@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BTC Trade Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#f7f5f0;--surface:#ffffff;--border:#e0ddd6;--border2:#c8c4bb;
+    --accent:#f2a413;--accent-dark:#c4840a;--red:#d94f3d;--green:#2e7d5e;
+    --text:#1a1814;--muted:#8a8378;
+    --mono:'IBM Plex Mono',monospace;--sans:'Barlow Condensed',sans-serif;
+  }
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;padding:16px;}
+  h1{font-family:var(--sans);font-size:1.1rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+  h1 .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block;}
+
+  .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+  .topbar h1{margin-bottom:0;}
+
+  /* CURRENCY TOGGLE */
+  .cur-toggle{display:flex;border-radius:4px;overflow:hidden;border:1px solid var(--border2);font-family:var(--mono);}
+  .cur-toggle button{padding:5px 12px;border:none;cursor:pointer;font-family:var(--mono);font-size:0.7rem;font-weight:600;background:var(--surface);color:var(--muted);transition:all 0.15s;}
+  .cur-toggle button.active{background:var(--accent);color:#fff;}
+
+  .inputs{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-bottom:14px;}
+  .field{display:flex;flex-direction:column;gap:3px;}
+  .field label{font-family:var(--mono);font-size:0.6rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);}
+  .field label span{color:var(--accent);font-size:0.55rem;margin-left:2px;}
+  .field input,.field select{font-family:var(--mono);font-size:0.8rem;color:var(--text);background:var(--surface);border:1px solid var(--border2);border-radius:4px;padding:5px 7px;outline:none;width:100%;transition:border-color 0.15s;}
+  .field input:focus,.field select:focus{border-color:var(--accent);}
+
+  .dir-toggle{display:flex;border-radius:4px;overflow:hidden;border:1px solid var(--border2);}
+  .dir-toggle button{flex:1;padding:5px 4px;border:none;cursor:pointer;font-family:var(--sans);font-weight:700;font-size:0.75rem;letter-spacing:0.05em;background:var(--surface);color:var(--muted);transition:all 0.15s;}
+  .dir-toggle button.buy{background:#e8f5ef;color:var(--green);}
+  .dir-toggle button.sell{background:#fdf0ee;color:var(--red);}
+
+  .results{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-bottom:14px;}
+  .res{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:8px 10px;}
+  .res__label{font-family:var(--mono);font-size:0.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px;}
+  .res__val{font-family:var(--mono);font-size:0.9rem;font-weight:600;color:var(--text);}
+  .res__val.pos{color:var(--green);} .res__val.neg{color:var(--red);} .res__val.acc{color:var(--accent-dark);}
+  .res__sub{font-family:var(--mono);font-size:0.58rem;color:var(--muted);margin-top:2px;}
+
+  .tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:6px;}
+  table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:0.72rem;}
+  thead tr{background:#f0ede6;}
+  th{padding:7px 10px;text-align:left;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.09em;color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap;font-weight:600;}
+  td{padding:6px 10px;border-bottom:1px solid var(--border);white-space:nowrap;color:var(--text);}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:#faf9f5;}
+  td.pos{color:var(--green);font-weight:600;} td.neg{color:var(--red);font-weight:600;} td.acc{color:var(--accent-dark);font-weight:600;} td.muted{color:var(--muted);}
+
+  .tag{display:inline-block;padding:2px 7px;border-radius:3px;font-size:0.6rem;font-weight:700;letter-spacing:0.06em;}
+  .tag-buy{background:#e8f5ef;color:var(--green);} .tag-sell{background:#fdf0ee;color:var(--red);}
+
+  .actions{display:flex;gap:8px;margin-bottom:14px;align-items:center;}
+  .btn{font-family:var(--sans);font-weight:700;font-size:0.75rem;letter-spacing:0.06em;text-transform:uppercase;padding:6px 14px;border-radius:4px;border:none;cursor:pointer;transition:all 0.15s;}
+  .btn-add{background:var(--accent);color:#fff;} .btn-add:hover{background:var(--accent-dark);}
+  .btn-del{background:none;border:none;cursor:pointer;color:var(--muted);font-size:0.7rem;padding:2px 5px;transition:color 0.15s;}
+  .btn-del:hover{color:var(--red);}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1><span class="dot"></span> BTC / USD Trade Planner</h1>
+  <div class="cur-toggle">
+    <button id="btnUSD" class="active" onclick="setCurrency('USD')">USD</button>
+    <button id="btnVND" onclick="setCurrency('VND')">VND</button>
+  </div>
+</div>
+
+<div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px;margin-bottom:14px;">
+  <div style="font-family:var(--mono);font-size:0.6rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:10px;">Quick Calculator</div>
+  <div class="inputs">
+    <div class="field">
+      <label>Direction</label>
+      <div class="dir-toggle">
+        <button id="btnBuy" class="buy" onclick="setDir('BUY')">▲ BUY</button>
+        <button id="btnSell" onclick="setDir('SELL')">▼ SELL</button>
+      </div>
+    </div>
+    <div class="field"><label>Balance <span id="lbl-balance">($)</span></label><input type="number" id="balance" value="10000" oninput="calc()"/></div>
+    <div class="field"><label>Entry <span>($)</span></label><input type="number" id="entry" value="65000" oninput="calc()"/></div>
+    <div class="field"><label>Lot Size <span>(BTC)</span></label><input type="number" id="lot" value="0.1" step="0.01" oninput="calc()"/></div>
+    <div class="field"><label>Price 1 <span>live</span></label><input type="number" id="price1" value="66000" oninput="calc()"/></div>
+    <div class="field"><label>Price 2 <span>live</span></label><input type="number" id="price2" value="67500" oninput="calc()"/></div>
+    <div class="field"><label>Target TP <span>($)</span></label><input type="number" id="tp" value="70000" oninput="calc()"/></div>
+    <div class="field"><label>Stop SL <span>($)</span></label><input type="number" id="sl" value="62000" oninput="calc()"/></div>
+  </div>
+  <div class="results" id="results"></div>
+  <div class="actions">
+    <button class="btn btn-add" onclick="addTrade()">+ Add to Table</button>
+  </div>
+</div>
+
+<div class="tbl-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th><th>Dir</th><th>Balance</th><th>Entry</th><th>Lot</th>
+        <th>Price 1</th><th>P/L @ P1</th><th>P/L %</th>
+        <th>Price 2</th><th>P/L @ P2</th><th>P/L %</th>
+        <th>TP</th><th>SL</th>
+        <th>Profit (TP)</th><th>Loss (SL)</th><th>R:R</th><th></th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<script>
+const LEV = 10;
+const USD_VND = 25400; // exchange rate
+let direction = 'BUY';
+let currency = 'USD';
+let trades = [];
+let tradeCount = 0;
+
+function setCurrency(c){
+  currency = c;
+  document.getElementById('btnUSD').className = c==='USD'?'active':'';
+  document.getElementById('btnVND').className = c==='VND'?'active':'';
+  // Update balance label
+  document.getElementById('lbl-balance').textContent = c==='USD'?'($)':'(₫)';
+  calc();
+  renderTable();
+}
+
+function setDir(d){
+  direction = d;
+  document.getElementById('btnBuy').className = d==='BUY'?'buy':'';
+  document.getElementById('btnSell').className = d==='SELL'?'sell':'';
+  calc();
+}
+
+function g(id){ return parseFloat(document.getElementById(id).value)||0; }
+
+// Always compute in USD internally; balance input is in selected currency
+function toUSD(v){ return currency==='VND' ? v/USD_VND : v; }
+function fromUSD(v){ return currency==='VND' ? v*USD_VND : v; }
+
+function computeTrade(dir, balanceRaw, entry, price1, price2, tp, sl, lot){
+  const balance = toUSD(balanceRaw); // normalise to USD for pct calcs
+  const dm = dir==='BUY'?1:-1;
+  const pos = lot;
+  const notional = entry * pos;
+  const margin = notional / LEV;
+  const pl1 = (price1 - entry) * pos * dm;
+  const pl1pct = balance>0?(pl1/balance*100):0;
+  const pl2 = (price2 - entry) * pos * dm;
+  const pl2pct = balance>0?(pl2/balance*100):0;
+  const profit = (tp - entry)*pos*dm;
+  const loss = (sl - entry)*pos*dm;
+  const tpDist = Math.abs(tp - entry);
+  const slDist = Math.abs(entry - sl);
+  const rr = slDist>0?(tpDist/slDist).toFixed(2):'—';
+  return {pos,notional,margin,pl1,pl1pct,pl2,pl2pct,profit,loss,tpDist,slDist,rr};
+}
+
+function fmtNum(n, dec){
+  if(typeof n !== 'number') return n;
+  if(currency==='VND'){
+    // no decimals for VND
+    return n.toLocaleString('vi-VN',{minimumFractionDigits:0,maximumFractionDigits:0});
+  }
+  return n.toLocaleString('en-US',{minimumFractionDigits:dec??2,maximumFractionDigits:dec??2});
+}
+
+function sym(){ return currency==='VND'?'₫':'$'; }
+
+// format a USD amount into display currency
+function fmtMoney(usdVal, sign=false){
+  const v = fromUSD(usdVal);
+  const prefix = sign?(v>=0?'+':'') : '';
+  const abs = Math.abs(v);
+  return prefix + sym() + fmtNum(abs, currency==='VND'?0:2);
+}
+
+function fmtPct(p){ return (p>=0?'+':'')+p.toFixed(2)+'%'; }
+
+function calc(){
+  const dir=direction;
+  const balanceRaw=g('balance'),entry=g('entry'),price1=g('price1'),price2=g('price2'),
+        tp=g('tp'),sl=g('sl'),lot=g('lot');
+  const r=computeTrade(dir,balanceRaw,entry,price1,price2,tp,sl,lot);
+
+  const cards=[
+    {label:'Position',val:`${r.pos.toFixed(4)} BTC`,sub:`Margin ${fmtMoney(r.margin)} (${LEV}x)`,cls:''},
+    {label:'P/L @ Price 1',val:fmtMoney(r.pl1,true),sub:fmtPct(r.pl1pct),cls:r.pl1>=0?'pos':'neg'},
+    {label:'P/L @ Price 2',val:fmtMoney(r.pl2,true),sub:fmtPct(r.pl2pct),cls:r.pl2>=0?'pos':'neg'},
+    {label:'R : R',val:`1 : ${r.rr}`,sub:parseFloat(r.rr)>=2?'✓ Good':parseFloat(r.rr)>=1?'Fair':'Risky',cls:parseFloat(r.rr)>=2?'pos':parseFloat(r.rr)>=1?'acc':'neg'},
+    {label:'Profit if TP',val:fmtMoney(r.profit,true),sub:`dist $${r.tpDist.toLocaleString()}`,cls:r.profit>=0?'pos':'neg'},
+    {label:'Loss if SL',val:fmtMoney(r.loss,true),sub:`dist $${r.slDist.toLocaleString()}`,cls:r.loss>=0?'pos':'neg'},
+  ];
+  document.getElementById('results').innerHTML=cards.map(c=>`
+    <div class="res">
+      <div class="res__label">${c.label}</div>
+      <div class="res__val ${c.cls}">${c.val}</div>
+      <div class="res__sub">${c.sub}</div>
+    </div>`).join('');
+}
+
+function addTrade(){
+  const dir=direction,balanceRaw=g('balance'),entry=g('entry'),
+        price1=g('price1'),price2=g('price2'),tp=g('tp'),sl=g('sl'),lot=g('lot');
+  const r=computeTrade(dir,balanceRaw,entry,price1,price2,tp,sl,lot);
+  tradeCount++;
+  trades.push({id:tradeCount,dir,balanceRaw,entry,price1,price2,tp,sl,lot,r,cur:currency});
+  renderTable();
+}
+
+function deleteTrade(id){ trades=trades.filter(t=>t.id!==id); renderTable(); }
+
+function renderTable(){
+  const tbody=document.getElementById('tbody');
+  if(!trades.length){
+    tbody.innerHTML=`<tr><td colspan="17" style="text-align:center;color:var(--muted);padding:16px;font-family:var(--mono);font-size:0.7rem;">No trades yet — use the calculator above</td></tr>`;
+    return;
+  }
+  tbody.innerHTML=trades.map(t=>{
+    // re-format based on current currency
+    const bal = t.cur===currency ? fmtMoney(toUSD(t.balanceRaw)) : fmtMoney(toUSD(t.balanceRaw));
+    return `<tr>
+      <td class="muted">${t.id}</td>
+      <td><span class="tag tag-${t.dir.toLowerCase()}">${t.dir}</span></td>
+      <td>${sym()}${fmtNum(fromUSD(toUSD(t.balanceRaw)),currency==='VND'?0:0)}</td>
+      <td>$${t.entry.toLocaleString()}</td>
+      <td>${t.lot} BTC</td>
+      <td class="acc">$${t.price1.toLocaleString()}</td>
+      <td class="${t.r.pl1>=0?'pos':'neg'}">${fmtMoney(t.r.pl1,true)}</td>
+      <td class="${t.r.pl1>=0?'pos':'neg'}">${fmtPct(t.r.pl1pct)}</td>
+      <td class="acc">$${t.price2.toLocaleString()}</td>
+      <td class="${t.r.pl2>=0?'pos':'neg'}">${fmtMoney(t.r.pl2,true)}</td>
+      <td class="${t.r.pl2>=0?'pos':'neg'}">${fmtPct(t.r.pl2pct)}</td>
+      <td>$${t.tp.toLocaleString()}</td>
+      <td>$${t.sl.toLocaleString()}</td>
+      <td class="${t.r.profit>=0?'pos':'neg'}">${fmtMoney(t.r.profit,true)}</td>
+      <td class="${t.r.loss>=0?'pos':'neg'}">${fmtMoney(t.r.loss,true)}</td>
+      <td class="${parseFloat(t.r.rr)>=2?'pos':parseFloat(t.r.rr)>=1?'acc':'neg'}">1:${t.r.rr}</td>
+      <td><button class="btn-del" onclick="deleteTrade(${t.id})">✕</button></td>
+    </tr>`;
+  }).join('');
+}
+
+calc();
+renderTable();
+</script>
+</body>
+</html>
