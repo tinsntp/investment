@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Budget Chart</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    background: #111;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    color: #fff;
+    overflow: hidden;
+  }
+
+  body {
+    position: relative;
+  }
+
+  #chart-wrap {
+    position: absolute;
+    bottom: 3vw;
+    left: 0;
+    right: 0;
+    padding: 0 4vw;
+  }
+
+  #error-msg {
+    color: rgba(255,255,255,0.5);
+    font-size: 2vw;
+    text-align: center;
+    padding: 4vw;
+    display: none;
+  }
+
+  .chart-inner {
+    position: relative;
+    width: 100%;
+  }
+
+  /* baseline */
+  .baseline {
+    position: absolute;
+    left: 0; right: 0;
+    height: 1.5px;
+    background: rgba(255,255,255,0.25);
+  }
+
+  .bars {
+    display: flex;
+    align-items: flex-end; /* anchored to baseline */
+    gap: 2vw;
+    width: 100%;
+  }
+
+  .bar-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+
+  /* label above bar (positive) or below bar (negative) */
+  .bar-value {
+    font-size: 2.2vw;
+    font-weight: 400;
+    color: #fff;
+    white-space: nowrap;
+    line-height: 1;
+  }
+
+  .bar-rect {
+    width: 100%;
+    border-radius: 2px 2px 0 0;
+  }
+
+  .bar-rect.negative {
+    border-radius: 0 0 2px 2px;
+  }
+
+  .bar-name {
+    font-size: 2vw;
+    color: rgba(255,255,255,0.75);
+    text-align: center;
+    white-space: pre-line;
+    line-height: 1.3;
+    margin-top: 1vw;
+  }
+</style>
+</head>
+<body>
+
+<div id="chart-wrap">
+  <div id="error-msg">⚠ Could not load spreadsheet. Check the Sheet ID and sharing settings.</div>
+  <div class="chart-inner" id="chart-inner"></div>
+</div>
+
+<script>
+  // ─────────────────────────────────────────────
+  // CONFIG — paste your Google Sheet ID here
+  // Sheet must be shared: File → Share → "Anyone with the link" (Viewer)
+  // Column A = Category name, Column B = Value (number)
+  // The last row should be your "Remaining" / positive bar
+  // ─────────────────────────────────────────────
+  const SHEET_ID  = '1lxq_OOJNzigR-kuWDx2toke9ED5nrZcumUvLtBm2jMo';
+  const SHEET_GID = '0'; // tab index (0 = first sheet)
+
+  // Colors
+  const COLOR_NEG = '#c8c8c8';   // grey for negative bars
+  const COLOR_POS = '#4DB6AC';   // teal for positive / remaining bar
+
+  // ─────────────────────────────────────────────
+
+  function formatVal(v) {
+    const abs = Math.abs(v);
+    let str;
+    if (abs >= 1_000_000)      str = (abs / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
+    else if (abs >= 1_000)     str = (abs / 1_000).toFixed(0) + 'K';
+    else                       str = abs.toString();
+    return (v < 0 ? '−' : '') + str;
+  }
+
+  async function load() {
+    if (SHEET_ID === '1lxq_OOJNzigR-kuWDx2toke9ED5nrZcumUvLtBm2jMo') {
+      renderChart(DEMO_DATA());
+      return;
+    }
+    try {
+      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${SHEET_GID}`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('fetch failed');
+      const csv = await res.text();
+      const rows = csv.trim().split('\n').slice(1); // skip header row
+      const data = rows.map(r => {
+        const cols = r.split(',');
+        const name = cols[0].replace(/^"|"$/g, '').trim();
+        const val  = parseFloat(cols[1].replace(/[^0-9.\-]/g, ''));
+        return { name, val };
+      }).filter(d => d.name && !isNaN(d.val));
+      renderChart(data);
+    } catch(e) {
+      document.getElementById('error-msg').style.display = 'block';
+      renderChart(DEMO_DATA()); // fallback to demo
+    }
+  }
+
+  function DEMO_DATA() {
+    return [
+      { name: 'Living Cost',        val: -9600000  },
+      { name: 'Family',             val: -12100000 },
+      { name: 'Insurance\n& Health',val: -995000   },
+      { name: 'Rental',             val: -6100000  },
+      { name: 'Bank Debts',         val: -32400000 },
+      { name: 'Remaining',          val:  25000000 },
+    ];
+  }
+
+  function renderChart(data) {
+    const maxAbs   = Math.max(...data.map(d => Math.abs(d.val)));
+    const chartH   = window.innerWidth * 0.38; // total chart height in px
+    const baselineY = chartH * 0.45;           // baseline sits ~45% from top
+
+    const inner = document.getElementById('chart-inner');
+    inner.style.height = chartH + 'px';
+
+    // baseline
+    const bl = document.createElement('div');
+    bl.className = 'baseline';
+    bl.style.top = baselineY + 'px';
+    inner.appendChild(bl);
+
+    // bars container — positioned at baseline
+    const barsEl = document.createElement('div');
+    barsEl.className = 'bars';
+    barsEl.style.position = 'absolute';
+    barsEl.style.top = '0';
+    barsEl.style.left = '0';
+    barsEl.style.right = '0';
+    barsEl.style.height = chartH + 'px';
+    barsEl.style.alignItems = 'flex-end';
+    barsEl.style.paddingBottom = (chartH - baselineY) + 'px';
+    inner.appendChild(barsEl);
+
+    data.forEach(({ name, val }) => {
+      const isPos   = val >= 0;
+      const barPx   = (Math.abs(val) / maxAbs) * baselineY * 0.92;
+      const color   = isPos ? COLOR_POS : COLOR_NEG;
+      const fmtVal  = formatVal(val);
+
+      const col = document.createElement('div');
+      col.className = 'bar-col';
+
+      if (isPos) {
+        // positive: label on top, bar grows upward
+        col.style.flexDirection = 'column';
+        col.style.justifyContent = 'flex-end';
+
+        const valEl = document.createElement('div');
+        valEl.className = 'bar-value';
+        valEl.textContent = fmtVal;
+        valEl.style.marginBottom = '0.6vw';
+
+        const rect = document.createElement('div');
+        rect.className = 'bar-rect';
+        rect.style.height = barPx + 'px';
+        rect.style.background = color;
+
+        col.appendChild(valEl);
+        col.appendChild(rect);
+      } else {
+        // negative: label BELOW bar name; bar grows downward from baseline
+        // We use a wrapper that flips direction
+        col.style.flexDirection = 'column';
+        col.style.justifyContent = 'flex-end';
+        col.style.position = 'relative';
+
+        // name above baseline
+        const nameEl = document.createElement('div');
+        nameEl.className = 'bar-name';
+        nameEl.textContent = name;
+        nameEl.style.position = 'absolute';
+        nameEl.style.bottom = '0';
+        nameEl.style.left = '0'; nameEl.style.right = '0';
+        nameEl.style.transform = `translateY(calc(-${barPx}px - 1.2vw))`;
+
+        // spacer so col takes up height up to baseline
+        const spacer = document.createElement('div');
+        spacer.style.flex = '1';
+
+        col.appendChild(nameEl);
+        col.appendChild(spacer);
+        barsEl.appendChild(col);
+
+        // draw negative bar below baseline separately
+        const negWrap = document.createElement('div');
+        negWrap.style.cssText = `
+          position: absolute;
+          top: ${baselineY}px;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        `;
+
+        // We'll inject neg bars inline after layout — use a data approach
+        col.dataset.negH   = barPx;
+        col.dataset.color  = color;
+        col.dataset.fmtval = fmtVal;
+        col.dataset.isNeg  = '1';
+        col.dataset.name   = name;
+        return;
+      }
+
+      barsEl.appendChild(col);
+    });
+
+    // Second pass: render negative bars properly
+    // Instead of two-pass complexity, rebuild cleanly with absolute positioning per column
+    inner.innerHTML = '';
+
+    // baseline
+    const bl2 = document.createElement('div');
+    bl2.className = 'baseline';
+    bl2.style.top = baselineY + 'px';
+    inner.appendChild(bl2);
+
+    const totalCols = data.length;
+    const gapVw = 2;
+    const padVw = 0;
+
+    data.forEach(({ name, val }, idx) => {
+      const isPos  = val >= 0;
+      const barPx  = (Math.abs(val) / maxAbs) * baselineY * 0.92;
+      const color  = isPos ? COLOR_POS : COLOR_NEG;
+      const fmtVal = formatVal(val);
+
+      const col = document.createElement('div');
+      col.style.cssText = `
+        position: absolute;
+        top: 0;
+        height: ${chartH}px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      `;
+
+      // horizontal position
+      const colW = `calc((100% - ${(totalCols - 1) * gapVw}vw) / ${totalCols})`;
+      col.style.width = colW;
+      col.style.left  = `calc(${idx} * ((100% - ${(totalCols - 1) * gapVw}vw) / ${totalCols} + ${gapVw}vw))`;
+
+      if (isPos) {
+        // value label above bar, name below baseline
+        const valEl = document.createElement('div');
+        valEl.className = 'bar-value';
+        valEl.textContent = fmtVal;
+        valEl.style.cssText = `
+          position: absolute;
+          bottom: ${chartH - baselineY + barPx + window.innerWidth * 0.008}px;
+          text-align: center;
+        `;
+
+        const rect = document.createElement('div');
+        rect.className = 'bar-rect';
+        rect.style.cssText = `
+          position: absolute;
+          bottom: ${chartH - baselineY}px;
+          width: 100%;
+          height: ${barPx}px;
+          background: ${color};
+          border-radius: 2px 2px 0 0;
+        `;
+
+        const nameEl = document.createElement('div');
+        nameEl.className = 'bar-name';
+        nameEl.textContent = name;
+        nameEl.style.cssText = `
+          position: absolute;
+          top: ${baselineY + window.innerWidth * 0.012}px;
+          text-align: center;
+          width: 100%;
+        `;
+
+        col.appendChild(valEl);
+        col.appendChild(rect);
+        col.appendChild(nameEl);
+
+      } else {
+        // name above baseline, bar downward, value below bar
+        const nameEl = document.createElement('div');
+        nameEl.className = 'bar-name';
+        nameEl.textContent = name;
+        nameEl.style.cssText = `
+          position: absolute;
+          bottom: ${chartH - baselineY + window.innerWidth * 0.012}px;
+          text-align: center;
+          width: 100%;
+        `;
+
+        const rect = document.createElement('div');
+        rect.style.cssText = `
+          position: absolute;
+          top: ${baselineY}px;
+          width: 100%;
+          height: ${barPx}px;
+          background: ${color};
+          border-radius: 0 0 2px 2px;
+        `;
+
+        const valEl = document.createElement('div');
+        valEl.className = 'bar-value';
+        valEl.textContent = fmtVal;
+        valEl.style.cssText = `
+          position: absolute;
+          top: ${baselineY + barPx + window.innerWidth * 0.008}px;
+          text-align: center;
+          width: 100%;
+        `;
+
+        col.appendChild(nameEl);
+        col.appendChild(rect);
+        col.appendChild(valEl);
+      }
+
+      inner.appendChild(col);
+    });
+  }
+
+  load();
+  // Auto-refresh every 60 seconds to pick up spreadsheet changes
+  setInterval(load, 60000);
+</script>
+</body>
+</html>
