@@ -6,372 +6,194 @@
 <title>Budget Chart</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  html, body {
-    width: 100%;
-    height: 100%;
-    background: #111;
-    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
-    color: #fff;
-    overflow: hidden;
-  }
-
-  body {
-    position: relative;
-  }
-
-  #chart-wrap {
-    position: absolute;
-    bottom: 3vw;
-    left: 0;
-    right: 0;
-    padding: 0 4vw;
-  }
-
-  #error-msg {
-    color: rgba(255,255,255,0.5);
-    font-size: 2vw;
-    text-align: center;
-    padding: 4vw;
-    display: none;
-  }
-
-  .chart-inner {
-    position: relative;
-    width: 100%;
-  }
-
-  /* baseline */
-  .baseline {
-    position: absolute;
-    left: 0; right: 0;
-    height: 1.5px;
-    background: rgba(255,255,255,0.25);
-  }
-
-  .bars {
-    display: flex;
-    align-items: flex-end; /* anchored to baseline */
-    gap: 2vw;
-    width: 100%;
-  }
-
-  .bar-col {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-  }
-
-  /* label above bar (positive) or below bar (negative) */
-  .bar-value {
-    font-size: 2.2vw;
-    font-weight: 400;
-    color: #fff;
-    white-space: nowrap;
-    line-height: 1;
-  }
-
-  .bar-rect {
-    width: 100%;
-    border-radius: 2px 2px 0 0;
-  }
-
-  .bar-rect.negative {
-    border-radius: 0 0 2px 2px;
-  }
-
-  .bar-name {
-    font-size: 2vw;
-    color: rgba(255,255,255,0.75);
-    text-align: center;
-    white-space: pre-line;
-    line-height: 1.3;
-    margin-top: 1vw;
-  }
+  html, body { width: 100%; height: 100%; background: #111; font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; color: #fff; overflow: hidden; }
+  body { position: relative; }
+  #status { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 1.8vw; color: rgba(255,255,255,0.5); text-align: center; line-height: 2; white-space: pre-line; }
+  #chart-wrap { position: absolute; bottom: 3vw; left: 0; right: 0; padding: 0 4vw; display: none; }
+  .baseline { position: absolute; left: 0; right: 0; height: 1.5px; background: rgba(255,255,255,0.25); }
+  .bar-value { font-size: 2.2vw; font-weight: 400; color: #fff; white-space: nowrap; text-align: center; width: 100%; line-height: 1; }
+  .bar-name { font-size: 2vw; color: rgba(255,255,255,0.75); text-align: center; white-space: pre-line; line-height: 1.3; }
 </style>
 </head>
 <body>
 
-<div id="chart-wrap">
-  <div id="error-msg">⚠ Could not load spreadsheet. Check the Sheet ID and sharing settings.</div>
-  <div class="chart-inner" id="chart-inner"></div>
-</div>
+<div id="status">Loading…</div>
+<div id="chart-wrap"><div id="chart-inner" style="position:relative;width:100%;"></div></div>
 
 <script>
-  // ─────────────────────────────────────────────
-  // CONFIG — paste your Google Sheet ID here
-  // Sheet must be shared: File → Share → "Anyone with the link" (Viewer)
-  // Column A = Category name, Column B = Value (number)
-  // The last row should be your "Remaining" / positive bar
-  // ─────────────────────────────────────────────
-  const SHEET_ID  = '1lxq_OOJNzigR-kuWDx2toke9ED5nrZcumUvLtBm2jMo';
-  const SHEET_GID = '0'; // tab index (0 = first sheet)
+  const CSV_URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv`;
 
-  // Colors
-  const COLOR_NEG = '#c8c8c8';   // grey for negative bars
-  const COLOR_POS = '#4DB6AC';   // teal for positive / remaining bar
+  const COLOR_NEG = '#c8c8c8';
+  const COLOR_POS = '#4DB6AC';
 
-  // ─────────────────────────────────────────────
-
-  function formatVal(v) {
-    const abs = Math.abs(v);
-    let str;
-    if (abs >= 1_000_000)      str = (abs / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
-    else if (abs >= 1_000)     str = (abs / 1_000).toFixed(0) + 'K';
-    else                       str = abs.toString();
-    return (v < 0 ? '−' : '') + str;
+  function fmt(v) {
+    const a = Math.abs(v);
+    let s = a >= 1e6 ? (a/1e6).toFixed(1).replace(/\.0$/,'')+'M'
+          : a >= 1e3 ? (a/1e3).toFixed(0)+'K'
+          : String(a);
+    return (v < 0 ? '−' : '') + s;
   }
 
-  async function load() {
-    if (SHEET_ID === '1lxq_OOJNzigR-kuWDx2toke9ED5nrZcumUvLtBm2jMo') {
-      renderChart(DEMO_DATA());
-      return;
+  function setStatus(msg) {
+    const el = document.getElementById('status');
+    el.style.display = 'block';
+    el.textContent = msg;
+  }
+
+  // Robust CSV row splitter (handles quoted fields with commas inside)
+  function splitCSVRow(row) {
+    const cols = [];
+    let cur = '', inQ = false;
+    for (let i = 0; i < row.length; i++) {
+      const ch = row[i];
+      if (ch === '"') {
+        inQ = !inQ;
+      } else if (ch === ',' && !inQ) {
+        cols.push(cur); cur = '';
+      } else {
+        cur += ch;
+      }
     }
-    try {
-      const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${SHEET_GID}`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error('fetch failed');
-      const csv = await res.text();
-      const rows = csv.trim().split('\n').slice(1); // skip header row
-      const data = rows.map(r => {
-        const cols = r.split(',');
-        const name = cols[0].replace(/^"|"$/g, '').trim();
-        const val  = parseFloat(cols[1].replace(/[^0-9.\-]/g, ''));
-        return { name, val };
-      }).filter(d => d.name && !isNaN(d.val));
-      renderChart(data);
-    } catch(e) {
-      document.getElementById('error-msg').style.display = 'block';
-      renderChart(DEMO_DATA()); // fallback to demo
-    }
+    cols.push(cur);
+    return cols;
   }
 
-  function DEMO_DATA() {
-    return [
-      { name: 'Living Cost',        val: -9600000  },
-      { name: 'Family',             val: -12100000 },
-      { name: 'Insurance\n& Health',val: -995000   },
-      { name: 'Rental',             val: -6100000  },
-      { name: 'Bank Debts',         val: -32400000 },
-      { name: 'Remaining',          val:  25000000 },
-    ];
+  // Parse number — handles "−9,600,000" / "-9600000" / "(9600000)" accounting format
+  function parseNum(str) {
+    if (!str) return NaN;
+    let s = str.trim();
+    // accounting negative: (1234) → -1234
+    const isAccounting = /^\(.*\)$/.test(s);
+    if (isAccounting) s = '-' + s.slice(1, -1);
+    // replace all unicode minus / en-dash with ASCII minus
+    s = s.replace(/[\u2212\u2013\u2014]/g, '-');
+    // remove everything except digits, dot, minus
+    s = s.replace(/[^0-9.\-]/g, '');
+    return parseFloat(s);
   }
 
-  function renderChart(data) {
-    const maxAbs   = Math.max(...data.map(d => Math.abs(d.val)));
-    const chartH   = window.innerWidth * 0.38; // total chart height in px
-    const baselineY = chartH * 0.45;           // baseline sits ~45% from top
+  async function fetchData() {
+    const url = CSV_URL + '&t=' + Date.now();
+    const r = await fetch(url, { cache: 'no-store' });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const text = await r.text();
 
+    const rows = text.trim().split('\n').slice(1); // skip header
+    const data = rows.map(row => {
+      const cols = splitCSVRow(row);
+      const name = cols[0].replace(/^"|"$/g, '').trim();
+      const val  = parseNum(cols[1]);
+      return { name, val };
+    }).filter(d => d.name && !isNaN(d.val));
+
+    if (!data.length) throw new Error('No valid data rows found.\nCheck columns A (name) and B (number) in your sheet.');
+    return data;
+  }
+
+  function render(data) {
     const inner = document.getElementById('chart-inner');
+    inner.innerHTML = '';
+
+    const W         = window.innerWidth;
+    const chartH    = W * 0.40;
+    const baselineY = chartH * 0.46;
+    const offset    = W * 0.008;
+
     inner.style.height = chartH + 'px';
 
-    // baseline
+    // baseline rule
     const bl = document.createElement('div');
     bl.className = 'baseline';
     bl.style.top = baselineY + 'px';
     inner.appendChild(bl);
 
-    // bars container — positioned at baseline
-    const barsEl = document.createElement('div');
-    barsEl.className = 'bars';
-    barsEl.style.position = 'absolute';
-    barsEl.style.top = '0';
-    barsEl.style.left = '0';
-    barsEl.style.right = '0';
-    barsEl.style.height = chartH + 'px';
-    barsEl.style.alignItems = 'flex-end';
-    barsEl.style.paddingBottom = (chartH - baselineY) + 'px';
-    inner.appendChild(barsEl);
+    const maxAbs = Math.max(...data.map(d => Math.abs(d.val)));
+    const n      = data.length;
+    const gapVw  = 2;
 
-    data.forEach(({ name, val }) => {
-      const isPos   = val >= 0;
-      const barPx   = (Math.abs(val) / maxAbs) * baselineY * 0.92;
-      const color   = isPos ? COLOR_POS : COLOR_NEG;
-      const fmtVal  = formatVal(val);
-
-      const col = document.createElement('div');
-      col.className = 'bar-col';
-
-      if (isPos) {
-        // positive: label on top, bar grows upward
-        col.style.flexDirection = 'column';
-        col.style.justifyContent = 'flex-end';
-
-        const valEl = document.createElement('div');
-        valEl.className = 'bar-value';
-        valEl.textContent = fmtVal;
-        valEl.style.marginBottom = '0.6vw';
-
-        const rect = document.createElement('div');
-        rect.className = 'bar-rect';
-        rect.style.height = barPx + 'px';
-        rect.style.background = color;
-
-        col.appendChild(valEl);
-        col.appendChild(rect);
-      } else {
-        // negative: label BELOW bar name; bar grows downward from baseline
-        // We use a wrapper that flips direction
-        col.style.flexDirection = 'column';
-        col.style.justifyContent = 'flex-end';
-        col.style.position = 'relative';
-
-        // name above baseline
-        const nameEl = document.createElement('div');
-        nameEl.className = 'bar-name';
-        nameEl.textContent = name;
-        nameEl.style.position = 'absolute';
-        nameEl.style.bottom = '0';
-        nameEl.style.left = '0'; nameEl.style.right = '0';
-        nameEl.style.transform = `translateY(calc(-${barPx}px - 1.2vw))`;
-
-        // spacer so col takes up height up to baseline
-        const spacer = document.createElement('div');
-        spacer.style.flex = '1';
-
-        col.appendChild(nameEl);
-        col.appendChild(spacer);
-        barsEl.appendChild(col);
-
-        // draw negative bar below baseline separately
-        const negWrap = document.createElement('div');
-        negWrap.style.cssText = `
-          position: absolute;
-          top: ${baselineY}px;
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-        `;
-
-        // We'll inject neg bars inline after layout — use a data approach
-        col.dataset.negH   = barPx;
-        col.dataset.color  = color;
-        col.dataset.fmtval = fmtVal;
-        col.dataset.isNeg  = '1';
-        col.dataset.name   = name;
-        return;
-      }
-
-      barsEl.appendChild(col);
-    });
-
-    // Second pass: render negative bars properly
-    // Instead of two-pass complexity, rebuild cleanly with absolute positioning per column
-    inner.innerHTML = '';
-
-    // baseline
-    const bl2 = document.createElement('div');
-    bl2.className = 'baseline';
-    bl2.style.top = baselineY + 'px';
-    inner.appendChild(bl2);
-
-    const totalCols = data.length;
-    const gapVw = 2;
-    const padVw = 0;
-
-    data.forEach(({ name, val }, idx) => {
-      const isPos  = val >= 0;
-      const barPx  = (Math.abs(val) / maxAbs) * baselineY * 0.92;
-      const color  = isPos ? COLOR_POS : COLOR_NEG;
-      const fmtVal = formatVal(val);
+    data.forEach(({ name, val }, i) => {
+      const isPos = val >= 0;
+      const barH  = (Math.abs(val) / maxAbs) * baselineY * 0.92;
+      const color = isPos ? COLOR_POS : COLOR_NEG;
 
       const col = document.createElement('div');
       col.style.cssText = `
         position: absolute;
         top: 0;
         height: ${chartH}px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+        width: calc((100% - ${(n - 1) * gapVw}vw) / ${n});
+        left: calc(${i} * ((100% - ${(n - 1) * gapVw}vw) / ${n} + ${gapVw}vw));
       `;
 
-      // horizontal position
-      const colW = `calc((100% - ${(totalCols - 1) * gapVw}vw) / ${totalCols})`;
-      col.style.width = colW;
-      col.style.left  = `calc(${idx} * ((100% - ${(totalCols - 1) * gapVw}vw) / ${totalCols} + ${gapVw}vw))`;
-
       if (isPos) {
-        // value label above bar, name below baseline
+        // value label above bar
         const valEl = document.createElement('div');
         valEl.className = 'bar-value';
-        valEl.textContent = fmtVal;
-        valEl.style.cssText = `
-          position: absolute;
-          bottom: ${chartH - baselineY + barPx + window.innerWidth * 0.008}px;
-          text-align: center;
-        `;
+        valEl.textContent = fmt(val);
+        valEl.style.cssText = `position:absolute; bottom:${chartH - baselineY + barH + offset}px;`;
 
+        // bar grows upward from baseline
         const rect = document.createElement('div');
-        rect.className = 'bar-rect';
         rect.style.cssText = `
-          position: absolute;
+          position: absolute; width: 100%;
           bottom: ${chartH - baselineY}px;
-          width: 100%;
-          height: ${barPx}px;
+          height: ${barH}px;
           background: ${color};
           border-radius: 2px 2px 0 0;
         `;
 
+        // name below baseline
         const nameEl = document.createElement('div');
         nameEl.className = 'bar-name';
         nameEl.textContent = name;
-        nameEl.style.cssText = `
-          position: absolute;
-          top: ${baselineY + window.innerWidth * 0.012}px;
-          text-align: center;
-          width: 100%;
-        `;
+        nameEl.style.cssText = `position:absolute; top:${baselineY + offset}px; width:100%;`;
 
-        col.appendChild(valEl);
-        col.appendChild(rect);
-        col.appendChild(nameEl);
+        col.append(valEl, rect, nameEl);
 
       } else {
-        // name above baseline, bar downward, value below bar
+        // name above baseline
         const nameEl = document.createElement('div');
         nameEl.className = 'bar-name';
         nameEl.textContent = name;
-        nameEl.style.cssText = `
-          position: absolute;
-          bottom: ${chartH - baselineY + window.innerWidth * 0.012}px;
-          text-align: center;
-          width: 100%;
-        `;
+        nameEl.style.cssText = `position:absolute; bottom:${chartH - baselineY + offset}px; width:100%;`;
 
+        // bar grows downward from baseline
         const rect = document.createElement('div');
         rect.style.cssText = `
-          position: absolute;
+          position: absolute; width: 100%;
           top: ${baselineY}px;
-          width: 100%;
-          height: ${barPx}px;
+          height: ${barH}px;
           background: ${color};
           border-radius: 0 0 2px 2px;
         `;
 
+        // value label below bar
         const valEl = document.createElement('div');
         valEl.className = 'bar-value';
-        valEl.textContent = fmtVal;
-        valEl.style.cssText = `
-          position: absolute;
-          top: ${baselineY + barPx + window.innerWidth * 0.008}px;
-          text-align: center;
-          width: 100%;
-        `;
+        valEl.textContent = fmt(val);
+        valEl.style.cssText = `position:absolute; top:${baselineY + barH + offset}px;`;
 
-        col.appendChild(nameEl);
-        col.appendChild(rect);
-        col.appendChild(valEl);
+        col.append(nameEl, rect, valEl);
       }
 
       inner.appendChild(col);
     });
+
+    document.getElementById('status').style.display = 'none';
+    document.getElementById('chart-wrap').style.display = 'block';
+  }
+
+  async function load() {
+    setStatus('Loading…');
+    try {
+      const data = await fetchData();
+      render(data);
+    } catch (e) {
+      setStatus(`⚠ Failed to load data\n${e.message}`);
+    }
   }
 
   load();
-  // Auto-refresh every 60 seconds to pick up spreadsheet changes
   setInterval(load, 60000);
 </script>
 </body>
