@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Widget</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    background: #1a1a1a;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    color: #fff;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* ── WEATHER ─────────────────────────────── */
+  .wx {
+    position: absolute;
+    top: 3vw;
+    left: 0;
+    right: 0;
+    padding: 0 4vw;
+  }
+
+  .wx-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 3vw;
+  }
+
+  .wx-city       { font-size: 6.5vw; font-weight: 700; color: #fff; line-height: 1.1; }
+  .wx-date       { font-size: 4vw; color: rgba(255,255,255,0.55); margin-top: 0.5vw; }
+  .wx-current    { display: flex; align-items: center; gap: 1.5vw; }
+  .wx-temp-big   { font-size: 6.5vw; font-weight: 700; color: #fff; line-height: 1; }
+  .wx-cond       { font-size: 3.8vw; color: rgba(255,255,255,0.55); margin-top: 0.4vw; text-align: right; }
+  .wx-hourly     { display: flex; overflow-x: auto; scrollbar-width: none; }
+  .wx-hourly::-webkit-scrollbar { display: none; }
+  .wx-hour       { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 1vw; padding: 0 1vw; }
+  .wx-hour-time  { font-size: 3.5vw; color: rgba(255,255,255,0.5); }
+  .wx-hour-temp  { font-size: 4.3vw; font-weight: 700; color: #fff; }
+  .wx-hour-wind  { font-size: 3.3vw; color: rgba(255,255,255,0.5); }
+
+  /* ── COUNTDOWN ───────────────────────────── */
+  .countdown {
+    position: absolute;
+    bottom: 4vw;
+    left: 0;
+    right: 0;
+    display: flex;
+    gap: 3vw;
+    padding: 0 4vw;
+    justify-content: center;
+    align-items: flex-end;
+  }
+
+  .unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5vw;
+    flex: 1 1 0;
+    max-width: 22vw;
+  }
+
+  .card {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: #f5f5f5;
+    border-radius: 8%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+      0 0.5vw 1vw rgba(0,0,0,0.45),
+      0 0.1vw 0.3vw rgba(0,0,0,0.3),
+      inset 0 0.1vw 0 rgba(255,255,255,0.8);
+    overflow: hidden;
+  }
+
+  .card::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    top: 50%;
+    height: 1.5px;
+    background: rgba(0,0,0,0.12);
+    z-index: 2;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 50%;
+    background: rgba(0,0,0,0.04);
+    z-index: 1;
+    border-radius: 8% 8% 0 0;
+  }
+
+  .card-number {
+    font-size: 13.5vw;
+    font-weight: 400;
+    color: #222;
+    letter-spacing: -0.05em;
+    z-index: 3;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .label {
+    font-size: 4vw;
+    color: #aaa;
+    text-transform: capitalize;
+    letter-spacing: 0.03em;
+    font-weight: 450;
+    white-space: nowrap;
+  }
+
+  .card.flip .card-number {
+    animation: flipNumber 0.4s ease-in-out;
+  }
+
+  @keyframes flipNumber {
+    0%   { transform: rotateX(0deg);   opacity: 1; }
+    40%  { transform: rotateX(-90deg); opacity: 0; }
+    60%  { transform: rotateX(-90deg); opacity: 0; }
+    100% { transform: rotateX(0deg);   opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Weather (top) -->
+<div class="wx">
+  <div class="wx-header">
+    <div>
+      <div class="wx-city">Ho Chi Minh City</div>
+      <div class="wx-date" id="wx-date"></div>
+    </div>
+    <div class="wx-current">
+      <div>
+        <div class="wx-temp-big" id="wx-temp">—</div>
+        <div class="wx-cond" id="wx-cond">—</div>
+      </div>
+      <div id="wx-icon-main"></div>
+    </div>
+  </div>
+  <div class="wx-hourly" id="wx-hourly"></div>
+</div>
+
+<!-- Countdown (bottom) -->
+<div class="countdown">
+  <div class="unit">
+    <div class="card" id="card-years"><span class="card-number" id="years">00</span></div>
+    <span class="label">Years</span>
+  </div>
+  <div class="unit">
+    <div class="card" id="card-months"><span class="card-number" id="months">00</span></div>
+    <span class="label">Months</span>
+  </div>
+  <div class="unit">
+    <div class="card" id="card-weeks"><span class="card-number" id="weeks">00</span></div>
+    <span class="label">Weeks</span>
+  </div>
+  <div class="unit">
+    <div class="card" id="card-days"><span class="card-number" id="days">00</span></div>
+    <span class="label">Days</span>
+  </div>
+</div>
+
+<script>
+/* ── WEATHER ──────────────────────────────────────────────────────── */
+(async () => {
+  const days   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const now    = new Date();
+
+  document.getElementById('wx-date').textContent =
+    `${months[now.getMonth()]} ${now.getDate()} ${days[now.getDay()]}`;
+
+  function iconSize() { return Math.round(window.innerWidth * 0.09); }
+
+  function moonCloudSVG(s) {
+    return `<svg width="${s}" height="${s}" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M36 10 C36 21 27 28 17 26 C19 33 26 38 34 36 C43 34 47 25 44 17 C41 11 38 9 36 10Z" fill="#F5A623"/>
+      <ellipse cx="22" cy="37" rx="12" ry="8" fill="#90CAF9"/>
+      <ellipse cx="30" cy="39" rx="10" ry="7" fill="#90CAF9"/>
+      <ellipse cx="16" cy="39" rx="8"  ry="6" fill="#90CAF9"/>
+    </svg>`;
+  }
+
+  function sunSVG(s) {
+    return `<svg width="${s}" height="${s}" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="26" cy="26" r="10" fill="#F5A623"/>
+      <g stroke="#F5A623" stroke-width="2.5" stroke-linecap="round">
+        <line x1="26" y1="6"  x2="26" y2="12"/>
+        <line x1="26" y1="40" x2="26" y2="46"/>
+        <line x1="6"  y1="26" x2="12" y2="26"/>
+        <line x1="40" y1="26" x2="46" y2="26"/>
+        <line x1="11" y1="11" x2="15" y2="15"/>
+        <line x1="37" y1="37" x2="41" y2="41"/>
+        <line x1="41" y1="11" x2="37" y2="15"/>
+        <line x1="15" y1="37" x2="11" y2="41"/>
+      </g>
+    </svg>`;
+  }
+
+  function cloudSVG(s) {
+    return `<svg width="${s}" height="${s}" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="22" cy="30" rx="13" ry="9" fill="#90CAF9"/>
+      <ellipse cx="32" cy="32" rx="11" ry="8" fill="#90CAF9"/>
+      <ellipse cx="16" cy="33" rx="9"  ry="7" fill="#90CAF9"/>
+    </svg>`;
+  }
+
+  function rainSVG(s) {
+    return `<svg width="${s}" height="${s}" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="22" cy="24" rx="13" ry="9" fill="#90CAF9"/>
+      <ellipse cx="32" cy="26" rx="11" ry="8" fill="#90CAF9"/>
+      <ellipse cx="16" cy="27" rx="9"  ry="7" fill="#90CAF9"/>
+      <g stroke="#90CAF9" stroke-width="2" stroke-linecap="round">
+        <line x1="18" y1="36" x2="16" y2="42"/>
+        <line x1="26" y1="36" x2="24" y2="42"/>
+        <line x1="34" y1="36" x2="32" y2="42"/>
+      </g>
+    </svg>`;
+  }
+
+  function getIcon(wmo, isDay, size) {
+    if (wmo === 0) return isDay ? sunSVG(size) : moonCloudSVG(size);
+    if (wmo <= 2)  return moonCloudSVG(size);
+    if (wmo <= 48) return cloudSVG(size);
+    return rainSVG(size);
+  }
+
+  function wmoText(wmo) {
+    if (wmo === 0) return 'Clear sky';
+    if (wmo === 1) return 'Mainly clear';
+    if (wmo === 2) return 'Partly cloudy';
+    if (wmo === 3) return 'Overcast';
+    if (wmo <= 48) return 'Foggy';
+    if (wmo <= 57) return 'Drizzle';
+    if (wmo <= 67) return 'Rain';
+    if (wmo <= 77) return 'Snow';
+    if (wmo <= 82) return 'Rain showers';
+    return 'Thunderstorm';
+  }
+
+  function windDir(deg) {
+    const dirs = ['↑','↗','→','↘','↓','↙','←','↖'];
+    return dirs[Math.round(deg / 45) % 8];
+  }
+
+  try {
+    const url = 'https://api.open-meteo.com/v1/forecast?latitude=10.8231&longitude=106.6297' +
+      '&current=temperature_2m,weathercode,windspeed_10m,winddirection_10m,is_day' +
+      '&hourly=temperature_2m,weathercode,windspeed_10m,winddirection_10m' +
+      '&timezone=Asia%2FHo_Chi_Minh&forecast_days=1';
+
+    const data = await fetch(url).then(r => r.json());
+    const cur  = data.current;
+
+    document.getElementById('wx-temp').textContent = Math.round(cur.temperature_2m) + '°C';
+    document.getElementById('wx-cond').textContent = wmoText(cur.weathercode);
+    document.getElementById('wx-icon-main').innerHTML = getIcon(cur.weathercode, cur.is_day, iconSize() * 1.2);
+
+    const times = data.hourly.time;
+    const temps = data.hourly.temperature_2m;
+    const wmos  = data.hourly.weathercode;
+    const wspds = data.hourly.windspeed_10m;
+    const wdirs = data.hourly.winddirection_10m;
+
+    const nowH  = now.getHours();
+    const slots = [];
+    for (let i = 0; i < times.length && slots.length < 5; i++) {
+      if (parseInt(times[i].split('T')[1]) >= nowH) slots.push(i);
+    }
+
+    document.getElementById('wx-hourly').innerHTML = slots.map(i => {
+      const hhmm  = times[i].split('T')[1].slice(0, 5);
+      const isDay = hhmm >= '06:00' && hhmm < '18:00';
+      return `<div class="wx-hour">
+        <span class="wx-hour-time">${hhmm}</span>
+        ${getIcon(wmos[i], isDay, iconSize())}
+        <span class="wx-hour-temp">${Math.round(temps[i])}°C</span>
+        <span class="wx-hour-wind">${windDir(wdirs[i])}${Math.round(wspds[i])}km/h</span>
+      </div>`;
+    }).join('');
+
+  } catch (e) {
+    document.getElementById('wx-temp').textContent = '—';
+    document.getElementById('wx-cond').textContent = 'Unable to load';
+  }
+})();
+
+/* ── COUNTDOWN ────────────────────────────────────────────────────── */
+const TARGET = new Date('2028-12-25T00:00:00');
+let prev = { years: -1, months: -1, weeks: -1, days: -1 };
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function calcCountdown() {
+  const now = new Date();
+  let years  = TARGET.getFullYear() - now.getFullYear();
+  let months = TARGET.getMonth()    - now.getMonth();
+  let days   = TARGET.getDate()     - now.getDate();
+
+  if (days < 0) {
+    months--;
+    const daysInPrev = new Date(TARGET.getFullYear(), TARGET.getMonth(), 0).getDate();
+    days += daysInPrev;
+  }
+  if (months < 0) { years--; months += 12; }
+
+  const weeks      = Math.floor(days / 7);
+  const remainDays = days % 7;
+  return { years, months, weeks, days: remainDays };
+}
+
+function animateCard(id) {
+  const card = document.getElementById('card-' + id);
+  card.classList.remove('flip');
+  void card.offsetWidth;
+  card.classList.add('flip');
+  setTimeout(() => card.classList.remove('flip'), 400);
+}
+
+function update() {
+  const { years, months, weeks, days } = calcCountdown();
+  if (years  !== prev.years)  { document.getElementById('years').textContent  = pad(years);  animateCard('years');  }
+  if (months !== prev.months) { document.getElementById('months').textContent = pad(months); animateCard('months'); }
+  if (weeks  !== prev.weeks)  { document.getElementById('weeks').textContent  = pad(weeks);  animateCard('weeks');  }
+  if (days   !== prev.days)   { document.getElementById('days').textContent   = pad(days);   animateCard('days');   }
+  prev = { years, months, weeks, days };
+}
+
+update();
+setInterval(update, 1000);
+</script>
+</body>
+</html>
