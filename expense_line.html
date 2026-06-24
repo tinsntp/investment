@@ -21,27 +21,22 @@
     flex-direction: column;
     justify-content: flex-end;
     padding: 0 3vw 3vw;
-    gap: 5vw;
   }
 
   .row {
     display: flex;
     align-items: center;
-    gap: 2vw;
+    gap: 2.5vw;
+    margin-bottom: 4vw;
   }
+  .row:last-child { margin-bottom: 0; }
 
-  /* arrow toggle (decorative) */
+  /* arrow */
   .arrow {
-    width: 2.2vw;
-    height: 2.2vw;
+    width: 2.2vw; height: 2.2vw;
     flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0.5;
+    opacity: 0.45;
   }
-
-  .arrow svg { width: 100%; height: 100%; }
 
   /* pill label */
   .pill {
@@ -49,14 +44,13 @@
     align-items: center;
     gap: 1vw;
     padding: 0.8vw 1.6vw;
-    border-radius: 0.7vw;
+    border-radius: 1.4vw;
     flex-shrink: 0;
-    min-width: 26vw;
+    min-width: 28vw;
   }
 
   .pill-dot {
-    width: 1.8vw;
-    height: 1.8vw;
+    width: 1.8vw; height: 1.8vw;
     border-radius: 50%;
     flex-shrink: 0;
   }
@@ -68,29 +62,25 @@
     white-space: nowrap;
   }
 
-  /* bar track */
-  .bar-track {
-    flex: 0 1 35vw;
-    height: 2.8vw;
-    background: rgba(255,255,255,0.08);
-    border-radius: 0.4vw;
-    overflow: hidden;
-    position: relative;
+  /* donut ring */
+  .ring-wrap {
+    flex-shrink: 0;
+    width: 8vw;
+    height: 8vw;
   }
 
-  .bar-fill {
+  .ring-wrap svg {
+    width: 100%;
     height: 100%;
-    border-radius: 0.4vw;
-    transition: width 0.6s ease;
+    transform: rotate(-90deg);
   }
 
   /* value */
   .bar-val {
-    flex-shrink: 0;
+    flex: 1;
     font-size: 3.2vw;
     font-weight: 500;
     color: rgba(255,255,255,0.75);
-    min-width: 22vw;
     text-align: right;
     white-space: nowrap;
   }
@@ -112,23 +102,17 @@
 <div id="bars"></div>
 
 <script>
-  // Tab 2 = gid 856261893 — change if your second sheet has a different gid
-  // To find the gid: open the sheet tab, look at the URL: ...#gid=XXXXXXX
   const CSV_URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1324702331`;
 
-  // Row colours matching screenshot: green, red/pink, deeper red
   const COLORS = [
-    { bg: '#1a3a2a', dot: '#2ECC71', bar: '#2ECC71' },
-    { bg: '#3a1a1a', dot: '#E74C3C', bar: '#E74C3C' },
-    { bg: '#4a1a2a', dot: '#C0392B', bar: '#C0392B' },
+    { bg: '#1a3a2a', dot: '#2ECC71', ring: '#2ECC71' },
+    { bg: '#3a1a1a', dot: '#E74C3C', ring: '#E74C3C' },
+    { bg: '#4a1a2a', dot: '#C0392B', ring: '#C0392B' },
   ];
 
   function fmt(v) {
     const a = Math.abs(v);
-    let s = a >= 1e6 ? (a/1e6).toFixed(1).replace(/\.0$/,'')+'M'
-          : a >= 1e3 ? Math.round(a/1e3)+'K'
-          : String(Math.round(a));
-    return (v < 0 ? '−' : '') + 'đ' + s;
+    return (v < 0 ? '−' : '') + 'đ' + Math.round(a).toLocaleString('en-US');
   }
 
   function splitCSVRow(row) {
@@ -150,6 +134,29 @@
     return parseFloat(s);
   }
 
+  function makeRing(pct, color) {
+    const r   = 40;
+    const cx  = 50, cy = 50;
+    const circ = 2 * Math.PI * r;
+    const dash = (pct / 100) * circ;
+    return `
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <!-- track -->
+        <circle cx="${cx}" cy="${cy}" r="${r}"
+          fill="none"
+          stroke="rgba(255,255,255,0.12)"
+          stroke-width="10"/>
+        <!-- progress -->
+        <circle cx="${cx}" cy="${cy}" r="${r}"
+          fill="none"
+          stroke="${color}"
+          stroke-width="10"
+          stroke-linecap="round"
+          stroke-dasharray="${dash} ${circ}"
+          stroke-dashoffset="0"/>
+      </svg>`;
+  }
+
   async function load() {
     try {
       const r = await fetch(CSV_URL + '&t=' + Date.now(), { cache: 'no-store' });
@@ -158,13 +165,10 @@
       const rows = text.trim().split('\n').filter(r => r.trim().length > 0);
       const data = rows.map(row => {
         const cols = splitCSVRow(row);
-        return {
-          name: cols[0].replace(/^"|"$/g,'').trim(),
-          val:  parseNum(cols[1])
-        };
+        return { name: cols[0].replace(/^"|"$/g,'').trim(), val: parseNum(cols[1]) };
       }).filter(d => d.name.length > 0 && !isNaN(d.val));
 
-      if (!data.length) throw new Error('No data in sheet tab 2.\nCheck gid= in the URL.');
+      if (!data.length) throw new Error('No data found.\nCheck sheet gid and column layout.');
       render(data);
     } catch(e) {
       const st = document.getElementById('status');
@@ -176,47 +180,35 @@
   function render(data) {
     document.getElementById('status').style.display = 'none';
     document.getElementById('bars').innerHTML = '';
-
     const maxAbs = Math.max(...data.map(d => Math.abs(d.val)));
 
     data.forEach(({ name, val }, i) => {
-      const c       = COLORS[i % COLORS.length];
-      const pct     = (Math.abs(val) / maxAbs * 100).toFixed(1);
-      const isPos   = val >= 0;
+      const c   = COLORS[i % COLORS.length];
+      const pct = Math.abs(val) / maxAbs * 100;
 
       const row = document.createElement('div');
       row.className = 'row';
 
       // arrow
-      row.innerHTML += `
-        <div class="arrow">
-          <svg viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <polygon points="3,2 8,5 3,8" fill="rgba(255,255,255,0.5)"/>
-          </svg>
-        </div>`;
+      row.innerHTML = `
+        <svg class="arrow" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="3,2 8,5 3,8" fill="rgba(255,255,255,0.5)"/>
+        </svg>`;
 
       // pill
       const pill = document.createElement('div');
       pill.className = 'pill';
       pill.style.background = c.bg;
       pill.innerHTML = `
-        <div class="pill-dot" style="background:${c.dot}; ${isPos ? '' : 'border-radius:2px;'}"></div>
-        <span class="pill-label">${name}</span>
-      `;
-      // dot shape: circle for positive, minus-bar for negative
-      if (!isPos) pill.querySelector('.pill-dot').style.borderRadius = '2px';
+        <div class="pill-dot" style="background:${c.dot};${val < 0 ? 'border-radius:2px;' : ''}"></div>
+        <span class="pill-label">${name}</span>`;
       row.appendChild(pill);
 
-      // bar track
-      const track = document.createElement('div');
-      track.className = 'bar-track';
-      const fill = document.createElement('div');
-      fill.className = 'bar-fill';
-      fill.style.width = pct + '%';
-      fill.style.background = c.bar;
-      fill.style.opacity = isPos ? '0.9' : '0.6';
-      track.appendChild(fill);
-      row.appendChild(track);
+      // donut ring
+      const ringWrap = document.createElement('div');
+      ringWrap.className = 'ring-wrap';
+      ringWrap.innerHTML = makeRing(pct, c.ring);
+      row.appendChild(ringWrap);
 
       // value
       const valEl = document.createElement('div');
