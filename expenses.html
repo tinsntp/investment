@@ -71,13 +71,13 @@
   }
 
   .donut-center-label {
-    font-size: 1.6vw;
+    font-size: 1.45vw;
     color: rgba(255,255,255,0.45);
     margin-bottom: 0.34vw;
   }
 
   .donut-center-val {
-    font-size: 2.5vw;
+    font-size: 2.31vw;
     font-weight: 700;
     color: #fff;
   }
@@ -109,20 +109,20 @@
 
   .list-name {
     flex: 1;
-    font-size: 2.6vw;
+    font-size: 2.54vw;
     font-weight: 600;
-    color: rgba(255,255,255,0.85);
+    color: #fff;
   }
 
   .list-val {
-    font-size: 2.6vw;
+    font-size: 2.54vw;
     font-weight: 600;
-    color: rgba(255,255,255,0.55);
+    color: rgba(255,255,255,0.85);
     white-space: nowrap;
   }
 
   #donut-status {
-    font-size: 1.9vw;
+    font-size: 1.7vw;
     color: rgba(255,255,255,0.4);
     text-align: center;
     padding: 1.7vw;
@@ -141,10 +141,10 @@
     margin-bottom: 2vw;
   }
 
-  .wx-city      { font-size: 3.2vw; font-weight: 700; color: #fff; line-height: 1.1; }
-  .wx-date      { font-size: 2.4vw; color: rgba(255,255,255,0.55); margin-top: 0.4vw; }
+  .wx-city      { font-size: 3.42vw; font-weight: 700; color: #fff; line-height: 1.1; }
+  .wx-date      { font-size: 2.2vw; color: rgba(255,255,255,0.55); margin-top: 0.4vw; }
   .wx-current   { display: flex; align-items: center; gap: 1vw; }
-  .wx-temp-big  { font-size: 3.2vw; font-weight: 700; color: #fff; line-height: 1; }
+  .wx-temp-big  { font-size: 3.8vw; font-weight: 700; color: #fff; line-height: 1; }
   .wx-cond      { font-size: 2vw; color: rgba(255,255,255,0.55); margin-top: 0.3vw; text-align: right; }
   .wx-hourly    { display: flex; overflow-x: auto; scrollbar-width: none; }
   .wx-hourly::-webkit-scrollbar { display: none; }
@@ -293,9 +293,9 @@
 const CSV_URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1324702331`;
 
 const PALETTE = [
-  { from: '#2ECC71', to: '#1aad5e', solid: '#2ECC71', glow: 'rgba(46,204,113,0.4)',  id: 'g0' }, // green  — Cashflow
-  { from: '#FF69B4', to: '#e0408a', solid: '#FF69B4', glow: 'rgba(255,105,180,0.4)', id: 'g1' }, // pink   — Expenses
-  { from: '#8B5CF6', to: '#6D3FD8', solid: '#8B5CF6', glow: 'rgba(139,92,246,0.4)',  id: 'g2' }, // purple — With Debts
+  { from: '#2ECC71', to: '#1aad5e', solid: '#2ECC71', glow: 'rgba(46,204,113,0.4)',  id: 'g0' },
+  { from: '#8B5CF6', to: '#6D3FD8', solid: '#8B5CF6', glow: 'rgba(139,92,246,0.4)', id: 'g1' },
+  { from: '#FF69B4', to: '#e0408a', solid: '#FF69B4', glow: 'rgba(255,105,180,0.4)',id: 'g2' },
 ];
 
 let activeIdx = null, globalData = [];
@@ -416,11 +416,28 @@ function renderDonut(data) {
   document.getElementById('donut-status').style.display = 'none';
 }
 
+function miniRing(pct, color) {
+  const r = 10, sw = 3, circ = 2 * Math.PI * r;
+  const dash = (pct / 100) * circ;       // filled arc length
+  const gap  = circ - dash;              // remaining arc length
+  // rotate(-90) starts arc at 12 o'clock; dashoffset=0 is correct after rotation
+  return `<svg width="2.8vw" height="2.8vw" viewBox="0 0 28 28" style="flex-shrink:0;width:2.8vw;height:2.8vw;">
+    <circle cx="14" cy="14" r="${r}" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="${sw}"/>
+    <circle cx="14" cy="14" r="${r}" fill="none" stroke="${color}" stroke-width="${sw}"
+      stroke-linecap="round"
+      stroke-dasharray="${dash} ${gap}"
+      stroke-dashoffset="0"
+      transform="rotate(-90 14 14)"/>
+  </svg>`;
+}
+
 function renderList(data) {
   const list = document.getElementById('list');
   list.innerHTML = '';
+  const total = data.reduce((s, d) => s + Math.abs(d.val), 0);
   data.forEach(({ name, val }, i) => {
-    const p = PALETTE[i % PALETTE.length];
+    const p   = PALETTE[i % PALETTE.length];
+    const pct = Math.abs(val) / total * 100;
     const row = document.createElement('div');
     row.className = 'list-row';
     const icons = [
@@ -431,7 +448,9 @@ function renderList(data) {
     row.innerHTML = `
       <img src="${icons[i % icons.length]}" style="width:2.89vw;height:2.89vw;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 0 3px ${p.glow});" />
       <div class="list-name">${name}</div>
-      <div class="list-val">${fmtFull(val)}</div>`;
+      <div class="list-val">${fmtFull(val)}</div>
+      ${miniRing(pct, p.solid)}
+      <div style="font-size:2.5vw;color:rgba(255,255,255,0.5);white-space:nowrap;flex-shrink:0;">${pct.toFixed(1)}%</div>`;
     row.addEventListener('click', () => highlightSegment(activeIdx === i ? null : i));
     list.appendChild(row);
   });
