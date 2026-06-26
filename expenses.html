@@ -33,6 +33,7 @@
     justify-content: flex-end;
     height: 100%;
     padding-bottom: 0;
+    padding-top: 8vw;
   }
 
   /* RIGHT column — weather + countdown */
@@ -48,10 +49,10 @@
 
   /* ── DONUT ── */
   #donut-wrap {
-    width: 35.7vw;
-    height: 35.7vw;
+    width: 25vw;
+    height: 25vw;
     position: relative;
-    margin: 0 auto 4vw auto;
+    margin: 0 auto 2vw auto;
     align-self: center;
     display: none;
   }
@@ -70,20 +71,20 @@
   }
 
   .donut-center-label {
-    font-size: 1.7vw;
+    font-size: 1.45vw;
     color: rgba(255,255,255,0.45);
-    margin-bottom: 0.4vw;
+    margin-bottom: 0.34vw;
   }
 
   .donut-center-val {
-    font-size: 2.72vw;
+    font-size: 2.31vw;
     font-weight: 700;
     color: #fff;
   }
 
   #list {
     width: 100%;
-    padding: 0 2.55vw;
+    padding: 0 2.17vw;
     display: flex;
     flex-direction: column;
   }
@@ -91,9 +92,9 @@
   .list-row {
     display: flex;
     align-items: center;
-    padding: 1.53vw 0;
+    padding: 1.3vw 0;
     border-bottom: 1px solid rgba(255,255,255,0.07);
-    gap: 1.7vw;
+    gap: 1.45vw;
     cursor: pointer;
     transition: opacity 0.2s;
   }
@@ -101,20 +102,20 @@
   .list-row.dimmed { opacity: 0.3; }
 
   .list-dot {
-    width: 1.7vw; height: 1.7vw;
+    width: 1.45vw; height: 1.45vw;
     border-radius: 50%;
     flex-shrink: 0;
   }
 
   .list-name {
     flex: 1;
-    font-size: 2.72vw;
+    font-size: 2.31vw;
     font-weight: 600;
     color: #fff;
   }
 
   .list-val {
-    font-size: 2.72vw;
+    font-size: 2.31vw;
     font-weight: 600;
     color: rgba(255,255,255,0.85);
     white-space: nowrap;
@@ -308,6 +309,11 @@ function fmtShort(v) {
   return (v < 0 ? '−' : '') + 'đ' + s;
 }
 
+function fmtFull(v) {
+  const a = Math.abs(v);
+  return (v < 0 ? '−' : '') + '₫' + Math.round(a).toLocaleString('en-US');
+}
+
 function splitCSVRow(row) {
   const cols = []; let cur = '', inQ = false;
   for (const ch of row) {
@@ -423,9 +429,9 @@ function renderList(data) {
       'https://raw.githubusercontent.com/tinsntp/investment/main/bank%20loan.png',
     ];
     row.innerHTML = `
-      <img src="${icons[i % icons.length]}" style="width:3.4vw;height:3.4vw;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 0 3px ${p.glow});" />
+      <img src="${icons[i % icons.length]}" style="width:2.89vw;height:2.89vw;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 0 3px ${p.glow});" />
       <div class="list-name">${name}</div>
-      <div class="list-val">${fmtShort(val)}</div>`;
+      <div class="list-val">${fmtFull(val)}</div>`;
     row.addEventListener('click', () => highlightSegment(activeIdx === i ? null : i));
     list.appendChild(row);
   });
