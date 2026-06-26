@@ -3,215 +3,569 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cashflow Bars</title>
+<title>Combined Widget</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   html, body {
-    width: 100%;
-    height: 100%;
-    background: transparent;
+    width: 100%; height: 100%;
+    background: #1a1a1a;
     font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
     color: #fff;
     overflow: hidden;
   }
 
+  /* ── Two-column layout ── */
   body {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    padding-bottom: 4vw;
+    gap: 0;
+  }
+
+  /* LEFT column — donut widget */
+  #col-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+    padding-bottom: 0;
+  }
+
+  /* RIGHT column — weather + countdown */
+  #col-right {
+    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    padding: 0 3vw 3vw;
-  }
-
-  .row {
-    display: grid;
-    grid-template-columns: 2.2vw auto 9vw 1fr;
-    align-items: center;
-    gap: 2.5vw;
-    margin-bottom: 16vw;
-  }
-  .row:last-child { margin-bottom: 0; }
-
-  /* arrow */
-  .arrow {
-    width: 2.2vw; height: 2.2vw;
-    flex-shrink: 0;
-    opacity: 0.45;
-  }
-
-  /* pill label */
-  .pill {
-    display: flex;
-    align-items: center;
-    padding: 0.8vw 1.6vw;
-    border-radius: 1.4vw;
-  }
-
-
-
-  .pill-label {
-    font-size: 5.5vw;
-    font-weight: 600;
-    color: #fff;
-    white-space: nowrap;
-  }
-
-  /* donut ring */
-  .ring-wrap {
-    width: 9vw;
-    height: 9vw;
-  }
-
-  .ring-wrap svg {
-    width: 100%;
     height: 100%;
-    transform: rotate(-90deg);
+    gap: 0;
+    padding-bottom: 0;
   }
 
-  /* value */
-  .bar-val {
-    font-size: 6.2vw;
-    font-weight: 500;
-    color: rgba(255,255,255,0.4);
-    white-space: nowrap;
-    text-align: right;
+  /* ── DONUT ── */
+  #donut-wrap {
+    width: 42vw;
+    height: 42vw;
+    position: relative;
+    margin: 0 auto 4vw auto;
+    align-self: center;
+    display: none;
   }
 
-  #status {
+  #donut-wrap svg {
+    width: 100%; height: 100%;
+    filter: drop-shadow(0 4px 24px rgba(0,0,0,0.5));
+  }
+
+  .donut-center {
     position: absolute;
     top: 50%; left: 50%;
-    transform: translate(-50%,-50%);
-    font-size: 1.8vw;
-    color: rgba(255,255,255,0.5);
+    transform: translate(-50%, -50%);
     text-align: center;
-    white-space: pre-line;
+    pointer-events: none;
+  }
+
+  .donut-center-label {
+    font-size: 2vw;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 0.5vw;
+  }
+
+  .donut-center-val {
+    font-size: 3.2vw;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  #list {
+    width: 100%;
+    padding: 0 3vw;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .list-row {
+    display: flex;
+    align-items: center;
+    padding: 1.8vw 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    gap: 2vw;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .list-row:last-child { border-bottom: none; }
+  .list-row.dimmed { opacity: 0.3; }
+
+  .list-dot {
+    width: 2vw; height: 2vw;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .list-name {
+    flex: 1;
+    font-size: 3.2vw;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .list-val {
+    font-size: 3.2vw;
+    font-weight: 600;
+    color: rgba(255,255,255,0.85);
+    white-space: nowrap;
+  }
+
+  #donut-status {
+    font-size: 2vw;
+    color: rgba(255,255,255,0.4);
+    text-align: center;
+    padding: 2vw;
+  }
+
+  /* ── WEATHER ── */
+  .wx {
+    padding: 0 3vw;
+    margin-bottom: 4vw;
+  }
+
+  .wx-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2vw;
+  }
+
+  .wx-city      { font-size: 3.8vw; font-weight: 700; color: #fff; line-height: 1.1; }
+  .wx-date      { font-size: 2.2vw; color: rgba(255,255,255,0.55); margin-top: 0.4vw; }
+  .wx-current   { display: flex; align-items: center; gap: 1vw; }
+  .wx-temp-big  { font-size: 3.8vw; font-weight: 700; color: #fff; line-height: 1; }
+  .wx-cond      { font-size: 2vw; color: rgba(255,255,255,0.55); margin-top: 0.3vw; text-align: right; }
+  .wx-hourly    { display: flex; overflow-x: auto; scrollbar-width: none; }
+  .wx-hourly::-webkit-scrollbar { display: none; }
+  .wx-hour      { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.6vw; padding: 0 0.5vw; }
+  .wx-hour-time { font-size: 2vw; color: rgba(255,255,255,0.5); }
+  .wx-hour-temp { font-size: 2.4vw; font-weight: 700; color: #fff; }
+  .wx-hour-wind { font-size: 1.8vw; color: rgba(255,255,255,0.5); }
+
+  /* ── COUNTDOWN ── */
+  .countdown {
+    display: flex;
+    gap: 2vw;
+    padding: 0 3vw;
+    justify-content: center;
+    align-items: flex-end;
+  }
+
+  .unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1vw;
+    flex: 1 1 0;
+  }
+
+  .card {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: #f5f5f5;
+    border-radius: 8%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+      0 0.5vw 1vw rgba(0,0,0,0.45),
+      0 0.1vw 0.3vw rgba(0,0,0,0.3),
+      inset 0 0.1vw 0 rgba(255,255,255,0.8);
+    overflow: hidden;
+  }
+
+  .card::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; top: 50%;
+    height: 1.5px;
+    background: rgba(0,0,0,0.12);
+    z-index: 2;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 50%;
+    background: rgba(0,0,0,0.04);
+    z-index: 1;
+    border-radius: 8% 8% 0 0;
+  }
+
+  .card-number {
+    font-size: 7vw;
+    font-weight: 400;
+    color: #222;
+    letter-spacing: -0.05em;
+    z-index: 3;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .label {
+    font-size: 2.2vw;
+    color: #aaa;
+    text-transform: capitalize;
+    letter-spacing: 0.03em;
+    font-weight: 450;
+    white-space: nowrap;
+  }
+
+  .card.flip .card-number { animation: flipNumber 0.4s ease-in-out; }
+
+  @keyframes flipNumber {
+    0%   { transform: rotateX(0deg);   opacity: 1; }
+    40%  { transform: rotateX(-90deg); opacity: 0; }
+    60%  { transform: rotateX(-90deg); opacity: 0; }
+    100% { transform: rotateX(0deg);   opacity: 1; }
   }
 </style>
 </head>
 <body>
 
-<div id="status">Loading…</div>
-<div id="bars"></div>
+<!-- LEFT: Donut -->
+<div id="col-left">
+  <div id="donut-status">Loading…</div>
+  <div id="donut-wrap">
+    <svg id="donut-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="donut-center">
+      <div class="donut-center-label" id="center-label">Total</div>
+      <div class="donut-center-val" id="center-val">—</div>
+    </div>
+  </div>
+  <div id="list"></div>
+</div>
+
+<!-- RIGHT: Weather + Countdown -->
+<div id="col-right">
+  <div class="wx">
+    <div class="wx-header">
+      <div>
+        <div class="wx-city">Ho Chi Minh City</div>
+        <div class="wx-date" id="wx-date"></div>
+      </div>
+      <div class="wx-current">
+        <div>
+          <div class="wx-temp-big" id="wx-temp">—</div>
+          <div class="wx-cond" id="wx-cond">—</div>
+        </div>
+        <div id="wx-icon-main"></div>
+      </div>
+    </div>
+    <div class="wx-hourly" id="wx-hourly"></div>
+  </div>
+
+  <div class="countdown">
+    <div class="unit">
+      <div class="card" id="card-years"><span class="card-number" id="years">00</span></div>
+      <span class="label">Years</span>
+    </div>
+    <div class="unit">
+      <div class="card" id="card-months"><span class="card-number" id="months">00</span></div>
+      <span class="label">Months</span>
+    </div>
+    <div class="unit">
+      <div class="card" id="card-weeks"><span class="card-number" id="weeks">00</span></div>
+      <span class="label">Weeks</span>
+    </div>
+    <div class="unit">
+      <div class="card" id="card-days"><span class="card-number" id="days">00</span></div>
+      <span class="label">Days</span>
+    </div>
+  </div>
+</div>
 
 <script>
-  const CSV_URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1324702331`;
+/* ── DONUT ──────────────────────────────────────────────────────────── */
+const CSV_URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1324702331`;
 
-  const COLORS = [
-    { bg: '#1a3a2a', dot: '#2ECC71', ring: '#2ECC71' },
-    { bg: '#3a1a1a', dot: '#E74C3C', ring: '#E74C3C' },
-    { bg: '#4a1a2a', dot: '#C0392B', ring: '#C0392B' },
-  ];
+const PALETTE = [
+  { from: '#2ECC71', to: '#1aad5e', solid: '#2ECC71', glow: 'rgba(46,204,113,0.4)',  id: 'g0' },
+  { from: '#8B5CF6', to: '#6D3FD8', solid: '#8B5CF6', glow: 'rgba(139,92,246,0.4)', id: 'g1' },
+  { from: '#FF69B4', to: '#e0408a', solid: '#FF69B4', glow: 'rgba(255,105,180,0.4)',id: 'g2' },
+];
 
-  function fmt(v) {
-    const a = Math.abs(v);
-    return (v < 0 ? '−' : '') + '₫' + Math.round(a).toLocaleString('en-US');
+let activeIdx = null, globalData = [];
+
+function fmtShort(v) {
+  const a = Math.abs(v);
+  const s = a >= 1e9 ? (a/1e9).toFixed(1)+'B'
+          : a >= 1e6 ? (a/1e6).toFixed(1)+'M'
+          : a >= 1e3 ? Math.round(a/1e3)+'K'
+          : String(Math.round(a));
+  return (v < 0 ? '−' : '') + 'đ' + s;
+}
+
+function splitCSVRow(row) {
+  const cols = []; let cur = '', inQ = false;
+  for (const ch of row) {
+    if (ch === '"') inQ = !inQ;
+    else if (ch === ',' && !inQ) { cols.push(cur); cur = ''; }
+    else cur += ch;
   }
+  cols.push(cur);
+  return cols;
+}
 
-  function splitCSVRow(row) {
-    const cols = []; let cur = '', inQ = false;
-    for (const ch of row) {
-      if (ch === '"') inQ = !inQ;
-      else if (ch === ',' && !inQ) { cols.push(cur); cur = ''; }
-      else cur += ch;
-    }
-    cols.push(cur);
-    return cols;
-  }
+function parseNum(str) {
+  if (!str) return NaN;
+  let s = str.trim();
+  if (/^\(.*\)$/.test(s)) s = '-' + s.slice(1,-1);
+  s = s.replace(/[\u2212\u2013\u2014]/g, '-').replace(/[^0-9.\-]/g, '');
+  return parseFloat(s);
+}
 
-  function parseNum(str) {
-    if (!str) return NaN;
-    let s = str.trim();
-    if (/^\(.*\)$/.test(s)) s = '-' + s.slice(1,-1);
-    s = s.replace(/[\u2212\u2013\u2014]/g, '-').replace(/[^0-9.\-]/g, '');
-    return parseFloat(s);
-  }
+function arcPath(cx, cy, r, startAngle, endAngle) {
+  const toRad = a => (a - 90) * Math.PI / 180;
+  const x1 = cx + r * Math.cos(toRad(startAngle));
+  const y1 = cy + r * Math.sin(toRad(startAngle));
+  const x2 = cx + r * Math.cos(toRad(endAngle));
+  const y2 = cy + r * Math.sin(toRad(endAngle));
+  const large = (endAngle - startAngle) > 180 ? 1 : 0;
+  return `M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2}`;
+}
 
-  function makeRing(pct, color) {
-    const r   = 40;
-    const cx  = 50, cy = 50;
-    const circ = 2 * Math.PI * r;
-    const dash = (pct / 100) * circ;
-    return `
-      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <!-- track -->
-        <circle cx="${cx}" cy="${cy}" r="${r}"
-          fill="none"
-          stroke="rgba(255,255,255,0.12)"
-          stroke-width="10"/>
-        <!-- progress -->
-        <circle cx="${cx}" cy="${cy}" r="${r}"
-          fill="none"
-          stroke="${color}"
-          stroke-width="10"
-          stroke-linecap="round"
-          stroke-dasharray="${dash} ${circ}"
-          stroke-dashoffset="0"/>
-      </svg>`;
-  }
+function setCenter(label, val) {
+  document.getElementById('center-label').textContent = label;
+  document.getElementById('center-val').textContent   = val;
+}
 
-  async function load() {
-    try {
-      const r = await fetch(CSV_URL + '&t=' + Date.now(), { cache: 'no-store' });
-      if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      const text = await r.text();
-      const rows = text.trim().split('\n').filter(r => r.trim().length > 0);
-      const data = rows.map(row => {
-        const cols = splitCSVRow(row);
-        return { name: cols[0].replace(/^"|"$/g,'').trim(), val: parseNum(cols[1]) };
-      }).filter(d => d.name.length > 0 && !isNaN(d.val));
+function highlightSegment(idx) {
+  activeIdx = idx;
+  document.querySelectorAll('.seg').forEach((el, i) => {
+    el.style.opacity = (idx === null || i === idx) ? '1' : '0.2';
+    el.setAttribute('stroke-width', (idx !== null && i === idx) ? '32' : '28');
+  });
+  document.querySelectorAll('.list-row').forEach((el, i) => {
+    el.classList.toggle('dimmed', idx !== null && i !== idx);
+  });
+  if (idx === null) setCenter('Total', fmtShort(globalData.reduce((s,d) => s + d.val, 0)));
+  else setCenter(globalData[idx].name, fmtShort(globalData[idx].val));
+}
 
-      if (!data.length) throw new Error('No data found.\nCheck sheet gid and column layout.');
-      render(data);
-    } catch(e) {
-      const st = document.getElementById('status');
-      if (st) { st.style.display = 'block'; st.textContent = `⚠ ${e.message}`; }
-      else { document.getElementById('bars').innerHTML = `<div style="color:rgba(255,255,255,0.4);font-size:1.8vw;text-align:center;padding:2vw">⚠ ${e.message}</div>`; }
-    }
-  }
+function renderDonut(data) {
+  const svg = document.getElementById('donut-svg');
+  svg.innerHTML = '';
+  const total = data.reduce((s, d) => s + Math.abs(d.val), 0);
+  const cx = 100, cy = 100, r = 78, strokeW = 28, GAP = 4;
 
-  function render(data) {
-    document.getElementById('status').style.display = 'none';
-    document.getElementById('bars').innerHTML = '';
-    const maxAbs = Math.max(...data.map(d => Math.abs(d.val)));
-
-    data.forEach(({ name, val }, i) => {
-      const c   = COLORS[i % COLORS.length];
-      const pct = Math.abs(val) / maxAbs * 100;
-
-      const row = document.createElement('div');
-      row.className = 'row';
-
-      // arrow
-      row.innerHTML = `
-        <svg class="arrow" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <polygon points="3,2 8,5 3,8" fill="rgba(255,255,255,0.5)"/>
-        </svg>`;
-
-      // pill
-      const pill = document.createElement('div');
-      pill.className = 'pill';
-      pill.style.background = c.bg;
-      pill.innerHTML = `<span class="pill-label">${name}</span>`;
-      row.appendChild(pill);
-
-      // donut ring
-      const ringWrap = document.createElement('div');
-      ringWrap.className = 'ring-wrap';
-      ringWrap.innerHTML = makeRing(pct, c.ring);
-      row.appendChild(ringWrap);
-
-      // value
-      const valEl = document.createElement('div');
-      valEl.className = 'bar-val';
-      valEl.textContent = fmt(val);
-      row.appendChild(valEl);
-
-      document.getElementById('bars').appendChild(row);
+  const defs = document.createElementNS('http://www.w3.org/2000/svg','defs');
+  PALETTE.forEach(p => {
+    const grad = document.createElementNS('http://www.w3.org/2000/svg','linearGradient');
+    grad.setAttribute('id', p.id);
+    grad.setAttribute('x1','0%'); grad.setAttribute('y1','0%');
+    grad.setAttribute('x2','100%'); grad.setAttribute('y2','100%');
+    [['0%', p.from],['100%', p.to]].forEach(([off, col]) => {
+      const stop = document.createElementNS('http://www.w3.org/2000/svg','stop');
+      stop.setAttribute('offset', off); stop.setAttribute('stop-color', col);
+      grad.appendChild(stop);
     });
-  }
+    defs.appendChild(grad);
+  });
+  svg.appendChild(defs);
 
-  load();
-  setInterval(load, 6000);
+  const track = document.createElementNS('http://www.w3.org/2000/svg','circle');
+  track.setAttribute('cx', cx); track.setAttribute('cy', cy); track.setAttribute('r', r);
+  track.setAttribute('fill','none');
+  track.setAttribute('stroke','rgba(255,255,255,0.06)');
+  track.setAttribute('stroke-width', strokeW);
+  svg.appendChild(track);
+
+  let angle = 0;
+  data.forEach(({ val }, i) => {
+    const pct   = Math.abs(val) / total;
+    const sweep = pct * 360 - GAP;
+    if (sweep <= 0) { angle += pct * 360; return; }
+
+    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d', arcPath(cx, cy, r, angle, angle + sweep));
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', `url(#${PALETTE[i % PALETTE.length].id})`);
+    path.setAttribute('stroke-width', strokeW);
+    path.setAttribute('stroke-linecap', 'round');
+    path.setAttribute('class', 'seg');
+    path.setAttribute('data-idx', i);
+    path.style.cursor = 'pointer';
+    path.style.transition = 'opacity 0.25s, stroke-width 0.2s';
+    path.addEventListener('click', (e) => { e.stopPropagation(); highlightSegment(activeIdx === i ? null : i); });
+    svg.appendChild(path);
+    angle += pct * 360;
+  });
+
+  svg.addEventListener('click', () => highlightSegment(null));
+  setCenter('Total', fmtShort(data.reduce((s,d) => s + d.val, 0)));
+  document.getElementById('donut-wrap').style.display = 'flex';
+  document.getElementById('donut-status').style.display = 'none';
+}
+
+function renderList(data) {
+  const list = document.getElementById('list');
+  list.innerHTML = '';
+  data.forEach(({ name, val }, i) => {
+    const p = PALETTE[i % PALETTE.length];
+    const row = document.createElement('div');
+    row.className = 'list-row';
+    row.innerHTML = `
+      <div class="list-dot" style="background:${p.solid};box-shadow:0 0 6px ${p.glow};"></div>
+      <div class="list-name">${name}</div>
+      <div class="list-val">${fmtShort(val)}</div>`;
+    row.addEventListener('click', () => highlightSegment(activeIdx === i ? null : i));
+    list.appendChild(row);
+  });
+}
+
+async function loadDonut() {
+  try {
+    const r = await fetch(CSV_URL + '&t=' + Date.now(), { cache: 'no-store' });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const text = await r.text();
+    const rows = text.trim().split('\n').filter(r => r.trim());
+    const data = rows.map(row => {
+      const cols = splitCSVRow(row);
+      return { name: cols[0].replace(/^"|"$/g,'').trim(), val: parseNum(cols[1]) };
+    }).filter(d => d.name && !isNaN(d.val));
+    if (!data.length) throw new Error('No data found.');
+    globalData = data;
+    renderDonut(data);
+    renderList(data);
+  } catch(e) {
+    document.getElementById('donut-status').textContent = `⚠ ${e.message}`;
+  }
+}
+
+loadDonut();
+setInterval(loadDonut, 60000);
+
+/* ── WEATHER ────────────────────────────────────────────────────────── */
+(async () => {
+  const days   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const now    = new Date();
+  document.getElementById('wx-date').textContent = `${months[now.getMonth()]} ${now.getDate()} ${days[now.getDay()]}`;
+
+  function iconSize() { return Math.round(window.innerWidth * 0.045); }
+
+  function moonCloudSVG(s) {
+    return `<svg width="${s}" height="${s}" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M36 10 C36 21 27 28 17 26 C19 33 26 38 34 36 C43 34 47 25 44 17 C41 11 38 9 36 10Z" fill="#F5A623"/>
+      <ellipse cx="22" cy="37" rx="12" ry="8" fill="#90CAF9"/>
+      <ellipse cx="30" cy="39" rx="10" ry="7" fill="#90CAF9"/>
+      <ellipse cx="16" cy="39" rx="8"  ry="6" fill="#90CAF9"/>
+    </svg>`;
+  }
+  function sunSVG(s) {
+    return `<svg width="${s}" height="${s}" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="26" cy="26" r="10" fill="#F5A623"/>
+      <g stroke="#F5A623" stroke-width="2.5" stroke-linecap="round">
+        <line x1="26" y1="6" x2="26" y2="12"/><line x1="26" y1="40" x2="26" y2="46"/>
+        <line x1="6" y1="26" x2="12" y2="26"/><line x1="40" y1="26" x2="46" y2="26"/>
+        <line x1="11" y1="11" x2="15" y2="15"/><line x1="37" y1="37" x2="41" y2="41"/>
+        <line x1="41" y1="11" x2="37" y2="15"/><line x1="15" y1="37" x2="11" y2="41"/>
+      </g></svg>`;
+  }
+  function cloudSVG(s) {
+    return `<svg width="${s}" height="${s}" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="22" cy="30" rx="13" ry="9" fill="#90CAF9"/>
+      <ellipse cx="32" cy="32" rx="11" ry="8" fill="#90CAF9"/>
+      <ellipse cx="16" cy="33" rx="9"  ry="7" fill="#90CAF9"/></svg>`;
+  }
+  function rainSVG(s) {
+    return `<svg width="${s}" height="${s}" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="22" cy="24" rx="13" ry="9" fill="#90CAF9"/>
+      <ellipse cx="32" cy="26" rx="11" ry="8" fill="#90CAF9"/>
+      <ellipse cx="16" cy="27" rx="9"  ry="7" fill="#90CAF9"/>
+      <g stroke="#90CAF9" stroke-width="2" stroke-linecap="round">
+        <line x1="18" y1="36" x2="16" y2="42"/><line x1="26" y1="36" x2="24" y2="42"/>
+        <line x1="34" y1="36" x2="32" y2="42"/>
+      </g></svg>`;
+  }
+  function getIcon(wmo, isDay, size) {
+    if (wmo === 0) return isDay ? sunSVG(size) : moonCloudSVG(size);
+    if (wmo <= 2)  return moonCloudSVG(size);
+    if (wmo <= 48) return cloudSVG(size);
+    return rainSVG(size);
+  }
+  function wmoText(wmo) {
+    if (wmo === 0) return 'Clear sky';   if (wmo === 1) return 'Mainly clear';
+    if (wmo === 2) return 'Partly cloudy'; if (wmo === 3) return 'Overcast';
+    if (wmo <= 48) return 'Foggy';       if (wmo <= 57) return 'Drizzle';
+    if (wmo <= 67) return 'Rain';        if (wmo <= 77) return 'Snow';
+    if (wmo <= 82) return 'Rain showers'; return 'Thunderstorm';
+  }
+  function windDir(deg) {
+    return ['↑','↗','→','↘','↓','↙','←','↖'][Math.round(deg / 45) % 8];
+  }
+  try {
+    const url = 'https://api.open-meteo.com/v1/forecast?latitude=10.8231&longitude=106.6297' +
+      '&current=temperature_2m,weathercode,windspeed_10m,winddirection_10m,is_day' +
+      '&hourly=temperature_2m,weathercode,windspeed_10m,winddirection_10m' +
+      '&timezone=Asia%2FHo_Chi_Minh&forecast_days=1';
+    const data = await fetch(url).then(r => r.json());
+    const cur  = data.current;
+    document.getElementById('wx-temp').textContent = Math.round(cur.temperature_2m) + '°C';
+    document.getElementById('wx-cond').textContent = wmoText(cur.weathercode);
+    document.getElementById('wx-icon-main').innerHTML = getIcon(cur.weathercode, cur.is_day, iconSize() * 1.2);
+    const times = data.hourly.time, temps = data.hourly.temperature_2m;
+    const wmos  = data.hourly.weathercode, wspds = data.hourly.windspeed_10m, wdirs = data.hourly.winddirection_10m;
+    const nowH  = now.getHours(), slots = [];
+    for (let i = 0; i < times.length && slots.length < 5; i++) {
+      if (parseInt(times[i].split('T')[1]) >= nowH) slots.push(i);
+    }
+    document.getElementById('wx-hourly').innerHTML = slots.map(i => {
+      const hhmm = times[i].split('T')[1].slice(0,5);
+      return `<div class="wx-hour">
+        <span class="wx-hour-time">${hhmm}</span>
+        ${getIcon(wmos[i], hhmm>='06:00'&&hhmm<'18:00', iconSize())}
+        <span class="wx-hour-temp">${Math.round(temps[i])}°C</span>
+        <span class="wx-hour-wind">${windDir(wdirs[i])}${Math.round(wspds[i])}km/h</span>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    document.getElementById('wx-temp').textContent = '—';
+    document.getElementById('wx-cond').textContent = 'Unable to load';
+  }
+})();
+
+/* ── COUNTDOWN ──────────────────────────────────────────────────────── */
+const TARGET = new Date('2028-12-25T00:00:00');
+let prev = { years: -1, months: -1, weeks: -1, days: -1 };
+function pad(n) { return String(n).padStart(2,'0'); }
+function calcCountdown() {
+  const now = new Date();
+  let years = TARGET.getFullYear() - now.getFullYear();
+  let months = TARGET.getMonth() - now.getMonth();
+  let days = TARGET.getDate() - now.getDate();
+  if (days < 0) { months--; days += new Date(TARGET.getFullYear(), TARGET.getMonth(), 0).getDate(); }
+  if (months < 0) { years--; months += 12; }
+  return { years, months, weeks: Math.floor(days/7), days: days%7 };
+}
+function animateCard(id) {
+  const card = document.getElementById('card-'+id);
+  card.classList.remove('flip'); void card.offsetWidth; card.classList.add('flip');
+  setTimeout(() => card.classList.remove('flip'), 400);
+}
+function update() {
+  const { years, months, weeks, days } = calcCountdown();
+  if (years  !== prev.years)  { document.getElementById('years').textContent  = pad(years);  animateCard('years');  }
+  if (months !== prev.months) { document.getElementById('months').textContent = pad(months); animateCard('months'); }
+  if (weeks  !== prev.weeks)  { document.getElementById('weeks').textContent  = pad(weeks);  animateCard('weeks');  }
+  if (days   !== prev.days)   { document.getElementById('days').textContent   = pad(days);   animateCard('days');   }
+  prev = { years, months, weeks, days };
+}
+update();
+setInterval(update, 1000);
 </script>
 </body>
 </html>
