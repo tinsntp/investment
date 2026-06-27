@@ -238,8 +238,6 @@
 </head>
 <body>
 
-<div id="debug-width" style="position:fixed;top:0;left:0;background:rgba(255,0,0,0.7);color:#fff;font-size:14px;padding:4px 8px;z-index:9999;pointer-events:none;"></div>
-
 <!-- LEFT: Donut -->
 <div id="col-left">
   <div id="donut-status">Loading…</div>
@@ -606,13 +604,11 @@ setInterval(update, 1000);
 /* ── Responsive layout (JS-based, reliable in Notion iframes) ── */
 function applyLayout() {
   const w = window.innerWidth;
-  const dbg = document.getElementById('debug-width');
-  if (dbg) dbg.textContent = 'w=' + w + 'px';
   const colRight = document.getElementById('col-right');
   const colLeft  = document.getElementById('col-left');
   const donutWrap = document.getElementById('donut-wrap');
 
-  if (w < 600) {
+  if (w < 400) {
     // Mobile: hide right, scale left 80% larger
     colRight.style.display = 'none';
     colLeft.style.flex = '1';
