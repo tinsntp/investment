@@ -456,6 +456,8 @@ function renderList(data) {
     row.addEventListener('click', () => highlightSegment(activeIdx === i ? null : i));
     list.appendChild(row);
   });
+  // Apply responsive sizing after list is fully rendered
+  applyLayout();
 }
 
 async function loadDonut() {
@@ -679,8 +681,7 @@ function applyLayout() {
 
 // Run on load and on resize
 window.addEventListener('resize', applyLayout);
-// Delay slightly so donut/list are rendered first
-setTimeout(applyLayout, 300);
+// Initial layout applied from within renderList after DOM is ready
 </script>
 </body>
 </html>
