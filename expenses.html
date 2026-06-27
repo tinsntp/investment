@@ -111,13 +111,13 @@
     flex: 1;
     font-size: 2.54vw;
     font-weight: 600;
-    color: #fff;
+    color: rgba(255,255,255,0.85);
   }
 
   .list-val {
     font-size: 2.54vw;
     font-weight: 600;
-    color: rgba(255,255,255,0.85);
+    color: rgba(255,255,255,0.55);
     white-space: nowrap;
   }
 
@@ -455,8 +455,8 @@ function renderDrill(items, title, color) {
   // Back button
   const header = document.createElement('div');
   header.style.cssText = 'display:flex;align-items:center;gap:1vw;padding:1vw 0 1.5vw;cursor:pointer;';
-  header.innerHTML = `<span style="font-size:1.5vw;color:rgba(255,255,255,0.5);">←</span>
-    <span style="font-size:1.5vw;font-weight:700;color:${color};">${title}</span>`;
+  header.innerHTML = `<span style="font-size:2.5vw;color:rgba(255,255,255,0.5);">←</span>
+    <span style="font-size:2.5vw;font-weight:700;color:${color};">${title}</span>`;
   header.addEventListener('click', () => {
     drillMode = false;
     activeIdx = null;
@@ -481,7 +481,7 @@ function renderDrill(items, title, color) {
     row.className = 'list-row';
     row.style.cursor = 'default';
     row.innerHTML = `
-      <img src="${icon}" style="width:2vw;height:2vw;object-fit:contain;flex-shrink:0;" />
+      <img src="${icon}" style="width:2.89vw;height:2.89vw;object-fit:contain;flex-shrink:0;" />
       <div class="list-name" style="font-size:${fs};">${name}</div>
       <div class="list-val" style="font-size:${fs};">${displayVal}</div>
       <svg viewBox="0 0 28 28" style="flex-shrink:0;width:${ringSize};height:${ringSize};">
@@ -547,7 +547,7 @@ function renderList(data) {
           // After filtering blanks: index 7=Standard Chartered, index 8=Shinhan
           const debtRaw = t1.slice(7, 9).filter(d => d.name && !isNaN(d.val));
           const debtItems = debtRaw.map((d, idx) => ({ ...d, icon: debtIcons[idx] }));
-          renderDrill(debtItems, 'With Debts', PALETTE[2].solid);
+          renderDrill(debtItems, 'Debts', PALETTE[2].solid);
         } catch(e) { console.error(e); }
       } else {
         highlightSegment(activeIdx === i ? null : i);
