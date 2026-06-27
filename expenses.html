@@ -529,10 +529,9 @@ function renderList(data) {
             'https://github.com/tinsntp/investment/blob/main/shop.png?raw=true',
             'https://github.com/tinsntp/investment/blob/main/heart.png?raw=true',
             'https://github.com/tinsntp/investment/blob/main/transaction.png?raw=true',
-            'https://github.com/tinsntp/investment/blob/main/shield.png?raw=true',
             'https://github.com/tinsntp/investment/blob/main/house.png?raw=true',
           ];
-          const expItems = t1.slice(0, 5).map((d, idx) => ({ ...d, icon: expIcons[idx] }));
+          const expItems = t1.slice(0, 4).map((d, idx) => ({ ...d, icon: expIcons[idx] }));
           renderDrill(expItems, 'Expenses', PALETTE[1].solid);
         } catch(e) { console.error(e); }
       } else if (i === 2) {
@@ -544,8 +543,8 @@ function renderList(data) {
             'https://github.com/tinsntp/investment/blob/main/sc.png?raw=true',
             'https://github.com/tinsntp/investment/blob/main/shinhan.png?raw=true',
           ];
-          // After filtering blanks: index 7=Standard Chartered, index 8=Shinhan
-          const debtRaw = t1.slice(7, 9).filter(d => d.name && !isNaN(d.val));
+          // After filtering blanks: index 6=Standard Chartered, index 8=Shinhan
+          const debtRaw = t1.slice(6, 8).filter(d => d.name && !isNaN(d.val));
           const debtItems = debtRaw.map((d, idx) => ({ ...d, icon: debtIcons[idx] }));
           renderDrill(debtItems, 'Debts', PALETTE[2].solid);
         } catch(e) { console.error(e); }
