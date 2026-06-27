@@ -226,22 +226,7 @@
 
   .card.flip .card-number { animation: flipNumber 0.4s ease-in-out; }
 
-  /* ── Responsive: hide right column on narrow iframes (phones) ── */
-  @media (max-width: 520px) {
-    #col-right { display: none; }
-    body       { justify-content: flex-end; }
-    #col-left  { flex: 1; padding-top: 4vw; }
 
-    /* Donut 60% larger: 25vw * 1.6 = 40vw */
-    #donut-wrap         { width: 40vw; height: 40vw; }
-    .donut-center-label { font-size: 2.32vw; }
-    .donut-center-val   { font-size: 3.7vw; }
-    #list               { padding: 0 3.47vw; }
-    .list-row           { padding: 2.08vw 0; gap: 2.32vw; }
-    .list-name          { font-size: 4.06vw; }
-    .list-val           { font-size: 4.06vw; }
-    #donut-status       { font-size: 2.72vw; }
-  }
 
   @keyframes flipNumber {
     0%   { transform: rotateX(0deg);   opacity: 1; }
@@ -613,6 +598,80 @@ function update() {
 }
 update();
 setInterval(update, 1000);
+
+/* ── Responsive layout (JS-based, reliable in Notion iframes) ── */
+function applyLayout() {
+  const w = window.innerWidth;
+  const colRight = document.getElementById('col-right');
+  const colLeft  = document.getElementById('col-left');
+  const donutWrap = document.getElementById('donut-wrap');
+
+  if (w < 600) {
+    // Mobile: hide right, scale left 70% larger
+    colRight.style.display = 'none';
+    colLeft.style.flex = '1';
+    colLeft.style.paddingTop = '4vw';
+
+    // Donut: 25vw * 1.7 = 42.5vw
+    donutWrap.style.width  = '42.5vw';
+    donutWrap.style.height = '42.5vw';
+
+    document.querySelector('.donut-center-label').style.fontSize = '2.47vw';
+    document.querySelector('.donut-center-val').style.fontSize   = '3.93vw';
+    document.getElementById('list').style.padding = '0 3.69vw';
+
+    document.querySelectorAll('.list-row').forEach(el => {
+      el.style.padding = '2.21vw 0';
+      el.style.gap     = '2.47vw';
+    });
+    document.querySelectorAll('.list-name').forEach(el => el.style.fontSize = '4.32vw');
+    document.querySelectorAll('.list-val').forEach(el  => el.style.fontSize = '4.32vw');
+
+    // Mini rings: 2.8vw * 1.7 = 4.76vw
+    document.querySelectorAll('#list svg').forEach(el => {
+      el.style.width  = '4.76vw';
+      el.style.height = '4.76vw';
+    });
+
+    // Percentage labels
+    document.querySelectorAll('#list .list-row > div:last-child').forEach(el => {
+      el.style.fontSize = '4.25vw';
+    });
+
+  } else {
+    // Tablet/desktop: show both columns, reset to default sizes
+    colRight.style.display = 'flex';
+    colLeft.style.paddingTop = '8vw';
+
+    donutWrap.style.width  = '25vw';
+    donutWrap.style.height = '25vw';
+
+    document.querySelector('.donut-center-label').style.fontSize = '1.45vw';
+    document.querySelector('.donut-center-val').style.fontSize   = '2.31vw';
+    document.getElementById('list').style.padding = '0 2.17vw';
+
+    document.querySelectorAll('.list-row').forEach(el => {
+      el.style.padding = '1.3vw 0';
+      el.style.gap     = '1.45vw';
+    });
+    document.querySelectorAll('.list-name').forEach(el => el.style.fontSize = '2.54vw');
+    document.querySelectorAll('.list-val').forEach(el  => el.style.fontSize = '2.54vw');
+
+    document.querySelectorAll('#list svg').forEach(el => {
+      el.style.width  = '2.8vw';
+      el.style.height = '2.8vw';
+    });
+
+    document.querySelectorAll('#list .list-row > div:last-child').forEach(el => {
+      el.style.fontSize = '2.5vw';
+    });
+  }
+}
+
+// Run on load and on resize
+window.addEventListener('resize', applyLayout);
+// Delay slightly so donut/list are rendered first
+setTimeout(applyLayout, 300);
 </script>
 </body>
 </html>
