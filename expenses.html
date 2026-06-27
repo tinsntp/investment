@@ -607,35 +607,44 @@ function applyLayout() {
   const donutWrap = document.getElementById('donut-wrap');
 
   if (w < 600) {
-    // Mobile: hide right, scale left 70% larger
+    // Mobile: hide right, scale left 80% larger
     colRight.style.display = 'none';
     colLeft.style.flex = '1';
     colLeft.style.paddingTop = '4vw';
 
-    // Donut: 25vw * 1.7 = 42.5vw
-    donutWrap.style.width  = '42.5vw';
-    donutWrap.style.height = '42.5vw';
+    // Donut: 25vw * 1.8 = 45vw
+    donutWrap.style.width  = '45vw';
+    donutWrap.style.height = '45vw';
 
-    document.querySelector('.donut-center-label').style.fontSize = '2.47vw';
-    document.querySelector('.donut-center-val').style.fontSize   = '3.93vw';
-    document.getElementById('list').style.padding = '0 3.69vw';
+    document.querySelector('.donut-center-label').style.fontSize = '2.61vw';
+    document.querySelector('.donut-center-val').style.fontSize   = '4.16vw';
+    document.getElementById('list').style.padding = '0 3.91vw';
 
     document.querySelectorAll('.list-row').forEach(el => {
-      el.style.padding = '2.21vw 0';
-      el.style.gap     = '2.47vw';
+      el.style.padding = '2.34vw 0';
+      el.style.gap     = '2.61vw';
     });
-    document.querySelectorAll('.list-name').forEach(el => el.style.fontSize = '4.32vw');
-    document.querySelectorAll('.list-val').forEach(el  => el.style.fontSize = '4.32vw');
+    document.querySelectorAll('.list-name').forEach(el => el.style.fontSize = '4.57vw');
+    document.querySelectorAll('.list-val').forEach(el  => el.style.fontSize = '4.57vw');
 
-    // Mini rings: 2.8vw * 1.7 = 4.76vw
+    // Icons: 2.89vw * 1.8 = 5.2vw
+    document.querySelectorAll('#list img').forEach(el => {
+      el.style.width  = '5.2vw';
+      el.style.height = '5.2vw';
+    });
+
+    // Mini rings: 2.8vw * 1.8 = 5.04vw — set both attribute and style
     document.querySelectorAll('#list svg').forEach(el => {
-      el.style.width  = '4.76vw';
-      el.style.height = '4.76vw';
+      el.style.width  = '5.04vw';
+      el.style.height = '5.04vw';
+      el.setAttribute('width',  '5.04vw');
+      el.setAttribute('height', '5.04vw');
     });
 
-    // Percentage labels
-    document.querySelectorAll('#list .list-row > div:last-child').forEach(el => {
-      el.style.fontSize = '4.25vw';
+    // Percentage labels — target the last div in each list-row
+    document.querySelectorAll('.list-row').forEach(row => {
+      const pctEl = row.querySelector('div:last-child');
+      if (pctEl) pctEl.style.fontSize = '4.5vw';
     });
 
   } else {
