@@ -111,13 +111,13 @@
     flex: 1;
     font-size: 2.54vw;
     font-weight: 600;
-    color: rgba(255,255,255,0.85);
+    color: #fff;
   }
 
   .list-val {
     font-size: 2.54vw;
     font-weight: 600;
-    color: rgba(255,255,255,0.55);
+    color: rgba(255,255,255,0.85);
     white-space: nowrap;
   }
 
@@ -225,6 +225,13 @@
   }
 
   .card.flip .card-number { animation: flipNumber 0.4s ease-in-out; }
+
+  /* ── Responsive: hide right column on phones, show on iPad mini+ ── */
+  @media (max-width: 767px) {
+    #col-right { display: none; }
+    #col-left  { flex: 1; padding-top: 4vw; }
+    body       { justify-content: flex-end; }
+  }
 
   @keyframes flipNumber {
     0%   { transform: rotateX(0deg);   opacity: 1; }
@@ -421,7 +428,7 @@ function miniRing(pct, color) {
   const dash = (pct / 100) * circ;       // filled arc length
   const gap  = circ - dash;              // remaining arc length
   // rotate(-90) starts arc at 12 o'clock; dashoffset=0 is correct after rotation
-  return `<svg width="3vw" height="3vw" viewBox="0 0 28 28" style="flex-shrink:0;width:2.8vw;height:2.8vw;">
+  return `<svg width="2.8vw" height="2.8vw" viewBox="0 0 28 28" style="flex-shrink:0;width:2.8vw;height:2.8vw;">
     <circle cx="14" cy="14" r="${r}" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="${sw}"/>
     <circle cx="14" cy="14" r="${r}" fill="none" stroke="${color}" stroke-width="${sw}"
       stroke-linecap="round"
@@ -450,7 +457,7 @@ function renderList(data) {
       <div class="list-name">${name}</div>
       <div class="list-val">${fmtFull(val)}</div>
       ${miniRing(pct, p.solid)}
-      <div style="font-size:2.5vw;color:rgba(255,255,255,0.55);white-space:nowrap;flex-shrink:0;">${pct.toFixed(0)}%</div>`;
+      <div style="font-size:2vw;color:rgba(255,255,255,0.5);white-space:nowrap;flex-shrink:0;">${pct.toFixed(1)}%</div>`;
     row.addEventListener('click', () => highlightSegment(activeIdx === i ? null : i));
     list.appendChild(row);
   });
