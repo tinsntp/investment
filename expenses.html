@@ -292,7 +292,8 @@
 
 <script>
 /* ── DONUT ──────────────────────────────────────────────────────────── */
-const CSV_URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1324702331`;
+const CSV_URL      = `https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1324702331`;
+const CSV_URL_TAB1 = `https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv`;
 
 const PALETTE = [
   { from: '#2ECC71', to: '#1aad5e', solid: '#2ECC71', glow: 'rgba(46,204,113,0.4)',  id: 'g0' },
@@ -300,7 +301,7 @@ const PALETTE = [
   { from: '#FF69B4', to: '#e0408a', solid: '#FF69B4', glow: 'rgba(255,105,180,0.4)',id: 'g2' },
 ];
 
-let activeIdx = null, globalData = [];
+let activeIdx = null, globalData = [], tab1Data = [], drillMode = false;
 
 function fmtShort(v) {
   const a = Math.abs(v);
@@ -433,6 +434,71 @@ function miniRing(pct, color) {
   </svg>`;
 }
 
+async function fetchTab1() {
+  if (tab1Data.length) return tab1Data; // cached
+  const r = await fetch(CSV_URL_TAB1 + '&t=' + Date.now(), { cache: 'no-store' });
+  if (!r.ok) throw new Error('tab1 ' + r.status);
+  const text = await r.text();
+  const rows = text.trim().split('\n').filter(r => r.trim());
+  tab1Data = rows.map(row => {
+    const cols = splitCSVRow(row);
+    return { name: cols[0].replace(/^"|"$/g,'').trim(), val: parseNum(cols[1]) };
+  }).filter(d => d.name && !isNaN(d.val));
+  return tab1Data;
+}
+
+function renderDrill(items, title, color) {
+  drillMode = true;
+  const list = document.getElementById('list');
+  list.innerHTML = '';
+
+  // Back button
+  const header = document.createElement('div');
+  header.style.cssText = 'display:flex;align-items:center;gap:1vw;padding:1vw 0 1.5vw;cursor:pointer;';
+  header.innerHTML = `<span style="font-size:1.5vw;color:rgba(255,255,255,0.5);">←</span>
+    <span style="font-size:1.5vw;font-weight:700;color:${color};">${title}</span>`;
+  header.addEventListener('click', () => {
+    drillMode = false;
+    activeIdx = null;
+    renderList(globalData);
+    highlightSegment(null);
+  });
+  list.appendChild(header);
+
+  const total = items.reduce((s, d) => s + Math.abs(d.val), 0);
+  const fs = '1.4vw';
+  const ringSize = '2vw';
+  const pctFs = '1.2vw';
+
+  items.forEach(({ name, val, icon }) => {
+    const pct  = Math.abs(val) / total * 100;
+    const r2   = 10, sw = 3, circ = 2 * Math.PI * r2;
+    const dash = (pct / 100) * circ;
+    const gap  = circ - dash;
+    const displayVal = fmtFull(Math.abs(val)); // always positive
+
+    const row = document.createElement('div');
+    row.className = 'list-row';
+    row.style.cursor = 'default';
+    row.innerHTML = `
+      <img src="${icon}" style="width:2vw;height:2vw;object-fit:contain;flex-shrink:0;" />
+      <div class="list-name" style="font-size:${fs};">${name}</div>
+      <div class="list-val" style="font-size:${fs};">${displayVal}</div>
+      <svg viewBox="0 0 28 28" style="flex-shrink:0;width:${ringSize};height:${ringSize};">
+        <circle cx="14" cy="14" r="${r2}" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="${sw}"/>
+        <circle cx="14" cy="14" r="${r2}" fill="none" stroke="${color}" stroke-width="${sw}"
+          stroke-linecap="round"
+          stroke-dasharray="${dash.toFixed(2)} ${gap.toFixed(2)}"
+          stroke-dashoffset="0"
+          transform="rotate(-90 14 14)"/>
+      </svg>
+      <div style="font-size:${pctFs};color:rgba(255,255,255,0.55);flex-shrink:0;">${pct.toFixed(0)}%</div>`;
+    list.appendChild(row);
+  });
+
+  applyLayout();
+}
+
 function renderList(data) {
   const list = document.getElementById('list');
   list.innerHTML = '';
@@ -453,7 +519,40 @@ function renderList(data) {
       <div class="list-val">${fmtFull(val)}</div>
       ${miniRing(pct, p.solid)}
       <div style="font-size:2vw;color:rgba(255,255,255,0.5);white-space:nowrap;flex-shrink:0;">${pct.toFixed(1)}%</div>`;
-    row.addEventListener('click', () => highlightSegment(activeIdx === i ? null : i));
+    row.addEventListener('click', async () => {
+      if (i === 1) {
+        // Expenses — rows 1-5 from tab 1
+        highlightSegment(1);
+        try {
+          const t1 = await fetchTab1();
+          const expIcons = [
+            'https://github.com/tinsntp/investment/blob/main/shop.png?raw=true',
+            'https://github.com/tinsntp/investment/blob/main/heart.png?raw=true',
+            'https://github.com/tinsntp/investment/blob/main/transaction.png?raw=true',
+            'https://github.com/tinsntp/investment/blob/main/shield.png?raw=true',
+            'https://github.com/tinsntp/investment/blob/main/house.png?raw=true',
+          ];
+          const expItems = t1.slice(0, 5).map((d, idx) => ({ ...d, icon: expIcons[idx] }));
+          renderDrill(expItems, 'Expenses', PALETTE[1].solid);
+        } catch(e) { console.error(e); }
+      } else if (i === 2) {
+        // With Debts — rows 9-10 from tab 1
+        highlightSegment(2);
+        try {
+          const t1 = await fetchTab1();
+          const debtIcons = [
+            'https://github.com/tinsntp/investment/blob/main/sc.png?raw=true',
+            'https://github.com/tinsntp/investment/blob/main/shinhan.png?raw=true',
+          ];
+          // After filtering blanks: index 7=Standard Chartered, index 8=Shinhan
+          const debtRaw = t1.slice(7, 9).filter(d => d.name && !isNaN(d.val));
+          const debtItems = debtRaw.map((d, idx) => ({ ...d, icon: debtIcons[idx] }));
+          renderDrill(debtItems, 'With Debts', PALETTE[2].solid);
+        } catch(e) { console.error(e); }
+      } else {
+        highlightSegment(activeIdx === i ? null : i);
+      }
+    });
     list.appendChild(row);
   });
   // Apply responsive sizing after list is fully rendered
