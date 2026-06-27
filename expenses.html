@@ -229,8 +229,23 @@
   /* ── Responsive: hide right column on phones, show on iPad mini+ ── */
   @media (max-width: 767px) {
     #col-right { display: none; }
-    #col-left  { flex: 1; padding-top: 4vw; }
     body       { justify-content: flex-end; }
+    #col-left  {
+      flex: 1;
+      padding-top: 4vw;
+      /* scale up all content 30% using CSS custom property via transform on children */
+    }
+    /* Donut 30% larger: 25vw * 1.3 = 32.5vw */
+    #donut-wrap { width: 32.5vw; height: 32.5vw; }
+    /* Center label */
+    .donut-center-label { font-size: 1.89vw; }
+    .donut-center-val   { font-size: 3vw; }
+    /* List */
+    #list               { padding: 0 2.82vw; }
+    .list-row           { padding: 1.69vw 0; gap: 1.89vw; }
+    .list-name          { font-size: 3.3vw; }
+    .list-val           { font-size: 3.3vw; }
+    #donut-status       { font-size: 2.21vw; }
   }
 
   @keyframes flipNumber {
