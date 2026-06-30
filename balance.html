@@ -299,45 +299,66 @@
     flex-shrink: 0;
   }
 
-  /* ── RIGHT: Column chart ── */
+  /* ── RIGHT: Column chart (flex-based, no fragile absolute math) ── */
   #card-income {
     flex: 1;
-    position: relative;
     display: flex;
     justify-content: space-between;
+    align-items: stretch;
     gap: 2vw;
     padding: 0 3vw;
+    min-height: 0;
   }
 
   .col-item {
     flex: 1;
-    position: relative;
-    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
   }
 
-  .col-baseline {
-    position: absolute;
-    left: 0; right: 0;
+  /* upper half: positive bars grow upward (anchored to bottom of this zone) */
+  .col-zone-pos {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  /* lower half: negative bars grow downward (anchored to top of this zone) */
+  .col-zone-neg {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .col-baseline-row {
+    width: 100%;
     height: 1.5px;
     background: rgba(255,255,255,0.2);
   }
 
-  .col-bar {
-    position: absolute;
-    left: 0; width: 100%;
-    background: rgba(255,255,255,0.85);
-    transition: height 0.5s ease;
+  .col-pct {
+    font-size: 1.8vw;
+    font-weight: 700;
+    color: rgba(255,255,255,0.8);
+    white-space: nowrap;
+    margin-bottom: 0.3vw;
   }
 
   .col-icon-wrap {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
     width: 4vw; height: 4vw;
     border-radius: 50%;
     background: rgba(255,255,255,0.13);
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
+    margin-bottom: 0.4vw;
   }
 
   .col-icon-wrap img {
@@ -345,24 +366,18 @@
     object-fit: contain;
   }
 
-  .col-pct {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 2.2vw;
-    font-weight: 700;
-    color: rgba(255,255,255,0.8);
-    white-space: nowrap;
-  }
-
   .col-val {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 1.8vw;
+    font-size: 1.6vw;
     font-weight: 400;
     color: rgba(255,255,255,0.55);
     white-space: nowrap;
+    margin-bottom: 0.4vw;
+  }
+
+  .col-bar {
+    width: 70%;
+    background: rgba(255,255,255,0.85);
+    transition: height 0.5s ease;
   }
 
   #status {
@@ -503,7 +518,7 @@
         <img class="list-icon" src="${icon}" onerror="this.style.display='none'" />
         <div class="bi-list-name">${stripEmoji(name)}</div>
         <div class="bi-list-val">${fmt(val)}</div>
-        <div class="list-pct">${social ? '---' : pct.toFixed(0) + '%'}</div>`;
+        <div class="list-pct">${social ? '--' : pct.toFixed(0) + '%'}</div>`;
       card.appendChild(row);
     });
 
@@ -520,48 +535,53 @@
     const sorted   = [...filtered].sort((a,b) => Math.abs(b.val) - Math.abs(a.val));
     const maxAbs   = Math.max(...sorted.map(d => Math.abs(d.val)), 1);
 
-    const baseW    = Math.min(window.innerWidth, window.innerWidth < 400 ? window.innerWidth * 0.5 : window.innerWidth);
-    const cardH    = baseW * 0.34; // total chart height px (extra room for value label)
-    const baselineY = cardH * 0.55;            // baseline position (room above for icon+pct)
-    const maxBarH  = Math.min(baselineY * 0.7, (cardH - baselineY) * 0.9);
+    // Fixed chart height in px, scaled to viewport width but with sane min/max bounds
+    const cardH   = Math.max(140, Math.min(window.innerWidth * 0.32, 260));
+    const posZoneH = cardH * 0.55; // upper half (positive bars)
+    const negZoneH = cardH * 0.45; // lower half (negative bars)
+    const maxBarPx = Math.min(posZoneH, negZoneH) * 0.55;
 
-    card.style.height = cardH + 'px';
-
-    // baseline rule
-    const bl = document.createElement('div');
-    bl.className = 'col-baseline';
-    bl.style.top = baselineY + 'px';
-    card.appendChild(bl);
+    card.style.minHeight = cardH + 'px';
 
     sorted.forEach(({ icon, name, val }) => {
       const isPos = val >= 0;
       const pct   = total > 0 ? (Math.abs(val) / total * 100) : 0;
-      const barH  = (Math.abs(val) / maxAbs) * maxBarH;
+      const barH  = Math.max(4, (Math.abs(val) / maxAbs) * maxBarPx);
 
       const col = document.createElement('div');
       col.className = 'col-item';
 
+      const posZone = document.createElement('div');
+      posZone.className = 'col-zone-pos';
+      posZone.style.height = posZoneH + 'px';
+
+      const negZone = document.createElement('div');
+      negZone.className = 'col-zone-neg';
+      negZone.style.height = negZoneH + 'px';
+
       if (isPos) {
-        // bar grows upward from baseline; icon above bar; value above icon; pct above value
-        col.innerHTML = `
-          <div class="col-bar" style="bottom:${cardH - baselineY}px; height:${barH}px; border-radius:1.6vw 1.6vw 0 0;"></div>
-          <div class="col-icon-wrap" style="bottom:${cardH - baselineY + barH - baseW*0.052}px;">
-            <img src="${icon}" onerror="this.style.display='none'" />
-          </div>
-          <div class="col-val" style="bottom:${cardH - baselineY + barH + 6}px;">${fmtShortSigned(val)}</div>
-          <div class="col-pct" style="bottom:${cardH - baselineY + barH + baseW*0.024 + 6}px;">${pct.toFixed(0)}%</div>
+        posZone.innerHTML = `
+          <div class="col-pct">${pct.toFixed(0)}%</div>
+          <div class="col-val">${fmtShortSigned(val)}</div>
+          <div class="col-icon-wrap"><img src="${icon}" onerror="this.style.display='none'" /></div>
+          <div class="col-bar" style="height:${barH}px; border-radius:1vw 1vw 0 0;"></div>
         `;
       } else {
-        // bar grows downward from baseline; icon above baseline (top); value above icon; pct above value
-        col.innerHTML = `
-          <div class="col-bar" style="top:${baselineY}px; height:${barH}px; border-radius:0 0 1.6vw 1.6vw;"></div>
-          <div class="col-icon-wrap" style="top:${baselineY + barH - baseW*0.052}px;">
-            <img src="${icon}" onerror="this.style.display='none'" />
-          </div>
-          <div class="col-val" style="top:${baselineY - baseW*0.052 - 6}px;">${fmtShortSigned(val)}</div>
-          <div class="col-pct" style="top:${baselineY - baseW*0.052 - baseW*0.024 - 6}px;">${pct.toFixed(0)}%</div>
+        negZone.innerHTML = `
+          <div class="col-bar" style="height:${barH}px; border-radius:0 0 1vw 1vw;"></div>
+          <div class="col-icon-wrap" style="margin-top:0.4vw;"><img src="${icon}" onerror="this.style.display='none'" /></div>
+          <div class="col-val">${fmtShortSigned(val)}</div>
+          <div class="col-pct" style="margin-bottom:0;">${pct.toFixed(0)}%</div>
         `;
       }
+
+      col.appendChild(posZone);
+
+      const baselineRow = document.createElement('div');
+      baselineRow.className = 'col-baseline-row';
+      col.appendChild(baselineRow);
+
+      col.appendChild(negZone);
       card.appendChild(col);
     });
 
