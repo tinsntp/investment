@@ -15,13 +15,21 @@
     overflow: hidden;
   }
 
-  /* ── Two-column layout ── */
+  /* ── 2x2 grid layout ── */
   body {
     display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 2.5vw;
+    gap: 2.5vw;
+  }
+
+  #row-top, #row-bottom {
+    display: flex;
     flex-direction: row;
-    align-items: flex-end;
-    padding-bottom: 4vw;
-    gap: 0;
+    flex: 1;
+    gap: 3vw;
+    min-height: 0;
   }
 
   /* LEFT column — donut widget */
@@ -235,29 +243,6 @@
     100% { transform: rotateX(0deg);   opacity: 1; }
   }
 
-  /* ── Balance & Income section wrapper ── */
-  #bi-section {
-    width: 100%;
-    padding: 2vw 2.5vw 0 2.5vw;
-  }
-
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  html, body {
-    width: 100%; height: 100%;
-    background: transparent;
-    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
-    color: #fff;
-    overflow: hidden;
-  }
-
-  body {
-    display: flex;
-    flex-direction: row;
-    gap: 5vw;
-    padding: 2.5vw;
-  }
 
   /* ── LEFT: List card with rounded-rect rows ── */
   #card-balance {
@@ -321,6 +306,7 @@
     display: flex;
     justify-content: center;
     gap: 2vw;
+    padding: 0 3vw;
   }
 
   .col-item {
@@ -370,6 +356,16 @@
     white-space: nowrap;
   }
 
+  .col-val {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.6vw;
+    font-weight: 600;
+    color: rgba(255,255,255,0.55);
+    white-space: nowrap;
+  }
+
   #status {
     font-size: 2vw;
     color: rgba(255,255,255,0.4);
@@ -380,176 +376,14 @@
 </style>
 </head>
 <body>
-<div id="bi-section">
-
-
+<div id="row-top">
 <div id="bi-status">Loading…</div>
 
 <div id="card-balance" style="display:none"></div>
 <div id="card-income"  style="display:none"></div>
-
-<script>
-(function() {
-
-  const CSV_URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=311369594`;
-
-  const BAR_COLORS = ['#7B61FF', '#E0E0E0', '#4285F4', '#E0E0E0'];
-
-  function fmt(v) {
-    return (v < 0 ? '−' : '') + '₫' + Math.round(Math.abs(v)).toLocaleString('en-US');
-  }
-
-  function stripEmoji(str) {
-    return str.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{1F000}-\u{1F0FF}\u{FE0F}\u{200D}]/gu, '').trim();
-  }
-
-  function splitCSVRow(row) {
-    const cols = []; let cur = '', inQ = false;
-    for (const ch of row) {
-      if (ch === '"') inQ = !inQ;
-      else if (ch === ',' && !inQ) { cols.push(cur); cur = ''; }
-      else cur += ch;
-    }
-    cols.push(cur);
-    return cols;
-  }
-
-  function parseNum(str) {
-    if (!str) return NaN;
-    let s = str.trim();
-    if (/^\(.*\)$/.test(s)) s = '-' + s.slice(1,-1);
-    s = s.replace(/[\u2212\u2013\u2014]/g, '-').replace(/[^0-9.\-]/g, '');
-    return parseFloat(s);
-  }
-
-  function isSocial(name) {
-    return stripEmoji(name).toUpperCase().includes('SOCIAL');
-  }
-
-  function renderBalanceList(items) {
-    const card = document.getElementById('card-balance');
-    card.innerHTML = '';
-
-    const filtered = items.filter(d => d.val && Math.abs(d.val) > 0);
-    // exclude SOCIAL from the percentage total
-    const total = filtered
-      .filter(d => !isSocial(d.name))
-      .reduce((s, d) => s + Math.abs(d.val), 0);
-    const sorted = [...filtered].sort((a,b) => Math.abs(b.val) - Math.abs(a.val));
-
-    sorted.forEach(({ icon, name, val }) => {
-      const social = isSocial(name);
-      const pct = total > 0 ? (Math.abs(val) / total * 100) : 0;
-      const row = document.createElement('div');
-      row.className = 'list-item';
-      row.innerHTML = `
-        <img class="list-icon" src="${icon}" onerror="this.style.display='none'" />
-        <div class="bi-list-name">${stripEmoji(name)}</div>
-        <div class="bi-list-val">${fmt(val)}</div>
-        <div class="list-pct">${social ? '-' : pct.toFixed(0) + '%'}</div>`;
-      card.appendChild(row);
-    });
-
-    card.style.display = 'flex';
-  }
-
-  function renderIncomeColumns(items) {
-    const card = document.getElementById('card-income');
-    card.innerHTML = '';
-
-    const filtered = items.filter(d => d.val && Math.abs(d.val) > 0);
-    const total    = filtered.reduce((s, d) => s + Math.abs(d.val), 0);
-    const sorted   = [...filtered].sort((a,b) => Math.abs(b.val) - Math.abs(a.val));
-    const maxAbs   = Math.max(...sorted.map(d => Math.abs(d.val)), 1);
-
-    const cardH    = window.innerWidth * 0.30; // total chart height px
-    const baselineY = cardH * 0.55;            // baseline position (room above for icon+pct)
-    const maxBarH  = Math.min(baselineY * 0.7, (cardH - baselineY) * 0.9);
-
-    card.style.height = cardH + 'px';
-
-    // baseline rule
-    const bl = document.createElement('div');
-    bl.className = 'col-baseline';
-    bl.style.top = baselineY + 'px';
-    card.appendChild(bl);
-
-    sorted.forEach(({ icon, name, val }) => {
-      const isPos = val >= 0;
-      const pct   = total > 0 ? (Math.abs(val) / total * 100) : 0;
-      const barH  = (Math.abs(val) / maxAbs) * maxBarH;
-
-      const col = document.createElement('div');
-      col.className = 'col-item';
-
-      if (isPos) {
-        // bar grows upward from baseline; icon above bar; pct above icon
-        col.innerHTML = `
-          <div class="col-bar" style="bottom:${cardH - baselineY}px; height:${barH}px; border-radius:1.6vw 1.6vw 0 0;"></div>
-          <div class="col-icon-wrap" style="bottom:${cardH - baselineY + barH - window.innerWidth*0.052}px;">
-            <img src="${icon}" onerror="this.style.display='none'" />
-          </div>
-          <div class="col-pct" style="bottom:${cardH - baselineY + barH + 6}px;">${pct.toFixed(0)}%</div>
-        `;
-      } else {
-        // bar grows downward from baseline; icon above baseline (top); pct above icon
-        col.innerHTML = `
-          <div class="col-bar" style="top:${baselineY}px; height:${barH}px; border-radius:0 0 1.6vw 1.6vw;"></div>
-          <div class="col-icon-wrap" style="top:${baselineY + barH - window.innerWidth*0.052}px;">
-            <img src="${icon}" onerror="this.style.display='none'" />
-          </div>
-          <div class="col-pct" style="top:${baselineY - window.innerWidth*0.052 - 6}px;">${pct.toFixed(0)}%</div>
-        `;
-      }
-      card.appendChild(col);
-    });
-
-    card.style.display = 'flex';
-  }
-
-  async function load() {
-    try {
-      const r = await fetch(CSV_URL + '&t=' + Date.now(), { cache: 'no-store' });
-      if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      const text = await r.text();
-      const rows = text.trim().split('\n').filter(r => r.trim());
-
-      const balance = [];
-      const income  = [];
-
-      rows.forEach(row => {
-        const cols = splitCSVRow(row);
-        const bIcon = (cols[0] || '').replace(/^"|"$/g,'').trim();
-        const bName = (cols[1] || '').replace(/^"|"$/g,'').trim();
-        const bVal  = parseNum(cols[2]);
-
-        const iIcon = (cols[4] || '').replace(/^"|"$/g,'').trim();
-        const iName = (cols[5] || '').replace(/^"|"$/g,'').trim();
-        const iVal  = parseNum(cols[6]);
-
-        if (bName && !isNaN(bVal)) balance.push({ icon: bIcon, name: bName, val: bVal });
-        if (iName && !isNaN(iVal)) income.push({ icon: iIcon, name: iName, val: iVal });
-      });
-
-      if (!balance.length && !income.length) throw new Error('No data found in columns A-C or E-G.');
-
-      document.getElementById('bi-status').style.display = 'none';
-      renderBalanceList(balance);
-      renderIncomeColumns(income);
-    } catch(e) {
-      document.getElementById('bi-status').textContent = `⚠ ${e.message}`;
-    }
-  }
-
-  load();
-  setInterval(load, 60000);
-
-})();
-</script>
-
 </div>
 
-
+<div id="row-bottom">
 <!-- LEFT: Donut -->
 <div id="col-left">
   <div id="donut-status">Loading…</div>
@@ -601,6 +435,177 @@
     </div>
   </div>
 </div>
+</div>
+
+<script>
+(function() {
+
+  const CSV_URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=311369594`;
+
+  const BAR_COLORS = ['#7B61FF', '#E0E0E0', '#4285F4', '#E0E0E0'];
+
+  function fmt(v) {
+    return (v < 0 ? '−' : '') + '₫' + Math.round(Math.abs(v)).toLocaleString('en-US');
+  }
+
+  function stripEmoji(str) {
+    return str.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{1F000}-\u{1F0FF}\u{FE0F}\u{200D}]/gu, '').trim();
+  }
+
+  function splitCSVRow(row) {
+    const cols = []; let cur = '', inQ = false;
+    for (const ch of row) {
+      if (ch === '"') inQ = !inQ;
+      else if (ch === ',' && !inQ) { cols.push(cur); cur = ''; }
+      else cur += ch;
+    }
+    cols.push(cur);
+    return cols;
+  }
+
+  function parseNum(str) {
+    if (!str) return NaN;
+    let s = str.trim();
+    if (/^\(.*\)$/.test(s)) s = '-' + s.slice(1,-1);
+    s = s.replace(/[\u2212\u2013\u2014]/g, '-').replace(/[^0-9.\-]/g, '');
+    return parseFloat(s);
+  }
+
+  function isSocial(name) {
+    return stripEmoji(name).toUpperCase().includes('SOCIAL');
+  }
+
+  function fmtShortSigned(v) {
+    const a = Math.abs(v);
+    const s = a >= 1e9 ? (a/1e9).toFixed(1)+'B'
+            : a >= 1e6 ? (a/1e6).toFixed(1)+'M'
+            : a >= 1e3 ? (a/1e3).toFixed(1)+'K'
+            : String(Math.round(a));
+    return (v < 0 ? '-' : '+') + s;
+  }
+
+  function renderBalanceList(items) {
+    const card = document.getElementById('card-balance');
+    card.innerHTML = '';
+
+    const filtered = items.filter(d => d.val && Math.abs(d.val) > 0);
+    // exclude SOCIAL from the percentage total
+    const total = filtered
+      .filter(d => !isSocial(d.name))
+      .reduce((s, d) => s + Math.abs(d.val), 0);
+    const sorted = [...filtered].sort((a,b) => Math.abs(b.val) - Math.abs(a.val));
+
+    sorted.forEach(({ icon, name, val }) => {
+      const social = isSocial(name);
+      const pct = total > 0 ? (Math.abs(val) / total * 100) : 0;
+      const row = document.createElement('div');
+      row.className = 'list-item';
+      row.innerHTML = `
+        <img class="list-icon" src="${icon}" onerror="this.style.display='none'" />
+        <div class="bi-list-name">${stripEmoji(name)}</div>
+        <div class="bi-list-val">${fmt(val)}</div>
+        <div class="list-pct">${social ? '--' : pct.toFixed(0) + '%'}</div>`;
+      card.appendChild(row);
+    });
+
+    card.style.display = 'flex';
+  }
+
+  function renderIncomeColumns(items) {
+    const card = document.getElementById('card-income');
+    card.innerHTML = '';
+
+    const filtered = items.filter(d => d.val && Math.abs(d.val) > 0);
+    const total    = filtered.reduce((s, d) => s + Math.abs(d.val), 0);
+    const sorted   = [...filtered].sort((a,b) => Math.abs(b.val) - Math.abs(a.val));
+    const maxAbs   = Math.max(...sorted.map(d => Math.abs(d.val)), 1);
+
+    const cardH    = window.innerWidth * 0.34; // total chart height px (extra room for value label)
+    const baselineY = cardH * 0.55;            // baseline position (room above for icon+pct)
+    const maxBarH  = Math.min(baselineY * 0.7, (cardH - baselineY) * 0.9);
+
+    card.style.height = cardH + 'px';
+
+    // baseline rule
+    const bl = document.createElement('div');
+    bl.className = 'col-baseline';
+    bl.style.top = baselineY + 'px';
+    card.appendChild(bl);
+
+    sorted.forEach(({ icon, name, val }) => {
+      const isPos = val >= 0;
+      const pct   = total > 0 ? (Math.abs(val) / total * 100) : 0;
+      const barH  = (Math.abs(val) / maxAbs) * maxBarH;
+
+      const col = document.createElement('div');
+      col.className = 'col-item';
+
+      if (isPos) {
+        // bar grows upward from baseline; icon above bar; value above icon; pct above value
+        col.innerHTML = `
+          <div class="col-bar" style="bottom:${cardH - baselineY}px; height:${barH}px; border-radius:1.6vw 1.6vw 0 0;"></div>
+          <div class="col-icon-wrap" style="bottom:${cardH - baselineY + barH - window.innerWidth*0.052}px;">
+            <img src="${icon}" onerror="this.style.display='none'" />
+          </div>
+          <div class="col-val" style="bottom:${cardH - baselineY + barH + 6}px;">${fmtShortSigned(val)}</div>
+          <div class="col-pct" style="bottom:${cardH - baselineY + barH + window.innerWidth*0.024 + 6}px;">${pct.toFixed(0)}%</div>
+        `;
+      } else {
+        // bar grows downward from baseline; icon above baseline (top); value above icon; pct above value
+        col.innerHTML = `
+          <div class="col-bar" style="top:${baselineY}px; height:${barH}px; border-radius:0 0 1.6vw 1.6vw;"></div>
+          <div class="col-icon-wrap" style="top:${baselineY + barH - window.innerWidth*0.052}px;">
+            <img src="${icon}" onerror="this.style.display='none'" />
+          </div>
+          <div class="col-val" style="top:${baselineY - window.innerWidth*0.052 - 6}px;">${fmtShortSigned(val)}</div>
+          <div class="col-pct" style="top:${baselineY - window.innerWidth*0.052 - window.innerWidth*0.024 - 6}px;">${pct.toFixed(0)}%</div>
+        `;
+      }
+      card.appendChild(col);
+    });
+
+    card.style.display = 'flex';
+  }
+
+  async function load() {
+    try {
+      const r = await fetch(CSV_URL + '&t=' + Date.now(), { cache: 'no-store' });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const text = await r.text();
+      const rows = text.trim().split('\n').filter(r => r.trim());
+
+      const balance = [];
+      const income  = [];
+
+      rows.forEach(row => {
+        const cols = splitCSVRow(row);
+        const bIcon = (cols[0] || '').replace(/^"|"$/g,'').trim();
+        const bName = (cols[1] || '').replace(/^"|"$/g,'').trim();
+        const bVal  = parseNum(cols[2]);
+
+        const iIcon = (cols[4] || '').replace(/^"|"$/g,'').trim();
+        const iName = (cols[5] || '').replace(/^"|"$/g,'').trim();
+        const iVal  = parseNum(cols[6]);
+
+        if (bName && !isNaN(bVal)) balance.push({ icon: bIcon, name: bName, val: bVal });
+        if (iName && !isNaN(iVal)) income.push({ icon: iIcon, name: iName, val: iVal });
+      });
+
+      if (!balance.length && !income.length) throw new Error('No data found in columns A-C or E-G.');
+
+      document.getElementById('bi-status').style.display = 'none';
+      renderBalanceList(balance);
+      renderIncomeColumns(income);
+    } catch(e) {
+      document.getElementById('bi-status').textContent = `⚠ ${e.message}`;
+    }
+  }
+
+  load();
+  setInterval(load, 60000);
+
+})();
+</script>
 
 <script>
 /* ── DONUT ──────────────────────────────────────────────────────────── */
@@ -609,7 +614,7 @@ const CSV_URL_TAB1 = `https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKN
 
 const PALETTE = [
   { from: '#2ECC71', to: '#1aad5e', solid: '#2ECC71', glow: 'rgba(46,204,113,0.4)',  id: 'g0' },
-  { from: '#8B5CF6', to: '#6D3FD8', solid: '#8B5CF6', glow: 'rgba(139,92,246,0.4)', id: 'g1' },
+  { from: '#FFB6C1', to: '#FF8FA3', solid: '#FFB6C1', glow: 'rgba(255,182,193,0.4)', id: 'g1' },
   { from: '#FF69B4', to: '#e0408a', solid: '#FF69B4', glow: 'rgba(255,105,180,0.4)',id: 'g2' },
 ];
 
