@@ -1092,6 +1092,26 @@ function applyLayout() {
       if (pctEl) pctEl.style.fontSize = '4.5vw';
     });
 
+    // ── Match Balance (top-left) and Income (top-right) font sizes to Expenses ──
+    document.querySelectorAll('.bi-list-name').forEach(el => el.style.fontSize = '4.57vw');
+    document.querySelectorAll('.bi-list-val').forEach(el  => el.style.fontSize = '4.57vw');
+    document.querySelectorAll('#card-balance .list-pct').forEach(el => el.style.fontSize = '4.5vw');
+    document.querySelectorAll('.list-icon').forEach(el => {
+      el.style.width  = '5.2vw';
+      el.style.height = '5.2vw';
+    });
+
+    document.querySelectorAll('.col-pct').forEach(el => el.style.fontSize = '4.5vw');
+    document.querySelectorAll('.col-val').forEach(el => el.style.fontSize = '4.57vw');
+    document.querySelectorAll('.col-icon-wrap img').forEach(el => {
+      el.style.width  = '5.2vw';
+      el.style.height = '5.2vw';
+    });
+    document.querySelectorAll('.col-icon-wrap').forEach(el => {
+      el.style.width  = '7vw';
+      el.style.height = '7vw';
+    });
+
   } else {
     // ── Tablet/desktop: top row stays side-by-side ──
     rowTop.style.flexDirection = 'row';
@@ -1122,6 +1142,26 @@ function applyLayout() {
 
     document.querySelectorAll('#list .list-row > div:last-child').forEach(el => {
       el.style.fontSize = '2.5vw';
+    });
+
+    // ── Reset Balance (top-left) and Income (top-right) font sizes to default ──
+    document.querySelectorAll('.bi-list-name').forEach(el => el.style.fontSize = '2.5vw');
+    document.querySelectorAll('.bi-list-val').forEach(el  => el.style.fontSize = '2.54vw');
+    document.querySelectorAll('#card-balance .list-pct').forEach(el => el.style.fontSize = '1.8vw');
+    document.querySelectorAll('.list-icon').forEach(el => {
+      el.style.width  = '4vw';
+      el.style.height = '4vw';
+    });
+
+    document.querySelectorAll('.col-pct').forEach(el => el.style.fontSize = '1.8vw');
+    document.querySelectorAll('.col-val').forEach(el => el.style.fontSize = '1.6vw');
+    document.querySelectorAll('.col-icon-wrap img').forEach(el => {
+      el.style.width  = '2.6vw';
+      el.style.height = '2.6vw';
+    });
+    document.querySelectorAll('.col-icon-wrap').forEach(el => {
+      el.style.width  = '4vw';
+      el.style.height = '4vw';
     });
   }
 }
