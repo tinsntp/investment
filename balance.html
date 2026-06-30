@@ -511,7 +511,12 @@
     const total = filtered
       .filter(d => !isSocial(d.name))
       .reduce((s, d) => s + Math.abs(d.val), 0);
-    const sorted = [...filtered].sort((a,b) => Math.abs(b.val) - Math.abs(a.val));
+    const sorted = [...filtered].sort((a,b) => {
+  const aSocial = isSocial(a.name), bSocial = isSocial(b.name);
+  if (aSocial && !bSocial) return 1;   // a goes after b
+  if (!aSocial && bSocial) return -1;  // a goes before b
+  return Math.abs(b.val) - Math.abs(a.val);
+});
 
     sorted.forEach(({ icon, name, val }) => {
       const social = isSocial(name);
