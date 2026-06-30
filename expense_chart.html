@@ -3,198 +3,304 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Budget Chart</title>
+<title>Balance & Income</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body { width: 100%; height: 100%; background: transparent; font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; color: #fff; overflow: hidden; }
-  body { position: relative; }
-  #status { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 2vw; color: rgba(255,255,255,0.5); text-align: center; line-height: 2; white-space: pre-line; }
-  #chart-wrap { position: absolute; bottom: 3vw; left: 0; right: 0; padding: 0 4vw; display: none; }
-  .baseline { position: absolute; left: 0; right: 0; height: 1.5px; background: rgba(255,255,255,0.25); }
-  .bar-value { font-size: 2.4vw; font-weight: 400; color: #fff; white-space: nowrap; text-align: center; width: 100%; line-height: 1; }
-  .bar-name { font-size: 2.2vw; color: rgba(255,255,255,0.75); text-align: center; white-space: pre-line; line-height: 1.3; }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: transparent;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    color: #fff;
+    overflow: hidden;
+  }
+
+  body {
+    display: flex;
+    flex-direction: row;
+    gap: 2.5vw;
+    padding: 2.5vw;
+  }
+
+  /* ── LEFT: List card with rounded-rect rows ── */
+  #card-balance {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.3vw;
+  }
+
+  .list-item {
+    display: flex;
+    align-items: center;
+    gap: 1.6vw;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 1.6vw;
+    padding: 1.6vw 1.8vw;
+  }
+
+  .list-icon {
+    width: 4vw; height: 4vw;
+    border-radius: 50%;
+    object-fit: contain;
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.06);
+    padding: 0.5vw;
+  }
+
+  .list-name {
+    flex: 1;
+    font-size: 2.2vw;
+    font-weight: 600;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .list-val {
+    font-size: 2.2vw;
+    font-weight: 700;
+    color: #fff;
+    white-space: nowrap;
+  }
+
+  .list-pct {
+    font-size: 1.8vw;
+    font-weight: 600;
+    color: rgba(255,255,255,0.45);
+    background: rgba(255,255,255,0.07);
+    border-radius: 99vw;
+    padding: 0.4vw 1.2vw;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* ── RIGHT: Column chart ── */
+  #card-income {
+    flex: 1;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: 2vw;
+  }
+
+  .col-item {
+    flex: 1;
+    max-width: 14vw;
+    position: relative;
+    height: 100%;
+  }
+
+  .col-baseline {
+    position: absolute;
+    left: 0; right: 0;
+    height: 1.5px;
+    background: rgba(255,255,255,0.2);
+  }
+
+  .col-bar {
+    position: absolute;
+    left: 0; width: 100%;
+    background: rgba(255,255,255,0.5);
+    transition: height 0.5s ease;
+  }
+
+  .col-icon-wrap {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4vw; height: 4vw;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .col-icon-wrap img {
+    width: 2.6vw; height: 2.6vw;
+    object-fit: contain;
+  }
+
+  .col-pct {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.8vw;
+    font-weight: 700;
+    color: rgba(255,255,255,0.8);
+    white-space: nowrap;
+  }
+
+  #status {
+    font-size: 2vw;
+    color: rgba(255,255,255,0.4);
+    text-align: center;
+    padding: 4vw;
+  }
 </style>
 </head>
 <body>
 
 <div id="status">Loading…</div>
-<div id="chart-wrap"><div id="chart-inner" style="position:relative;width:100%;"></div></div>
+
+<div id="card-balance" style="display:none"></div>
+<div id="card-income"  style="display:none"></div>
 
 <script>
-  const CSV_URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv`;
+  const CSV_URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=311369594`;
 
-  const COLOR_NEG = '#c8c8c8';
-  const COLOR_POS = '#4DB6AC';
+  const BAR_COLORS = ['#7B61FF', '#E0E0E0', '#4285F4', '#E0E0E0'];
 
   function fmt(v) {
-    const a = Math.abs(v);
-    let s = a >= 1e6 ? (a/1e6).toFixed(1).replace(/\.0$/,'')+'M'
-          : a >= 1e3 ? (a/1e3).toFixed(0)+'K'
-          : String(a);
-    return (v < 0 ? '−' : '') + s;
+    return (v < 0 ? '−' : '') + '₫' + Math.round(Math.abs(v)).toLocaleString('en-US');
   }
 
-  function setStatus(msg) {
-    const el = document.getElementById('status');
-    el.style.display = 'block';
-    el.textContent = msg;
+  function stripEmoji(str) {
+    return str.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{1F000}-\u{1F0FF}\u{FE0F}\u{200D}]/gu, '').trim();
   }
 
-  // Robust CSV row splitter (handles quoted fields with commas inside)
   function splitCSVRow(row) {
-    const cols = [];
-    let cur = '', inQ = false;
-    for (let i = 0; i < row.length; i++) {
-      const ch = row[i];
-      if (ch === '"') {
-        inQ = !inQ;
-      } else if (ch === ',' && !inQ) {
-        cols.push(cur); cur = '';
-      } else {
-        cur += ch;
-      }
+    const cols = []; let cur = '', inQ = false;
+    for (const ch of row) {
+      if (ch === '"') inQ = !inQ;
+      else if (ch === ',' && !inQ) { cols.push(cur); cur = ''; }
+      else cur += ch;
     }
     cols.push(cur);
     return cols;
   }
 
-  // Parse number — handles "−9,600,000" / "-9600000" / "(9600000)" accounting format
   function parseNum(str) {
     if (!str) return NaN;
     let s = str.trim();
-    // accounting negative: (1234) → -1234
-    const isAccounting = /^\(.*\)$/.test(s);
-    if (isAccounting) s = '-' + s.slice(1, -1);
-    // replace all unicode minus / en-dash with ASCII minus
-    s = s.replace(/[\u2212\u2013\u2014]/g, '-');
-    // remove everything except digits, dot, minus
-    s = s.replace(/[^0-9.\-]/g, '');
+    if (/^\(.*\)$/.test(s)) s = '-' + s.slice(1,-1);
+    s = s.replace(/[\u2212\u2013\u2014]/g, '-').replace(/[^0-9.\-]/g, '');
     return parseFloat(s);
   }
 
-  async function fetchData() {
-    const url = CSV_URL + '&t=' + Date.now();
-    const r = await fetch(url, { cache: 'no-store' });
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    const text = await r.text();
-
-    const rows = text.trim().split('\n').slice(1); // skip header
-    const data = rows.map(row => {
-      const cols = splitCSVRow(row);
-      const name = cols[0].replace(/^"|"$/g, '').trim();
-      const val  = parseNum(cols[1]);
-      return { name, val };
-    }).filter(d => d.name && !isNaN(d.val));
-
-    if (!data.length) throw new Error('No valid data rows found.\nCheck columns A (name) and B (number) in your sheet.');
-    return data;
+  function isSocial(name) {
+    return stripEmoji(name).toUpperCase().includes('SOCIAL');
   }
 
-  function render(data) {
-    const inner = document.getElementById('chart-inner');
-    inner.innerHTML = '';
+  function renderBalanceList(items) {
+    const card = document.getElementById('card-balance');
+    card.innerHTML = '';
 
-    const W         = window.innerWidth;
-    const chartH    = W * 0.40;
-    const baselineY = chartH * 0.46;
-    const offset    = W * 0.008;
+    const filtered = items.filter(d => d.val && Math.abs(d.val) > 0);
+    // exclude SOCIAL from the percentage total
+    const total = filtered
+      .filter(d => !isSocial(d.name))
+      .reduce((s, d) => s + Math.abs(d.val), 0);
+    const sorted = [...filtered].sort((a,b) => Math.abs(b.val) - Math.abs(a.val));
 
-    inner.style.height = chartH + 'px';
+    sorted.forEach(({ icon, name, val }) => {
+      const social = isSocial(name);
+      const pct = total > 0 ? (Math.abs(val) / total * 100) : 0;
+      const row = document.createElement('div');
+      row.className = 'list-item';
+      row.innerHTML = `
+        <img class="list-icon" src="${icon}" onerror="this.style.display='none'" />
+        <div class="list-name">${stripEmoji(name)}</div>
+        <div class="list-val">${fmt(val)}</div>
+        <div class="list-pct">${social ? '' : pct.toFixed(0) + '%'}</div>`;
+      card.appendChild(row);
+    });
+
+    card.style.display = 'flex';
+  }
+
+  function renderIncomeColumns(items) {
+    const card = document.getElementById('card-income');
+    card.innerHTML = '';
+
+    const filtered = items.filter(d => d.val && Math.abs(d.val) > 0);
+    const total    = filtered.reduce((s, d) => s + Math.abs(d.val), 0);
+    const sorted   = [...filtered].sort((a,b) => Math.abs(b.val) - Math.abs(a.val));
+    const maxAbs   = Math.max(...sorted.map(d => Math.abs(d.val)), 1);
+
+    const cardH    = window.innerWidth * 0.30; // total chart height px
+    const baselineY = cardH * 0.55;            // baseline position (room above for icon+pct)
+    const maxBarH  = Math.min(baselineY * 0.7, (cardH - baselineY) * 0.9);
+
+    card.style.height = cardH + 'px';
 
     // baseline rule
     const bl = document.createElement('div');
-    bl.className = 'baseline';
+    bl.className = 'col-baseline';
     bl.style.top = baselineY + 'px';
-    inner.appendChild(bl);
+    card.appendChild(bl);
 
-    const maxAbs = Math.max(...data.map(d => Math.abs(d.val)));
-    const n      = data.length;
-    const gapVw  = 2;
-
-    data.forEach(({ name, val }, i) => {
+    sorted.forEach(({ icon, name, val }) => {
       const isPos = val >= 0;
-      const barH  = (Math.abs(val) / maxAbs) * baselineY * 0.92;
-      const color = isPos ? COLOR_POS : COLOR_NEG;
+      const pct   = total > 0 ? (Math.abs(val) / total * 100) : 0;
+      const barH  = (Math.abs(val) / maxAbs) * maxBarH;
 
       const col = document.createElement('div');
-      col.style.cssText = `
-        position: absolute;
-        top: 0;
-        height: ${chartH}px;
-        width: calc((100% - ${(n - 1) * gapVw}vw) / ${n});
-        left: calc(${i} * ((100% - ${(n - 1) * gapVw}vw) / ${n} + ${gapVw}vw));
-      `;
+      col.className = 'col-item';
 
       if (isPos) {
-        // value label above bar
-        const valEl = document.createElement('div');
-        valEl.className = 'bar-value';
-        valEl.textContent = fmt(val);
-        valEl.style.cssText = `position:absolute; bottom:${chartH - baselineY + barH + offset}px;`;
-
-        // bar grows upward from baseline
-        const rect = document.createElement('div');
-        rect.style.cssText = `
-          position: absolute; width: 100%;
-          bottom: ${chartH - baselineY}px;
-          height: ${barH}px;
-          background: ${color};
-          border-radius: 2px 2px 0 0;
+        // bar grows upward from baseline; icon above bar; pct above icon
+        col.innerHTML = `
+          <div class="col-bar" style="bottom:${cardH - baselineY}px; height:${barH}px; border-radius:0.8vw 0.8vw 0 0;"></div>
+          <div class="col-icon-wrap" style="bottom:${cardH - baselineY + barH + 8}px;">
+            <img src="${icon}" onerror="this.style.display='none'" />
+          </div>
+          <div class="col-pct" style="bottom:${cardH - baselineY + barH + window.innerWidth*0.052}px;">${pct.toFixed(0)}%</div>
         `;
-
-        // name below baseline
-        const nameEl = document.createElement('div');
-        nameEl.className = 'bar-name';
-        nameEl.textContent = name;
-        nameEl.style.cssText = `position:absolute; top:${baselineY + offset}px; width:100%;`;
-
-        col.append(valEl, rect, nameEl);
-
       } else {
-        // name above baseline
-        const nameEl = document.createElement('div');
-        nameEl.className = 'bar-name';
-        nameEl.textContent = name;
-        nameEl.style.cssText = `position:absolute; bottom:${chartH - baselineY + offset}px; width:100%;`;
-
-        // bar grows downward from baseline
-        const rect = document.createElement('div');
-        rect.style.cssText = `
-          position: absolute; width: 100%;
-          top: ${baselineY}px;
-          height: ${barH}px;
-          background: ${color};
-          border-radius: 0 0 2px 2px;
+        // bar grows downward from baseline; icon above baseline (top); pct above icon
+        col.innerHTML = `
+          <div class="col-bar" style="top:${baselineY}px; height:${barH}px; border-radius:0 0 0.8vw 0.8vw;"></div>
+          <div class="col-icon-wrap" style="top:${baselineY - window.innerWidth*0.044 - 8}px;">
+            <img src="${icon}" onerror="this.style.display='none'" />
+          </div>
+          <div class="col-pct" style="top:${baselineY - window.innerWidth*0.044 - window.innerWidth*0.052 - 8}px;">${pct.toFixed(0)}%</div>
         `;
-
-        // value label below bar
-        const valEl = document.createElement('div');
-        valEl.className = 'bar-value';
-        valEl.textContent = fmt(val);
-        valEl.style.cssText = `position:absolute; top:${baselineY + barH + offset}px;`;
-
-        col.append(nameEl, rect, valEl);
       }
-
-      inner.appendChild(col);
+      card.appendChild(col);
     });
 
-    document.getElementById('status').style.display = 'none';
-    document.getElementById('chart-wrap').style.display = 'block';
+    card.style.display = 'flex';
   }
 
   async function load() {
-    setStatus('Loading…');
     try {
-      const data = await fetchData();
-      render(data);
-    } catch (e) {
-      setStatus(`⚠ Failed to load data\n${e.message}`);
+      const r = await fetch(CSV_URL + '&t=' + Date.now(), { cache: 'no-store' });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const text = await r.text();
+      const rows = text.trim().split('\n').filter(r => r.trim());
+
+      const balance = [];
+      const income  = [];
+
+      rows.forEach(row => {
+        const cols = splitCSVRow(row);
+        const bIcon = (cols[0] || '').replace(/^"|"$/g,'').trim();
+        const bName = (cols[1] || '').replace(/^"|"$/g,'').trim();
+        const bVal  = parseNum(cols[2]);
+
+        const iIcon = (cols[4] || '').replace(/^"|"$/g,'').trim();
+        const iName = (cols[5] || '').replace(/^"|"$/g,'').trim();
+        const iVal  = parseNum(cols[6]);
+
+        if (bName && !isNaN(bVal)) balance.push({ icon: bIcon, name: bName, val: bVal });
+        if (iName && !isNaN(iVal)) income.push({ icon: iIcon, name: iName, val: iVal });
+      });
+
+      if (!balance.length && !income.length) throw new Error('No data found in columns A-C or E-G.');
+
+      document.getElementById('status').style.display = 'none';
+      renderBalanceList(balance);
+      renderIncomeColumns(income);
+    } catch(e) {
+      document.getElementById('status').textContent = `⚠ ${e.message}`;
     }
   }
 
   load();
-  setInterval(load, 86400000);
+  setInterval(load, 60000);
 </script>
 </body>
 </html>
