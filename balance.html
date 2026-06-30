@@ -259,7 +259,7 @@
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.07);
     border-radius: 1.6vw;
-    padding: 1.6vw 1.8vw;
+    padding: 0.5vw 1.8vw;
   }
 
   .list-icon {
@@ -304,14 +304,13 @@
     flex: 1;
     position: relative;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     gap: 2vw;
     padding: 0 3vw;
   }
 
   .col-item {
     flex: 1;
-    max-width: 14vw;
     position: relative;
     height: 100%;
   }
@@ -367,7 +366,7 @@
   }
 
   #status {
-    font-size: 2vw;
+    font-size: 1vw;
     color: rgba(255,255,255,0.4);
     text-align: center;
     padding: 4vw;
@@ -379,8 +378,8 @@
 <div id="row-top">
 <div id="bi-status">Loading…</div>
 
-<div id="card-balance" style="display:none"></div>
 <div id="card-income"  style="display:none"></div>
+<div id="card-balance" style="display:none"></div>
 </div>
 
 <div id="row-bottom">
@@ -504,7 +503,7 @@
         <img class="list-icon" src="${icon}" onerror="this.style.display='none'" />
         <div class="bi-list-name">${stripEmoji(name)}</div>
         <div class="bi-list-val">${fmt(val)}</div>
-        <div class="list-pct">${social ? '---' : pct.toFixed(0) + '%'}</div>`;
+        <div class="list-pct">${social ? '--' : pct.toFixed(0) + '%'}</div>`;
       card.appendChild(row);
     });
 
@@ -547,7 +546,7 @@
           <div class="col-icon-wrap" style="bottom:${cardH - baselineY + barH - window.innerWidth*0.052}px;">
             <img src="${icon}" onerror="this.style.display='none'" />
           </div>
-          <div class="col-val" style="bottom:${cardH - baselineY + barH + 4}px;">${fmtShortSigned(val)}</div>
+          <div class="col-val" style="bottom:${cardH - baselineY + barH + 6}px;">${fmtShortSigned(val)}</div>
           <div class="col-pct" style="bottom:${cardH - baselineY + barH + window.innerWidth*0.024 + 6}px;">${pct.toFixed(0)}%</div>
         `;
       } else {
@@ -849,7 +848,7 @@ function renderList(data) {
             'https://github.com/tinsntp/investment/blob/main/shield.png?raw=true',
             'https://github.com/tinsntp/investment/blob/main/house.png?raw=true',
           ];
-          const expItems = t1.slice(0, 5).map((d, idx) => ({ ...d, icon: expIcons[idx] }));
+          const expItems = t1.slice(0, 4).map((d, idx) => ({ ...d, icon: expIcons[idx] }));
           renderDrill(expItems, 'Expenses', PALETTE[1].solid);
         } catch(e) { console.error(e); }
       } else if (i === 2) {
@@ -862,7 +861,7 @@ function renderList(data) {
             'https://github.com/tinsntp/investment/blob/main/shinhan.png?raw=true',
           ];
           // After filtering blanks: index 7=Standard Chartered, index 8=Shinhan
-          const debtRaw = t1.slice(7, 9).filter(d => d.name && !isNaN(d.val));
+          const debtRaw = t1.slice(6, 8).filter(d => d.name && !isNaN(d.val));
           const debtItems = debtRaw.map((d, idx) => ({ ...d, icon: debtIcons[idx] }));
           renderDrill(debtItems, 'With Debts', PALETTE[2].solid);
         } catch(e) { console.error(e); }
