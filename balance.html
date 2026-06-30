@@ -12,7 +12,7 @@
     background: #1a1a1a;
     font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
     color: #fff;
-    overflow: hidden;
+    overflow: hidden;padding-top:20px;
   }
 
   /* ── 2x2 grid layout ── */
@@ -31,6 +31,11 @@
     gap: 3vw;
     min-height: 0;
   }
+
+  #row-top {
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 0vw;
+}
 
   /* LEFT column — donut widget */
   #col-left {
@@ -282,7 +287,7 @@
   }
 
   .bi-list-val {
-    font-size: 2.2vw;
+    font-size: 2.54vw;
     font-weight: 700;
     color: #fff;
     white-space: nowrap;
@@ -325,7 +330,7 @@
   .col-bar {
     position: absolute;
     left: 0; width: 100%;
-    background: rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.85);
     transition: height 0.5s ease;
   }
 
@@ -349,7 +354,7 @@
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 1.8vw;
+    font-size: 2.2vw;
     font-weight: 700;
     color: rgba(255,255,255,0.8);
     white-space: nowrap;
@@ -359,8 +364,8 @@
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 1.6vw;
-    font-weight: 600;
+    font-size: 1.8vw;
+    font-weight: 400;
     color: rgba(255,255,255,0.55);
     white-space: nowrap;
   }
@@ -382,7 +387,7 @@
 <div id="card-balance" style="display:none"></div>
 </div>
 
-<div id="row-bottom">
+<div id="row-bottom" style="margin-top:10vw">
 <!-- LEFT: Donut -->
 <div id="col-left">
   <div id="donut-status">Loading…</div>
