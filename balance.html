@@ -503,11 +503,12 @@
         <img class="list-icon" src="${icon}" onerror="this.style.display='none'" />
         <div class="bi-list-name">${stripEmoji(name)}</div>
         <div class="bi-list-val">${fmt(val)}</div>
-        <div class="list-pct">${social ? '--' : pct.toFixed(0) + '%'}</div>`;
+        <div class="list-pct">${social ? '---' : pct.toFixed(0) + '%'}</div>`;
       card.appendChild(row);
     });
 
     card.style.display = 'flex';
+    applyLayout();
   }
 
   function renderIncomeColumns(items) {
@@ -519,7 +520,8 @@
     const sorted   = [...filtered].sort((a,b) => Math.abs(b.val) - Math.abs(a.val));
     const maxAbs   = Math.max(...sorted.map(d => Math.abs(d.val)), 1);
 
-    const cardH    = window.innerWidth * 0.34; // total chart height px (extra room for value label)
+    const baseW    = Math.min(window.innerWidth, window.innerWidth < 400 ? window.innerWidth * 0.5 : window.innerWidth);
+    const cardH    = baseW * 0.34; // total chart height px (extra room for value label)
     const baselineY = cardH * 0.55;            // baseline position (room above for icon+pct)
     const maxBarH  = Math.min(baselineY * 0.7, (cardH - baselineY) * 0.9);
 
@@ -543,27 +545,28 @@
         // bar grows upward from baseline; icon above bar; value above icon; pct above value
         col.innerHTML = `
           <div class="col-bar" style="bottom:${cardH - baselineY}px; height:${barH}px; border-radius:1.6vw 1.6vw 0 0;"></div>
-          <div class="col-icon-wrap" style="bottom:${cardH - baselineY + barH - window.innerWidth*0.052}px;">
+          <div class="col-icon-wrap" style="bottom:${cardH - baselineY + barH - baseW*0.052}px;">
             <img src="${icon}" onerror="this.style.display='none'" />
           </div>
           <div class="col-val" style="bottom:${cardH - baselineY + barH + 6}px;">${fmtShortSigned(val)}</div>
-          <div class="col-pct" style="bottom:${cardH - baselineY + barH + window.innerWidth*0.024 + 6}px;">${pct.toFixed(0)}%</div>
+          <div class="col-pct" style="bottom:${cardH - baselineY + barH + baseW*0.024 + 6}px;">${pct.toFixed(0)}%</div>
         `;
       } else {
         // bar grows downward from baseline; icon above baseline (top); value above icon; pct above value
         col.innerHTML = `
           <div class="col-bar" style="top:${baselineY}px; height:${barH}px; border-radius:0 0 1.6vw 1.6vw;"></div>
-          <div class="col-icon-wrap" style="top:${baselineY + barH - window.innerWidth*0.052}px;">
+          <div class="col-icon-wrap" style="top:${baselineY + barH - baseW*0.052}px;">
             <img src="${icon}" onerror="this.style.display='none'" />
           </div>
-          <div class="col-val" style="top:${baselineY - window.innerWidth*0.052 - 6}px;">${fmtShortSigned(val)}</div>
-          <div class="col-pct" style="top:${baselineY - window.innerWidth*0.052 - window.innerWidth*0.024 - 6}px;">${pct.toFixed(0)}%</div>
+          <div class="col-val" style="top:${baselineY - baseW*0.052 - 6}px;">${fmtShortSigned(val)}</div>
+          <div class="col-pct" style="top:${baselineY - baseW*0.052 - baseW*0.024 - 6}px;">${pct.toFixed(0)}%</div>
         `;
       }
       card.appendChild(col);
     });
 
     card.style.display = 'flex';
+    applyLayout();
   }
 
   async function load() {
@@ -1022,9 +1025,14 @@ function applyLayout() {
   const colRight = document.getElementById('col-right');
   const colLeft  = document.getElementById('col-left');
   const donutWrap = document.getElementById('donut-wrap');
+  const rowTop   = document.getElementById('row-top');
 
   if (w < 400) {
-    // Mobile: hide right, scale left 80% larger
+    // ── Mobile: stack top row (income/balance) vertically so they don't collapse/overflow ──
+    rowTop.style.flexDirection = 'column';
+    rowTop.style.gap = '3vw';
+
+    // ── Mobile: hide right, scale left (expenses donut) 80% larger ──
     colRight.style.display = 'none';
     colLeft.style.flex = '1';
     colLeft.style.paddingTop = '4vw';
@@ -1065,6 +1073,10 @@ function applyLayout() {
     });
 
   } else {
+    // ── Tablet/desktop: top row stays side-by-side ──
+    rowTop.style.flexDirection = 'row';
+    rowTop.style.gap = '3vw';
+
     // Tablet/desktop: show both columns, reset to default sizes
     colRight.style.display = 'flex';
     colLeft.style.paddingTop = '8vw';
@@ -1096,7 +1108,7 @@ function applyLayout() {
 
 // Run on load and on resize
 window.addEventListener('resize', applyLayout);
-// Initial layout applied from within renderList after DOM is ready
+// Initial layout applied from within renderList / renderBalanceList / renderIncomeColumns after DOM is ready
 </script>
 </body>
 </html>
