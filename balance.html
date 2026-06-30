@@ -1111,6 +1111,13 @@ function applyLayout() {
       el.style.height = '5.2vw';
     });
 
+    document.getElementById('card-balance').style.gap = '3vw';
+    document.querySelectorAll('.list-item').forEach(el => {
+      el.style.padding = '1.8vw 1.8vw';
+      el.style.gap     = '2.4vw';
+      el.style.borderRadius = '3vw';
+    });
+
     document.querySelectorAll('.col-pct').forEach(el => el.style.fontSize = '3.6vw');
     document.querySelectorAll('.col-val').forEach(el => el.style.fontSize = '4.57vw');
     document.querySelectorAll('.col-icon-wrap img').forEach(el => {
@@ -1184,6 +1191,13 @@ function applyLayout() {
     document.querySelectorAll('.list-icon').forEach(el => {
       el.style.width  = '4vw';
       el.style.height = '4vw';
+    });
+    document.getElementById('card-balance').style.gap = '3vw';
+    document.getElementById('card-balance').style.gap = '1.3vw';
+    document.querySelectorAll('.list-item').forEach(el => {
+      el.style.padding = '0.6vw 1.8vw';
+      el.style.gap     = '1.6vw';
+      el.style.borderRadius = '1.6vw';
     });
 
     document.querySelectorAll('.col-pct').forEach(el => el.style.fontSize = '1.53vw');
