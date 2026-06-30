@@ -504,7 +504,7 @@
         <img class="list-icon" src="${icon}" onerror="this.style.display='none'" />
         <div class="bi-list-name">${stripEmoji(name)}</div>
         <div class="bi-list-val">${fmt(val)}</div>
-        <div class="list-pct">${social ? '--' : pct.toFixed(0) + '%'}</div>`;
+        <div class="list-pct">${social ? '   ' : pct.toFixed(0) + '%'}</div>`;
       card.appendChild(row);
     });
 
@@ -547,7 +547,7 @@
           <div class="col-icon-wrap" style="bottom:${cardH - baselineY + barH - window.innerWidth*0.052}px;">
             <img src="${icon}" onerror="this.style.display='none'" />
           </div>
-          <div class="col-val" style="bottom:${cardH - baselineY + barH + 6}px;">${fmtShortSigned(val)}</div>
+          <div class="col-val" style="bottom:${cardH - baselineY + barH + 4}px;">${fmtShortSigned(val)}</div>
           <div class="col-pct" style="bottom:${cardH - baselineY + barH + window.innerWidth*0.024 + 6}px;">${pct.toFixed(0)}%</div>
         `;
       } else {
