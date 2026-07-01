@@ -36,11 +36,11 @@
     background: rgba(255,255,255,0.06); padding: 0.5vw;
   }
   .bi-list-name {
-    flex: 1; font-size: 2.5vw; font-weight: 600; color: rgba(255,255,255,0.95);
+    flex: 1; font-size: 2.5vw; font-weight: 600; color: #fff;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .bi-list-val {
-    font-size: 2.54vw; font-weight: 700; color:rgba(255,255,255,0.65);
+    font-size: 2.54vw; font-weight: 700; color: #fff;
     white-space: nowrap; text-align: right; margin-left: auto;
   }
   .list-pct {
@@ -73,7 +73,7 @@
     sorted.forEach(({icon,name,val})=>{
       const social=isSocial(name),pct=total>0?(Math.abs(val)/total*100):0;
       const row=document.createElement('div');row.className='list-item';row.dataset.pct=social?'':pct.toFixed(1);
-      row.innerHTML=`<img class="list-icon" src="${icon}" onerror="this.style.display='none'" /><div class="bi-list-name">${stripEmoji(name)}</div><div class="bi-list-val">${fmt(val)}</div><div class="list-pct">${social?'-----':pct.toFixed(0)+'%'}</div>`;
+      row.innerHTML=`<img class="list-icon" src="${icon}" onerror="this.style.display='none'" /><div class="bi-list-name">${stripEmoji(name)}</div><div class="bi-list-val">${fmt(val)}</div><div class="list-pct">${social?'-----':pct.toFixed(1)+'%'}</div>`;
       card.appendChild(row);
     });
     card.style.display='flex';
@@ -100,7 +100,7 @@
 
 function applyLayout() {
   const w = window.innerWidth;
-  if (w > 400) {
+  if (w < 400) {
     document.body.style.overflowY = 'auto';
     document.getElementById('card-balance').style.gap='3vw';
     document.querySelectorAll('.list-item').forEach(el=>{el.style.padding='1.6vw 1.8vw';el.style.gap='2.4vw';el.style.borderRadius='3vw';});
