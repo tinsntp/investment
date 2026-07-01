@@ -15,7 +15,6 @@
     overflow: hidden;padding-top:25px;
   }
 
-  /* ── 2x2 grid layout ── */
   body {
     display: flex;
     flex-direction: column;
@@ -32,225 +31,6 @@
     gap: 3vw;
     min-height: 0;
   }
-
-  #row-bottom {
-    display: flex;
-    flex-direction: row;
-    flex: 0 0 auto;
-    gap: 3vw;
-    min-height: 0;
-  }
- 
-  /* LEFT column — donut widget */
-  #col-left {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    padding-bottom: 0;
-    padding-top: 8vw;
-  }
-
-  /* RIGHT column — weather + countdown */
-  #col-right {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    gap: 0;
-    padding-bottom: 0;
-  }
-
-  /* ── DONUT ── */
-  #donut-wrap {
-    width: 25vw;
-    height: 25vw;
-    position: relative;
-    margin: 0 auto 2vw auto;
-    align-self: center;
-    display: none;
-  }
-
-  #donut-wrap svg {
-    width: 100%; height: 100%;
-    filter: drop-shadow(0 4px 24px rgba(0,0,0,0.5));
-  }
-
-  .donut-center {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    pointer-events: none;
-  }
-
-  .donut-center-label {
-    font-size: 1.45vw;
-    color: rgba(255,255,255,0.45);
-    margin-bottom: 0.34vw;
-  }
-
-  .donut-center-val {
-    font-size: 2.31vw;
-    font-weight: 700;
-    color: #fff;
-  }
-
-  #list {
-    width: 100%;
-    padding: 0 2.17vw;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .list-row {
-    display: flex;
-    align-items: center;
-    padding: 1.3vw 0;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-    gap: 1.45vw;
-    cursor: pointer;
-    transition: opacity 0.2s;
-  }
-  .list-row:last-child { border-bottom: none; }
-  .list-row.dimmed { opacity: 0.3; }
-
-  .list-dot {
-    width: 1.45vw; height: 1.45vw;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  .list-name {
-    flex: 1;
-    font-size: 2.54vw;
-    font-weight: 600;
-    color: #fff;
-  }
-
-  .list-val {
-    font-size: 2.54vw;
-    font-weight: 600;
-    color: rgba(255,255,255,0.85);
-    white-space: nowrap;
-    text-align: right;
-  }
-
-  #donut-status {
-    font-size: 1.7vw;
-    color: rgba(255,255,255,0.4);
-    text-align: center;
-    padding: 1.7vw;
-  }
-
-  /* ── WEATHER ── */
-  .wx {
-    padding: 0 3vw;
-    margin-bottom: 4vw;
-  }
-
-  .wx-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 2vw;
-  }
-
-  .wx-city      { font-size: 2.8vw; font-weight: 700; color: #fff; line-height: 1.1; }
-  .wx-date      { font-size: 2.2vw; color: rgba(255,255,255,0.55); margin-top: 0.4vw; }
-  .wx-current   { display: flex; align-items: center; gap: 1vw; }
-  .wx-temp-big  { font-size: 3.2vw; font-weight: 700; color: #fff; line-height: 1; }
-  .wx-cond      { font-size: 1.7vw; color: rgba(255,255,255,0.55); margin-top: 0.3vw; text-align: right; }
-  .wx-hourly    { display: flex; overflow-x: auto; scrollbar-width: none; }
-  .wx-hourly::-webkit-scrollbar { display: none; }
-  .wx-hour      { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.6vw; padding: 0 0.5vw; }
-  .wx-hour-time { font-size: 2vw; color: rgba(255,255,255,0.5); }
-  .wx-hour-temp { font-size: 2.4vw; font-weight: 700; color: #fff; }
-  .wx-hour-wind { font-size: 1.8vw; color: rgba(255,255,255,0.5); }
-
-  /* ── COUNTDOWN ── */
-  .countdown {
-    display: flex;
-    gap: 2vw;
-    padding: 0 3vw;
-    justify-content: center;
-    align-items: flex-end;
-  }
-
-  .unit {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1vw;
-    flex: 1 1 0;
-  }
-
-  .card {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    background: #f5f5f5;
-    border-radius: 8%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow:
-      0 0.5vw 1vw rgba(0,0,0,0.45),
-      0 0.1vw 0.3vw rgba(0,0,0,0.3),
-      inset 0 0.1vw 0 rgba(255,255,255,0.8);
-    overflow: hidden;
-  }
-
-  .card::after {
-    content: '';
-    position: absolute;
-    left: 0; right: 0; top: 50%;
-    height: 1.5px;
-    background: rgba(0,0,0,0.12);
-    z-index: 2;
-  }
-
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 50%;
-    background: rgba(0,0,0,0.04);
-    z-index: 1;
-    border-radius: 8% 8% 0 0;
-  }
-
-  .card-number {
-    font-size: 7vw;
-    font-weight: 400;
-    color: #222;
-    letter-spacing: -0.05em;
-    z-index: 3;
-    line-height: 1;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .label {
-    font-size: 2.2vw;
-    color: #aaa;
-    text-transform: capitalize;
-    letter-spacing: 0.03em;
-    font-weight: 450;
-    white-space: nowrap;
-  }
-
-  .card.flip .card-number { animation: flipNumber 0.4s ease-in-out; }
-
-
-
-  @keyframes flipNumber {
-    0%   { transform: rotateX(0deg);   opacity: 1; }
-    40%  { transform: rotateX(-90deg); opacity: 0; }
-    60%  { transform: rotateX(-90deg); opacity: 0; }
-    100% { transform: rotateX(0deg);   opacity: 1; }
-  }
-
 
   /* ── LEFT: List card with rounded-rect rows ── */
   #card-balance {
@@ -309,7 +89,7 @@
     flex-shrink: 0;
   }
 
-  /* ── RIGHT: Column chart (flex-based, no fragile absolute math) ── */
+  /* ── RIGHT: Column chart ── */
   #card-income {
     flex: 1;
     display: flex;
@@ -328,7 +108,6 @@
     min-width: 0;
   }
 
-  /* upper half: positive bars grow upward (anchored to bottom of this zone) */
   .col-zone-pos {
     flex: 1;
     width: 100%;
@@ -338,7 +117,6 @@
     align-items: center;
   }
 
-  /* lower half: negative bars grow downward (anchored to top of this zone) */
   .col-zone-neg {
     flex: 1;
     width: 100%;
@@ -391,82 +169,26 @@
     transition: height 0.5s ease;
   }
 
-  #status {
-    font-size: 1vw;
+  #bi-status {
+    font-size: 1.5vw;
     color: rgba(255,255,255,0.4);
     text-align: center;
-    padding: 4vw;
+    padding: 2vw;
   }
-
 </style>
 </head>
 <body>
+
 <div id="row-top">
-<div id="bi-status">Loading…</div>
-<div id="card-balance" style="display:none"></div>
-<div id="card-income"  style="display:none"></div>
-</div>
-
-<div id="row-bottom">
-<!-- LEFT: Donut -->
-<div id="col-left">
-  <div id="donut-status">Loading…</div>
-  <div id="donut-wrap">
-    <svg id="donut-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"></svg>
-    <div class="donut-center">
-      <div class="donut-center-label" id="center-label">Total</div>
-      <div class="donut-center-val" id="center-val">—</div>
-    </div>
-  </div>
-  <div id="list"></div>
-</div>
-
-<!-- RIGHT: Weather + Countdown -->
-<div id="col-right">
-  <div class="wx">
-    <div class="wx-header">
-      <div>
-        <div class="wx-city">Ho Chi Minh City</div>
-        <div class="wx-date" id="wx-date"></div>
-      </div>
-      <div class="wx-current">
-        <div>
-          <div class="wx-temp-big" id="wx-temp">—</div>
-          <div class="wx-cond" id="wx-cond">—</div>
-        </div>
-        <div id="wx-icon-main"></div>
-      </div>
-    </div>
-    <div class="wx-hourly" id="wx-hourly"></div>
-  </div>
-
-  <div class="countdown">
-    <div class="unit">
-      <div class="card" id="card-years"><span class="card-number" id="years">00</span></div>
-      <span class="label">Years</span>
-    </div>
-    <div class="unit">
-      <div class="card" id="card-months"><span class="card-number" id="months">00</span></div>
-      <span class="label">Months</span>
-    </div>
-    <div class="unit">
-      <div class="card" id="card-weeks"><span class="card-number" id="weeks">00</span></div>
-      <span class="label">Weeks</span>
-    </div>
-    <div class="unit">
-      <div class="card" id="card-days"><span class="card-number" id="days">00</span></div>
-      <span class="label">Days</span>
-    </div>
-  </div>
-</div>
+  <div id="bi-status">Loading…</div>
+  <div id="card-balance" style="display:none"></div>
+  <div id="card-income"  style="display:none"></div>
 </div>
 
 <script>
 (function() {
 
   const CSV_URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=311369594`;
-
-  const BAR_COLORS = ['#7B61FF', '#E0E0E0', '#4285F4', '#E0E0E0'];
 
   function fmt(v) {
     return (v < 0 ? '−' : '') + '₫' + Math.round(Math.abs(v)).toLocaleString('en-US');
@@ -513,14 +235,13 @@
     card.innerHTML = '';
 
     const filtered = items.filter(d => d.val && Math.abs(d.val) > 0);
-    // exclude SOCIAL from the percentage total
     const total = filtered
       .filter(d => !isSocial(d.name))
       .reduce((s, d) => s + Math.abs(d.val), 0);
     const sorted = [...filtered].sort((a,b) => {
       const aSocial = isSocial(a.name), bSocial = isSocial(b.name);
-      if (aSocial && !bSocial) return 1;   // a goes after b
-      if (!aSocial && bSocial) return -1;  // a goes before b
+      if (aSocial && !bSocial) return 1;
+      if (!aSocial && bSocial) return -1;
       return Math.abs(b.val) - Math.abs(a.val);
     });
 
@@ -534,7 +255,7 @@
         <img class="list-icon" src="${icon}" onerror="this.style.display='none'" />
         <div class="bi-list-name">${stripEmoji(name)}</div>
         <div class="bi-list-val">${fmt(val)}</div>
-        <div class="list-pct">${social ? '-----' : pct.toFixed(1) + '%'}</div>`;
+        <div class="list-pct">${social ? '--' : pct.toFixed(1) + '%'}</div>`;
       card.appendChild(row);
     });
 
@@ -551,10 +272,9 @@
     const sorted   = [...filtered].sort((a,b) => Math.abs(b.val) - Math.abs(a.val));
     const maxAbs   = Math.max(...sorted.map(d => Math.abs(d.val)), 1);
 
-    // Fixed chart height in px, scaled to viewport width but with sane min/max bounds
-    const cardH   = Math.max(140, Math.min(window.innerWidth * 0.32, 260));
-    const posZoneH = cardH * 0.55; // upper half (positive bars)
-    const negZoneH = cardH * 0.45; // lower half (negative bars)
+    const cardH    = Math.max(140, Math.min(window.innerWidth * 0.32, 260));
+    const posZoneH = cardH * 0.55;
+    const negZoneH = cardH * 0.45;
     const maxBarPx = Math.min(posZoneH, negZoneH) * 0.55;
 
     card.style.minHeight = cardH + 'px';
@@ -580,23 +300,19 @@
           <div class="col-pct">${pct.toFixed(1)}%</div>
           <div class="col-val">${fmtShortSigned(val)}</div>
           <div class="col-icon-wrap"><img src="${icon}" onerror="this.style.display='none'" /></div>
-          <div class="col-bar" style="height:${barH}px; border-radius:1vw 1vw 0 0;"></div>
-        `;
+          <div class="col-bar" style="height:${barH}px; border-radius:1vw 1vw 0 0;"></div>`;
       } else {
         negZone.innerHTML = `
           <div class="col-bar" style="height:${barH}px; border-radius:0 0 1vw 1vw;"></div>
           <div class="col-icon-wrap" style="margin-top:0.4vw;"><img src="${icon}" onerror="this.style.display='none'" /></div>
           <div class="col-val">${fmtShortSigned(val)}</div>
-          <div class="col-pct" style="margin-bottom:0;">${pct.toFixed(1)}%</div>
-        `;
+          <div class="col-pct" style="margin-bottom:0;">${pct.toFixed(1)}%</div>`;
       }
 
       col.appendChild(posZone);
-
       const baselineRow = document.createElement('div');
       baselineRow.className = 'col-baseline-row';
       col.appendChild(baselineRow);
-
       col.appendChild(negZone);
       card.appendChild(col);
     });
@@ -612,25 +328,20 @@
       const text = await r.text();
       const rows = text.trim().split('\n').filter(r => r.trim());
 
-      const balance = [];
-      const income  = [];
-
+      const balance = [], income = [];
       rows.forEach(row => {
         const cols = splitCSVRow(row);
         const bIcon = (cols[0] || '').replace(/^"|"$/g,'').trim();
         const bName = (cols[1] || '').replace(/^"|"$/g,'').trim();
         const bVal  = parseNum(cols[2]);
-
         const iIcon = (cols[4] || '').replace(/^"|"$/g,'').trim();
         const iName = (cols[5] || '').replace(/^"|"$/g,'').trim();
         const iVal  = parseNum(cols[6]);
-
         if (bName && !isNaN(bVal)) balance.push({ icon: bIcon, name: bName, val: bVal });
         if (iName && !isNaN(iVal)) income.push({ icon: iIcon, name: iName, val: iVal });
       });
 
       if (!balance.length && !income.length) throw new Error('No data found in columns A-C or E-G.');
-
       document.getElementById('bi-status').style.display = 'none';
       renderBalanceList(balance);
       renderIncomeColumns(income);
@@ -646,471 +357,18 @@
 </script>
 
 <script>
-/* ── DONUT ──────────────────────────────────────────────────────────── */
-const CSV_URL      = `https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1324702331`;
-const CSV_URL_TAB1 = `https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv`;
-
-const PALETTE = [
-  { from: '#2ECC71', to: '#1aad5e', solid: '#2ECC71', glow: 'rgba(46,204,113,0.4)',  id: 'g0' },
-  { from: '#FFB6C1', to: '#FF8FA3', solid: '#FFB6C1', glow: 'rgba(255,182,193,0.4)', id: 'g1' },
-  { from: '#FF69B4', to: '#e0408a', solid: '#FF69B4', glow: 'rgba(255,105,180,0.4)',id: 'g2' },
-];
-
-let activeIdx = null, globalData = [], tab1Data = [], drillMode = false;
-
-function fmtShort(v) {
-  const a = Math.abs(v);
-  const s = a >= 1e9 ? (a/1e9).toFixed(1)+'B'
-          : a >= 1e6 ? (a/1e6).toFixed(1)+'M'
-          : a >= 1e3 ? Math.round(a/1e3)+'K'
-          : String(Math.round(a));
-  return (v < 0 ? '−' : '') + 'đ' + s;
-}
-
-function fmtFull(v) {
-  const a = Math.abs(v);
-  return (v < 0 ? '−' : '') + '₫' + Math.round(a).toLocaleString('en-US');
-}
-
-function splitCSVRow(row) {
-  const cols = []; let cur = '', inQ = false;
-  for (const ch of row) {
-    if (ch === '"') inQ = !inQ;
-    else if (ch === ',' && !inQ) { cols.push(cur); cur = ''; }
-    else cur += ch;
-  }
-  cols.push(cur);
-  return cols;
-}
-
-function parseNum(str) {
-  if (!str) return NaN;
-  let s = str.trim();
-  if (/^\(.*\)$/.test(s)) s = '-' + s.slice(1,-1);
-  s = s.replace(/[\u2212\u2013\u2014]/g, '-').replace(/[^0-9.\-]/g, '');
-  return parseFloat(s);
-}
-
-function arcPath(cx, cy, r, startAngle, endAngle) {
-  const toRad = a => (a - 90) * Math.PI / 180;
-  const x1 = cx + r * Math.cos(toRad(startAngle));
-  const y1 = cy + r * Math.sin(toRad(startAngle));
-  const x2 = cx + r * Math.cos(toRad(endAngle));
-  const y2 = cy + r * Math.sin(toRad(endAngle));
-  const large = (endAngle - startAngle) > 180 ? 1 : 0;
-  return `M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2}`;
-}
-
-function setCenter(label, val) {
-  document.getElementById('center-label').textContent = label;
-  document.getElementById('center-val').textContent   = val;
-}
-
-function highlightSegment(idx) {
-  activeIdx = idx;
-  document.querySelectorAll('.seg').forEach((el, i) => {
-    el.style.opacity = (idx === null || i === idx) ? '1' : '0.2';
-    el.setAttribute('stroke-width', (idx !== null && i === idx) ? '32' : '28');
-  });
-  document.querySelectorAll('.list-row').forEach((el, i) => {
-    el.classList.toggle('dimmed', idx !== null && i !== idx);
-  });
-  if (idx === null) setCenter('Total', fmtShort(globalData.reduce((s,d) => s + d.val, 0)));
-  else setCenter(globalData[idx].name, fmtShort(globalData[idx].val));
-}
-
-function renderDonut(data) {
-  const svg = document.getElementById('donut-svg');
-  svg.innerHTML = '';
-  const total = data.reduce((s, d) => s + Math.abs(d.val), 0);
-  const cx = 100, cy = 100, r = 78, strokeW = 28, GAP = 4;
-
-  const defs = document.createElementNS('http://www.w3.org/2000/svg','defs');
-  PALETTE.forEach(p => {
-    const grad = document.createElementNS('http://www.w3.org/2000/svg','linearGradient');
-    grad.setAttribute('id', p.id);
-    grad.setAttribute('x1','0%'); grad.setAttribute('y1','0%');
-    grad.setAttribute('x2','100%'); grad.setAttribute('y2','100%');
-    [['0%', p.from],['100%', p.to]].forEach(([off, col]) => {
-      const stop = document.createElementNS('http://www.w3.org/2000/svg','stop');
-      stop.setAttribute('offset', off); stop.setAttribute('stop-color', col);
-      grad.appendChild(stop);
-    });
-    defs.appendChild(grad);
-  });
-  svg.appendChild(defs);
-
-  const track = document.createElementNS('http://www.w3.org/2000/svg','circle');
-  track.setAttribute('cx', cx); track.setAttribute('cy', cy); track.setAttribute('r', r);
-  track.setAttribute('fill','none');
-  track.setAttribute('stroke','rgba(255,255,255,0.06)');
-  track.setAttribute('stroke-width', strokeW);
-  svg.appendChild(track);
-
-  let angle = 0;
-  data.forEach(({ val }, i) => {
-    const pct   = Math.abs(val) / total;
-    const sweep = pct * 360 - GAP;
-    if (sweep <= 0) { angle += pct * 360; return; }
-
-    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
-    path.setAttribute('d', arcPath(cx, cy, r, angle, angle + sweep));
-    path.setAttribute('fill', 'none');
-    path.setAttribute('stroke', `url(#${PALETTE[i % PALETTE.length].id})`);
-    path.setAttribute('stroke-width', strokeW);
-    path.setAttribute('stroke-linecap', 'round');
-    path.setAttribute('class', 'seg');
-    path.setAttribute('data-idx', i);
-    path.style.cursor = 'pointer';
-    path.style.transition = 'opacity 0.25s, stroke-width 0.2s';
-    path.addEventListener('click', (e) => { e.stopPropagation(); highlightSegment(activeIdx === i ? null : i); });
-    svg.appendChild(path);
-    angle += pct * 360;
-  });
-
-  svg.addEventListener('click', () => highlightSegment(null));
-  setCenter('Total', fmtShort(data.reduce((s,d) => s + d.val, 0)));
-  document.getElementById('donut-wrap').style.display = 'flex';
-  document.getElementById('donut-status').style.display = 'none';
-}
-
-function miniRing(pct, color) {
-  const r = 10, sw = 3, circ = 2 * Math.PI * r;
-  const dash = (pct / 100) * circ;       // filled arc length
-  const gap  = circ - dash;              // remaining arc length
-  // rotate(-90) starts arc at 12 o'clock; dashoffset=0 is correct after rotation
-  return `<svg width="2.8vw" height="2.8vw" viewBox="0 0 28 28" style="flex-shrink:0;width:2.8vw;height:2.8vw;">
-    <circle cx="14" cy="14" r="${r}" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="${sw}"/>
-    <circle cx="14" cy="14" r="${r}" fill="none" stroke="${color}" stroke-width="${sw}"
-      stroke-linecap="round"
-      stroke-dasharray="${dash} ${gap}"
-      stroke-dashoffset="0"
-      transform="rotate(-90 14 14)"/>
-  </svg>`;
-}
-
-async function fetchTab1() {
-  if (tab1Data.length) return tab1Data; // cached
-  const r = await fetch(CSV_URL_TAB1 + '&t=' + Date.now(), { cache: 'no-store' });
-  if (!r.ok) throw new Error('tab1 ' + r.status);
-  const text = await r.text();
-  const rows = text.trim().split('\n').filter(r => r.trim());
-  tab1Data = rows.map(row => {
-    const cols = splitCSVRow(row);
-    return { name: cols[0].replace(/^"|"$/g,'').trim(), val: parseNum(cols[1]) };
-  }).filter(d => d.name && !isNaN(d.val));
-  return tab1Data;
-}
-
-function renderDrill(items, title, color) {
-  drillMode = true;
-  const list = document.getElementById('list');
-  list.innerHTML = '';
-
-  // Back button
-  const header = document.createElement('div');
-  header.style.cssText = 'display:flex;align-items:center;gap:1vw;padding:1vw 0 1.5vw;cursor:pointer;';
-  header.innerHTML = `<span style="font-size:2.5vw;color:rgba(255,255,255,0.5);">◂</span>
-    <span style="font-size:2.5vw;font-weight:700;color:${color};">${title}</span>`;
-  header.addEventListener('click', () => {
-    drillMode = false;
-    activeIdx = null;
-    renderList(globalData);
-    highlightSegment(null);
-  });
-  list.appendChild(header);
-
-  const total = items.reduce((s, d) => s + Math.abs(d.val), 0);
-  const fs = '1.4vw';
-  const ringSize = '2vw';
-  const pctFs = '1.02vw';
-
-  items.forEach(({ name, val, icon }) => {
-    const pct  = Math.abs(val) / total * 100;
-    const r2   = 10, sw = 3, circ = 2 * Math.PI * r2;
-    const dash = (pct / 100) * circ;
-    const gap  = circ - dash;
-    const displayVal = fmtFull(Math.abs(val)); // always positive
-
-    const row = document.createElement('div');
-    row.className = 'list-row';
-    row.style.cursor = 'default';
-    row.innerHTML = `
-      <img src="${icon}" style="width:3vw;height:3vw;object-fit:contain;flex-shrink:0;" />
-      <div class="list-name" style="font-size:${fs};">${name}</div>
-      <div class="list-val" style="font-size:${fs};">${displayVal}</div>
-      <svg viewBox="0 0 28 28" style="flex-shrink:0;width:${ringSize};height:${ringSize};">
-        <circle cx="14" cy="14" r="${r2}" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="${sw}"/>
-        <circle cx="14" cy="14" r="${r2}" fill="none" stroke="${color}" stroke-width="${sw}"
-          stroke-linecap="round"
-          stroke-dasharray="${dash.toFixed(2)} ${gap.toFixed(2)}"
-          stroke-dashoffset="0"
-          transform="rotate(-90 14 14)"/>
-      </svg>
-      <div style="font-size:${pctFs};color:rgba(255,255,255,0.55);flex-shrink:0;">${pct.toFixed(1)}%</div>`;
-    list.appendChild(row);
-  });
-
-  applyLayout();
-}
-
-function renderList(data) {
-  const list = document.getElementById('list');
-  list.innerHTML = '';
-  const total = data.reduce((s, d) => s + Math.abs(d.val), 0);
-  data.forEach(({ name, val }, i) => {
-    const p   = PALETTE[i % PALETTE.length];
-    const pct = Math.abs(val) / total * 100;
-    const row = document.createElement('div');
-    row.className = 'list-row';
-    const icons = [
-      'https://raw.githubusercontent.com/tinsntp/investment/main/cash.png',
-      'https://raw.githubusercontent.com/tinsntp/investment/main/expense.png',
-      'https://raw.githubusercontent.com/tinsntp/investment/main/bank%20loan.png',
-    ];
-    row.innerHTML = `
-      <img src="${icons[i % icons.length]}" style="width:2.89vw;height:2.89vw;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 0 3px ${p.glow});" />
-      <div class="list-name">${name}</div>
-      <div class="list-val">${fmtFull(val)}</div>
-      ${miniRing(pct, p.solid)}
-      <div style="font-size:2vw;color:rgba(255,255,255,0.5);white-space:nowrap;flex-shrink:0;">${pct.toFixed(1)}%</div>`;
-    row.addEventListener('click', async () => {
-      if (i === 1) {
-        // Expenses — rows 1-5 from tab 1
-        highlightSegment(1);
-        try {
-          const t1 = await fetchTab1();
-          const expIcons = [
-            'https://github.com/tinsntp/investment/blob/main/shop.png?raw=true',
-            'https://github.com/tinsntp/investment/blob/main/heart.png?raw=true',
-            'https://github.com/tinsntp/investment/blob/main/transaction.png?raw=true',
-            'https://github.com/tinsntp/investment/blob/main/shield.png?raw=true',
-            'https://github.com/tinsntp/investment/blob/main/house.png?raw=true',
-          ];
-          const expItems = t1.slice(0, 4).map((d, idx) => ({ ...d, icon: expIcons[idx] }));
-          renderDrill(expItems, 'Expenses', PALETTE[1].solid);
-        } catch(e) { console.error(e); }
-      } else if (i === 2) {
-        // With Debts — rows 9-10 from tab 1
-        highlightSegment(2);
-        try {
-          const t1 = await fetchTab1();
-          const debtIcons = [
-            'https://github.com/tinsntp/investment/blob/main/sc.png?raw=true',
-            'https://github.com/tinsntp/investment/blob/main/shinhan.png?raw=true',
-          ];
-          // After filtering blanks: index 7=Standard Chartered, index 8=Shinhan
-          const debtRaw = t1.slice(6, 8).filter(d => d.name && !isNaN(d.val));
-          const debtItems = debtRaw.map((d, idx) => ({ ...d, icon: debtIcons[idx] }));
-          renderDrill(debtItems, 'With Debts', PALETTE[2].solid);
-        } catch(e) { console.error(e); }
-      } else {
-        highlightSegment(activeIdx === i ? null : i);
-      }
-    });
-    list.appendChild(row);
-  });
-  // Apply responsive sizing after list is fully rendered
-  applyLayout();
-}
-
-async function loadDonut() {
-  try {
-    const r = await fetch(CSV_URL + '&t=' + Date.now(), { cache: 'no-store' });
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    const text = await r.text();
-    const rows = text.trim().split('\n').filter(r => r.trim());
-    const data = rows.map(row => {
-      const cols = splitCSVRow(row);
-      return { name: cols[0].replace(/^"|"$/g,'').trim(), val: parseNum(cols[1]) };
-    }).filter(d => d.name && !isNaN(d.val));
-    if (!data.length) throw new Error('No data found.');
-    globalData = data;
-    renderDonut(data);
-    renderList(data);
-  } catch(e) {
-    document.getElementById('donut-status').textContent = `⚠ ${e.message}`;
-  }
-}
-
-loadDonut();
-setInterval(loadDonut, 60000);
-
-/* ── WEATHER ────────────────────────────────────────────────────────── */
-(async () => {
-  const days   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-  const now    = new Date();
-  document.getElementById('wx-date').textContent = `${months[now.getMonth()]} ${now.getDate()} ${days[now.getDay()]}`;
-
-  function iconSize() { return Math.round(window.innerWidth * 0.045); }
-
-  function moonCloudSVG(s) {
-    return `<svg width="${s}" height="${s}" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M36 10 C36 21 27 28 17 26 C19 33 26 38 34 36 C43 34 47 25 44 17 C41 11 38 9 36 10Z" fill="#F5A623"/>
-      <ellipse cx="22" cy="37" rx="12" ry="8" fill="#90CAF9"/>
-      <ellipse cx="30" cy="39" rx="10" ry="7" fill="#90CAF9"/>
-      <ellipse cx="16" cy="39" rx="8"  ry="6" fill="#90CAF9"/>
-    </svg>`;
-  }
-  function sunSVG(s) {
-    return `<svg width="${s}" height="${s}" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="26" cy="26" r="10" fill="#F5A623"/>
-      <g stroke="#F5A623" stroke-width="2.5" stroke-linecap="round">
-        <line x1="26" y1="6" x2="26" y2="12"/><line x1="26" y1="40" x2="26" y2="46"/>
-        <line x1="6" y1="26" x2="12" y2="26"/><line x1="40" y1="26" x2="46" y2="26"/>
-        <line x1="11" y1="11" x2="15" y2="15"/><line x1="37" y1="37" x2="41" y2="41"/>
-        <line x1="41" y1="11" x2="37" y2="15"/><line x1="15" y1="37" x2="11" y2="41"/>
-      </g></svg>`;
-  }
-  function cloudSVG(s) {
-    return `<svg width="${s}" height="${s}" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="22" cy="30" rx="13" ry="9" fill="#90CAF9"/>
-      <ellipse cx="32" cy="32" rx="11" ry="8" fill="#90CAF9"/>
-      <ellipse cx="16" cy="33" rx="9"  ry="7" fill="#90CAF9"/></svg>`;
-  }
-  function rainSVG(s) {
-    return `<svg width="${s}" height="${s}" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="22" cy="24" rx="13" ry="9" fill="#90CAF9"/>
-      <ellipse cx="32" cy="26" rx="11" ry="8" fill="#90CAF9"/>
-      <ellipse cx="16" cy="27" rx="9"  ry="7" fill="#90CAF9"/>
-      <g stroke="#90CAF9" stroke-width="2" stroke-linecap="round">
-        <line x1="18" y1="36" x2="16" y2="42"/><line x1="26" y1="36" x2="24" y2="42"/>
-        <line x1="34" y1="36" x2="32" y2="42"/>
-      </g></svg>`;
-  }
-  function getIcon(wmo, isDay, size) {
-    if (wmo === 0) return isDay ? sunSVG(size) : moonCloudSVG(size);
-    if (wmo <= 2)  return moonCloudSVG(size);
-    if (wmo <= 48) return cloudSVG(size);
-    return rainSVG(size);
-  }
-  function wmoText(wmo) {
-    if (wmo === 0) return 'Clear sky';   if (wmo === 1) return 'Mainly clear';
-    if (wmo === 2) return 'Partly cloudy'; if (wmo === 3) return 'Overcast';
-    if (wmo <= 48) return 'Foggy';       if (wmo <= 57) return 'Drizzle';
-    if (wmo <= 67) return 'Rain';        if (wmo <= 77) return 'Snow';
-    if (wmo <= 82) return 'Rain showers'; return 'Thunderstorm';
-  }
-  function windDir(deg) {
-    return ['↑','↗','→','↘','↓','↙','←','↖'][Math.round(deg / 45) % 8];
-  }
-  try {
-    const url = 'https://api.open-meteo.com/v1/forecast?latitude=10.8231&longitude=106.6297' +
-      '&current=temperature_2m,weathercode,windspeed_10m,winddirection_10m,is_day' +
-      '&hourly=temperature_2m,weathercode,windspeed_10m,winddirection_10m' +
-      '&timezone=Asia%2FHo_Chi_Minh&forecast_days=1';
-    const data = await fetch(url).then(r => r.json());
-    const cur  = data.current;
-    document.getElementById('wx-temp').textContent = Math.round(cur.temperature_2m) + '°C';
-    document.getElementById('wx-cond').textContent = wmoText(cur.weathercode);
-    document.getElementById('wx-icon-main').innerHTML = getIcon(cur.weathercode, cur.is_day, iconSize() * 1.2);
-    const times = data.hourly.time, temps = data.hourly.temperature_2m;
-    const wmos  = data.hourly.weathercode, wspds = data.hourly.windspeed_10m, wdirs = data.hourly.winddirection_10m;
-    const nowH  = now.getHours(), slots = [];
-    for (let i = 0; i < times.length && slots.length < 5; i++) {
-      if (parseInt(times[i].split('T')[1]) >= nowH) slots.push(i);
-    }
-    document.getElementById('wx-hourly').innerHTML = slots.map(i => {
-      const hhmm = times[i].split('T')[1].slice(0,5);
-      return `<div class="wx-hour">
-        <span class="wx-hour-time">${hhmm}</span>
-        ${getIcon(wmos[i], hhmm>='06:00'&&hhmm<'18:00', iconSize())}
-        <span class="wx-hour-temp">${Math.round(temps[i])}°C</span>
-        <span class="wx-hour-wind">${windDir(wdirs[i])}${Math.round(wspds[i])}km/h</span>
-      </div>`;
-    }).join('');
-  } catch(e) {
-    document.getElementById('wx-temp').textContent = '—';
-    document.getElementById('wx-cond').textContent = 'Unable to load';
-  }
-})();
-
-/* ── COUNTDOWN ──────────────────────────────────────────────────────── */
-const TARGET = new Date('2028-12-25T00:00:00');
-let prev = { years: -1, months: -1, weeks: -1, days: -1 };
-function pad(n) { return String(n).padStart(2,'0'); }
-function calcCountdown() {
-  const now = new Date();
-  let years = TARGET.getFullYear() - now.getFullYear();
-  let months = TARGET.getMonth() - now.getMonth();
-  let days = TARGET.getDate() - now.getDate();
-  if (days < 0) { months--; days += new Date(TARGET.getFullYear(), TARGET.getMonth(), 0).getDate(); }
-  if (months < 0) { years--; months += 12; }
-  return { years, months, weeks: Math.floor(days/7), days: days%7 };
-}
-function animateCard(id) {
-  const card = document.getElementById('card-'+id);
-  card.classList.remove('flip'); void card.offsetWidth; card.classList.add('flip');
-  setTimeout(() => card.classList.remove('flip'), 400);
-}
-function update() {
-  const { years, months, weeks, days } = calcCountdown();
-  if (years  !== prev.years)  { document.getElementById('years').textContent  = pad(years);  animateCard('years');  }
-  if (months !== prev.months) { document.getElementById('months').textContent = pad(months); animateCard('months'); }
-  if (weeks  !== prev.weeks)  { document.getElementById('weeks').textContent  = pad(weeks);  animateCard('weeks');  }
-  if (days   !== prev.days)   { document.getElementById('days').textContent   = pad(days);   animateCard('days');   }
-  prev = { years, months, weeks, days };
-}
-update();
-setInterval(update, 1000);
-
-/* ── Responsive layout (JS-based, reliable in Notion iframes) ── */
+/* ── Responsive layout ── */
 function applyLayout() {
   const w = window.innerWidth;
-  const colRight = document.getElementById('col-right');
-  const colLeft  = document.getElementById('col-left');
-  const donutWrap = document.getElementById('donut-wrap');
-  const rowTop   = document.getElementById('row-top');
+  const rowTop = document.getElementById('row-top');
 
   if (w < 400) {
-    // ── Mobile: stack top row (income/balance) vertically so they don't collapse/overflow ──
+    // Mobile: stack vertically
     rowTop.style.flexDirection = 'column';
     rowTop.style.gap = '3vw';
     document.body.style.justifyContent = 'flex-start';
     document.body.style.overflowY = 'auto';
 
-    // ── Mobile: hide right, scale left (expenses donut) 80% larger ──
-    colRight.style.display = 'none';
-    colLeft.style.flex = '1';
-    colLeft.style.paddingTop = '4vw';
-
-    // Donut: 25vw * 1.8 = 45vw
-    donutWrap.style.width  = '45vw';
-    donutWrap.style.height = '45vw';
-
-    document.querySelector('.donut-center-label').style.fontSize = '2.61vw';
-    document.querySelector('.donut-center-val').style.fontSize   = '4.16vw';
-    document.getElementById('list').style.padding = '0 3.91vw';
-
-    document.querySelectorAll('.list-row').forEach(el => {
-      el.style.padding = '2.34vw 0';
-      el.style.gap     = '2.61vw';
-    });
-    document.querySelectorAll('.list-name').forEach(el => el.style.fontSize = '4.57vw');
-    document.querySelectorAll('.list-val').forEach(el  => el.style.fontSize = '4.57vw');
-
-    // Icons: 2.89vw * 1.8 = 5.2vw
-    document.querySelectorAll('#list img').forEach(el => {
-      el.style.width  = '5.2vw';
-      el.style.height = '5.2vw';
-    });
-
-    // Mini rings: 2.8vw * 1.8 = 5.04vw — set both attribute and style
-    document.querySelectorAll('#list svg').forEach(el => {
-      el.style.width  = '5.04vw';
-      el.style.height = '5.04vw';
-      el.setAttribute('width',  '5.04vw');
-      el.setAttribute('height', '5.04vw');
-    });
-
-    // Percentage labels — target the last div in each list-row
-    document.querySelectorAll('.list-row').forEach(row => {
-      const pctEl = row.querySelector('div:last-child');
-      if (pctEl) pctEl.style.fontSize = '3.6vw';
-    });
-
-    // ── Match Balance (top-left) and Income (top-right) font sizes to Expenses ──
     document.getElementById('card-balance').style.gap = '3vw';
     document.querySelectorAll('.list-item').forEach(el => {
       el.style.padding = '1.6vw 1.8vw';
@@ -1124,9 +382,8 @@ function applyLayout() {
       el.style.width  = '5.2vw';
       el.style.height = '5.2vw';
     });
-
     document.querySelectorAll('.col-pct').forEach(el => el.style.fontSize = '3.6vw');
-    document.querySelectorAll('.col-val').forEach(el => el.style.fontSize = '3.2vw');
+    document.querySelectorAll('.col-val').forEach(el => el.style.fontSize = '4.57vw');
     document.querySelectorAll('.col-icon-wrap img').forEach(el => {
       el.style.width  = '5.2vw';
       el.style.height = '5.2vw';
@@ -1136,13 +393,13 @@ function applyLayout() {
       el.style.height = '7vw';
     });
 
-    document.getElementById('card-income').style.marginTop = '20px';
+    document.getElementById('card-income').style.marginTop = '30px';
 
-    // ── Add mini ring before the value, on mobile only ──
+    // Add mini ring before value on mobile
     document.querySelectorAll('#card-balance .list-item').forEach(row => {
-      if (row.querySelector('.mini-ring-wrap')) return; // already added
+      if (row.querySelector('.mini-ring-wrap')) return;
       const pct = row.dataset.pct;
-      if (pct === '' || pct === undefined) return; // skip SOCIAL (no pct)
+      if (pct === '' || pct === undefined) return;
       const valEl = row.querySelector('.bi-list-val');
       const r = 10, sw = 3, circ = 2 * Math.PI * r;
       const dash = (parseFloat(pct) / 100) * circ;
@@ -1153,50 +410,20 @@ function applyLayout() {
       ringWrap.innerHTML = `<svg viewBox="0 0 28 28" style="width:100%;height:100%;">
         <circle cx="14" cy="14" r="${r}" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="${sw}"/>
         <circle cx="14" cy="14" r="${r}" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="${sw}"
-          stroke-linecap="round"
-          stroke-dasharray="${dash} ${gap}"
-          stroke-dashoffset="0"
-          transform="rotate(-90 14 14)"/>
+          stroke-linecap="round" stroke-dasharray="${dash} ${gap}"
+          stroke-dashoffset="0" transform="rotate(-90 14 14)"/>
       </svg>`;
       valEl.parentNode.insertBefore(ringWrap, valEl);
     });
 
   } else {
-    // ── Tablet/desktop: top row stays side-by-side ──
+    // Desktop/iPad: side-by-side
     rowTop.style.flexDirection = 'row';
     rowTop.style.gap = '3vw';
     document.body.style.justifyContent = 'flex-end';
     document.body.style.overflowY = 'hidden';
-    document.body.style.gap = '1vw';
+    document.body.style.gap = '1.5vw';
 
-    // Tablet/desktop: show both columns, reset to default sizes
-    colRight.style.display = 'flex';
-    colLeft.style.paddingTop = '8vw';
-
-    donutWrap.style.width  = '25vw';
-    donutWrap.style.height = '25vw';
-
-    document.querySelector('.donut-center-label').style.fontSize = '1.45vw';
-    document.querySelector('.donut-center-val').style.fontSize   = '2.31vw';
-    document.getElementById('list').style.padding = '0 2.17vw';
-
-    document.querySelectorAll('.list-row').forEach(el => {
-      el.style.padding = '1.3vw 0';
-      el.style.gap     = '1.45vw';
-    });
-    document.querySelectorAll('.list-name').forEach(el => el.style.fontSize = '2.54vw');
-    document.querySelectorAll('.list-val').forEach(el  => el.style.fontSize = '2.54vw');
-
-    document.querySelectorAll('#list svg').forEach(el => {
-      el.style.width  = '2.8vw';
-      el.style.height = '2.8vw';
-    });
-
-    document.querySelectorAll('#list .list-row > div:last-child').forEach(el => {
-      el.style.fontSize = '2.125vw';
-    });
-
-    // ── Reset Balance (top-left) and Income (top-right) font sizes to default ──
     document.getElementById('card-balance').style.gap = '1.3vw';
     document.querySelectorAll('.list-item').forEach(el => {
       el.style.padding = '0.6vw 1.8vw';
@@ -1210,7 +437,6 @@ function applyLayout() {
       el.style.width  = '4.5vw';
       el.style.height = '4.5vw';
     });
-
     document.querySelectorAll('.col-pct').forEach(el => el.style.fontSize = '2.125vw');
     document.querySelectorAll('.col-val').forEach(el => el.style.fontSize = '2vw');
     document.querySelectorAll('.col-icon-wrap img').forEach(el => {
@@ -1224,14 +450,12 @@ function applyLayout() {
 
     document.getElementById('card-income').style.marginTop = '0px';
 
-    // ── Remove mini ring on desktop ──
+    // Remove mini ring on desktop
     document.querySelectorAll('#card-balance .mini-ring-wrap').forEach(el => el.remove());
   }
 }
 
-// Run on load and on resize
 window.addEventListener('resize', applyLayout);
-// Initial layout applied from within renderList / renderBalanceList / renderIncomeColumns after DOM is ready
 </script>
 </body>
 </html>
