@@ -12,7 +12,7 @@
     background: #1a1a1a;
     font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
     color: #fff;
-    overflow: hidden;padding-top:30px;
+    overflow: hidden;padding-top:25px;
   }
 
   /* ── 2x2 grid layout ── */
@@ -150,10 +150,10 @@
     margin-bottom: 2vw;
   }
 
-  .wx-city      { font-size: 3.42vw; font-weight: 700; color: #fff; line-height: 1.1; }
+  .wx-city      { font-size: 3.0vw; font-weight: 700; color: #fff; line-height: 1.1; }
   .wx-date      { font-size: 2.2vw; color: rgba(255,255,255,0.55); margin-top: 0.4vw; }
   .wx-current   { display: flex; align-items: center; gap: 1vw; }
-  .wx-temp-big  { font-size: 3.8vw; font-weight: 700; color: #fff; line-height: 1; }
+  .wx-temp-big  { font-size: 3.5vw; font-weight: 700; color: #fff; line-height: 1; }
   .wx-cond      { font-size: 2vw; color: rgba(255,255,255,0.55); margin-top: 0.3vw; text-align: right; }
   .wx-hourly    { display: flex; overflow-x: auto; scrollbar-width: none; }
   .wx-hourly::-webkit-scrollbar { display: none; }
@@ -397,7 +397,7 @@
 <div id="row-top">
 <div id="bi-status">Loading…</div>
 <div id="card-balance" style="display:none"></div>
-<div id="card-income"  style="display:none;margin-top:30px"></div>
+<div id="card-income"  style="display:none"></div>
 
 </div>
 
@@ -1111,6 +1111,8 @@ function applyLayout() {
       el.style.height = '5.2vw';
     });
 
+    document.getElementById('card-income').style.marginTop = '30px';
+
     document.getElementById('card-balance').style.gap = '3vw';
     document.querySelectorAll('.list-item').forEach(el => {
       el.style.padding = '1.8vw 1.8vw';
@@ -1187,7 +1189,7 @@ function applyLayout() {
     // ── Reset Balance (top-left) and Income (top-right) font sizes to default ──
     document.querySelectorAll('.bi-list-name').forEach(el => el.style.fontSize = '2.5vw');
     document.querySelectorAll('.bi-list-val').forEach(el  => el.style.fontSize = '2.54vw');
-    document.querySelectorAll('#card-balance .list-pct').forEach(el => el.style.fontSize = '1.53vw');
+    document.querySelectorAll('#card-balance .list-pct').forEach(el => el.style.fontSize = '1.83vw');
     document.querySelectorAll('.list-icon').forEach(el => {
       el.style.width  = '4vw';
       el.style.height = '4vw';
@@ -1199,6 +1201,8 @@ function applyLayout() {
       el.style.gap     = '1.6vw';
       el.style.borderRadius = '1.6vw';
     });
+
+    document.getElementById('card-income').style.marginTop = '-70px';
 
     document.querySelectorAll('.col-pct').forEach(el => el.style.fontSize = '1.53vw');
     document.querySelectorAll('.col-val').forEach(el => el.style.fontSize = '1.6vw');
