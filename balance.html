@@ -17,7 +17,7 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    padding: 0vw;
+    padding: 2.5vw;
   }
   #card-balance {
     display: flex;
@@ -36,11 +36,11 @@
     background: rgba(255,255,255,0.06); padding: 0.5vw;
   }
   .bi-list-name {
-    flex: 1; font-size: 4.57vw; font-weight: 600; color: rgba(255,255,255,0.85);
+    flex: 1; font-size: 2.5vw; font-weight: 600; color: rgba(255,255,255,0.95);
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .bi-list-val {
-    font-size: 4.57vw; font-weight: 700; color: rgba(255,255,255,0.85);
+    font-size: 2.54vw; font-weight: 700; color:rgba(255,255,255,0.65);
     white-space: nowrap; text-align: right; margin-left: auto;
   }
   .list-pct {
@@ -73,7 +73,7 @@
     sorted.forEach(({icon,name,val})=>{
       const social=isSocial(name),pct=total>0?(Math.abs(val)/total*100):0;
       const row=document.createElement('div');row.className='list-item';row.dataset.pct=social?'':pct.toFixed(1);
-      row.innerHTML=`<img class="list-icon" src="${icon}" onerror="this.style.display='none'" /><div class="bi-list-name">${stripEmoji(name)}</div><div class="bi-list-val">${fmt(val)}</div><div class="list-pct">${social?'-----':pct.toFixed(1)+'%'}</div>`;
+      row.innerHTML=`<img class="list-icon" src="${icon}" onerror="this.style.display='none'" /><div class="bi-list-name">${stripEmoji(name)}</div><div class="bi-list-val">${fmt(val)}</div><div class="list-pct">${social?'-----':pct.toFixed(0)+'%'}</div>`;
       card.appendChild(row);
     });
     card.style.display='flex';
@@ -100,14 +100,14 @@
 
 function applyLayout() {
   const w = window.innerWidth;
-  
+  if (w > 400) {
     document.body.style.overflowY = 'auto';
     document.getElementById('card-balance').style.gap='3vw';
-    document.querySelectorAll('.list-item').forEach(el=>{el.style.padding='2.6vw 1.8vw';el.style.gap='2.4vw';el.style.borderRadius='3vw';});
-    document.querySelectorAll('.bi-list-name').forEach(el=>el.style.fontSize='5.57vw');
-    document.querySelectorAll('.bi-list-val').forEach(el=>el.style.fontSize='5.57vw');
-    document.querySelectorAll('#card-balance .list-pct').forEach(el=>el.style.fontSize='4.6vw');
-    document.querySelectorAll('.list-icon').forEach(el=>{el.style.width='5.6vw';el.style.height='6.6vw';});
+    document.querySelectorAll('.list-item').forEach(el=>{el.style.padding='1.6vw 1.8vw';el.style.gap='2.4vw';el.style.borderRadius='3vw';});
+    document.querySelectorAll('.bi-list-name').forEach(el=>el.style.fontSize='4.57vw');
+    document.querySelectorAll('.bi-list-val').forEach(el=>el.style.fontSize='4.57vw');
+    document.querySelectorAll('#card-balance .list-pct').forEach(el=>el.style.fontSize='3.6vw');
+    document.querySelectorAll('.list-icon').forEach(el=>{el.style.width='5.2vw';el.style.height='5.2vw';});
 
     document.querySelectorAll('#card-balance .list-item').forEach(row=>{
       if(row.querySelector('.mini-ring-wrap'))return;
@@ -118,7 +118,16 @@ function applyLayout() {
       rw.innerHTML=`<svg viewBox="0 0 28 28" style="width:100%;height:100%;"><circle cx="14" cy="14" r="${r}" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="${sw}"/><circle cx="14" cy="14" r="${r}" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${dash} ${gap}" stroke-dashoffset="0" transform="rotate(-90 14 14)"/></svg>`;
       valEl.parentNode.insertBefore(rw,valEl);
     });
-  
+  } else {
+    document.body.style.overflowY = 'hidden';
+    document.getElementById('card-balance').style.gap='1.3vw';
+    document.querySelectorAll('.list-item').forEach(el=>{el.style.padding='0.6vw 1.8vw';el.style.gap='1.6vw';el.style.borderRadius='1.6vw';});
+    document.querySelectorAll('.bi-list-name').forEach(el=>el.style.fontSize='2.54vw');
+    document.querySelectorAll('.bi-list-val').forEach(el=>el.style.fontSize='2.54vw');
+    document.querySelectorAll('#card-balance .list-pct').forEach(el=>el.style.fontSize='2.125vw');
+    document.querySelectorAll('.list-icon').forEach(el=>{el.style.width='4.5vw';el.style.height='4.5vw';});
+    document.querySelectorAll('#card-balance .mini-ring-wrap').forEach(el=>el.remove());
+  }
 }
 window.addEventListener('resize', applyLayout);
 </script>
