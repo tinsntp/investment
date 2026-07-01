@@ -15,25 +15,38 @@
     padding-top: 25px;
   }
 
-  /* ── Desktop: 2-column grid ── */
+  /* ── Desktop: true 2-column flex, no gaps ── */
   body {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto 1fr;
-    grid-template-areas:
-      "balance  income"
-      "expense  weather";
-    gap: 3vw;
-    padding: 2.5vw;
+    display: flex;
+    flex-direction: row;
     height: 100%;
+    padding: 2.5vw;
+    gap: 3vw;
     overflow: hidden;
-    align-content: end;
   }
 
-  #section-balance { grid-area: balance; display: flex; flex-direction: column; }
-  #section-income  { grid-area: income;  display: flex; flex-direction: column; justify-content: flex-end; }
-  #section-expense { grid-area: expense; display: flex; flex-direction: column; justify-content: flex-end; }
-  #section-weather { grid-area: weather; display: flex; flex-direction: column; justify-content: flex-end; }
+  #col-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3vw;
+    min-width: 0;
+    justify-content: flex-end;
+  }
+
+  #col-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    min-width: 0;
+    justify-content: flex-end;
+  }
+
+  #section-balance { display: flex; flex-direction: column; flex: 0 0 auto; min-width: 0; }
+  #section-income  { display: flex; flex-direction: column; flex: 0 0 auto; min-width: 0; overflow: hidden; }
+  #section-expense { display: flex; flex-direction: column; flex: 0 0 auto; min-width: 0; }
+  #section-weather { display: flex; flex-direction: column; flex: 0 0 auto; min-width: 0; }
 
   /* ── Account Balance ── */
   #card-balance {
@@ -135,21 +148,16 @@
 </head>
 <body>
 
-<!-- BALANCE: top-left (desktop) / top (mobile) -->
-<div id="section-balance">
-  <div id="bi-status">Loading…</div>
-  <div id="card-balance" style="display:none"></div>
-</div>
+<!-- LEFT COLUMN: Balance (top) + Expense/Donut (bottom) -->
+<div id="col-left">
+  <div id="section-balance">
+    <div id="bi-status">Loading…</div>
+    <div id="card-balance" style="display:none"></div>
+  </div>
 
-<!-- INCOME: top-right (desktop) / second (mobile) -->
-<div id="section-income">
-  <div id="card-income" style="display:none"></div>
-</div>
-
-<!-- EXPENSE DONUT: bottom-left (desktop) / third (mobile) -->
-<div id="section-expense">
-  <div id="donut-status">Loading…</div>
-  <div id="donut-wrap">
+  <div id="section-expense">
+    <div id="donut-status">Loading…</div>
+    <div id="donut-wrap">
     <svg id="donut-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"></svg>
     <div class="donut-center">
       <div class="donut-center-label" id="center-label">Total</div>
@@ -157,10 +165,16 @@
     </div>
   </div>
   <div id="list"></div>
-</div>
+  </div><!-- end section-expense -->
+</div><!-- end col-left -->
 
-<!-- WEATHER + COUNTDOWN: bottom-right (desktop) / hidden (mobile) -->
-<div id="section-weather">
+<!-- RIGHT COLUMN: Income (top) + Weather+Countdown (bottom) -->
+<div id="col-right">
+  <div id="section-income">
+    <div id="card-income" style="display:none"></div>
+  </div>
+
+  <div id="section-weather">
   <div class="wx">
     <div class="wx-header">
       <div>
@@ -183,7 +197,8 @@
     <div class="unit"><div class="card" id="card-weeks"><span class="card-number" id="weeks">00</span></div><span class="label">Weeks</span></div>
     <div class="unit"><div class="card" id="card-days"><span class="card-number" id="days">00</span></div><span class="label">Days</span></div>
   </div>
-</div>
+</div><!-- end section-weather -->
+</div><!-- end col-right -->
 
 <script>
 (function() {
@@ -216,7 +231,7 @@
     const total=filtered.reduce((s,d)=>s+Math.abs(d.val),0);
     const sorted=[...filtered].sort((a,b)=>Math.abs(b.val)-Math.abs(a.val));
     const maxAbs=Math.max(...sorted.map(d=>Math.abs(d.val)),1);
-    const cardH=Math.max(220,Math.min(window.innerWidth*0.32, 260));
+    const cardH=Math.max(140,Math.min(window.innerWidth*0.32,260));
     const posZoneH=cardH*0.55,negZoneH=cardH*0.45,maxBarPx=Math.min(posZoneH,negZoneH)*0.55;
     card.style.minHeight=cardH+'px';
     sorted.forEach(({icon,name,val})=>{
@@ -325,7 +340,7 @@ loadDonut();setInterval(loadDonut,60000);
     const data=await fetch('https://api.open-meteo.com/v1/forecast?latitude=10.8231&longitude=106.6297&current=temperature_2m,weathercode,windspeed_10m,winddirection_10m,is_day&hourly=temperature_2m,weathercode,windspeed_10m,winddirection_10m&timezone=Asia%2FHo_Chi_Minh&forecast_days=1').then(r=>r.json());
     const cur=data.current;document.getElementById('wx-temp').textContent=Math.round(cur.temperature_2m)+'°C';document.getElementById('wx-cond').textContent=wmoText(cur.weathercode);document.getElementById('wx-icon-main').innerHTML=getIcon(cur.weathercode,cur.is_day,iconSize()*1.2);
     const times=data.hourly.time,temps=data.hourly.temperature_2m,wmos=data.hourly.weathercode,wspds=data.hourly.windspeed_10m,wdirs=data.hourly.winddirection_10m;
-    const nowH=now.getHours(),slots=[];for(let i=0;i<times.length&&slots.length<5;i++){if(parseInt(times[i].split('T')[1])>=nowH)slots.push(i);}
+    const nowH=now.getHours(),slots=[];for(let i=0;i<times.length&&slots.length<4;i++){if(parseInt(times[i].split('T')[1])>=nowH)slots.push(i);}
     document.getElementById('wx-hourly').innerHTML=slots.map(i=>{const hhmm=times[i].split('T')[1].slice(0,5);return`<div class="wx-hour"><span class="wx-hour-time">${hhmm}</span>${getIcon(wmos[i],hhmm>='06:00'&&hhmm<'18:00',iconSize())}<span class="wx-hour-temp">${Math.round(temps[i])}°C</span><span class="wx-hour-wind">${windDir(wdirs[i])}${Math.round(wspds[i])}km/h</span></div>`;}).join('');
   }catch(e){document.getElementById('wx-temp').textContent='—';document.getElementById('wx-cond').textContent='Unable to load';}
 })();
@@ -341,32 +356,33 @@ update();setInterval(update,1000);
 /* ── Responsive layout ── */
 function applyLayout() {
   const w = window.innerWidth;
-  const sBalance = document.getElementById('section-balance');
-  const sIncome  = document.getElementById('section-income');
-  const sExpense = document.getElementById('section-expense');
-  const sWeather = document.getElementById('section-weather');
+  const colLeft   = document.getElementById('col-left');
+  const colRight  = document.getElementById('col-right');
+  const sBalance  = document.getElementById('section-balance');
+  const sIncome   = document.getElementById('section-income');
+  const sExpense  = document.getElementById('section-expense');
+  const sWeather  = document.getElementById('section-weather');
   const donutWrap = document.getElementById('donut-wrap');
 
   if (w < 400) {
-    // ── iPhone: single column, Balance → Income → Expense, weather hidden ──
-    document.body.style.display = 'flex';
+    // ── iPhone: single column — Balance → Income → Expense, weather hidden ──
     document.body.style.flexDirection = 'column';
     document.body.style.overflowY = 'auto';
     document.body.style.overflowX = 'hidden';
-    document.body.style.alignContent = '';
     document.body.style.height = 'auto';
     document.body.style.minHeight = '100%';
+    document.body.style.gap = '3vw';
 
-    sBalance.style.order = '1';
-    sIncome.style.order  = '2';
-    sExpense.style.order = '3';
+    // Flatten all sections directly into body in correct order
+    document.body.appendChild(sBalance);
+    document.body.appendChild(sIncome);
+    document.body.appendChild(sExpense);
     sWeather.style.display = 'none';
-
-    // Reset grid styles
-    [sBalance,sIncome,sExpense].forEach(s=>{s.style.gridArea='';s.style.width='100%';});
+    colLeft.style.display  = 'none';
+    colRight.style.display = 'none';
 
     // Donut sizing
-    donutWrap.style.width='45vw';donutWrap.style.height='45vw';
+    donutWrap.style.width='45vw'; donutWrap.style.height='45vw';
     document.querySelector('.donut-center-label').style.fontSize='2.61vw';
     document.querySelector('.donut-center-val').style.fontSize='4.16vw';
     document.getElementById('list').style.padding='0 3.91vw';
@@ -377,22 +393,18 @@ function applyLayout() {
     document.querySelectorAll('#list svg').forEach(el=>{el.style.width='5.04vw';el.style.height='5.04vw';el.setAttribute('width','5.04vw');el.setAttribute('height','5.04vw');});
     document.querySelectorAll('.list-row').forEach(row=>{const p=row.querySelector('div:last-child');if(p)p.style.fontSize='3.6vw';});
 
-    // Balance sizing
     document.getElementById('card-balance').style.gap='3vw';
     document.querySelectorAll('.list-item').forEach(el=>{el.style.padding='1.6vw 1.8vw';el.style.gap='2.4vw';el.style.borderRadius='3vw';});
     document.querySelectorAll('.bi-list-name').forEach(el=>el.style.fontSize='4.57vw');
     document.querySelectorAll('.bi-list-val').forEach(el=>el.style.fontSize='4.57vw');
     document.querySelectorAll('#card-balance .list-pct').forEach(el=>el.style.fontSize='3.6vw');
     document.querySelectorAll('.list-icon').forEach(el=>{el.style.width='5.2vw';el.style.height='5.2vw';});
-
-    // Income sizing
     document.getElementById('card-income').style.marginTop='20px';
     document.querySelectorAll('.col-pct').forEach(el=>el.style.fontSize='3.6vw');
     document.querySelectorAll('.col-val').forEach(el=>el.style.fontSize='3.2vw');
     document.querySelectorAll('.col-icon-wrap img').forEach(el=>{el.style.width='5.2vw';el.style.height='5.2vw';});
     document.querySelectorAll('.col-icon-wrap').forEach(el=>{el.style.width='7vw';el.style.height='7vw';});
 
-    // Mini ring before value
     document.querySelectorAll('#card-balance .list-item').forEach(row=>{
       if(row.querySelector('.mini-ring-wrap'))return;
       const pct=row.dataset.pct;if(pct===''||pct===undefined)return;
@@ -404,25 +416,24 @@ function applyLayout() {
     });
 
   } else {
-    // ── iPad/desktop: 2-column grid
-    //    Left col:  balance (top) + expense (bottom)
-    //    Right col: income  (top) + weather  (bottom) ──
-    document.body.style.display = 'grid';
-    document.body.style.gridTemplateColumns = '1fr 1fr';
-    document.body.style.gridTemplateRows = 'auto 1fr';
-    document.body.style.gridTemplateAreas = '"balance income" "expense weather"';
-    document.body.style.flexDirection = '';
+    // ── iPad/desktop: left col (balance+expense) | right col (income+weather) ──
+    document.body.style.flexDirection = 'row';
     document.body.style.overflowY = 'hidden';
     document.body.style.height = '100%';
-    document.body.style.alignContent = 'end';
+    document.body.style.minHeight = '';
+    document.body.style.gap = '3vw';
 
-    sBalance.style.gridArea = 'balance'; sBalance.style.order=''; sBalance.style.width='';
-    sIncome.style.gridArea  = 'income';  sIncome.style.order='';  sIncome.style.width='';
-    sExpense.style.gridArea = 'expense'; sExpense.style.order=''; sExpense.style.width='';
-    sWeather.style.gridArea = 'weather'; sWeather.style.display='flex';
+    // Put sections back into their columns if they were moved
+    colLeft.style.display  = 'flex';
+    colRight.style.display = 'flex';
+    colLeft.appendChild(sBalance);
+    colLeft.appendChild(sExpense);
+    colRight.appendChild(sIncome);
+    colRight.appendChild(sWeather);
+    sWeather.style.display = 'flex';
 
     // Donut sizing
-    donutWrap.style.width='25vw';donutWrap.style.height='25vw';
+    donutWrap.style.width='25vw'; donutWrap.style.height='25vw';
     document.querySelector('.donut-center-label').style.fontSize='1.45vw';
     document.querySelector('.donut-center-val').style.fontSize='2.31vw';
     document.getElementById('list').style.padding='0 2.17vw';
@@ -432,15 +443,12 @@ function applyLayout() {
     document.querySelectorAll('#list svg').forEach(el=>{el.style.width='2.8vw';el.style.height='2.8vw';});
     document.querySelectorAll('#list .list-row > div:last-child').forEach(el=>el.style.fontSize='2.125vw');
 
-    // Balance sizing
     document.getElementById('card-balance').style.gap='1.3vw';
     document.querySelectorAll('.list-item').forEach(el=>{el.style.padding='0.6vw 1.8vw';el.style.gap='1.6vw';el.style.borderRadius='1.6vw';});
     document.querySelectorAll('.bi-list-name').forEach(el=>el.style.fontSize='2.54vw');
     document.querySelectorAll('.bi-list-val').forEach(el=>el.style.fontSize='2.54vw');
     document.querySelectorAll('#card-balance .list-pct').forEach(el=>el.style.fontSize='2.125vw');
     document.querySelectorAll('.list-icon').forEach(el=>{el.style.width='4.5vw';el.style.height='4.5vw';});
-
-    // Income sizing
     document.getElementById('card-income').style.marginTop='0px';
     document.querySelectorAll('.col-pct').forEach(el=>el.style.fontSize='2.125vw');
     document.querySelectorAll('.col-val').forEach(el=>el.style.fontSize='2vw');
