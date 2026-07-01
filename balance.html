@@ -19,7 +19,7 @@
     display: flex;
     flex-direction: row;
     height: 100%;
-    padding: 1.5vw;
+    padding: 0vw;
     gap: 3vw;
     overflow: hidden;
   }
@@ -434,14 +434,6 @@ function applyLayout() {
 
     // Donut sizing
     donutWrap.style.width='25vw'; donutWrap.style.height='25vw'; donutWrap.style.marginTop='5vw';
-    ['section-income', 'section-expense'].forEach(id => {
-      const el = document.getElementById(id);
-      el.style.background = 'rgba(255,255,255,0.002)';
-      el.style.border = '1px solid rgba(255,255,255,0.05)';
-      el.style.borderRadius = '1.6vw';
-      el.style.padding = '1.5vw';
-    });
-
     document.querySelector('.donut-center-label').style.fontSize='1.45vw';
     document.querySelector('.donut-center-val').style.fontSize='2.31vw';
     document.getElementById('list').style.padding='0 2.17vw';
@@ -457,7 +449,7 @@ function applyLayout() {
     document.querySelectorAll('.bi-list-val').forEach(el=>el.style.fontSize='2.54vw');
     document.querySelectorAll('#card-balance .list-pct').forEach(el=>el.style.fontSize='2.125vw');
     document.querySelectorAll('.list-icon').forEach(el=>{el.style.width='4.5vw';el.style.height='4.5vw';});
-    //document.getElementById('card-income').style.marginBottom='2vw';
+    document.getElementById('card-income').style.marginBottom='2vw';
     document.querySelectorAll('.col-pct').forEach(el=>el.style.fontSize='2.125vw');
     document.querySelectorAll('.col-val').forEach(el=>el.style.fontSize='2vw');
     document.querySelectorAll('.col-icon-wrap img').forEach(el=>{el.style.width='2.8vw';el.style.height='2.8vw';});
