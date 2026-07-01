@@ -157,11 +157,11 @@
     margin-bottom: 2vw;
   }
 
-  .wx-city      { font-size: 3.42vw; font-weight: 700; color: #fff; line-height: 1.1; }
+  .wx-city      { font-size: 2.9vw; font-weight: 700; color: #fff; line-height: 1.1; }
   .wx-date      { font-size: 2.2vw; color: rgba(255,255,255,0.55); margin-top: 0.4vw; }
   .wx-current   { display: flex; align-items: center; gap: 1vw; }
-  .wx-temp-big  { font-size: 3.8vw; font-weight: 700; color: #fff; line-height: 1; }
-  .wx-cond      { font-size: 2vw; color: rgba(255,255,255,0.55); margin-top: 0.3vw; text-align: right; }
+  .wx-temp-big  { font-size: 3.3vw; font-weight: 700; color: #fff; line-height: 1; }
+  .wx-cond      { font-size: 1.9vw; color: rgba(255,255,255,0.55); margin-top: 0.3vw; text-align: right; }
   .wx-hourly    { display: flex; overflow-x: auto; scrollbar-width: none; }
   .wx-hourly::-webkit-scrollbar { display: none; }
   .wx-hour      { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.6vw; padding: 0 0.5vw; }
@@ -403,9 +403,8 @@
 <body>
 <div id="row-top">
 <div id="bi-status">Loading…</div>
-
-<div id="card-income"  style="display:none"></div>
 <div id="card-balance" style="display:none"></div>
+<div id="card-income"  style="display:none"></div>
 </div>
 
 <div id="row-bottom">
@@ -535,7 +534,7 @@
         <img class="list-icon" src="${icon}" onerror="this.style.display='none'" />
         <div class="bi-list-name">${stripEmoji(name)}</div>
         <div class="bi-list-val">${fmt(val)}</div>
-        <div class="list-pct">${social ? '--' : pct.toFixed(1) + '%'}</div>`;
+        <div class="list-pct">${social ? '-----' : pct.toFixed(1) + '%'}</div>`;
       card.appendChild(row);
     });
 
@@ -811,8 +810,8 @@ function renderDrill(items, title, color) {
   // Back button
   const header = document.createElement('div');
   header.style.cssText = 'display:flex;align-items:center;gap:1vw;padding:1vw 0 1.5vw;cursor:pointer;';
-  header.innerHTML = `<span style="font-size:1.5vw;color:rgba(255,255,255,0.5);">←</span>
-    <span style="font-size:1.5vw;font-weight:700;color:${color};">${title}</span>`;
+  header.innerHTML = `<span style="font-size:2.5vw;color:rgba(255,255,255,0.5);">◂</span>
+    <span style="font-size:2.5vw;font-weight:700;color:${color};">${title}</span>`;
   header.addEventListener('click', () => {
     drillMode = false;
     activeIdx = null;
@@ -1070,9 +1069,6 @@ function applyLayout() {
     rowTop.style.gap = '3vw';
     document.body.style.justifyContent = 'flex-start';
     document.body.style.overflowY = 'auto';
-    document.getElementById('row-bottom').style.flex = '0 0 auto';
-    document.getElementById('col-left').style.justifyContent = 'flex-start';
-    document.getElementById('col-right').style.justifyContent = 'flex-start';
 
     // ── Mobile: hide right, scale left (expenses donut) 80% larger ──
     colRight.style.display = 'none';
@@ -1130,7 +1126,7 @@ function applyLayout() {
     });
 
     document.querySelectorAll('.col-pct').forEach(el => el.style.fontSize = '3.6vw');
-    document.querySelectorAll('.col-val').forEach(el => el.style.fontSize = '4.57vw');
+    document.querySelectorAll('.col-val').forEach(el => el.style.fontSize = '3.2vw');
     document.querySelectorAll('.col-icon-wrap img').forEach(el => {
       el.style.width  = '5.2vw';
       el.style.height = '5.2vw';
@@ -1139,6 +1135,8 @@ function applyLayout() {
       el.style.width  = '7vw';
       el.style.height = '7vw';
     });
+
+    document.getElementById('card-income').style.marginTop = '20px';
 
     // ── Add mini ring before the value, on mobile only ──
     document.querySelectorAll('#card-balance .list-item').forEach(row => {
@@ -1169,10 +1167,7 @@ function applyLayout() {
     rowTop.style.gap = '3vw';
     document.body.style.justifyContent = 'flex-end';
     document.body.style.overflowY = 'hidden';
-    document.body.style.gap = '1.5vw';
-    document.getElementById('row-bottom').style.flex = '0 0 auto';
-    document.getElementById('col-left').style.justifyContent = 'flex-end';
-    document.getElementById('col-right').style.justifyContent = 'flex-end';
+    document.body.style.gap = '1vw';
 
     // Tablet/desktop: show both columns, reset to default sizes
     colRight.style.display = 'flex';
@@ -1226,6 +1221,8 @@ function applyLayout() {
       el.style.width  = '4.5vw';
       el.style.height = '4.5vw';
     });
+
+    document.getElementById('card-income').style.marginTop = '0px';
 
     // ── Remove mini ring on desktop ──
     document.querySelectorAll('#card-balance .mini-ring-wrap').forEach(el => el.remove());
