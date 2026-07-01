@@ -12,7 +12,7 @@
     background: #1a1a1a;
     font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
     color: #fff;
-    overflow: hidden;padding-top:25px;
+    overflow: hidden;padding-top:0px;
   }
 
   /* ── 2x2 grid layout ── */
@@ -403,9 +403,9 @@
 <body>
 <div id="row-top">
 <div id="bi-status">Loading…</div>
-
-<div id="card-income"  style="display:none"></div>
 <div id="card-balance" style="display:none"></div>
+<div id="card-income"  style="display:none"></div>
+
 </div>
 
 <div id="row-bottom">
@@ -1068,6 +1068,8 @@ function applyLayout() {
     // ── Mobile: stack top row (income/balance) vertically so they don't collapse/overflow ──
     rowTop.style.flexDirection = 'column';
     rowTop.style.gap = '3vw';
+    document.body.style.justifyContent = 'flex-start';
+    document.body.style.overflowY = 'auto';
 
     // ── Mobile: hide right, scale left (expenses donut) 80% larger ──
     colRight.style.display = 'none';
@@ -1162,6 +1164,8 @@ function applyLayout() {
     // ── Tablet/desktop: top row stays side-by-side ──
     rowTop.style.flexDirection = 'row';
     rowTop.style.gap = '3vw';
+    document.body.style.justifyContent = 'flex-end';
+    document.body.style.overflowY = 'hidden';
 
     // Tablet/desktop: show both columns, reset to default sizes
     colRight.style.display = 'flex';
@@ -1199,7 +1203,7 @@ function applyLayout() {
     });
     document.querySelectorAll('.bi-list-name').forEach(el => el.style.fontSize = '2.5vw');
     document.querySelectorAll('.bi-list-val').forEach(el  => el.style.fontSize = '2.54vw');
-    document.querySelectorAll('#card-balance .list-pct').forEach(el => el.style.fontSize = '1.53vw');
+    document.querySelectorAll('#card-balance .list-pct').forEach(el => el.style.fontSize = '1.83vw');
     document.querySelectorAll('.list-icon').forEach(el => {
       el.style.width  = '4vw';
       el.style.height = '4vw';
