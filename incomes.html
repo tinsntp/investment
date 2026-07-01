@@ -53,7 +53,7 @@
     const total=filtered.reduce((s,d)=>s+Math.abs(d.val),0);
     const sorted=[...filtered].sort((a,b)=>Math.abs(b.val)-Math.abs(a.val));
     const maxAbs=Math.max(...sorted.map(d=>Math.abs(d.val)),1);
-    const cardH=Math.max(140,Math.min(window.innerWidth*0.32,260));
+    const cardH=Math.max(140,Math.min(window.innerWidth*0.58,420));
     const posZoneH=cardH*0.55,negZoneH=cardH*0.45,maxBarPx=Math.min(posZoneH,negZoneH)*0.55;
     card.style.minHeight=cardH+'px';
     sorted.forEach(({icon,name,val})=>{
@@ -89,21 +89,13 @@
 
 function applyLayout() {
   const w = window.innerWidth;
-  if (w < 400) {
     document.body.style.overflowY = 'auto';
-    document.getElementById('card-income').style.marginTop = '20px';
-    document.querySelectorAll('.col-pct').forEach(el=>el.style.fontSize='3.6vw');
-    document.querySelectorAll('.col-val').forEach(el=>el.style.fontSize='3.2vw');
+    document.getElementById('card-income').style.marginTop = '0px';
+    document.querySelectorAll('.col-pct').forEach(el=>el.style.fontSize='4.57vw');
+    document.querySelectorAll('.col-val').forEach(el=>el.style.fontSize='3.8vw');
     document.querySelectorAll('.col-icon-wrap img').forEach(el=>{el.style.width='5.2vw';el.style.height='5.2vw';});
     document.querySelectorAll('.col-icon-wrap').forEach(el=>{el.style.width='7vw';el.style.height='7vw';});
-  } else {
-    document.body.style.overflowY = 'hidden';
-    document.getElementById('card-income').style.marginTop = '0';
-    document.querySelectorAll('.col-pct').forEach(el=>el.style.fontSize='2.125vw');
-    document.querySelectorAll('.col-val').forEach(el=>el.style.fontSize='2vw');
-    document.querySelectorAll('.col-icon-wrap img').forEach(el=>{el.style.width='2.8vw';el.style.height='2.8vw';});
-    document.querySelectorAll('.col-icon-wrap').forEach(el=>{el.style.width='4.5vw';el.style.height='4.5vw';});
-  }
+  
 }
 window.addEventListener('resize', applyLayout);
 </script>
