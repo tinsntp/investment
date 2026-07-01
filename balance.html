@@ -11,8 +11,7 @@
     width: 100%; height: 100%;
     background: #1a1a1a;
     font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
-    color: #fff;
-    padding-top: 25px;
+    color: #fff
   }
 
   /* ── Desktop: true 2-column flex, no gaps ── */
@@ -422,6 +421,7 @@ function applyLayout() {
     document.body.style.height = '100%';
     document.body.style.minHeight = '';
     document.body.style.gap = '3vw';
+    document.getElementById('section-income').style.marginBottom = '4vw';
 
     // Put sections back into their columns if they were moved
     colLeft.style.display  = 'flex';
