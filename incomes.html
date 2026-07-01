@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Income Chart</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 100%; height: 100%;
+    background: #1a1a1a;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    color: #fff;
+    overflow: hidden;
+  }
+  body {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 2.5vw;
+  }
+  #card-income {
+    display: flex; justify-content: space-between;
+    align-items: stretch; gap: 2vw; padding: 0 3vw; min-height: 0;
+  }
+  .col-item { flex: 1; display: flex; flex-direction: column; align-items: center; min-width: 0; }
+  .col-zone-pos { flex: 1; width: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; }
+  .col-zone-neg { flex: 1; width: 100%; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; }
+  .col-baseline-row { width: 100%; height: 1.5px; background: rgba(255,255,255,0.2); }
+  .col-pct { font-size: 1.53vw; font-weight: 700; color: rgba(255,255,255,0.8); white-space: nowrap; margin-bottom: 0.3vw; }
+  .col-icon-wrap { width: 4vw; height: 4vw; border-radius: 50%; background: rgba(255,255,255,0.13); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-bottom: 0.4vw; }
+  .col-icon-wrap img { width: 2.6vw; height: 2.6vw; object-fit: contain; }
+  .col-val { font-size: 1.6vw; font-weight: 400; color: rgba(255,255,255,0.55); white-space: nowrap; margin-bottom: 0.4vw; text-align: center; }
+  .col-bar { width: 70%; background: rgba(255,255,255,0.85); transition: height 0.5s ease; }
+  #income-status { font-size: 1.5vw; color: rgba(255,255,255,0.4); text-align: center; padding: 2vw; }
+</style>
+</head>
+<body>
+<div id="income-status">Loading…</div>
+<div id="card-income" style="display:none"></div>
+
+<script>
+(function() {
+  const CSV_URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=311369594`;
+
+  function splitCSVRow(row){const cols=[];let cur='',inQ=false;for(const ch of row){if(ch==='"')inQ=!inQ;else if(ch===','&&!inQ){cols.push(cur);cur='';}else cur+=ch;}cols.push(cur);return cols;}
+  function parseNum(str){if(!str)return NaN;let s=str.trim();if(/^\(.*\)$/.test(s))s='-'+s.slice(1,-1);s=s.replace(/[\u2212\u2013\u2014]/g,'-').replace(/[^0-9.\-]/g,'');return parseFloat(s);}
+  function fmtShortSigned(v){const a=Math.abs(v);const s=a>=1e9?(a/1e9).toFixed(1)+'B':a>=1e6?(a/1e6).toFixed(1)+'M':a>=1e3?(a/1e3).toFixed(1)+'K':String(Math.round(a));return(v<0?'-':'+')+s;}
+
+  function renderIncomeColumns(items) {
+    const card=document.getElementById('card-income');card.innerHTML='';
+    const filtered=items.filter(d=>d.val&&Math.abs(d.val)>0);
+    const total=filtered.reduce((s,d)=>s+Math.abs(d.val),0);
+    const sorted=[...filtered].sort((a,b)=>Math.abs(b.val)-Math.abs(a.val));
+    const maxAbs=Math.max(...sorted.map(d=>Math.abs(d.val)),1);
+    const cardH=Math.max(140,Math.min(window.innerWidth*0.32,260));
+    const posZoneH=cardH*0.55,negZoneH=cardH*0.45,maxBarPx=Math.min(posZoneH,negZoneH)*0.55;
+    card.style.minHeight=cardH+'px';
+    sorted.forEach(({icon,name,val})=>{
+      const isPos=val>=0,pct=total>0?(Math.abs(val)/total*100):0,barH=Math.max(4,(Math.abs(val)/maxAbs)*maxBarPx);
+      const col=document.createElement('div');col.className='col-item';
+      const posZone=document.createElement('div');posZone.className='col-zone-pos';posZone.style.height=posZoneH+'px';
+      const negZone=document.createElement('div');negZone.className='col-zone-neg';negZone.style.height=negZoneH+'px';
+      if(isPos){posZone.innerHTML=`<div class="col-pct">${pct.toFixed(1)}%</div><div class="col-val">${fmtShortSigned(val)}</div><div class="col-icon-wrap"><img src="${icon}" onerror="this.style.display='none'" /></div><div class="col-bar" style="height:${barH}px;border-radius:1vw 1vw 0 0;"></div>`;}
+      else{negZone.innerHTML=`<div class="col-bar" style="height:${barH}px;border-radius:0 0 1vw 1vw;"></div><div class="col-icon-wrap" style="margin-top:0.4vw;"><img src="${icon}" onerror="this.style.display='none'" /></div><div class="col-val">${fmtShortSigned(val)}</div><div class="col-pct" style="margin-bottom:0;">${pct.toFixed(1)}%</div>`;}
+      col.appendChild(posZone);const bl=document.createElement('div');bl.className='col-baseline-row';col.appendChild(bl);col.appendChild(negZone);card.appendChild(col);
+    });
+    card.style.display='flex';
+    applyLayout();
+  }
+
+  async function load() {
+    try {
+      const r=await fetch(CSV_URL+'&t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error(`HTTP ${r.status}`);
+      const rows=(await r.text()).trim().split('\n').filter(r=>r.trim());
+      const income=[];
+      rows.forEach(row=>{
+        const cols=splitCSVRow(row);
+        const iIcon=(cols[4]||'').replace(/^"|"$/g,'').trim(),iName=(cols[5]||'').replace(/^"|"$/g,'').trim(),iVal=parseNum(cols[6]);
+        if(iName&&!isNaN(iVal))income.push({icon:iIcon,name:iName,val:iVal});
+      });
+      if(!income.length)throw new Error('No data found.');
+      document.getElementById('income-status').style.display='none';
+      renderIncomeColumns(income);
+    } catch(e){document.getElementById('income-status').textContent=`⚠ ${e.message}`;}
+  }
+  load();setInterval(load,60000);
+})();
+
+function applyLayout() {
+  const w = window.innerWidth;
+  if (w < 400) {
+    document.body.style.overflowY = 'auto';
+    document.getElementById('card-income').style.marginTop = '20px';
+    document.querySelectorAll('.col-pct').forEach(el=>el.style.fontSize='3.6vw');
+    document.querySelectorAll('.col-val').forEach(el=>el.style.fontSize='3.2vw');
+    document.querySelectorAll('.col-icon-wrap img').forEach(el=>{el.style.width='5.2vw';el.style.height='5.2vw';});
+    document.querySelectorAll('.col-icon-wrap').forEach(el=>{el.style.width='7vw';el.style.height='7vw';});
+  } else {
+    document.body.style.overflowY = 'hidden';
+    document.getElementById('card-income').style.marginTop = '0';
+    document.querySelectorAll('.col-pct').forEach(el=>el.style.fontSize='2.125vw');
+    document.querySelectorAll('.col-val').forEach(el=>el.style.fontSize='2vw');
+    document.querySelectorAll('.col-icon-wrap img').forEach(el=>{el.style.width='2.8vw';el.style.height='2.8vw';});
+    document.querySelectorAll('.col-icon-wrap').forEach(el=>{el.style.width='4.5vw';el.style.height='4.5vw';});
+  }
+}
+window.addEventListener('resize', applyLayout);
+</script>
+</body>
+</html>
