@@ -24,7 +24,15 @@
     gap: 2.5vw;
   }
 
-  #row-top, #row-bottom {
+  #row-top {
+    display: flex;
+    flex-direction: row;
+    flex: 0 0 auto;
+    gap: 3vw;
+    min-height: 0;
+  }
+
+  #row-bottom {
     display: flex;
     flex-direction: row;
     flex: 1;
@@ -1202,7 +1210,7 @@ function applyLayout() {
       el.style.borderRadius = '1.6vw';
     });
 
-    document.getElementById('card-income').style.marginTop = '-50px';
+    //document.getElementById('card-income').style.marginTop = '-50px';
 
     document.querySelectorAll('.col-pct').forEach(el => el.style.fontSize = '1.53vw');
     document.querySelectorAll('.col-val').forEach(el => el.style.fontSize = '1.6vw');
