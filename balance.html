@@ -14,7 +14,6 @@
     color: #fff;
   }
 
-  /* ── Desktop: true 2-column flex, no gaps ── */
   body {
     display: flex;
     flex-direction: row;
@@ -25,21 +24,13 @@
   }
 
   #col-left {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 3vw;
-    min-width: 0;
-    justify-content: center;
+    flex: 1; display: flex; flex-direction: column;
+    gap: 3vw; min-width: 0; justify-content: center;
   }
 
   #col-right {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    min-width: 0;
-    justify-content: center;
+    flex: 1; display: flex; flex-direction: column;
+    gap: 0; min-width: 0; justify-content: center;
   }
 
   #section-balance { display: flex; flex-direction: column; flex: 0 0 auto; min-width: 0; }
@@ -48,17 +39,13 @@
   #section-weather { display: flex; flex-direction: column; flex: 0 0 auto; min-width: 0; }
 
   /* ── Account Balance ── */
-  #card-balance {
-    display: flex;
-    flex-direction: column;
-    gap: 1.3vw;
-  }
+  #card-balance { display: flex; flex-direction: column; gap: 1.3vw; }
 
   .list-item {
     display: flex; align-items: center; gap: 1.6vw;
     background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 1.6vw; padding: 0.5vw 1.8vw;
+    border-radius: 1.6vw; padding: 0.575vw 1.8vw;
   }
 
   .list-icon {
@@ -86,13 +73,12 @@
   /* ── Income Chart ── */
   #card-income {
     display: flex; justify-content: space-between;
-    align-items: stretch; gap: 2vw; padding: 0 3vw; min-height: 0;
+    align-items: stretch; gap: 0.5vw; padding: 0 3vw; min-height: 0;
   }
 
   .col-item { flex: 1; display: flex; flex-direction: column; align-items: center; min-width: 0; }
   .col-zone-pos { flex: 1; width: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; }
   .col-zone-neg { flex: 1; width: 100%; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; }
-  .col-baseline-row { width: 100%; height: 1.5px; background: rgba(255,255,255,0.2); }
   .col-pct { font-size: 1.53vw; font-weight: 700; color: rgba(255,255,255,0.8); white-space: nowrap; margin-bottom: 0.3vw; }
   .col-icon-wrap { width: 4vw; height: 4vw; border-radius: 50%; background: rgba(255,255,255,0.13); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-bottom: 0.4vw; }
   .col-icon-wrap img { width: 2.6vw; height: 2.6vw; object-fit: contain; }
@@ -147,63 +133,58 @@
 </head>
 <body>
 
-<!-- LEFT COLUMN: Balance (top) + Expense/Donut (bottom) -->
 <div id="col-left">
   <div id="section-balance">
     <div id="bi-status">Loading…</div>
     <div id="card-balance" style="display:none"></div>
   </div>
-
   <div id="section-expense">
     <div id="donut-status">Loading…</div>
     <div id="donut-wrap">
-    <svg id="donut-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"></svg>
-    <div class="donut-center">
-      <div class="donut-center-label" id="center-label">Total</div>
-      <div class="donut-center-val"   id="center-val">—</div>
+      <svg id="donut-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="donut-center">
+        <div class="donut-center-label" id="center-label">Total</div>
+        <div class="donut-center-val"   id="center-val">—</div>
+      </div>
     </div>
+    <div id="list"></div>
   </div>
-  <div id="list"></div>
-  </div><!-- end section-expense -->
-</div><!-- end col-left -->
+</div>
 
-<!-- RIGHT COLUMN: Income (top) + Weather+Countdown (bottom) -->
 <div id="col-right">
   <div id="section-income">
     <div id="card-income" style="display:none"></div>
   </div>
-
   <div id="section-weather">
-  <div class="wx">
-    <div class="wx-header">
-      <div>
-        <div class="wx-city">Ho Chi Minh City</div>
-        <div class="wx-date" id="wx-date"></div>
-      </div>
-      <div class="wx-current">
+    <div class="wx">
+      <div class="wx-header">
         <div>
-          <div class="wx-temp-big" id="wx-temp">—</div>
-          <div class="wx-cond"     id="wx-cond">—</div>
+          <div class="wx-city">Ho Chi Minh City</div>
+          <div class="wx-date" id="wx-date"></div>
         </div>
-        <div id="wx-icon-main"></div>
+        <div class="wx-current">
+          <div>
+            <div class="wx-temp-big" id="wx-temp">—</div>
+            <div class="wx-cond"     id="wx-cond">—</div>
+          </div>
+          <div id="wx-icon-main"></div>
+        </div>
       </div>
+      <div class="wx-hourly" id="wx-hourly"></div>
     </div>
-    <div class="wx-hourly" id="wx-hourly"></div>
+    <div class="countdown">
+      <div class="unit"><div class="card" id="card-years"><span class="card-number" id="years">00</span></div><span class="label">Years</span></div>
+      <div class="unit"><div class="card" id="card-months"><span class="card-number" id="months">00</span></div><span class="label">Months</span></div>
+      <div class="unit"><div class="card" id="card-weeks"><span class="card-number" id="weeks">00</span></div><span class="label">Weeks</span></div>
+      <div class="unit"><div class="card" id="card-days"><span class="card-number" id="days">00</span></div><span class="label">Days</span></div>
+    </div>
   </div>
-  <div class="countdown">
-    <div class="unit"><div class="card" id="card-years"><span class="card-number" id="years">00</span></div><span class="label">Years</span></div>
-    <div class="unit"><div class="card" id="card-months"><span class="card-number" id="months">00</span></div><span class="label">Months</span></div>
-    <div class="unit"><div class="card" id="card-weeks"><span class="card-number" id="weeks">00</span></div><span class="label">Weeks</span></div>
-    <div class="unit"><div class="card" id="card-days"><span class="card-number" id="days">00</span></div><span class="label">Days</span></div>
-  </div>
-</div><!-- end section-weather -->
-</div><!-- end col-right -->
+</div>
 
 <script>
 (function() {
   const CSV_URL = `https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=311369594`;
-
-  function fmt(v){return(v<0?'−':'')+'₫'+Math.round(Math.abs(v)).toLocaleString('en-US');}
+  function fmt(v){return(v<0?'−':'')+'\u20ab'+Math.round(Math.abs(v)).toLocaleString('en-US');}
   function stripEmoji(str){return str.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{1F000}-\u{1F0FF}\u{FE0F}\u{200D}]/gu,'').trim();}
   function splitCSVRow(row){const cols=[];let cur='',inQ=false;for(const ch of row){if(ch==='"')inQ=!inQ;else if(ch===','&&!inQ){cols.push(cur);cur='';}else cur+=ch;}cols.push(cur);return cols;}
   function parseNum(str){if(!str)return NaN;let s=str.trim();if(/^\(.*\)$/.test(s))s='-'+s.slice(1,-1);s=s.replace(/[\u2212\u2013\u2014]/g,'-').replace(/[^0-9.\-]/g,'');return parseFloat(s);}
@@ -238,9 +219,9 @@
       const col=document.createElement('div');col.className='col-item';
       const posZone=document.createElement('div');posZone.className='col-zone-pos';posZone.style.height=posZoneH+'px';
       const negZone=document.createElement('div');negZone.className='col-zone-neg';negZone.style.height=negZoneH+'px';
-      if(isPos){posZone.innerHTML=`<div class="col-pct">${pct.toFixed(1)}%</div><div class="col-val">${fmtShortSigned(val)}</div><div class="col-icon-wrap"><img src="${icon}" onerror="this.style.display='none'" /></div><div class="col-bar" style="height:${barH}px;border-radius:1vw 1vw 0 0;"></div>`;}
-      else{negZone.innerHTML=`<div class="col-bar" style="height:${barH}px;border-radius:0 0 1vw 1vw;"></div><div class="col-icon-wrap" style="margin-top:0.4vw;"><img src="${icon}" onerror="this.style.display='none'" /></div><div class="col-val">${fmtShortSigned(val)}</div><div class="col-pct" style="margin-bottom:0;">${pct.toFixed(1)}%</div>`;}
-      col.appendChild(posZone);const bl=document.createElement('div');bl.className='col-baseline-row';col.appendChild(bl);col.appendChild(negZone);card.appendChild(col);
+      if(isPos){posZone.innerHTML=`<div class="col-pct">${pct.toFixed(1)}%</div><div class="col-val">${fmtShortSigned(val)}</div><div class="col-icon-wrap"><img src="${icon}" onerror="this.style.display='none'" /></div><div class="col-bar" style="height:${barH}px;border-radius:1vw;"></div>`;}
+      else{negZone.innerHTML=`<div class="col-bar" style="height:${barH}px;border-radius:1vw;"></div><div class="col-icon-wrap" style="margin-top:0.4vw;"><img src="${icon}" onerror="this.style.display='none'" /></div><div class="col-val">${fmtShortSigned(val)}</div><div class="col-pct" style="margin-bottom:0;">${pct.toFixed(1)}%</div>`;}
+      col.appendChild(posZone);col.appendChild(negZone);card.appendChild(col);
     });
     card.style.display='flex';applyLayout();
   }
@@ -260,20 +241,20 @@
       if(!balance.length&&!income.length)throw new Error('No data found.');
       document.getElementById('bi-status').style.display='none';
       renderBalanceList(balance);renderIncomeColumns(income);
-    } catch(e){document.getElementById('bi-status').textContent=`⚠ ${e.message}`;}
+    } catch(e){document.getElementById('bi-status').textContent=`\u26a0 ${e.message}`;}
   }
   load();setInterval(load,60000);
 })();
 </script>
 
 <script>
-/* ── DONUT ── */
+/* -- DONUT -- */
 const CSV_URL      = `https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1324702331`;
 const CSV_URL_TAB1 = `https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv`;
 const PALETTE=[{from:'#2ECC71',to:'#1aad5e',solid:'#2ECC71',glow:'rgba(46,204,113,0.4)',id:'g0'},{from:'#FFB6C1',to:'#FF8FA3',solid:'#FFB6C1',glow:'rgba(255,182,193,0.4)',id:'g1'},{from:'#FF69B4',to:'#e0408a',solid:'#FF69B4',glow:'rgba(255,105,180,0.4)',id:'g2'}];
 let activeIdx=null,globalData=[],tab1Data=[],drillMode=false;
-function fmtShort(v){const a=Math.abs(v);return(v<0?'−':'')+'đ'+(a>=1e9?(a/1e9).toFixed(1)+'B':a>=1e6?(a/1e6).toFixed(1)+'M':a>=1e3?Math.round(a/1e3)+'K':String(Math.round(a)));}
-function fmtFull(v){return(v<0?'−':'')+'₫'+Math.round(Math.abs(v)).toLocaleString('en-US');}
+function fmtShort(v){const a=Math.abs(v);return(v<0?'\u2212':'')+'\u0111'+(a>=1e9?(a/1e9).toFixed(1)+'B':a>=1e6?(a/1e6).toFixed(1)+'M':a>=1e3?Math.round(a/1e3)+'K':String(Math.round(a)));}
+function fmtFull(v){return(v<0?'\u2212':'')+'\u20ab'+Math.round(Math.abs(v)).toLocaleString('en-US');}
 function splitCSVRow(row){const cols=[];let cur='',inQ=false;for(const ch of row){if(ch==='"')inQ=!inQ;else if(ch===','&&!inQ){cols.push(cur);cur='';}else cur+=ch;}cols.push(cur);return cols;}
 function parseNum(str){if(!str)return NaN;let s=str.trim();if(/^\(.*\)$/.test(s))s='-'+s.slice(1,-1);s=s.replace(/[\u2212\u2013\u2014]/g,'-').replace(/[^0-9.\-]/g,'');return parseFloat(s);}
 function arcPath(cx,cy,r,sa,ea){const toR=a=>(a-90)*Math.PI/180;const x1=cx+r*Math.cos(toR(sa)),y1=cy+r*Math.sin(toR(sa)),x2=cx+r*Math.cos(toR(ea)),y2=cy+r*Math.sin(toR(ea));return`M ${x1} ${y1} A ${r} ${r} 0 ${(ea-sa)>180?1:0} 1 ${x2} ${y2}`;}
@@ -297,7 +278,7 @@ async function fetchTab1(){if(tab1Data.length)return tab1Data;const r=await fetc
 function renderDrill(items,title,color){
   drillMode=true;const list=document.getElementById('list');list.innerHTML='';
   const header=document.createElement('div');header.style.cssText='display:flex;align-items:center;gap:1vw;padding:1vw 0 1.5vw;cursor:pointer;';
-  header.innerHTML=`<span style="font-size:2.5vw;color:rgba(255,255,255,0.5);">◂</span><span style="font-size:2.5vw;font-weight:700;color:${color};">${title}</span>`;
+  header.innerHTML=`<span style="font-size:2.5vw;color:rgba(255,255,255,0.5);">\u25c2</span><span style="font-size:2.5vw;font-weight:700;color:${color};">${title}</span>`;
   header.addEventListener('click',()=>{drillMode=false;activeIdx=null;renderList(globalData);highlightSegment(null);});list.appendChild(header);
   const total=items.reduce((s,d)=>s+Math.abs(d.val),0);
   items.forEach(({name,val,icon})=>{const pct=Math.abs(val)/total*100,r2=10,sw=3,circ=2*Math.PI*r2,dash=(pct/100)*circ,gap=circ-dash;const row=document.createElement('div');row.className='list-row';row.style.cursor='default';row.innerHTML=`<img src="${icon}" style="width:3vw;height:3vw;object-fit:contain;flex-shrink:0;" /><div class="list-name" style="font-size:1.4vw;">${name}</div><div class="list-val" style="font-size:1.4vw;">${fmtFull(Math.abs(val))}</div><svg viewBox="0 0 28 28" style="flex-shrink:0;width:2vw;height:2vw;"><circle cx="14" cy="14" r="${r2}" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="${sw}"/><circle cx="14" cy="14" r="${r2}" fill="none" stroke="${color}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${dash.toFixed(2)} ${gap.toFixed(2)}" stroke-dashoffset="0" transform="rotate(-90 14 14)"/></svg><div style="font-size:1.02vw;color:rgba(255,255,255,0.55);flex-shrink:0;">${pct.toFixed(1)}%</div>`;list.appendChild(row);});
@@ -318,11 +299,11 @@ async function loadDonut(){
   try{const r=await fetch(CSV_URL+'&t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error(`HTTP ${r.status}`);
     const data=(await r.text()).trim().split('\n').filter(r=>r.trim()).map(row=>{const cols=splitCSVRow(row);return{name:cols[0].replace(/^"|"$/g,'').trim(),val:parseNum(cols[1])};}).filter(d=>d.name&&!isNaN(d.val));
     if(!data.length)throw new Error('No data found.');globalData=data;renderDonut(data);renderList(data);
-  }catch(e){document.getElementById('donut-status').textContent=`⚠ ${e.message}`;}
+  }catch(e){document.getElementById('donut-status').textContent=`\u26a0 ${e.message}`;}
 }
 loadDonut();setInterval(loadDonut,60000);
 
-/* ── WEATHER ── */
+/* -- WEATHER -- */
 (async()=>{
   const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -334,17 +315,17 @@ loadDonut();setInterval(loadDonut,60000);
   function rainSVG(s){return`<svg width="${s}" height="${s}" viewBox="0 0 52 52" fill="none"><ellipse cx="22" cy="24" rx="13" ry="9" fill="#90CAF9"/><ellipse cx="32" cy="26" rx="11" ry="8" fill="#90CAF9"/><ellipse cx="16" cy="27" rx="9" ry="7" fill="#90CAF9"/><g stroke="#90CAF9" stroke-width="2" stroke-linecap="round"><line x1="18" y1="36" x2="16" y2="42"/><line x1="26" y1="36" x2="24" y2="42"/><line x1="34" y1="36" x2="32" y2="42"/></g></svg>`;}
   function getIcon(wmo,isDay,size){if(wmo===0)return isDay?sunSVG(size):moonCloudSVG(size);if(wmo<=2)return moonCloudSVG(size);if(wmo<=48)return cloudSVG(size);return rainSVG(size);}
   function wmoText(wmo){if(wmo===0)return'Clear sky';if(wmo===1)return'Mainly clear';if(wmo===2)return'Partly cloudy';if(wmo===3)return'Overcast';if(wmo<=48)return'Foggy';if(wmo<=57)return'Drizzle';if(wmo<=67)return'Rain';if(wmo<=77)return'Snow';if(wmo<=82)return'Rain showers';return'Thunderstorm';}
-  function windDir(deg){return['↑','↗','→','↘','↓','↙','←','↖'][Math.round(deg/45)%8];}
+  function windDir(deg){return['\u2191','\u2197','\u2192','\u2198','\u2193','\u2199','\u2190','\u2196'][Math.round(deg/45)%8];}
   try{
     const data=await fetch('https://api.open-meteo.com/v1/forecast?latitude=10.8231&longitude=106.6297&current=temperature_2m,weathercode,windspeed_10m,winddirection_10m,is_day&hourly=temperature_2m,weathercode,windspeed_10m,winddirection_10m&timezone=Asia%2FHo_Chi_Minh&forecast_days=1').then(r=>r.json());
-    const cur=data.current;document.getElementById('wx-temp').textContent=Math.round(cur.temperature_2m)+'°C';document.getElementById('wx-cond').textContent=wmoText(cur.weathercode);document.getElementById('wx-icon-main').innerHTML=getIcon(cur.weathercode,cur.is_day,iconSize()*1.2);
+    const cur=data.current;document.getElementById('wx-temp').textContent=Math.round(cur.temperature_2m)+'\u00b0C';document.getElementById('wx-cond').textContent=wmoText(cur.weathercode);document.getElementById('wx-icon-main').innerHTML=getIcon(cur.weathercode,cur.is_day,iconSize()*1.2);
     const times=data.hourly.time,temps=data.hourly.temperature_2m,wmos=data.hourly.weathercode,wspds=data.hourly.windspeed_10m,wdirs=data.hourly.winddirection_10m;
     const nowH=now.getHours(),slots=[];for(let i=0;i<times.length&&slots.length<4;i++){if(parseInt(times[i].split('T')[1])>=nowH)slots.push(i);}
-    document.getElementById('wx-hourly').innerHTML=slots.map(i=>{const hhmm=times[i].split('T')[1].slice(0,5);return`<div class="wx-hour"><span class="wx-hour-time">${hhmm}</span>${getIcon(wmos[i],hhmm>='06:00'&&hhmm<'18:00',iconSize())}<span class="wx-hour-temp">${Math.round(temps[i])}°C</span><span class="wx-hour-wind">${windDir(wdirs[i])}${Math.round(wspds[i])}km/h</span></div>`;}).join('');
-  }catch(e){document.getElementById('wx-temp').textContent='—';document.getElementById('wx-cond').textContent='Unable to load';}
+    document.getElementById('wx-hourly').innerHTML=slots.map(i=>{const hhmm=times[i].split('T')[1].slice(0,5);return`<div class="wx-hour"><span class="wx-hour-time">${hhmm}</span>${getIcon(wmos[i],hhmm>='06:00'&&hhmm<'18:00',iconSize())}<span class="wx-hour-temp">${Math.round(temps[i])}\u00b0C</span><span class="wx-hour-wind">${windDir(wdirs[i])}${Math.round(wspds[i])}km/h</span></div>`;}).join('');
+  }catch(e){document.getElementById('wx-temp').textContent='\u2014';document.getElementById('wx-cond').textContent='Unable to load';}
 })();
 
-/* ── COUNTDOWN ── */
+/* -- COUNTDOWN -- */
 const TARGET=new Date('2028-12-25T00:00:00');let prev={years:-1,months:-1,weeks:-1,days:-1};
 function pad(n){return String(n).padStart(2,'0');}
 function calcCountdown(){const now=new Date();let years=TARGET.getFullYear()-now.getFullYear(),months=TARGET.getMonth()-now.getMonth(),days=TARGET.getDate()-now.getDate();if(days<0){months--;days+=new Date(TARGET.getFullYear(),TARGET.getMonth(),0).getDate();}if(months<0){years--;months+=12;}return{years,months,weeks:Math.floor(days/7),days:days%7};}
@@ -352,36 +333,21 @@ function animateCard(id){const c=document.getElementById('card-'+id);c.classList
 function update(){const{years,months,weeks,days}=calcCountdown();if(years!==prev.years){document.getElementById('years').textContent=pad(years);animateCard('years');}if(months!==prev.months){document.getElementById('months').textContent=pad(months);animateCard('months');}if(weeks!==prev.weeks){document.getElementById('weeks').textContent=pad(weeks);animateCard('weeks');}if(days!==prev.days){document.getElementById('days').textContent=pad(days);animateCard('days');}prev={years,months,weeks,days};}
 update();setInterval(update,1000);
 
-/* ── Responsive layout ── */
+/* -- Responsive layout -- */
 function applyLayout() {
   const w = window.innerWidth;
-  const colLeft   = document.getElementById('col-left');
-  const colRight  = document.getElementById('col-right');
-  const sBalance  = document.getElementById('section-balance');
-  const sIncome   = document.getElementById('section-income');
-  const sExpense  = document.getElementById('section-expense');
-  const sWeather  = document.getElementById('section-weather');
-  const donutWrap = document.getElementById('donut-wrap');
+  const colLeft=document.getElementById('col-left'),colRight=document.getElementById('col-right');
+  const sBalance=document.getElementById('section-balance'),sIncome=document.getElementById('section-income');
+  const sExpense=document.getElementById('section-expense'),sWeather=document.getElementById('section-weather');
+  const donutWrap=document.getElementById('donut-wrap');
 
   if (w < 400) {
-    // ── iPhone: single column — Balance → Income → Expense, weather hidden ──
-    document.body.style.flexDirection = 'column';
-    document.body.style.overflowY = 'auto';
-    document.body.style.overflowX = 'hidden';
-    document.body.style.height = 'auto';
-    document.body.style.minHeight = '100%';
-    document.body.style.gap = '3vw';
+    document.body.style.flexDirection='column';document.body.style.overflowY='auto';document.body.style.overflowX='hidden';
+    document.body.style.height='auto';document.body.style.minHeight='100%';document.body.style.gap='3vw';
+    document.body.appendChild(sBalance);document.body.appendChild(sIncome);document.body.appendChild(sExpense);
+    sWeather.style.display='none';colLeft.style.display='none';colRight.style.display='none';
 
-    // Flatten all sections directly into body in correct order
-    document.body.appendChild(sBalance);
-    document.body.appendChild(sIncome);
-    document.body.appendChild(sExpense);
-    sWeather.style.display = 'none';
-    colLeft.style.display  = 'none';
-    colRight.style.display = 'none';
-
-    // Donut sizing
-    donutWrap.style.width='45vw'; donutWrap.style.height='45vw';
+    donutWrap.style.width='45vw';donutWrap.style.height='45vw';
     document.querySelector('.donut-center-label').style.fontSize='2.61vw';
     document.querySelector('.donut-center-val').style.fontSize='4.16vw';
     document.getElementById('list').style.padding='0 3.91vw';
@@ -393,7 +359,7 @@ function applyLayout() {
     document.querySelectorAll('.list-row').forEach(row=>{const p=row.querySelector('div:last-child');if(p)p.style.fontSize='3.6vw';});
 
     document.getElementById('card-balance').style.gap='3vw';
-    document.querySelectorAll('.list-item').forEach(el=>{el.style.padding='1.6vw 1.8vw';el.style.gap='2.4vw';el.style.borderRadius='3vw';});
+    document.querySelectorAll('.list-item').forEach(el=>{el.style.padding='1.84vw 1.8vw';el.style.gap='2.4vw';el.style.borderRadius='3vw';});
     document.querySelectorAll('.bi-list-name').forEach(el=>el.style.fontSize='4.57vw');
     document.querySelectorAll('.bi-list-val').forEach(el=>el.style.fontSize='4.57vw');
     document.querySelectorAll('#card-balance .list-pct').forEach(el=>el.style.fontSize='3.6vw');
@@ -403,6 +369,11 @@ function applyLayout() {
     document.querySelectorAll('.col-val').forEach(el=>el.style.fontSize='3.2vw');
     document.querySelectorAll('.col-icon-wrap img').forEach(el=>{el.style.width='5.2vw';el.style.height='5.2vw';});
     document.querySelectorAll('.col-icon-wrap').forEach(el=>{el.style.width='7vw';el.style.height='7vw';});
+
+    ['section-income','section-expense'].forEach(id=>{
+      const el=document.getElementById(id);
+      el.style.background='none';el.style.border='none';el.style.borderRadius='0';el.style.padding='0';
+    });
 
     document.querySelectorAll('#card-balance .list-item').forEach(row=>{
       if(row.querySelector('.mini-ring-wrap'))return;
@@ -415,25 +386,15 @@ function applyLayout() {
     });
 
   } else {
-    // ── iPad/desktop: left col (balance+expense) | right col (income+weather) ──
-    document.body.style.flexDirection = 'row';
-    document.body.style.overflowY = 'hidden';
-    document.body.style.height = '100%';
-    document.body.style.minHeight = '';
-    document.body.style.gap = '3vw';
-    document.getElementById('section-income').style.marginBottom = '4vw';
+    document.body.style.flexDirection='row';document.body.style.overflowY='hidden';
+    document.body.style.height='100%';document.body.style.minHeight='';document.body.style.gap='3vw';
+    document.getElementById('section-income').style.marginBottom='4vw';
+    colLeft.style.display='flex';colRight.style.display='flex';
+    colLeft.appendChild(sBalance);colLeft.appendChild(sExpense);
+    colRight.appendChild(sIncome);colRight.appendChild(sWeather);
+    sWeather.style.display='flex';
 
-    // Put sections back into their columns if they were moved
-    colLeft.style.display  = 'flex';
-    colRight.style.display = 'flex';
-    colLeft.appendChild(sBalance);
-    colLeft.appendChild(sExpense);
-    colRight.appendChild(sIncome);
-    colRight.appendChild(sWeather);
-    sWeather.style.display = 'flex';
-
-    // Donut sizing
-    donutWrap.style.width='25vw'; donutWrap.style.height='25vw'; donutWrap.style.marginTop='5vw';
+    donutWrap.style.width='25vw';donutWrap.style.height='25vw';donutWrap.style.marginTop='5vw';
     document.querySelector('.donut-center-label').style.fontSize='1.45vw';
     document.querySelector('.donut-center-val').style.fontSize='2.31vw';
     document.getElementById('list').style.padding='0 2.17vw';
@@ -444,7 +405,7 @@ function applyLayout() {
     document.querySelectorAll('#list .list-row > div:last-child').forEach(el=>el.style.fontSize='2.125vw');
 
     document.getElementById('card-balance').style.gap='1.3vw';
-    document.querySelectorAll('.list-item').forEach(el=>{el.style.padding='0.6vw 1.8vw';el.style.gap='1.6vw';el.style.borderRadius='1.6vw';});
+    document.querySelectorAll('.list-item').forEach(el=>{el.style.padding='0.69vw 1.8vw';el.style.gap='1.6vw';el.style.borderRadius='1.6vw';});
     document.querySelectorAll('.bi-list-name').forEach(el=>el.style.fontSize='2.54vw');
     document.querySelectorAll('.bi-list-val').forEach(el=>el.style.fontSize='2.54vw');
     document.querySelectorAll('#card-balance .list-pct').forEach(el=>el.style.fontSize='2.125vw');
