@@ -1,1 +1,230 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recent Transactions</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body {
+  width:100%; height:100%;
+  background:#1a1a1a;
+  font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+  color:#fff;
+}
+body { display:flex; flex-direction:column; padding:4vw; overflow:hidden; }
+.hdr { display:flex; justify-content:space-between; align-items:center; margin-bottom:3vw; }
+.hdr-title { font-size:4vw; font-weight:700; color:#fff; }
+.hdr-btn {
+  font-size:3vw; font-weight:600; color:#4ade80;
+  background:none; border:none; cursor:pointer; padding:0;
+}
+#tx-list { display:flex; flex-direction:column; }
+.row {
+  display:flex; align-items:center;
+  padding:2.8vw 0;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  gap:3vw;
+}
+.row:last-child { border-bottom:none; }
+.row.hide { display:none; }
+.ico {
+  width:10vw; height:10vw; border-radius:50%;
+  object-fit:contain; flex-shrink:0;
+  background:rgba(255,255,255,0.08); padding:1.5vw;
+}
+.ico-fb {
+  width:10vw; height:10vw; border-radius:50%; flex-shrink:0;
+  background:rgba(255,255,255,0.1);
+  display:flex; align-items:center; justify-content:center;
+  font-size:4.5vw; font-weight:700; color:rgba(255,255,255,0.6);
+}
+.mid { flex:1; min-width:0; }
+.ttl {
+  font-size:3.2vw; font-weight:700; color:#fff;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  margin-bottom:0.6vw;
+}
+.dtl { font-size:2.6vw; color:rgba(255,255,255,0.5); line-height:1.4; }
+.rgt { display:flex; flex-direction:column; align-items:flex-end; flex-shrink:0; gap:0.8vw; }
+.amt { font-size:3.2vw; font-weight:700; color:#fff; white-space:nowrap; }
+.amt.neg { color:#f87171; }
+.amt.pos { color:#4ade80; }
+.dte { font-size:2.4vw; color:rgba(255,255,255,0.4); white-space:nowrap; }
+#msg { font-size:3vw; color:rgba(255,255,255,0.4); text-align:center; padding:4vw; }
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-title">Recent Transactions</div>
+  <button class="hdr-btn" id="btn">See all</button>
+</div>
+<div id="msg">Loading...</div>
+<div id="tx-list"></div>
+<script>
+var LIMIT = 5;
+var expanded = false;
+var allData = [];
+
+document.getElementById("btn").addEventListener("click", function() {
+  expanded = !expanded;
+  document.getElementById("btn").textContent = expanded ? "Show less" : "See all";
+  var rows = document.querySelectorAll(".row");
+  for (var i = 0; i < rows.length; i++) {
+    if (i >= LIMIT) {
+      if (expanded) {
+        rows[i].classList.remove("hide");
+      } else {
+        rows[i].classList.add("hide");
+      }
+    }
+  }
+});
+
+function parseCsvRow(line) {
+  var cols = [];
+  var cur = "";
+  var inQ = false;
+  for (var i = 0; i < line.length; i++) {
+    var c = line[i];
+    if (c === '"') {
+      inQ = !inQ;
+    } else if (c === "," && !inQ) {
+      cols.push(cur.replace(/^"|"$/g, "").trim());
+      cur = "";
+    } else {
+      cur += c;
+    }
+  }
+  cols.push(cur.replace(/^"|"$/g, "").trim());
+  return cols;
+}
+
+function parseVal(s) {
+  if (!s) return NaN;
+  s = s.trim();
+  if (s.charAt(0) === "(" && s.charAt(s.length - 1) === ")") {
+    s = "-" + s.slice(1, -1);
+  }
+  s = s.replace(/[^\d.\-]/g, "");
+  return parseFloat(s);
+}
+
+function fmtMoney(v) {
+  var a = Math.abs(v);
+  return "\u20ab" + Math.round(a).toLocaleString("en-US");
+}
+
+function fmtDate(raw) {
+  if (!raw) return "";
+  var d = new Date(raw);
+  if (!isNaN(d.getTime())) {
+    return d.toLocaleDateString("en-US", { day:"numeric", month:"long", year:"numeric" });
+  }
+  return raw;
+}
+
+function buildRow(item, idx) {
+  var row = document.createElement("div");
+  row.className = "row" + (idx >= LIMIT ? " hide" : "");
+
+  var iconEl;
+  if (item.icon && item.icon.indexOf("http") === 0) {
+    iconEl = document.createElement("img");
+    iconEl.className = "ico";
+    iconEl.src = item.icon;
+    iconEl.onerror = function() {
+      var fb = document.createElement("div");
+      fb.className = "ico-fb";
+      fb.textContent = item.title ? item.title.charAt(0) : "?";
+      this.parentNode.replaceChild(fb, this);
+    };
+  } else {
+    iconEl = document.createElement("div");
+    iconEl.className = "ico-fb";
+    iconEl.textContent = item.icon || (item.title ? item.title.charAt(0) : "?");
+  }
+
+  var mid = document.createElement("div");
+  mid.className = "mid";
+
+  var ttl = document.createElement("div");
+  ttl.className = "ttl";
+  ttl.textContent = item.title;
+
+  var dtl = document.createElement("div");
+  dtl.className = "dtl";
+  dtl.textContent = item.detail;
+
+  mid.appendChild(ttl);
+  mid.appendChild(dtl);
+
+  var rgt = document.createElement("div");
+  rgt.className = "rgt";
+
+  var amt = document.createElement("div");
+  var v = item.amount;
+  amt.className = "amt" + (v < 0 ? " neg" : v > 0 ? " pos" : "");
+  amt.textContent = fmtMoney(v);
+
+  var dte = document.createElement("div");
+  dte.className = "dte";
+  dte.textContent = fmtDate(item.date);
+
+  rgt.appendChild(amt);
+  rgt.appendChild(dte);
+
+  row.appendChild(iconEl);
+  row.appendChild(mid);
+  row.appendChild(rgt);
+
+  return row;
+}
+
+function render(data) {
+  var list = document.getElementById("tx-list");
+  list.innerHTML = "";
+  for (var i = 0; i < data.length; i++) {
+    list.appendChild(buildRow(data[i], i));
+  }
+}
+
+function loadData() {
+  var url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=528094299&t=" + Date.now();
+  fetch(url, { cache: "no-store" })
+    .then(function(res) {
+      if (!res.ok) { throw new Error("HTTP " + res.status); }
+      return res.text();
+    })
+    .then(function(text) {
+      var lines = text.trim().split("\n").filter(function(l) { return l.trim(); });
+      var start = 0;
+      var first = parseCsvRow(lines[0]);
+      if (isNaN(parseVal(first[3]))) { start = 1; }
+      allData = [];
+      for (var i = start; i < lines.length; i++) {
+        var cols = parseCsvRow(lines[i]);
+        if (!cols[2]) { continue; }
+        allData.push({
+          date:   cols[0] || "",
+          icon:   cols[5] || "",
+          title:  cols[2] || "",
+          detail: cols[4] || "",
+          amount: parseVal(cols[3])
+        });
+      }
+      if (!allData.length) { throw new Error("No data found."); }
+      document.getElementById("msg").style.display = "none";
+      render(allData);
+    })
+    .catch(function(err) {
+      document.getElementById("msg").textContent = "Error: " + err.message;
+    });
+}
+
+loadData();
+setInterval(loadData, 60000);
+</script>
+</body>
+</html>
