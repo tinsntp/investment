@@ -10,7 +10,7 @@ html, body {
   width:100%; height:100%;
   background:#1a1a1a;
   font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
-  color:#fff;margin-top:10px;
+  color:#fff;margin-top:15px;
 }
 body { display:flex; flex-direction:column; padding:4vw; overflow:hidden; }
 .hdr { display:flex; justify-content:space-between; align-items:center; margin-bottom:2vw; }
@@ -54,6 +54,18 @@ body { display:flex; flex-direction:column; padding:4vw; overflow:hidden; }
 .dte { font-size:2.4vw; color:rgba(255,255,255,0.4); white-space:nowrap; }
 #msg { font-size:3vw; color:rgba(255,255,255,0.4); text-align:center; padding:4vw; }
 #tx-list { margin-top:20px; }
+
+.row {
+  cursor: pointer;
+  transition: transform 0.2s ease, padding 0.2s ease;
+}
+.row.expanded {
+  transform: scale(1.03);
+  background: rgba(255,255,255,0.03);
+  border-radius: 2vw;
+  padding: 2.8vw 1vw;
+}
+
 </style>
 </head>
 <body>
@@ -254,6 +266,20 @@ function applyLayout() {
     el.style.fontSize = isMobile ? "7vw" : "3.8vw";
   });
 }
+document.getElementById("tx-list").addEventListener("click", function(e) {
+  var row = e.target;
+  while (row && !row.classList.contains("row")) {
+    row = row.parentNode;
+  }
+  if (!row) return;
+  var isExpanded = row.classList.contains("expanded");
+  document.querySelectorAll(".row.expanded").forEach(function(el) {
+    el.classList.remove("expanded");
+  });
+  if (!isExpanded) {
+    row.classList.add("expanded");
+  }
+});
 
 window.addEventListener("resize", applyLayout);
 </script>
