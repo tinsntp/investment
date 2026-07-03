@@ -8,13 +8,15 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 html, body {
   width:100%; height:100%;
-  background:#1a1a1a; border-radius:40px;
+  background:#1a1a1a; border-radius:30px;
   font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
-  color:#fff; margin-top:15px;
+  color:#fff;
 }
 body { display:flex; flex-direction:column; padding:0vw; overflow:hidden; }
 .hdr { display:flex; justify-content:space-between; align-items:center; margin-bottom:2vw; }
-.hdr-title { font-size:4vw; font-weight:700; color:#fff; }
+.hdr-left { display:flex; align-items:center; gap:2vw; }
+.hdr-icon { width:6vw; height:6vw; object-fit:contain; flex-shrink:0; }
+.hdr-title { font-size:3vw; font-weight:700; color:#fff; }
 #tx-list { display:flex; flex-direction:column; margin-top:20px; }
 .row {
   display:flex; align-items:center;
@@ -27,7 +29,7 @@ body { display:flex; flex-direction:column; padding:0vw; overflow:hidden; }
 }
 .row:last-child { border-bottom:none; }
 .row.expanded {
-  background:rgba(255,255,255,0.03);
+  background:rgba(255,255,255,0.06);
   border-radius:2vw;
   padding:2.2vw 1.5vw;
 }
@@ -44,12 +46,12 @@ body { display:flex; flex-direction:column; padding:0vw; overflow:hidden; }
 }
 .mid { flex:1; min-width:0; }
 .ttl {
-  font-size:3.2vw; font-weight:700; color:#fff;
+  font-size:3.8vw; font-weight:700; color:#fff;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   margin-bottom:0.6vw;
 }
 .dtl {
-  font-size:2.6vw; color:rgba(255,255,255,0.5); line-height:1.4;
+  font-size:3.2vw; color:rgba(255,255,255,0.5); line-height:1.4;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 .row.expanded .dtl {
@@ -58,14 +60,17 @@ body { display:flex; flex-direction:column; padding:0vw; overflow:hidden; }
   text-overflow:unset;
 }
 .rgt { display:flex; flex-direction:column; align-items:flex-end; flex-shrink:0; gap:0.8vw; }
-.amt { font-size:3.2vw; font-weight:700; color:rgba(255,255,255,0.45); white-space:nowrap; }
-.dte { font-size:2.4vw; color:rgba(255,255,255,0.4); white-space:nowrap; }
+.amt { font-size:3.8vw; font-weight:700; color:#fff; white-space:nowrap; }
+.dte { font-size:3vw; color:rgba(255,255,255,0.4); white-space:nowrap; }
 #msg { font-size:3vw; color:rgba(255,255,255,0.4); text-align:center; padding:4vw; }
 </style>
 </head>
 <body>
 <div class="hdr">
-  <div class="hdr-title">Recent Transactions</div>
+  <div class="hdr-left">
+    <img class="hdr-icon" src="https://github.com/tinsntp/investment/blob/main/icon/recent.png?raw=true" />
+    <div class="hdr-title">Recent Transactions</div>
+  </div>
 </div>
 <div id="msg">Loading...</div>
 <div id="tx-list"></div>
@@ -236,14 +241,17 @@ setInterval(loadData, 60000);
 function applyLayout() {
   var w = window.innerWidth;
   var isMobile = w < 400;
-  var titleFs  = isMobile ? "4.6vw" : "2.9vw";
-  var detailFs = isMobile ? "4.0vw" : "2.6vw";
-  var amtFs    = isMobile ? "4.6vw" : "3vw";
-  var dateFs   = isMobile ? "3.8vw" : "2.5vw";
-  var hdrFs    = isMobile ? "6vw"   : "3.4vw";
-  var icoSz    = isMobile ? "12vw"  : "8vw";
+  var titleFs  = isMobile ? "4.6vw" : "3.8vw";
+  var detailFs = isMobile ? "4.0vw" : "3.2vw";
+  var amtFs    = isMobile ? "4.6vw" : "3.8vw";
+  var dateFs   = isMobile ? "3.8vw" : "3vw";
+  var hdrFs    = isMobile ? "5vw"   : "3.8vw";
+  var icoHdrSz = isMobile ? "9vw"   : "6vw";
+  var icoSz    = isMobile ? "12vw"  : "10vw";
 
   document.querySelector(".hdr-title").style.fontSize = hdrFs;
+  var hdrIcon = document.querySelector(".hdr-icon");
+  if (hdrIcon) { hdrIcon.style.width = icoHdrSz; hdrIcon.style.height = icoHdrSz; }
   document.querySelectorAll(".ttl").forEach(function(el) { el.style.fontSize = titleFs; });
   document.querySelectorAll(".dtl").forEach(function(el) { el.style.fontSize = detailFs; });
   document.querySelectorAll(".amt").forEach(function(el) { el.style.fontSize = amtFs; });
