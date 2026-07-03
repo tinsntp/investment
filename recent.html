@@ -8,26 +8,29 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 html, body {
   width:100%; height:100%;
-  background:#1a1a1a;border-radius:40px;
+  background:#1a1a1a; border-radius:40px;
   font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
-  color:#fff;margin-top:15px;
+  color:#fff; margin-top:15px;
 }
 body { display:flex; flex-direction:column; padding:0vw; overflow:hidden; }
 .hdr { display:flex; justify-content:space-between; align-items:center; margin-bottom:2vw; }
 .hdr-title { font-size:4vw; font-weight:700; color:#fff; }
-.hdr-btn {
-  font-size:3vw; font-weight:600; color:rgba(255,255,255,1.95);
-  background:none; border:none; cursor:pointer; padding:0;
-}
-#tx-list { display:flex; flex-direction:column; }
+#tx-list { display:flex; flex-direction:column; margin-top:20px; }
 .row {
   display:flex; align-items:center;
-  padding:1.8vw 0;
+  padding:2.2vw 0;
   border-bottom:1px solid rgba(255,255,255,0.08);
   gap:3vw;
+  cursor:pointer;
+  transition:background 0.2s ease;
+  border-radius:0;
 }
 .row:last-child { border-bottom:none; }
-.row.hide { display:none; }
+.row.expanded {
+  background:rgba(255,255,255,0.03);
+  border-radius:2vw;
+  padding:2.2vw 1.5vw;
+}
 .ico {
   width:10vw; height:10vw; border-radius:50%;
   object-fit:contain; flex-shrink:0;
@@ -49,51 +52,40 @@ body { display:flex; flex-direction:column; padding:0vw; overflow:hidden; }
   font-size:2.6vw; color:rgba(255,255,255,0.5); line-height:1.4;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
+.row.expanded .dtl {
+  white-space:normal;
+  overflow:visible;
+  text-overflow:unset;
+}
 .rgt { display:flex; flex-direction:column; align-items:flex-end; flex-shrink:0; gap:0.8vw; }
-.amt { font-size:3.2vw; font-weight:700; color:rgba(255,255,255,0.85); white-space:nowrap; }
+.amt { font-size:3.2vw; font-weight:700; color:rgba(255,255,255,0.45); white-space:nowrap; }
 .dte { font-size:2.4vw; color:rgba(255,255,255,0.4); white-space:nowrap; }
 #msg { font-size:3vw; color:rgba(255,255,255,0.4); text-align:center; padding:4vw; }
-#tx-list { margin-top:20px; }
-
-.row {
-  cursor: pointer;
-  transition: transform 0.2s ease, padding 0.2s ease;
-}
-.row.expanded {
-  transform: scale(1.03);
-  background: rgba(255,255,255,0.03);
-  border-radius: 2vw;
-  padding: 2.8vw 1vw;
-}
-
 </style>
 </head>
 <body>
 <div class="hdr">
   <div class="hdr-title">Recent Transactions</div>
-  <button class="hdr-btn" id="btn">See all</button>
 </div>
 <div id="msg">Loading...</div>
 <div id="tx-list"></div>
 <script>
-var LIMIT = 5;
-var expanded = false;
 var allData = [];
 
-document.getElementById("btn").addEventListener("click", function() {
-  expanded = !expanded;
-  document.getElementById("btn").textContent = expanded ? "Show less" : "See all";
-  var rows = document.querySelectorAll(".row");
-  for (var i = 0; i < rows.length; i++) {
-    if (i >= LIMIT) {
-      if (expanded) {
-        rows[i].classList.remove("hide");
-      } else {
-        rows[i].classList.add("hide");
-      }
-    }
+var NOISE_PATTERNS = [
+  /GIAO DICH THE\s*[\d*]{4}\s*TAI/i,
+  /NAP TIEN VI/i,
+  /NAP VI DIEN TU/i,
+  /TT QR VNPAY/i
+];
+
+function cleanDetail(s) {
+  if (!s) return "";
+  for (var i = 0; i < NOISE_PATTERNS.length; i++) {
+    s = s.replace(NOISE_PATTERNS[i], "").trim();
   }
-});
+  return s.replace(/\s+/g, " ").trim();
+}
 
 function parseCsvRow(line) {
   var cols = [];
@@ -138,21 +130,23 @@ function fmtDate(raw) {
   return raw;
 }
 
-function buildRow(item, idx) {
+function buildRow(item) {
   var row = document.createElement("div");
-  row.className = "row" + (idx >= LIMIT ? " hide" : "");
+  row.className = "row";
 
   var iconEl;
   if (item.icon && item.icon.indexOf("http") === 0) {
     iconEl = document.createElement("img");
     iconEl.className = "ico";
     iconEl.src = item.icon;
-    iconEl.onerror = function() {
-      var fb = document.createElement("div");
-      fb.className = "ico-fb";
-      fb.textContent = item.title ? item.title.charAt(0) : "?";
-      this.parentNode.replaceChild(fb, this);
-    };
+    iconEl.onerror = (function(title) {
+      return function() {
+        var fb = document.createElement("div");
+        fb.className = "ico-fb";
+        fb.textContent = title ? title.charAt(0) : "?";
+        this.parentNode.replaceChild(fb, this);
+      };
+    })(item.title);
   } else {
     iconEl = document.createElement("div");
     iconEl.className = "ico-fb";
@@ -177,9 +171,8 @@ function buildRow(item, idx) {
   rgt.className = "rgt";
 
   var amt = document.createElement("div");
-  var v = item.amount;
   amt.className = "amt";
-  amt.textContent = fmtMoney(v);
+  amt.textContent = fmtMoney(item.amount);
 
   var dte = document.createElement("div");
   dte.className = "dte";
@@ -199,8 +192,9 @@ function render(data) {
   var list = document.getElementById("tx-list");
   list.innerHTML = "";
   for (var i = 0; i < data.length; i++) {
-    list.appendChild(buildRow(data[i], i));
+    list.appendChild(buildRow(data[i]));
   }
+  applyLayout();
 }
 
 function loadData() {
@@ -223,14 +217,13 @@ function loadData() {
           date:   cols[0] || "",
           icon:   cols[5] || "",
           title:  cols[2] || "",
-          detail: cols[4] || "",
+          detail: cleanDetail(cols[4] || ""),
           amount: parseVal(cols[3])
         });
       }
       if (!allData.length) { throw new Error("No data found."); }
       document.getElementById("msg").style.display = "none";
       render(allData);
-      applyLayout();
     })
     .catch(function(err) {
       document.getElementById("msg").textContent = "Error: " + err.message;
@@ -247,13 +240,10 @@ function applyLayout() {
   var detailFs = isMobile ? "4.0vw" : "2.6vw";
   var amtFs    = isMobile ? "4.6vw" : "3vw";
   var dateFs   = isMobile ? "3.8vw" : "2.5vw";
-  var hdrFs    = isMobile ? "6vw"    : "3.4vw";
-  var btnFs    = isMobile ? "4.5vw"  : "2.8vw";
-  var icoSz    = isMobile ? "12vw" : "8vw";
+  var hdrFs    = isMobile ? "6vw"   : "3.4vw";
+  var icoSz    = isMobile ? "12vw"  : "8vw";
 
   document.querySelector(".hdr-title").style.fontSize = hdrFs;
-  document.querySelector(".hdr-btn").style.fontSize   = btnFs;
-
   document.querySelectorAll(".ttl").forEach(function(el) { el.style.fontSize = titleFs; });
   document.querySelectorAll(".dtl").forEach(function(el) { el.style.fontSize = detailFs; });
   document.querySelectorAll(".amt").forEach(function(el) { el.style.fontSize = amtFs; });
@@ -266,6 +256,7 @@ function applyLayout() {
     el.style.fontSize = isMobile ? "7vw" : "3.8vw";
   });
 }
+
 document.getElementById("tx-list").addEventListener("click", function(e) {
   var row = e.target;
   while (row && !row.classList.contains("row")) {
