@@ -10,7 +10,7 @@ html, body {
   width:100%; height:100%;
   background:#191919;
   font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
-  color:#fff; overflow:hidden;margin-top:10px
+  color:#fff; overflow:hidden;margin-top:15px
 }
 
 /* ── Tab bar ── */
@@ -105,7 +105,7 @@ html, body {
 #det-msg { font-size:3vw; color:rgba(255,255,255,0.4); text-align:center; padding:5vw; }
 
 /* ══ RECENT STYLES ══ */
-#tx-list { display:flex; flex-direction:column; }
+#tx-list { display:flex; flex-direction:column; margin-top:5px}
 .row {
   display:flex; align-items:center; padding:2vw 0;
   border-bottom:1px solid rgba(255,255,255,0.08); gap:3vw; cursor:pointer;
@@ -524,7 +524,7 @@ function caRenderBalance(items){
     row.appendChild(ico);row.appendChild(nm);row.appendChild(rw);row.appendChild(vl);row.appendChild(pc);
     card.appendChild(row);
   });
-  card.style.display="flex";
+  card.style.display="flex"; caApplyLayout();
 }
 
 function caRenderIncome(items){
@@ -534,7 +534,7 @@ function caRenderIncome(items){
   var sorted=filtered.slice().sort(function(a,b){return Math.abs(b.val)-Math.abs(a.val);});
   var maxAbs=Math.max.apply(null,sorted.map(function(d){return Math.abs(d.val);}));maxAbs=maxAbs||1;
   var isMobile=window.innerWidth<400;
-  var cardH=Math.max(isMobile?100:140,Math.min(window.innerWidth*(isMobile?0.38:0.32),isMobile?220:260));
+  var cardH=Math.max(isMobile?150:140,Math.min(window.innerWidth*(isMobile?0.6:0.32),isMobile?300:260));
   var posH=cardH*0.55,negH=cardH*0.45,maxBar=Math.min(posH,negH)*0.55;
   card.style.minHeight=cardH+"px";
   sorted.forEach(function(item){
@@ -546,7 +546,7 @@ function caRenderIncome(items){
     else{nz.innerHTML='<div class="ca-col-bar" style="height:'+barH+'px;border-radius:1vw;"></div><div class="ca-col-icon-wrap"><img src="'+item.icon+'" onerror="this.style.display=\'none\'" /></div><div class="ca-col-val">'+caFmtSgn(item.val)+'</div><div class="ca-col-pct">'+pct.toFixed(1)+'%</div>';}
     col.appendChild(pz);col.appendChild(nz);card.appendChild(col);
   });
-  card.style.display="flex";
+  card.style.display="flex";caApplyLayout();
 }
 
 function caSetCenter(l,v){var cl=document.getElementById("ca-center-label"),cv=document.getElementById("ca-center-val");if(cl)cl.textContent=l;if(cv)cv.textContent=v;}
@@ -595,7 +595,7 @@ function caRenderDonut(data){
     lbl.innerHTML='<img src="'+icons[i%icons.length]+'" style="width:7vw;height:7vw;object-fit:contain;border-radius:50%;background:rgba(26,26,26,0.7);padding:1vw;" />'
       +'<span style="font-size:3.8vw;font-weight:700;color:#fff;white-space:nowrap;text-shadow:0 1px 4px rgba(0,0,0,0.8);">'+caFmtSh(item.val)+'</span>';
     wrap.appendChild(lbl);la+=pt*360;
-  });
+  });caApplyLayout();
 }
 
 function caMiniRing(pct,color){var r=10,sw=3,circ=2*Math.PI*r,dash=(pct/100)*circ,gap=circ-dash;return'<svg viewBox="0 0 28 28" style="flex-shrink:0;width:3.8vw;height:3.8vw;"><circle cx="14" cy="14" r="'+r+'" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="'+sw+'"/><circle cx="14" cy="14" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="'+sw+'" stroke-linecap="round" stroke-dasharray="'+dash.toFixed(2)+' '+gap.toFixed(2)+'" stroke-dashoffset="0" transform="rotate(-90 14 14)"/></svg>';}
@@ -629,7 +629,7 @@ function caRenderDrill(items,title,color){
       +'<svg viewBox="0 0 28 28" style="flex-shrink:0;width:2.8vw;height:2.8vw;"><circle cx="14" cy="14" r="'+r2+'" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="'+sw+'"/><circle cx="14" cy="14" r="'+r2+'" fill="none" stroke="'+color+'" stroke-width="'+sw+'" stroke-linecap="round" stroke-dasharray="'+dash.toFixed(2)+' '+gap.toFixed(2)+'" stroke-dashoffset="0" transform="rotate(-90 14 14)"/></svg>'
       +'<div style="font-size:3vw;color:rgba(255,255,255,0.55);flex-shrink:0;">'+pct.toFixed(1)+'%</div>';
     list.appendChild(row);
-  });
+  });caApplyLayout();
 }
 
 function caRenderList(data){
@@ -952,7 +952,7 @@ setInterval(loadExpense,60000);
 setInterval(loadRecent,60000);
 setInterval(caLoadBI,60000);
 setInterval(caLoadDonut,60000);
-window.addEventListener("load",function(){positionTabLine();applyLayout();});
+window.addEventListener("load",function(){positionTabLine();applyLayout();caApplyLayout();});
 window.addEventListener("resize",applyLayout);
 </script>
 </body>
