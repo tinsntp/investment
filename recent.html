@@ -99,7 +99,7 @@ html, body {
 
 /* Name cell */
 .name-cell { display:flex; align-items:center; gap:1.5vw; min-width:0; overflow:hidden; }
-.sub-row .name-cell { padding-left:5vw; }
+.sub-row .name-cell { padding-left:8vw; }
 .chevron { font-size:3.5vw; color:rgba(255,255,255,0.45); flex-shrink:0; user-select:none; line-height:1; }
 .cat-ico { width:5vw; height:5vw; border-radius:50%; object-fit:contain; flex-shrink:0; background:rgba(255,255,255,0.08); padding:0.5vw; }
 .cat-ico-fb { width:5vw; height:5vw; border-radius:50%; flex-shrink:0; background:rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; font-size:2.3vw; color:rgba(255,255,255,0.6); }
@@ -179,7 +179,7 @@ html, body {
 <script>
 /* ══ TAB SWITCHING ══ */
 var currentTab = 0;
-var touchStartX = 0, touchStartY = 0;
+//var touchStartX = 0, touchStartY = 0;
 
 function switchTab(idx) {
   currentTab = idx;
@@ -202,7 +202,7 @@ function positionTabLine() {
 document.querySelectorAll(".tab-btn").forEach(function(btn) {
   btn.addEventListener("click", function() { switchTab(parseInt(this.dataset.idx)); });
 });
-
+/*
 var slidesOuter = document.getElementById("slides-outer");
 slidesOuter.addEventListener("touchstart", function(e) {
   touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY;
@@ -214,7 +214,7 @@ slidesOuter.addEventListener("touchend", function(e) {
     if (dx < 0 && currentTab === 0) switchTab(1);
     if (dx > 0 && currentTab === 1) switchTab(0);
   }
-}, { passive:true });
+}, { passive:true });*/
 
 /* ══ SHARED UTILS ══ */
 function parseCsvRow(line) {
@@ -440,7 +440,7 @@ function buildColHdr() {
   var hdr = document.getElementById("col-hdr");
   if (!hdr) return;
   hdr.innerHTML = "";
-  hdr.style.fontSize = isMobile ? "3.8vw" : "2.8vw";
+  hdr.style.fontSize = isMobile ? "4.2vw" : "2.8vw";
   hdr.style.gridTemplateColumns = isMobile ? "5fr 2fr 1.6fr" : "5.4fr 2fr 2fr 1.6fr";
   var cols = isMobile ? ["Category","Amount","+/-"] : ["Category","Amount","Last month","+/-"];
   cols.forEach(function(t, i) {
@@ -596,13 +596,13 @@ function applyLayout(){
   var isMobile = window.innerWidth < 400;
 
   // Tab bar
-  document.querySelectorAll(".tab-btn").forEach(function(el){el.style.fontSize=isMobile?"4.7vw":"3.3vw";});
+  document.querySelectorAll(".tab-btn").forEach(function(el){el.style.fontSize=isMobile?"4.8vw":"3.3vw";});
   document.querySelectorAll(".tab-btn img").forEach(function(el){el.style.width=isMobile?"6vw":"5vw";el.style.height=isMobile?"6vw":"5vw";});
 
   // Rings
   var ringSz   = isMobile?"25vw":"12vw";
-  var ringLblFs= isMobile?"4vw":"2.8vw";
-  var ringRemFs= isMobile?"3.7vw":"2.2vw";
+  var ringLblFs= isMobile?"4.2vw":"2.8vw";
+  var ringRemFs= isMobile?"3.8vw":"2.2vw";
   var ringIcoSz= isMobile?"6vw":"4vw";
   document.querySelectorAll(".ring-svg").forEach(function(el){el.style.width=ringSz;el.style.height=ringSz;});
   document.querySelectorAll(".ring-label").forEach(function(el){el.style.fontSize=ringLblFs;});
@@ -611,18 +611,18 @@ function applyLayout(){
   document.querySelectorAll(".ring-item[data-hide-on-mobile]").forEach(function(el){el.style.display=isMobile?"none":"flex";});
 
   // Expand button
-  document.getElementById("expand-btn").style.fontSize = isMobile?"4vw":"3vw";
+  document.getElementById("expand-btn").style.fontSize = isMobile?"4.4vw":"3vw";
 
   // Category grid — 4 columns; on mobile, hide last-val column
   var gridCols = isMobile ? "5.6fr 1.8fr 1.6fr" : "5.4fr 2fr 2fr 1.6fr";
-  var mainNmFs = isMobile?"4.6vw":"3.2vw";
-  var subNmFs  = isMobile?"4.2vw":"3vw";
-  var amtFs    = isMobile?"4.6vw":"3.2vw";
-  var subAmtFs = isMobile?"4.2vw":"3vw";
-  var lastFs   = isMobile?"3.9vw":"2.8vw";
-  var pctFs    = isMobile?"3.9vw":"2.8vw";
-  var catIcoSz = isMobile?"8vw":"8vw";
-  var subIcoSz = isMobile?"6vw":"6vw";
+  var mainNmFs = isMobile?"4.8vw":"3.2vw";
+  var subNmFs  = isMobile?"4.4vw":"3vw";
+  var amtFs    = isMobile?"4.8vw":"3.2vw";
+  var subAmtFs = isMobile?"4.4vw":"3vw";
+  var lastFs   = isMobile?"4.1vw":"2.8vw";
+  var pctFs    = isMobile?"4.1vw":"2.8vw";
+  var catIcoSz = isMobile?"9vw":"8vw";
+  var subIcoSz = isMobile?"7vw":"6vw";
   var chevFs   = isMobile?"6vw":"4.5vw";
   var rowPad   = isMobile?"2vw 0.5vw":"1.4vw 0.5vw";
 
