@@ -198,7 +198,7 @@ html, body {
 
 <div class="tab-bar" id="tab-bar">
   <div class="tab-btn active" data-idx="0" id="tab-btn-0">
-    <img src="https://github.com/tinsntp/investment/blob/main/icon/pie-chart-orange.png?raw=true" />
+    <img src="https://github.com/tinsntp/investment/blob/main/icon/pie-chart-yellow.png?raw=true" />
     <span>Detail</span>
   </div>
   <div class="tab-btn" data-idx="1" id="tab-btn-1">
@@ -592,7 +592,7 @@ function caRenderDonut(data){
     var lx=50+0.56*Math.cos(rad)*100,ly=50+0.56*Math.sin(rad)*100;
     var lbl=document.createElement("div");lbl.className="ca-donut-lbl";lbl.style.left=lx+"%";lbl.style.top=ly+"%";
     var icons=["https://raw.githubusercontent.com/tinsntp/investment/main/cash.png","https://raw.githubusercontent.com/tinsntp/investment/main/expense.png","https://raw.githubusercontent.com/tinsntp/investment/main/bank%20loan.png"];
-    lbl.innerHTML='<img src="'+icons[i%icons.length]+'" style="width:7vw;height:7vw;object-fit:contain;border-radius:50%;background:rgba(26,26,26,0.7);padding:1vw;" />'
+    lbl.innerHTML='<img src="'+icons[i%icons.length]+'" style="width:8vw;height:8vw;object-fit:contain;border-radius:50%;background:rgba(26,26,26,0.7);padding:1vw;" />'
       +'<span style="font-size:3.8vw;font-weight:700;color:#fff;white-space:nowrap;text-shadow:0 1px 4px rgba(0,0,0,0.8);">'+caFmtSh(item.val)+'</span>';
     wrap.appendChild(lbl);la+=pt*360;
   });caApplyLayout();
@@ -620,14 +620,16 @@ function caRenderDrill(items,title,color){
   header.addEventListener("click",function(){caHighlight(null);caRenderList(caGlobalData);});
   list.appendChild(header);
   var total=items.reduce(function(s,d){return s+Math.abs(d.val);},0);
+  var drPcFs = window.innerWidth < 400 ? "4.6vw" : "2.6vw";
+  var drIS = window.innerWidth < 400 ? "3.35vw" : "3.35vw";
   items.forEach(function(item){
     var pct=Math.abs(item.val)/total*100,r2=10,sw=3,circ=2*Math.PI*r2,dash=(pct/100)*circ,gap=circ-dash;
     var row=document.createElement("div");row.className="ca-list-row";row.style.cursor="default";
-    row.innerHTML='<img src="'+item.icon+'" style="width:3.45vw;height:3.45vw;object-fit:contain;flex-shrink:0;" />'
-      +'<div class="ca-list-name" style="font-size:2.88vw;">'+item.name+'</div>'
-      +'<div class="ca-list-val" style="font-size:2.88vw;">'+caFmt(Math.abs(item.val))+'</div>'
-      +'<svg viewBox="0 0 28 28" style="flex-shrink:0;width:2.8vw;height:2.8vw;"><circle cx="14" cy="14" r="'+r2+'" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="'+sw+'"/><circle cx="14" cy="14" r="'+r2+'" fill="none" stroke="'+color+'" stroke-width="'+sw+'" stroke-linecap="round" stroke-dasharray="'+dash.toFixed(2)+' '+gap.toFixed(2)+'" stroke-dashoffset="0" transform="rotate(-90 14 14)"/></svg>'
-      +'<div style="font-size:3vw;color:rgba(255,255,255,0.55);flex-shrink:0;">'+pct.toFixed(1)+'%</div>';
+    row.innerHTML='<img src="'+item.icon+'" style="width:'+drIS+';height:'+drIS+';object-fit:contain;flex-shrink:0;" />'
+      +'<div class="ca-list-name" style="font-size:'+drPcFs+';">'+item.name+'</div>'
+      +'<div class="ca-list-val" style="font-size:'+drPcFs+';">'+caFmt(Math.abs(item.val))+'</div>'
+      +'<svg viewBox="0 0 28 28" style="flex-shrink:0;width:4.8vw;height:4.8vw;"><circle cx="14" cy="14" r="'+r2+'" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="'+sw+'"/><circle cx="14" cy="14" r="'+r2+'" fill="none" stroke="'+color+'" stroke-width="'+sw+'" stroke-linecap="round" stroke-dasharray="'+dash.toFixed(2)+' '+gap.toFixed(2)+'" stroke-dashoffset="0" transform="rotate(-90 14 14)"/></svg>'
+      +'<div style="font-size:'+drPcFs+';color:rgba(255,255,255,0.55);flex-shrink:0;">'+pct.toFixed(1)+'%</div>';
     list.appendChild(row);
   });caApplyLayout();
 }
@@ -639,14 +641,15 @@ function caRenderList(data){
   data.forEach(function(item,i){
     var p=CA_PALETTE[i%CA_PALETTE.length],pct=Math.abs(item.val)/total*100;
     var row=document.createElement("div");row.className="ca-list-row";
-    var pcFs = window.innerWidth < 400 ? "3.6vw" : "3vw";
-    row.innerHTML='<img src="'+icons[i%icons.length]+'" style="width:3.32vw;height:3.32vw;object-fit:contain;flex-shrink:0;filter:drop-shadow(0 0 3px '+p.glow+');" />'
-      +'<div class="ca-list-name">'+item.name+'</div>'
-      +'<div class="ca-list-val">'+caFmt(item.val)+'</div>'
+    var pcFs = window.innerWidth < 400 ? "4.6vw" : "2.6vw";
+    var pcIS = window.innerWidth < 400 ? "3.35vw" : "3.35vw";
+    row.innerHTML='<img src="'+icons[i%icons.length]+'" style="width:'+pcIS+';height:'+pcIS+';object-fit:contain;flex-shrink:0;filter:drop-shadow(0 0 3px '+p.glow+');" />'
+      +'<div class="ca-list-name" style="font-size:'+pcFs+';">'+item.name+'</div>'
+      +'<div class="ca-list-val" style="font-size:'+pcFs+';">'+caFmt(item.val)+'</div>'
       +caMiniRing(pct,p.solid)
       +'<div style="font-size:'+pcFs+';color:rgba(255,255,255,0.5);white-space:nowrap;flex-shrink:0;">'+pct.toFixed(1)+'%</div>';
     (function(ii){row.addEventListener("click",function(){
-      if(ii===1){caHighlight(1);caFetchTab1(function(t1){var ei=["https://github.com/tinsntp/investment/blob/main/shop.png?raw=true","https://github.com/tinsntp/investment/blob/main/heart.png?raw=true","https://github.com/tinsntp/investment/blob/main/transaction.png?raw=true","https://github.com/tinsntp/investment/blob/main/shield.png?raw=true"];caRenderDrill(t1.slice(0,4).map(function(d,idx){return{name:d.name,val:d.val,icon:ei[idx]};}), "Expenses", CA_PALETTE[1].solid);});}
+      if(ii===1){caHighlight(1);caFetchTab1(function(t1){var ei=["https://github.com/tinsntp/investment/blob/main/shop.png?raw=true","https://github.com/tinsntp/investment/blob/main/heart.png?raw=true","https://github.com/tinsntp/investment/blob/main/transaction.png?raw=true","https://github.com/tinsntp/investment/blob/main/shield.png?raw=true"];caRenderDrill(t1.slice(0,4).map(function(d,idx){return{name:d.name,val:d.val,icon:ei[idx]};}), "Average Expenses", CA_PALETTE[1].solid);});}
       else if(ii===2){caHighlight(2);caFetchTab1(function(t1){var di=["https://github.com/tinsntp/investment/blob/main/sc.png?raw=true","https://github.com/tinsntp/investment/blob/main/shinhan.png?raw=true"];caRenderDrill(t1.slice(6,8).filter(function(d){return d.name&&!isNaN(d.val);}).map(function(d,idx){return{name:d.name,val:d.val,icon:di[idx]};}), "With Debts", CA_PALETTE[2].solid);});}
       else{caHighlight(caActiveIdx===ii?null:ii);}
     });})(i);
@@ -772,13 +775,14 @@ function caApplyLayout(){
     document.querySelectorAll(".ca-list-icon").forEach(function(el){el.style.width="8vw";el.style.height="8vw";});
     document.querySelectorAll(".ca-bi-name").forEach(function(el){el.style.fontSize="4.5vw";});
     document.querySelectorAll(".ca-bi-val").forEach(function(el){el.style.fontSize="4.5vw";});
-    document.querySelectorAll(".ca-list-pct").forEach(function(el){el.style.fontSize="3.2vw";});
+    document.querySelectorAll(".ca-list-pct").forEach(function(el){el.style.fontSize="4.2vw";});
     document.querySelectorAll(".ca-mini-ring").forEach(function(el){el.style.width="9vw";el.style.height="9vw";});
     // Donut list sizes for mobile
     document.querySelectorAll(".ca-list-name").forEach(function(el){el.style.fontSize="5vw";});
     document.querySelectorAll(".ca-list-val").forEach(function(el){el.style.fontSize="5vw";});
-    document.querySelectorAll(".ca-donut-center-label").forEach(function(el){el.style.fontSize="3vw";});
+    document.querySelectorAll(".ca-donut-center-label").forEach(function(el){el.style.fontSize="3.3vw";});
     document.querySelectorAll(".ca-donut-center-val").forEach(function(el){el.style.fontSize="4.8vw";});
+    document.querySelectorAll("#ca-list img").forEach(function(el){el.style.width="6vw";el.style.height="6vw";});
     
   } else {
     // iPad: 2-column layout, show weather+countdown
@@ -809,7 +813,7 @@ function caApplyLayout(){
     document.querySelectorAll(".ca-list-val").forEach(function(el){el.style.fontSize="2.92vw";});
     document.querySelectorAll(".ca-donut-center-label").forEach(function(el){el.style.fontSize="2vw";});
     document.querySelectorAll(".ca-donut-center-val").forEach(function(el){el.style.fontSize="2.8vw";});
-    
+    document.querySelectorAll("#ca-list img").forEach(function(el){el.style.width="3.32vw";el.style.height="3.32vw";});
   }
 }
 
