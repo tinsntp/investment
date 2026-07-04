@@ -356,6 +356,7 @@ function applyLayout() {
   const donutWrap=document.getElementById('donut-wrap');
 
   if (w < 400) {
+    /*
     document.body.style.flexDirection='column';document.body.style.overflowY='auto';document.body.style.overflowX='hidden';
     document.body.style.height='auto';document.body.style.minHeight='100%';document.body.style.gap='3vw';
     document.body.appendChild(sBalance);document.body.appendChild(sIncome);document.body.appendChild(sExpense);
@@ -402,6 +403,10 @@ function applyLayout() {
       rw.innerHTML=`<svg viewBox="0 0 28 28" style="width:100%;height:100%;"><circle cx="14" cy="14" r="${r}" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="${sw}"/><circle cx="14" cy="14" r="${r}" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${dash} ${gap}" stroke-dashoffset="0" transform="rotate(-90 14 14)"/></svg>`;
       valEl.parentNode.insertBefore(rw,valEl);
     });
+    */
+     document.getElementById('col-left').style.display = 'none';
+  document.getElementById('col-right').style.display = 'none';
+  return;
 
   } else {
     document.body.style.flexDirection='row';document.body.style.overflowY='hidden';
