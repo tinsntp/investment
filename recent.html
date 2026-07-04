@@ -126,8 +126,8 @@ html, body {
 .amt { font-size:2.4vw; font-weight:700; color:#fff; white-space:nowrap; }
 .dte { font-size:1.9vw; color:rgba(255,255,255,0.4); white-space:nowrap; }
 /* ══ OVERVIEW (combined-all) STYLES ══ */
-#slide-2 { overflow-y:auto; padding:3vw; }
-#ca-wrap { display:flex; flex-direction:column; gap:4vw; }
+#slide-2 { overflow-y:auto; padding:3vw; width:100%; box-sizing:border-box; }
+#ca-wrap { display:flex; flex-direction:column; gap:4vw; width:100%; }
 #ca-section-balance, #ca-section-income, #ca-section-expense { display:flex; flex-direction:column; }
 
 /* Balance */
@@ -561,6 +561,42 @@ function caRenderDonut(data){
 
 function caMiniRing(pct,color){var r=10,sw=3,circ=2*Math.PI*r,dash=(pct/100)*circ,gap=circ-dash;return '<svg viewBox="0 0 28 28" style="flex-shrink:0;width:5.8vw;height:5.8vw;"><circle cx="14" cy="14" r="'+r+'" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="'+sw+'"/><circle cx="14" cy="14" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="'+sw+'" stroke-linecap="round" stroke-dasharray="'+dash.toFixed(2)+' '+gap.toFixed(2)+'" stroke-dashoffset="0" transform="rotate(-90 14 14)"/></svg>';}
 
+var caTab1Cache = [];
+var CA_CSV_TAB1 = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv";
+
+function caFetchTab1(cb) {
+  if (caTab1Cache.length) { cb(caTab1Cache); return; }
+  fetch(CA_CSV_TAB1+"&t="+Date.now(),{cache:"no-store"})
+    .then(function(r){return r.text();})
+    .then(function(text){
+      caTab1Cache = text.trim().split("\n").filter(function(r){return r.trim();}).map(function(row){
+        var cols=caCSV(row);return{name:cols[0].replace(/^"|"$/g,"").trim(),val:caNum(cols[1])};
+      }).filter(function(d){return d.name&&!isNaN(d.val);});
+      cb(caTab1Cache);
+    });
+}
+
+function caRenderDrill(items, title, color) {
+  var list = document.getElementById("ca-list"); list.innerHTML = "";
+  var header = document.createElement("div");
+  header.style.cssText = "display:flex;align-items:center;gap:2vw;padding:2vw 0 3vw;cursor:pointer;";
+  header.innerHTML = '<span style="font-size:5vw;color:rgba(255,255,255,0.5);">◂</span>'
+    +'<span style="font-size:5vw;font-weight:700;color:'+color+';">'+title+'</span>';
+  header.addEventListener("click", function(){ caHighlight(null); caRenderList(caGlobalData); });
+  list.appendChild(header);
+  var total = items.reduce(function(s,d){return s+Math.abs(d.val);},0);
+  items.forEach(function(item){
+    var pct=Math.abs(item.val)/total*100,r2=10,sw=3,circ=2*Math.PI*r2,dash=(pct/100)*circ,gap=circ-dash;
+    var row=document.createElement("div");row.className="ca-list-row";row.style.cursor="default";
+    row.innerHTML='<img src="'+item.icon+'" style="width:6vw;height:6vw;object-fit:contain;flex-shrink:0;border-radius:50%;background:rgba(255,255,255,0.08);padding:0.8vw;" />'
+      +'<div class="ca-list-name" style="font-size:4.5vw;">'+item.name+'</div>'
+      +'<div class="ca-list-val" style="font-size:4.5vw;">'+caFmt(Math.abs(item.val))+'</div>'
+      +'<svg viewBox="0 0 28 28" style="flex-shrink:0;width:6vw;height:6vw;"><circle cx="14" cy="14" r="'+r2+'" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="'+sw+'"/><circle cx="14" cy="14" r="'+r2+'" fill="none" stroke="'+color+'" stroke-width="'+sw+'" stroke-linecap="round" stroke-dasharray="'+dash.toFixed(2)+' '+gap.toFixed(2)+'" stroke-dashoffset="0" transform="rotate(-90 14 14)"/></svg>'
+      +'<div style="font-size:3.5vw;color:rgba(255,255,255,0.55);flex-shrink:0;">'+pct.toFixed(1)+'%</div>';
+    list.appendChild(row);
+  });
+}
+
 function caRenderList(data){
   var list=document.getElementById("ca-list");list.innerHTML="";
   var total=data.reduce(function(s,d){return s+Math.abs(d.val);},0);
@@ -573,7 +609,23 @@ function caRenderList(data){
       +'<div class="ca-list-val">'+caFmt(item.val)+'</div>'
       +caMiniRing(pct,p.solid)
       +'<div style="font-size:4.2vw;color:rgba(255,255,255,0.5);white-space:nowrap;flex-shrink:0;">'+pct.toFixed(1)+'%</div>';
-    (function(ii){row.addEventListener("click",function(){caHighlight(caActiveIdx===ii?null:ii);});})(i);
+    (function(ii){row.addEventListener("click",function(){
+  if (ii===1) {
+    caHighlight(1);
+    caFetchTab1(function(t1){
+      var ei=["https://github.com/tinsntp/investment/blob/main/shop.png?raw=true","https://github.com/tinsntp/investment/blob/main/heart.png?raw=true","https://github.com/tinsntp/investment/blob/main/transaction.png?raw=true","https://github.com/tinsntp/investment/blob/main/shield.png?raw=true"];
+      caRenderDrill(t1.slice(0,4).map(function(d,idx){return{name:d.name,val:d.val,icon:ei[idx]};}), "Expenses", CA_PALETTE[1].solid);
+    });
+  } else if (ii===2) {
+    caHighlight(2);
+    caFetchTab1(function(t1){
+      var di=["https://github.com/tinsntp/investment/blob/main/sc.png?raw=true","https://github.com/tinsntp/investment/blob/main/shinhan.png?raw=true"];
+      caRenderDrill(t1.slice(6,8).filter(function(d){return d.name&&!isNaN(d.val);}).map(function(d,idx){return{name:d.name,val:d.val,icon:di[idx]};}), "With Debts", CA_PALETTE[2].solid);
+    });
+  } else {
+    caHighlight(caActiveIdx===ii?null:ii);
+  }
+});})(i);
     list.appendChild(row);
   });
 }
