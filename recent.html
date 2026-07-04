@@ -3,302 +3,626 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Recent Transactions</title>
+<title>Finance</title>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 html, body {
   width:100%; height:100%;
-  background:#1a1a1a; border-radius:40px;
+  background:#1a1a1a;
   font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
-  color:#fff; margin-top:0px;
+  color:#fff; overflow:hidden;
 }
-body { display:flex; flex-direction:column; padding:0vw; overflow:hidden; }
-.hdr { display:flex; justify-content:space-between; align-items:center; margin-bottom:2vw; }
-.hdr-left { display:flex; align-items:center; gap:2vw; }
-.hdr-icon { width:6vw; height:6vw; object-fit:contain; flex-shrink:0; }
-.hdr-title { font-size:3vw; font-weight:700; color:#fff; }
-#tx-list { display:flex; flex-direction:column; margin-top:20px; }
-.row {
-  display:flex; align-items:center;
-  padding:2vw 0;
+
+/* ── Tab bar ── */
+.tab-bar {
+  display:flex; align-items:stretch;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+  position:relative; flex-shrink:0; padding:0 3vw;
+}
+.tab-btn {
+  flex:1; display:flex; align-items:center; justify-content:center;
+  gap:1.5vw; padding:2.5vw 0; cursor:pointer; user-select:none;
+  font-size:3vw; font-weight:600; color:rgba(255,255,255,0.4); transition:color 0.2s;
+}
+.tab-btn.active { color:#fff; }
+.tab-btn img { width:5vw; height:5vw; object-fit:contain; opacity:0.4; transition:opacity 0.2s; }
+.tab-btn.active img { opacity:1; }
+.tab-line {
+  position:absolute; bottom:0; height:2.5px; background:#fff; border-radius:2px;
+  transition:left 0.25s ease, width 0.25s ease;
+}
+
+/* ── Slides ── */
+.slides-outer { flex:1; overflow:hidden; position:relative; }
+.slides-wrap { display:flex; width:200%; height:100%; transition:transform 0.3s cubic-bezier(0.4,0,0.2,1); }
+.slide { width:50%; height:100%; overflow-y:auto; overflow-x:hidden; padding:3vw; }
+
+/* ══ DETAIL STYLES ══ */
+
+/* Rings */
+#rings-wrap {
+  display:flex; flex-wrap:wrap; gap:1.5vw;
+  justify-content:space-around; margin-bottom:1.5vw;
+}
+.ring-item {
+  display:flex; flex-direction:column; align-items:center; gap:0.6vw; flex:1;
+  cursor:pointer; border-radius:2vw; padding:1.5vw 0.5vw;
+  transition:background 0.2s;
+}
+.ring-item:hover { background:rgba(255,255,255,0.05); }
+.ring-item.selected { background:rgba(255,255,255,0.12); outline:1.5px solid rgba(255,255,255,0.25); }
+.ring-icon { width:4vw; height:4vw; object-fit:contain; border-radius:50%; margin-top:0.5vw; }
+.ring-icon-fb { width:4vw; height:4vw; margin-top:0.5vw; }
+.ring-svg { flex-shrink:0; }
+.ring-label { font-size:2.2vw; color:rgba(255,255,255,0.7); text-align:center; line-height:1.2; font-weight:600; }
+.ring-remain { font-size:2vw; font-weight:700; text-align:center; }
+.ring-remain.ok   { color:#4ade80; }
+.ring-remain.low  { color:#fbbf24; }
+.ring-remain.over { color:#f87171; }
+
+/* Expand/Collapse — plain text, right-aligned */
+.expand-txt {
+  display:block; text-align:right;
+  font-size:2.2vw; font-weight:600; color:rgba(255,255,255,0.45);
+  cursor:pointer; margin-bottom:1.5vw; background:none; border:none; padding:0;
+}
+.expand-txt:hover { color:#fff; }
+
+/* Category rows — 4-column grid: name | amt | last | pct */
+#cat-list { display:flex; flex-direction:column; }
+.cat-row {
+  display:grid;
+  grid-template-columns: 5fr 2fr 2fr 1.6fr;
+  align-items:center; gap:1vw;
+  padding:1.4vw 0.5vw;
   border-bottom:1px solid rgba(255,255,255,0.08);
-  gap:3vw;
-  cursor:pointer;
+  cursor:pointer; transition:background 0.15s;
+}
+.cat-row:last-child { border-bottom:none; }
+.cat-row:hover { background:rgba(255,255,255,0.04); border-radius:1.5vw; }
+.cat-row.filtered-out { display:none; }
+.cat-row.sub-row { display:none; }
+.cat-row.sub-row.visible { display:grid; }
+
+/* Name cell */
+.name-cell { display:flex; align-items:center; gap:1.5vw; min-width:0; overflow:hidden; }
+.sub-row .name-cell { padding-left:5vw; }
+.chevron { font-size:3.5vw; color:rgba(255,255,255,0.45); flex-shrink:0; user-select:none; line-height:1; }
+.cat-ico { width:5vw; height:5vw; border-radius:50%; object-fit:contain; flex-shrink:0; background:rgba(255,255,255,0.08); padding:0.5vw; }
+.cat-ico-fb { width:5vw; height:5vw; border-radius:50%; flex-shrink:0; background:rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; font-size:2.3vw; color:rgba(255,255,255,0.6); }
+.sub-row .cat-ico, .sub-row .cat-ico-fb { width:4vw; height:4vw; }
+.cat-name { font-size:2.8vw; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sub-row .cat-name { font-size:2.4vw; font-weight:500; color:rgba(255,255,255,0.75); }
+
+/* Value cells — all right-aligned */
+.amt-val { font-size:2.5vw; font-weight:700; color:#fff; text-align:right; white-space:nowrap; }
+.sub-row .amt-val { font-size:2.2vw; font-weight:500; }
+.last-val { font-size:2.2vw; color:rgba(255,255,255,0.4); text-align:right; white-space:nowrap; }
+.pct-val { font-size:2.2vw; font-weight:600; text-align:right; white-space:nowrap; }
+.pct-val.up   { color:#f87171; }
+.pct-val.down { color:#4ade80; }
+.pct-val.flat { color:rgba(255,255,255,0.3); }
+
+#det-msg { font-size:3vw; color:rgba(255,255,255,0.4); text-align:center; padding:5vw; }
+
+/* ══ RECENT STYLES ══ */
+#tx-list { display:flex; flex-direction:column; }
+.row {
+  display:flex; align-items:center; padding:2vw 0;
+  border-bottom:1px solid rgba(255,255,255,0.08); gap:3vw; cursor:pointer;
   transition:background 0.2s ease, border-radius 0.2s ease, padding 0.2s ease;
 }
 .row:last-child { border-bottom:none; }
-.row.expanded {
-  background:rgba(255,255,255,0.06);
-  border-radius:2vw;
-  padding:2.2vw 1.5vw;
-}
-.ico {
-  width:10vw; height:10vw; border-radius:50%;
-  object-fit:contain; flex-shrink:0;
-  background:rgba(255,255,255,0.08); padding:1.5vw;
-}
-.ico-fb {
-  width:10vw; height:10vw; border-radius:50%; flex-shrink:0;
-  background:rgba(255,255,255,0.1);
-  display:flex; align-items:center; justify-content:center;
-  font-size:4.5vw; font-weight:700; color:rgba(255,255,255,0.6);
-}
+.row:hover { background:rgba(255,255,255,0.04); border-radius:2vw; padding:2vw 1vw; }
+.row.expanded { background:rgba(255,255,255,0.06); border-radius:2vw; padding:2.2vw 1.5vw; }
+.ico { width:10vw; height:10vw; border-radius:50%; object-fit:contain; flex-shrink:0; background:rgba(255,255,255,0.08); padding:1.5vw; }
+.ico-fb { width:10vw; height:10vw; border-radius:50%; flex-shrink:0; background:rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; font-size:4.5vw; font-weight:700; color:rgba(255,255,255,0.6); }
 .mid { flex:1; min-width:0; }
-.ttl {
-  font-size:2.4vw; font-weight:700; color:#fff;
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-  margin-bottom:0.6vw;
-}
-.dtl {
-  font-size:2vw; color:rgba(255,255,255,0.5); line-height:1.4;
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-}
-.row.expanded .dtl {
-  white-space:normal;
-  overflow:visible;
-  text-overflow:unset;
-}
+.ttl { font-size:2.4vw; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:0.6vw; }
+.dtl { font-size:2vw; color:rgba(255,255,255,0.5); line-height:1.4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.row.expanded .dtl { white-space:normal; overflow:visible; text-overflow:unset; }
 .rgt { display:flex; flex-direction:column; align-items:flex-end; flex-shrink:0; gap:0.8vw; }
 .amt { font-size:2.4vw; font-weight:700; color:#fff; white-space:nowrap; }
 .dte { font-size:1.9vw; color:rgba(255,255,255,0.4); white-space:nowrap; }
-#msg { font-size:3vw; color:rgba(255,255,255,0.4); text-align:center; padding:4vw; }
+#rec-msg { font-size:3vw; color:rgba(255,255,255,0.4); text-align:center; padding:5vw; }
 </style>
 </head>
 <body>
-<div class="hdr">
-  <div class="hdr-left">
-    <img class="hdr-icon" src="https://github.com/tinsntp/investment/blob/main/icon/recent.png?raw=true" />
-    <div class="hdr-title">Recent Transactions</div>
+
+<div class="tab-bar" id="tab-bar">
+  <div class="tab-btn active" data-idx="0">
+    <img src="https://github.com/tinsntp/investment/blob/main/icon/pie-chart.png?raw=true" />
+    <span>Detail</span>
   </div>
+  <div class="tab-btn" data-idx="1">
+    <img src="https://github.com/tinsntp/investment/blob/main/icon/recent.png?raw=true" />
+    <span>Recent</span>
+  </div>
+  <div class="tab-line" id="tab-line"></div>
 </div>
-<div id="msg">Loading...</div>
-<div id="tx-list"></div>
+
+<div class="slides-outer" id="slides-outer">
+<div class="slides-wrap" id="slides-wrap">
+
+  <!-- DETAIL SLIDE -->
+  <div class="slide" id="slide-0">
+    <div id="rings-wrap"></div>
+    <button class="expand-txt" id="expand-btn">Expand all</button>
+    <div id="det-msg">Loading...</div>
+    <div id="cat-list"></div>
+  </div>
+
+  <!-- RECENT SLIDE -->
+  <div class="slide" id="slide-1">
+    <div id="rec-msg">Loading...</div>
+    <div id="tx-list"></div>
+  </div>
+
+</div>
+</div>
+
 <script>
-var allData = [];
+/* ══ TAB SWITCHING ══ */
+var currentTab = 0;
+var touchStartX = 0, touchStartY = 0;
 
-var NOISE_PATTERNS = [
-  /GIAO DICH THE\s*[\d*]{4}\s*TAI/i,
-  /NAP TIEN VI/i,
-  /NAP VI DIEN TU/i,
-  /TT QR VNPAY/i
-];
-
-function cleanDetail(s) {
-  if (!s) return "";
-  for (var i = 0; i < NOISE_PATTERNS.length; i++) {
-    s = s.replace(NOISE_PATTERNS[i], "").trim();
-  }
-  return s.replace(/\s+/g, " ").trim();
+function switchTab(idx) {
+  currentTab = idx;
+  document.querySelectorAll(".tab-btn").forEach(function(btn, i) {
+    btn.classList.toggle("active", i === idx);
+  });
+  document.getElementById("slides-wrap").style.transform = "translateX(-"+(idx*50)+"%)";
+  positionTabLine();
 }
 
+function positionTabLine() {
+  var bar = document.getElementById("tab-bar");
+  var btns = bar.querySelectorAll(".tab-btn");
+  var line = document.getElementById("tab-line");
+  var ab = btns[currentTab];
+  line.style.left = ab.offsetLeft+"px";
+  line.style.width = ab.offsetWidth+"px";
+}
+
+document.querySelectorAll(".tab-btn").forEach(function(btn) {
+  btn.addEventListener("click", function() { switchTab(parseInt(this.dataset.idx)); });
+});
+
+var slidesOuter = document.getElementById("slides-outer");
+slidesOuter.addEventListener("touchstart", function(e) {
+  touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY;
+}, { passive:true });
+slidesOuter.addEventListener("touchend", function(e) {
+  var dx = e.changedTouches[0].clientX - touchStartX;
+  var dy = e.changedTouches[0].clientY - touchStartY;
+  if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
+    if (dx < 0 && currentTab === 0) switchTab(1);
+    if (dx > 0 && currentTab === 1) switchTab(0);
+  }
+}, { passive:true });
+
+/* ══ SHARED UTILS ══ */
 function parseCsvRow(line) {
-  var cols = [];
-  var cur = "";
-  var inQ = false;
-  for (var i = 0; i < line.length; i++) {
-    var c = line[i];
-    if (c === '"') {
-      inQ = !inQ;
-    } else if (c === "," && !inQ) {
-      cols.push(cur.replace(/^"|"$/g, "").trim());
-      cur = "";
+  var cols=[], cur="", inQ=false;
+  for (var i=0;i<line.length;i++) {
+    var c=line[i];
+    if(c==='"'){inQ=!inQ;}
+    else if(c===','&&!inQ){cols.push(cur.replace(/^"|"$/g,"").trim());cur="";}
+    else{cur+=c;}
+  }
+  cols.push(cur.replace(/^"|"$/g,"").trim()); return cols;
+}
+function parseNum(s){if(!s)return 0;s=s.trim();if(s.charAt(0)==="("&&s.charAt(s.length-1)===")") s="-"+s.slice(1,-1);s=s.replace(/[^\d.\-]/g,"");var v=parseFloat(s);return isNaN(v)?0:v;}
+function parseVal(s){if(!s)return NaN;s=s.trim();if(s.charAt(0)==="("&&s.charAt(s.length-1)===")") s="-"+s.slice(1,-1);s=s.replace(/[^\d.\-]/g,"");return parseFloat(s);}
+function fmtK(v){var a=Math.abs(v);if(a>=1000000)return"\u20ab"+(v/1000000).toFixed(1)+"M";if(a>=1000)return"\u20ab"+Math.round(v/1000)+"K";return"\u20ab"+Math.round(v);}
+function pctInfo(curr,last){if(!last||last===0)return{text:"\u2014",cls:"flat"};var pct=(curr-last)/Math.abs(last)*100;if(Math.abs(pct)<0.5)return{text:"\u00b10%",cls:"flat"};var cls=pct>0?"up":"down";var arrow=pct>0?"\u25b2 +":"\u25bc ";return{text:arrow+Math.abs(pct).toFixed(0)+"%",cls:cls};}
+function ringColor(pct){if(pct>90)return"#f87171";if(pct>70)return"#fbbf24";return"#4ade80";}
+
+/* ══ DETAIL TAB ══ */
+var CSV_EXPENSE = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1324702331";
+var allExpanded = false;
+
+function buildRing(label, spent, budget, iconUrl, hideOnMobile, gids) {
+  var item = document.createElement("div");
+  item.className = "ring-item";
+  if (hideOnMobile) item.dataset.hideOnMobile = "1";
+  item.dataset.gids = gids.join(",");
+
+  var pct = budget > 0 ? Math.min(100, spent/budget*100) : 0;
+  var r=28,sw=5,cx=35,cy=35;
+  var circ=2*Math.PI*r, dash=pct/100*circ, gap=circ-dash;
+  var color = ringColor(pct);
+  var remain = budget - spent;
+  var remCls = remain<0?"over":(remain<budget*0.2?"low":"ok");
+  var remText = remain>=0?(fmtK(remain)+" left"):(fmtK(Math.abs(remain))+" over");
+
+  // SVG ring (first)
+  // icon stored for insertion after SVG
+  var ringIcoEl = null;
+  if (iconUrl && iconUrl.indexOf("http")===0) {
+    ringIcoEl = document.createElement("img");
+    ringIcoEl.className = "ring-icon"; ringIcoEl.src = iconUrl;
+    ringIcoEl.onerror = function() { this.style.display="none"; };
+  }
+
+  // SVG ring
+  var ns = "http://www.w3.org/2000/svg";
+  var svg = document.createElementNS(ns,"svg");
+  svg.setAttribute("viewBox","0 0 70 70"); svg.className = "ring-svg";
+  svg.style.width="12vw"; svg.style.height="12vw";
+
+  var bg = document.createElementNS(ns,"circle");
+  bg.setAttribute("cx",cx); bg.setAttribute("cy",cy); bg.setAttribute("r",r);
+  bg.setAttribute("fill","none"); bg.setAttribute("stroke","rgba(255,255,255,0.08)");
+  bg.setAttribute("stroke-width",sw); svg.appendChild(bg);
+
+  var fg = document.createElementNS(ns,"circle");
+  fg.setAttribute("cx",cx); fg.setAttribute("cy",cy); fg.setAttribute("r",r);
+  fg.setAttribute("fill","none"); fg.setAttribute("stroke",color);
+  fg.setAttribute("stroke-width",sw); fg.setAttribute("stroke-linecap","round");
+  fg.setAttribute("stroke-dasharray",dash+" "+gap); fg.setAttribute("stroke-dashoffset","0");
+  fg.setAttribute("transform","rotate(-90 "+cx+" "+cy+")"); svg.appendChild(fg);
+
+  var pctTxt = document.createElementNS(ns,"text");
+  pctTxt.setAttribute("x","35"); pctTxt.setAttribute("y","35");
+  pctTxt.setAttribute("text-anchor","middle"); pctTxt.setAttribute("dominant-baseline","middle");
+  pctTxt.setAttribute("fill","#fff"); pctTxt.setAttribute("font-size","15");
+  pctTxt.setAttribute("font-weight","800");
+  pctTxt.textContent = Math.round(pct)+"%";
+  svg.appendChild(pctTxt);
+
+  var lblEl = document.createElement("div");
+  lblEl.className = "ring-label"; lblEl.textContent = label;
+
+  var remEl = document.createElement("div");
+  remEl.className = "ring-remain "+remCls; remEl.textContent = remText;
+
+  item.appendChild(svg);
+  if(ringIcoEl) item.appendChild(ringIcoEl);
+  item.appendChild(lblEl); item.appendChild(remEl);
+
+  // Click: select/deselect + expand/collapse sub-rows for this category
+  item.addEventListener("click", function() {
+    var alreadySel = this.classList.contains("selected");
+    var gids = (this.dataset.gids||"").split(",").filter(function(g){return g;});
+    // toggle selected
+    document.querySelectorAll(".ring-item.selected").forEach(function(r2){r2.classList.remove("selected");});
+    if (!alreadySel) {
+      this.classList.add("selected");
+      // expand sub-rows for this ring's categories
+      gids.forEach(function(gid) {
+        var mainRow = document.querySelector(".main-row[data-id='"+gid+"']");
+        if (!mainRow) return;
+        mainRow.dataset.open = "1";
+        var chev2 = document.getElementById("chev-"+gid);
+        if (chev2) chev2.textContent = "\u25be";
+        document.querySelectorAll(".sub-row[data-group='"+gid+"']").forEach(function(s){ s.classList.add("visible"); });
+      });
     } else {
-      cur += c;
+      // collapse sub-rows for this ring's categories
+      gids.forEach(function(gid) {
+        var mainRow = document.querySelector(".main-row[data-id='"+gid+"']");
+        if (!mainRow) return;
+        mainRow.dataset.open = "0";
+        var chev2 = document.getElementById("chev-"+gid);
+        if (chev2) chev2.textContent = "\u25b8";
+        document.querySelectorAll(".sub-row[data-group='"+gid+"']").forEach(function(s){ s.classList.remove("visible"); });
+      });
     }
+  });
+
+  return item;
+}
+
+// applyRingFilter removed - rings now toggle expand/collapse
+
+function makeIcon(iconUrl, fallback) {
+  if (iconUrl && iconUrl.indexOf("http")===0) {
+    var img = document.createElement("img");
+    img.className = "cat-ico"; img.src = iconUrl;
+    img.onerror = (function(fb){ return function(){
+      var d=document.createElement("div");d.className="cat-ico-fb";d.textContent=fb||"\u2022";
+      this.parentNode.replaceChild(d,this);
+    }; })(fallback);
+    return img;
   }
-  cols.push(cur.replace(/^"|"$/g, "").trim());
-  return cols;
+  var d = document.createElement("div"); d.className="cat-ico-fb";
+  d.textContent = iconUrl||fallback||"\u2022"; return d;
 }
 
-function parseVal(s) {
-  if (!s) return NaN;
-  s = s.trim();
-  if (s.charAt(0) === "(" && s.charAt(s.length - 1) === ")") {
-    s = "-" + s.slice(1, -1);
-  }
-  s = s.replace(/[^\d.\-]/g, "");
-  return parseFloat(s);
-}
-
-function fmtMoney(v) {
-  var a = Math.abs(v);
-  return "-\u20ab" + Math.round(a).toLocaleString("en-US");
-}
-
-function fmtDate(raw) {
-  if (!raw) return "";
-  var d = new Date(raw);
-  if (!isNaN(d.getTime())) {
-    return d.toLocaleDateString("en-US", { day:"numeric", month:"long", year:"numeric" });
-  }
-  return raw;
-}
-
-function buildRow(item) {
+function buildCatRow(item, isSub, gid) {
   var row = document.createElement("div");
-  row.className = "row";
+  row.className = "cat-row"+(isSub?" sub-row":" main-row");
+  if (isSub) row.dataset.group = gid;
+  else { row.dataset.id = gid; row.dataset.open = "0"; }
 
-  var iconEl;
-  if (item.icon && item.icon.indexOf("http") === 0) {
-    iconEl = document.createElement("img");
-    iconEl.className = "ico";
-    iconEl.src = item.icon;
-    iconEl.onerror = (function(title) {
-      return function() {
-        var fb = document.createElement("div");
-        fb.className = "ico-fb";
-        fb.textContent = title ? title.charAt(0) : "?";
-        this.parentNode.replaceChild(fb, this);
-      };
-    })(item.title);
-  } else {
-    iconEl = document.createElement("div");
-    iconEl.className = "ico-fb";
-    iconEl.textContent = item.icon || (item.title ? item.title.charAt(0) : "?");
+  var p = pctInfo(item.curr, item.last);
+
+  // Col 1: name
+  var nameCell = document.createElement("div");
+  nameCell.className = "name-cell";
+  if (!isSub) {
+    var chev = document.createElement("span");
+    chev.className = "chevron"; chev.id = "chev-"+gid;
+    chev.textContent = "\u25b8";
+    nameCell.appendChild(chev);
   }
+  nameCell.appendChild(makeIcon(item.icon, item.name?item.name.charAt(0):"\u2022"));
+  var nameSpan = document.createElement("span");
+  nameSpan.className = "cat-name"; nameSpan.textContent = item.name;
+  nameCell.appendChild(nameSpan);
 
-  var mid = document.createElement("div");
-  mid.className = "mid";
+  // Col 2: current amount
+  var amtEl = document.createElement("div");
+  amtEl.className = "amt-val"; amtEl.textContent = fmtK(item.curr);
 
-  var ttl = document.createElement("div");
-  ttl.className = "ttl";
-  ttl.textContent = item.title;
+  // Col 3: last month
+  var lastEl = document.createElement("div");
+  lastEl.className = "last-val"; lastEl.textContent = fmtK(item.last);
 
-  var dtl = document.createElement("div");
-  dtl.className = "dtl";
-  dtl.textContent = item.detail;
+  // Col 4: % change
+  var pctEl = document.createElement("div");
+  pctEl.className = "pct-val "+p.cls; pctEl.textContent = p.text;
 
-  mid.appendChild(ttl);
-  mid.appendChild(dtl);
+  row.appendChild(nameCell);
+  row.appendChild(amtEl);
+  row.appendChild(lastEl);
+  row.appendChild(pctEl);
 
-  var rgt = document.createElement("div");
-  rgt.className = "rgt";
-
-  var amt = document.createElement("div");
-  amt.className = "amt";
-  amt.textContent = fmtMoney(item.amount);
-
-  var dte = document.createElement("div");
-  dte.className = "dte";
-  dte.textContent = fmtDate(item.date);
-
-  rgt.appendChild(amt);
-  rgt.appendChild(dte);
-
-  row.appendChild(iconEl);
-  row.appendChild(mid);
-  row.appendChild(rgt);
-
+  if (!isSub) {
+    row.addEventListener("click", function() {
+      var g = this.dataset.id;
+      var isOpen = this.dataset.open === "1";
+      this.dataset.open = isOpen ? "0" : "1";
+      var chev2 = document.getElementById("chev-"+g);
+      if (chev2) chev2.textContent = isOpen ? "\u25b8" : "\u25be";
+      var subs = document.querySelectorAll(".sub-row[data-group='"+g+"']");
+      subs.forEach(function(s){ isOpen?s.classList.remove("visible"):s.classList.add("visible"); });
+    });
+  }
   return row;
 }
 
-function render(data) {
-  var list = document.getElementById("tx-list");
-  list.innerHTML = "";
-  for (var i = 0; i < data.length; i++) {
-    list.appendChild(buildRow(data[i]));
-  }
-  applyLayout();
-}
+document.getElementById("expand-btn").addEventListener("click", function() {
+  allExpanded = !allExpanded;
+  this.textContent = allExpanded ? "Collapse" : "Expand";
+  document.querySelectorAll(".sub-row").forEach(function(s){
+    allExpanded?s.classList.add("visible"):s.classList.remove("visible");
+  });
+  document.querySelectorAll(".main-row").forEach(function(r){ r.dataset.open=allExpanded?"1":"0"; });
+  document.querySelectorAll(".chevron").forEach(function(c){
+    c.textContent = allExpanded?"\u25be":"\u25b8";
+  });
+});
 
-function loadData() {
-  var url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=528094299&t=" + Date.now();
-  fetch(url, { cache: "no-store" })
-    .then(function(res) {
-      if (!res.ok) { throw new Error("HTTP " + res.status); }
-      return res.text();
-    })
-    .then(function(text) {
-      var lines = text.trim().split("\n").filter(function(l) { return l.trim(); });
-      var start = 0;
-      var first = parseCsvRow(lines[0]);
-      if (isNaN(parseVal(first[3]))) { start = 1; }
-      allData = [];
-      for (var i = start; i < lines.length; i++) {
-        var cols = parseCsvRow(lines[i]);
-        if (!cols[2]) { continue; }
-        allData.push({
-          date:   cols[0] || "",
-          icon:   cols[5] || "",
-          title:  cols[2] || "",
-          detail: cleanDetail(cols[4] || ""),
-          amount: parseVal(cols[3])
-        });
+function loadExpense() {
+  fetch(CSV_EXPENSE+"&t="+Date.now(),{cache:"no-store"})
+    .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.text();})
+    .then(function(text){
+      var lines=text.split("\n");
+      var rows=[];
+      for(var i=0;i<lines.length;i++) rows.push(parseCsvRow(lines[i]));
+      function g(ri,col){var ci=col.toUpperCase().charCodeAt(0)-65;return rows[ri]?rows[ri][ci]||"":"";}
+      function n(ri,col){return parseNum(g(ri,col));}
+
+      var budgetMap={};
+      for(var bi=1;bi<=8;bi++){var bn=g(bi,"B"),bv=n(bi,"C");if(bn)budgetMap[bn.toLowerCase().trim()]=bv;}
+
+      var mains=[];
+      for(var mi=12;mi<=17;mi++){
+        var nm=g(mi,"B");if(!nm)continue;
+        mains.push({rowIdx:mi,name:nm,icon:g(mi,"F"),curr:n(mi,"C"),last:n(mi,"D"),groupE:g(mi,"E"),budget:0,subs:[]});
       }
-      if (!allData.length) { throw new Error("No data found."); }
-      document.getElementById("msg").style.display = "none";
-      render(allData);
+
+      var subs=[];
+      for(var si=18;si<rows.length;si++){
+        var sn=g(si,"B");if(!sn)continue;
+        var sc=n(si,"C");if(sc===0)continue;
+        subs.push({rowIdx:si,name:sn,icon:g(si,"F"),curr:sc,last:n(si,"D"),parentE:g(si,"E")});
+      }
+
+      for(var mc=0;mc<mains.length;mc++){
+        var key=mains[mc].name.toLowerCase().trim();
+        if(budgetMap[key]!==undefined){mains[mc].budget=budgetMap[key];continue;}
+        for(var bk in budgetMap){if(key.indexOf(bk)>=0||bk.indexOf(key)>=0){mains[mc].budget=budgetMap[bk];break;}}
+      }
+
+      for(var sc2=0;sc2<subs.length;sc2++){
+        var pk=subs[sc2].parentE.toLowerCase().trim(); var done=false;
+        for(var pm=0;pm<mains.length;pm++){
+          var mk=mains[pm].name.toLowerCase().trim(), mg=mains[pm].groupE.toLowerCase().trim();
+          if(pk&&(pk===mk||pk===mg||mk.indexOf(pk)>=0||pk.indexOf(mk)>=0)){mains[pm].subs.push(subs[sc2]);done=true;break;}
+        }
+        if(!done){var best=mains[0];for(var cm=1;cm<mains.length;cm++){if(mains[cm].rowIdx<subs[sc2].rowIdx)best=mains[cm];}best.subs.push(subs[sc2]);}
+      }
+
+      for(var rc=0;rc<mains.length;rc++){
+        if(mains[rc].subs.length>0){
+          var s3=0,l3=0;
+          for(var s4=0;s4<mains[rc].subs.length;s4++){s3+=mains[rc].subs[s4].curr;l3+=mains[rc].subs[s4].last;}
+          if(s3>0){mains[rc].curr=s3;mains[rc].last=l3;}
+        }
+      }
+
+      // Rings — track gids per ring
+      var ringsWrap = document.getElementById("rings-wrap");
+      ringsWrap.innerHTML = "";
+      var billsSpent=0,billsBudget=0,billsIcon="",billsGids=[];
+
+      for(var ri=0;ri<mains.length;ri++){
+        var mn=mains[ri].name.toLowerCase();
+        var isRental=mn.indexOf("rental")>=0||mn.indexOf("rent")>=0;
+        var isBills=mn.indexOf("bill")>=0||mn.indexOf("insurance")>=0||mn.indexOf("health")>=0;
+        if(isBills){billsSpent+=mains[ri].curr;billsBudget+=mains[ri].budget;billsGids.push("g"+ri);if(!billsIcon)billsIcon=mains[ri].icon;continue;}
+        if(mains[ri].budget>0){
+          ringsWrap.appendChild(buildRing(mains[ri].name,mains[ri].curr,mains[ri].budget,mains[ri].icon,isRental,["g"+ri]));
+        }
+      }
+      if(billsBudget>0||billsSpent>0){
+        ringsWrap.appendChild(buildRing("Bills & Ins.",billsSpent,billsBudget,billsIcon,false,billsGids));
+      }
+
+      // Category rows
+      var list = document.getElementById("cat-list");
+      list.innerHTML = "";
+      for(var r2=0;r2<mains.length;r2++){
+        var gid="g"+r2;
+        list.appendChild(buildCatRow(mains[r2],false,gid));
+        for(var s5=0;s5<mains[r2].subs.length;s5++) list.appendChild(buildCatRow(mains[r2].subs[s5],true,gid));
+      }
+
+      document.getElementById("det-msg").style.display="none";
+      applyLayout();
     })
-    .catch(function(err) {
-      document.getElementById("msg").textContent = "Error: " + err.message;
-    });
+    .catch(function(err){document.getElementById("det-msg").textContent="Error: "+err.message;});
 }
 
-loadData();
-setInterval(loadData, 60000);
+/* ══ RECENT TAB ══ */
+var CSV_RECENT = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=528094299";
+var NOISE_PATTERNS = [/GIAO DICH THE\s*[\d*]{4}\s*TAI/i,/NAP TIEN VI/i,/NAP VI DIEN TU/i,/TT QR VNPAY/i];
 
-function applyLayout() {
-  var w = window.innerWidth;
-  var isMobile = w < 400;
+function cleanDetail(s){if(!s)return"";for(var i=0;i<NOISE_PATTERNS.length;i++)s=s.replace(NOISE_PATTERNS[i],"").trim();return s.replace(/\s+/g," ").trim();}
+function fmtMoney(v){return"-\u20ab"+Math.round(Math.abs(v)).toLocaleString("en-US");}
+function fmtDate(raw){if(!raw)return"";var d=new Date(raw);if(!isNaN(d.getTime()))return d.toLocaleDateString("en-US",{day:"numeric",month:"long",year:"numeric"});return raw;}
 
-  var titleFs  = isMobile ? "4.6vw" : "3vw";
-  var detailFs = isMobile ? "4.0vw" : "2.5vw";
-  var amtFs    = isMobile ? "4.6vw" : "3vw";
-  var dateFs   = isMobile ? "3.8vw" : "2.5vw";
-  var hdrFs    = isMobile ? "5vw"   : "3.5vw";
-  var icoHdrSz = isMobile ? "9vw"   : "6vw";
-  var icoSz    = isMobile ? "12vw"  : "9vw";
-  var icoFbFs  = isMobile ? "7vw"   : "3.8vw";
-
-  document.querySelectorAll(".row").forEach(function(el) {
-    el.style.padding = isMobile ? "3.5vw 0" : "2vw 0";
-  });
-  document.querySelectorAll(".row.expanded").forEach(function(el) {
-    el.style.padding = isMobile ? "3.5vw 2vw" : "2vw 1.5vw";
-  });
-
-  document.querySelector(".hdr-title").style.fontSize = hdrFs;
-
-  var hdrIcon = document.querySelector(".hdr-icon");
-  if (hdrIcon) { hdrIcon.style.width = icoHdrSz; hdrIcon.style.height = icoHdrSz; }
-
-  document.querySelectorAll(".ttl").forEach(function(el) { el.style.fontSize = titleFs; });
-  document.querySelectorAll(".dtl").forEach(function(el) { el.style.fontSize = detailFs; });
-  document.querySelectorAll(".amt").forEach(function(el) { el.style.fontSize = amtFs; });
-  document.querySelectorAll(".dte").forEach(function(el) { el.style.fontSize = dateFs; });
-  document.querySelectorAll(".ico").forEach(function(el) {
-    el.style.width = icoSz; el.style.height = icoSz;
-  });
-  document.querySelectorAll(".ico-fb").forEach(function(el) {
-    el.style.width = icoSz; el.style.height = icoSz;
-    el.style.fontSize = icoFbFs;
-  });
-
-  document.querySelectorAll(".row").forEach(function(el) {
-    el.style.padding = isMobile ? "3.5vw 0" : "2vw 0";
-  });
-  document.querySelectorAll(".row.expanded").forEach(function(el) {
-    el.style.padding = isMobile ? "3.5vw 2vw" : "2vw 1.5vw";
-  });
+function buildTxRow(item){
+  var row=document.createElement("div"); row.className="row";
+  var iconEl;
+  if(item.icon&&item.icon.indexOf("http")===0){
+    iconEl=document.createElement("img"); iconEl.className="ico"; iconEl.src=item.icon;
+    iconEl.onerror=(function(t){return function(){var fb=document.createElement("div");fb.className="ico-fb";fb.textContent=t?t.charAt(0):"?";this.parentNode.replaceChild(fb,this);};})(item.title);
+  } else {
+    iconEl=document.createElement("div"); iconEl.className="ico-fb";
+    iconEl.textContent=item.icon||(item.title?item.title.charAt(0):"?");
+  }
+  var mid=document.createElement("div");mid.className="mid";
+  var ttl=document.createElement("div");ttl.className="ttl";ttl.textContent=item.title;
+  var dtl=document.createElement("div");dtl.className="dtl";dtl.textContent=item.detail;
+  mid.appendChild(ttl);mid.appendChild(dtl);
+  var rgt=document.createElement("div");rgt.className="rgt";
+  var amt=document.createElement("div");amt.className="amt";amt.textContent=fmtMoney(item.amount);
+  var dte=document.createElement("div");dte.className="dte";dte.textContent=fmtDate(item.date);
+  rgt.appendChild(amt);rgt.appendChild(dte);
+  row.appendChild(iconEl);row.appendChild(mid);row.appendChild(rgt);
+  return row;
 }
 
-document.getElementById("tx-list").addEventListener("click", function(e) {
-  var row = e.target;
-  while (row && !row.classList.contains("row")) {
-    row = row.parentNode;
-  }
-  if (!row) return;
-  var isExpanded = row.classList.contains("expanded");
-  document.querySelectorAll(".row.expanded").forEach(function(el) {
-    el.classList.remove("expanded");
-  });
-  if (!isExpanded) {
-    row.classList.add("expanded");
-  }
+function loadRecent(){
+  fetch(CSV_RECENT+"&t="+Date.now(),{cache:"no-store"})
+    .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.text();})
+    .then(function(text){
+      var lines=text.trim().split("\n").filter(function(l){return l.trim();});
+      var start=0, first=parseCsvRow(lines[0]);
+      if(isNaN(parseVal(first[3])))start=1;
+      var list=document.getElementById("tx-list"); list.innerHTML="";
+      for(var i=start;i<lines.length;i++){
+        var cols=parseCsvRow(lines[i]); if(!cols[2])continue;
+        list.appendChild(buildTxRow({date:cols[0]||"",icon:cols[5]||"",title:cols[2]||"",detail:cleanDetail(cols[4]||""),amount:parseVal(cols[3])}));
+      }
+      document.getElementById("rec-msg").style.display="none";
+      applyLayout();
+    })
+    .catch(function(err){document.getElementById("rec-msg").textContent="Error: "+err.message;});
+}
+
+document.getElementById("tx-list").addEventListener("click",function(e){
+  var row=e.target;
+  while(row&&!row.classList.contains("row"))row=row.parentNode;
+  if(!row)return;
+  var isExp=row.classList.contains("expanded");
+  document.querySelectorAll(".row.expanded").forEach(function(el){el.classList.remove("expanded");});
+  if(!isExp)row.classList.add("expanded");
   applyLayout();
 });
 
-window.addEventListener("resize", applyLayout);
+/* ══ APPLY LAYOUT ══ */
+function applyLayout(){
+  var isMobile = window.innerWidth < 400;
+
+  // Tab bar
+  document.querySelectorAll(".tab-btn").forEach(function(el){el.style.fontSize=isMobile?"3.5vw":"2.8vw";});
+  document.querySelectorAll(".tab-btn img").forEach(function(el){el.style.width=isMobile?"6vw":"4.5vw";el.style.height=isMobile?"6vw":"4.5vw";});
+
+  // Rings
+  var ringSz   = isMobile?"16vw":"12vw";
+  var ringLblFs= isMobile?"3.2vw":"2.2vw";
+  var ringRemFs= isMobile?"2.8vw":"2vw";
+  var ringIcoSz= isMobile?"5vw":"4vw";
+  document.querySelectorAll(".ring-svg").forEach(function(el){el.style.width=ringSz;el.style.height=ringSz;});
+  document.querySelectorAll(".ring-label").forEach(function(el){el.style.fontSize=ringLblFs;});
+  document.querySelectorAll(".ring-remain").forEach(function(el){el.style.fontSize=ringRemFs;});
+  document.querySelectorAll(".ring-icon").forEach(function(el){el.style.width=ringIcoSz;el.style.height=ringIcoSz;});
+  document.querySelectorAll(".ring-item[data-hide-on-mobile]").forEach(function(el){el.style.display=isMobile?"none":"flex";});
+
+  // Expand button
+  document.getElementById("expand-btn").style.fontSize = isMobile?"3.5vw":"2.2vw";
+
+  // Category grid — 4 columns; on mobile, hide last-val column
+  var gridCols = isMobile ? "5fr 2fr 1.6fr" : "5fr 2fr 2fr 1.6fr";
+  var mainNmFs = isMobile?"4.6vw":"2.8vw";
+  var subNmFs  = isMobile?"4vw":"2.4vw";
+  var amtFs    = isMobile?"4.6vw":"2.5vw";
+  var subAmtFs = isMobile?"4vw":"2.2vw";
+  var lastFs   = isMobile?"3.8vw":"2.2vw";
+  var pctFs    = isMobile?"3.8vw":"2.2vw";
+  var catIcoSz = isMobile?"8vw":"5vw";
+  var subIcoSz = isMobile?"7vw":"4vw";
+  var chevFs   = isMobile?"5vw":"3.5vw";
+  var rowPad   = isMobile?"2vw 0.5vw":"1.4vw 0.5vw";
+
+  document.querySelectorAll(".chevron").forEach(function(el){el.style.fontSize=chevFs;});
+
+  document.querySelectorAll(".main-row,.sub-row.visible").forEach(function(el){
+    el.style.gridTemplateColumns=gridCols;
+    el.style.padding=rowPad;
+  });
+  document.querySelectorAll(".main-row").forEach(function(el){
+    var nc=el.querySelector(".cat-name");if(nc)nc.style.fontSize=mainNmFs;
+    var av=el.querySelector(".amt-val");if(av)av.style.fontSize=amtFs;
+    var lv=el.querySelector(".last-val");if(lv){lv.style.display=isMobile?"none":"block";lv.style.fontSize=lastFs;}
+    var pv=el.querySelector(".pct-val");if(pv)pv.style.fontSize=pctFs;
+    var ico=el.querySelector(".cat-ico,.cat-ico-fb");
+    if(ico){ico.style.width=catIcoSz;ico.style.height=catIcoSz;if(ico.className.indexOf("fb")>=0)ico.style.fontSize=isMobile?"4vw":"2.3vw";}
+  });
+  document.querySelectorAll(".sub-row").forEach(function(el){
+    el.style.gridTemplateColumns=gridCols;
+    el.style.padding=rowPad;
+    var nc=el.querySelector(".cat-name");if(nc)nc.style.fontSize=subNmFs;
+    var av=el.querySelector(".amt-val");if(av)av.style.fontSize=subAmtFs;
+    var lv=el.querySelector(".last-val");if(lv){lv.style.display=isMobile?"none":"block";lv.style.fontSize=lastFs;}
+    var pv=el.querySelector(".pct-val");if(pv)pv.style.fontSize=pctFs;
+    var ico=el.querySelector(".cat-ico,.cat-ico-fb");
+    if(ico){ico.style.width=subIcoSz;ico.style.height=subIcoSz;if(ico.className.indexOf("fb")>=0)ico.style.fontSize=isMobile?"3.5vw":"2vw";}
+  });
+
+  // Recent
+  var txAmtFs  = isMobile?"4.6vw":"3vw";
+  var txTtlFs  = isMobile?"4.6vw":"3vw";
+  var txDtlFs  = isMobile?"4vw":"2.5vw";
+  var txDteFs  = isMobile?"3.8vw":"2.5vw";
+  var txIcoSz  = isMobile?"12vw":"9vw";
+  var txIcoFbFs= isMobile?"7vw":"3.8vw";
+  var txRowPad = isMobile?"3.5vw 0":"2vw 0";
+  var txExpPad = isMobile?"3.5vw 1.5vw":"2vw 1.5vw";
+
+  document.querySelectorAll(".ttl").forEach(function(el){el.style.fontSize=txTtlFs;});
+  document.querySelectorAll(".dtl").forEach(function(el){el.style.fontSize=txDtlFs;});
+  document.querySelectorAll(".amt").forEach(function(el){el.style.fontSize=txAmtFs;});
+  document.querySelectorAll(".dte").forEach(function(el){el.style.fontSize=txDteFs;});
+  document.querySelectorAll(".ico").forEach(function(el){el.style.width=txIcoSz;el.style.height=txIcoSz;});
+  document.querySelectorAll(".ico-fb").forEach(function(el){el.style.width=txIcoSz;el.style.height=txIcoSz;el.style.fontSize=txIcoFbFs;});
+  document.querySelectorAll(".row").forEach(function(el){el.style.padding=txRowPad;});
+  document.querySelectorAll(".row.expanded").forEach(function(el){el.style.padding=txExpPad;});
+
+  positionTabLine();
+}
+
+loadExpense();
+loadRecent();
+setInterval(loadExpense,60000);
+setInterval(loadRecent,60000);
+window.addEventListener("load",function(){positionTabLine();applyLayout();});
+window.addEventListener("resize",applyLayout);
 </script>
 </body>
 </html>
