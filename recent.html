@@ -161,7 +161,7 @@ html, body {
   <div class="slide" id="slide-0">
     <div id="rings-wrap"></div>
     <div class="button-container" style="display: flex;justify-content: flex-end;margin-bottom:10px;margin-top:10px">
-    <button class="expand-txt" id="expand-btn">Expand All</button></div>
+    <button class="expand-txt" id="expand-btn">▾ Expand All</button></div>
     <div id="col-hdr" class="det-col-hdr"></div>
     <div id="det-msg">Loading...</div>
     <div id="cat-list"></div>
@@ -409,7 +409,7 @@ function buildCatRow(item, isSub, gid) {
 
 document.getElementById("expand-btn").addEventListener("click", function() {
   allExpanded = !allExpanded;
-  this.textContent = allExpanded ? "Collapse All" : "Expand All";
+  this.textContent = allExpanded ? "▴ Collapse All" : "▾ Expand All";
 
   if (allExpanded) {
     // highlight all main rows
