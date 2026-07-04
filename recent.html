@@ -10,7 +10,7 @@ html, body {
   width:100%; height:100%;
   background:#191919;
   font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
-  color:#fff; overflow:hidden;margin-top:10px;border-radius:30px;
+  color:#fff; overflow:hidden;margin-top:10px
 }
 
 /* ── Tab bar ── */
@@ -129,13 +129,13 @@ html, body {
 #ca-wrap { display:flex; width:100%; height:100%; }
 
 /* iPad: 2-column */
-#ca-col-left { flex:1; display:flex; flex-direction:column; gap:3vw; min-width:0; justify-content:center; padding:2vw 1vw 2vw 2vw; overflow:hidden; }
-#ca-col-right { flex:1; display:flex; flex-direction:column; gap:0; min-width:0; justify-content:center; padding:2vw 2vw 2vw 1vw; overflow:hidden; }
+#ca-col-left { flex:1; display:flex; flex-direction:column; gap:3vw; min-width:0; justify-content:top; padding:0; overflow:hidden; margin-top:10px}
+#ca-col-right { flex:1; display:flex; flex-direction:column; gap:0; min-width:0; justify-content:top; padding:0; overflow:hidden; margin-top:10px }
 #ca-section-balance, #ca-section-income, #ca-section-expense, #ca-section-weather { display:flex; flex-direction:column; flex:0 0 auto; min-width:0; }
 
 /* Balance */
 #ca-card-balance { display:flex; flex-direction:column; gap:1.3vw; }
-.ca-list-item { display:flex; align-items:center; gap:1.6vw; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:1.8vw; padding:0.575vw 1.8vw; }
+.ca-list-item { display:flex; align-items:center; gap:1.6vw; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:1.8vw; padding:1vw 1.8vw; }
 .ca-list-icon { width:4vw; height:4vw; border-radius:50%; object-fit:contain; flex-shrink:0; background:rgba(255,255,255,0.06); padding:0.5vw; }
 .ca-bi-name { flex:1; font-size:2.88vw; font-weight:600; color:rgba(255,255,255,0.85); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .ca-bi-val { font-size:2.92vw; font-weight:700; color:rgba(255,255,255,0.85); white-space:nowrap; text-align:right; margin-left:auto; }
@@ -753,8 +753,8 @@ function caApplyLayout(){
   if(isMobile){
     // iPhone: stacked single column, hide weather+countdown
     if(wrap){wrap.style.flexDirection="column";wrap.style.overflowY="auto";wrap.style.overflowX="hidden";wrap.style.height="auto";wrap.style.minHeight="100%";}
-    if(colL){colL.style.padding="3vw 3vw 0 3vw";}
-    if(colR){colR.style.padding="0 3vw 3vw 3vw";}
+    if(colL){colL.style.padding="0";}
+    if(colR){colR.style.padding="0";}
     if(sWx)sWx.style.display="none";
     if(donutWrap){donutWrap.style.width="45vw";donutWrap.style.height="45vw";}
     // Move income into left column above donut
@@ -782,15 +782,16 @@ function caApplyLayout(){
   } else {
     // iPad: 2-column layout, show weather+countdown
     if(wrap){wrap.style.flexDirection="row";wrap.style.overflowY="hidden";wrap.style.height="100%";wrap.style.minHeight="";}
-    if(colL){colL.style.padding="2vw 1vw 2vw 2vw";}
-    if(colR){colR.style.padding="2vw 2vw 2vw 1vw";}
+    if(colL){colL.style.padding="0";}
+    if(colR){colR.style.padding="0";}
     if(sWx){sWx.style.display="flex";sWx.style.flexDirection="column";}
-    if(donutWrap){donutWrap.style.width="25vw";donutWrap.style.height="25vw";}
+    if(donutWrap){donutWrap.style.width="25vw";donutWrap.style.height="25vw";donutWrap.style.marginTop="20px"}
     // Ensure income is first in right column
     if(colR&&sInc&&colR.firstChild!==sInc){colR.insertBefore(sInc,colR.firstChild);}
     // Income sizes for iPad
     var sInc = document.getElementById("ca-section-income");
-    if (sInc) sInc.style.marginTop = "";
+    if (sInc) sInc.style.marginTop = "10px";
+    if (sInc) sInc.style.marginBottom = "20px";
     document.querySelectorAll(".ca-col-pct").forEach(function(el){el.style.fontSize="1.76vw";});
     document.querySelectorAll(".ca-col-val").forEach(function(el){el.style.fontSize="1.84vw";});
     document.querySelectorAll(".ca-col-icon-wrap").forEach(function(el){el.style.width="4vw";el.style.height="4vw";});
@@ -829,7 +830,7 @@ function loadExpense() {
       for(var mc=0;mc<mains.length;mc++){var key=mains[mc].name.toLowerCase().trim();if(budgetMap[key]!==undefined){mains[mc].budget=budgetMap[key];continue;}for(var bk in budgetMap){if(key.indexOf(bk)>=0||bk.indexOf(key)>=0){mains[mc].budget=budgetMap[bk];break;}}}
       for(var sc2=0;sc2<subs.length;sc2++){var pk=subs[sc2].parentE.toLowerCase().trim();var done=false;for(var pm=0;pm<mains.length;pm++){var mk=mains[pm].name.toLowerCase().trim(),mg=mains[pm].groupE.toLowerCase().trim();if(pk&&(pk===mk||pk===mg||mk.indexOf(pk)>=0||pk.indexOf(mk)>=0)){mains[pm].subs.push(subs[sc2]);done=true;break;}}if(!done){var best=mains[0];for(var cm=1;cm<mains.length;cm++){if(mains[cm].rowIdx<subs[sc2].rowIdx)best=mains[cm];}best.subs.push(subs[sc2]);}}
       for(var rc=0;rc<mains.length;rc++){if(mains[rc].subs.length>0){var s3=0,l3=0;for(var s4=0;s4<mains[rc].subs.length;s4++){s3+=mains[rc].subs[s4].curr;l3+=mains[rc].subs[s4].last;}if(s3>0){mains[rc].curr=s3;mains[rc].last=l3;}}}
-      var ringsWrap=document.getElementById("rings-wrap");ringsWrap.innerHTML="";
+      var ringsWrap=document.getElementById("rings-wrap");ringsWrap.innerHTML="";ringsWrap.style.marginTop = "5px";
       var billsSpent=0,billsBudget=0,billsIcon="",billsGids=[];
       for(var ri=0;ri<mains.length;ri++){var mn=mains[ri].name.toLowerCase();var isRental=mn.indexOf("rental")>=0||mn.indexOf("rent")>=0;var isBills=mn.indexOf("bill")>=0||mn.indexOf("insurance")>=0||mn.indexOf("health")>=0;if(isBills){billsSpent+=mains[ri].curr;billsBudget+=mains[ri].budget;billsGids.push("g"+ri);if(!billsIcon)billsIcon=mains[ri].icon;continue;}if(mains[ri].budget>0){ringsWrap.appendChild(buildRing(mains[ri].name,mains[ri].curr,mains[ri].budget,mains[ri].icon,isRental,["g"+ri]));}}
       if(billsBudget>0||billsSpent>0){ringsWrap.appendChild(buildRing("Bills & Insurance",billsSpent,billsBudget,billsIcon,false,billsGids));}
@@ -892,7 +893,7 @@ function applyLayout(){
   if (!caDataLoaded) { caLoadBI(); caLoadDonut(); caDataLoaded=true; }
 
   // Tab bar
-  document.querySelectorAll(".tab-btn").forEach(function(el){el.style.fontSize=isMobile?"5vw":"3.3vw";});
+  document.querySelectorAll(".tab-btn").forEach(function(el){el.style.fontSize=isMobile?"5vw":"3.1vw";});
   document.querySelectorAll(".tab-btn img").forEach(function(el){el.style.width=isMobile?"7vw":"5vw";el.style.height=isMobile?"7vw":"5vw";});
 
   // Rings
