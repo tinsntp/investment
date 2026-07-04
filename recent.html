@@ -10,7 +10,7 @@ html, body {
   width:100%; height:100%;
   background:#1a1a1a;
   font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
-  color:#fff; overflow:hidden;
+  color:#fff; overflow:hidden;margin-top:10px
 }
 
 /* ── Tab bar ── */
@@ -54,19 +54,31 @@ html, body {
 .ring-icon { width:4vw; height:4vw; object-fit:contain; border-radius:50%; margin-top:0.5vw; }
 .ring-icon-fb { width:4vw; height:4vw; margin-top:0.5vw; }
 .ring-svg { flex-shrink:0; }
-.ring-label { font-size:2.2vw; color:rgba(255,255,255,0.7); text-align:center; line-height:1.2; font-weight:600; }
-.ring-remain { font-size:2vw; font-weight:700; text-align:center; }
+.ring-label { font-size:2.2vw; color:rgba(255,255,255,0.7); text-align:center; line-height:1.3; font-weight:600; white-space:normal; word-break:break-word; }
+.ring-remain { font-size:2vw; font-weight:700; text-align:center; white-space:normal; }
 .ring-remain.ok   { color:#4ade80; }
 .ring-remain.low  { color:#fbbf24; }
 .ring-remain.over { color:#f87171; }
 
+/* Column header */
+.det-col-hdr {
+  display:grid;
+  grid-template-columns: 5fr 2fr 2fr 1.6fr;
+  padding:0.8vw 0.5vw;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+  margin-bottom:0.5vw;
+  font-size:1.9vw; font-weight:600; color:rgba(255,255,255,0.35);
+}
+.det-col-hdr .ch { text-align:right; }
+.det-col-hdr .ch:first-child { text-align:left; }
+
 /* Expand/Collapse — plain text, right-aligned */
 .expand-txt {
   display:block; text-align:right;
-  font-size:2.2vw; font-weight:600; color:rgba(255,255,255,0.45);
-  cursor:pointer; margin-bottom:1.5vw; background:none; border:none; padding:0;
+  font-size:2.2vw; font-weight:600; color:rgba(255,255,255,0.85); border-radius: 2vw;
+  cursor:pointer; margin-top:15px; margin-bottom:2.5vw; background:rgba(255,255,255,0.08); border:0px solid rgba(255,255,255,0.25); padding:0.6vw 2.5vw;;
 }
-.expand-txt:hover { color:#fff; }
+.expand-txt:hover { color:#fff; background:rgba(255,255,255,0.12);}
 
 /* Category rows — 4-column grid: name | amt | last | pct */
 #cat-list { display:flex; flex-direction:column; }
@@ -147,7 +159,9 @@ html, body {
   <!-- DETAIL SLIDE -->
   <div class="slide" id="slide-0">
     <div id="rings-wrap"></div>
-    <button class="expand-txt" id="expand-btn">Expand all</button>
+    <div class="button-container" style="display: flex;justify-content: flex-end;">
+    <button class="expand-txt" id="expand-btn">Expand All</button></div>
+    <div id="col-hdr" class="det-col-hdr"></div>
     <div id="det-msg">Loading...</div>
     <div id="cat-list"></div>
   </div>
@@ -266,7 +280,7 @@ function buildRing(label, spent, budget, iconUrl, hideOnMobile, gids) {
   var pctTxt = document.createElementNS(ns,"text");
   pctTxt.setAttribute("x","35"); pctTxt.setAttribute("y","35");
   pctTxt.setAttribute("text-anchor","middle"); pctTxt.setAttribute("dominant-baseline","middle");
-  pctTxt.setAttribute("fill","#fff"); pctTxt.setAttribute("font-size","15");
+  pctTxt.setAttribute("fill","#fff"); pctTxt.setAttribute("font-size","16");
   pctTxt.setAttribute("font-weight","800");
   pctTxt.textContent = Math.round(pct)+"%";
   svg.appendChild(pctTxt);
@@ -385,7 +399,7 @@ function buildCatRow(item, isSub, gid) {
 
 document.getElementById("expand-btn").addEventListener("click", function() {
   allExpanded = !allExpanded;
-  this.textContent = allExpanded ? "Collapse" : "Expand";
+  this.textContent = allExpanded ? "Collapse All" : "Expand All";
   document.querySelectorAll(".sub-row").forEach(function(s){
     allExpanded?s.classList.add("visible"):s.classList.remove("visible");
   });
@@ -394,6 +408,21 @@ document.getElementById("expand-btn").addEventListener("click", function() {
     c.textContent = allExpanded?"\u25be":"\u25b8";
   });
 });
+
+function buildColHdr() {
+  var isMobile = window.innerWidth < 400;
+  var hdr = document.getElementById("col-hdr");
+  if (!hdr) return;
+  hdr.innerHTML = "";
+  hdr.style.fontSize = isMobile ? "3.2vw" : "2.8vw";
+  hdr.style.gridTemplateColumns = isMobile ? "5fr 2fr 1.6fr" : "5.4fr 2fr 2fr 1.6fr";
+  var cols = isMobile ? ["Category","Amount","+/-"] : ["Category","Amount","Last month","+/-"];
+  cols.forEach(function(t, i) {
+    var d = document.createElement("div");
+    d.className = "ch"; d.textContent = t;
+    hdr.appendChild(d);
+  });
+}
 
 function loadExpense() {
   fetch(CSV_EXPENSE+"&t="+Date.now(),{cache:"no-store"})
@@ -459,7 +488,7 @@ function loadExpense() {
         }
       }
       if(billsBudget>0||billsSpent>0){
-        ringsWrap.appendChild(buildRing("Bills & Ins.",billsSpent,billsBudget,billsIcon,false,billsGids));
+        ringsWrap.appendChild(buildRing("Bills & Insurance",billsSpent,billsBudget,billsIcon,false,billsGids));
       }
 
       // Category rows
@@ -472,6 +501,7 @@ function loadExpense() {
       }
 
       document.getElementById("det-msg").style.display="none";
+      buildColHdr();
       applyLayout();
     })
     .catch(function(err){document.getElementById("det-msg").textContent="Error: "+err.message;});
@@ -540,13 +570,13 @@ function applyLayout(){
   var isMobile = window.innerWidth < 400;
 
   // Tab bar
-  document.querySelectorAll(".tab-btn").forEach(function(el){el.style.fontSize=isMobile?"3.5vw":"2.8vw";});
-  document.querySelectorAll(".tab-btn img").forEach(function(el){el.style.width=isMobile?"6vw":"4.5vw";el.style.height=isMobile?"6vw":"4.5vw";});
+  document.querySelectorAll(".tab-btn").forEach(function(el){el.style.fontSize=isMobile?"4.5vw":"3.6vw";});
+  document.querySelectorAll(".tab-btn img").forEach(function(el){el.style.width=isMobile?"6vw":"5vw";el.style.height=isMobile?"6vw":"5vw";});
 
   // Rings
-  var ringSz   = isMobile?"16vw":"12vw";
-  var ringLblFs= isMobile?"3.2vw":"2.2vw";
-  var ringRemFs= isMobile?"2.8vw":"2vw";
+  var ringSz   = isMobile?"18vw":"12vw";
+  var ringLblFs= isMobile?"3.4vw":"2.8vw";
+  var ringRemFs= isMobile?"3.2vw":"2.2vw";
   var ringIcoSz= isMobile?"5vw":"4vw";
   document.querySelectorAll(".ring-svg").forEach(function(el){el.style.width=ringSz;el.style.height=ringSz;});
   document.querySelectorAll(".ring-label").forEach(function(el){el.style.fontSize=ringLblFs;});
@@ -555,19 +585,19 @@ function applyLayout(){
   document.querySelectorAll(".ring-item[data-hide-on-mobile]").forEach(function(el){el.style.display=isMobile?"none":"flex";});
 
   // Expand button
-  document.getElementById("expand-btn").style.fontSize = isMobile?"3.5vw":"2.2vw";
+  document.getElementById("expand-btn").style.fontSize = isMobile?"3.4vw":"3vw";
 
   // Category grid — 4 columns; on mobile, hide last-val column
-  var gridCols = isMobile ? "5fr 2fr 1.6fr" : "5fr 2fr 2fr 1.6fr";
-  var mainNmFs = isMobile?"4.6vw":"2.8vw";
-  var subNmFs  = isMobile?"4vw":"2.4vw";
-  var amtFs    = isMobile?"4.6vw":"2.5vw";
-  var subAmtFs = isMobile?"4vw":"2.2vw";
-  var lastFs   = isMobile?"3.8vw":"2.2vw";
-  var pctFs    = isMobile?"3.8vw":"2.2vw";
-  var catIcoSz = isMobile?"8vw":"5vw";
-  var subIcoSz = isMobile?"7vw":"4vw";
-  var chevFs   = isMobile?"5vw":"3.5vw";
+  var gridCols = isMobile ? "5fr 2fr 1.6fr" : "5.4fr 2fr 2fr 1.6fr";
+  var mainNmFs = isMobile?"4.2vw":"3.2vw";
+  var subNmFs  = isMobile?"3.8vw":"3vw";
+  var amtFs    = isMobile?"4.2vw":"3.2vw";
+  var subAmtFs = isMobile?"3.8vw":"3vw";
+  var lastFs   = isMobile?"3.6vw":"2.8vw";
+  var pctFs    = isMobile?"3.6vw":"2.8vw";
+  var catIcoSz = isMobile?"8vw":"8vw";
+  var subIcoSz = isMobile?"6vw":"6vw";
+  var chevFs   = isMobile?"5.5vw":"4.5vw";
   var rowPad   = isMobile?"2vw 0.5vw":"1.4vw 0.5vw";
 
   document.querySelectorAll(".chevron").forEach(function(el){el.style.fontSize=chevFs;});
@@ -614,6 +644,7 @@ function applyLayout(){
   document.querySelectorAll(".row").forEach(function(el){el.style.padding=txRowPad;});
   document.querySelectorAll(".row.expanded").forEach(function(el){el.style.padding=txExpPad;});
 
+  buildColHdr();
   positionTabLine();
 }
 
