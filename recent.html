@@ -50,7 +50,7 @@ html, body {
   transition:background 0.2s;
 }
 .ring-item:hover { background:rgba(255,255,255,0.05); }
-.ring-item.selected { background:rgba(255,255,255,0.12); outline:1.5px solid rgba(255,255,255,0.25); }
+.ring-item.selected { background:rgba(255,255,255,0.08); outline:0px solid rgba(255,255,255,0.25); }
 .ring-icon { width:4vw; height:4vw; object-fit:contain; border-radius:50%; margin-top:0.5vw; }
 .ring-icon-fb { width:4vw; height:4vw; margin-top:0.5vw; }
 .ring-svg { flex-shrink:0; }
@@ -91,7 +91,8 @@ html, body {
   cursor:pointer; transition:background 0.15s;
 }
 .cat-row:last-child { border-bottom:none; }
-.cat-row:hover { background:rgba(255,255,255,0.04); border-radius:1.5vw; }
+.cat-row:hover { background:rgba(255,255,255,0.04); border-radius:0vw; }
+.cat-row.ring-highlighted {background: rgba(255,255,255,0.08);border-radius: 0vw;}
 .cat-row.filtered-out { display:none; }
 .cat-row.sub-row { display:none; }
 .cat-row.sub-row.visible { display:grid; }
@@ -125,8 +126,8 @@ html, body {
   transition:background 0.2s ease, border-radius 0.2s ease, padding 0.2s ease;
 }
 .row:last-child { border-bottom:none; }
-.row:hover { background:rgba(255,255,255,0.04); border-radius:2vw; padding:2vw 1vw; }
-.row.expanded { background:rgba(255,255,255,0.06); border-radius:2vw; padding:2.2vw 1.5vw; }
+.row:hover { background:rgba(255,255,255,0.04); border-radius:0vw; padding:2vw 1vw; }
+.row.expanded { background:rgba(255,255,255,0.06); border-radius:0vw; padding:2.2vw 1.5vw; }
 .ico { width:10vw; height:10vw; border-radius:50%; object-fit:contain; flex-shrink:0; background:rgba(255,255,255,0.08); padding:1.5vw; }
 .ico-fb { width:10vw; height:10vw; border-radius:50%; flex-shrink:0; background:rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; font-size:4.5vw; font-weight:700; color:rgba(255,255,255,0.6); }
 .mid { flex:1; min-width:0; }
@@ -307,6 +308,11 @@ function buildRing(label, spent, budget, iconUrl, hideOnMobile, gids) {
       gids.forEach(function(gid) {
         var mainRow = document.querySelector(".main-row[data-id='"+gid+"']");
         if (!mainRow) return;
+        if (!alreadySel) {
+        mainRow.classList.add("ring-highlighted");
+        } else {
+          mainRow.classList.remove("ring-highlighted");
+        }
         mainRow.dataset.open = "1";
         var chev2 = document.getElementById("chev-"+gid);
         if (chev2) chev2.textContent = "\u25be";
@@ -314,6 +320,10 @@ function buildRing(label, spent, budget, iconUrl, hideOnMobile, gids) {
       });
     } else {
       // collapse sub-rows for this ring's categories
+      // Clear all highlights first
+      document.querySelectorAll(".main-row.ring-highlighted").forEach(function(r){
+        r.classList.remove("ring-highlighted");
+      });
       gids.forEach(function(gid) {
         var mainRow = document.querySelector(".main-row[data-id='"+gid+"']");
         if (!mainRow) return;
@@ -400,6 +410,22 @@ function buildCatRow(item, isSub, gid) {
 document.getElementById("expand-btn").addEventListener("click", function() {
   allExpanded = !allExpanded;
   this.textContent = allExpanded ? "Collapse All" : "Expand All";
+
+  if (allExpanded) {
+    // highlight all main rows
+    document.querySelectorAll(".main-row").forEach(function(r){
+      r.classList.add("ring-highlighted");
+    });
+  } else {
+    // remove all highlights
+    document.querySelectorAll(".main-row.ring-highlighted").forEach(function(r){
+      r.classList.remove("ring-highlighted");
+    });
+    document.querySelectorAll(".ring-item.selected").forEach(function(r){
+      r.classList.remove("selected");
+    });
+  }
+
   document.querySelectorAll(".sub-row").forEach(function(s){
     allExpanded?s.classList.add("visible"):s.classList.remove("visible");
   });
@@ -414,7 +440,7 @@ function buildColHdr() {
   var hdr = document.getElementById("col-hdr");
   if (!hdr) return;
   hdr.innerHTML = "";
-  hdr.style.fontSize = isMobile ? "3.2vw" : "2.8vw";
+  hdr.style.fontSize = isMobile ? "3.6vw" : "2.8vw";
   hdr.style.gridTemplateColumns = isMobile ? "5fr 2fr 1.6fr" : "5.4fr 2fr 2fr 1.6fr";
   var cols = isMobile ? ["Category","Amount","+/-"] : ["Category","Amount","Last month","+/-"];
   cols.forEach(function(t, i) {
@@ -570,14 +596,14 @@ function applyLayout(){
   var isMobile = window.innerWidth < 400;
 
   // Tab bar
-  document.querySelectorAll(".tab-btn").forEach(function(el){el.style.fontSize=isMobile?"4.5vw":"3.6vw";});
+  document.querySelectorAll(".tab-btn").forEach(function(el){el.style.fontSize=isMobile?"4.5vw":"3.3vw";});
   document.querySelectorAll(".tab-btn img").forEach(function(el){el.style.width=isMobile?"6vw":"5vw";el.style.height=isMobile?"6vw":"5vw";});
 
   // Rings
-  var ringSz   = isMobile?"18vw":"12vw";
-  var ringLblFs= isMobile?"3.4vw":"2.8vw";
-  var ringRemFs= isMobile?"3.2vw":"2.2vw";
-  var ringIcoSz= isMobile?"5vw":"4vw";
+  var ringSz   = isMobile?"25vw":"12vw";
+  var ringLblFs= isMobile?"3.8vw":"2.8vw";
+  var ringRemFs= isMobile?"3.6vw":"2.2vw";
+  var ringIcoSz= isMobile?"6vw":"4vw";
   document.querySelectorAll(".ring-svg").forEach(function(el){el.style.width=ringSz;el.style.height=ringSz;});
   document.querySelectorAll(".ring-label").forEach(function(el){el.style.fontSize=ringLblFs;});
   document.querySelectorAll(".ring-remain").forEach(function(el){el.style.fontSize=ringRemFs;});
@@ -585,16 +611,16 @@ function applyLayout(){
   document.querySelectorAll(".ring-item[data-hide-on-mobile]").forEach(function(el){el.style.display=isMobile?"none":"flex";});
 
   // Expand button
-  document.getElementById("expand-btn").style.fontSize = isMobile?"3.4vw":"3vw";
+  document.getElementById("expand-btn").style.fontSize = isMobile?"3.6vw":"3vw";
 
   // Category grid — 4 columns; on mobile, hide last-val column
-  var gridCols = isMobile ? "5fr 2fr 1.6fr" : "5.4fr 2fr 2fr 1.6fr";
-  var mainNmFs = isMobile?"4.2vw":"3.2vw";
-  var subNmFs  = isMobile?"3.8vw":"3vw";
-  var amtFs    = isMobile?"4.2vw":"3.2vw";
-  var subAmtFs = isMobile?"3.8vw":"3vw";
-  var lastFs   = isMobile?"3.6vw":"2.8vw";
-  var pctFs    = isMobile?"3.6vw":"2.8vw";
+  var gridCols = isMobile ? "5.2fr 2fr 1.6fr" : "5.4fr 2fr 2fr 1.6fr";
+  var mainNmFs = isMobile?"4.4vw":"3.2vw";
+  var subNmFs  = isMobile?"4vw":"3vw";
+  var amtFs    = isMobile?"4.4vw":"3.2vw";
+  var subAmtFs = isMobile?"4vw":"3vw";
+  var lastFs   = isMobile?"3.8vw":"2.8vw";
+  var pctFs    = isMobile?"3.8vw":"2.8vw";
   var catIcoSz = isMobile?"8vw":"8vw";
   var subIcoSz = isMobile?"6vw":"6vw";
   var chevFs   = isMobile?"5.5vw":"4.5vw";
