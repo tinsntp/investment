@@ -233,6 +233,7 @@ html, body {
 /* ══ TAB SWITCHING ══ */
 var currentTab = 0;
 var numTabs = 2; // updated in applyLayout
+var caDataLoaded = false;
 
 function switchTab(idx) {
   if (idx >= numTabs) return;
@@ -246,11 +247,9 @@ function switchTab(idx) {
 }
 
 function positionTabLine() {
-  var bar = document.getElementById("tab-bar");
-  var btns = bar.querySelectorAll(".tab-btn:not([style*='display: none']):not([style*='display:none'])");
   var visibleBtns = [];
-  bar.querySelectorAll(".tab-btn").forEach(function(btn) {
-    if (btn.style.display !== "none") visibleBtns.push(btn);
+  document.querySelectorAll(".tab-btn").forEach(function(btn) {
+    if (window.getComputedStyle(btn).display !== "none") visibleBtns.push(btn);
   });
   var line = document.getElementById("tab-line");
   var ab = visibleBtns[currentTab];
@@ -308,7 +307,7 @@ function buildRing(label, spent, budget, iconUrl, hideOnMobile, gids) {
   var ns = "http://www.w3.org/2000/svg";
   var svg = document.createElementNS(ns,"svg");
   svg.setAttribute("viewBox","0 0 80 80"); svg.className = "ring-svg";
-  var initRingSz = window.innerWidth < 600 ? "18vw" : "12vw";
+  var initRingSz = window.innerWidth < 400 ? "18vw" : "12vw";
   svg.style.width = initRingSz; svg.style.height = initRingSz;
 
   var bg = document.createElementNS(ns,"circle");
@@ -436,11 +435,11 @@ document.getElementById("expand-btn").addEventListener("click", function() {
 });
 
 function buildColHdr() {
-  var isMobile = window.innerWidth < 600;
+  var isMobile = window.innerWidth < 400;
   var hdr = document.getElementById("col-hdr");
   if (!hdr) return;
   hdr.innerHTML = "";
-  hdr.style.fontSize = isMobile ? "4.6vw" : "2.8vw";
+  hdr.style.fontSize = isMobile ? "4.6vw" : "3.2vw";
   hdr.style.gridTemplateColumns = isMobile ? "5fr 2fr 1.6fr" : "5.4fr 2fr 2fr 1.6fr";
   var cols = isMobile ? ["Category","Amount","+/-"] : ["Category","Amount","Last month","+/-"];
   cols.forEach(function(t, i) {
@@ -765,22 +764,25 @@ document.getElementById("tx-list").addEventListener("click",function(e){
 
 /* ══ APPLY LAYOUT ══ */
 function applyLayout(){
-  var isMobile = window.innerWidth < 600;
+  var isMobile = window.innerWidth < 400;
 
   // ── 3rd tab: show on iPhone only ──
   var tab2 = document.getElementById("tab-btn-2");
   var slide2 = document.getElementById("slide-2");
   if (isMobile) {
     tab2.style.display = "flex";
+    tab2.style.visibility = "visible";
     slide2.style.display = "flex";
     numTabs = 3;
-    caLoadBI(); caLoadDonut();
+    if (!caDataLoaded) { caLoadBI(); caLoadDonut(); caDataLoaded=true; }
     document.getElementById("slides-wrap").style.width = "300%";
     document.querySelectorAll(".slide").forEach(function(el){ el.style.width = "33.333%"; });
   } else {
     tab2.style.display = "none";
+    tab2.style.visibility = "hidden";
     slide2.style.display = "none";
     numTabs = 2;
+    if (currentTab === 2) { currentTab = 0; }
     document.getElementById("slides-wrap").style.width = "200%";
     document.querySelectorAll(".slide").forEach(function(el){ el.style.width = "50%"; });
     if (currentTab === 2) switchTab(0);
@@ -864,10 +866,6 @@ function applyLayout(){
 
 loadExpense();
 loadRecent();
-caLoadBI();
-caLoadDonut();
-setInterval(caLoadBI,60000);
-setInterval(caLoadDonut,60000);
 setInterval(loadExpense,60000);
 setInterval(loadRecent,60000);
 window.addEventListener("load",function(){positionTabLine();applyLayout();});
