@@ -198,7 +198,7 @@ html, body {
 
 <div class="tab-bar" id="tab-bar">
   <div class="tab-btn active" data-idx="0" id="tab-btn-0">
-    <img src="https://github.com/tinsntp/investment/blob/main/icon/pie-chart-yellow.png?raw=true" />
+    <img src="https://github.com/tinsntp/investment/blob/main/icon/pie-chart-pink.png?raw=true" />
     <span>Detail</span>
   </div>
   <div class="tab-btn" data-idx="1" id="tab-btn-1">
@@ -614,14 +614,15 @@ function caFetchTab1(cb){
 function caRenderDrill(items,title,color){
   var list=document.getElementById("ca-list");list.innerHTML="";
   var header=document.createElement("div");
+  var drPcFs = window.innerWidth < 400 ? "4.6vw" : "2.6vw";
+  var drIS = window.innerWidth < 400 ? "3.35vw" : "3.35vw";
   header.style.cssText="display:flex;align-items:center;gap:2vw;padding:2vw 0 3vw;cursor:pointer;";
-  header.innerHTML='<span style="font-size:3vw;color:rgba(255,255,255,0.5);">\u25c2</span>'
-    +'<span style="font-size:3vw;font-weight:700;color:'+color+';">'+title+'</span>';
+  header.innerHTML='<span style="font-size:'+drPcFs+';color:rgba(255,255,255,0.5);">\u25c2</span>'
+    +'<span style="font-size:'+drPcFs+';font-weight:700;color:'+color+';">'+title+'</span>';
   header.addEventListener("click",function(){caHighlight(null);caRenderList(caGlobalData);});
   list.appendChild(header);
   var total=items.reduce(function(s,d){return s+Math.abs(d.val);},0);
-  var drPcFs = window.innerWidth < 400 ? "4.6vw" : "2.6vw";
-  var drIS = window.innerWidth < 400 ? "3.35vw" : "3.35vw";
+  
   items.forEach(function(item){
     var pct=Math.abs(item.val)/total*100,r2=10,sw=3,circ=2*Math.PI*r2,dash=(pct/100)*circ,gap=circ-dash;
     var row=document.createElement("div");row.className="ca-list-row";row.style.cursor="default";
@@ -654,7 +655,7 @@ function caRenderList(data){
       else{caHighlight(caActiveIdx===ii?null:ii);}
     });})(i);
     list.appendChild(row);
-  });
+  });caApplyLayout();
 }
 
 function caLoadBI(){
