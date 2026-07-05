@@ -125,8 +125,8 @@ html, body {
 .dte { font-size:1.9vw; color:rgba(255,255,255,0.4); white-space:nowrap; }
 
 /* ══ OVERVIEW SLIDE ══ */
-#slide-2 { padding:0; overflow:hidden;}
-#ca-wrap { display:flex; width:100%; height:100%; margin-top:10px}
+#slide-2 { padding:0; overflow:hidden; }
+#ca-wrap { display:flex; width:100%; height:100%; margin-top:5px}
 
 /* iPad: 2-column */
 #ca-col-left { flex:1; display:flex; flex-direction:column; gap:3vw; min-width:0; justify-content:top; padding:0; overflow:hidden; margin-top:10px}
@@ -198,7 +198,7 @@ html, body {
 
 <div class="tab-bar" id="tab-bar">
   <div class="tab-btn active" data-idx="0" id="tab-btn-0">
-    <img src="https://github.com/tinsntp/investment/blob/main/icon/pie-chart-red.png?raw=true" />
+    <img src="https://github.com/tinsntp/investment/blob/main/icon/pie-chart-pink.png?raw=true" />
     <span>Detail</span>
   </div>
   <div class="tab-btn" data-idx="1" id="tab-btn-1">
@@ -293,25 +293,27 @@ var currentTab = 0;
 var numTabs = 3;
 var caDataLoaded = false;
 
-/* ══ TAB ORDER PERSISTENCE ══ */
+/* ══ TAB ORDER PERSISTENCE (localStorage — works in any regular browser) ══ */
 var DEFAULT_TAB_ORDER = [0, 1, 2]; // Detail, Recent, Overview
+var LS_TAB_ORDER_KEY = 'finance-tab-order';
+var LS_ACTIVE_TAB_KEY = 'finance-active-tab';
 
-async function loadTabOrder() {
+function loadTabOrder() {
   try {
-    var result = await window.storage.get('tab-order');
-    if (result && result.value) {
-      var order = JSON.parse(result.value);
+    var raw = localStorage.getItem(LS_TAB_ORDER_KEY);
+    if (raw) {
+      var order = JSON.parse(raw);
       if (Array.isArray(order) && order.length === numTabs) return order;
     }
   } catch (e) {
-    // no saved order yet, use default
+    // no saved order yet, or storage unavailable — use default
   }
   return DEFAULT_TAB_ORDER.slice();
 }
 
-async function saveTabOrder(order) {
+function saveTabOrder(order) {
   try {
-    await window.storage.set('tab-order', JSON.stringify(order));
+    localStorage.setItem(LS_TAB_ORDER_KEY, JSON.stringify(order));
   } catch (e) {
     console.warn('Could not save tab order:', e);
   }
@@ -320,22 +322,22 @@ async function saveTabOrder(order) {
 /* ══ LAST ACTIVE TAB PERSISTENCE ══ */
 var DEFAULT_ACTIVE_TAB = 1; // Recent, as default fallback if nothing saved yet
 
-async function loadActiveTab() {
+function loadActiveTab() {
   try {
-    var result = await window.storage.get('active-tab');
-    if (result && result.value !== undefined && result.value !== null) {
-      var idx = parseInt(result.value);
+    var raw = localStorage.getItem(LS_ACTIVE_TAB_KEY);
+    if (raw !== null) {
+      var idx = parseInt(raw);
       if (!isNaN(idx) && idx >= 0 && idx < numTabs) return idx;
     }
   } catch (e) {
-    // nothing saved yet
+    // nothing saved yet, or storage unavailable
   }
   return DEFAULT_ACTIVE_TAB;
 }
 
-async function saveActiveTab(idx) {
+function saveActiveTab(idx) {
   try {
-    await window.storage.set('active-tab', String(idx));
+    localStorage.setItem(LS_ACTIVE_TAB_KEY, String(idx));
   } catch (e) {
     console.warn('Could not save active tab:', e);
   }
@@ -578,7 +580,7 @@ function buildRing(label, spent, budget, iconUrl, hideOnMobile, gids) {
   if (hideOnMobile) item.dataset.hideOnMobile = "1";
   item.dataset.gids = gids.join(",");
   var pct = budget > 0 ? Math.min(100, spent/budget*100) : 0;
-  var r=28,sw=5,cx=35,cy=35;
+  var r=28,sw=5,cx=40,cy=40;
   var circ=2*Math.PI*r, dash=pct/100*circ, gap=circ-dash;
   var color = ringColor(pct);
   var remain = budget - spent;
@@ -606,7 +608,7 @@ function buildRing(label, spent, budget, iconUrl, hideOnMobile, gids) {
   fg.setAttribute("stroke-dasharray",dash+" "+gap);fg.setAttribute("stroke-dashoffset","0");
   fg.setAttribute("transform","rotate(-90 "+cx+" "+cy+")");svg.appendChild(fg);
   var pctTxt = document.createElementNS(ns,"text");
-  pctTxt.setAttribute("x","35");pctTxt.setAttribute("y","35");
+  pctTxt.setAttribute("x","40");pctTxt.setAttribute("y","40");
   pctTxt.setAttribute("text-anchor","middle");pctTxt.setAttribute("dominant-baseline","middle");
   pctTxt.setAttribute("fill","#fff");pctTxt.setAttribute("font-size","18");
   pctTxt.setAttribute("font-weight","700");
@@ -1023,13 +1025,13 @@ function caApplyLayout(){
     if(colL){colL.style.padding="0";}
     if(colR){colR.style.padding="0";}
     if(sWx){sWx.style.display="flex";sWx.style.flexDirection="column";}
-    if(donutWrap){donutWrap.style.width="25vw";donutWrap.style.height="25vw";donutWrap.style.marginTop="35px"}
+    if(donutWrap){donutWrap.style.width="25vw";donutWrap.style.height="25vw";donutWrap.style.marginTop="30px"}
     // Ensure income is first in right column
     if(colR&&sInc&&colR.firstChild!==sInc){colR.insertBefore(sInc,colR.firstChild);}
     // Income sizes for iPad
     var sInc = document.getElementById("ca-section-income");
     if (sInc) sInc.style.marginTop = "10px";
-    if (sInc) sInc.style.marginBottom = "35px";
+    if (sInc) sInc.style.marginBottom = "30px";
     document.querySelectorAll(".ca-col-pct").forEach(function(el){el.style.fontSize="2.76vw";});
     document.querySelectorAll(".ca-col-val").forEach(function(el){el.style.fontSize="2.6vw";});
     document.querySelectorAll(".ca-col-icon-wrap").forEach(function(el){el.style.width="4vw";el.style.height="4vw";});
@@ -1191,13 +1193,13 @@ setInterval(caLoadBI,60000);
 setInterval(caLoadDonut,60000);
 
 /* ══ INIT: load saved tab order + last active tab, apply, then wire up UI ══ */
-Promise.all([loadTabOrder(), loadActiveTab()]).then(function(results) {
-  var order = results[0];
-  var activeIdx = results[1];
+(function() {
+  var order = loadTabOrder();
+  var activeIdx = loadActiveTab();
   applyTabOrder(order);
   switchTab(activeIdx);
   positionTabLine();
-});
+})();
 
 window.addEventListener("load",function(){positionTabLine();applyLayout();caApplyLayout();});
 window.addEventListener("resize",applyLayout);
