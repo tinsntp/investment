@@ -125,8 +125,8 @@ html, body {
 .dte { font-size:1.9vw; color:rgba(255,255,255,0.4); white-space:nowrap; }
 
 /* ══ OVERVIEW SLIDE ══ */
-#slide-2 { padding:0; overflow:hidden; }
-#ca-wrap { display:flex; width:100%; height:100%; }
+#slide-2 { padding:0; overflow:hidden;}
+#ca-wrap { display:flex; width:100%; height:100%; margin-top:10px}
 
 /* iPad: 2-column */
 #ca-col-left { flex:1; display:flex; flex-direction:column; gap:3vw; min-width:0; justify-content:top; padding:0; overflow:hidden; margin-top:10px}
@@ -198,7 +198,7 @@ html, body {
 
 <div class="tab-bar" id="tab-bar">
   <div class="tab-btn active" data-idx="0" id="tab-btn-0">
-    <img src="https://github.com/tinsntp/investment/blob/main/icon/pie-chart-pink.png?raw=true" />
+    <img src="https://github.com/tinsntp/investment/blob/main/icon/pie-chart-red.png?raw=true" />
     <span>Detail</span>
   </div>
   <div class="tab-btn" data-idx="1" id="tab-btn-1">
@@ -216,7 +216,7 @@ html, body {
 <div class="slides-wrap" id="slides-wrap">
 
   <!-- DETAIL SLIDE -->
-  <div class="slide" id="slide-0">
+  <div class="slide" id="slide-0" data-idx="0">
     <div id="rings-wrap"></div>
     <div class="button-container" style="display:flex;justify-content:flex-end;margin-bottom:10px;margin-top:10px">
       <button class="expand-txt" id="expand-btn">&#9662; Expand All</button>
@@ -227,13 +227,13 @@ html, body {
   </div>
 
   <!-- RECENT SLIDE -->
-  <div class="slide" id="slide-1">
+  <div class="slide" id="slide-1" data-idx="1">
     <div id="rec-msg">Loading...</div>
     <div id="tx-list"></div>
   </div>
 
   <!-- OVERVIEW SLIDE -->
-  <div class="slide" id="slide-2">
+  <div class="slide" id="slide-2" data-idx="2">
     <div id="ca-wrap">
       <!-- Left column: Balance + Donut -->
       <div id="ca-col-left">
@@ -293,31 +293,263 @@ var currentTab = 0;
 var numTabs = 3;
 var caDataLoaded = false;
 
+/* ══ TAB ORDER PERSISTENCE ══ */
+var DEFAULT_TAB_ORDER = [0, 1, 2]; // Detail, Recent, Overview
+
+async function loadTabOrder() {
+  try {
+    var result = await window.storage.get('tab-order');
+    if (result && result.value) {
+      var order = JSON.parse(result.value);
+      if (Array.isArray(order) && order.length === numTabs) return order;
+    }
+  } catch (e) {
+    // no saved order yet, use default
+  }
+  return DEFAULT_TAB_ORDER.slice();
+}
+
+async function saveTabOrder(order) {
+  try {
+    await window.storage.set('tab-order', JSON.stringify(order));
+  } catch (e) {
+    console.warn('Could not save tab order:', e);
+  }
+}
+
+/* ══ LAST ACTIVE TAB PERSISTENCE ══ */
+var DEFAULT_ACTIVE_TAB = 1; // Recent, as default fallback if nothing saved yet
+
+async function loadActiveTab() {
+  try {
+    var result = await window.storage.get('active-tab');
+    if (result && result.value !== undefined && result.value !== null) {
+      var idx = parseInt(result.value);
+      if (!isNaN(idx) && idx >= 0 && idx < numTabs) return idx;
+    }
+  } catch (e) {
+    // nothing saved yet
+  }
+  return DEFAULT_ACTIVE_TAB;
+}
+
+async function saveActiveTab(idx) {
+  try {
+    await window.storage.set('active-tab', String(idx));
+  } catch (e) {
+    console.warn('Could not save active tab:', e);
+  }
+}
+
+// Reorders BOTH the tab buttons AND their matching content slides
+function applyTabOrder(order) {
+  var tabBar = document.getElementById("tab-bar");
+  var slidesWrap = document.getElementById("slides-wrap");
+  var tabLine = document.getElementById("tab-line");
+
+  var tabs = Array.prototype.slice.call(tabBar.querySelectorAll(".tab-btn"));
+  var slides = Array.prototype.slice.call(slidesWrap.querySelectorAll(".slide"));
+
+  order.forEach(function(idx) {
+    var btn = tabs.find(function(b) { return parseInt(b.dataset.idx) === idx; });
+    if (btn) tabBar.insertBefore(btn, tabLine);
+
+    var slide = slides.find(function(s) { return parseInt(s.dataset.idx) === idx; });
+    if (slide) slidesWrap.appendChild(slide);
+  });
+}
+
+/* ══ TAB SWITCHING (position-aware, not fixed idx) ══ */
 function switchTab(idx) {
   currentTab = idx;
-  document.querySelectorAll(".tab-btn").forEach(function(btn, i) {
-    btn.classList.toggle("active", i === idx);
+  var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab-btn"));
+  tabs.forEach(function(btn) {
+    btn.classList.toggle("active", parseInt(btn.dataset.idx) === idx);
   });
-  var pct = idx * (100 / numTabs);
-  document.getElementById("slides-wrap").style.transform = "translateX(-"+pct+"%)";
+
+  // Find where this slide currently SITS in slides-wrap (its visual position),
+  // not its fixed original idx — since slides get reordered along with tabs.
+  var slides = Array.prototype.slice.call(document.querySelectorAll("#slides-wrap .slide"));
+  var visualPos = slides.findIndex(function(s) { return parseInt(s.dataset.idx) === idx; });
+  if (visualPos < 0) visualPos = idx;
+
+  var pct = visualPos * (100 / numTabs);
+  document.getElementById("slides-wrap").style.transform = "translateX(-" + pct + "%)";
   positionTabLine();
+
+  saveActiveTab(idx); // remember this as the last tab shown
 }
 
 function positionTabLine() {
-  var visibleBtns = [];
-  document.querySelectorAll(".tab-btn").forEach(function(btn) {
-    if (window.getComputedStyle(btn).display !== "none") visibleBtns.push(btn);
-  });
+  var visibleBtns = Array.prototype.slice.call(document.querySelectorAll(".tab-btn"))
+    .filter(function(b) { return window.getComputedStyle(b).display !== "none"; });
   var line = document.getElementById("tab-line");
-  var ab = visibleBtns[currentTab];
+  var ab = visibleBtns.find(function(b) { return parseInt(b.dataset.idx) === currentTab; });
   if (!ab) return;
   line.style.left = ab.offsetLeft+"px";
   line.style.width = ab.offsetWidth+"px";
 }
 
-document.querySelectorAll(".tab-btn").forEach(function(btn) {
-  btn.addEventListener("click", function() { switchTab(parseInt(this.dataset.idx)); });
-});
+/* ══ DRAG TO REORDER TABS (with tap-to-switch support, content follows) ══ */
+(function() {
+  var tabBar = document.getElementById("tab-bar");
+  var slidesWrap = document.getElementById("slides-wrap");
+  var dragEl = null;
+  var startX = 0;
+  var placeholder = null;
+  var pointerId = null;
+  var isDragging = false;      // becomes true only once movement passes threshold
+  var DRAG_THRESHOLD = 6;      // px — below this, treat as a tap not a drag
+
+  function getTabs() {
+    return Array.prototype.slice.call(tabBar.querySelectorAll(".tab-btn"));
+  }
+
+  function beginDragVisuals() {
+    var rect = dragEl.getBoundingClientRect();
+
+    placeholder = document.createElement("div");
+    placeholder.className = "tab-btn";
+    placeholder.style.visibility = "hidden";
+    placeholder.style.flex = window.getComputedStyle(dragEl).flex;
+    tabBar.insertBefore(placeholder, dragEl);
+
+    dragEl.style.position = "fixed";
+    dragEl.style.left = rect.left + "px";
+    dragEl.style.top = rect.top + "px";
+    dragEl.style.width = rect.width + "px";
+    dragEl.style.height = rect.height + "px";
+    dragEl.style.zIndex = "1000";
+    dragEl.style.pointerEvents = "none";
+    dragEl.style.transition = "none";
+
+    document.getElementById("tab-line").style.display = "none";
+  }
+
+  function onPointerDown(e) {
+    var btn = e.target.closest(".tab-btn");
+    if (!btn) return;
+    dragEl = btn;
+    pointerId = e.pointerId;
+    startX = e.clientX;
+    isDragging = false;
+
+    dragEl.setPointerCapture(pointerId);
+
+    tabBar.addEventListener("pointermove", onPointerMove);
+    tabBar.addEventListener("pointerup", onPointerUp);
+    tabBar.addEventListener("pointercancel", onPointerCancel);
+  }
+
+  function onPointerMove(e) {
+    if (!dragEl) return;
+    var dx = e.clientX - startX;
+
+    if (!isDragging) {
+      if (Math.abs(dx) < DRAG_THRESHOLD) return; // still just a tap so far
+      isDragging = true;
+      beginDragVisuals();
+    }
+
+    var rect = placeholder.getBoundingClientRect();
+    dragEl.style.left = (rect.left + dx) + "px";
+
+    var dragCenter = e.clientX;
+    var tabs = getTabs().filter(function(t) { return t !== dragEl && t !== placeholder; });
+
+    for (var i = 0; i < tabs.length; i++) {
+      var r = tabs[i].getBoundingClientRect();
+      var center = r.left + r.width / 2;
+      if (dragCenter < center) {
+        if (tabs[i] !== placeholder.nextSibling) {
+          tabBar.insertBefore(placeholder, tabs[i]);
+        }
+        return;
+      }
+    }
+    tabBar.appendChild(placeholder);
+  }
+
+  function cleanupListeners() {
+    tabBar.removeEventListener("pointermove", onPointerMove);
+    tabBar.removeEventListener("pointerup", onPointerUp);
+    tabBar.removeEventListener("pointercancel", onPointerCancel);
+    if (dragEl && pointerId !== null) {
+      try { dragEl.releasePointerCapture(pointerId); } catch (e) {}
+    }
+  }
+
+  function onPointerUp(e) {
+    if (!dragEl) return;
+
+    if (!isDragging) {
+      // It was just a tap — switch to this tab directly.
+      var tappedIdx = parseInt(dragEl.dataset.idx);
+      cleanupListeners();
+      dragEl = null;
+      placeholder = null;
+      switchTab(tappedIdx);
+      return;
+    }
+
+    cleanupListeners();
+
+    tabBar.insertBefore(dragEl, placeholder);
+    placeholder.remove();
+    placeholder = null;
+
+    dragEl.style.position = "";
+    dragEl.style.left = "";
+    dragEl.style.top = "";
+    dragEl.style.width = "";
+    dragEl.style.height = "";
+    dragEl.style.zIndex = "";
+    dragEl.style.pointerEvents = "";
+    dragEl.style.transition = "";
+
+    document.getElementById("tab-line").style.display = "";
+
+    var droppedIdx = parseInt(dragEl.dataset.idx);
+    dragEl = null;
+
+    // Reorder the content slides to match the new tab order
+    var newOrder = getTabs().map(function(b) { return parseInt(b.dataset.idx); });
+    var slides = Array.prototype.slice.call(slidesWrap.querySelectorAll(".slide"));
+    newOrder.forEach(function(idx) {
+      var slide = slides.find(function(s) { return parseInt(s.dataset.idx) === idx; });
+      if (slide) slidesWrap.appendChild(slide);
+    });
+
+    // Treat the drop itself as also selecting that tab
+    switchTab(droppedIdx);
+    saveTabOrder(newOrder);
+  }
+
+  function onPointerCancel() {
+    if (!dragEl) return;
+    cleanupListeners();
+
+    if (isDragging && placeholder) {
+      tabBar.insertBefore(dragEl, placeholder);
+      placeholder.remove();
+      dragEl.style.position = "";
+      dragEl.style.left = "";
+      dragEl.style.top = "";
+      dragEl.style.width = "";
+      dragEl.style.height = "";
+      dragEl.style.zIndex = "";
+      dragEl.style.pointerEvents = "";
+      dragEl.style.transition = "";
+      document.getElementById("tab-line").style.display = "";
+    }
+    placeholder = null;
+    dragEl = null;
+    isDragging = false;
+    positionTabLine();
+  }
+
+  tabBar.addEventListener("pointerdown", onPointerDown);
+})();
 
 /* ══ SHARED UTILS ══ */
 function parseCsvRow(line) {
@@ -791,13 +1023,13 @@ function caApplyLayout(){
     if(colL){colL.style.padding="0";}
     if(colR){colR.style.padding="0";}
     if(sWx){sWx.style.display="flex";sWx.style.flexDirection="column";}
-    if(donutWrap){donutWrap.style.width="25vw";donutWrap.style.height="25vw";donutWrap.style.marginTop="20px"}
+    if(donutWrap){donutWrap.style.width="25vw";donutWrap.style.height="25vw";donutWrap.style.marginTop="35px"}
     // Ensure income is first in right column
     if(colR&&sInc&&colR.firstChild!==sInc){colR.insertBefore(sInc,colR.firstChild);}
     // Income sizes for iPad
     var sInc = document.getElementById("ca-section-income");
     if (sInc) sInc.style.marginTop = "10px";
-    if (sInc) sInc.style.marginBottom = "30px";
+    if (sInc) sInc.style.marginBottom = "35px";
     document.querySelectorAll(".ca-col-pct").forEach(function(el){el.style.fontSize="2.76vw";});
     document.querySelectorAll(".ca-col-val").forEach(function(el){el.style.fontSize="2.6vw";});
     document.querySelectorAll(".ca-col-icon-wrap").forEach(function(el){el.style.width="4vw";el.style.height="4vw";});
@@ -957,6 +1189,16 @@ setInterval(loadExpense,60000);
 setInterval(loadRecent,60000);
 setInterval(caLoadBI,60000);
 setInterval(caLoadDonut,60000);
+
+/* ══ INIT: load saved tab order + last active tab, apply, then wire up UI ══ */
+Promise.all([loadTabOrder(), loadActiveTab()]).then(function(results) {
+  var order = results[0];
+  var activeIdx = results[1];
+  applyTabOrder(order);
+  switchTab(activeIdx);
+  positionTabLine();
+});
+
 window.addEventListener("load",function(){positionTabLine();applyLayout();caApplyLayout();});
 window.addEventListener("resize",applyLayout);
 </script>
