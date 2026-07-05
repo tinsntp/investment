@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Total Balance</title>
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; margin-top:15px;}
   html, body {
     width:100%; height:100%;
     background:#191919;
@@ -50,9 +50,19 @@
   /* ── Balance headline ── */
   .card-balance {
     font-size:36px; font-weight:800; color:#fff; letter-spacing:-0.02em;
-    margin-bottom:10px;
+    margin-bottom:10px;line-height:1;
   }
+
   .card-balance .cents { color:rgba(255,255,255,0.4); font-weight:700; }
+
+  .balance-group{display:inline-block;}
+
+  .card-balance-usd{
+      width:100%;
+      text-align:right;
+      font-size:18px;
+      color:rgba(255,255,255,.45);
+  }
 
   /* ── Sub row: gained text + pill ── */
   .card-sub-row {
@@ -106,7 +116,7 @@
 
 <div class="card" id="card">
   <div class="card-top">
-    <div class="card-title">Total Balance</div>
+    <div class="card-title"></div>
     <div class="range-selector" id="range-selector">
     <button class="range-btn" data-range="-2y">-2y</button>
     <button class="range-btn" data-range="-1y">-1y</button>
@@ -123,7 +133,11 @@
     <button class="range-btn" data-range="max">Max</button>
   </div>
   </div>
-  <div class="card-balance" id="balance-val">&#x2014;</div>
+  
+  <div class="balance-group">
+    <div class="card-balance" id="balance-val">&#x2014;</div>
+    <div class="card-balance-usd" id="balance-usd"></div>
+  </div>
   <div class="card-sub-row">
     <div class="card-sub-text" id="sub-text">Loading&hellip;</div>
     <div class="pill" id="change-pill" style="display:none;"></div>
@@ -141,12 +155,20 @@ var CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpB
 var TEAL = "#2dd4bf";
 var TEAL_DIM = "#14b8a6";
 var RED = "#f87171";
+var USD_RATE = 26300;
 
 var PAD_LEFT = 52, PAD_RIGHT = 8, PAD_TOP = 16, PAD_BOTTOM = 30;
 var VB_W = 640, VB_H = 300;
 
 var fullSeries = [];   // [{date: Date, balance: number}], ascending, cumulative
 var currentRange = "today";
+
+function fmtUSD(v){
+    return "$" + (v / USD_RATE).toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
 
 /* ══ CSV PARSE HELPERS ══ */
 function csvRow(line) {
@@ -360,7 +382,8 @@ function renderChart(range) {
 
   //var currentIndex = getCurrentMonthIndex();
   var now = new Date(); var currentIndex = 0; for (var i = 0; i < xy.length; i++) { if (xy[i].date <= now) { currentIndex = i; } else {break;}}
-  var targetIndex = currentIndex; var currentIndex = getCurrentMonthIndex(); var targetIndex = currentIndex; switch (range) { case "today":
+  var targetIndex = currentIndex; var currentIndex = getCurrentMonthIndex(); var targetIndex = currentIndex; 
+  switch (range) { case "today":
   targetIndex = getMonthIndex(-1); break;
   case "-3m":
   targetIndex = getMonthIndex(-3); break;
@@ -381,6 +404,7 @@ function renderChart(range) {
   case "max":
   targetIndex = currentXY.length - 1; break;
   }
+  var hoverIndex = getDefaultHoverIndex();
 
   /* Gridlines + Y labels */
   var gridCount = 4;
@@ -466,7 +490,7 @@ function renderChart(range) {
 
   
   /* Default state: show the vertical line + tooltip pinned at the LAST (current) point */
-  showPointAt(targetIndex);
+  showPointAt(hoverIndex);
 
   /* Header stats: overall gain/loss for the selected range */
   var current = xy[currentIndex];
@@ -474,7 +498,8 @@ function renderChart(range) {
   var diff;
 
   if (range === "today" || range.startsWith("-")) { diff = current.balance - target.balance; } else {
-  diff = target.balance - current.balance; } var pct = current.balance !== 0 ? (diff / Math.abs(current.balance)) * 100 : 0; var isPos = diff >= 0; document.getElementById("balance-val").textContent = fmtFull(current.balance); var subText = document.getElementById("sub-text"); var directionText;
+  diff = target.balance - current.balance; } var pct = current.balance !== 0 ? (diff / Math.abs(current.balance)) * 100 : 0; var isPos = diff >= 0; document.getElementById("balance-val").textContent = fmtFull(current.balance); document.getElementById("balance-usd").textContent =
+    fmtUSD(current.balance);var subText = document.getElementById("sub-text"); var directionText;
   switch (range) {
   case "today": directionText = "over the last month"; break; case "-3m": directionText = "in the last 3 months"; break; case "-6m": directionText = "in the last 6 months"; break; case "-1y": directionText = "in the last year"; break; case "-2y": directionText = "in the last 2 years"; break; case "+3m": directionText = "over the next 3 months"; break; case "+6m": directionText = "over the next 6 months"; break; case "+1y": directionText = "over the next year"; break; case "+2y": directionText = "over the next 2 years"; break; default: var directionMap = { "today": "over the last month", "-3m": "in the last 3 months", "-6m": "in the last 6 months", "-1y": "in the last year", "-2y": "in the last 2 years", "+3m": "over the next 3 months", "+6m": "over the next 6 months", "+1y": "over the next year", "+2y": "over the next 2 years", "max": "across all future projections" }; var directionText = directionMap[range] || ""; } var verb;
   if (range === "today") {
@@ -511,6 +536,13 @@ function getCurrentMonthIndex() {
     }
 
     return idx;
+}
+
+function getDefaultHoverIndex() {
+    return Math.min(
+        currentXY.length - 1,
+        getCurrentMonthIndex() + 6
+    );
 }
 
 /* ══ HOVER: show crosshair + tooltip at a given point index ══ */
@@ -558,7 +590,7 @@ function showPointAt(idx) {
     showPointAt(nearestIndexFromClientX(e.clientX));
   });
   chartWrap.addEventListener("mouseleave", function(){
-    if (currentXY.length) showPointAt(getCurrentMonthIndex()); // revert to "current" point
+    if (currentXY.length) showPointAt(getDefaultHoverIndex()); // revert to "current" point
   });
 
   chartWrap.addEventListener("touchstart", function(e){
