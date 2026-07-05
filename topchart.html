@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Total Balance</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html, body {
+    width:100%; height:100%;
+    background:#191919;
+    font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+    color:#fff;
+  }
+
+  .card {
+    border:0px solid rgba(255,255,255,0.08);
+    border-radius:20px;
+    max-width:100%;
+    margin:0 auto;
+  }
+
+  /* ── Header row: title + range selector ── */
+  .card-top {
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:14px;
+  }
+  .card-title {
+    font-size:14px; font-weight:600; color:rgba(255,255,255,0.5);
+  }
+  .range-selector {
+    display:flex; gap:2px;width:250px;  
+    border:0px solid rgba(255,255,255,0.06);overflow-x:auto;overflow-y:hidden;
+    border-radius:10px; padding: 3px 12px;;scroll-behavior:smooth;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;
+  }
+
+  .range-selector::-webkit-scrollbar{
+    display:none;
+}
+  .range-btn {
+    border:none; background:transparent; cursor:pointer;flex:0 0 auto;
+    font-size:12.5px; font-weight:600; color:rgba(255,255,255,0.45);
+    padding:5px 11px; border-radius:7px; transition:background 0.15s, color 0.15s;
+  }
+
+  .range-btn:hover { color:rgba(255,255,255,0.75); }
+  .range-btn.active { background:rgba(255,255,255,0.1); color:#fff; }
+
+  /* ── Balance headline ── */
+  .card-balance {
+    font-size:36px; font-weight:800; color:#fff; letter-spacing:-0.02em;
+    margin-bottom:10px;
+  }
+  .card-balance .cents { color:rgba(255,255,255,0.4); font-weight:700; }
+
+  /* ── Sub row: gained text + pill ── */
+  .card-sub-row {
+    display:flex; align-items:center; justify-content:space-between;
+    gap:12px; margin-bottom:20px; flex-wrap:wrap;
+  }
+  .card-sub-text {
+    font-size:13px; color:rgba(255,255,255,0.45); line-height:1.5; max-width:390px;
+  }
+  .card-sub-text .amt-hl { font-weight:700; }
+  .card-sub-text .amt-hl.pos { color:#2dd4bf; }
+  .card-sub-text .amt-hl.neg { color:#f87171; }
+
+  .pill {
+    display:inline-flex; align-items:center; gap:4px;
+    font-size:12.5px; font-weight:700;
+    padding:6px 12px; border-radius:99px; white-space:nowrap; flex-shrink:0;
+  }
+  .pill.pos { background:rgba(45,212,191,0.14); color:#2dd4bf; }
+  .pill.neg { background:rgba(248,113,113,0.14); color:#f87171; }
+
+  /* ── Chart ── */
+  .chart-wrap { position:relative; width:100%; cursor:crosshair; }
+  #chart-svg { width:100%; height:auto; display:block; overflow:visible; }
+
+  .tooltip {
+    position:absolute; pointer-events:none;
+    background:#1b1b1b; border:1px solid rgba(255,255,255,0.12);
+    color:#fff; font-size:12.5px; font-weight:700;
+    padding:6px 11px; border-radius:8px; white-space:nowrap;
+    transform:translate(-50%,-130%);
+    box-shadow:0 4px 16px rgba(0,0,0,0.4);
+  }
+  .tooltip::after {
+    content:''; position:absolute; left:50%; bottom:-5px; transform:translateX(-50%);
+    width:9px; height:9px; background:#1b1b1b;
+    border-right:1px solid rgba(255,255,255,0.12); border-bottom:1px solid rgba(255,255,255,0.12);
+    rotate:45deg;
+  }
+  .tooltip .arrow { color:#2dd4bf; margin-right:2px; }
+  .tooltip .arrow.neg { color:#f87171; }
+  .tooltip .tt-month { font-size:10.5px; font-weight:600; color:rgba(255,255,255,0.45); margin-bottom:2px; }
+  .tooltip .tt-delta { font-size:11px; font-weight:600; margin-top:2px; }
+  .tooltip .tt-delta.pos { color:#2dd4bf; }
+  .tooltip .tt-delta.neg { color:#f87171; }
+
+  #loading-msg { font-size:13px; color:rgba(255,255,255,0.4); text-align:center; padding:40px 0; }
+</style>
+</head>
+<body>
+
+<div class="card" id="card">
+  <div class="card-top">
+    <div class="card-title">Total Balance</div>
+    <div class="range-selector" id="range-selector">
+    <button class="range-btn" data-range="-2y">-2y</button>
+    <button class="range-btn" data-range="-1y">-1y</button>
+    <button class="range-btn" data-range="-6m">-6m</button>
+    <button class="range-btn" data-range="-3m">-3m</button>
+
+    <button class="range-btn active" data-range="today">Today</button>
+
+    <button class="range-btn" data-range="+3m">+3m</button>
+    <button class="range-btn" data-range="+6m">+6m</button>
+    <button class="range-btn" data-range="+1y">+1y</button>
+    <button class="range-btn" data-range="+2y">+2y</button>
+
+    <button class="range-btn" data-range="max">Max</button>
+  </div>
+  </div>
+  <div class="card-balance" id="balance-val">&#x2014;</div>
+  <div class="card-sub-row">
+    <div class="card-sub-text" id="sub-text">Loading&hellip;</div>
+    <div class="pill" id="change-pill" style="display:none;"></div>
+  </div>
+  <div id="loading-msg">Loading chart&hellip;</div>
+  <div class="chart-wrap" id="chart-wrap" style="display:none;">
+    <svg id="chart-svg" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+    <div class="tooltip" id="tooltip" style="display:none;"></div>
+  </div>
+</div>
+
+<script>
+/* ══ CONFIG ══ */
+var CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=311369594";
+var TEAL = "#2dd4bf";
+var TEAL_DIM = "#14b8a6";
+var RED = "#f87171";
+
+var PAD_LEFT = 52, PAD_RIGHT = 8, PAD_TOP = 16, PAD_BOTTOM = 30;
+var VB_W = 640, VB_H = 300;
+
+var fullSeries = [];   // [{date: Date, balance: number}], ascending, cumulative
+var currentRange = "today";
+
+/* ══ CSV PARSE HELPERS ══ */
+function csvRow(line) {
+  var cols=[], cur="", inQ=false;
+  for (var i=0;i<line.length;i++) {
+    var c=line[i];
+    if (c==='"') inQ=!inQ;
+    else if (c===','&&!inQ) { cols.push(cur); cur=""; }
+    else cur+=c;
+  }
+  cols.push(cur);
+  return cols.map(function(s){ return s.replace(/^"|"$/g,"").trim(); });
+}
+function parseAmt(raw) {
+  if (!raw) return NaN;
+  var s = raw.trim();
+  var neg = false;
+  if (s.charAt(0)==="(" && s.charAt(s.length-1)===")") { neg = true; s = s.slice(1,-1); }
+  s = s.replace(/[^\d,.\-]/g, ""); // strip currency symbols, letters, spaces
+  if (s === "" || s === "-") return NaN;
+  if (s.charAt(0) === "-") { neg = true; s = s.slice(1); }
+
+  var lastComma = s.lastIndexOf(",");
+  var lastDot = s.lastIndexOf(".");
+
+  if (lastComma > -1 && lastDot > -1) {
+    // Both separators present — whichever appears LAST is the true decimal separator
+    if (lastComma > lastDot) {
+      s = s.replace(/\./g, "").replace(",", "."); // dot=thousands, comma=decimal (VN/EU style)
+    } else {
+      s = s.replace(/,/g, ""); // comma=thousands, dot=decimal (US style)
+    }
+  } else if (lastComma > -1) {
+    var afterComma = s.length - lastComma - 1;
+    var commaCount = (s.match(/,/g)||[]).length;
+    if (commaCount === 1 && afterComma <= 2) {
+      s = s.replace(",", "."); // single comma w/ 1-2 digits after = decimal comma
+    } else {
+      s = s.replace(/,/g, ""); // otherwise commas are thousands separators
+    }
+  } else if (lastDot > -1) {
+    var afterDot = s.length - lastDot - 1;
+    var dotCount = (s.match(/\./g)||[]).length;
+    if (!(dotCount === 1 && afterDot <= 2)) {
+      s = s.replace(/\./g, ""); // multiple dots, or 3+ digits after = thousands separators (VN style)
+    }
+    // else: single dot w/ 1-2 digits after = a genuine decimal, leave as-is
+  }
+
+  var v = parseFloat(s);
+  if (isNaN(v)) return NaN;
+  return neg ? -v : v;
+}
+
+function parseSheetDate(raw) {
+  if (!raw) return null;
+  var s = raw.trim();
+  // ISO format: YYYY-MM-DD (unambiguous, use directly)
+  var iso = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (iso) return new Date(parseInt(iso[1]), parseInt(iso[2])-1, parseInt(iso[3]));
+
+  // Slash/dash separated: D/M/YYYY — Vietnamese sheets default to DAY/MONTH/YEAR,
+  // NOT the US month/day/year that JS's native Date() assumes.
+  var dmy = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+  if (dmy) {
+    var a = parseInt(dmy[1]), b = parseInt(dmy[2]), y = parseInt(dmy[3]);
+    var day = a, month = b;
+    if (a <= 12 && b > 12) { day = b; month = a; } // only swap if the DMY reading is impossible
+    return new Date(y, month-1, day);
+  }
+
+  var d = new Date(s);
+  return isNaN(d.getTime()) ? null : d;
+}
+function fmtFull(v) {
+  var sign = v<0 ? "\u2212" : "";
+  return sign + "\u20ab" + Math.round(Math.abs(v)).toLocaleString("en-US");
+}
+function fmtAxis(v) {
+  var a = Math.abs(v), sign = v<0 ? "-" : "";
+  if (a>=1e9) return sign+(a/1e9).toFixed(1)+"B";
+  if (a>=1e6) return sign+(a/1e6).toFixed(1)+"M";
+  if (a>=1e3) return sign+Math.round(a/1e3)+"K";
+  return sign+Math.round(a);
+}
+function monthShort(d){ return ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][d.getMonth()]; }
+function monthYearLabel(d){ return monthShort(d)+" "+d.getFullYear(); }
+
+/* ══ LOAD + BUILD CUMULATIVE MONTHLY SERIES ══ */
+function loadBalanceHistory() {
+  fetch(CSV_URL+"&t="+Date.now(), {cache:"no-store"})
+    .then(function(r){ if(!r.ok) throw new Error("HTTP "+r.status); return r.text(); })
+    .then(function(text){
+      var lines = text.split("\n").filter(function(l){ return l.trim(); });
+      var rows = lines.map(csvRow);
+
+      // Column I (index 8) holds the group names to EXCLUDE (e.g. "Social Account")
+      var excluded = {};
+      rows.forEach(function(cols){
+        var v = (cols[8]||"").trim();
+        if (v) excluded[v.toLowerCase()] = true;
+      });
+
+      // Columns K(10)=Date, L(11)=Group, M(12)=Amt — aggregated by MONTH, not day
+      var byMonth = {};   // "YYYY-M" -> summed delta for that month
+      var monthObjs = {}; // "YYYY-M" -> Date (1st of that month)
+
+      rows.forEach(function(cols){
+        var dateStr = cols[10]||"";
+        var group   = (cols[11]||"").trim();
+        var amt     = parseAmt(cols[12]||"");
+        if (!dateStr) return;
+        var d = parseSheetDate(dateStr);
+        if (!d) return;
+        if (isNaN(amt)) return;
+        if (group && excluded[group.toLowerCase()]) return; // skip excluded groups
+
+        var key = d.getFullYear()+"-"+d.getMonth();
+        if (!byMonth[key]) { byMonth[key]=0; monthObjs[key]=new Date(d.getFullYear(), d.getMonth(), 1); }
+        byMonth[key] += amt;
+      });
+
+      var keys = Object.keys(byMonth).sort(function(a,b){ return monthObjs[a]-monthObjs[b]; });
+      var running = 0;
+      fullSeries = keys.map(function(k){
+        running += byMonth[k];
+        return { date: monthObjs[k], balance: running, delta: byMonth[k] };
+      });
+
+      document.getElementById("loading-msg").style.display = "none";
+      document.getElementById("chart-wrap").style.display = "block";
+      renderChart(currentRange);
+    })
+    .catch(function(err){
+      document.getElementById("loading-msg").textContent = "Error: "+err.message;
+    });
+    const todayBtn = document.querySelector(
+    '.range-btn[data-range="today"]'
+);
+
+todayBtn.scrollIntoView({
+    behavior: "auto",
+    inline: "center",
+    block: "nearest"
+});
+}
+
+/* ══ RANGE FILTERING (by month-count, since points are now one-per-month) ══ */
+var RANGE_MONTHS = { "-2y": -24,"-1y": -12,"-6m": -6,"-3m": -3,"today": 0,"+3m":3, "+6m":6, "+1y":12, "+2y":24, "max":null };
+var RANGE_LABELS = { "-2y":"2 years","-1y":"1 year","-6m":"6 months","-3m":"3 months","+3m":"3 months", "+6m":"6 months", "+1y":"1 year", "+2y":"2 years", "max":"all time" };
+
+function filterByRange(range) { if (!fullSeries.length) return []; // Max = everything
+ if (range === "max") {
+ return fullSeries.slice();
+ }
+ var months = RANGE_MONTHS[range]; var today = new Date();
+ var start = new Date(today.getFullYear(), today.getMonth()-3, 1); var end = new Date(today.getFullYear(), today.getMonth() + months, 1); return fullSeries.filter(function (p) { return p.date >= start && p.date <= end; });
+ }
+
+/* ══ SMOOTH PATH BUILDER (simple cubic bezier smoothing) ══ */
+function buildSmoothPath(pts) {
+  if (pts.length < 2) return { line:"", area:"" };
+  var d = "M "+pts[0].x+" "+pts[0].y;
+  for (var i=0; i<pts.length-1; i++) {
+    var p0 = pts[i], p1 = pts[i+1];
+    var cx = (p0.x+p1.x)/2;
+    d += " C "+cx+" "+p0.y+" "+cx+" "+p1.y+" "+p1.x+" "+p1.y;
+  }
+  var area = d + " L "+pts[pts.length-1].x+" "+(VB_H-PAD_BOTTOM) + " L "+pts[0].x+" "+(VB_H-PAD_BOTTOM)+" Z";
+  return { line: d, area: area };
+}
+
+/* ══ RENDER ══ */
+var currentXY = []; // stores the last-rendered points (with pixel coords) for hover lookups
+
+function getMonthIndex(monthOffset) {
+  if (!currentXY.length) return 0; var currentIndex = getCurrentMonthIndex(); var currentDate = currentXY[currentIndex].date; var target = new Date( currentDate.getFullYear(), currentDate.getMonth() + monthOffset, 1);
+  var targetYear = target.getFullYear(); var targetMonth = target.getMonth(); var idx = currentIndex; for (var i = 0; i < currentXY.length; i++) { var d = currentXY[i].date; if (d.getFullYear() === targetYear && d.getMonth() === targetMonth ) {idx = i;}}
+  return idx;
+}
+
+function renderChart(range) {
+  currentRange = range;
+  var pts = fullSeries.slice();
+  if (!pts.length) return;
+
+  var svg = document.getElementById("chart-svg");
+  svg.innerHTML = "";
+  var ns = "http://www.w3.org/2000/svg";
+
+  var values = pts.map(function(p){ return p.balance; });
+  var minV = Math.min.apply(null, values), maxV = Math.max.apply(null, values);
+  var range_ = maxV - minV;
+  if (range_ === 0) range_ = Math.abs(maxV) || 1;
+  var padV = range_ * 0.12;
+  minV -= padV; maxV += padV;
+
+  var plotW = VB_W - PAD_LEFT - PAD_RIGHT;
+  var plotH = VB_H - PAD_TOP - PAD_BOTTOM;
+
+  var xy = pts.map(function(p, i){
+    var x = PAD_LEFT + (pts.length===1 ? 0 : (i/(pts.length-1))*plotW);
+    var y = PAD_TOP + (1 - (p.balance-minV)/(maxV-minV)) * plotH;
+    // month-over-month delta uses the FULL series (previous calendar month),
+    // not just the previous point within the filtered range
+    var fullIdx = fullSeries.indexOf(p);
+    var prevBalance = fullIdx > 0 ? fullSeries[fullIdx-1].balance : p.balance;
+    return { x:x, y:y, date:p.date, balance:p.balance, momDelta: p.balance - prevBalance };
+  });
+  currentXY = xy;
+
+  //var currentIndex = getCurrentMonthIndex();
+  var now = new Date(); var currentIndex = 0; for (var i = 0; i < xy.length; i++) { if (xy[i].date <= now) { currentIndex = i; } else {break;}}
+  var targetIndex = currentIndex; var currentIndex = getCurrentMonthIndex(); var targetIndex = currentIndex; switch (range) { case "today":
+  targetIndex = getMonthIndex(-1); break;
+  case "-3m":
+  targetIndex = getMonthIndex(-3); break;
+  case "-6m":
+  targetIndex = getMonthIndex(-6); break;
+  case "-1y":
+  targetIndex = getMonthIndex(-12); break;
+  case "-2y":
+  targetIndex = getMonthIndex(-24); break;
+  case "+3m":
+  targetIndex = getMonthIndex(3); break;
+  case "+6m":
+  targetIndex = getMonthIndex(6); break;
+  case "+1y":
+  targetIndex = getMonthIndex(12); break;
+  case "+2y":
+  targetIndex = getMonthIndex(24); break;
+  case "max":
+  targetIndex = currentXY.length - 1; break;
+  }
+
+  /* Gridlines + Y labels */
+  var gridCount = 4;
+  for (var g=0; g<=gridCount; g++) {
+    var gv = minV + (maxV-minV) * (g/gridCount);
+    var gy = PAD_TOP + (1 - g/gridCount) * plotH;
+    var line = document.createElementNS(ns,"line");
+    line.setAttribute("x1", PAD_LEFT); line.setAttribute("x2", VB_W-PAD_RIGHT);
+    line.setAttribute("y1", gy); line.setAttribute("y2", gy);
+    line.setAttribute("stroke", "rgba(255,255,255,0.06)");
+    line.setAttribute("stroke-width", "1");
+    svg.appendChild(line);
+
+    var txt = document.createElementNS(ns,"text");
+    txt.setAttribute("x", PAD_LEFT-8); txt.setAttribute("y", gy+4);
+    txt.setAttribute("text-anchor","end");
+    txt.setAttribute("font-size","11"); txt.setAttribute("fill","rgba(255,255,255,0.35)");
+    txt.textContent = "\u20ab"+fmtAxis(gv);
+    svg.appendChild(txt);
+  }
+
+  /* Gradient defs */
+  var defs = document.createElementNS(ns,"defs");
+  var grad = document.createElementNS(ns,"linearGradient");
+  grad.setAttribute("id","tealFill"); grad.setAttribute("x1","0"); grad.setAttribute("y1","0");
+  grad.setAttribute("x2","0"); grad.setAttribute("y2","1");
+  var s1 = document.createElementNS(ns,"stop"); s1.setAttribute("offset","0%"); s1.setAttribute("stop-color",TEAL); s1.setAttribute("stop-opacity","0.30");
+  var s2 = document.createElementNS(ns,"stop"); s2.setAttribute("offset","100%"); s2.setAttribute("stop-color",TEAL); s2.setAttribute("stop-opacity","0");
+  grad.appendChild(s1); grad.appendChild(s2);
+  defs.appendChild(grad);
+  svg.appendChild(defs);
+
+  /* Area + line */
+  var paths = buildSmoothPath(xy);
+  var areaEl = document.createElementNS(ns,"path");
+  areaEl.setAttribute("d", paths.area); areaEl.setAttribute("fill","url(#tealFill)"); areaEl.setAttribute("stroke","none");
+  svg.appendChild(areaEl);
+
+  var lineEl = document.createElementNS(ns,"path");
+  lineEl.setAttribute("d", paths.line); lineEl.setAttribute("fill","none");
+  lineEl.setAttribute("stroke", TEAL); lineEl.setAttribute("stroke-width","2.5");
+  lineEl.setAttribute("stroke-linecap","round"); lineEl.setAttribute("stroke-linejoin","round");
+  svg.appendChild(lineEl);
+
+  /* X-axis labels: "MMM yyyy" — skip labels if too crowded */
+  /* ===== TradingView-style X Axis ===== */
+
+  var lastLabelX = -1000; var MIN_LABEL_SPACING = 75; var prevYear = null;
+  var prevQuarter = null; for (var i = 0; i < xy.length; i++) { var d = xy[i].date;
+  var x = xy[i].x;
+  var year = d.getFullYear(); var month = d.getMonth(); var quarter = Math.floor(month / 3); var text = "";
+  var important = false; if (month === 0) {
+  text = year;
+  important = true;
+  }
+  else if (quarter !== prevQuarter) { text = monthShort(d); important = true;
+  }
+  if (!important) continue; if (x - lastLabelX < MIN_LABEL_SPACING) continue;
+  var lbl = document.createElementNS(ns, "text"); lbl.setAttribute("x", x); lbl.setAttribute("y", VB_H - 10); lbl.setAttribute("text-anchor", "middle"); lbl.setAttribute("font-size", month === 0 ? "12" : "11"); lbl.setAttribute("font-weight", month === 0 ? "700" : "500"); lbl.setAttribute(
+  "fill",
+  month === 0
+  ? "rgba(255,255,255,0.85)"
+  : "rgba(255,255,255,0.45)"
+  );
+  lbl.textContent = text; svg.appendChild(lbl); lastLabelX = x;
+  prevYear = year;
+  prevQuarter = quarter; }
+  
+
+  /* Hover crosshair group (hidden by default, shown on mousemove) */
+  var hoverLine = document.createElementNS(ns,"line");
+  hoverLine.setAttribute("id","hover-line");
+  hoverLine.setAttribute("y1", PAD_TOP); hoverLine.setAttribute("y2", VB_H-PAD_BOTTOM);
+  hoverLine.setAttribute("stroke", "rgba(255,255,255,0.35)");
+  hoverLine.setAttribute("stroke-width","1.3"); hoverLine.setAttribute("stroke-dasharray","4 4");
+  svg.appendChild(hoverLine);
+
+  var hoverDot = document.createElementNS(ns,"circle");
+  hoverDot.setAttribute("id","hover-dot");
+  hoverDot.setAttribute("r","5"); hoverDot.setAttribute("fill", TEAL);
+  hoverDot.setAttribute("stroke","#191919"); hoverDot.setAttribute("stroke-width","2");
+  svg.appendChild(hoverDot);
+
+  
+  /* Default state: show the vertical line + tooltip pinned at the LAST (current) point */
+  showPointAt(targetIndex);
+
+  /* Header stats: overall gain/loss for the selected range */
+  var current = xy[currentIndex];
+  var target = xy[targetIndex];
+  var diff;
+
+  if (range === "today" || range.startsWith("-")) { diff = current.balance - target.balance; } else {
+  diff = target.balance - current.balance; } var pct = current.balance !== 0 ? (diff / Math.abs(current.balance)) * 100 : 0; var isPos = diff >= 0; document.getElementById("balance-val").textContent = fmtFull(current.balance); var subText = document.getElementById("sub-text"); var directionText;
+  switch (range) {
+  case "today": directionText = "over the last month"; break; case "-3m": directionText = "in the last 3 months"; break; case "-6m": directionText = "in the last 6 months"; break; case "-1y": directionText = "in the last year"; break; case "-2y": directionText = "in the last 2 years"; break; case "+3m": directionText = "over the next 3 months"; break; case "+6m": directionText = "over the next 6 months"; break; case "+1y": directionText = "over the next year"; break; case "+2y": directionText = "over the next 2 years"; break; default: var directionMap = { "today": "over the last month", "-3m": "in the last 3 months", "-6m": "in the last 6 months", "-1y": "in the last year", "-2y": "in the last 2 years", "+3m": "over the next 3 months", "+6m": "over the next 6 months", "+1y": "over the next year", "+2y": "over the next 2 years", "max": "across all future projections" }; var directionText = directionMap[range] || ""; } var verb;
+  if (range === "today") {
+  verb = "Projected " + (isPos ? "gain " : "loss "); } else if (range.startsWith("-")) { verb = isPos ? "You gained " : "You lost "; } else {
+  verb = "Projected " + (isPos ? "gain " : "loss "); }
+  subText.innerHTML = verb + '<span class="amt-hl ' + (isPos ? "pos" : "neg") + '">' + fmtFull(Math.abs(diff)) + "</span> " + directionText + "."; (isPos ? "gain" : "loss") + ' <span class="amt-hl ' + (isPos ? "pos" : "neg") + '">' + fmtFull(Math.abs(diff)) + "</span> " + directionText + ".";
+
+  var pill = document.getElementById("change-pill");
+  pill.style.display = "inline-flex";
+  pill.className = "pill "+(isPos?"pos":"neg");
+  pill.innerHTML = (isPos?"&#9650; Increased by ":"&#9660; Decreased by ")+Math.abs(pct).toFixed(0)+"%";
+}
+
+function getCurrentMonthIndex() {
+    if (!currentXY.length) return 0;
+
+    var now = new Date();
+    var year = now.getFullYear();
+    var month = now.getMonth();
+
+    var idx = 0;
+
+    for (var i = 0; i < currentXY.length; i++) {
+        var d = currentXY[i].date;
+
+        if (
+            d.getFullYear() < year ||
+            (d.getFullYear() === year && d.getMonth() <= month)
+        ) {
+            idx = i;
+        } else {
+            break;
+        }
+    }
+
+    return idx;
+}
+
+/* ══ HOVER: show crosshair + tooltip at a given point index ══ */
+function showPointAt(idx) {
+  if (!currentXY.length) return;
+  idx = Math.max(0, Math.min(currentXY.length-1, idx));
+  var pt = currentXY[idx];
+
+  var hoverLine = document.getElementById("hover-line");
+  var hoverDot = document.getElementById("hover-dot");
+  if (hoverLine) { hoverLine.setAttribute("x1", pt.x); hoverLine.setAttribute("x2", pt.x); }
+  if (hoverDot) { hoverDot.setAttribute("cx", pt.x); hoverDot.setAttribute("cy", pt.y); }
+
+  var tooltip = document.getElementById("tooltip");
+  var wrapRect = document.getElementById("chart-wrap").getBoundingClientRect();
+  var scaleX = wrapRect.width / VB_W, scaleY = wrapRect.height / VB_H;
+  tooltip.style.display = "block";
+  tooltip.style.left = (pt.x * scaleX) + "px";
+  tooltip.style.top  = (pt.y * scaleY) + "px";
+
+  var deltaIsPos = pt.momDelta >= 0;
+  var deltaTxt = (deltaIsPos ? "+" : "\u2212") + fmtFull(Math.abs(pt.momDelta)).replace("\u20ab","\u20ab");
+  tooltip.innerHTML =
+    '<div class="tt-month">'+monthYearLabel(pt.date)+'</div>'+
+    '<div>'+fmtFull(pt.balance)+'</div>'+
+    '<div class="tt-delta '+(deltaIsPos?"pos":"neg")+'">'+(deltaIsPos?"&#9650;":"&#9660;")+' '+deltaTxt+' vs last month</div>';
+}
+
+/* ══ MOUSE / TOUCH HOVER HANDLING ══ */
+(function() {
+  var chartWrap = document.getElementById("chart-wrap");
+
+  function nearestIndexFromClientX(clientX) {
+    var rect = chartWrap.getBoundingClientRect();
+    var relX = clientX - rect.left;
+    var svgX = (relX / rect.width) * VB_W;
+    var plotW = VB_W - PAD_LEFT - PAD_RIGHT;
+    var frac = (svgX - PAD_LEFT) / plotW;
+    frac = Math.max(0, Math.min(1, frac));
+    return Math.round(frac * (currentXY.length-1));
+  }
+
+  chartWrap.addEventListener("mousemove", function(e){
+    if (!currentXY.length) return;
+    showPointAt(nearestIndexFromClientX(e.clientX));
+  });
+  chartWrap.addEventListener("mouseleave", function(){
+    if (currentXY.length) showPointAt(getCurrentMonthIndex()); // revert to "current" point
+  });
+
+  chartWrap.addEventListener("touchstart", function(e){
+    if (!currentXY.length) return;
+    showPointAt(nearestIndexFromClientX(e.touches[0].clientX));
+  }, { passive:true });
+  chartWrap.addEventListener("touchmove", function(e){
+    if (!currentXY.length) return;
+    showPointAt(nearestIndexFromClientX(e.touches[0].clientX));
+  }, { passive:true });
+})();
+
+/* ══ RANGE BUTTON HANDLERS ══ */
+document.querySelectorAll(".range-btn").forEach(function(btn){
+
+    btn.addEventListener("click",function(){
+
+        document.querySelectorAll(".range-btn")
+            .forEach(b=>b.classList.remove("active"));
+
+        this.classList.add("active");
+
+        this.scrollIntoView({
+            behavior:"smooth",
+            inline:"center",
+            block:"nearest"
+        });
+
+        renderChart(this.dataset.range);
+
+    });
+    const selector = document.getElementById("range-selector");
+
+selector.addEventListener("wheel", function(e){
+
+    e.preventDefault();
+
+    selector.scrollLeft += e.deltaY;
+    
+
+}, { passive:false });
+
+});
+
+window.addEventListener("resize", function(){ if (fullSeries.length) renderChart(currentRange); });
+window.addEventListener("load", function () { setTimeout(function () { const selector = document.getElementById("range-selector"); const btn = selector.querySelector('[data-range="-3m"]'); btn.scrollIntoView({ inline:"start",behavior:"instant"});}, 0);});
+loadBalanceHistory();
+setInterval(loadBalanceHistory, 60000);
+</script>
+</body>
+</html>
