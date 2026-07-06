@@ -21,7 +21,7 @@ html, body {
 }
 .tab-btn {
   flex:1; display:flex; align-items:center; justify-content:center;
-  gap:1.5vw; padding:1.7vw 0; cursor:pointer; user-select:none;
+  gap:1.5vw; cursor:pointer; user-select:none;
   font-size:3vw; font-weight:600; color:rgba(255,255,255,0.4); transition:color 0.2s;
 }
 .tab-btn.active { color:#fff; }
@@ -132,7 +132,7 @@ html, body {
 
 /* ══ OVERVIEW SLIDE ══ */
 #slide-2 { padding:0; overflow:hidden; }
-#ca-wrap { display:flex; width:100%; height:100%; margin-top:10px}
+#ca-wrap { display:flex; width:100%; height:100%; }
 
 /* iPad: 2-column */
 #ca-col-left { flex:1; display:flex; flex-direction:column; gap:3vw; min-width:0; justify-content:top; padding:0; overflow:hidden; margin-top:10px}
@@ -1031,13 +1031,13 @@ function caApplyLayout(){
     if(colL){colL.style.padding="0";}
     if(colR){colR.style.padding="0";}
     if(sWx){sWx.style.display="flex";sWx.style.flexDirection="column";}
-    if(donutWrap){donutWrap.style.width="25vw";donutWrap.style.height="25vw";donutWrap.style.marginTop="35px"}
+    if(donutWrap){donutWrap.style.width="25vw";donutWrap.style.height="25vw";donutWrap.style.marginTop="20px"}
     // Ensure income is first in right column
     if(colR&&sInc&&colR.firstChild!==sInc){colR.insertBefore(sInc,colR.firstChild);}
     // Income sizes for iPad
     var sInc = document.getElementById("ca-section-income");
     if (sInc) sInc.style.marginTop = "10px";
-    if (sInc) sInc.style.marginBottom = "35px";
+    if (sInc) sInc.style.marginBottom = "30px";
     document.querySelectorAll(".ca-col-pct").forEach(function(el){el.style.fontSize="2.76vw";});
     document.querySelectorAll(".ca-col-val").forEach(function(el){el.style.fontSize="2.6vw";});
     document.querySelectorAll(".ca-col-icon-wrap").forEach(function(el){el.style.width="4vw";el.style.height="4vw";});
@@ -1182,6 +1182,7 @@ function applyLayout(){
 
   // Tab bar
   document.querySelectorAll(".tab-btn").forEach(function(el){el.style.fontSize=isMobile?"5vw":"3.1vw";});
+  document.querySelectorAll(".tab-btn").forEach(function(el){el.style.padding=isMobile?"2.2vw 0":"1.5vw 0";});
   document.querySelectorAll(".tab-btn img").forEach(function(el){el.style.width=isMobile?"7vw":"5vw";el.style.height=isMobile?"7vw":"5vw";});
 
   // Rings
