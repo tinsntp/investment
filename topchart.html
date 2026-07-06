@@ -244,6 +244,20 @@ function parseSheetDate(raw) {
   var d = new Date(s);
   return isNaN(d.getTime()) ? null : d;
 }
+
+/* Parses a "MM/YY" or "MM/YYYY" style month-year label, e.g. "07/26" or "07/2026" */
+function parseMonthYear(raw) {
+  if (!raw) return null;
+  var s = raw.trim();
+  var m = s.match(/^(\d{1,2})[\/\-](\d{2,4})$/);
+  if (!m) return null;
+  var month = parseInt(m[1]) - 1;
+  if (month < 0 || month > 11) return null;
+  var yearPart = m[2];
+  var year = yearPart.length <= 2 ? 2000 + parseInt(yearPart) : parseInt(yearPart);
+  return new Date(year, month, 1);
+}
+
 function fmtFull(v) {
   var sign = v<0 ? "\u2212" : "";
   return sign + "\u20ab" + Math.round(Math.abs(v)).toLocaleString("en-US");
@@ -290,6 +304,25 @@ function loadBalanceHistory() {
         var key = d.getFullYear()+"-"+d.getMonth();
         if (!byMonth[key]) { byMonth[key]=0; monthObjs[key]=new Date(d.getFullYear(), d.getMonth(), 1); }
         byMonth[key] += amt;
+      });
+
+      // Columns Q(16)=MM/YY, R(17)=Amt, S(18)=Amt — both R and S are monthly totals
+      // tied to the same Q month label, merged into the same byMonth buckets as
+      // the dated ledger above (not tied to a specific day).
+      rows.forEach(function(cols){
+        var qStr = cols[16]||"";
+        if (!qStr) return;
+        var qd = parseMonthYear(qStr);
+        if (!qd) return;
+        var key = qd.getFullYear()+"-"+qd.getMonth();
+
+        var rAmt = parseAmt(cols[17]||"");
+        var sAmt = parseAmt(cols[18]||"");
+        if (isNaN(rAmt) && isNaN(sAmt)) return;
+
+        if (!byMonth[key]) { byMonth[key]=0; monthObjs[key]=new Date(qd.getFullYear(), qd.getMonth(), 1); }
+        if (!isNaN(rAmt)) byMonth[key] += rAmt;
+        if (!isNaN(sAmt)) byMonth[key] += sAmt;
       });
 
       var keys = Object.keys(byMonth).sort(function(a,b){ return monthObjs[a]-monthObjs[b]; });
@@ -506,7 +539,7 @@ function renderChart(range) {
   if (range === "today") {
   verb = "Projected " + (isPos ? "gain " : "loss "); } else if (range.startsWith("-")) { verb = isPos ? "You gained " : "You lost "; } else {
   verb = "Projected " + (isPos ? "gain " : "loss "); }
-  subText.innerHTML = verb + '<span class="amt-hl ' + (isPos ? "pos" : "neg") + '">' + fmtFull(Math.abs(diff)) + "</span> " + directionText + "."; (isPos ? "gain" : "loss") + ' <span class="amt-hl ' + (isPos ? "pos" : "neg") + '">' + fmtFull(Math.abs(diff)) + "</span> " + directionText + ".";
+  subText.innerHTML = verb + '<span class="amt-hl ' + (isPos ? "pos" : "neg") + '">' + fmtFull(Math.abs(diff)) + "</span> " + directionText + ".";
 
   var pill = document.getElementById("change-pill");
   pill.style.display = "inline-flex";
