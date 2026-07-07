@@ -58,9 +58,9 @@
   .balance-group{display:inline-block;}
 
   .card-balance-usd{
-      width:100%;
-      text-align:right;padding-right:45px;
-      font-size:16px;
+      width:auto;
+      text-align:left;padding-right:45px;
+      font-size:16px;margin-bottom:5px;
       color:rgba(255,255,255,.45);
   }
 
@@ -68,6 +68,19 @@
     width:34px; height:34px; flex-shrink:0;
   }
   .goal-ring-wrap svg { width:100%; height:100%; }
+
+  .usd-row {
+    display: flex;justify-content: flex-end;  align-items: center;gap: 5px;width: 100%;
+  }
+
+  .usd-flag-wrap {
+    width:14px; height:14px; flex-shrink:0;border-radius: 50%;margin-top:-5px;
+  }
+  .usd-flag-wrap img {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
 
   /* ── Sub row: gained text + pill ── */
   .card-sub-row {
@@ -184,7 +197,11 @@
         <svg id="goal-ring-svg" viewBox="0 0 80 80"></svg>
       </div>
     </div>
-    <div class="card-balance-usd" id="balance-usd"></div>
+    <div class="usd-row">
+      <div class="usd-flag-wrap" id="usd-flag-wrap"><img src="https://github.com/tinsntp/investment/blob/main/icon/usdflag.png?raw=true"></div>
+      <div class="card-balance-usd" id="balance-usd"></div>
+    </div> 
+      
   </div>
   <div class="card-sub-row">
     <div class="card-sub-text" id="sub-text">Loading&hellip;</div>
@@ -420,7 +437,7 @@ function updateCountdown() {
   var parts = [];
   if (diff.years > 0) parts.push(diff.years + (diff.years===1?" year":" years"));
   if (diff.months > 0) parts.push(diff.months + (diff.months===1?" month":" months"));
-  parts.push(diff.days + (diff.days===1?" day":" days"));
+  //parts.push(diff.days + (diff.days===1?" day":" days"));
   el.textContent = parts.join(" ") + " left"+" |";
 }
 
