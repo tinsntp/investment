@@ -10,7 +10,7 @@
     width:100%; height:100%;
     background:#191919;
     font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
-    color:#fff;
+    color:#fff;padding-top: 10px;
   }
 
   .card {
@@ -59,10 +59,15 @@
 
   .card-balance-usd{
       width:100%;
-      text-align:right;
+      text-align:right;padding-right:45px;
       font-size:16px;
       color:rgba(255,255,255,.45);
   }
+
+  .goal-ring-wrap {
+    width:34px; height:34px; flex-shrink:0;
+  }
+  .goal-ring-wrap svg { width:100%; height:100%; }
 
   /* ── Sub row: gained text + pill ── */
   .card-sub-row {
@@ -113,22 +118,19 @@
 
   .refresh-row {
     display:flex; align-items:center; justify-content:flex-end; gap:8px;
-    
+    margin-top: 10px;
   }
-  @media screen and (max-width: 400px) {
-    .refresh-row {margin-top: 10px;   /* change as needed */
-    }}
-  @media screen and (min-width: 431px) and (max-width: 1024px) {
-    .refresh-row {margin-top: 10px;   /* change as needed */
-    }}
+  .countdown-text {
+    font-size:11px; color:rgba(255,255,255,0.35); white-space:nowrap;
+  }
 
   .last-updated { font-size:11px; color:rgba(255,255,255,0.35); }
   .refresh-btn {
     border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.04);
-    color:rgba(255,255,255,0.6); font-size:11.5px; font-weight:600;
-    padding:5px 10px; border-radius:7px; cursor:pointer;
+    color:rgba(255,255,255,0.6); font-size:11px; font-weight:600;
+    padding:4px 5px; border-radius:8px; cursor:pointer;
     display:inline-flex; align-items:center; gap:5px;
-    transition:background 0.15s, color 0.15s;
+    transition:background 0.15s, color 0.15s; margin-right:5px;
   }
   .refresh-btn:hover { background:rgba(255,255,255,0.09); color:#fff; }
   .refresh-btn.spinning svg { animation:refreshSpin 0.6s linear; }
@@ -176,7 +178,12 @@
   </div>
   
   <div class="balance-group">
-    <div class="card-balance" id="balance-val">&#x2014;</div>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <div class="card-balance" id="balance-val">&#x2014;</div>
+      <div class="goal-ring-wrap" id="goal-ring-wrap">
+        <svg id="goal-ring-svg" viewBox="0 0 80 80"></svg>
+      </div>
+    </div>
     <div class="card-balance-usd" id="balance-usd"></div>
   </div>
   <div class="card-sub-row">
@@ -202,6 +209,7 @@
     <div class="tooltip" id="tooltip" style="display:none;"></div>
   </div>
   <div class="refresh-row">
+    <span class="countdown-text" id="countdown-text"></span>
     <span class="last-updated" id="last-updated"></span>
     <button class="refresh-btn" id="refresh-btn">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
@@ -215,6 +223,9 @@
 /* ══ CONFIG ══ */
 var CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=311369594";
 var DEBT_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=271989628";
+var GOAL_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1134096431";
+var monthlyExpenseGoal = 0; // raw value from B2
+var goalTarget = 0;         // monthlyExpenseGoal * 12 — the "12 months of expenses" target
 var TEAL = "#2dd4bf";
 var TEAL_DIM = "#14b8a6";
 var RED = "#f87171";
@@ -346,6 +357,73 @@ function fmtAxis(v) {
 function monthShort(d){ return ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][d.getMonth()]; }
 function monthYearLabel(d){ return monthShort(d)+" "+d.getFullYear(); }
 
+/* ══ GOAL PROGRESS RING (current balance vs. 12x monthly expense figure) ══ */
+function updateGoalRing(balance) {
+  var svg = document.getElementById("goal-ring-svg");
+  if (!svg) return;
+  svg.innerHTML = "";
+  var ns = "http://www.w3.org/2000/svg";
+
+  var pct = goalTarget > 0 ? (balance / goalTarget * 100) : 0;
+  var clampedPct = Math.max(0, Math.min(100, pct));
+  var r = 32, sw = 9, cx = 40, cy = 40;
+  var circ = 2 * Math.PI * r;
+  var dash = clampedPct/100*circ, gap = circ - dash;
+  var color = pct >= 100 ? "#fbbf24" : TEAL; // gold once goal is fully reached/exceeded
+
+  var bg = document.createElementNS(ns,"circle");
+  bg.setAttribute("cx",cx); bg.setAttribute("cy",cy); bg.setAttribute("r",r);
+  bg.setAttribute("fill","none"); bg.setAttribute("stroke","rgba(255,255,255,0.1)");
+  bg.setAttribute("stroke-width",sw);
+  svg.appendChild(bg);
+
+  var fg = document.createElementNS(ns,"circle");
+  fg.setAttribute("cx",cx); fg.setAttribute("cy",cy); fg.setAttribute("r",r);
+  fg.setAttribute("fill","none"); fg.setAttribute("stroke",color);
+  fg.setAttribute("stroke-width",sw); fg.setAttribute("stroke-linecap","round");
+  fg.setAttribute("stroke-dasharray", dash+" "+gap);
+  fg.setAttribute("stroke-dashoffset","0");
+  fg.setAttribute("transform","rotate(-90 "+cx+" "+cy+")");
+  svg.appendChild(fg);
+
+  var txt = document.createElementNS(ns,"text");
+  txt.setAttribute("x", cx); txt.setAttribute("y", cy);
+  txt.setAttribute("text-anchor","middle"); txt.setAttribute("dominant-baseline","middle");
+  txt.setAttribute("fill","#fff"); txt.setAttribute("font-size","24"); txt.setAttribute("font-weight","700");
+  txt.textContent = Math.round(pct)+"%";
+  svg.appendChild(txt);
+}
+
+/* ══ COUNTDOWN to the furthest future date present in the dataset ══ */
+function diffYMD(from, to) {
+  var years = to.getFullYear() - from.getFullYear();
+  var months = to.getMonth() - from.getMonth();
+  var days = to.getDate() - from.getDate();
+  if (days < 0) {
+    months--;
+    days += new Date(to.getFullYear(), to.getMonth(), 0).getDate();
+  }
+  if (months < 0) { years--; months += 12; }
+  return { years:years, months:months, days:days };
+}
+
+function updateCountdown() {
+  var el = document.getElementById("countdown-text");
+  if (!el || !fullSeries.length) return;
+
+  var targetDate = fullSeries[fullSeries.length - 1].date;
+  var now = new Date();
+
+  if (targetDate <= now) { el.textContent = ""; return; }
+
+  var diff = diffYMD(now, targetDate);
+  var parts = [];
+  if (diff.years > 0) parts.push(diff.years + (diff.years===1?" year":" years"));
+  if (diff.months > 0) parts.push(diff.months + (diff.months===1?" month":" months"));
+  parts.push(diff.days + (diff.days===1?" day":" days"));
+  el.textContent = parts.join(" ") + " left"+" |";
+}
+
 /* ══ LOAD + BUILD CUMULATIVE MONTHLY SERIES ══ */
 function loadBalanceHistory() {
   Promise.all([
@@ -355,10 +433,16 @@ function loadBalanceHistory() {
         .then(r => {
             if (!r.ok) throw new Error("HTTP " + r.status);
             return r.text();
+        }),
+    fetch(GOAL_CSV_URL + "&t=" + Date.now(), { cache: "no-store" })
+        .then(r => {
+            if (!r.ok) throw new Error("HTTP " + r.status);
+            return r.text();
         })
     ]).then(function(results){
       var balanceText = results[0];
       var debtText = results[1];
+      var goalText = results[2];
       
       var lines = balanceText.split("\n").filter(function(l){
         return l.trim();
@@ -510,6 +594,22 @@ var d = new Date(year, month - 1, day);
 
       });
   
+
+    // -------------------------
+    // Parse goal sheet — cell B2 (row index 1, col index 1) = the expense figure.
+    // This sheet has no header row; B2 is a literal cell address (row 2, col B),
+    // so goalRows[1][1] is correct regardless.
+    // -------------------------
+    var goalLines = goalText.split("\n").filter(function(l){ return l.trim(); });
+    var goalRows = goalLines.map(csvRow);
+    var b2raw = goalRows[1] ? goalRows[1][1] : "";
+    var b3raw = goalRows[2] ? goalRows[2][1] : "";
+    var b2val = parseAmt(b2raw||"");
+    var b3val = parseAmt(b3raw||"");
+    if (isNaN(b2val)) b2val = 0;
+    if (isNaN(b3val)) b3val = 0;
+    monthlyExpenseGoal = b2val;
+    goalTarget = monthlyExpenseGoal * 12 * 15;
 
       document.getElementById("loading-msg").style.display = "none";
       document.getElementById("chart-wrap").style.display = "block";
@@ -966,7 +1066,12 @@ currentDebtSCXY = pts.map(function(p, i){
 
   if (range === "today" || range.startsWith("-")) { diff = current.balance - target.balance; } else {
   diff = target.balance - current.balance; } var pct = current.balance !== 0 ? (diff / Math.abs(current.balance)) * 100 : 0; var isPos = diff >= 0; document.getElementById("balance-val").textContent = fmtFull(current.balance); document.getElementById("balance-usd").textContent =
-    fmtUSD(current.balance);var subText = document.getElementById("sub-text"); var directionText;
+    fmtUSD(current.balance);
+
+  updateGoalRing(current.balance);
+  updateCountdown();
+
+  var subText = document.getElementById("sub-text"); var directionText;
   switch (range) {
   case "today": directionText = "over the last month"; break; case "-3m": directionText = "in the last 3 months"; break; case "-6m": directionText = "in the last 6 months"; break; case "-1y": directionText = "in the last year"; break; case "-2y": directionText = "in the last 2 years"; break; case "+3m": directionText = "over the next 3 months"; break; case "+6m": directionText = "over the next 6 months"; break; case "+1y": directionText = "over the next year"; break; case "+2y": directionText = "over the next 2 years"; break; default: var directionMap = { "today": "over the last month", "-3m": "in the last 3 months", "-6m": "in the last 6 months", "-1y": "in the last year", "-2y": "in the last 2 years", "+3m": "over the next 3 months", "+6m": "over the next 6 months", "+1y": "over the next year", "+2y": "over the next 2 years", "max": "across all future projections" }; var directionText = directionMap[range] || ""; } var verb;
   if (range === "today") {
