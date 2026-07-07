@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Total Balance</title>
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; margin-top:10px;}
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html, body {
     width:100%; height:100%;
     background:#191919;
@@ -126,11 +126,27 @@
   .refresh-btn:hover { background:rgba(255,255,255,0.09); color:#fff; }
   .refresh-btn.spinning svg { animation:refreshSpin 0.6s linear; }
   @keyframes refreshSpin { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+
+  /* ── Line filter toggle (icon-only) ── */
+  .line-toggle-group {
+    display:flex; align-items:center; gap:6px; flex-shrink:0;
+  }
+  .line-toggle-btn {
+    width:28px; height:28px; padding:0; border-radius:50%;
+    border:1.5px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.03);
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
+    opacity:0.45; transition:opacity 0.15s, border-color 0.15s, background 0.15s;
+  }
+  .line-toggle-btn img { width:15px; height:15px; object-fit:contain; }
+  .line-toggle-btn:hover { opacity:0.75; }
+  .line-toggle-btn.active { opacity:1; }
+  .line-toggle-btn.active[data-line="balance"] { border-color:#2dd4bf; background:rgba(45,212,191,0.12); }
+  .line-toggle-btn.active[data-line="expense"] { border-color:#f472b6; background:rgba(244,114,182,0.12); }
 </style>
 </head>
 <body>
 
-<div class="card" id="card">
+<div class="card" id="card"">
   <div class="card-top">
     <div class="card-title"></div>
     <div class="range-selector" id="range-selector">
@@ -157,12 +173,29 @@
   </div>
   <div class="card-sub-row">
     <div class="card-sub-text" id="sub-text">Loading&hellip;</div>
-    <div class="pill" id="change-pill" style="display:none;"></div>
+    <div style="display:flex; align-items:center; gap:8px;">
+      <div class="pill" id="change-pill" style="display:none;"></div>
+      <div class="line-toggle-group" id="line-toggle-group">
+        <button class="line-toggle-btn active" data-line="balance" title="Balance">
+          <img src="https://github.com/tinsntp/investment/blob/main/icon/cash.png?raw=true" />
+        </button>
+        <button class="line-toggle-btn" data-line="expense" title="Expense">
+          <img src="https://github.com/tinsntp/investment/blob/main/icon/expense.png?raw=true" />
+        </button>
+      </div>
+    </div>
   </div>
   <div id="loading-msg">Loading chart&hellip;</div>
   <div class="chart-wrap" id="chart-wrap" style="display:none;">
     <svg id="chart-svg" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
     <div class="tooltip" id="tooltip" style="display:none;"></div>
+  </div>
+  <div class="refresh-row">
+    <span class="last-updated" id="last-updated"></span>
+    <button class="refresh-btn" id="refresh-btn">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+      Refresh
+    </button>
   </div>
   
 </div>
@@ -179,7 +212,10 @@ var PAD_LEFT = 52, PAD_RIGHT = 8, PAD_TOP = 16, PAD_BOTTOM = 30;
 var VB_W = 640, VB_H = 300;
 
 var fullSeries = [];   // [{date: Date, balance: number}], ascending, cumulative
+var expenseSeries = []; // [{date: Date, amount: number}], aligned 1:1 with fullSeries by index — NOT cumulative
 var currentRange = "today";
+var lineVisibility = { balance: true, expense: false };
+var lastExpenseIndex = -1;
 
 function fmtUSD(v){
     return "$" + (v / USD_RATE).toLocaleString("en-US", {
@@ -334,12 +370,28 @@ function loadBalanceHistory() {
         var key = qd.getFullYear()+"-"+qd.getMonth();
 
         var rAmt = parseAmt(cols[17]||"");
-        var sAmt = parseAmt(cols[18]||"");
+        var sAmt = parseAmt(cols[19]||"");
         if (isNaN(rAmt) && isNaN(sAmt)) return;
 
         if (!byMonth[key]) { byMonth[key]=0; monthObjs[key]=new Date(qd.getFullYear(), qd.getMonth(), 1); }
         if (!isNaN(rAmt)) byMonth[key] += rAmt;
         if (!isNaN(sAmt)) byMonth[key] += sAmt;
+      });
+
+      // Column R (17) ALONE, keyed by the same Q(16) month label — this becomes
+      // its own separate "Expense" line, NOT merged into the balance, and NOT
+      // cumulative (each point is just that month's total from R).
+      var byMonthExpense = {}; // "YYYY-M" -> summed R for that month (independent of balance/S)
+      rows.forEach(function(cols){
+        var qStr = cols[16]||"";
+        if (!qStr) return;
+        var qd = parseMonthYear(qStr);
+        if (!qd) return;
+        var rAmt = parseAmt(cols[17]||"");
+        if (isNaN(rAmt)) return;
+        var key = qd.getFullYear()+"-"+qd.getMonth();
+        if (!byMonthExpense[key]) byMonthExpense[key] = 0;
+        byMonthExpense[key] += rAmt;
       });
 
       var keys = Object.keys(byMonth).sort(function(a,b){ return monthObjs[a]-monthObjs[b]; });
@@ -348,6 +400,21 @@ function loadBalanceHistory() {
         running += byMonth[k];
         return { date: monthObjs[k], balance: running, delta: byMonth[k] };
       });
+
+      // expenseSeries stays aligned 1:1 (same index/order) with fullSeries — months
+      // with no R entry just show 0, so the two lines always share x positions.
+      expenseSeries = keys.map(function(k){
+        return { date: monthObjs[k], amount: Math.abs(byMonthExpense[k]||0) };
+      });
+
+      lastExpenseIndex = -1;
+      for (let i = expenseSeries.length - 1; i >= 0; i--) {
+      if (expenseSeries[i].amount > 0) {
+          lastExpenseIndex = i;
+          break;
+      }
+      
+  }
 
       document.getElementById("loading-msg").style.display = "none";
       document.getElementById("chart-wrap").style.display = "block";
@@ -400,6 +467,7 @@ function buildSmoothPath(pts) {
 
 /* ══ RENDER ══ */
 var currentXY = []; // stores the last-rendered points (with pixel coords) for hover lookups
+var currentExpenseXY = []; // parallel array for the expense line, same x positions/index as currentXY
 
 function getMonthIndex(monthOffset) {
   if (!currentXY.length) return 0; var currentIndex = getCurrentMonthIndex(); var currentDate = currentXY[currentIndex].date; var target = new Date( currentDate.getFullYear(), currentDate.getMonth() + monthOffset, 1);
@@ -409,14 +477,51 @@ function getMonthIndex(monthOffset) {
 
 function renderChart(range) {
   currentRange = range;
-  var pts = fullSeries.slice();
+  var pts;
+
+if (lineVisibility.expense && !lineVisibility.balance) {
+
+    pts = [];
+
+    for (var i = 0; i < fullSeries.length; i++) {
+
+        if (expenseSeries[i].amount > 0) {
+
+            pts.push({
+                balance: fullSeries[i].balance,
+                expense: expenseSeries[i].amount,
+                date: fullSeries[i].date,
+                originalIndex: i
+            });
+
+        }
+
+    }
+
+} else {
+
+    pts = fullSeries.map(function(p, i){
+
+        return {
+            balance:p.balance,
+            expense:expenseSeries[i].amount,
+            date:p.date,
+            originalIndex:i
+        };
+
+    });
+
+}
   if (!pts.length) return;
 
   var svg = document.getElementById("chart-svg");
   svg.innerHTML = "";
   var ns = "http://www.w3.org/2000/svg";
 
-  var values = pts.map(function(p){ return p.balance; });
+  var values = [];
+  if (lineVisibility.balance) values = values.concat(pts.map(function(p){ return p.balance; }));
+  if (lineVisibility.expense) values = values.concat(expenseSeries.map(function(p){ return p.amount; }));
+  if (!values.length) values = [0, 1]; // fallback so the chart doesn't crash with nothing selected
   var minV = Math.min.apply(null, values), maxV = Math.max.apply(null, values);
   var range_ = maxV - minV;
   if (range_ === 0) range_ = Math.abs(maxV) || 1;
@@ -431,11 +536,49 @@ function renderChart(range) {
     var y = PAD_TOP + (1 - (p.balance-minV)/(maxV-minV)) * plotH;
     // month-over-month delta uses the FULL series (previous calendar month),
     // not just the previous point within the filtered range
-    var fullIdx = fullSeries.indexOf(p);
-    var prevBalance = fullIdx > 0 ? fullSeries[fullIdx-1].balance : p.balance;
+    var fullIdx = p.originalIndex;
+    var prevBalance =
+    fullIdx > 0
+        ? fullSeries[fullIdx - 1].balance
+        : p.balance;
     return { x:x, y:y, date:p.date, balance:p.balance, momDelta: p.balance - prevBalance };
   });
   currentXY = xy;
+
+  // Expense line points — same x positions/index as xy (both built from the same
+  // month keys), y mapped through the SAME combined min/max scale as balance.
+  currentExpenseXY = [];
+  for (let i = 0; i <= lastExpenseIndex; i++) {
+
+    const expense = expenseSeries[i];
+
+    const balancePoint = currentXY[i];
+
+    const y =
+        PAD_TOP +
+        (1 - (expense.amount - minV) / (maxV - minV)) *
+        plotH;
+
+    const prevAmount =
+        i > 0
+            ? expenseSeries[i - 1].amount
+            : expense.amount;
+
+    currentExpenseXY.push({
+
+        x: balancePoint.x,
+
+        y: y,
+
+        date: expense.date,
+
+        amount: expense.amount,
+
+        momDelta: expense.amount - prevAmount
+
+    });
+
+}
 
   //var currentIndex = getCurrentMonthIndex();
   var now = new Date(); var currentIndex = 0; for (var i = 0; i < xy.length; i++) { if (xy[i].date <= now) { currentIndex = i; } else {break;}}
@@ -492,19 +635,45 @@ function renderChart(range) {
   var s2 = document.createElementNS(ns,"stop"); s2.setAttribute("offset","100%"); s2.setAttribute("stop-color",TEAL); s2.setAttribute("stop-opacity","0");
   grad.appendChild(s1); grad.appendChild(s2);
   defs.appendChild(grad);
+
+  var PINK = "#f472b6";
+  var gradPink = document.createElementNS(ns,"linearGradient");
+  gradPink.setAttribute("id","pinkFill"); gradPink.setAttribute("x1","0"); gradPink.setAttribute("y1","0");
+  gradPink.setAttribute("x2","0"); gradPink.setAttribute("y2","1");
+  var p1 = document.createElementNS(ns,"stop"); p1.setAttribute("offset","0%"); p1.setAttribute("stop-color",PINK); p1.setAttribute("stop-opacity","0.28");
+  var p2 = document.createElementNS(ns,"stop"); p2.setAttribute("offset","100%"); p2.setAttribute("stop-color",PINK); p2.setAttribute("stop-opacity","0");
+  gradPink.appendChild(p1); gradPink.appendChild(p2);
+  defs.appendChild(gradPink);
+
   svg.appendChild(defs);
 
-  /* Area + line */
-  var paths = buildSmoothPath(xy);
-  var areaEl = document.createElementNS(ns,"path");
-  areaEl.setAttribute("d", paths.area); areaEl.setAttribute("fill","url(#tealFill)"); areaEl.setAttribute("stroke","none");
-  svg.appendChild(areaEl);
+  /* Balance line (teal) */
+  if (lineVisibility.balance) {
+    var paths = buildSmoothPath(xy);
+    var areaEl = document.createElementNS(ns,"path");
+    areaEl.setAttribute("d", paths.area); areaEl.setAttribute("fill","url(#tealFill)"); areaEl.setAttribute("stroke","none");
+    svg.appendChild(areaEl);
 
-  var lineEl = document.createElementNS(ns,"path");
-  lineEl.setAttribute("d", paths.line); lineEl.setAttribute("fill","none");
-  lineEl.setAttribute("stroke", TEAL); lineEl.setAttribute("stroke-width","2.5");
-  lineEl.setAttribute("stroke-linecap","round"); lineEl.setAttribute("stroke-linejoin","round");
-  svg.appendChild(lineEl);
+    var lineEl = document.createElementNS(ns,"path");
+    lineEl.setAttribute("d", paths.line); lineEl.setAttribute("fill","none");
+    lineEl.setAttribute("stroke", TEAL); lineEl.setAttribute("stroke-width","2.5");
+    lineEl.setAttribute("stroke-linecap","round"); lineEl.setAttribute("stroke-linejoin","round");
+    svg.appendChild(lineEl);
+  }
+
+  /* Expense line (pink) */
+  if (lineVisibility.expense) {
+    var pathsExp = buildSmoothPath(currentExpenseXY);
+    var areaElExp = document.createElementNS(ns,"path");
+    areaElExp.setAttribute("d", pathsExp.area); areaElExp.setAttribute("fill","url(#pinkFill)"); areaElExp.setAttribute("stroke","none");
+    svg.appendChild(areaElExp);
+
+    var lineElExp = document.createElementNS(ns,"path");
+    lineElExp.setAttribute("d", pathsExp.line); lineElExp.setAttribute("fill","none");
+    lineElExp.setAttribute("stroke", PINK); lineElExp.setAttribute("stroke-width","2.5");
+    lineElExp.setAttribute("stroke-linecap","round"); lineElExp.setAttribute("stroke-linejoin","round");
+    svg.appendChild(lineElExp);
+  }
 
   /* X-axis labels: "MMM yyyy" — skip labels if too crowded */
   /* ===== TradingView-style X Axis ===== */
@@ -545,6 +714,12 @@ function renderChart(range) {
   hoverDot.setAttribute("stroke","#191919"); hoverDot.setAttribute("stroke-width","2");
   svg.appendChild(hoverDot);
 
+  var hoverDotExp = document.createElementNS(ns,"circle");
+  hoverDotExp.setAttribute("id","hover-dot-expense");
+  hoverDotExp.setAttribute("r","5"); hoverDotExp.setAttribute("fill", "#f472b6");
+  hoverDotExp.setAttribute("stroke","#191919"); hoverDotExp.setAttribute("stroke-width","2");
+  svg.appendChild(hoverDotExp);
+
   
   /* Default state: show the vertical line + tooltip pinned at the LAST (current) point */
   showPointAt(hoverIndex);
@@ -560,8 +735,8 @@ function renderChart(range) {
   switch (range) {
   case "today": directionText = "over the last month"; break; case "-3m": directionText = "in the last 3 months"; break; case "-6m": directionText = "in the last 6 months"; break; case "-1y": directionText = "in the last year"; break; case "-2y": directionText = "in the last 2 years"; break; case "+3m": directionText = "over the next 3 months"; break; case "+6m": directionText = "over the next 6 months"; break; case "+1y": directionText = "over the next year"; break; case "+2y": directionText = "over the next 2 years"; break; default: var directionMap = { "today": "over the last month", "-3m": "in the last 3 months", "-6m": "in the last 6 months", "-1y": "in the last year", "-2y": "in the last 2 years", "+3m": "over the next 3 months", "+6m": "over the next 6 months", "+1y": "over the next year", "+2y": "over the next 2 years", "max": "across all future projections" }; var directionText = directionMap[range] || ""; } var verb;
   if (range === "today") {
-  verb = "Projected " + (isPos ? "gain " : "loss "); } else if (range.startsWith("-")) { verb = isPos ? "You gained " : "You lost "; } else {
-  verb = "Projected " + (isPos ? "gain " : "loss "); }
+  verb = "You " + (isPos ? "gain " : "loss "); } else if (range.startsWith("-")) { verb = isPos ? "You gained " : "You lost "; } else {
+  verb = "You " + (isPos ? "gain " : "loss "); }
   subText.innerHTML = verb + '<span class="amt-hl ' + (isPos ? "pos" : "neg") + '">' + fmtFull(Math.abs(diff)) + "</span> " + directionText + ".";
 
   var pill = document.getElementById("change-pill");
@@ -596,9 +771,18 @@ function getCurrentMonthIndex() {
 }
 
 function getDefaultHoverIndex() {
+    var currentIdx = getCurrentMonthIndex();
+
+    // Expense-only view: pin to the current month, never a future one.
+    if (lineVisibility.expense && !lineVisibility.balance) {
+        return Math.min(currentXY.length - 1, currentIdx);
+    }
+
+    // Balance visible (alone or alongside expense): keep existing behavior,
+    // previewing 6 months ahead by default.
     return Math.min(
         currentXY.length - 1,
-        getCurrentMonthIndex() + 6
+        currentIdx + 6
     );
 }
 
@@ -607,25 +791,55 @@ function showPointAt(idx) {
   if (!currentXY.length) return;
   idx = Math.max(0, Math.min(currentXY.length-1, idx));
   var pt = currentXY[idx];
+  var ptExp =
+idx <= lastExpenseIndex
+    ? currentExpenseXY[idx]
+    : null;
 
   var hoverLine = document.getElementById("hover-line");
   var hoverDot = document.getElementById("hover-dot");
+  var hoverDotExp = document.getElementById("hover-dot-expense");
   if (hoverLine) { hoverLine.setAttribute("x1", pt.x); hoverLine.setAttribute("x2", pt.x); }
-  if (hoverDot) { hoverDot.setAttribute("cx", pt.x); hoverDot.setAttribute("cy", pt.y); }
+
+  if (hoverDot) {
+    if (lineVisibility.balance) {
+      hoverDot.setAttribute("cx", pt.x); hoverDot.setAttribute("cy", pt.y);
+      hoverDot.style.display = "";
+    } else { hoverDot.style.display = "none"; }
+  }
+  if (hoverDotExp) {
+    if (lineVisibility.expense && ptExp) {
+      hoverDotExp.setAttribute("cx", ptExp.x); hoverDotExp.setAttribute("cy", ptExp.y);
+      hoverDotExp.style.display = "";
+    } else { hoverDotExp.style.display = "none"; }
+  }
 
   var tooltip = document.getElementById("tooltip");
   var wrapRect = document.getElementById("chart-wrap").getBoundingClientRect();
   var scaleX = wrapRect.width / VB_W, scaleY = wrapRect.height / VB_H;
   tooltip.style.display = "block";
   tooltip.style.left = (pt.x * scaleX) + "px";
-  tooltip.style.top  = (pt.y * scaleY) + "px";
+  // anchor tooltip above whichever visible point is higher up (smaller y)
+  var anchorY = pt.y;
+  if (lineVisibility.expense && ptExp && (!lineVisibility.balance || ptExp.y < pt.y)) anchorY = ptExp.y;
+  tooltip.style.top = (anchorY * scaleY) + "px";
 
-  var deltaIsPos = pt.momDelta >= 0;
-  var deltaTxt = (deltaIsPos ? "+" : "\u2212") + fmtFull(Math.abs(pt.momDelta)).replace("\u20ab","\u20ab");
-  tooltip.innerHTML =
-    '<div class="tt-month">'+monthYearLabel(pt.date)+'</div>'+
-    '<div>'+fmtFull(pt.balance)+'</div>'+
-    '<div class="tt-delta '+(deltaIsPos?"pos":"neg")+'">'+(deltaIsPos?"&#9650;":"&#9660;")+' '+deltaTxt+' vs last month</div>';
+  var html = '<div class="tt-month">'+monthYearLabel(pt.date)+'</div>';
+
+  if (lineVisibility.balance) {
+    var deltaIsPos = pt.momDelta >= 0;
+    var deltaTxt = (deltaIsPos ? "+" : "\u2212") + fmtFull(Math.abs(pt.momDelta));
+    html += '<div>'+fmtFull(pt.balance)+'</div>'+
+      '<div class="tt-delta '+(deltaIsPos?"pos":"neg")+'">'+(deltaIsPos?"&#9650;":"&#9660;")+' '+deltaTxt+' vs last month</div>';
+  }
+  if (lineVisibility.expense && ptExp) {
+    var expDeltaIsPos = ptExp.momDelta >= 0;
+    var expDeltaTxt = (expDeltaIsPos ? "+" : "\u2212") + fmtFull(Math.abs(ptExp.momDelta));
+    html += '<div style="margin-top:'+(lineVisibility.balance?"6px":"0")+';color:#f472b6;">'+fmtFull(ptExp.amount)+' expense</div>'+
+      '<div class="tt-delta" style="color:'+(expDeltaIsPos?"#f87171":"#2dd4bf")+';">'+(expDeltaIsPos?"&#9650;":"&#9660;")+' '+expDeltaTxt+' vs last month</div>';
+  }
+
+  tooltip.innerHTML = html;
 }
 
 /* ══ MOUSE / TOUCH HOVER HANDLING ══ */
@@ -694,6 +908,41 @@ selector.addEventListener("wheel", function(e){
 
 window.addEventListener("resize", function(){ if (fullSeries.length) renderChart(currentRange); });
 window.addEventListener("load", function () { setTimeout(function () { const selector = document.getElementById("range-selector"); const btn = selector.querySelector('[data-range="-3m"]'); btn.scrollIntoView({ inline:"start",behavior:"instant"});}, 0);});
+
+document.querySelectorAll(".line-toggle-btn").forEach(function(btn){
+  btn.addEventListener("click", function(){
+    var line = this.dataset.line; // "balance" or "expense"
+    lineVisibility[line] = !lineVisibility[line];
+    this.classList.toggle("active", lineVisibility[line]);
+    if (fullSeries.length) renderChart(currentRange);
+  });
+});
+/*
+document.querySelectorAll(".line-toggle-btn").forEach(function(btn){
+    btn.addEventListener("click", function () {
+    var selected = this.dataset.line;
+
+    // Only one line can be active
+    lineVisibility.balance = selected === "balance";
+    lineVisibility.expense = selected === "expense";
+
+    // Update button UI
+    document.querySelectorAll(".line-toggle-btn").forEach(function (b) {
+        b.classList.toggle("active", b.dataset.line === selected);
+    });
+
+    if (fullSeries.length) renderChart(currentRange);
+});
+
+
+});*/
+
+document.getElementById("refresh-btn").addEventListener("click", function(){
+  var btn = this;
+  btn.classList.add("spinning");
+  loadBalanceHistory();
+  setTimeout(function(){ btn.classList.remove("spinning"); }, 650);
+});
 
 loadBalanceHistory();
 setInterval(loadBalanceHistory, 60000);
