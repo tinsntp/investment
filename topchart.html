@@ -142,11 +142,12 @@
   .line-toggle-btn.active { opacity:1; }
   .line-toggle-btn.active[data-line="balance"] { border-color:#2dd4bf; background:rgba(45,212,191,0.12); }
   .line-toggle-btn.active[data-line="expense"] { border-color:#f472b6; background:rgba(244,114,182,0.12); }
+  .line-toggle-btn.active[data-line="debt"] { border-color:#fff; background:rgba(244,114,182,0.12); }
 </style>
 </head>
 <body>
 
-<div class="card" id="card"">
+<div class="card" id="card">
   <div class="card-top">
     <div class="card-title"></div>
     <div class="range-selector" id="range-selector">
@@ -182,6 +183,9 @@
         <button class="line-toggle-btn" data-line="expense" title="Expense">
           <img src="https://github.com/tinsntp/investment/blob/main/icon/expense.png?raw=true" />
         </button>
+        <button class="line-toggle-btn" data-line="debt" title="Debt">
+          <img src="https://github.com/tinsntp/investment/blob/main/icon/bank%20loan.png?raw=true" />
+        </button>
       </div>
     </div>
   </div>
@@ -203,6 +207,7 @@
 <script>
 /* ══ CONFIG ══ */
 var CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=311369594";
+var DEBT_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=271989628";
 var TEAL = "#2dd4bf";
 var TEAL_DIM = "#14b8a6";
 var RED = "#f87171";
@@ -214,8 +219,9 @@ var VB_W = 640, VB_H = 300;
 var fullSeries = [];   // [{date: Date, balance: number}], ascending, cumulative
 var expenseSeries = []; // [{date: Date, amount: number}], aligned 1:1 with fullSeries by index — NOT cumulative
 var currentRange = "today";
-var lineVisibility = { balance: true, expense: false };
+var lineVisibility = { balance: true, expense: false, debt: false };
 var lastExpenseIndex = -1;
+var debtSeries = [];
 
 function fmtUSD(v){
     return "$" + (v / USD_RATE).toLocaleString("en-US", {
@@ -327,11 +333,23 @@ function monthYearLabel(d){ return monthShort(d)+" "+d.getFullYear(); }
 
 /* ══ LOAD + BUILD CUMULATIVE MONTHLY SERIES ══ */
 function loadBalanceHistory() {
-  fetch(CSV_URL+"&t="+Date.now(), {cache:"no-store"})
-    .then(function(r){ if(!r.ok) throw new Error("HTTP "+r.status); return r.text(); })
-    .then(function(text){
-      var lines = text.split("\n").filter(function(l){ return l.trim(); });
-      var rows = lines.map(csvRow);
+  Promise.all([
+    fetch(CSV_URL+"&t="+Date.now(), {cache:"no-store"})
+      .then(function(r){ if(!r.ok) throw new Error("HTTP "+r.status); return r.text(); }),
+    fetch(DEBT_CSV_URL + "&t=" + Date.now(), { cache: "no-store" })
+        .then(r => {
+            if (!r.ok) throw new Error("HTTP " + r.status);
+            return r.text();
+        })
+    ]).then(function(results){
+      var balanceText = results[0];
+      var debtText = results[1];
+      
+      var lines = balanceText.split("\n").filter(function(l){
+        return l.trim();
+    });
+
+    var rows = lines.map(csvRow);
 
       // Column I (index 8) holds the group names to EXCLUDE (e.g. "Social Account")
       var excluded = {};
@@ -393,7 +411,8 @@ function loadBalanceHistory() {
         if (!byMonthExpense[key]) byMonthExpense[key] = 0;
         byMonthExpense[key] += rAmt;
       });
-
+      
+      
       var keys = Object.keys(byMonth).sort(function(a,b){ return monthObjs[a]-monthObjs[b]; });
       var running = 0;
       fullSeries = keys.map(function(k){
@@ -412,9 +431,70 @@ function loadBalanceHistory() {
       if (expenseSeries[i].amount > 0) {
           lastExpenseIndex = i;
           break;
-      }
-      
-  }
+      }   
+      };
+
+    // -------------------------
+    // Parse debt sheet
+    // -------------------------
+
+    var debtLines = debtText.split("\n").filter(function(l){
+        return l.trim();
+    });
+
+    var debtRows = debtLines.map(csvRow);
+
+    // Skip header
+    debtRows = debtRows.slice(1);
+
+    var debtByMonth = {};
+
+    debtRows.forEach(function(cols){
+        var raw = cols[0].trim();
+        var m = raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+if (!m) return;
+
+var month = parseInt(m[1], 10);
+var day   = parseInt(m[2], 10);
+var year  = parseInt(m[3], 10);
+
+var d = new Date(year, month - 1, day);
+        if (!d) return;
+
+        var key = d.getFullYear() + "-" + d.getMonth();
+
+        var shinhan = parseAmt(cols[2]);
+        var sc       = parseAmt(cols[1]);
+
+        if (isNaN(shinhan)) shinhan = 0;
+        if (isNaN(sc)) sc = 0;
+
+        debtByMonth[key] = {
+            sc: sc,
+            shinhan: shinhan
+            
+        };
+        
+    });
+
+    debtSeries = keys.map(function(k){
+
+        var debt = debtByMonth[k] || {
+            sc: 0,
+            shinhan: 0
+        };
+        
+
+        return {
+            date: monthObjs[k],
+            total: debt.shinhan + debt.sc,
+            sc: debt.sc,
+            shinhan: debt.shinhan
+
+        };
+
+      });
+  
 
       document.getElementById("loading-msg").style.display = "none";
       document.getElementById("chart-wrap").style.display = "block";
@@ -468,6 +548,9 @@ function buildSmoothPath(pts) {
 /* ══ RENDER ══ */
 var currentXY = []; // stores the last-rendered points (with pixel coords) for hover lookups
 var currentExpenseXY = []; // parallel array for the expense line, same x positions/index as currentXY
+var currentDebtTotalXY = []; 
+var currentDebtShinhanXY = []; 
+var currentDebtSCXY = []; 
 
 function getMonthIndex(monthOffset) {
   if (!currentXY.length) return 0; var currentIndex = getCurrentMonthIndex(); var currentDate = currentXY[currentIndex].date; var target = new Date( currentDate.getFullYear(), currentDate.getMonth() + monthOffset, 1);
@@ -483,15 +566,32 @@ if (lineVisibility.expense && !lineVisibility.balance) {
 
     pts = [];
 
+    var currentIndex = getCurrentMonthIndex();
+
     for (var i = 0; i < fullSeries.length; i++) {
 
-        if (expenseSeries[i].amount > 0) {
+        var keep =
+            expenseSeries[i].amount > 0 ||
+            (i > currentIndex && i <= currentIndex + 3);
+
+        if (keep) {
 
             pts.push({
+
                 balance: fullSeries[i].balance,
+
                 expense: expenseSeries[i].amount,
+
+                debtTotal: debtSeries[i] ? debtSeries[i].total : 0,
+
+                debtShinhan: debtSeries[i] ? debtSeries[i].shinhan : 0,
+
+                debtSC: debtSeries[i] ? debtSeries[i].sc : 0,
+
                 date: fullSeries[i].date,
+
                 originalIndex: i
+
             });
 
         }
@@ -503,10 +603,21 @@ if (lineVisibility.expense && !lineVisibility.balance) {
     pts = fullSeries.map(function(p, i){
 
         return {
-            balance:p.balance,
-            expense:expenseSeries[i].amount,
-            date:p.date,
-            originalIndex:i
+
+            balance: p.balance,
+
+            expense: expenseSeries[i].amount,
+
+            debtTotal: debtSeries[i] ? debtSeries[i].total : 0,
+
+            debtShinhan: debtSeries[i] ? debtSeries[i].shinhan : 0,
+
+            debtSC: debtSeries[i] ? debtSeries[i].sc : 0,
+
+            date: p.date,
+
+            originalIndex: i
+
         };
 
     });
@@ -521,6 +632,27 @@ if (lineVisibility.expense && !lineVisibility.balance) {
   var values = [];
   if (lineVisibility.balance) values = values.concat(pts.map(function(p){ return p.balance; }));
   if (lineVisibility.expense) values = values.concat(expenseSeries.map(function(p){ return p.amount; }));
+  if (lineVisibility.debt){
+
+    values = values.concat(
+    pts.map(function(p){
+        return p.debtTotal;
+    })
+);
+
+values = values.concat(
+    pts.map(function(p){
+        return p.debtShinhan;
+    })
+);
+
+values = values.concat(
+    pts.map(function(p){
+        return p.debtSC;
+    })
+);
+
+}
   if (!values.length) values = [0, 1]; // fallback so the chart doesn't crash with nothing selected
   var minV = Math.min.apply(null, values), maxV = Math.max.apply(null, values);
   var range_ = maxV - minV;
@@ -578,7 +710,60 @@ if (lineVisibility.expense && !lineVisibility.balance) {
 
     });
 
-}
+};
+currentDebtTotalXY = pts.map(function(p, i){
+
+    var x = PAD_LEFT + (pts.length==1 ? 0 : (i/(pts.length-1))*plotW);
+
+    var y = PAD_TOP +
+        (1-(p.debtTotal-minV)/(maxV-minV))*plotH;
+
+    return {
+
+        x:x,
+        y:y,
+        date:p.date,
+        amount:p.debtTotal
+
+    };
+
+});
+
+currentDebtShinhanXY = pts.map(function(p, i){
+
+    var x = PAD_LEFT + (pts.length==1 ? 0 : (i/(pts.length-1))*plotW);
+
+    var y = PAD_TOP +
+        (1-(p.debtShinhan-minV)/(maxV-minV))*plotH;
+
+    return {
+
+        x:x,
+        y:y,
+        date:p.date,
+        amount:p.debtShinhan
+
+    };
+
+});
+
+currentDebtSCXY = pts.map(function(p, i){
+
+    var x = PAD_LEFT + (pts.length==1 ? 0 : (i/(pts.length-1))*plotW);
+
+    var y = PAD_TOP +
+        (1-(p.debtSC-minV)/(maxV-minV))*plotH;
+
+    return {
+
+        x:x,
+        y:y,
+        date:p.date,
+        amount:p.debtSC
+
+    };
+
+});
 
   //var currentIndex = getCurrentMonthIndex();
   var now = new Date(); var currentIndex = 0; for (var i = 0; i < xy.length; i++) { if (xy[i].date <= now) { currentIndex = i; } else {break;}}
@@ -647,6 +832,31 @@ if (lineVisibility.expense && !lineVisibility.balance) {
 
   svg.appendChild(defs);
 
+  function drawDebtLine(points, color, width, dash){
+
+    var paths = buildSmoothPath(points);
+
+    var line = document.createElementNS(ns, "path");
+
+    line.setAttribute("d", paths.line);
+
+    line.setAttribute("fill", "none");
+
+    line.setAttribute("stroke", color);
+
+    line.setAttribute("stroke-width", width);
+
+    line.setAttribute("stroke-linecap", "round");
+
+    line.setAttribute("stroke-linejoin", "round");
+
+    if (dash)
+        line.setAttribute("stroke-dasharray", dash);
+
+    svg.appendChild(line);
+
+}
+
   /* Balance line (teal) */
   if (lineVisibility.balance) {
     var paths = buildSmoothPath(xy);
@@ -674,6 +884,16 @@ if (lineVisibility.expense && !lineVisibility.balance) {
     lineElExp.setAttribute("stroke-linecap","round"); lineElExp.setAttribute("stroke-linejoin","round");
     svg.appendChild(lineElExp);
   }
+  /* Debt line (pink) */
+  if (lineVisibility.debt) {
+
+    drawDebtLine(currentDebtTotalXY, "#ffffff", 3);
+
+    drawDebtLine(currentDebtShinhanXY, "#60a5fa", 2, "6 4");
+
+    drawDebtLine(currentDebtSCXY, "#fbbf24", 2, "2 2");
+
+}
 
   /* X-axis labels: "MMM yyyy" — skip labels if too crowded */
   /* ===== TradingView-style X Axis ===== */
@@ -786,6 +1006,18 @@ function getDefaultHoverIndex() {
     );
 }
 
+/* ══ short number formatter ══ */
+function fmtShort(v) {
+    var sign = v < 0 ? "-" : "";
+    var a = Math.abs(v);
+
+    if (a >= 1e9) return sign + (a / 1e9).toFixed(1).replace(/\.0$/, "") + "B";
+    if (a >= 1e6) return sign + Math.round(a / 1e6) + "M";
+    if (a >= 1e3) return sign + Math.round(a / 1e3) + "K";
+
+    return sign + Math.round(a);
+}
+
 /* ══ HOVER: show crosshair + tooltip at a given point index ══ */
 function showPointAt(idx) {
   if (!currentXY.length) return;
@@ -838,6 +1070,20 @@ idx <= lastExpenseIndex
     html += '<div style="margin-top:'+(lineVisibility.balance?"6px":"0")+';color:#f472b6;">'+fmtFull(ptExp.amount)+' expense</div>'+
       '<div class="tt-delta" style="color:'+(expDeltaIsPos?"#f87171":"#2dd4bf")+';">'+(expDeltaIsPos?"&#9650;":"&#9660;")+' '+expDeltaTxt+' vs last month</div>';
   }
+  if (lineVisibility.debt) {
+
+    var shinhan = currentDebtShinhanXY[idx].amount;
+    var sc = currentDebtSCXY[idx].amount;
+    var total = currentDebtTotalXY[idx].amount;
+
+    html +=
+        '<div style="margin-top:6px;font-weight:700;white-space:nowrap;">' +
+        '<span style="color:#60a5fa">' + fmtShort(shinhan) + '</span>'+
+        '<span style="color:#fbbf24">' + fmtShort(sc) + '</span>' +
+        ' = ' +
+        '<span style="color:#fff">' + fmtShort(total) + '</span>' +
+        '</div>';
+}
 
   tooltip.innerHTML = html;
 }
