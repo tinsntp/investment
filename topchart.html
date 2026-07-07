@@ -1040,37 +1040,38 @@ idx <= lastExpenseIndex
   tooltip.style.display = "block";
   tooltip.style.left = (pt.x * scaleX) + "px";
   // anchor tooltip above whichever visible point is higher up (smaller y)
-  var anchorY = pt.y;
-  var anchorY = pt.y;
+  var anchorY;
 
-// Expense
-if (lineVisibility.expense && ptExp) {
-    anchorY = Math.min(anchorY, ptExp.y);
+if (lineVisibility.expense && !lineVisibility.balance && !lineVisibility.debt) {
+    // Expense only
+    anchorY = ptExp ? ptExp.y : pt.y;
+
+} else if (lineVisibility.debt && !lineVisibility.balance && !lineVisibility.expense) {
+    // Debt only
+    anchorY = Math.min(
+        currentDebtTotalXY[idx].y,
+        currentDebtShinhanXY[idx].y,
+        currentDebtSCXY[idx].y
+    );
+
+} else {
+    // Mixed mode
+    anchorY = pt.y;
+
+    if (lineVisibility.expense && ptExp)
+        anchorY = Math.min(anchorY, ptExp.y);
+
+    if (lineVisibility.debt) {
+        anchorY = Math.min(
+            anchorY,
+            currentDebtTotalXY[idx].y,
+            currentDebtShinhanXY[idx].y,
+            currentDebtSCXY[idx].y
+        );
+    }
 }
 
-// Debt
-if (lineVisibility.debt) {
-
-    var debtYs = [];
-
-    if (currentDebtTotalXY[idx]) {
-        debtYs.push(currentDebtTotalXY[idx].y);
-    }
-
-    if (currentDebtShinhanXY[idx] && currentDebtShinhanXY[idx].amount !== 0) {
-        debtYs.push(currentDebtShinhanXY[idx].y);
-    }
-
-    if (currentDebtSCXY[idx] && currentDebtSCXY[idx].amount !== 0) {
-        debtYs.push(currentDebtSCXY[idx].y);
-    }
-
-    if (debtYs.length) {
-        anchorY = Math.min(anchorY, ...debtYs);
-    }
-
-    
-}
+tooltip.style.top = (anchorY * scaleY) + "px";
 
 // If only debt is selected, ignore hidden balance completely.
 if (
