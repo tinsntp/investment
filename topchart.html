@@ -10,7 +10,7 @@
     width:100%; height:100%;
     background:#191919;
     font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
-    color:#fff;padding-top: 15px;
+    color:#fff;padding-top: 10px;
   }
 
   .card {
@@ -74,7 +74,7 @@
   }
 
   .usd-flag-wrap {
-    width:14px; height:14px; flex-shrink:0;border-radius: 50%;margin-top:-5px;
+    width:15px; height:15px; flex-shrink:0;border-radius: 50%;margin-top:-5px;
   }
   .usd-flag-wrap img {
     width: 100%;
@@ -437,7 +437,9 @@ function updateCountdown() {
   var parts = [];
   if (diff.years > 0) parts.push(diff.years + (diff.years===1?" year":" years"));
   if (diff.months > 0) parts.push(diff.months + (diff.months===1?" month":" months"));
-  //parts.push(diff.days + (diff.days===1?" day":" days"));
+  if (window.innerWidth > 400 && window.innerWidth <= 1024) {
+    parts.push(diff.days + (diff.days === 1 ? " day" : " days"));
+  }
   el.textContent = parts.join(" ") + " left"+" |";
 }
 
