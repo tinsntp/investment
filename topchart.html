@@ -116,10 +116,10 @@
     
   }
   @media screen and (max-width: 400px) {
-    .refresh-row {margin-top: 80px;   /* change as needed */
+    .refresh-row {margin-top: 10px;   /* change as needed */
     }}
   @media screen and (min-width: 431px) and (max-width: 1024px) {
-    .refresh-row {margin-top: 110px;   /* change as needed */
+    .refresh-row {margin-top: 10px;   /* change as needed */
     }}
 
   .last-updated { font-size:11px; color:rgba(255,255,255,0.35); }
@@ -221,7 +221,15 @@ var RED = "#f87171";
 var USD_RATE = 26300;
 
 var PAD_LEFT = 52, PAD_RIGHT = 8, PAD_TOP = 10, PAD_BOTTOM = 24;
-var VB_W = 640, VB_H = 420;
+var VB_W = 640, VB_H = 300;
+
+if (window.innerWidth <= 400) {   // iPhone
+    VB_H = 380;
+
+    document
+        .getElementById("chart-svg")
+        .setAttribute("viewBox", `0 0 ${VB_W} ${VB_H}`);
+}
 
 var fullSeries = [];   // [{date: Date, balance: number}], ascending, cumulative
 var expenseSeries = []; // [{date: Date, amount: number}], aligned 1:1 with fullSeries by index — NOT cumulative
