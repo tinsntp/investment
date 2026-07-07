@@ -1006,18 +1006,6 @@ function getDefaultHoverIndex() {
     );
 }
 
-/* ══ short number formatter ══ */
-function fmtShort(v) {
-    var sign = v < 0 ? "-" : "";
-    var a = Math.abs(v);
-
-    if (a >= 1e9) return sign + (a / 1e9).toFixed(1).replace(/\.0$/, "") + "B";
-    if (a >= 1e6) return sign + Math.round(a / 1e6) + "M";
-    if (a >= 1e3) return sign + Math.round(a / 1e3) + "K";
-
-    return sign + Math.round(a);
-}
-
 /* ══ HOVER: show crosshair + tooltip at a given point index ══ */
 function showPointAt(idx) {
   if (!currentXY.length) return;
@@ -1053,7 +1041,45 @@ idx <= lastExpenseIndex
   tooltip.style.left = (pt.x * scaleX) + "px";
   // anchor tooltip above whichever visible point is higher up (smaller y)
   var anchorY = pt.y;
-  if (lineVisibility.expense && ptExp && (!lineVisibility.balance || ptExp.y < pt.y)) anchorY = ptExp.y;
+  var anchorY = pt.y;
+
+// Expense
+if (lineVisibility.expense && ptExp) {
+    anchorY = Math.min(anchorY, ptExp.y);
+}
+
+// Debt
+if (lineVisibility.debt) {
+
+    var debtYs = [];
+
+    if (currentDebtTotalXY[idx]) {
+        debtYs.push(currentDebtTotalXY[idx].y);
+    }
+
+    if (currentDebtShinhanXY[idx] && currentDebtShinhanXY[idx].amount !== 0) {
+        debtYs.push(currentDebtShinhanXY[idx].y);
+    }
+
+    if (currentDebtSCXY[idx] && currentDebtSCXY[idx].amount !== 0) {
+        debtYs.push(currentDebtSCXY[idx].y);
+    }
+
+    if (debtYs.length) {
+        anchorY = Math.min(anchorY, ...debtYs);
+    }
+
+    
+}
+
+// If only debt is selected, ignore hidden balance completely.
+if (
+    lineVisibility.debt &&
+    !lineVisibility.balance &&
+    !lineVisibility.expense
+) {
+    anchorY = currentDebtTotalXY[idx].y -55;
+}
   tooltip.style.top = (anchorY * scaleY) + "px";
 
   var html = '<div class="tt-month">'+monthYearLabel(pt.date)+'</div>';
@@ -1072,17 +1098,35 @@ idx <= lastExpenseIndex
   }
   if (lineVisibility.debt) {
 
-    var shinhan = currentDebtShinhanXY[idx].amount;
-    var sc = currentDebtSCXY[idx].amount;
-    var total = currentDebtTotalXY[idx].amount;
+    function fmtShort(v) {
+        var a = Math.abs(v);
+        var sign = v < 0 ? "-" : "";
 
-    html +=
-        '<div style="margin-top:6px;font-weight:700;white-space:nowrap;">' +
-        '<span style="color:#60a5fa">' + fmtShort(shinhan) + '</span>'+
-        '<span style="color:#fbbf24">' + fmtShort(sc) + '</span>' +
-        ' = ' +
-        '<span style="color:#fff">' + fmtShort(total) + '</span>' +
-        '</div>';
+        if (a >= 1e9) return sign + (a / 1e9).toFixed(1).replace(/\.0$/, "") + "B";
+        if (a >= 1e6) return sign + Math.round(a / 1e6) + "M";
+        if (a >= 1e3) return sign + Math.round(a / 1e3) + "K";
+        return sign + Math.round(a);
+    }
+
+    var parts = [];
+
+    if (currentDebtShinhanXY[idx].amount !== 0)
+        parts.push('<span style="color:#60a5fa;font-weight:600;font-size:11px">' +fmtShort(currentDebtShinhanXY[idx].amount)+'</span>');
+
+    if (currentDebtSCXY[idx].amount !== 0)
+        parts.push('<span style="color:#fbbf24;font-weight:600;font-size:11px">' +fmtShort(currentDebtSCXY[idx].amount)+'</span>');
+
+    // Only show total if there are at least 2 loans
+    if (parts.length > 1)
+        parts.push("= " + fmtShort(currentDebtTotalXY[idx].amount));
+
+    // Show nothing if total debt is zero
+    if (parts.length) {
+        html +=
+            '<div style="margin-top:6px;font-weight:700;color:#fff;font-size:11px">' +
+            parts.join("  ") +
+            "</div>";
+    }
 }
 
   tooltip.innerHTML = html;
