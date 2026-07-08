@@ -10,9 +10,14 @@
     width:100%; height:100%;
     background:#191919;
     font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
-    color:#fff;padding-top:15px;
+    color:#fff;
   }
-
+.today-jp{
+    font-size:12px;font-weight:600;
+    color:rgba(255,255,255,.45);
+    text-align:right;
+    margin-top:4px;margin-right:66px;
+}
   .card {
     border:0px solid rgba(255,255,255,0.08);
     border-radius:20px;
@@ -168,7 +173,7 @@
 </style>
 </head>
 <body>
-
+<div id="today-jp" class="today-jp"></div>
 <div class="card" id="card">
   <div class="card-top">
     <div class="card-title"></div>
@@ -272,6 +277,21 @@ function fmtUSD(v){
         maximumFractionDigits: 2
     });
 }
+
+const today = new Date();
+
+const date = today.toLocaleDateString("ja-JP", {
+    year: "numeric",
+    month: "long",
+    day: "numeric"
+});
+
+const weekday = today.toLocaleDateString("ja-JP", {
+    weekday: "short"
+});
+
+document.getElementById("today-jp").textContent =
+    `${date} (${weekday})`;
 
 /* ══ CSV PARSE HELPERS ══ */
 function csvRow(line) {
