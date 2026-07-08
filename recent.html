@@ -104,6 +104,42 @@ html, body {
 .pct-val.flat { color:rgba(255,255,255,0.3); }
 #det-msg { font-size:3vw; color:rgba(255,255,255,0.4); text-align:center; padding:5vw; }
 
+.budget-card{
+margin-top:20px; }
+.budget-title,.budget-label{ font-size:12px; color:rgba(255,255,255,.55); margin-bottom:2px; }
+.budget-total,
+#budget-spent,.marker-value, #budget-remaining{ font-family:monospace; }
+.budget-total{
+font-size:20px; font-weight:500; color:rgba(255,255,255,.85); margin-bottom:16px; }
+.budget-bar-wrap{ position:relative; margin-bottom:10px; }
+.budget-bar{ position:relative; width:100%; height:7px;
+ background:#505867; border-radius:999px; overflow:hidden; } 
+ #budget-fill{ position:absolute; left:0; top:0;
+ height:100%; border-radius:999px; /* Gradient */ background:linear-gradient( 90deg, #4f21ff 0%,
+ #6b4dff 35%, #9a88ff 65%, #ffffff 100% );
+transition:width .4s ease; }
+.budget-bottom{ display:flex;
+justify-content:space-between; align-items:flex-start; }
+.marker-label{
+font-size:10px; color:rgba(255,255,255,.45); line-height:1;
+margin-bottom:2px; white-space:nowrap; }
+#budget-spent,
+#budget-remaining{ font-size:12px; font-weight:200; }
+.budget-spent-row{ display:flex;
+align-items:center; gap:8px;
+}
+.budget-percent{ display:inline-flex; align-items:center; justify-content:center; min-width:44px; height:20px;
+padding:0 10px; border-radius:999px; background:rgba(255,255,255,.10); color:#fff;
+font-size:12px; line-height:1;
+}
+#last-month-marker{ position:absolute; top:-40px;
+transform:translateX(-50%); text-align:center; pointer-events:none; }
+#last-month-marker .marker-value{ font-size:11px; color:rgba(255,255,255,.65); margin-bottom:2px; }
+#last-month-marker .triangle{ width:0;
+height:0;
+margin:auto;
+border-left:5px solid transparent; border-right:5px solid transparent; border-bottom:7px solid #fff; }
+
 /* ══ RECENT STYLES ══ */
 #tx-list { display:flex; flex-direction:column; margin-top:5px}
 .tx-group-hdr {
@@ -224,6 +260,14 @@ html, body {
   <!-- DETAIL SLIDE -->
   <div class="slide" id="slide-0" data-idx="0">
     <div id="rings-wrap"></div>
+    <div class="budget-card"> <div class="budget-title"> Monthly spending budget </div>
+      <!-- Budget amount --> <div class="budget-total" id="budget-average"></div> <div class="budget-bar-wrap"> <!-- Last month marker --> <div id="last-month-marker"></div> <div class="budget-bar"> <div id="budget-fill"></div> </div>
+      </div>
+      <div class="budget-bottom"> <div class="budget-col"> <div class="budget-label">Spent</div> <div class="budget-spent-row"> <span id="budget-spent"></span> <span id="budget-percent"></span> </div>
+      </div>
+      <div class="budget-col" style="text-align:right;"> <div class="budget-label">Remaining</div> <div id="budget-remaining"></div> </div>
+      </div>
+      </div>
     <div class="button-container" style="display:flex;justify-content:flex-end;margin-bottom:10px;margin-top:10px">
       <button class="expand-txt" id="expand-btn">&#9662; Expand All</button>
     </div>
@@ -579,6 +623,9 @@ function ringColor(pct){if(pct>90)return"rgba(255,255,255,0.8)";if(pct>70)return
 /* ══ DETAIL TAB ══ */
 var CSV_EXPENSE = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1324702331";
 var allExpanded = false;
+var monthlyBudget = 0;
+var currentExpense = 0;
+var lastExpense = 0;
 
 function buildRing(label, spent, budget, iconUrl, hideOnMobile, gids) {
   var item = document.createElement("div");
@@ -1060,6 +1107,63 @@ function caApplyLayout(){
   }
 }
 
+function parseAmt(raw) {
+        if (!raw) return NaN;
+        var s = raw.trim();
+        var neg = false;
+        if (s.charAt(0) === "(" && s.charAt(s.length - 1) === ")") {
+            neg = true;
+            s = s.slice(1, -1);
+        }
+        s = s.replace(/[^\d,.\-]/g, ""); // strip currency symbols, letters, spaces
+        if (s === "" || s === "-") return NaN;
+        if (s.charAt(0) === "-") {
+            neg = true;
+            s = s.slice(1);
+        }
+        var lastComma = s.lastIndexOf(",");
+        var lastDot = s.lastIndexOf(".");
+        if (lastComma > -1 && lastDot > -1) {
+            // Both separators present — whichever appears LAST is the true decimal separator
+            if (lastComma > lastDot) {
+                s = s.replace(/\./g, "").replace(",", "."); // dot=thousands, comma=decimal (VN/EU style)
+            } else {
+                s = s.replace(/,/g, ""); // comma=thousands, dot=decimal (US style)
+            }
+        } else if (lastComma > -1) {
+            var afterComma = s.length - lastComma - 1;
+            var commaCount = (s.match(/,/g) || []).length;
+            if (commaCount === 1 && afterComma <= 2) {
+                s = s.replace(",", "."); // single comma w/ 1-2 digits after = decimal comma
+            } else {
+                s = s.replace(/,/g, ""); // otherwise commas are thousands separators
+            }
+        } else if (lastDot > -1) {
+            var afterDot = s.length - lastDot - 1;
+            var dotCount = (s.match(/\./g) || []).length;
+            if (!(dotCount === 1 && afterDot <= 2)) {
+                s = s.replace(/\./g, ""); // multiple dots, or 3+ digits after = thousands separators (VN style)
+            }
+            // else: single dot w/ 1-2 digits after = a genuine decimal, leave as-is
+        }
+        var v = parseFloat(s);
+        if (isNaN(v)) return NaN;
+        return neg ? -v : v;
+    }
+
+    function fmtFull(v) {
+        var sign = v < 0 ? "\u2212" : "";
+        return sign + "\u20ab" + Math.round(Math.abs(v)).toLocaleString("en-US");
+    }
+
+    function fmtAxis(v) {
+        var a = Math.abs(v),
+            sign = v < 0 ? "-" : "";
+        if (a >= 1e9) return sign + (a / 1e9).toFixed(1) + "B";
+        if (a >= 1e6) return sign + (a / 1e6).toFixed(1) + "M";
+        if (a >= 1e3) return sign + Math.round(a / 1e3) + "K";
+        return sign + Math.round(a);
+    }
 /* ══ DETAIL TAB LOAD ══ */
 function loadExpense() {
   fetch(CSV_EXPENSE+"&t="+Date.now(),{cache:"no-store"})
@@ -1086,6 +1190,31 @@ function loadExpense() {
       for(var r2=0;r2<mains.length;r2++){var gid="g"+r2;list.appendChild(buildCatRow(mains[r2],false,gid));for(var s5=0;s5<mains[r2].subs.length;s5++)list.appendChild(buildCatRow(mains[r2].subs[s5],true,gid));}
       for(var dr=0;dr<mains.length;dr++){var dmn=mains[dr].name.toLowerCase();if(dmn.indexOf("food")>=0||dmn.indexOf("shop")>=0||dmn.indexOf("travel")>=0){var dgid="g"+dr;var dRow=document.querySelector(".main-row[data-id='"+dgid+"']");if(dRow){dRow.dataset.open="1";var dc=document.getElementById("chev-"+dgid);if(dc)dc.textContent="\u25be";document.querySelectorAll(".sub-row[data-group='"+dgid+"']").forEach(function(s){s.classList.add("visible");});dRow.classList.add("ring-highlighted");}}}
       document.getElementById("det-msg").style.display="none";
+      var row = rows[11];
+            currentExpense = parseAmt(row[2]); // Column C
+            lastMonthExpense = parseAmt(row[3]); // Column D
+            averageExpense = parseAmt(row[4]); // Column E
+            if (!averageExpense) return;
+            var percent = currentExpense / averageExpense;
+            var remaining = averageExpense - currentExpense;
+            document.getElementById("budget-average").textContent = fmtFull(averageExpense);
+            document.getElementById("budget-spent").innerHTML = fmtFull(currentExpense) + " <span class='budget-percent'>" + Math.round(percent * 100) + "%</span>";
+            document.getElementById("budget-remaining").textContent = fmtFull(Math.max(0, remaining));
+            var fill = document.getElementById("budget-fill");
+            fill.style.width = Math.min(percent, 1) * 100 + "%";
+            if (percent > 1) {
+                // Over budget
+                fill.style.background = "linear-gradient(90deg, #ff5f6d 0%, #ef4444 100%)";
+            } else {
+                // Normal gradient
+                fill.style.background = "linear-gradient(90deg, #4f46e5 0%, #7c3aed 20%, #a855f7 45%, #ffffff 100%)";
+            }
+            // marker position
+            var markerPercent = Math.min(lastMonthExpense / averageExpense, 1);
+            var marker = document.getElementById("last-month-marker");
+            marker.style.left = (markerPercent * 100) + "%";
+            marker.innerHTML = '<div class="marker-label">Last month</div>' + '<div class="marker-value">' + fmtAxis(lastMonthExpense) + '</div>' + '<div class="triangle"></div>';
+            
       buildColHdr(); applyLayout();
     }).catch(function(err){document.getElementById("det-msg").textContent="Error: "+err.message;});
 }
