@@ -16,7 +16,7 @@
   .card {
     max-width:100%;
     margin:0 auto;
-    padding:0px;
+    padding:16px;
   }
 
   /* ── Header ── */
@@ -39,7 +39,7 @@
   /* ── Total row ── */
   .sub-stats-row { display:flex; gap:28px; margin-bottom:30px; }
   .sub-stat-val {
-    font-size:25px; font-weight:800; color:rgba(255,255,255,0.95); letter-spacing:-0.02em; line-height:1;
+    font-size:32px; font-weight:800; color:rgba(255,255,255,0.95); letter-spacing:-0.02em; line-height:1;
     margin-bottom:4px; font-family:monospace;
   }
   .sub-stat-label {
@@ -70,14 +70,15 @@
   
   .sub-mid { flex:1; min-width:0; }
   .sub-name-row {
-    display:flex; align-items:center; gap:8px; margin-bottom:4px; flex-wrap:wrap;
+    display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px; flex-wrap:wrap;
   }
+  .sub-name-left { display:flex; align-items:center; gap:8px; min-width:0; flex-wrap:wrap; }
   .sub-name {
     font-size:14.5px; font-weight:700; color:rgba(255,255,255,0.95); white-space:nowrap;
     overflow:hidden; text-overflow:ellipsis;
   }
   .sub-badge {
-    font-size:10.5px; font-weight:700; color:#2dd4bf;
+    font-size:10.5px; font-weight:700; color:#4ade80;
     background:rgba(74,222,128,0.14); border-radius:99px; padding:2px 9px;
     white-space:nowrap;
   }
@@ -88,7 +89,7 @@
   .sub-expiry svg { flex-shrink:0; opacity:0.6; }
   .sub-price {
     font-size:14.5px; font-weight:700; color:rgba(255,255,255,0.95); text-align:right; white-space:nowrap;
-    flex-shrink:0; margin-bottom:20px;
+    flex-shrink:0;
   }
   .sub-price-unit {
     font-size:11px; font-weight:500; color:rgba(255,255,255,0.4); margin-left:2px;
@@ -324,14 +325,24 @@ function renderSubscriptions(items) {
 
     var nameRow = document.createElement("div");
     nameRow.className = "sub-name-row";
+
+    var nameLeft = document.createElement("div");
+    nameLeft.className = "sub-name-left";
     var nameEl = document.createElement("span");
     nameEl.className = "sub-name";
     nameEl.textContent = item.name;
     var badge = document.createElement("span");
     badge.className = "sub-badge";
-    badge.textContent = "Active Subscription";
-    nameRow.appendChild(nameEl);
-    nameRow.appendChild(badge);
+    badge.textContent = "Active";
+    nameLeft.appendChild(nameEl);
+    nameLeft.appendChild(badge);
+
+    var priceEl = document.createElement("div");
+    priceEl.className = "sub-price";
+    priceEl.innerHTML = fmtFull(item.price) + '<span class="sub-price-unit">/month</span>';
+
+    nameRow.appendChild(nameLeft);
+    nameRow.appendChild(priceEl);
 
     var expEl = document.createElement("div");
     expEl.className = "sub-expiry";
@@ -342,13 +353,8 @@ function renderSubscriptions(items) {
     mid.appendChild(nameRow);
     mid.appendChild(expEl);
 
-    var priceEl = document.createElement("div");
-    priceEl.className = "sub-price";
-    priceEl.innerHTML = fmtFull(item.price) + '<span class="sub-price-unit">/month</span>';
-
     row.appendChild(iconEl);
     row.appendChild(mid);
-    row.appendChild(priceEl);
     listEl.appendChild(row);
   });
 
