@@ -12,23 +12,48 @@
     font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
     color:#fff;
   }
+
+
+  /* ── Header row: title + range selector ── */
+ 
+
+  .card-top{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:8px;
+}
 .today-jp{
     font-size:12px;font-weight:600;
     color:rgba(255,255,255,.45);
     text-align:right;
-    margin: 3px 50px 5px;
+    margin: 0 50px -5px;
+}
+
+@media (min-width:401px){
+
+    .card-top{
+        flex-direction:row;
+        align-items:center;
+        justify-content:space-between;
+    }
+
+    .today-jp{
+        flex:0 0 auto;
+        margin-right:12px;
+        white-space:nowrap;margin: -3px 0 5px;
+    }
+
+    .range-selector{
+        margin-left:auto;
+    }
+
 }
   .card {
     border:0px solid rgba(255,255,255,0.08);
     border-radius:20px;
     max-width:100%;
     margin:0 auto;
-  }
-
-  /* ── Header row: title + range selector ── */
-  .card-top {
-    display:flex; align-items:center; justify-content:space-between;
-    margin-bottom:0px;
   }
   .card-title {
     font-size:14px; font-weight:600; color:rgba(255,255,255,0.5);
@@ -173,10 +198,10 @@
 </style>
 </head>
 <body>
-<div id="today-jp" class="today-jp"></div>
+
 <div class="card" id="card">
   <div class="card-top">
-    <div class="card-title"></div>
+    <div id="today-jp" class="today-jp"></div>
     <div class="range-selector" id="range-selector">
       <button class="range-btn" data-range="-2y">-2y</button>
       <button class="range-btn" data-range="-1y">-1y</button>
