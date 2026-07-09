@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subscriptions</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html, body {
+    width:100%; height:100%;
+    background:#191919;
+    font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+    color:#fff;
+  }
+
+  .card {
+    max-width:100%;
+    margin:0 auto;
+    padding:16px;
+  }
+
+  /* ── Header ── */
+  .sub-header-row {
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:14px;
+  }
+  .sub-title { font-size:15px; font-weight:700; color:rgba(255,255,255,0.85); }
+  .sub-refresh-row { display:flex; align-items:center; gap:8px; }
+  .sub-last-updated { font-size:11px; color:rgba(255,255,255,0.35); white-space:nowrap; }
+  .sub-refresh-btn {
+    border:none; background:transparent; color:rgba(255,255,255,0.5);
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
+    padding:4px; border-radius:50%; transition:color 0.15s, background 0.15s;
+  }
+  .sub-refresh-btn:hover { color:#fff; background:rgba(255,255,255,0.08); }
+  .sub-refresh-btn.spinning svg { animation:subSpin 0.6s linear; }
+  @keyframes subSpin { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+
+  /* ── Total row ── */
+  .sub-stats-row { display:flex; gap:28px; margin-bottom:30px; }
+  .sub-stat-val {
+    font-size:25px; font-weight:800; color:rgba(255,255,255,0.95); letter-spacing:-0.02em; line-height:1;
+    margin-bottom:4px; font-family:monospace;
+  }
+  .sub-stat-label {
+    font-size:12.5px; color:rgba(255,255,255,0.45);
+  }
+  .sub-stat-label .hl-teal { color:#2dd4bf; font-weight:600; }
+
+  /* ── List section ── */
+  .sub-list-title {
+    font-size:14px; font-weight:700; color:rgba(255,255,255,0.75); margin-bottom:12px;}
+
+  #sub-list { display:flex; flex-direction:column;}
+  #sub-loading, #sub-empty {
+    font-size:13px; color:rgba(255,255,255,0.4); padding:24px 0; text-align:center;
+  }
+  .sub-row:last-child { border-bottom:none; }
+
+  .sub-row {
+    display:flex; align-items:center; padding:2vw 0;
+  border-bottom:1px solid rgba(255,255,255,0.08); gap:3vw; cursor:pointer;
+  transition:background 0.2s ease, border-radius 0.2s ease, padding 0.2s ease;}
+  .sub-row:hover { background:rgba(255,255,255,0.04); }
+  .sub-icon {
+    width:42px; height:42px; border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:17px; font-weight:800; color:#fff;
+  }
+  
+  .sub-mid { flex:1; min-width:0; }
+  .sub-name-row {
+    display:flex; align-items:center; gap:8px; margin-bottom:4px; flex-wrap:wrap;
+  }
+  .sub-name {
+    font-size:14.5px; font-weight:700; color:rgba(255,255,255,0.95); white-space:nowrap;
+    overflow:hidden; text-overflow:ellipsis;
+  }
+  .sub-badge {
+    font-size:10.5px; font-weight:700; color:#2dd4bf;
+    background:rgba(74,222,128,0.14); border-radius:99px; padding:2px 9px;
+    white-space:nowrap;
+  }
+  .sub-expiry {
+    display:flex; align-items:center; gap:5px;
+    font-size:12px; color:rgba(255,255,255,0.45); white-space:nowrap;
+  }
+  .sub-expiry svg { flex-shrink:0; opacity:0.6; }
+  .sub-price {
+    font-size:14.5px; font-weight:700; color:rgba(255,255,255,0.95); text-align:right; white-space:nowrap;
+    flex-shrink:0; margin-bottom:20px;
+  }
+  .sub-price-unit {
+    font-size:11px; font-weight:500; color:rgba(255,255,255,0.4); margin-left:2px;
+  }
+  
+</style>
+</head>
+<body>
+
+<div class="card" id="card">
+
+  <div class="sub-header-row">
+    <div class="sub-title">Spending overview</div>
+    
+  </div>
+
+  <div class="sub-stats-row">
+    <div class="sub-stat-block">
+      <div class="sub-stat-val" id="sub-total-val">&#x2014;</div>
+      <div class="sub-stat-label" id="sub-total-label">Active subscriptions / month</div>
+    </div>
+    <div class="sub-stat-block">
+      <div class="sub-stat-val" id="sub-total-excl-val">&#x2014;</div>
+      <div class="sub-stat-label">Excl. KungfuStockPro</div>
+    </div>
+  </div>
+
+  <div class="sub-list-title">Active subscription</div>
+  <div id="sub-loading">Loading&hellip;</div>
+  <div id="sub-list"></div>
+</div>
+
+<script>
+/* ══ CONFIG ══ */
+var CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1737926422";
+
+/*
+  ── COLUMN MAPPING (A–J, confirmed from sheet screenshot) ──
+    A = Active (checkbox TRUE/FALSE)
+    B = Service (name, sometimes with a leading emoji — stripped on display)
+    C = Total Amount (unused here)
+    D = Start Date (unused here)
+    E = End Date → used as "Expired"
+    F = Price/Month/User → used as the monthly amount
+    G = Month, H = of users, I = Price/Year (all unused here)
+    J = Icon (image URL) — used directly; falls back to a generated color+letter
+        icon if a row's J is blank or the image fails to load.
+*/
+var COL_ACTIVE = 0; // A
+var COL_NAME   = 1; // B
+var COL_PRICE  = 5; // F: Price/Month/User
+var COL_EXPIRY = 4; // E: End Date
+var COL_ICON   = 9; // J: Icon URL
+
+/* ══ CSV PARSE HELPERS ══ */
+function csvRow(line) {
+  var cols=[], cur="", inQ=false;
+  for (var i=0;i<line.length;i++) {
+    var c=line[i];
+    if (c==='"') inQ=!inQ;
+    else if (c===','&&!inQ) { cols.push(cur); cur=""; }
+    else cur+=c;
+  }
+  cols.push(cur);
+  return cols.map(function(s){ return s.replace(/^"|"$/g,"").trim(); });
+}
+
+function parseBool(s) {
+  if (!s) return false;
+  var v = s.trim().toLowerCase();
+  return v==="true" || v==="1" || v==="yes" || v==="active" || v==="x" || v==="✓";
+}
+
+function parseAmt(raw) {
+  if (!raw) return 0;
+  var s = raw.trim();
+  var neg = false;
+  if (s.charAt(0)==="(" && s.charAt(s.length-1)===")") { neg = true; s = s.slice(1,-1); }
+  s = s.replace(/[^\d,.\-]/g, "");
+  if (s === "" || s === "-") return 0;
+  if (s.charAt(0) === "-") { neg = true; s = s.slice(1); }
+
+  var lastComma = s.lastIndexOf(","), lastDot = s.lastIndexOf(".");
+  if (lastComma > -1 && lastDot > -1) {
+    if (lastComma > lastDot) s = s.replace(/\./g,"").replace(",",".");
+    else s = s.replace(/,/g,"");
+  } else if (lastComma > -1) {
+    var afterComma = s.length - lastComma - 1;
+    var commaCount = (s.match(/,/g)||[]).length;
+    if (commaCount===1 && afterComma<=2) s = s.replace(",",".");
+    else s = s.replace(/,/g,"");
+  } else if (lastDot > -1) {
+    var afterDot = s.length - lastDot - 1;
+    var dotCount = (s.match(/\./g)||[]).length;
+    if (!(dotCount===1 && afterDot<=2)) s = s.replace(/\./g,"");
+  }
+  var v = parseFloat(s);
+  if (isNaN(v)) return 0;
+  return neg ? -v : v;
+}
+
+function parseSheetDate(raw) {
+  if (!raw) return null;
+  var s = raw.trim();
+  var iso = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (iso) return new Date(parseInt(iso[1]), parseInt(iso[2])-1, parseInt(iso[3]));
+  var dmy = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+  if (dmy) {
+    var a=parseInt(dmy[1]), b=parseInt(dmy[2]), y=parseInt(dmy[3]);
+    var day=a, month=b;
+    if (a<=12 && b>12) { day=b; month=a; }
+    return new Date(y, month-1, day);
+  }
+  var d = new Date(s);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+function fmtFull(v) {
+  var sign = v<0 ? "\u2212" : "";
+  return sign + "\u20ab" + Math.round(Math.abs(v)).toLocaleString("en-US");
+}
+
+function fmtExpiryDate(d) {
+  if (!d) return "\u2014";
+  var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return d.getDate() + " " + months[d.getMonth()] + ", " + d.getFullYear();
+}
+
+function stripEmoji(str) {
+  return (str||"").replace(/\p{Emoji_Presentation}|\p{Extended_Pictographic}/gu, "").trim();
+}
+
+/* ══ ICON MATCHING (built here, not sourced from the sheet) ══ */
+function iconFor(name) {
+  var n = (name||"").toLowerCase();
+  
+  var palette = ["#7c6cff","#f472b6","#14b8a6","#fbbf24","#60a5fa","#f87171","#a78bfa"];
+  var hash = 0;
+  for (var j=0; j<n.length; j++) hash = (hash*31 + n.charCodeAt(j)) >>> 0;
+  var bg = palette[hash % palette.length];
+  var ltr = (name||"?").trim().charAt(0).toUpperCase() || "?";
+  return { bg:bg, ltr:ltr };
+}
+
+/* ══ LOAD + RENDER ══ */
+function loadSubscriptions() {
+  fetch(CSV_URL + "&t=" + Date.now(), { cache:"no-store" })
+    .then(function(r){ if(!r.ok) throw new Error("HTTP "+r.status); return r.text(); })
+    .then(function(text){
+      var lines = text.split("\n").filter(function(l){ return l.trim(); });
+      var rows = lines.map(csvRow);
+      // Assume row 0 is a header row — skip it.
+      rows = rows.slice(1);
+
+      var items = [];
+      rows.forEach(function(cols){
+        if (!parseBool(cols[COL_ACTIVE])) return; // only Active = TRUE
+        var rawName = (cols[COL_NAME]||"").trim();
+        if (!rawName) return;
+        var name = stripEmoji(rawName) || rawName;
+        var price = parseAmt(cols[COL_PRICE]);
+        var expiry = parseSheetDate(cols[COL_EXPIRY]||"");
+        var iconUrl = (cols[COL_ICON]||"").trim();
+        items.push({ name:name, price:price, expiry:expiry, iconUrl:iconUrl });
+      });
+
+      renderSubscriptions(items);
+
+      var now = new Date();
+      var hh = String(now.getHours()).padStart(2,"0");
+      var mm = String(now.getMinutes()).padStart(2,"0");
+      var lastUpdatedEl = document.getElementById("sub-last-updated");
+      if (lastUpdatedEl) lastUpdatedEl.textContent = hh+":"+mm+" ago";
+    })
+    .catch(function(err){
+      document.getElementById("sub-loading").textContent = "Error: " + err.message;
+    });
+}
+
+function renderSubscriptions(items) {
+  document.getElementById("sub-loading").style.display = "none";
+  var listEl = document.getElementById("sub-list");
+  listEl.innerHTML = "";
+
+  if (!items.length) {
+    var empty = document.createElement("div");
+    empty.id = "sub-empty";
+    empty.textContent = "No active subscriptions found.";
+    listEl.appendChild(empty);
+  }
+
+  var total = 0;
+  var totalExclKfs = 0;
+
+  items.forEach(function(item){
+    total += item.price;
+    if (item.name.toLowerCase().indexOf("kungfustockpro") < 0) {
+      totalExclKfs += item.price;
+    }
+
+    var icon = iconFor(item.name);
+
+    var row = document.createElement("div");
+    row.className = "sub-row";
+
+    var iconEl = document.createElement("div");
+    iconEl.className = "sub-icon";
+
+    if (item.iconUrl) {
+      iconEl.style.background = "rgba(255,255,255,0.08)";
+      var imgEl = document.createElement("img");
+      imgEl.src = item.iconUrl;
+      imgEl.style.width = "75%";
+      imgEl.style.height = "75%";
+      imgEl.style.objectFit = "contain";
+      imgEl.style.borderRadius = "50%";
+      imgEl.onerror = (function(el, fallbackIcon){
+        return function(){
+          el.style.background = fallbackIcon.bg;
+          el.textContent = fallbackIcon.ltr;
+          el.style.display = "flex"; el.style.alignItems = "center"; el.style.justifyContent = "center";
+        };
+      })(iconEl, icon);
+      iconEl.appendChild(imgEl);
+      iconEl.style.display = "flex"; iconEl.style.alignItems = "center"; iconEl.style.justifyContent = "center";
+    } else {
+      iconEl.style.background = icon.bg;
+      iconEl.textContent = icon.ltr;
+    }
+
+    var mid = document.createElement("div");
+    mid.className = "sub-mid";
+
+    var nameRow = document.createElement("div");
+    nameRow.className = "sub-name-row";
+    var nameEl = document.createElement("span");
+    nameEl.className = "sub-name";
+    nameEl.textContent = item.name;
+    var badge = document.createElement("span");
+    badge.className = "sub-badge";
+    badge.textContent = "Active Subscription";
+    nameRow.appendChild(nameEl);
+    nameRow.appendChild(badge);
+
+    var expEl = document.createElement("div");
+    expEl.className = "sub-expiry";
+    expEl.innerHTML =
+      '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>' +
+      '<span>Expired: ' + fmtExpiryDate(item.expiry) + '</span>';
+
+    mid.appendChild(nameRow);
+    mid.appendChild(expEl);
+
+    var priceEl = document.createElement("div");
+    priceEl.className = "sub-price";
+    priceEl.innerHTML = fmtFull(item.price) + '<span class="sub-price-unit">/month</span>';
+
+    row.appendChild(iconEl);
+    row.appendChild(mid);
+    row.appendChild(priceEl);
+    listEl.appendChild(row);
+  });
+
+  document.getElementById("sub-total-val").textContent = fmtFull(total);
+  document.getElementById("sub-total-label").innerHTML =
+    items.length + ' <span class="hl-teal">active</span> subscription' + (items.length===1?"":"s") + " / month";
+
+  document.getElementById("sub-total-excl-val").textContent = fmtFull(totalExclKfs);
+}
+
+loadSubscriptions();
+setInterval(loadSubscriptions, 60000);
+</script>
+</body>
+</html>
