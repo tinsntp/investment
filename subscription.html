@@ -115,7 +115,7 @@
     </div>
     <div class="sub-stat-block">
       <div class="sub-stat-val" id="sub-total-excl-val">&#x2014;</div>
-      <div class="sub-stat-label">Excl. KungfuStocksPro</div>
+      <div class="sub-stat-label" id="sub-total-excl-label">Excl. KungfuStocksPro</div>
     </div>
   </div>
 
@@ -224,6 +224,23 @@ function stripEmoji(str) {
   return (str||"").replace(/\p{Emoji_Presentation}|\p{Extended_Pictographic}/gu, "").trim();
 }
 
+/* ══ MOBILE DISPLAY-NAME SHORTENING (iPhone view only, ≤400px) ══ */
+/* Matching is case-insensitive against the full (emoji-stripped) name.
+   Add more entries here any time another name needs a short form on iPhone. */
+var MOBILE_SHORT_NAMES = [
+  { match: "kungfu stocks pro", short: "KFSP" },
+  { match: "youtube premium",   short: "Premium" }
+];
+
+function getDisplayName(fullName, isMobile) {
+  if (!isMobile) return fullName;
+  var n = (fullName||"").toLowerCase();
+  for (var i=0; i<MOBILE_SHORT_NAMES.length; i++) {
+    if (n === MOBILE_SHORT_NAMES[i].match) return MOBILE_SHORT_NAMES[i].short;
+  }
+  return fullName;
+}
+
 /* ══ ICON MATCHING (built here, not sourced from the sheet) ══ */
 function iconFor(name) {
   var n = (name||"").toLowerCase();
@@ -237,6 +254,8 @@ function iconFor(name) {
 }
 
 /* ══ LOAD + RENDER ══ */
+var lastLoadedItems = []; // cached so we can re-render on resize without refetching
+
 function loadSubscriptions() {
   fetch(CSV_URL + "&t=" + Date.now(), { cache:"no-store" })
     .then(function(r){ if(!r.ok) throw new Error("HTTP "+r.status); return r.text(); })
@@ -258,6 +277,7 @@ function loadSubscriptions() {
         items.push({ name:name, price:price, expiry:expiry, iconUrl:iconUrl });
       });
 
+      lastLoadedItems = items;
       renderSubscriptions(items);
 
       var now = new Date();
@@ -283,6 +303,7 @@ function renderSubscriptions(items) {
     listEl.appendChild(empty);
   }
 
+  var isMobile = window.innerWidth <= 400;
   var total = 0;
   var totalExclKfs = 0;
 
@@ -332,7 +353,7 @@ function renderSubscriptions(items) {
     nameLeft.className = "sub-name-left";
     var nameEl = document.createElement("span");
     nameEl.className = "sub-name";
-    nameEl.textContent = item.name;
+    nameEl.textContent = getDisplayName(item.name, isMobile);
     var badge = document.createElement("span");
     badge.className = "sub-badge";
     badge.textContent = "Active Subscription";
@@ -365,7 +386,13 @@ function renderSubscriptions(items) {
     items.length + ' <span class="hl-teal">active</span> subscription' + (items.length===1?"":"s");
 
   document.getElementById("sub-total-excl-val").textContent = fmtFull(totalExclKfs);
+  document.getElementById("sub-total-excl-label").innerHTML =
+    ' <span class="hl-teal">Excl.</span> KungfuStocksPro';
 }
+
+window.addEventListener("resize", function(){
+  if (lastLoadedItems.length) renderSubscriptions(lastLoadedItems);
+});
 
 loadSubscriptions();
 setInterval(loadSubscriptions, 60000);
