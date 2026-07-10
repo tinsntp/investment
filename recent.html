@@ -104,7 +104,7 @@ html, body {
 .pct-val.flat { color:rgba(255,255,255,0.3); }
 #det-msg { font-size:3vw; color:rgba(255,255,255,0.4); text-align:center; padding:5vw; }
 
-.budget-card{margin-top:20px; }
+.budget-card{margin-top:15px; }
 .budget-title,.budget-label{ font-size:12px; color:rgba(255,255,255,.55); margin-bottom:2px; }
 .budget-total,
 #budget-spent,.marker-value, #budget-remaining{ font-family:monospace; }
@@ -130,6 +130,103 @@ margin:auto;
 border-left:5px solid transparent; border-right:5px solid transparent; border-bottom:7px solid #fff; }
 
 @media (min-width:401px){.budget-card{padding:10px; }}
+
+/* ==========================================================================
+   1. BASE STYLES: This handles the iPad & Desktop view flawlessly using GRID
+   ========================================================================== */
+.tx-detail-row {
+  display: grid !important; 
+  grid-template-columns: 5fr 2fr 2fr 1.6fr; /* Match parent headers perfectly */
+  align-items: center; 
+  gap: 1vw; 
+  padding: 1vw 0.5vw 1vw 0vw; 
+  font-size: 2.8vw; 
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  width: 100%;
+  box-sizing: border-box;cursor:pointer; transition:background 0.15s;
+}
+.tx-detail-row:hover { background:rgba(255,255,255,0.04); border-radius:0vw; }
+
+
+.tx-detail-row .td-desc { 
+  color: rgba(255,255,255,0.85); 
+  font-weight: 500; 
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis;
+  padding-left: 12vw; /* Aligns description to sub-category icon */
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.tx-detail-row .td-desc span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tx-detail-row .td-amt {
+  text-align: right;
+  color: rgba(255,255,255,0.85); 
+  font-weight: 700;
+}
+
+.tx-detail-row .td-empty {
+  display: block; /* Show spacer on iPad to shift date to the last column */
+}
+
+.tx-detail-row .td-date {
+  text-align: right;
+  color: rgba(255,255,255,0.85);
+  white-space: nowrap;
+}
+
+
+/* ==========================================================================
+   2. MOBILE OVERRIDES: This handles the iPhone view strictly using FLEXBOX
+   ========================================================================== */
+@media (max-width: 400px) {
+  .tx-detail-row {
+    display: flex !important; /* Force switch to flex box ONLY on small screens */
+    flex-direction: row;
+    justify-content: space-between;
+    font-size: 3.8vw;
+    padding: 2vw 2vw 2vw 0vw;
+  }
+  
+  .tx-detail-row .td-desc {
+    flex: 1;
+    padding-left: 11vw;
+  }
+
+  .tx-detail-row .cat-ico, 
+  .tx-detail-row .cat-ico-fb {
+    width: 4.5vw !important;
+    height: 4.5vw !important;
+    flex-shrink: 0;
+  }
+
+  .tx-detail-row .td-amt {
+    width: auto;
+    padding-right: 8vw; 
+    flex-shrink: 0;
+  }
+  
+  .tx-detail-row .td-date {
+    width: 6vw;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* Completely kill the extra column spacer block on iPhone view */
+  .tx-detail-row .td-empty {
+    display: none !important;
+  }
+}
+
+/* Rotates the sub-category arrow downwards when active */
+.sub-row.visible-tx .chevron { transform: rotate(90deg); }
 
 /* ══ RECENT STYLES ══ */
 #tx-list { display:flex; flex-direction:column; margin-top:5px}
@@ -696,6 +793,203 @@ function buildRing(label, spent, budget, iconUrl, hideOnMobile, gids) {
   return item;
 }
 
+/* ══ TRANSACTIONS DATA FETCHER (CORRECTED COLUMN INDEXES) ══ */
+var DETAIL_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1492221762";
+var cachedTxData = null; 
+
+function fetchTransactionDetails(subCatName, containerEl) {
+  if (cachedTxData) {
+    renderTxRows(subCatName, containerEl);
+    return;
+  }
+  containerEl.innerHTML = "<div class='tx-detail-row'><div class='td-desc'>Loading details...</div></div>";
+  
+  fetch(DETAIL_SHEET_URL)
+    .then(res => res.text())
+    .then(text => {
+      var lines = text.split(/\r?\n/);
+      cachedTxData = [];
+      for (var i = 1; i < lines.length; i++) {
+        if (!lines[i].trim()) continue;
+        var cols = parseCsvRow(lines[i]);
+        
+        // Safeguard ensure row has elements before processing
+        if (cols.length >= 6) { 
+          cachedTxData.push({
+            date: cols[2],       // [2] - 7/10/2026
+            subCat: cols[3],     // [3] - Hu Tieu
+            detail: cols[4],     // [4] - Restaurant
+            amount: parseNum(cols[5]) // [5] - 60,000
+          });
+        }
+      }
+      renderTxRows(subCatName, containerEl);
+    })
+    .catch(err => {
+      containerEl.innerHTML = "<div class='tx-detail-row'><div class='td-desc'>Error loading data</div></div>";
+    });
+}
+
+function renderTxRows(subCatName, containerEl) {
+  containerEl.innerHTML = "";
+  
+  var cleanStr = function(str) {
+    return (str || "").toLowerCase().replace(/[\u200B-\u200D\uFEFF]/g, "").replace(/\s+/g, " ").trim();
+  };
+
+  var targetName = cleanStr(subCatName);
+  var filtered = cachedTxData.filter(function(tx) { 
+    return cleanStr(tx.subCat) === targetName; 
+  });
+  
+  if (filtered.length === 0) {
+    containerEl.innerHTML = "<div class='tx-detail-row'><div class='td-desc' style='color:rgba(255,255,255,0.4)'>No transactions found</div></div>";
+    return;
+  }
+  
+  filtered.forEach(function(tx) {
+    var row = document.createElement("div");
+    row.className = "tx-detail-row";
+    
+    // Parse timestamp safely to pull just the day digit
+    var shortDay = "";
+    if (tx.date) {
+      // Split by space first to remove the time component (14:00...)
+      var datePartOnly = tx.date.split(" ")[0];
+      var parts = datePartOnly.split(/[\/\-\.]/);
+      if (parts.length >= 2) {
+        var dayPart = parts[1]; // Handles standard MM/DD/YYYY layouts cleanly
+        if (parts[0].length > 2) dayPart = parts[2]; // Fallback for YYYY/MM/DD layouts
+        if (dayPart && dayPart.length === 1) dayPart = "0" + dayPart;
+        shortDay = dayPart || "";
+      }
+    }
+    
+    row.innerHTML = `
+      <div class="td-desc">${tx.detail || '—'}</div>
+      <div class="td-amt">${fmtK(tx.amount)}</div>
+      <div></div>
+      <div class="td-date">${shortDay || '—'}</div>
+    `;
+    containerEl.appendChild(row);
+  });
+}/* ══ TRANSACTIONS DATA FETCHER (CORRECTED COLUMN INDEXES) ══ */
+var DETAIL_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1492221762";
+var cachedTxData = null; 
+
+function fetchTransactionDetails(subCatName, containerEl) {
+  if (cachedTxData) {
+    renderTxRows(subCatName, containerEl);
+    return;
+  }
+  containerEl.innerHTML = "<div class='tx-detail-row'><div class='td-desc'>Loading details...</div></div>";
+  
+  fetch(DETAIL_SHEET_URL)
+    .then(res => res.text())
+    .then(text => {
+      var lines = text.split(/\r?\n/);
+      cachedTxData = [];
+      for (var i = 1; i < lines.length; i++) {
+        if (!lines[i].trim()) continue;
+        var cols = parseCsvRow(lines[i]);
+        
+        // Safeguard ensure row has elements before processing
+        if (cols.length >= 9) { 
+          cachedTxData.push({
+            date: cols[2],       // [2] - 7/10/2026
+            subCat: cols[4],     // [3] - Hu Tieu
+            detail: cols[6],     // [4] - Restaurant
+            cleanDetail: cols[6] || "",
+            amount: parseNum(cols[5]), // [5] - 60,000
+            iconUrl: cols[8]
+          });
+        }
+      }
+      renderTxRows(subCatName, containerEl);
+    })
+    .catch(err => {
+      containerEl.innerHTML = "<div class='tx-detail-row'><div class='td-desc'>Error loading data</div></div>";
+    });
+}
+
+function renderTxRows(subCatName, containerEl) {
+  containerEl.innerHTML = "";
+  
+  var cleanStr = function(str) {
+    return (str || "").toLowerCase().replace(/[\u200B-\u200D\uFEFF]/g, "").replace(/\s+/g, " ").trim();
+  };
+
+  var targetName = cleanStr(subCatName);
+  var filtered = cachedTxData.filter(function(tx) { 
+    return cleanStr(tx.subCat) === targetName; 
+  });
+  
+  if (filtered.length === 0) {
+    containerEl.innerHTML = "<div class='tx-detail-row'><div class='td-desc' style='color:rgba(255,255,255,0.4)'>No transactions found</div></div>";
+    return;
+  }
+  
+  filtered.forEach(function(tx) {
+    var row = document.createElement("div");
+    row.className = "tx-detail-row";
+    
+    // Parse timestamp safely to pull just the day digit
+    var shortDay = "";
+    if (tx.date) {
+      // Split by space first to remove the time component (14:00...)
+      var datePartOnly = tx.date.split(" ")[0];
+      var parts = datePartOnly.split(/[\/\-\.]/);
+      if (parts.length >= 2) {
+        var dayPart = parts[1]; // Handles standard MM/DD/YYYY layouts cleanly
+        if (parts[0].length > 2) dayPart = parts[2]; // Fallback for YYYY/MM/DD layouts
+        if (dayPart && dayPart.length === 1) dayPart = "0" + dayPart;
+        shortDay = dayPart || "";
+      }
+      // Create the image element or fallback dot if the link is empty or dead
+      var iconHtml = "";
+      if (tx.iconUrl && tx.iconUrl.indexOf("http") === 0) {
+        iconHtml = `<img src="${tx.iconUrl}" class="cat-ico" style="width:3.5vw; height:3.5vw; margin-right:1vw;" onerror="this.style.display='none'">`;
+      } else {
+        iconHtml = `<div class="cat-ico-fb" style="width:3.5vw; height:3.5vw; font-size:1.8vw; margin-right:1vw;">&bull;</div>`;
+      }
+    }
+    
+    row.innerHTML = `
+    <div class="td-desc" style="display:flex; align-items:center;">
+      ${iconHtml}
+      <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+        ${tx.detail ? cleanDetail(tx.cleanDetail) : '—'}
+      </span>
+    </div>
+    <div class="td-amt">${fmtK(tx.amount)}</div>
+    <div></div>
+    <div class="td-date">${shortDay || '—'}</div>
+  `;
+    containerEl.appendChild(row);
+  });
+}
+
+function toggleSubCategoryTx(subRowEl, subCatName) {
+  var nextEl = subRowEl.nextSibling;
+  var isCont = nextEl && nextEl.classList && nextEl.classList.contains("tx-details-container");
+  
+  if (!isCont) {
+    var container = document.createElement("div");
+    container.className = "tx-details-container";
+    subRowEl.parentNode.insertBefore(container, nextEl);
+    nextEl = container;
+  }
+  
+  if (nextEl.classList.contains("visible")) {
+    nextEl.classList.remove("visible");
+    subRowEl.classList.remove("visible-tx");
+  } else {
+    nextEl.classList.add("visible");
+    subRowEl.classList.add("visible-tx");
+    fetchTransactionDetails(subCatName, nextEl);
+  }
+}
+
 function makeIcon(iconUrl, fallback) {
   if (iconUrl && iconUrl.indexOf("http")===0) {
     var img = document.createElement("img"); img.className = "cat-ico"; img.src = iconUrl;
@@ -713,11 +1007,20 @@ function buildCatRow(item, isSub, gid) {
   else { row.dataset.id = gid; row.dataset.open = "0"; }
   var p = pctInfo(item.curr, item.last);
   var nameCell = document.createElement("div"); nameCell.className = "name-cell";
+  
   if (!isSub) {
     var chev = document.createElement("span");
     chev.className = "chevron"; chev.id = "chev-"+gid; chev.textContent = "\u25b8";
     nameCell.appendChild(chev);
+  } else {
+    // 1. Add a small chevron indicator next to sub-category names to make them look clickable
+    var subChev = document.createElement("span");
+    subChev.className = "chevron sub-chev";
+    subChev.style.fontSize = "2.5vw";
+    subChev.textContent = "\u25b8 ";
+    nameCell.appendChild(subChev);
   }
+  
   nameCell.appendChild(makeIcon(item.icon, item.name?item.name.charAt(0):"\u2022"));
   var nameSpan = document.createElement("span"); nameSpan.className = "cat-name"; nameSpan.textContent = item.name;
   nameCell.appendChild(nameSpan);
@@ -725,6 +1028,7 @@ function buildCatRow(item, isSub, gid) {
   var lastEl = document.createElement("div"); lastEl.className = "last-val"; lastEl.textContent = fmtK(item.last);
   var pctEl = document.createElement("div"); pctEl.className = "pct-val "+p.cls; pctEl.textContent = p.text;
   row.appendChild(nameCell); row.appendChild(amtEl); row.appendChild(lastEl); row.appendChild(pctEl);
+  
   if (!isSub) {
     row.addEventListener("click", function() {
       var g = this.dataset.id;
@@ -732,7 +1036,24 @@ function buildCatRow(item, isSub, gid) {
       this.dataset.open = isOpen ? "0" : "1";
       var chev2 = document.getElementById("chev-"+g);
       if (chev2) chev2.textContent = isOpen ? "\u25b8" : "\u25be";
-      document.querySelectorAll(".sub-row[data-group='"+g+"']").forEach(function(s){ isOpen?s.classList.remove("visible"):s.classList.add("visible"); });
+      
+      document.querySelectorAll(".sub-row[data-group='"+g+"']").forEach(function(s){ 
+        if (isOpen) {
+          s.classList.remove("visible");
+          // 2. Safety Cleanup: Auto-collapse open transaction logs if the main category closes
+          if (s.classList.contains("visible-tx")) {
+            toggleSubCategoryTx(s, "");
+          }
+        } else {
+          s.classList.add("visible");
+        }
+      });
+    });
+  } else {
+    // 3. ENHANCEMENT: Click listener bound to the sub-category row to call the fetch engine
+    row.addEventListener("click", function(e) {
+      e.stopPropagation(); // Stops the click from interfering with any background parent triggers
+      toggleSubCategoryTx(row, item.name);
     });
   }
   return row;
