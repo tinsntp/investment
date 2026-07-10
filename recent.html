@@ -58,29 +58,13 @@ html, body {
 .ring-remain.low  { color:#fbbf24; }   /* keep yellow */
 .ring-remain.over { color:#FF69B4; }   /* pink */
 
-.det-col-hdr {
-  display:grid; grid-template-columns:5fr 2fr 2fr 1.6fr;
-  padding:0.8vw 0.5vw; border-bottom:1px solid rgba(255,255,255,0.1);
-  margin-bottom:0.5vw; font-size:1.9vw; font-weight:600; color:rgba(255,255,255,0.35);
-}
-.det-col-hdr .ch { text-align:right; }
-.det-col-hdr .ch:first-child { text-align:left; }
-
-.expand-txt {
-  display:block; text-align:right; font-size:2.2vw; font-weight:600;
-  color:rgba(255,255,255,0.75); border-radius:4vw; cursor:pointer;
-  margin-top:15px; margin-bottom:2.5vw;
-  background:rgba(255,255,255,0.08); border:0px solid rgba(255,255,255,0.25); padding:1vw 2.5vw;
-}
-.expand-txt:hover { color:#fff; background:rgba(255,255,255,0.1); }
-
-#cat-list { display:flex; flex-direction:column; }
-.cat-row {
-  display:grid; grid-template-columns:5fr 2fr 2fr 1.6fr;
-  align-items:center; gap:1vw; padding:1.4vw 0.5vw;
-  border-bottom:1px solid rgba(255,255,255,0.08);
-  cursor:pointer; transition:background 0.15s;
-}
+.det-col-hdr{display:grid;grid-template-columns:5fr 2fr 2fr 1.6fr;padding:0.8vw 0.5vw;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:0.5vw;font-size:1.9vw;font-weight:600;color:rgba(255,255,255,0.35)}
+.det-col-hdr .ch{text-align:right}
+.det-col-hdr .ch:first-child{text-align:left}
+.expand-txt{display:block;text-align:right;font-size:2.2vw;font-weight:600;color:rgba(255,255,255,0.75);border-radius:4vw;cursor:pointer;margin-top:15px;margin-bottom:2.5vw;background:rgba(255,255,255,0.08);border:0px solid rgba(255,255,255,0.25);padding:1vw 2.5vw}
+.expand-txt:hover{color:#fff;background:rgba(255,255,255,0.1)}
+#cat-list{display:flex;flex-direction:column}
+.cat-row{display:grid;grid-template-columns:5fr 2fr 2fr 1.6fr;align-items:center;gap:1vw;padding:1.4vw 0.5vw;border-bottom:1px solid rgba(255,255,255,0.08);cursor:pointer;transition:background 0.15s}
 .cat-row:last-child { border-bottom:none; }
 .cat-row:hover { background:rgba(255,255,255,0.04); border-radius:0vw; }
 .cat-row.ring-highlighted { background:rgba(255,255,255,0.04); border-radius:0vw; }
@@ -104,152 +88,50 @@ html, body {
 .pct-val.flat { color:rgba(255,255,255,0.3); }
 #det-msg { font-size:3vw; color:rgba(255,255,255,0.4); text-align:center; padding:5vw; }
 
-.budget-card{margin-top:15px; }
-.budget-title,.budget-label{ font-size:12px; color:rgba(255,255,255,.55); margin-bottom:2px; }
-.budget-total,
-#budget-spent,.marker-value, #budget-remaining{ font-family:monospace; }
-.budget-total{font-size:18px; font-weight:500; color:rgba(255,255,255,.85); margin-bottom:16px; }
-.budget-bar-wrap{ position:relative; margin-bottom:10px; }
-.budget-bar{ position:relative; width:100%; height:7px;background:#505867; border-radius:999px; overflow:hidden; } 
- #budget-fill{ position:absolute; left:0; top:0;height:100%; border-radius:999px; /* Gradient */ background:linear-gradient( 90deg, #4f21ff 0%,#6b4dff 35%, #9a88ff 65%, #ffffff 100% );transition:width .4s ease; }
-.budget-bottom{ display:flex;justify-content:space-between; align-items:flex-start; }
-.marker-label{font-size:10px; color:rgba(255,255,255,.45); line-height:1;margin-bottom:2px; white-space:nowrap; }
-#budget-spent,
-#budget-remaining{ font-size:12px; font-weight:200; color:rgba(255,255,255,.85);}
-.budget-spent-row{ display:flex;align-items:center; gap:8px;}
-.budget-percent{ display:inline-flex; align-items:center; justify-content:center; min-width:10px; height:20px;
-padding:0 10px; border-radius:999px; background:rgba(255,255,255,.10); color:rgba(255,255,255,.85);
-font-size:11.5px; line-height:1;
-}
-#last-month-marker{ position:absolute; top:-40px;
-transform:translateX(-50%); text-align:center; pointer-events:none; }
-#last-month-marker .marker-value{ font-size:11px; color:rgba(255,255,255,.65); margin-bottom:2px; }
-#last-month-marker .triangle{ width:0;
-height:0;
-margin:auto;
-border-left:5px solid transparent; border-right:5px solid transparent; border-bottom:7px solid #fff; }
+.budget-card{margin-top:15px}
+.budget-title,.budget-label{font-size:12px;color:rgba(255,255,255,.55);margin-bottom:2px}
+.budget-total,#budget-spent,.marker-value,#budget-remaining{font-family:monospace}
+.budget-total{font-size:18px;font-weight:500;color:rgba(255,255,255,.85);margin-bottom:16px}
+.budget-bar-wrap{position:relative;margin-bottom:10px}
+.budget-bar{position:relative;width:100%;height:7px;background:#505867;border-radius:999px;overflow:hidden}
+#budget-fill{position:absolute;left:0;top:0;height:100%;border-radius:999px;background:linear-gradient( 90deg,#4f21ff 0%,#6b4dff 35%,#9a88ff 65%,#ffffff 100% );transition:width .4s ease}
+.budget-bottom{display:flex;justify-content:space-between;align-items:flex-start}
+.marker-label{font-size:10px;color:rgba(255,255,255,.45);line-height:1;margin-bottom:2px;white-space:nowrap}
+#budget-spent,#budget-remaining{font-size:12px;font-weight:200;color:rgba(255,255,255,.85)}
+.budget-spent-row{display:flex;align-items:center;gap:8px}
+.budget-percent{display:inline-flex;align-items:center;justify-content:center;min-width:10px;height:20px;padding:0 10px;border-radius:999px;background:rgba(255,255,255,.10);color:rgba(255,255,255,.85);font-size:11.5px;line-height:1}
+#last-month-marker{position:absolute;top:-40px;transform:translateX(-50%);text-align:center;pointer-events:none}
+#last-month-marker .marker-value{font-size:11px;color:rgba(255,255,255,.65);margin-bottom:2px}
+#last-month-marker .triangle{width:0;height:0;margin:auto;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:7px solid #fff}
 
 @media (min-width:401px){.budget-card{padding:10px; }}
 
-/* ==========================================================================
-   1. BASE STYLES: This handles the iPad & Desktop view flawlessly using GRID
-   ========================================================================== */
-.tx-detail-row {
-  display: grid !important; 
-  grid-template-columns: 5fr 2fr 2fr 1.6fr; /* Match parent headers perfectly */
-  align-items: center; 
-  gap: 1vw; 
-  padding: 1vw 0.5vw 1vw 0vw; 
-  font-size: 2.8vw; 
-  border-bottom: 1px solid rgba(255,255,255,0.03);
-  width: 100%;
-  box-sizing: border-box;cursor:pointer; transition:background 0.15s;
-}
-.tx-detail-row:hover { background:rgba(255,255,255,0.04); border-radius:0vw; }
-
-
-.tx-detail-row .td-desc { 
-  color: rgba(255,255,255,0.85); 
-  font-weight: 500; 
-  white-space: nowrap; 
-  overflow: hidden; 
-  text-overflow: ellipsis;
-  padding-left: 12vw; /* Aligns description to sub-category icon */
-  display: flex;
-  align-items: center;
-  min-width: 0;
+ .tx-detail-row{display:grid !important;grid-template-columns:5fr 2fr 2fr 1.6fr;align-items:center;gap:1vw;padding:1vw 0.5vw 1vw 0vw;font-size:2.6vw;border-bottom:1px solid rgba(255,255,255,0.03);width:100%;box-sizing:border-box;cursor:pointer;transition:background 0.15s}
+.tx-detail-row:hover{background:rgba(255,255,255,0.04);border-radius:0vw}
+.tx-detail-row .td-desc{color:rgba(255,255,255,0.85);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-left:12vw;display:flex;align-items:center;padding-left:13vw;min-width:0}
+.tx-detail-row .td-desc span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tx-detail-row .td-amt{text-align:right;color:rgba(255,255,255,0.85);font-weight:700;padding-left:15vw}
+.tx-detail-row .td-empty{display:block}
+.tx-detail-row .td-date{text-align:right;color:rgba(255,255,255,0.85);white-space:nowrap}
+@media (max-width:400px){.tx-detail-row{display:flex !important;flex-direction:row;justify-content:space-between;font-size:4vw;padding:2vw 2vw 2vw 0vw}
+.tx-detail-row .td-desc{flex:1;padding-left:14vw}
+.tx-detail-row .cat-ico,.tx-detail-row .cat-ico-fb{width:6vw !important;height:6vw !important;flex-shrink:0}
+.tx-detail-row .td-amt{width:auto;padding-right:9vw;flex-shrink:0}
+.tx-detail-row .td-date{width:6vw;text-align:right;flex-shrink:0}
+.tx-detail-row .td-empty{display:none !important}
+}.sub-row.visible-tx .chevron{transform:rotate(90deg)}
+.tx-details-container{display:none;width:100%}
+.tx-details-container.visible{display:block}
+.tx-date-badge{display:inline-flex;align-items:center;justify-content:center;width:5vw;height:5vw;border-radius:50%;background-color:rgba(255,255,255,0.08);color:rgba(255,255,255,0.6);font-size:2.6vw;font-weight:400;text-align:center;box-sizing:border-box}
+@media (max-width:400px){.tx-date-badge{width:6.5vw;height:6.5vw;font-size:3.6vw;background-color:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7)}
 }
 
-.tx-detail-row .td-desc span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+/*RECENT */
+#tx-list{display:flex;flex-direction:column;margin-top:5px}
+.tx-group-hdr{font-size:2.3vw;font-weight:700;color:rgba(255,255,255,0.45);letter-spacing:0.05em;padding:2.5vw 0 1vw;margin-top:0.5vw}
+.tx-group-hdr:first-child{padding-top:0.5vw}
+.row{display:flex;align-items:center;padding:2vw 0;border-bottom:1px solid rgba(255,255,255,0.08);gap:3vw;cursor:pointer;transition:background 0.2s ease,border-radius 0.2s ease,padding 0.2s ease}
 
-.tx-detail-row .td-amt {
-  text-align: right;
-  color: rgba(255,255,255,0.85); 
-  font-weight: 700;
-}
-
-.tx-detail-row .td-empty {
-  display: block; /* Show spacer on iPad to shift date to the last column */
-}
-
-.tx-detail-row .td-date {
-  text-align: right;
-  color: rgba(255,255,255,0.85);
-  white-space: nowrap;
-}
-
-
-/* ==========================================================================
-   2. MOBILE OVERRIDES: This handles the iPhone view strictly using FLEXBOX
-   ========================================================================== */
-@media (max-width: 400px) {
-  .tx-detail-row {
-    display: flex !important; /* Force switch to flex box ONLY on small screens */
-    flex-direction: row;
-    justify-content: space-between;
-    font-size: 3.8vw;
-    padding: 2vw 2vw 2vw 0vw;
-  }
-  
-  .tx-detail-row .td-desc {
-    flex: 1;
-    padding-left: 11vw;
-  }
-
-  .tx-detail-row .cat-ico, 
-  .tx-detail-row .cat-ico-fb {
-    width: 4.5vw !important;
-    height: 4.5vw !important;
-    flex-shrink: 0;
-  }
-
-  .tx-detail-row .td-amt {
-    width: auto;
-    padding-right: 8vw; 
-    flex-shrink: 0;
-  }
-  
-  .tx-detail-row .td-date {
-    width: 6vw;
-    text-align: right;
-    flex-shrink: 0;
-  }
-
-  /* Completely kill the extra column spacer block on iPhone view */
-  .tx-detail-row .td-empty {
-    display: none !important;
-  }
-}
-
-/* Rotates the sub-category arrow downwards when active */
-.sub-row.visible-tx .chevron { transform: rotate(90deg); }
-/* ══ THE HIDDEN/VISIBLE WRAPPER CONTAINER FOR SUB-DETAILS ══ */
-.tx-details-container {
-  display: none; /* Forced hidden by default */
-  width: 100%;
-}
-
-.tx-details-container.visible {
-  display: block; /* Reveals itself only when the JS toggle adds the class */
-}
-
-/* ══ RECENT STYLES ══ */
-#tx-list { display:flex; flex-direction:column; margin-top:5px}
-.tx-group-hdr {
-  font-size:2.3vw; font-weight:700; color:rgba(255,255,255,0.45);
-  letter-spacing:0.05em;
-  padding:2.5vw 0 1vw; margin-top:0.5vw;
-}
-.tx-group-hdr:first-child { padding-top:0.5vw; }
-.row {
-  display:flex; align-items:center; padding:2vw 0;
-  border-bottom:1px solid rgba(255,255,255,0.08); gap:3vw; cursor:pointer;
-  transition:background 0.2s ease, border-radius 0.2s ease, padding 0.2s ease;
-}
 .row:last-child { border-bottom:none; }
 .row:hover { background:rgba(255,255,255,0.04); border-radius:0vw; padding:2vw 1vw; }
 .row.expanded { background:rgba(255,255,255,0.04); border-radius:0vw; padding:2.2vw 1.5vw; }
@@ -963,17 +845,18 @@ function renderTxRows(subCatName, containerEl) {
       }
     }
     
-    row.innerHTML = `
-    <div class="td-desc" style="display:flex; align-items:center;">
-      ${iconHtml}
-      <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
-        ${tx.detail ? cleanDetail(tx.cleanDetail) : '—'}
-      </span>
-    </div>
-    <div class="td-amt">${fmtK(tx.amount)}</div>
-    <div></div>
-    <div class="td-date">${shortDay || '—'}</div>
-  `;
+    // Change the td-date line to look like this:
+      row.innerHTML = `
+        <div class="td-desc">
+          ${iconHtml}
+          <span>${tx.detail ? cleanDetail(tx.cleanDetail) : '—'}</span>
+        </div>
+        <div class="td-amt">${fmtK(tx.amount)}</div>
+        <div class="td-empty"></div>
+        <div class="td-date">
+          ${shortDay ? `<span class="tx-date-badge">${shortDay}</span>` : '—'}
+        </div>
+      `;
     containerEl.appendChild(row);
   });
 }
