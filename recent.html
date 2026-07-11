@@ -26,7 +26,7 @@ html, body {
   font-size:2.8vw; font-weight:600; color:rgba(255,255,255,0.4); transition:color 0.2s;
 }
 .tab-btn.active { color:#fff; }
-.tab-btn img { width:4vw; height:4vw; object-fit:contain; opacity:0.4; transition:opacity 0.2s; }
+.tab-btn img { width:3.5vw; height:3.5vw; object-fit:contain; opacity:0.4; transition:opacity 0.2s; }
 .tab-btn.active img { opacity:1; }
 .tab-line {
   position:absolute; bottom:0; height:2.5px; background:#fff; border-radius:2px;
@@ -44,7 +44,7 @@ html, body {
   .tab-btn.active span {
     display: inline-block; /* Or 'block' depending on your alignment layout */
     margin-left: 6px;      /* Adds nice spacing right next to the active icon */
-    font-size: 15px;       /* Keeps it neat and compact for narrow displays */
+    font-size: 14px;       /* Keeps it neat and compact for narrow displays */
   }
 }
 
@@ -119,9 +119,9 @@ html, body {
 #last-month-marker .marker-value{font-size:11px;color:rgba(255,255,255,.65);margin-bottom:2px}
 #last-month-marker .triangle{width:0;height:0;margin:auto;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:7px solid #fff}
 
-.tx-detail-row{display:grid !important;grid-template-columns:5fr 2fr 2fr 1.6fr;align-items:center;gap:1vw;padding:1vw 0.5vw 1vw 0vw;font-size:2.6vw;border-bottom:1px solid rgba(255,255,255,0.03);width:100%;box-sizing:border-box;cursor:pointer;transition:background 0.15s}
+.tx-detail-row{display:grid !important;grid-template-columns:5fr 2fr 2fr 1.6fr;align-items:center;gap:1vw;padding:1vw .5vw 1vw 0vw;font-size:2.6vw;border-bottom:1px solid rgba(255,255,255,0.03);width:100%;box-sizing:border-box;cursor:pointer;transition:background 0.15s}
 .tx-detail-row:hover{background:rgba(255,255,255,0.04);border-radius:0vw}
-.tx-detail-row .td-desc{color:rgba(255,255,255,0.85);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-left:12vw;display:flex;align-items:center;padding-left:13vw;min-width:0}
+.tx-detail-row .td-desc{color:rgba(255,255,255,0.85);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-left:11vw;display:flex;align-items:center;min-width:0}
 .tx-detail-row .td-desc span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tx-detail-row .td-amt{text-align:right;color:rgba(255,255,255,0.85);font-weight:700;padding-left:7vw}
 .tx-detail-row .td-empty{display:block}
@@ -262,10 +262,10 @@ to{transform:rotate(360deg)}
 
 #sub-list{display:flex;flex-direction:column}
 #sub-loading,#sub-empty{font-size:13px;color:rgba(255,255,255,0.4);padding:24px 0;text-align:center}
-.sub-row{display:flex;align-items:center;padding:2.5vw 0;border-bottom:1px solid rgba(255,255,255,0.08);gap:vw;cursor:pointer;transition:background 0.2s ease,border-radius 0.2s ease,padding 0.2s ease}
+.sub-row{display:flex;align-items:center;border-bottom:1px solid rgba(255,255,255,0.08);gap:vw;cursor:pointer;transition:background 0.2s ease,border-radius 0.2s ease,padding 0.2s ease}
 .sub-row:hover{background:rgba(255,255,255,0.04)}
 .sub-icon{width:42px;height:42px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff}
-.sub-mid{flex:1;min-width:0}
+.sub-mid{flex:1;min-width:0;margin:2vw}
 .sub-name-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;flex-wrap:wrap}
 .sub-name-left{display:flex;align-items:center;gap:8px;min-width:0;flex-wrap:wrap}
 .sub-name{font-size:14.5px;font-weight:700;color:rgba(255,255,255,0.95);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -275,7 +275,7 @@ to{transform:rotate(360deg)}
 .sub-price{font-size:14.5px;font-weight:700;color:rgba(255,255,255,0.95);text-align:right;white-space:nowrap;flex-shrink:0}
 .sub-price-unit{font-size:11px;font-weight:500;color:rgba(255,255,255,0.4);margin-left:2px}
 
-.add-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:600;align-items:flex-end;justify-content:center}
+.add-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:600;align-items:center;justify-content:center}
 .add-modal-overlay.open{display:flex!important;}
 .add-modal{background:#232323;width:100%;max-width:480px;border-radius:5vw 5vw 0 0;padding:5vw 5vw 8vw;max-height:85vh;overflow-y:auto}
 .add-modal h3{font-size:4.2vw;margin-bottom:4vw}
@@ -327,7 +327,7 @@ to{transform:rotate(360deg)}
     <img src="https://github.com/tinsntp/investment/blob/main/icon/trend-g.png?raw=true" />
     <span>Overview</span>
   </div>
-  <!-- 🟢 Fixed missing quote on data-idx and corrected id index below -->
+  
   <div class="tab-btn" data-idx="3" id="tab-btn-3">
     <img src="https://github.com/tinsntp/investment/blob/main/icon/cloud.png?raw=true" />
     <span>Subscription</span>
@@ -1720,9 +1720,9 @@ function applyLayout(){
   if (!caDataLoaded) { caLoadBI(); caLoadDonut(); caDataLoaded=true; }
 
   // Tab bar
-  document.querySelectorAll(".tab-btn").forEach(function(el){el.style.fontSize=isMobile?"5vw":"3.1vw";});
+  document.querySelectorAll(".tab-btn").forEach(function(el){el.style.fontSize=isMobile?"4vw":"3.3vw";});
   document.querySelectorAll(".tab-btn").forEach(function(el){el.style.padding=isMobile?"2.4vw 0":"1.5vw 0";});
-  document.querySelectorAll(".tab-btn img").forEach(function(el){el.style.width=isMobile?"7vw":"5vw";el.style.height=isMobile?"7vw":"5vw";});
+  document.querySelectorAll(".tab-btn img").forEach(function(el){el.style.width=isMobile?"5.5vw":"4vw";el.style.height=isMobile?"5.5vw":"4vw";});
 
   // Rings
   var ringSz=isMobile?"25vw":"12vw";
