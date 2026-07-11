@@ -244,7 +244,7 @@ html, body {
 /* ══ SUBSCRIPTION SLIDE ══ */
 .card{max-width:100%;margin: 2vw;}
 .sub-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.sub-title{font-size:15px;font-weight:700;color:rgba(255,255,255,0.85)}
+.sub-title{font-size:14px;font-weight:700;color:rgba(255,255,255,0.85)}
 .sub-refresh-row{display:flex;align-items:center;gap:8px}
 .sub-last-updated{font-size:11px;color:rgba(255,255,255,0.35);white-space:nowrap}
 .sub-refresh-btn{border:none;background:transparent;color:rgba(255,255,255,0.5);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:4px;border-radius:50%;transition:color 0.15s,background 0.15s}
@@ -303,7 +303,7 @@ to{transform:rotate(360deg)}
 .sub-swipe-container{position:relative;width:100%;overflow:hidden;margin-bottom:0;border-radius:12px;background:#191919;}
 .sub-row{position:relative;z-index:2;background:#191919;width:100%;margin-bottom:0 !important;will-change:transform;cursor:grab}
 .sub-row:active{cursor:grabbing}
-.sub-delete-action{position:absolute;margin-right:2px;top:0;right:0;bottom:0;width:70px;z-index:1;background-color:#ef4444;color:#ffffff;display:flex;align-items:center;justify-content:center;border-top-right-radius:12px;border-bottom-right-radius:12px;cursor:pointer}
+.sub-delete-action{position:absolute;margin-right:2px;margin-bottom:2px;top:0;right:0;bottom:0;width:70px;z-index:1;background-color:#ef4444;color:#ffffff;display:flex;align-items:center;justify-content:center;border-top-right-radius:12px;border-bottom-right-radius:12px;cursor:pointer}
 .sub-delete-action svg{pointer-events:none}
 .sub-delete-action:hover{background-color:#dc2626}
 @media (min-pointer:fine) and (min-width:401px){.sub-swipe-container:hover .sub-row{width:calc(100% - 70px);border-top-right-radius:0;border-bottom-right-radius:0}
@@ -1720,7 +1720,7 @@ function applyLayout(){
   if (!caDataLoaded) { caLoadBI(); caLoadDonut(); caDataLoaded=true; }
 
   // Tab bar
-  document.querySelectorAll(".tab-btn").forEach(function(el){el.style.fontSize=isMobile?"4vw":"3.3vw";});
+  document.querySelectorAll(".tab-btn").forEach(function(el){el.style.fontSize=isMobile?"4vw":"3vw";});
   document.querySelectorAll(".tab-btn").forEach(function(el){el.style.padding=isMobile?"2.4vw 0":"1.5vw 0";});
   document.querySelectorAll(".tab-btn img").forEach(function(el){el.style.width=isMobile?"5.5vw":"4vw";el.style.height=isMobile?"5.5vw":"4vw";});
 
