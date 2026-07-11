@@ -2304,11 +2304,11 @@ function deleteSubscription(itemId) {
   var shortName = getDisplayName(targetItem.name, true);
   modalOverlay.innerHTML = `
     <div style="background: #1e1e1e; border: 1px solid rgba(255,255,255,0.1); width: 85%; max-width: 320px; border-radius: 16px; padding: 24px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
-      <h3 style="color: #fff; margin: 0 0 12px 0; font-size: 16px; font-weight: 600;">Delete Subscription?</h3>
+      <h3 style="color: #fff; margin: 0 0 12px 0; font-size: 16px!important; font-weight: 600;">Delete Subscription?</h3>
       <p style="color: rgba(255,255,255,0.6); margin: 0 0 24px 0; font-size: 14px; line-height: 1.4;">Are you sure you want to permanently remove <strong>${shortName}</strong>?</p>
       <div style="display: flex; gap: 12px;">
-        <button id="custom-del-cancel" style="flex: 1; background: rgba(255,255,255,0.08); border: none; color: #fff; padding: 12px; border-radius: 8px; font-size: 14px;font-weight: 500; cursor: pointer;">Cancel</button>
-        <button id="custom-del-confirm" style="flex: 1; background: #ff4d4d; border: none; color: #fff; padding: 12px; border-radius: 8px; font-size: 14px;font-weight: 600; cursor: pointer;">Delete</button>
+        <button id="custom-del-cancel" style="flex: 1; background: rgba(255,255,255,0.08); border: none; color: #fff; padding: 12px; border-radius: 8px; font-size: 14px!important;font-weight: 500; cursor: pointer;">Cancel</button>
+        <button id="custom-del-confirm" style="flex: 1; background: #ff4d4d; border: none; color: #fff; padding: 12px; border-radius: 8px; font-size: 14px!important;font-weight: 600; cursor: pointer;">Delete</button>
       </div>
     </div>
   `;
