@@ -36,8 +36,7 @@ to{transform:rotate(360deg)}
 .sub-name-left{display:flex;align-items:center;gap:8px;min-width:0;flex-wrap:wrap}
 .sub-name{font-size:14.5px;font-weight:700;color:rgba(255,255,255,0.95);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sub-badge{font-size:10.5px;font-weight:700;color:#14b8a6;background:rgba(74,222,128,0.14);border-radius:99px;padding:2px 9px;white-space:nowrap}
-@media screen and (max-width:400px){.sub-badge{display:none}
-}.sub-expiry{display:flex;align-items:center;gap:5px;font-size:12px;color:rgba(255,255,255,0.45);white-space:nowrap}
+.sub-expiry{display:flex;align-items:center;gap:5px;font-size:12px;color:rgba(255,255,255,0.45);white-space:nowrap}
 .sub-expiry svg{flex-shrink:0;opacity:0.6}
 .sub-price{font-size:14.5px;font-weight:700;color:rgba(255,255,255,0.95);text-align:right;white-space:nowrap;flex-shrink:0}
 .sub-price-unit{font-size:11px;font-weight:500;color:rgba(255,255,255,0.4);margin-left:2px}
@@ -104,7 +103,7 @@ to{transform:rotate(360deg)}
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  text-align: center !important;
+  text-align: left !important;
 }
 
 /* ── Tablet Settings (iPad) ── */
@@ -126,6 +125,72 @@ to{transform:rotate(360deg)}
     border-radius: 8px !important;
   }
 }
+/* ── The Parent Row Wrapper Context ── */
+.sub-swipe-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  background: #191919;
+}
+
+/* Ensure sub-row stays on top but slides gracefully */
+.sub-row {
+  position: relative;
+  z-index: 2; 
+  background: #191919;
+  width: 100%;
+  margin-bottom: 0 !important;
+  will-change: transform;
+  cursor: grab;
+}
+
+.sub-row:active {
+  cursor: grabbing;
+}
+
+/* ── 🟢 Fixed: Always visible behind the card row ── */
+.sub-delete-action {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 70px; /* Maps to maxSwipeWidth */
+  z-index: 1; /* Perfectly layers directly beneath your moving card row */
+  background-color: #ef4444;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+  cursor: pointer;
+}
+
+.sub-delete-action svg {
+  pointer-events: none; /* Prevents raw icon lines from blocking clicks */
+}
+
+.sub-delete-action:hover {
+  background-color: #dc2626; /* Slight dark contrast when target is tracked */
+}
+
+/* ── 🟢 COMPUTER / LAPTOP DESKTOP HOVER RULES ── */
+@media (min-pointer: fine) and (min-width: 401px) {
+  /* On hover, safely pull back card item width to prevent amount overlap */
+  .sub-swipe-container:hover .sub-row {
+    width: calc(100% - 70px);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  
+  /* Elevate and reveal the active clickable delete action zone layer */
+  .sub-swipe-container:hover .sub-delete-action {
+    opacity: 1;
+    z-index: 3; /* Pops on top of the row background so the mouse click registers instantly! */
+  }
+}
   
 </style>
 </head>
@@ -135,7 +200,6 @@ to{transform:rotate(360deg)}
   <div class="sub-header-row">
     <div class="sub-title">Spending overview</div> 
   </div>
-
   <div class="sub-stats-row">
     <div class="sub-stat-block">
       <div class="sub-stat-val" id="sub-total-val">&#x2014;</div>
@@ -146,14 +210,12 @@ to{transform:rotate(360deg)}
       <div class="sub-stat-label" id="sub-total-excl-label">Excl. KungfuStocksPro</div>
     </div>
   </div>
-
   <div class="sub-list-title">
   <span>Active subscription</span>
   <button class="add-inline-btn" id="add-fab">+</button>
 </div>
   <div id="sub-loading">Loading&hellip;</div>
   <div id="sub-list"></div>
-  
 </div>
 
 <div class="add-modal-overlay" id="add-modal-overlay">
@@ -303,6 +365,8 @@ function stripEmoji(str) {
 /* Matching is case-insensitive against the full (emoji-stripped) name.
    Add more entries here any time another name needs a short form on iPhone. */
 var MOBILE_SHORT_NAMES = [
+  { match: "fpt adsl vl", short: "ADSL VL" },
+  { match: "fpt adsl tg", short: "ADSL TG" },
   { match: "kungfu stocks pro", short: "KFSP" },
   { match: "youtube premium",   short: "Premium" }
 ];
@@ -367,6 +431,7 @@ function loadSubscriptions() {
 }
 
 function renderSubscriptions(items) {
+  globalSubItems = items;
   document.getElementById("sub-loading").style.display = "none";
   var listEl = document.getElementById("sub-list");
   listEl.innerHTML = "";
@@ -382,7 +447,7 @@ function renderSubscriptions(items) {
   var total = 0;
   var totalExclKfs = 0;
 
-  items.forEach(function(item){
+  items.forEach(function(item, index){ // 🟢 Added index as fallback id
     total += item.price;
     if (item.name.toLowerCase().indexOf("kungfu stocks pro") < 0) {
       totalExclKfs += item.price;
@@ -390,6 +455,25 @@ function renderSubscriptions(items) {
 
     var icon = iconFor(item.name);
 
+    // 🟢 1. Create Swipe Wrapper Container
+    var swipeContainer = document.createElement("div");
+    swipeContainer.className = "sub-swipe-container";
+
+    // 🟢 2. Create the Hidden Delete Action Layer underneath
+    var deleteAction = document.createElement("div");
+    deleteAction.className = "sub-delete-action";
+    var itemId = item.id || index; // Use unique row ID if available, otherwise array index
+    deleteAction.setAttribute("onclick", "deleteSubscription('" + itemId + "')");
+    deleteAction.innerHTML = `
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="3 6 5 6 21 6"></polyline>
+        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        <line x1="10" y1="11" x2="10" y2="17"></line>
+        <line x1="14" y1="11" x2="14" y2="17"></line>
+      </svg>
+    `;
+
+    // 🟢 3. Your current sub-row acts as the moving card
     var row = document.createElement("div");
     row.className = "sub-row";
 
@@ -431,7 +515,7 @@ function renderSubscriptions(items) {
     nameEl.textContent = getDisplayName(item.name, isMobile);
     var badge = document.createElement("span");
     badge.className = "sub-badge";
-    badge.textContent = "Active Subscription";
+    badge.textContent = "Active";
     nameLeft.appendChild(nameEl);
     nameLeft.appendChild(badge);
 
@@ -453,7 +537,16 @@ function renderSubscriptions(items) {
 
     row.appendChild(iconEl);
     row.appendChild(mid);
-    listEl.appendChild(row);
+
+    // 🟢 4. Glue everything together inside the container setup
+    swipeContainer.appendChild(deleteAction);
+    swipeContainer.appendChild(row);
+    
+    // 🟢 5. Attach the real-time gesture listener directly to this row card
+    attachSwipeEvents(row, swipeContainer);
+
+    // 🟢 6. Append the swipe container shell to the DOM list target
+    listEl.appendChild(swipeContainer);
   });
 
   document.getElementById("sub-total-val").textContent = fmtFull(total);
@@ -465,16 +558,118 @@ function renderSubscriptions(items) {
     ' <span class="hl-teal">Excl.</span> KungfuStocksPro';
 }
 
+// 🟢 Add this helper function to your script globally so you can call it anywhere
+function closeAllSwipeRows() {
+  document.querySelectorAll(".sub-swipe-container").forEach(function (container) {
+    container.classList.remove("swiped");
+    var cardRow = container.querySelector(".sub-row");
+    if (cardRow) {
+      cardRow.style.transition = "transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)";
+      cardRow.style.transform = "translateX(0px)";
+    }
+    // Reset desktop button layering
+    var btn = container.querySelector(".sub-delete-action");
+    if (btn) btn.style.zIndex = "1";
+  });
+}
+
+function attachSwipeEvents(cardRow, container) {
+  var startX = 0;
+  var currentX = 0;
+  var isDragging = false;
+  var maxSwipeWidth = 70;
+
+  cardRow.addEventListener("touchstart", function (e) {
+    handleStart(e.touches[0].clientX);
+  }, { passive: true });
+
+  cardRow.addEventListener("touchmove", function (e) {
+    handleMove(e.touches[0].clientX);
+  }, { passive: true });
+
+  cardRow.addEventListener("touchend", function () {
+    handleEnd();
+  });
+
+  cardRow.addEventListener("mousedown", function (e) {
+    isDragging = true;
+    handleStart(e.clientX);
+    cardRow.style.cursor = "grabbing";
+  });
+
+  window.addEventListener("mousemove", function (e) {
+    if (!isDragging) return;
+    handleMove(e.clientX);
+  });
+
+  window.addEventListener("mouseup", function () {
+    if (!isDragging) return;
+    isDragging = false;
+    cardRow.style.cursor = "grab";
+    handleEnd();
+  });
+
+  function handleStart(clientX) {
+    // 🟢 Close all OTHER rows when you start dragging a new one
+    document.querySelectorAll(".sub-swipe-container.swiped").forEach(function (el) {
+      if (el !== container) {
+        el.classList.remove("swiped");
+        var activeRow = el.querySelector(".sub-row");
+        if (activeRow) activeRow.style.transform = "translateX(0px)";
+        var activeBtn = el.querySelector(".sub-delete-action");
+        if (activeBtn) activeBtn.style.zIndex = "1";
+      }
+    });
+
+    startX = clientX;
+    cardRow.style.transition = "none";
+  }
+
+  function handleMove(clientX) {
+    currentX = clientX;
+    var diffX = currentX - startX;
+
+    if (diffX < 0) {
+      var translateAmount = Math.max(diffX, -maxSwipeWidth);
+      cardRow.style.transform = "translateX(" + translateAmount + "px)";
+    }
+  }
+
+  function handleEnd() {
+    var diffX = currentX - startX;
+    cardRow.style.transition = "transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)";
+
+    // 🟢 If swiped left past half the button width, snap open and raise button priority
+    if (diffX < -(maxSwipeWidth / 2)) {
+      container.classList.add("swiped");
+      cardRow.style.transform = "translateX(-" + maxSwipeWidth + "px)";
+      
+      var btn = container.querySelector(".sub-delete-action");
+      if (btn) btn.style.zIndex = "3"; // Makes it clickable on desktop
+    } else {
+      // 🟢 Force it back completely if it didn't cross the threshold
+      container.classList.remove("swiped");
+      cardRow.style.transform = "translateX(0px)";
+      var btn = container.querySelector(".sub-delete-action");
+      if (btn) btn.style.zIndex = "1";
+    }
+    
+    startX = 0;
+    currentX = 0;
+  }
+}
+
 window.addEventListener("resize", function(){
   if (lastLoadedItems.length) renderSubscriptions(lastLoadedItems);
 });
 
 /* ══ ADD RECORD (writes to the sheet via Apps Script Web App) ══ */
-var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzXNlnpRsCEaOuLP1IIHE2so-r1xnMq0i4SKKxp3IK8jmfesTG8IgaliNqTBvZNL-Hu/exec"; // ends in /exec
+var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxb1lPB9kZh-Q5C01U-DjuesOVlHgDEorEBK-pavyJUd5jPxZSub-Rx6unOCTDdrCS2/exec"; // ends in /exec
 
 var addOverlay = document.getElementById("add-modal-overlay");
 var addStatusEl = document.getElementById("add-status");
 var addSubmitBtn = document.getElementById("add-submit-btn");
+var globalSubItems = []; // 🟢 Global variable to hold your data backup safely
 
 document.getElementById("add-fab").addEventListener("click", function(){
   document.getElementById("add-title").value = "";
@@ -537,6 +732,53 @@ document.getElementById("add-submit-btn").addEventListener("click", function(){
     addSubmitBtn.disabled = false;
   });
 });
+
+function deleteSubscription(itemId) {
+  var targetItem = globalSubItems[itemId] || null; 
+  
+  if (!targetItem) {
+    alert("Subscription could not be verified.");
+    return;
+  }
+
+  var shortName = getDisplayName(targetItem.name, true);
+  
+  if (!confirm("Are you sure you want to permanently delete " + shortName + "?")) {
+    // 🟢 User cancelled: snap everything back neatly immediately
+    closeAllSwipeRows();
+    return;
+  }
+
+  var deletePayload = {
+    action: "delete",
+    title: targetItem.name
+  };
+
+  var containers = document.getElementById("sub-list").children;
+  if (containers[itemId]) {
+    containers[itemId].style.opacity = "0.3";
+    containers[itemId].style.pointerEvents = "none";
+  }
+
+  fetch(APPS_SCRIPT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "text/plain" },
+    body: JSON.stringify(deletePayload)
+  })
+  .then(function() {
+    // 🟢 Clear swipe styling positions before rebuilding the layout
+    closeAllSwipeRows();
+    setTimeout(function() {
+      loadSubscriptions(); 
+    }, 300);
+  })
+  .catch(function(err) {
+    alert("Failed to delete records: " + err.message);
+    closeAllSwipeRows();
+    loadSubscriptions();
+  });
+}
 
 loadSubscriptions();
 setInterval(loadSubscriptions, 60000);
