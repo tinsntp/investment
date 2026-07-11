@@ -277,7 +277,8 @@ to{transform:rotate(360deg)}
 
 .add-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:600;align-items:center;justify-content:center}
 .add-modal-overlay.open{display:flex!important;}
-.add-modal{background:#232323;width:100%;max-width:480px;border-radius:5vw 5vw 0 0;padding:5vw 5vw 8vw;max-height:85vh;overflow-y:auto}
+@media (min-width:401px){.add-modal{border-radius:5vw 5vw 0 0!important;}.add-modal-overlay{align-items:flex-end;}}
+.add-modal{background:#232323;width:100%;max-width:480px;border-radius:5vw;padding:5vw 5vw 8vw;max-height:85vh;overflow-y:auto}
 .add-modal h3{font-size:4.2vw;margin-bottom:4vw}
 .add-field{margin-bottom:3.5vw}
 .add-field label{display:block;font-size:3.8vw;color:rgba(255,255,255,0.5);margin-bottom:1.2vw}
