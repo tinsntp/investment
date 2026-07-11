@@ -22,6 +22,9 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .slides-wrap { display:flex; width:500%; height:100%; transition:transform 0.3s cubic-bezier(0.4,0,0.2,1); }
 .slide { width:20%; height:100%; overflow-y:auto; overflow-x:hidden; padding:0vw; flex-shrink:0; }
 
+/* ══ BTC STYLES ══ */
+.tradingview-widget-container{height:350px!important;}
+
 /* ══ DETAIL STYLES ══ */
 #rings-wrap{display:flex;flex-wrap:wrap;gap:1.5vw;justify-content:space-around;margin-bottom:1.5vw}
 .ring-item{display:flex;flex-direction:column;align-items:center;gap:0.6vw;flex:1;cursor:pointer;border-radius:2vw;padding:1.5vw 0.5vw;transition:background 0.2s}
@@ -426,9 +429,20 @@ to{transform:rotate(360deg)}
       </div>
     </div>
     <!-- BTC SLIDE -->
+    <!-- BTC SLIDE CONTAINER -->
     <div class="slide" id="slide-4" data-idx="4">
-      
+      <!-- TradingView Widget BEGIN -->
+      <div class="tradingview-widget-container">
+        <div class="tradingview-widget-container__widget"></div>
+        <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/markets/" rel="noopener nofollow" target="_blank"><span class="blue-text">World markets</span></a> by TradingView</div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
+        {"lineWidth":2,"lineType":0,"chartType":"area","fontColor":"rgb(106, 109, 120)","gridLineColor":"rgba(242, 242, 242, 0)","volumeUpColor":"rgba(34, 171, 148, 0.5)","volumeDownColor":"rgba(247, 82, 95, 0.5)","backgroundColor":"#0F0F0F","widgetFontColor":"#DBDBDB","upColor":"#22ab94","downColor":"#f7525f","borderUpColor":"#22ab94","borderDownColor":"#f7525f","wickUpColor":"#22ab94","wickDownColor":"#f7525f","colorTheme":"dark","isTransparent":true,"locale":"en","chartOnly":false,"scalePosition":"right","scaleMode":"Normal","fontFamily":"-apple-system, BlinkMacSystemFont, Trebuchet MS, Roboto, Ubuntu, sans-serif","valuesTracking":"1","changeMode":"price-and-percent","symbols":[["COINBASE:BTCUSD|1M"],["PYTH:XAUUSD|1D"],["VANTAGE:SP500|1M"]],"dateRanges":["1d|1","1m|30","3m|60","12m|1D","60m|1W","all|1M"],"fontSize":"10","headerFontSize":"medium","autosize":true,"width":"100%","height":"100%","noTimeScale":false,"hideDateRanges":false,"hideMarketStatus":false,"hideSymbolLogo":false}
+        </script>
+      </div>
+      <!-- TradingView Widget END -->
     </div>
+
+
     <!-- TRANSACTION SLIDE -->
     <div class="slide" id="slide-5" data-idx="5">
       
@@ -745,6 +759,7 @@ function positionTabLine() {
 
   tabBar.addEventListener("pointerdown", onPointerDown);
 })();
+
 
 /* ══ SHARED UTILS ══ */
 function parseCsvRow(line) {
@@ -2359,7 +2374,99 @@ function deleteSubscription(itemId) {
     });
   });
 }
+function renderTradingViewWidget() {
+  var container = document.getElementById("tv-widget-container");
+  if (!container) return;
 
+  // 1. Completely destroy the old target div and rebuild it fresh
+  var oldTarget = document.getElementById("tv-widget-target");
+  if (oldTarget) oldTarget.remove();
+
+  var newTarget = document.createElement("div");
+  newTarget.id = "tv-widget-target";
+  newTarget.className = "tradingview-widget-container__widget";
+  
+  // Force full size constraints on the dynamically generated element
+  newTarget.style.width = "100%";
+  newTarget.style.height = "100%";
+  container.appendChild(newTarget);
+
+  // 2. Remove any old leftover script instances from this container
+  var oldScript = container.querySelector("script");
+  if (oldScript) oldScript.remove();
+
+  // 3. Create the configuration script block
+  var script = document.createElement("script");
+  script.type = "text/javascript";
+  script.src = "https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js";
+  script.async = true;
+
+  // Your exact widget layout configuration options
+  var widgetOptions = {
+    "lineWidth": 2,
+    "lineType": 0,
+    "chartType": "area",
+    "fontColor": "rgb(106, 109, 120)",
+    "gridLineColor": "rgba(242, 242, 242, 0)",
+    "volumeUpColor": "rgba(34, 171, 148, 0.5)",
+    "volumeDownColor": "rgba(247, 82, 95, 0.5)",
+    "backgroundColor": "#0F0F0F",
+    "widgetFontColor": "#DBDBDB",
+    "upColor": "#22ab94",
+    "downColor": "#f7525f",
+    "borderUpColor": "#22ab94",
+    "borderDownColor": "#f7525f",
+    "wickUpColor": "#22ab94",
+    "wickDownColor": "#f7525f",
+    "colorTheme": "dark",
+    "isTransparent": true, 
+    "locale": "en",
+    "chartOnly": false,
+    "scalePosition": "right",
+    "scaleMode": "Normal",
+    "fontFamily": "-apple-system, BlinkMacSystemFont, Trebuchet MS, Roboto, Ubuntu, sans-serif",
+    "valuesTracking": "1",
+    "changeMode": "price-and-percent",
+    "symbols": [
+      ["COINBASE:BTCUSD|1M"],
+      ["PYTH:XAUUSD|1D"],
+      ["VANTAGE:SP500|1M"]
+    ],
+    "dateRanges": [
+      "1d|1",
+      "1m|30",
+      "3m|60",
+      "12m|1D",
+      "60m|1W",
+      "all|1M"
+    ],
+    "fontSize": "10",
+    "headerFontSize": "medium",
+    "autosize": true,
+    "width": "100%",
+    "height": "100%",
+    "noTimeScale": false,
+    "hideDateRanges": false,
+    "hideMarketStatus": false,
+    "hideSymbolLogo": false
+  };
+
+  script.innerHTML = JSON.stringify(widgetOptions);
+
+  // 4. Append script to run layout parsing
+  container.appendChild(script);
+}
+
+
+function onTabChange(activeTabIndex) {
+  // Check if it matches your TradingView tab index layout slot
+  if (activeTabIndex === 4) { 
+    // A tiny 50ms delay gives the UI time to expand so TradingView can calculate width safely
+    setTimeout(function() {
+      renderTradingViewWidget();
+    }, 50);
+  }
+}
 
 loadSubscriptions();
 
@@ -2382,6 +2489,8 @@ setInterval(caLoadDonut,60000);
 window.addEventListener("load",function(){positionTabLine();applyLayout();caApplyLayout();});
 window.addEventListener("resize",applyLayout);
 
+
 </script>
+
 </body>
 </html>
