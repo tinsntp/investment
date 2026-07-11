@@ -303,7 +303,7 @@ to{transform:rotate(360deg)}
 .sub-swipe-container{position:relative;width:100%;overflow:hidden;margin-bottom:0;border-radius:12px;background:#191919;}
 .sub-row{position:relative;z-index:2;background:#191919;width:100%;margin-bottom:0 !important;will-change:transform;cursor:grab}
 .sub-row:active{cursor:grabbing}
-.sub-delete-action{position:absolute;margin-right:2px;margin-bottom:2px;top:0;right:0;bottom:0;width:70px;z-index:1;background-color:#ef4444;color:#ffffff;display:flex;align-items:center;justify-content:center;border-top-right-radius:12px;border-bottom-right-radius:12px;cursor:pointer}
+.sub-delete-action{cursor: pointer;position:absolute;margin-right:2px;margin-bottom:2px;top:0;right:0;bottom:0;width:70px;z-index:1;background-color:#ef4444;color:#ffffff;display:flex;align-items:center;justify-content:center;border-top-right-radius:12px;border-bottom-right-radius:12px;cursor:pointer}
 .sub-delete-action svg{pointer-events:none}
 .sub-delete-action:hover{background-color:#dc2626}
 @media (min-pointer:fine) and (min-width:401px){.sub-swipe-container:hover .sub-row{width:calc(100% - 70px);border-top-right-radius:0;border-bottom-right-radius:0}
@@ -1738,7 +1738,7 @@ function applyLayout(){
   var amtFs=isMobile?"4.6vw":"2.8vw",subAmtFs=isMobile?"4.1vw":"2.8vw";
   var lastFs=isMobile?"4.1vw":"2.8vw",pctFs=isMobile?"4.1vw":"2.8vw";
   var catIcoSz=isMobile?"8vw":"7vw",subIcoSz=isMobile?"7.5vw":"6vw";
-  var chevFs=isMobile?"5.5vw":"4.5vw",rowPad=isMobile?"2vw 0.5vw":"1.4vw 0.5vw";
+  var chevFs=isMobile?"5.5vw":"4.5vw",rowPad=isMobile?"1vw 0.5vw":"0.5vw 0.5vw";
 
   document.querySelectorAll(".chevron").forEach(function(el){el.style.fontSize=chevFs;});
   document.querySelectorAll(".main-row,.sub-row.visible").forEach(function(el){el.style.gridTemplateColumns=gridCols;el.style.padding=rowPad;});
@@ -1975,7 +1975,15 @@ function renderSubscriptions(items) {
     var deleteAction = document.createElement("div");
     deleteAction.className = "sub-delete-action";
     var itemId = item.id || index; // Use unique row ID if available, otherwise array index
-    deleteAction.setAttribute("onclick", "deleteSubscription('" + itemId + "')");
+    //  UPDATED FIX (Remove the setAttribute line and place this further down inside items.forEach):
+    deleteAction.addEventListener("click", function(e) {
+      e.preventDefault();
+      deleteSubscription(itemId);
+    });
+    deleteAction.addEventListener("touchend", function(e) {
+      e.preventDefault();
+      deleteSubscription(itemId);
+    }, { passive: false });
     deleteAction.innerHTML = `
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="3 6 5 6 21 6"></polyline>
