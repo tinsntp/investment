@@ -1973,16 +1973,25 @@ function renderSubscriptions(items) {
     swipeContainer.className = "sub-swipe-container";
 
     // 🟢 2. Create the Hidden Delete Action Layer underneath
+    // Find this section inside your items.forEach loop:
     var deleteAction = document.createElement("div");
     deleteAction.className = "sub-delete-action";
-    var itemId = item.id || index; // Use unique row ID if available, otherwise array index
-    //  UPDATED FIX (Remove the setAttribute line and place this further down inside items.forEach):
+    var itemId = item.id || index;
+
+    // 1. Remove the old setAttribute("onclick", ...) entirely! 
+    // 2. Instead, explicitly mark the parent swipe container with a dataset ID tracking key:
+    swipeContainer.setAttribute("data-id", itemId);
+
+    // 3. Attach standard and mobile touch event handlers directly to the trash layout box:
     deleteAction.addEventListener("click", function(e) {
       e.preventDefault();
+      e.stopPropagation();
       deleteSubscription(itemId);
     });
+
     deleteAction.addEventListener("touchend", function(e) {
       e.preventDefault();
+      e.stopPropagation();
       deleteSubscription(itemId);
     }, { passive: false });
     deleteAction.innerHTML = `
@@ -2181,7 +2190,9 @@ function attachSwipeEvents(cardRow, container) {
 }
 
 window.addEventListener("resize", function(){
-  if (globalSubItems && globalSubItems.length) renderSubscriptions(globalSubItems);
+  if (globalSubItems && globalSubItems.length) {
+    renderSubscriptions(globalSubItems);
+  }
 });
 
 /* ══ ADD RECORD (writes to the sheet via Apps Script Web App) ══ */
@@ -2255,6 +2266,7 @@ document.getElementById("add-submit-btn").addEventListener("click", function(){
 });
 
 function deleteSubscription(itemId) {
+  // Safe lookup utility for your subscription item
   var targetItem = globalSubItems.find(function(i) { return i.id === itemId; }) || globalSubItems[itemId] || null;
   
   if (!targetItem) {
@@ -2262,43 +2274,94 @@ function deleteSubscription(itemId) {
     return;
   }
 
-  var shortName = getDisplayName(targetItem.name, true);
-  
-  if (!confirm("Are you sure you want to permanently delete " + shortName + "?")) {
-    // 🟢 User cancelled: snap everything back neatly immediately
-    closeAllSwipeRows();
-    return;
-  }
+  // 1. Create a custom HTML overlay dynamically so it sits perfectly at the body root
+  var modalId = "custom-delete-modal";
+  var existingModal = document.getElementById(modalId);
+  if (existingModal) existingModal.remove();
 
-  var deletePayload = {
-    action: "delete",
-    title: targetItem.name
+  var modalOverlay = document.createElement("div");
+  modalOverlay.id = modalId;
+  
+  // Apply direct styling to guarantee it renders on top of tabs and mobile viewports
+  Object.assign(modalOverlay.style, {
+    position: "fixed",
+    top: "0",
+    left: "0",
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    backdropFilter: "blur(4px)",
+    webkitBackdropFilter: "blur(4px)", // Safari support
+    zIndex: "999999",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    opacity: "0",
+    transition: "opacity 0.2s ease"
+  });
+
+  // Simple, clean mobile-friendly modal box markup
+  var shortName = getDisplayName(targetItem.name, true);
+  modalOverlay.innerHTML = `
+    <div style="background: #1e1e1e; border: 1px solid rgba(255,255,255,0.1); width: 85%; max-width: 320px; border-radius: 16px; padding: 24px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+      <h3 style="color: #fff; margin: 0 0 12px 0; font-size: 16px; font-weight: 600;">Delete Subscription?</h3>
+      <p style="color: rgba(255,255,255,0.6); margin: 0 0 24px 0; font-size: 14px; line-height: 1.4;">Are you sure you want to permanently remove <strong>${shortName}</strong>?</p>
+      <div style="display: flex; gap: 12px;">
+        <button id="custom-del-cancel" style="flex: 1; background: rgba(255,255,255,0.08); border: none; color: #fff; padding: 12px; border-radius: 8px; font-size: 14px;font-weight: 500; cursor: pointer;">Cancel</button>
+        <button id="custom-del-confirm" style="flex: 1; background: #ff4d4d; border: none; color: #fff; padding: 12px; border-radius: 8px; font-size: 14px;font-weight: 600; cursor: pointer;">Delete</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modalOverlay);
+  
+  // Force browser layout reflow to trigger display transition smoothly
+  setTimeout(function() { modalOverlay.style.opacity = "1"; }, 10);
+
+  // 2. Handle Modal Actions
+  var cleanupModal = function() {
+    modalOverlay.style.opacity = "0";
+    setTimeout(function() { modalOverlay.remove(); }, 200);
+    closeAllSwipeRows();
   };
 
-  swipeContainer.setAttribute("data-id", itemId);
-  var targetContainer = document.querySelector(`[data-id="${itemId}"]`);
-  if (targetContainer) {
-    targetContainer.style.opacity = "0.3";
-    targetContainer.style.pointerEvents = "none";
-  }
+  // Cancel Button Action
+  document.getElementById("custom-del-cancel").addEventListener("click", function(e) {
+    e.preventDefault();
+    cleanupModal();
+  });
 
-  fetch(APPS_SCRIPT_URL, {
-    method: "POST",
-    mode: "no-cors",
-    headers: { "Content-Type": "text/plain" },
-    body: JSON.stringify(deletePayload)
-  })
-  .then(function() {
-    // 🟢 Clear swipe styling positions before rebuilding the layout
-    closeAllSwipeRows();
-    setTimeout(function() {
-      loadSubscriptions(); 
-    }, 300);
-  })
-  .catch(function(err) {
-    alert("Failed to delete records: " + err.message);
-    closeAllSwipeRows();
-    loadSubscriptions();
+  // Confirm Delete Action
+  document.getElementById("custom-del-confirm").addEventListener("click", function(e) {
+    e.preventDefault();
+    
+    // Optimistically dim the item in the list while running network request
+    var targetContainer = document.querySelector(`[data-id="${itemId}"]`);
+    if (targetContainer) {
+      targetContainer.style.opacity = "0.3";
+      targetContainer.style.pointerEvents = "none";
+    }
+
+    cleanupModal();
+
+    var deletePayload = {
+      action: "delete",
+      title: targetItem.name
+    };
+
+    fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify(deletePayload)
+    })
+    .then(function() {
+      setTimeout(function() { loadSubscriptions(); }, 300);
+    })
+    .catch(function(err) {
+      alert("Failed to delete records: " + err.message);
+      loadSubscriptions();
+    });
   });
 }
 
