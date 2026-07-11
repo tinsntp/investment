@@ -6,62 +6,25 @@
 <title>Finance</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-html, body {
-  width:100%; height:100%;border-radius:20px;
-  background:#191919;
-  font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
-  color:#fff; overflow:hidden;margin-top:15px;display: flex;
-  flex-direction: column;padding-bottom:5px;
-}
-
-/* ── Tab bar ── */
-.tab-bar {
-  display:flex; align-items:stretch;
-  border-bottom:1px solid rgba(255,255,255,0.1);
-  position:relative; flex-shrink:0; padding:0 0vw;
-}
-.tab-btn {
-  flex:1; display:flex; align-items:center; justify-content:center;
-  gap:1.5vw; cursor:pointer; user-select:none;
-  font-size:2.8vw; font-weight:600; color:rgba(255,255,255,0.4); transition:color 0.2s;
-}
+html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;color:#fff;overflow:hidden;margin-top:15px;display:flex;flex-direction:column;padding-bottom:5px}
+.tab-bar{display:flex;align-items:stretch;border-bottom:1px solid rgba(255,255,255,0.1);position:relative;flex-shrink:0;padding:0 0vw}
+.tab-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:0.5vw;cursor:pointer;user-select:none;font-size:2.8vw;font-weight:600;color:rgba(255,255,255,0.4);transition:color 0.2s}
 .tab-btn.active { color:#fff; }
 .tab-btn img { width:3.5vw; height:3.5vw; object-fit:contain; opacity:0.4; transition:opacity 0.2s; }
 .tab-btn.active img { opacity:1; }
-.tab-line {
-  position:absolute; bottom:0; height:2.5px; background:#fff; border-radius:2px;
-  transition:left 0.25s ease, width 0.25s ease;
-}
+.tab-line {position:absolute; bottom:0; height:2.5px; background:#fff; border-radius:2px; transition:left 0.25s ease, width 0.25s ease;}
 #tab-btn-2 { display:flex; }
-/* ── 🟢 Mobile Layout (iPhone & Small Viewports) ── */
-@media (max-width: 401px) {
-  /* Hide the text names inside all tabs by default */
-  .tab-btn span {
-    display: none;
-  }
-
-  /* Force the text name to show up ONLY if the tab is selected/active */
-  .tab-btn.active span {
-    display: inline-block; /* Or 'block' depending on your alignment layout */
-    margin-left: 6px;      /* Adds nice spacing right next to the active icon */
-    font-size: 14px;       /* Keeps it neat and compact for narrow displays */
-  }
-}
+@media (max-width: 401px) {.tab-btn span {display: none;}.tab-btn.active span {display: inline-block; margin-left: 6px; font-size: 14px; }}
+@media (min-width: 400px) {.tab-btn span {display: none;}.tab-btn.active span {display: inline-block; margin-left: 6px; font-size: 14px; }}
 
 /* ── Slides ── */
 .slides-outer { flex:1; overflow:hidden; position:relative; }
-.slides-wrap { display:flex; width:400%; height:100%; transition:transform 0.3s cubic-bezier(0.4,0,0.2,1); }
-.slide { width:25%; height:100%; overflow-y:auto; overflow-x:hidden; padding:0vw; flex-shrink:0; }
+.slides-wrap { display:flex; width:500%; height:100%; transition:transform 0.3s cubic-bezier(0.4,0,0.2,1); }
+.slide { width:20%; height:100%; overflow-y:auto; overflow-x:hidden; padding:0vw; flex-shrink:0; }
 
 /* ══ DETAIL STYLES ══ */
-#rings-wrap {
-  display:flex; flex-wrap:wrap; gap:1.5vw;
-  justify-content:space-around; margin-bottom:1.5vw;
-}
-.ring-item {
-  display:flex; flex-direction:column; align-items:center; gap:0.6vw; flex:1;
-  cursor:pointer; border-radius:2vw; padding:1.5vw 0.5vw; transition:background 0.2s;
-}
+#rings-wrap{display:flex;flex-wrap:wrap;gap:1.5vw;justify-content:space-around;margin-bottom:1.5vw}
+.ring-item{display:flex;flex-direction:column;align-items:center;gap:0.6vw;flex:1;cursor:pointer;border-radius:2vw;padding:1.5vw 0.5vw;transition:background 0.2s}
 .ring-item:hover { background:rgba(255,255,255,0.04); }
 .ring-item.selected { background:rgba(255,255,255,0.04); }
 .ring-icon { width:4vw; height:4vw; object-fit:contain; border-radius:50%; margin-top:0.5vw; }
@@ -103,7 +66,7 @@ html, body {
 .pct-val.flat { color:rgba(255,255,255,0.3); }
 #det-msg { font-size:3vw; color:rgba(255,255,255,0.4); text-align:center; padding:5vw; }
 
-.budget-card{margin-top:15px;padding:10px;}
+.budget-card{margin-top:15px;padding:0 15px 0 15px;}
 .budget-title,.budget-label{font-size:12px;color:rgba(255,255,255,.55);margin-bottom:2px}
 .budget-total,#budget-spent,.marker-value,#budget-remaining{font-family:monospace}
 .budget-total{font-size:18px;font-weight:500;color:rgba(255,255,255,.85);margin-bottom:16px}
@@ -119,17 +82,17 @@ html, body {
 #last-month-marker .marker-value{font-size:11px;color:rgba(255,255,255,.65);margin-bottom:2px}
 #last-month-marker .triangle{width:0;height:0;margin:auto;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:7px solid #fff}
 
-.tx-detail-row{display:grid !important;grid-template-columns:5fr 2fr 2fr 1.6fr;align-items:center;gap:1vw;padding:1vw .5vw 1vw 0vw;font-size:2.4vw;border-bottom:1px solid rgba(255,255,255,0.03);width:100%;box-sizing:border-box;cursor:pointer;transition:background 0.15s}
+.tx-detail-row{display:grid !important;grid-template-columns:5fr 2fr 2fr 1.6fr;align-items:center;font-size:2.4vw;border-bottom:1px solid rgba(255,255,255,0.03);width:100%;box-sizing:border-box;cursor:pointer;transition:background 0.15s}
 .tx-detail-row:hover{background:rgba(255,255,255,0.04);border-radius:0vw}
 .tx-detail-row .td-desc{color:rgba(255,255,255,0.85);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-left:11vw;display:flex;align-items:center;min-width:0}
 .tx-detail-row .td-desc span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tx-detail-row .td-amt{text-align:right;color:rgba(255,255,255,0.85);font-weight:700;padding-left:20vw}
 .tx-detail-row .td-empty{display:block}
 .tx-detail-row .td-date{text-align:right;color:rgba(255,255,255,0.85);white-space:nowrap}
-@media (max-width:400px){.tx-detail-row{display:flex !important;flex-direction:row;justify-content:space-between;font-size:3.6vw;padding:2vw 2vw 2vw 0vw}
+@media (max-width:400px){.tx-detail-row{display:flex !important;flex-direction:row;justify-content:space-between;font-size:3.7vw;padding:0vw}
 .tx-detail-row .td-desc{flex:1;padding-left:14vw}
 .tx-detail-row .cat-ico,.tx-detail-row .cat-ico-fb{width:5vw !important;height:5vw !important;flex-shrink:0}
-.tx-detail-row .td-amt{width:auto;padding-right:9vw;flex-shrink:0}
+.tx-detail-row .td-amt{width:auto;padding-right:12vw;flex-shrink:0}
 .tx-detail-row .td-date{width:6vw;text-align:right;flex-shrink:0}
 .tx-detail-row .td-empty{display:none !important}
 }.sub-row.visible-tx .chevron{transform:rotate(90deg)}
@@ -158,19 +121,9 @@ html, body {
 .amt { font-size:2.4vw; font-weight:700; color:#fff; white-space:nowrap; }
 .dte { font-size:1.9vw; color:rgba(255,255,255,0.4); white-space:nowrap; }
 
-.ttl {
-  display: flex;
-  align-items: center;
-  gap: 1.5vw; /* Adds space between your title text and the badge */
-}
-.recent-badge {
-    font-size:2.4vw; font-weight:700; color:#14b8a6;
-    background:rgba(74,222,128,0.14); border-radius:99px; padding: 0.4vw 1.2vw;
-    white-space:nowrap;
-  }
-  @media screen and (max-width: 400px) {
-  .recent-badge {font-size:3.6vw; }
-}
+.ttl{display:flex;align-items:center;gap:1.5vw}
+.recent-badge{font-size:2.4vw;font-weight:700;color:#14b8a6;background:rgba(74,222,128,0.14);border-radius:99px;padding:0.4vw 1.2vw;white-space:nowrap}
+@media screen and (max-width:400px){.recent-badge{font-size:3.6vw}}
 
 /* ══ OVERVIEW SLIDE ══ */
 #slide-2 { padding:0; overflow:hidden; margin-top:10px}
@@ -325,175 +278,216 @@ to{transform:rotate(360deg)}
     <span>Recent</span>
   </div>
   <div class="tab-btn" data-idx="2" id="tab-btn-2">
-    <img src="https://github.com/tinsntp/investment/blob/main/icon/trend-g.png?raw=true" />
+    <img src="https://github.com/tinsntp/investment/blob/main/icon/development.png?raw=true" />
     <span>Overview</span>
   </div>
-  
   <div class="tab-btn" data-idx="3" id="tab-btn-3">
     <img src="https://github.com/tinsntp/investment/blob/main/icon/cloud.png?raw=true" />
     <span>Subscription</span>
   </div>
+  <div class="tab-btn" data-idx="4" id="tab-btn-4">
+    <img src="https://github.com/tinsntp/investment/blob/main/icon/bitcoin.png?raw=true" />
+    <span>BTC</span>
+  </div>
+  <div class="tab-btn" data-idx="5" id="tab-btn-5">
+    <img src="https://github.com/tinsntp/investment/blob/main/icon/up-and-down.png?raw=true" />
+    <span>Transaction</span>
+  </div>
+  <div class="tab-btn" data-idx="6" id="tab-btn-6">
+    <img src="https://github.com/tinsntp/investment/blob/main/icon/incomes.png?raw=true" />
+    <span>F.I.R.E.</span>
+  </div>
   <div class="tab-line" id="tab-line"></div>
 </div>
-
 <div class="slides-outer" id="slides-outer">
-<div class="slides-wrap" id="slides-wrap">
-
-  <!-- DETAIL SLIDE -->
-  <div class="slide" id="slide-0" data-idx="0">
-    <div id="rings-wrap"></div>
-    <div class="budget-card"> <div class="budget-title"> Monthly spending budget </div>
-      <!-- Budget amount --> <div class="budget-total" id="budget-average"></div> <div class="budget-bar-wrap"> <!-- Last month marker --> <div id="last-month-marker"></div> <div class="budget-bar"> <div id="budget-fill"></div> </div>
-      </div>
-      <div class="budget-bottom"> <div class="budget-col"> <div class="budget-label">Spent</div> <div class="budget-spent-row"> <span id="budget-spent"></span> <span id="budget-percent"></span> </div>
-      </div>
-      <div class="budget-col" style="text-align:right;"> <div class="budget-label">Remaining</div> <div id="budget-remaining" style="margin-top:5px;"></div> </div>
-      </div>
-      </div>
-    <div class="button-container" style="display:flex;justify-content:flex-end;margin-bottom:10px;margin-top:10px">
-      <button class="expand-txt" id="expand-btn">&#9662; Expand All</button>
-    </div>
-    <div id="col-hdr" class="det-col-hdr"></div>
-    <div id="det-msg">Loading...</div>
-    <div id="cat-list"></div>
-  </div>
-
-  <!-- RECENT SLIDE -->
-  <div class="slide" id="slide-1" data-idx="1">
-    <div id="rec-msg">Loading...</div>
-    <div id="tx-list"></div>
-  </div>
-
-  <!-- OVERVIEW SLIDE -->
-  <div class="slide" id="slide-2" data-idx="2">
-    <div id="ca-wrap">
-      <!-- Left column: Balance + Donut -->
-      <div id="ca-col-left">
-        <div id="ca-section-balance">
-          <div id="ca-card-balance" style="display:none"></div>
-        </div>
-        <div id="ca-section-expense">
-          <div id="ca-donut-wrap">
-            <svg id="ca-donut-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"></svg>
-            <div class="ca-donut-center">
-              <div class="ca-donut-center-label" id="ca-center-label">Total</div>
-              <div class="ca-donut-center-val" id="ca-center-val">&#x2014;</div>
-            </div>
+  <div class="slides-wrap" id="slides-wrap">
+    <!-- DETAIL SLIDE -->
+    <div class="slide" id="slide-0" data-idx="0">
+      <div id="rings-wrap"></div>
+      <div class="budget-card">
+        <div class="budget-title"> Monthly spending budget </div>
+        <!-- Budget amount --> 
+        <div class="budget-total" id="budget-average"></div>
+        <div class="budget-bar-wrap">
+          <!-- Last month marker --> 
+          <div id="last-month-marker"></div>
+          <div class="budget-bar">
+            <div id="budget-fill"></div>
           </div>
-          <div id="ca-list"></div>
+        </div>
+        <div class="budget-bottom">
+          <div class="budget-col">
+            <div class="budget-label">Spent</div>
+            <div class="budget-spent-row"> <span id="budget-spent"></span> <span id="budget-percent"></span> </div>
+          </div>
+          <div class="budget-col" style="text-align:right;">
+            <div class="budget-label">Remaining</div>
+            <div id="budget-remaining" style="margin-top:5px;"></div>
+          </div>
         </div>
       </div>
-      <!-- Right column: Income + Weather + Countdown -->
-      <div id="ca-col-right">
-        <div id="ca-section-income">
-          <div id="ca-card-income" style="display:none"></div>
-        </div>
-        <div id="ca-section-weather">
-          <div class="ca-wx">
-            <div class="ca-wx-header">
-              <div>
-                <div class="ca-wx-city">Ho Chi Minh City</div>
-                <div class="ca-wx-date" id="ca-wx-date"></div>
+      <div class="button-container" style="display:flex;justify-content:flex-end;margin-bottom:10px;margin-top:10px">
+        <button class="expand-txt" id="expand-btn">&#9662; Expand All</button>
+      </div>
+      <div id="col-hdr" class="det-col-hdr"></div>
+      <div id="det-msg">Loading...</div>
+      <div id="cat-list"></div>
+    </div>
+    <!-- RECENT SLIDE -->
+    <div class="slide" id="slide-1" data-idx="1">
+      <div id="rec-msg">Loading...</div>
+      <div id="tx-list"></div>
+    </div>
+    <!-- OVERVIEW SLIDE -->
+    <div class="slide" id="slide-2" data-idx="2">
+      <div id="ca-wrap">
+        <!-- Left column: Balance + Donut -->
+        <div id="ca-col-left">
+          <div id="ca-section-balance">
+            <div id="ca-card-balance" style="display:none"></div>
+          </div>
+          <div id="ca-section-expense">
+            <div id="ca-donut-wrap">
+              <svg id="ca-donut-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"></svg>
+              <div class="ca-donut-center">
+                <div class="ca-donut-center-label" id="ca-center-label">Total</div>
+                <div class="ca-donut-center-val" id="ca-center-val">&#x2014;</div>
               </div>
-              <div class="ca-wx-current">
+            </div>
+            <div id="ca-list"></div>
+          </div>
+        </div>
+        <!-- Right column: Income + Weather + Countdown -->
+        <div id="ca-col-right">
+          <div id="ca-section-income">
+            <div id="ca-card-income" style="display:none"></div>
+          </div>
+          <div id="ca-section-weather">
+            <div class="ca-wx">
+              <div class="ca-wx-header">
                 <div>
-                  <div class="ca-wx-temp-big" id="ca-wx-temp">&#x2014;</div>
-                  <div class="ca-wx-cond" id="ca-wx-cond">&#x2014;</div>
+                  <div class="ca-wx-city">Ho Chi Minh City</div>
+                  <div class="ca-wx-date" id="ca-wx-date"></div>
                 </div>
-                <div id="ca-wx-icon-main"></div>
+                <div class="ca-wx-current">
+                  <div>
+                    <div class="ca-wx-temp-big" id="ca-wx-temp">&#x2014;</div>
+                    <div class="ca-wx-cond" id="ca-wx-cond">&#x2014;</div>
+                  </div>
+                  <div id="ca-wx-icon-main"></div>
+                </div>
+              </div>
+              <div class="ca-wx-hourly" id="ca-wx-hourly"></div>
+            </div>
+            <div class="ca-countdown">
+              <div class="ca-unit">
+                <div class="ca-card" id="ca-card-years"><span class="ca-card-number" id="ca-years">00</span></div>
+                <span class="ca-label">Years</span>
+              </div>
+              <div class="ca-unit">
+                <div class="ca-card" id="ca-card-months"><span class="ca-card-number" id="ca-months">00</span></div>
+                <span class="ca-label">Months</span>
+              </div>
+              <div class="ca-unit">
+                <div class="ca-card" id="ca-card-weeks"><span class="ca-card-number" id="ca-weeks">00</span></div>
+                <span class="ca-label">Weeks</span>
+              </div>
+              <div class="ca-unit">
+                <div class="ca-card" id="ca-card-days"><span class="ca-card-number" id="ca-days">00</span></div>
+                <span class="ca-label">Days</span>
               </div>
             </div>
-            <div class="ca-wx-hourly" id="ca-wx-hourly"></div>
-          </div>
-          <div class="ca-countdown">
-            <div class="ca-unit"><div class="ca-card" id="ca-card-years"><span class="ca-card-number" id="ca-years">00</span></div><span class="ca-label">Years</span></div>
-            <div class="ca-unit"><div class="ca-card" id="ca-card-months"><span class="ca-card-number" id="ca-months">00</span></div><span class="ca-label">Months</span></div>
-            <div class="ca-unit"><div class="ca-card" id="ca-card-weeks"><span class="ca-card-number" id="ca-weeks">00</span></div><span class="ca-label">Weeks</span></div>
-            <div class="ca-unit"><div class="ca-card" id="ca-card-days"><span class="ca-card-number" id="ca-days">00</span></div><span class="ca-label">Days</span></div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- SUBSCRIPTION SLIDE -->
-  <div class="slide" id="slide-3" data-idx=3">
-    <div class="card" id="card">
-      <div class="sub-header-row">
-        <div class="sub-title">Spending overview</div> 
-      </div>
-      <div class="sub-stats-row">
-        <div class="sub-stat-block">
-          <div class="sub-stat-val" id="sub-total-val">&#x2014;</div>
-          <div class="sub-stat-label" id="sub-total-label">Active subscriptions / month</div>
+    <!-- SUBSCRIPTION SLIDE -->
+    <div class="slide" id="slide-3" data-idx="3">
+      <div class="card" id="card">
+        <div class="sub-header-row">
+          <div class="sub-title">Spending overview</div>
         </div>
-        <div class="sub-stat-block">
-          <div class="sub-stat-val" id="sub-total-excl-val">&#x2014;</div>
-          <div class="sub-stat-label" id="sub-total-excl-label">Excl. KungfuStocksPro</div>
+        <div class="sub-stats-row">
+          <div class="sub-stat-block">
+            <div class="sub-stat-val" id="sub-total-val">&#x2014;</div>
+            <div class="sub-stat-label" id="sub-total-label">Active subscriptions / month</div>
+          </div>
+          <div class="sub-stat-block">
+            <div class="sub-stat-val" id="sub-total-excl-val">&#x2014;</div>
+            <div class="sub-stat-label" id="sub-total-excl-label">Excl. KungfuStocksPro</div>
+          </div>
         </div>
+        <div class="sub-list-title">
+          <span>Active subscription</span>
+          <button class="add-inline-btn" id="add-fab">+</button>
+        </div>
+        <div id="sub-loading">Loading&hellip;</div>
+        <div id="sub-list"></div>
       </div>
-      <div class="sub-list-title">
-      <span>Active subscription</span>
-      <button class="add-inline-btn" id="add-fab">+</button>
     </div>
-      <div id="sub-loading">Loading&hellip;</div>
-      <div id="sub-list"></div>
-    </div>  
+    <!-- BTC SLIDE -->
+    <div class="slide" id="slide-4" data-idx="4">
+      
+    </div>
+    <!-- TRANSACTION SLIDE -->
+    <div class="slide" id="slide-5" data-idx="5">
+      
+    </div>
+    <!-- F.I.R.E. SLIDE -->
+    <div class="slide" id="slide-6" data-idx="6">
+      
+    </div>
   </div>
-
-</div>
 </div>
 <div class="add-modal-overlay" id="add-modal-overlay">
-      <div class="add-modal">
-        <h3>Add Subscription</h3>
-        
-        <div class="form-row-2col">
-          <div class="add-field">
-            <label>Subscription Name</label>
-            <input type="text" id="add-title">
-            </div>
-          <div class="add-field">
-            <label># of users</label>
-            <input type="number" id="add-user">
-          </div>
-        </div>
-        <div class="form-row-2col">
-          <div class="add-field">
-            <label>Monthly Price</label>
-            <input type="number" id="add-amount">
-          </div>
-          <div class="add-field">
-            <label>Total Price</label>
-            <input type="number" id="add-total-amount">
-          </div>
-        </div>
-        <div class="form-row-2col">
-          <div class="add-field">
-            <label>From Date</label>
-            <input type="date" id="add-start-date">
-          </div>
-          <div class="add-field">
-            <label>To Date</label>
-            <input type="date" id="add-end-date">
-          </div>
-        </div>
-        
-        <div class="add-actions">
-          <button class="add-cancel-btn" id="add-cancel-btn">Cancel</button>
-          <button class="add-submit-btn" id="add-submit-btn">Save</button>
-        </div>
-        <div class="add-status" id="add-status"></div>
+  <div class="add-modal">
+    <h3>Add Subscription</h3>
+    <div class="form-row-2col">
+      <div class="add-field">
+        <label>Subscription Name</label>
+        <input type="text" id="add-title">
+      </div>
+      <div class="add-field">
+        <label># of users</label>
+        <input type="number" id="add-user">
       </div>
     </div>
+    <div class="form-row-2col">
+      <div class="add-field">
+        <label>Monthly Price</label>
+        <input type="number" id="add-amount">
+      </div>
+      <div class="add-field">
+        <label>Total Price</label>
+        <input type="number" id="add-total-amount">
+      </div>
+    </div>
+    <div class="form-row-2col">
+      <div class="add-field">
+        <label>From Date</label>
+        <input type="date" id="add-start-date">
+      </div>
+      <div class="add-field">
+        <label>To Date</label>
+        <input type="date" id="add-end-date">
+      </div>
+    </div>
+    <div class="add-actions">
+      <button class="add-cancel-btn" id="add-cancel-btn">Cancel</button>
+      <button class="add-submit-btn" id="add-submit-btn">Save</button>
+    </div>
+    <div class="add-status" id="add-status"></div>
+  </div>
+</div>
 
 <script>
 /* ══ TAB SWITCHING ══ */
 var currentTab = 0;
-var numTabs = 4;
+var numTabs = 5;
 var caDataLoaded = false;
 
 /* ══ TAB ORDER PERSISTENCE (localStorage — works in any regular browser) ══ */
-var DEFAULT_TAB_ORDER = [0, 1, 2, 3]; // Detail, Recent, Overview
+var DEFAULT_TAB_ORDER = [4,0,1,5,2,3,6]; // Detail, Recent, Overview
 var LS_TAB_ORDER_KEY = 'finance-tab-order';
 var LS_ACTIVE_TAB_KEY = 'finance-active-tab';
 
@@ -1142,7 +1136,7 @@ function buildColHdr() {
   hdr.innerHTML = "";
   hdr.style.fontSize = isMobile ? "4.1vw" : "2.6vw";
   hdr.style.gridTemplateColumns = isMobile ? "5.2fr 1.6fr 1.6fr" : "5.6fr 1.6fr 1.6fr 1.6fr";
-  var cols = isMobile ? ["Category","Amount","+/-"] : ["Category","Amount","Previous","+/-"];
+  var cols = isMobile ? ["☰ Category","# Amount","+/-"] : ["☰ Category","# Amount","# Previous","+/-"];
   cols.forEach(function(t, i) {
     var d = document.createElement("div"); d.className = "ch"; d.textContent = t;
     hdr.appendChild(d);
@@ -1759,9 +1753,10 @@ function applyLayout(){
     var ico=el.querySelector(".cat-ico,.cat-ico-fb");if(ico){ico.style.width=subIcoSz;ico.style.height=subIcoSz;if(ico.className.indexOf("fb")>=0)ico.style.fontSize=isMobile?"3.5vw":"2vw";}
   });
 
+  //RECENT
   var txIcoSz=isMobile?"12vw":"9vw";
-  document.querySelectorAll(".ttl").forEach(function(el){el.style.fontSize=isMobile?"4.6vw":"2.6vw";});
-  document.querySelectorAll(".dtl").forEach(function(el){el.style.fontSize=isMobile?"4vw":"2.5vw";});
+  document.querySelectorAll(".ttl").forEach(function(el){el.style.fontSize=isMobile?"4.1vw":"2.6vw";});
+  document.querySelectorAll(".dtl").forEach(function(el){el.style.fontSize=isMobile?"3.8vw":"2.5vw";});
   document.querySelectorAll(".amt").forEach(function(el){el.style.fontSize=isMobile?"4.6vw":"2.8vw";});
   document.querySelectorAll(".dte").forEach(function(el){el.style.fontSize=isMobile?"3.8vw":"2.5vw";});
   document.querySelectorAll(".tx-group-hdr").forEach(function(el){el.style.fontSize=isMobile?"4vw":"2.3vw";});
