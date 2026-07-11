@@ -33,11 +33,25 @@ html, body {
   transition:left 0.25s ease, width 0.25s ease;
 }
 #tab-btn-2 { display:flex; }
+/* ── 🟢 Mobile Layout (iPhone & Small Viewports) ── */
+@media (max-width: 401px) {
+  /* Hide the text names inside all tabs by default */
+  .tab-btn span {
+    display: none;
+  }
+
+  /* Force the text name to show up ONLY if the tab is selected/active */
+  .tab-btn.active span {
+    display: inline-block; /* Or 'block' depending on your alignment layout */
+    margin-left: 6px;      /* Adds nice spacing right next to the active icon */
+    font-size: 15px;       /* Keeps it neat and compact for narrow displays */
+  }
+}
 
 /* ── Slides ── */
 .slides-outer { flex:1; overflow:hidden; position:relative; }
-.slides-wrap { display:flex; width:300%; height:100%; transition:transform 0.3s cubic-bezier(0.4,0,0.2,1); }
-.slide { width:33.333%; height:100%; overflow-y:auto; overflow-x:hidden; padding:0vw; flex-shrink:0; }
+.slides-wrap { display:flex; width:400%; height:100%; transition:transform 0.3s cubic-bezier(0.4,0,0.2,1); }
+.slide { width:25%; height:100%; overflow-y:auto; overflow-x:hidden; padding:0vw; flex-shrink:0; }
 
 /* ══ DETAIL STYLES ══ */
 #rings-wrap {
@@ -89,7 +103,7 @@ html, body {
 .pct-val.flat { color:rgba(255,255,255,0.3); }
 #det-msg { font-size:3vw; color:rgba(255,255,255,0.4); text-align:center; padding:5vw; }
 
-.budget-card{margin-top:15px}
+.budget-card{margin-top:15px;padding:10px;}
 .budget-title,.budget-label{font-size:12px;color:rgba(255,255,255,.55);margin-bottom:2px}
 .budget-total,#budget-spent,.marker-value,#budget-remaining{font-family:monospace}
 .budget-total{font-size:18px;font-weight:500;color:rgba(255,255,255,.85);margin-bottom:16px}
@@ -105,13 +119,11 @@ html, body {
 #last-month-marker .marker-value{font-size:11px;color:rgba(255,255,255,.65);margin-bottom:2px}
 #last-month-marker .triangle{width:0;height:0;margin:auto;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:7px solid #fff}
 
-@media (min-width:401px){.budget-card{padding:10px; }}
-
- .tx-detail-row{display:grid !important;grid-template-columns:5fr 2fr 2fr 1.6fr;align-items:center;gap:1vw;padding:1vw 0.5vw 1vw 0vw;font-size:2.6vw;border-bottom:1px solid rgba(255,255,255,0.03);width:100%;box-sizing:border-box;cursor:pointer;transition:background 0.15s}
+.tx-detail-row{display:grid !important;grid-template-columns:5fr 2fr 2fr 1.6fr;align-items:center;gap:1vw;padding:1vw 0.5vw 1vw 0vw;font-size:2.6vw;border-bottom:1px solid rgba(255,255,255,0.03);width:100%;box-sizing:border-box;cursor:pointer;transition:background 0.15s}
 .tx-detail-row:hover{background:rgba(255,255,255,0.04);border-radius:0vw}
 .tx-detail-row .td-desc{color:rgba(255,255,255,0.85);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-left:12vw;display:flex;align-items:center;padding-left:13vw;min-width:0}
 .tx-detail-row .td-desc span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tx-detail-row .td-amt{text-align:right;color:rgba(255,255,255,0.85);font-weight:700;padding-left:15vw}
+.tx-detail-row .td-amt{text-align:right;color:rgba(255,255,255,0.85);font-weight:700;padding-left:7vw}
 .tx-detail-row .td-empty{display:block}
 .tx-detail-row .td-date{text-align:right;color:rgba(255,255,255,0.85);white-space:nowrap}
 @media (max-width:400px){.tx-detail-row{display:flex !important;flex-direction:row;justify-content:space-between;font-size:4vw;padding:2vw 2vw 2vw 0vw}
@@ -228,6 +240,77 @@ html, body {
 .ca-label { font-size:2.53vw; color:#aaa; text-transform:capitalize; letter-spacing:0.03em; font-weight:450; white-space:nowrap; }
 .ca-card.ca-flip .ca-card-number { animation:caFlip 0.4s ease-in-out; }
 @keyframes caFlip { 0%{transform:rotateX(0deg);opacity:1} 40%{transform:rotateX(-90deg);opacity:0} 60%{transform:rotateX(-90deg);opacity:0} 100%{transform:rotateX(0deg);opacity:1} }
+
+/* ══ SUBSCRIPTION SLIDE ══ */
+.card{max-width:100%;margin:0 auto}
+.sub-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.sub-title{font-size:15px;font-weight:700;color:rgba(255,255,255,0.85)}
+.sub-refresh-row{display:flex;align-items:center;gap:8px}
+.sub-last-updated{font-size:11px;color:rgba(255,255,255,0.35);white-space:nowrap}
+.sub-refresh-btn{border:none;background:transparent;color:rgba(255,255,255,0.5);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:4px;border-radius:50%;transition:color 0.15s,background 0.15s}
+.sub-refresh-btn:hover{color:#fff;background:rgba(255,255,255,0.08)}
+.sub-refresh-btn.spinning svg{animation:subSpin 0.6s linear}
+@keyframes subSpin{from{transform:rotate(0deg)}
+to{transform:rotate(360deg)}
+}.sub-stats-row{display:flex;gap:28px;margin-bottom:30px}
+.sub-stat-val{font-size:25px;font-weight:800;color:rgba(255,255,255,0.95);letter-spacing:-0.02em;line-height:1;margin-bottom:4px;font-family:monospace}
+.sub-stat-label{font-size:12.5px;color:rgba(255,255,255,0.45)}
+.sub-stat-label .hl-teal{color:#2dd4bf;font-weight:600}
+.sub-list-title{display:flex;align-items:center;justify-content:left;gap:2vw;width:100%;font-size:14px;font-weight:700;color:rgba(255,255,255,0.75);margin-bottom:12px}
+.add-inline-btn{width:6vw;height:6vw;max-width:28px;max-height:28px;border-radius:50%;background:#14b8a6;border:none;color:#fff;font-size:4.5vw;font-weight:bold;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:opacity 0.2s}
+.add-inline-btn:active{opacity:0.8}
+
+#sub-list{display:flex;flex-direction:column}
+#sub-loading,#sub-empty{font-size:13px;color:rgba(255,255,255,0.4);padding:24px 0;text-align:center}
+.sub-row:last-child{border-bottom:none}
+.sub-row{display:flex;align-items:center;padding:2vw 0;border-bottom:1px solid rgba(255,255,255,0.08);gap:3vw;cursor:pointer;transition:background 0.2s ease,border-radius 0.2s ease,padding 0.2s ease}
+.sub-row:hover{background:rgba(255,255,255,0.04)}
+.sub-icon{width:42px;height:42px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff}
+.sub-mid{flex:1;min-width:0}
+.sub-name-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;flex-wrap:wrap}
+.sub-name-left{display:flex;align-items:center;gap:8px;min-width:0;flex-wrap:wrap}
+.sub-name{font-size:14.5px;font-weight:700;color:rgba(255,255,255,0.95);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sub-badge{font-size:10.5px;font-weight:700;color:#14b8a6;background:rgba(74,222,128,0.14);border-radius:99px;padding:2px 9px;white-space:nowrap}
+.sub-expiry{display:flex;align-items:center;gap:5px;font-size:12px;color:rgba(255,255,255,0.45);white-space:nowrap}
+.sub-expiry svg{flex-shrink:0;opacity:0.6}
+.sub-price{font-size:14.5px;font-weight:700;color:rgba(255,255,255,0.95);text-align:right;white-space:nowrap;flex-shrink:0}
+.sub-price-unit{font-size:11px;font-weight:500;color:rgba(255,255,255,0.4);margin-left:2px}
+
+.add-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:600;align-items:flex-end;justify-content:center}
+.add-modal-overlay.open{display:flex!important;}
+.add-modal{background:#232323;width:100%;max-width:480px;border-radius:5vw 5vw 0 0;padding:5vw 5vw 8vw;max-height:85vh;overflow-y:auto}
+.add-modal h3{font-size:4.2vw;margin-bottom:4vw}
+.add-field{margin-bottom:3.5vw}
+.add-field label{display:block;font-size:3.8vw;color:rgba(255,255,255,0.5);margin-bottom:1.2vw}
+.add-field input{width: 100% !important;height: 11vw;padding:2.8vw 3vw;border-radius:2.5vw;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:#fff;font-size:3.4vw}
+.add-actions{display:flex;gap:3vw;margin-top:5vw}
+.add-actions button{flex:1;padding:3vw;border-radius:3vw;border:none;font-size:3.4vw;font-weight:600;cursor:pointer}
+.add-cancel-btn{background:rgba(255,255,255,0.08);color:#fff}
+.add-submit-btn{background:#14b8a6;color:#fff}
+.add-submit-btn:disabled{opacity:0.5}
+.add-status{font-size:2.8vw;margin-top:2vw;text-align:center}
+.add-status.error{color:#FF69B4}
+.add-status.success{color:#14b8a6}
+
+
+.form-row-2col{display:flex !important;flex-direction:row !important;gap:3vw !important;width:100%;margin-bottom:4vw}
+.form-row-2col .add-field{flex:1 1 0% !important;min-width:0;display:flex;flex-direction:column}
+.add-field label{font-size:3.8vw;font-weight:600;color:rgba(255,255,255,0.5);margin-bottom:1.5vw}
+.add-field input[type="text"],.add-field input[type="number"],.add-field input[type="date"]{-webkit-appearance:none;-moz-appearance:none;appearance:none;width:100% !important;height:11vw !important;background:#2a2a2a !important;border:1px solid rgba(255,255,255,0.1) !important;border-radius:12px !important;color:#fff !important;padding:0 3vw !important;font-size:3.5vw !important;outline:none;box-sizing:border-box !important;display:flex !important;align-items:center !important;justify-content:center !important;text-align:left !important}
+@media (min-width:401px){.form-row-2col{gap:15px !important;margin-bottom:16px}
+.add-field label{font-size:13px;margin-bottom:6px}
+.add-field input[type="text"],.add-field input[type="number"],.add-field input[type="date"]{height:44px !important;font-size:15px !important;padding:0 12px !important;border-radius:8px !important}
+}
+.sub-swipe-container{position:relative;width:100%;overflow:hidden;margin-bottom:12px;border-radius:12px;background:#191919}
+.sub-row{position:relative;z-index:2;background:#191919;width:100%;margin-bottom:0 !important;will-change:transform;cursor:grab}
+.sub-row:active{cursor:grabbing}
+.sub-delete-action{position:absolute;top:0;right:0;bottom:0;width:70px;z-index:1;background-color:#ef4444;color:#ffffff;display:flex;align-items:center;justify-content:center;border-top-right-radius:12px;border-bottom-right-radius:12px;cursor:pointer}
+.sub-delete-action svg{pointer-events:none}
+.sub-delete-action:hover{background-color:#dc2626}
+@media (min-pointer:fine) and (min-width:401px){.sub-swipe-container:hover .sub-row{width:calc(100% - 70px);border-top-right-radius:0;border-bottom-right-radius:0}
+.sub-swipe-container:hover .sub-delete-action{opacity:1;z-index:3}
+}
+
 </style>
 </head>
 <body>
@@ -244,6 +327,11 @@ html, body {
   <div class="tab-btn" data-idx="2" id="tab-btn-2">
     <img src="https://github.com/tinsntp/investment/blob/main/icon/trend-g.png?raw=true" />
     <span>Overview</span>
+  </div>
+  <!-- 🟢 Fixed missing quote on data-idx and corrected id index below -->
+  <div class="tab-btn" data-idx="3" id="tab-btn-3">
+    <img src="https://github.com/tinsntp/investment/blob/main/icon/cloud.png?raw=true" />
+    <span>Subscription</span>
   </div>
   <div class="tab-line" id="tab-line"></div>
 </div>
@@ -328,17 +416,84 @@ html, body {
     </div>
   </div>
 
+  <!-- SUBSCRIPTION SLIDE -->
+  <div class="slide" id="slide-3" data-idx=3">
+    <div class="card" id="card">
+      <div class="sub-header-row">
+        <div class="sub-title">Spending overview</div> 
+      </div>
+      <div class="sub-stats-row">
+        <div class="sub-stat-block">
+          <div class="sub-stat-val" id="sub-total-val">&#x2014;</div>
+          <div class="sub-stat-label" id="sub-total-label">Active subscriptions / month</div>
+        </div>
+        <div class="sub-stat-block">
+          <div class="sub-stat-val" id="sub-total-excl-val">&#x2014;</div>
+          <div class="sub-stat-label" id="sub-total-excl-label">Excl. KungfuStocksPro</div>
+        </div>
+      </div>
+      <div class="sub-list-title">
+      <span>Active subscription</span>
+      <button class="add-inline-btn" id="add-fab">+</button>
+    </div>
+      <div id="sub-loading">Loading&hellip;</div>
+      <div id="sub-list"></div>
+    </div>  
+  </div>
+
 </div>
 </div>
+<div class="add-modal-overlay" id="add-modal-overlay">
+      <div class="add-modal">
+        <h3>Add Subscription</h3>
+        
+        <div class="form-row-2col">
+          <div class="add-field">
+            <label>Subscription Name</label>
+            <input type="text" id="add-title">
+            </div>
+          <div class="add-field">
+            <label># of users</label>
+            <input type="number" id="add-user">
+          </div>
+        </div>
+        <div class="form-row-2col">
+          <div class="add-field">
+            <label>Monthly Price</label>
+            <input type="number" id="add-amount">
+          </div>
+          <div class="add-field">
+            <label>Total Price</label>
+            <input type="number" id="add-total-amount">
+          </div>
+        </div>
+        <div class="form-row-2col">
+          <div class="add-field">
+            <label>From Date</label>
+            <input type="date" id="add-start-date">
+          </div>
+          <div class="add-field">
+            <label>To Date</label>
+            <input type="date" id="add-end-date">
+          </div>
+        </div>
+        
+        <div class="add-actions">
+          <button class="add-cancel-btn" id="add-cancel-btn">Cancel</button>
+          <button class="add-submit-btn" id="add-submit-btn">Save</button>
+        </div>
+        <div class="add-status" id="add-status"></div>
+      </div>
+    </div>
 
 <script>
 /* ══ TAB SWITCHING ══ */
 var currentTab = 0;
-var numTabs = 3;
+var numTabs = 4;
 var caDataLoaded = false;
 
 /* ══ TAB ORDER PERSISTENCE (localStorage — works in any regular browser) ══ */
-var DEFAULT_TAB_ORDER = [0, 1, 2]; // Detail, Recent, Overview
+var DEFAULT_TAB_ORDER = [0, 1, 2, 3]; // Detail, Recent, Overview
 var LS_TAB_ORDER_KEY = 'finance-tab-order';
 var LS_ACTIVE_TAB_KEY = 'finance-active-tab';
 
@@ -854,9 +1009,9 @@ function renderTxRows(subCatName, containerEl) {
       // Create the image element or fallback dot if the link is empty or dead
       var iconHtml = "";
       if (tx.iconUrl && tx.iconUrl.indexOf("http") === 0) {
-        iconHtml = `<img src="${tx.iconUrl}" class="cat-ico" style="width:3.5vw; height:3.5vw; margin-right:1vw;" onerror="this.style.display='none'">`;
+        iconHtml = `<img src="${tx.iconUrl}" class="cat-ico" style="width:5vw; height:5vw; margin-right:1vw;" onerror="this.style.display='none'">`;
       } else {
-        iconHtml = `<div class="cat-ico-fb" style="width:3.5vw; height:3.5vw; font-size:1.8vw; margin-right:1vw;">&bull;</div>`;
+        iconHtml = `<div class="cat-ico-fb" style="width:5vw; height:5vw; font-size:1.8vw; margin-right:1vw;">&bull;</div>`;
       }
     }
     
@@ -1620,6 +1775,527 @@ function applyLayout(){
   positionTabLine();
 }
 
+/* ══ CONFIG ══ */
+var CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1737926422";
+
+/*
+  ── COLUMN MAPPING (A–J, confirmed from sheet screenshot) ──
+    A = Active (checkbox TRUE/FALSE)
+    B = Service (name, sometimes with a leading emoji — stripped on display)
+    C = Total Amount (unused here)
+    D = Start Date (unused here)
+    E = End Date → used as "Expired"
+    F = Price/Month/User → used as the monthly amount
+    G = Month, H = of users, I = Price/Year (all unused here)
+    J = Icon (image URL) — used directly; falls back to a generated color+letter
+        icon if a row's J is blank or the image fails to load.
+*/
+var COL_ACTIVE = 0; // A
+var COL_NAME   = 1; // B
+var COL_PRICE  = 5; // F: Price/Month/User
+var COL_EXPIRY = 4; // E: End Date
+var COL_ICON   = 9; // J: Icon URL
+
+/* ══ CSV PARSE HELPERS ══ */
+function csvRow(line) {
+  var cols=[], cur="", inQ=false;
+  for (var i=0;i<line.length;i++) {
+    var c=line[i];
+    if (c==='"') inQ=!inQ;
+    else if (c===','&&!inQ) { cols.push(cur); cur=""; }
+    else cur+=c;
+  }
+  cols.push(cur);
+  return cols.map(function(s){ return s.replace(/^"|"$/g,"").trim(); });
+}
+
+function parseBool(s) {
+  if (!s) return false;
+  var v = s.trim().toLowerCase();
+  return v==="true" || v==="1" || v==="yes" || v==="active" || v==="x" || v==="✓";
+}
+
+function parseAmt(raw) {
+  if (!raw) return 0;
+  var s = raw.trim();
+  var neg = false;
+  if (s.charAt(0)==="(" && s.charAt(s.length-1)===")") { neg = true; s = s.slice(1,-1); }
+  s = s.replace(/[^\d,.\-]/g, "");
+  if (s === "" || s === "-") return 0;
+  if (s.charAt(0) === "-") { neg = true; s = s.slice(1); }
+
+  var lastComma = s.lastIndexOf(","), lastDot = s.lastIndexOf(".");
+  if (lastComma > -1 && lastDot > -1) {
+    if (lastComma > lastDot) s = s.replace(/\./g,"").replace(",",".");
+    else s = s.replace(/,/g,"");
+  } else if (lastComma > -1) {
+    var afterComma = s.length - lastComma - 1;
+    var commaCount = (s.match(/,/g)||[]).length;
+    if (commaCount===1 && afterComma<=2) s = s.replace(",",".");
+    else s = s.replace(/,/g,"");
+  } else if (lastDot > -1) {
+    var afterDot = s.length - lastDot - 1;
+    var dotCount = (s.match(/\./g)||[]).length;
+    if (!(dotCount===1 && afterDot<=2)) s = s.replace(/\./g,"");
+  }
+  var v = parseFloat(s);
+  if (isNaN(v)) return 0;
+  return neg ? -v : v;
+}
+
+function parseSheetDate(raw) {
+  if (!raw) return null;
+  var s = raw.trim();
+  var iso = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (iso) return new Date(parseInt(iso[1]), parseInt(iso[2])-1, parseInt(iso[3]));
+  var dmy = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+  if (dmy) {
+    var a=parseInt(dmy[1]), b=parseInt(dmy[2]), y=parseInt(dmy[3]);
+    var day=a, month=b;
+    if (a<=12 && b>12) { day=b; month=a; }
+    return new Date(y, month-1, day);
+  }
+  var d = new Date(s);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+function fmtFull(v) {
+  var sign = v<0 ? "\u2212" : "";
+  return sign + "\u20ab" + Math.round(Math.abs(v)).toLocaleString("en-US");
+}
+
+function fmtExpiryDate(d) {
+  if (!d) return "\u2014";
+  var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return d.getDate() + " " + months[d.getMonth()] + ", " + d.getFullYear();
+}
+
+function stripEmoji(str) {
+  return (str||"").replace(/\p{Emoji_Presentation}|\p{Extended_Pictographic}/gu, "").trim();
+}
+
+/* ══ MOBILE DISPLAY-NAME SHORTENING (iPhone view only, ≤400px) ══ */
+/* Matching is case-insensitive against the full (emoji-stripped) name.
+   Add more entries here any time another name needs a short form on iPhone. */
+var MOBILE_SHORT_NAMES = [
+  { match: "fpt adsl vl", short: "ADSL VL" },
+  { match: "fpt adsl tg", short: "ADSL TG" },
+  { match: "kungfu stocks pro", short: "KFSP" },
+  { match: "youtube premium",   short: "Premium" }
+];
+
+function getDisplayName(fullName, isMobile) {
+  if (!isMobile) return fullName;
+  var n = (fullName||"").toLowerCase();
+  for (var i=0; i<MOBILE_SHORT_NAMES.length; i++) {
+    if (n === MOBILE_SHORT_NAMES[i].match) return MOBILE_SHORT_NAMES[i].short;
+  }
+  return fullName;
+}
+
+/* ══ ICON MATCHING (built here, not sourced from the sheet) ══ */
+function iconFor(name) {
+  var n = (name||"").toLowerCase();
+  
+  var palette = ["#7c6cff","#f472b6","#14b8a6","#fbbf24","#60a5fa","#f87171","#a78bfa"];
+  var hash = 0;
+  for (var j=0; j<n.length; j++) hash = (hash*31 + n.charCodeAt(j)) >>> 0;
+  var bg = palette[hash % palette.length];
+  var ltr = (name||"?").trim().charAt(0).toUpperCase() || "?";
+  return { bg:bg, ltr:ltr };
+}
+
+/* ══ LOAD + RENDER ══ */
+var lastLoadedItems = []; // cached so we can re-render on resize without refetching
+
+function loadSubscriptions() {
+  fetch(CSV_URL + "&t=" + Date.now(), { cache:"no-store" })
+    .then(function(r){ if(!r.ok) throw new Error("HTTP "+r.status); return r.text(); })
+    .then(function(text){
+      var lines = text.split("\n").filter(function(l){ return l.trim(); });
+      var rows = lines.map(csvRow);
+      // Assume row 0 is a header row — skip it.
+      rows = rows.slice(1);
+
+      var items = [];
+      rows.forEach(function(cols){
+        if (!parseBool(cols[COL_ACTIVE])) return; // only Active = TRUE
+        var rawName = (cols[COL_NAME]||"").trim();
+        if (!rawName) return;
+        var name = stripEmoji(rawName) || rawName;
+        var price = parseAmt(cols[COL_PRICE]);
+        var expiry = parseSheetDate(cols[COL_EXPIRY]||"");
+        var iconUrl = (cols[COL_ICON]||"").trim();
+        items.push({ name:name, price:price, expiry:expiry, iconUrl:iconUrl });
+      });
+
+      lastLoadedItems = items;
+      renderSubscriptions(items);
+
+      var now = new Date();
+      var hh = String(now.getHours()).padStart(2,"0");
+      var mm = String(now.getMinutes()).padStart(2,"0");
+      var lastUpdatedEl = document.getElementById("sub-last-updated");
+      if (lastUpdatedEl) lastUpdatedEl.textContent = hh+":"+mm+" ago";
+    })
+    .catch(function(err){
+      document.getElementById("sub-loading").textContent = "Error: " + err.message;
+    });
+}
+
+function renderSubscriptions(items) {
+  globalSubItems = items;
+  document.getElementById("sub-loading").style.display = "none";
+  var listEl = document.getElementById("sub-list");
+  listEl.innerHTML = "";
+
+  if (!items.length) {
+    var empty = document.createElement("div");
+    empty.id = "sub-empty";
+    empty.textContent = "No active subscriptions found.";
+    listEl.appendChild(empty);
+  }
+
+  var isMobile = window.innerWidth <= 400;
+  var total = 0;
+  var totalExclKfs = 0;
+
+  items.forEach(function(item, index){ // 🟢 Added index as fallback id
+    total += item.price;
+    if (item.name.toLowerCase().indexOf("kungfu stocks pro") < 0) {
+      totalExclKfs += item.price;
+    }
+
+    var icon = iconFor(item.name);
+
+    // 🟢 1. Create Swipe Wrapper Container
+    var swipeContainer = document.createElement("div");
+    swipeContainer.className = "sub-swipe-container";
+
+    // 🟢 2. Create the Hidden Delete Action Layer underneath
+    var deleteAction = document.createElement("div");
+    deleteAction.className = "sub-delete-action";
+    var itemId = item.id || index; // Use unique row ID if available, otherwise array index
+    deleteAction.setAttribute("onclick", "deleteSubscription('" + itemId + "')");
+    deleteAction.innerHTML = `
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="3 6 5 6 21 6"></polyline>
+        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        <line x1="10" y1="11" x2="10" y2="17"></line>
+        <line x1="14" y1="11" x2="14" y2="17"></line>
+      </svg>
+    `;
+
+    // 🟢 3. Your current sub-row acts as the moving card
+    var row = document.createElement("div");
+    row.className = "sub-row";
+
+    var iconEl = document.createElement("div");
+    iconEl.className = "sub-icon";
+
+    if (item.iconUrl) {
+      iconEl.style.background = "rgba(255,255,255,0.08)";
+      var imgEl = document.createElement("img");
+      imgEl.src = item.iconUrl;
+      imgEl.style.width = "75%";
+      imgEl.style.height = "75%";
+      imgEl.style.objectFit = "contain";
+      imgEl.style.borderRadius = "50%";
+      imgEl.onerror = (function(el, fallbackIcon){
+        return function(){
+          el.style.background = fallbackIcon.bg;
+          el.textContent = fallbackIcon.ltr;
+          el.style.display = "flex"; el.style.alignItems = "center"; el.style.justifyContent = "center";
+        };
+      })(iconEl, icon);
+      iconEl.appendChild(imgEl);
+      iconEl.style.display = "flex"; iconEl.style.alignItems = "center"; iconEl.style.justifyContent = "center";
+    } else {
+      iconEl.style.background = icon.bg;
+      iconEl.textContent = icon.ltr;
+    }
+
+    var mid = document.createElement("div");
+    mid.className = "sub-mid";
+
+    var nameRow = document.createElement("div");
+    nameRow.className = "sub-name-row";
+
+    var nameLeft = document.createElement("div");
+    nameLeft.className = "sub-name-left";
+    var nameEl = document.createElement("span");
+    nameEl.className = "sub-name";
+    nameEl.textContent = getDisplayName(item.name, isMobile);
+    var badge = document.createElement("span");
+    badge.className = "sub-badge";
+    badge.textContent = "Active";
+    nameLeft.appendChild(nameEl);
+    nameLeft.appendChild(badge);
+
+    var priceEl = document.createElement("div");
+    priceEl.className = "sub-price";
+    priceEl.innerHTML = fmtFull(item.price) + '<span class="sub-price-unit">/month</span>';
+
+    nameRow.appendChild(nameLeft);
+    nameRow.appendChild(priceEl);
+
+    var expEl = document.createElement("div");
+    expEl.className = "sub-expiry";
+    expEl.innerHTML =
+      '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>' +
+      '<span>Expired: ' + fmtExpiryDate(item.expiry) + '</span>';
+
+    mid.appendChild(nameRow);
+    mid.appendChild(expEl);
+
+    row.appendChild(iconEl);
+    row.appendChild(mid);
+
+    // 🟢 4. Glue everything together inside the container setup
+    swipeContainer.appendChild(deleteAction);
+    swipeContainer.appendChild(row);
+    
+    // 🟢 5. Attach the real-time gesture listener directly to this row card
+    attachSwipeEvents(row, swipeContainer);
+
+    // 🟢 6. Append the swipe container shell to the DOM list target
+    listEl.appendChild(swipeContainer);
+  });
+
+  document.getElementById("sub-total-val").textContent = fmtFull(total);
+  document.getElementById("sub-total-label").innerHTML =
+    items.length + ' <span class="hl-teal">active</span> subscription' + (items.length===1?"":"s");
+
+  document.getElementById("sub-total-excl-val").textContent = fmtFull(totalExclKfs);
+  document.getElementById("sub-total-excl-label").innerHTML =
+    ' <span class="hl-teal">Excl.</span> KungfuStocksPro';
+}
+
+// 🟢 Add this helper function to your script globally so you can call it anywhere
+function closeAllSwipeRows() {
+  document.querySelectorAll(".sub-swipe-container").forEach(function (container) {
+    container.classList.remove("swiped");
+    var cardRow = container.querySelector(".sub-row");
+    if (cardRow) {
+      cardRow.style.transition = "transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)";
+      cardRow.style.transform = "translateX(0px)";
+    }
+    // Reset desktop button layering
+    var btn = container.querySelector(".sub-delete-action");
+    if (btn) btn.style.zIndex = "1";
+  });
+}
+
+function attachSwipeEvents(cardRow, container) {
+  var startX = 0;
+  var currentX = 0;
+  var isDragging = false;
+  var maxSwipeWidth = 70;
+
+  cardRow.addEventListener("touchstart", function (e) {
+    handleStart(e.touches[0].clientX);
+  }, { passive: true });
+
+  cardRow.addEventListener("touchmove", function (e) {
+    handleMove(e.touches[0].clientX);
+  }, { passive: true });
+
+  cardRow.addEventListener("touchend", function () {
+    handleEnd();
+  });
+
+  cardRow.addEventListener("mousedown", function (e) {
+    isDragging = true;
+    handleStart(e.clientX);
+    cardRow.style.cursor = "grabbing";
+  });
+
+  window.addEventListener("mousemove", function (e) {
+    if (!isDragging) return;
+    handleMove(e.clientX);
+  });
+
+  window.addEventListener("mouseup", function () {
+    if (!isDragging) return;
+    isDragging = false;
+    cardRow.style.cursor = "grab";
+    handleEnd();
+  });
+
+  function handleStart(clientX) {
+    // 🟢 Close all OTHER rows when you start dragging a new one
+    document.querySelectorAll(".sub-swipe-container.swiped").forEach(function (el) {
+      if (el !== container) {
+        el.classList.remove("swiped");
+        var activeRow = el.querySelector(".sub-row");
+        if (activeRow) activeRow.style.transform = "translateX(0px)";
+        var activeBtn = el.querySelector(".sub-delete-action");
+        if (activeBtn) activeBtn.style.zIndex = "1";
+      }
+    });
+
+    startX = clientX;
+    cardRow.style.transition = "none";
+  }
+
+  function handleMove(clientX) {
+    currentX = clientX;
+    var diffX = currentX - startX;
+
+    if (diffX < 0) {
+      var translateAmount = Math.max(diffX, -maxSwipeWidth);
+      cardRow.style.transform = "translateX(" + translateAmount + "px)";
+    }
+  }
+
+  function handleEnd() {
+    var diffX = currentX - startX;
+    cardRow.style.transition = "transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)";
+
+    // 🟢 If swiped left past half the button width, snap open and raise button priority
+    if (diffX < -(maxSwipeWidth / 2)) {
+      container.classList.add("swiped");
+      cardRow.style.transform = "translateX(-" + maxSwipeWidth + "px)";
+      
+      var btn = container.querySelector(".sub-delete-action");
+      if (btn) btn.style.zIndex = "3"; // Makes it clickable on desktop
+    } else {
+      // 🟢 Force it back completely if it didn't cross the threshold
+      container.classList.remove("swiped");
+      cardRow.style.transform = "translateX(0px)";
+      var btn = container.querySelector(".sub-delete-action");
+      if (btn) btn.style.zIndex = "1";
+    }
+    
+    startX = 0;
+    currentX = 0;
+  }
+}
+
+window.addEventListener("resize", function(){
+  if (lastLoadedItems.length) renderSubscriptions(lastLoadedItems);
+});
+
+/* ══ ADD RECORD (writes to the sheet via Apps Script Web App) ══ */
+var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxb1lPB9kZh-Q5C01U-DjuesOVlHgDEorEBK-pavyJUd5jPxZSub-Rx6unOCTDdrCS2/exec"; // ends in /exec
+
+var addOverlay = document.getElementById("add-modal-overlay");
+var addStatusEl = document.getElementById("add-status");
+var addSubmitBtn = document.getElementById("add-submit-btn");
+var globalSubItems = []; // 🟢 Global variable to hold your data backup safely
+
+document.getElementById("add-fab").addEventListener("click", function(){
+  document.getElementById("add-title").value = "";
+  document.getElementById("add-total-amount").value = "";  
+  document.getElementById("add-amount").value = "";
+  document.getElementById("add-start-date").value = new Date().toISOString().slice(0,10);
+  document.getElementById("add-end-date").value = new Date().toISOString().slice(0,10);
+  document.getElementById("add-user").value = "1";
+  addStatusEl.textContent = ""; addStatusEl.className = "add-status";
+  addOverlay.classList.add("open");
+});
+
+document.getElementById("add-cancel-btn").addEventListener("click", function(){
+  addOverlay.classList.remove("open");
+});
+addOverlay.addEventListener("click", function(e){
+  if (e.target === addOverlay) addOverlay.classList.remove("open");
+});
+
+document.getElementById("add-submit-btn").addEventListener("click", function(){
+
+  var title = document.getElementById("add-title").value.trim();
+  var totalamount = document.getElementById("add-total-amount").value;
+  var amount = document.getElementById("add-amount").value;
+  var startdate = document.getElementById("add-start-date").value;
+  var enddate = document.getElementById("add-end-date").value;
+  var users = document.getElementById("add-user").value;
+
+  if (!startdate || !enddate || !title || (!amount && !totalamount)) {
+    addStatusEl.textContent = "Dates, Title, and Amount are required.";
+    addStatusEl.className = "add-status error";
+    return;
+  }
+
+  addSubmitBtn.disabled = true;
+  addStatusEl.textContent = "Saving\u2026";
+  addStatusEl.className = "add-status";
+
+  // Apps Script Web Apps generally require no-cors from a static page,
+  // which means we can't read the response — we optimistically assume
+  // success if the request doesn't throw, then refresh the data.
+  fetch(APPS_SCRIPT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "text/plain" }, // avoids a CORS preflight
+    body: JSON.stringify({ title:title, totalamount:totalamount, amount:amount,startdate:startdate, enddate:enddate, users:users })
+  })
+  .then(function(){
+    addStatusEl.textContent = "Saved!";
+    addStatusEl.className = "add-status success";
+    setTimeout(function(){
+      addOverlay.classList.remove("open");
+      addSubmitBtn.disabled = false;
+      loadSubscriptions();
+    }, 700);
+  })
+  .catch(function(err){
+    addStatusEl.textContent = "Error: " + err.message;
+    addStatusEl.className = "add-status error";
+    addSubmitBtn.disabled = false;
+  });
+});
+
+function deleteSubscription(itemId) {
+  var targetItem = globalSubItems[itemId] || null; 
+  
+  if (!targetItem) {
+    alert("Subscription could not be verified.");
+    return;
+  }
+
+  var shortName = getDisplayName(targetItem.name, true);
+  
+  if (!confirm("Are you sure you want to permanently delete " + shortName + "?")) {
+    // 🟢 User cancelled: snap everything back neatly immediately
+    closeAllSwipeRows();
+    return;
+  }
+
+  var deletePayload = {
+    action: "delete",
+    title: targetItem.name
+  };
+
+  var containers = document.getElementById("sub-list").children;
+  if (containers[itemId]) {
+    containers[itemId].style.opacity = "0.3";
+    containers[itemId].style.pointerEvents = "none";
+  }
+
+  fetch(APPS_SCRIPT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "text/plain" },
+    body: JSON.stringify(deletePayload)
+  })
+  .then(function() {
+    // 🟢 Clear swipe styling positions before rebuilding the layout
+    closeAllSwipeRows();
+    setTimeout(function() {
+      loadSubscriptions(); 
+    }, 300);
+  })
+  .catch(function(err) {
+    alert("Failed to delete records: " + err.message);
+    closeAllSwipeRows();
+    loadSubscriptions();
+  });
+}
+
+
+loadSubscriptions();
+
 loadExpense();
 loadRecent();
 setInterval(loadExpense,60000);
@@ -1638,6 +2314,7 @@ setInterval(caLoadDonut,60000);
 
 window.addEventListener("load",function(){positionTabLine();applyLayout();caApplyLayout();});
 window.addEventListener("resize",applyLayout);
+
 </script>
 </body>
 </html>
