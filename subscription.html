@@ -21,7 +21,10 @@ to{transform:rotate(360deg)}
 .sub-stat-val{font-size:25px;font-weight:800;color:rgba(255,255,255,0.95);letter-spacing:-0.02em;line-height:1;margin-bottom:4px;font-family:monospace}
 .sub-stat-label{font-size:12.5px;color:rgba(255,255,255,0.45)}
 .sub-stat-label .hl-teal{color:#2dd4bf;font-weight:600}
-.sub-list-title{font-size:14px;font-weight:700;color:rgba(255,255,255,0.75);margin-bottom:12px}
+.sub-list-title{display:flex;align-items:center;justify-content:left;gap:2vw;width:100%;font-size:14px;font-weight:700;color:rgba(255,255,255,0.75);margin-bottom:12px}
+.add-inline-btn{width:6vw;height:6vw;padding-top:2px;max-width:28px;max-height:28px;border-radius:50%;background:#14b8a6;border:none;color:#fff;font-size:4.5vw;font-weight:bold;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:opacity 0.2s}
+.add-inline-btn:active{opacity:0.8}
+
 #sub-list{display:flex;flex-direction:column}
 #sub-loading,#sub-empty{font-size:13px;color:rgba(255,255,255,0.4);padding:24px 0;text-align:center}
 .sub-row:last-child{border-bottom:none}
@@ -39,14 +42,13 @@ to{transform:rotate(360deg)}
 .sub-price{font-size:14.5px;font-weight:700;color:rgba(255,255,255,0.95);text-align:right;white-space:nowrap;flex-shrink:0}
 .sub-price-unit{font-size:11px;font-weight:500;color:rgba(255,255,255,0.4);margin-left:2px}
 
-.add-fab{position:fixed;right:5vw;bottom:5vw;z-index:500;width:13vw;height:13vw;max-width:52px;max-height:52px;border-radius:50%;background:#14b8a6;border:none;color:#fff;font-size:7vw;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,0.4);cursor:pointer}
 .add-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:600;align-items:flex-end;justify-content:center}
 .add-modal-overlay.open{display:flex}
 .add-modal{background:#232323;width:100%;max-width:480px;border-radius:5vw 5vw 0 0;padding:5vw 5vw 8vw;max-height:85vh;overflow-y:auto}
 .add-modal h3{font-size:4.2vw;margin-bottom:4vw}
 .add-field{margin-bottom:3.5vw}
 .add-field label{display:block;font-size:2.8vw;color:rgba(255,255,255,0.5);margin-bottom:1.2vw}
-.add-field input{width:100%;padding:2.8vw 3vw;border-radius:2.5vw;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:#fff;font-size:3.4vw}
+.add-field input{width: 100% !important;height: 11vw;padding:2.8vw 3vw;border-radius:2.5vw;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:#fff;font-size:3.4vw}
 .add-actions{display:flex;gap:3vw;margin-top:5vw}
 .add-actions button{flex:1;padding:3vw;border-radius:3vw;border:none;font-size:3.4vw;font-weight:600;cursor:pointer}
 .add-cancel-btn{background:rgba(255,255,255,0.08);color:#fff}
@@ -56,44 +58,13 @@ to{transform:rotate(360deg)}
 .add-status.error{color:#FF69B4}
 .add-status.success{color:#14b8a6}
 
-/* ── Side-by-Side 2 Column Row ── */
-.form-row-2col {
-  display: flex;
-  gap: 3vw;
-  width: 100%;
-}
-
-.form-row-2col .add-field {
-  flex: 1; /* Splits width evenly between both fields */
-  display: flex;
-  flex-direction: column;
-}
-
-/* Fix widths internally inside the grid container */
-.add-field input {
-  width: 100% !important;
-  box-sizing: border-box;
-}
-
-/* Tablet Scaling overrides */
-@media (min-width: 401px) {
-  body {
-    max-width: 600px; /* Locks the mobile view template so it looks professional on larger screens */
-    margin: 0 auto;
-    box-shadow: 0 0 40px rgba(0,0,0,0.5);
-  }
-  .form-group label {
-    font-size: 14px;
-    margin-bottom: 6px;
-  }
-  .form-group input {
-    height: 45px;
-    font-size: 16px;
-    padding: 0 12px;
-  }
-  .form-row-2col {
-    gap: 15px;
-  }
+.form-row-2col{display:flex;gap:3vw;width:100%}
+.form-row-2col .add-field{flex:1;display:flex;flex-direction:column}
+.add-field input{width:100% !important;box-sizing:border-box}
+@media (min-width:401px){body{max-width:600px;margin:0 auto;box-shadow:0 0 40px rgba(0,0,0,0.5)}
+.form-group label{font-size:14px;margin-bottom:6px}
+.form-group input{height:45px;font-size:16px;padding:0 12px}
+.form-row-2col{gap:15px}
 }
   
 </style>
@@ -116,12 +87,15 @@ to{transform:rotate(360deg)}
     </div>
   </div>
 
-  <div class="sub-list-title">Active subscription</div>
+  <div class="sub-list-title">
+  <span>Active subscription</span>
+  <button class="add-inline-btn" id="add-fab">+</button>
+</div>
   <div id="sub-loading">Loading&hellip;</div>
   <div id="sub-list"></div>
   
 </div>
-<button class="add-fab" id="add-fab">+</button>
+
 <div class="add-modal-overlay" id="add-modal-overlay">
   <div class="add-modal">
     <h3>Add Subscription</h3>
@@ -446,7 +420,7 @@ document.getElementById("add-fab").addEventListener("click", function(){
   document.getElementById("add-amount").value = "";
   document.getElementById("add-start-date").value = new Date().toISOString().slice(0,10);
   document.getElementById("add-end-date").value = new Date().toISOString().slice(0,10);
-  document.getElementById("add-user").value = "";
+  document.getElementById("add-user").value = "1";
   addStatusEl.textContent = ""; addStatusEl.className = "add-status";
   addOverlay.classList.add("open");
 });
