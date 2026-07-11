@@ -73,7 +73,7 @@ html, body {
 .ring-remain.low  { color:#fbbf24; }   /* keep yellow */
 .ring-remain.over { color:#FF69B4; }   /* pink */
 
-.det-col-hdr{display:grid;grid-template-columns:5fr 2fr 2fr 1.6fr;padding:0.8vw 0.5vw;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:0.5vw;font-size:1.9vw;font-weight:600;color:rgba(255,255,255,0.35)}
+.det-col-hdr{display:grid;grid-template-columns:5.4fr 1.6fr 1.6fr 1.6fr;padding:0.8vw 0.5vw;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:0.5vw;font-size:14px;font-weight:600;color:rgba(255,255,255,0.35)}
 .det-col-hdr .ch{text-align:right}
 .det-col-hdr .ch:first-child{text-align:left}
 .expand-txt{display:block;text-align:right;font-size:2.2vw;font-weight:600;color:rgba(255,255,255,0.75);border-radius:4vw;cursor:pointer;margin-top:5px;margin-bottom:2.5vw;background:rgba(255,255,255,0.08);border:0px solid rgba(255,255,255,0.25);padding:1vw 2.5vw}
@@ -119,16 +119,16 @@ html, body {
 #last-month-marker .marker-value{font-size:11px;color:rgba(255,255,255,.65);margin-bottom:2px}
 #last-month-marker .triangle{width:0;height:0;margin:auto;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:7px solid #fff}
 
-.tx-detail-row{display:grid !important;grid-template-columns:5fr 2fr 2fr 1.6fr;align-items:center;gap:1vw;padding:1vw .5vw 1vw 0vw;font-size:2.6vw;border-bottom:1px solid rgba(255,255,255,0.03);width:100%;box-sizing:border-box;cursor:pointer;transition:background 0.15s}
+.tx-detail-row{display:grid !important;grid-template-columns:5fr 2fr 2fr 1.6fr;align-items:center;gap:1vw;padding:1vw .5vw 1vw 0vw;font-size:2.4vw;border-bottom:1px solid rgba(255,255,255,0.03);width:100%;box-sizing:border-box;cursor:pointer;transition:background 0.15s}
 .tx-detail-row:hover{background:rgba(255,255,255,0.04);border-radius:0vw}
 .tx-detail-row .td-desc{color:rgba(255,255,255,0.85);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-left:11vw;display:flex;align-items:center;min-width:0}
 .tx-detail-row .td-desc span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tx-detail-row .td-amt{text-align:right;color:rgba(255,255,255,0.85);font-weight:700;padding-left:20vw}
 .tx-detail-row .td-empty{display:block}
 .tx-detail-row .td-date{text-align:right;color:rgba(255,255,255,0.85);white-space:nowrap}
-@media (max-width:400px){.tx-detail-row{display:flex !important;flex-direction:row;justify-content:space-between;font-size:4vw;padding:2vw 2vw 2vw 0vw}
+@media (max-width:400px){.tx-detail-row{display:flex !important;flex-direction:row;justify-content:space-between;font-size:3.6vw;padding:2vw 2vw 2vw 0vw}
 .tx-detail-row .td-desc{flex:1;padding-left:14vw}
-.tx-detail-row .cat-ico,.tx-detail-row .cat-ico-fb{width:6vw !important;height:6vw !important;flex-shrink:0}
+.tx-detail-row .cat-ico,.tx-detail-row .cat-ico-fb{width:5vw !important;height:5vw !important;flex-shrink:0}
 .tx-detail-row .td-amt{width:auto;padding-right:9vw;flex-shrink:0}
 .tx-detail-row .td-date{width:6vw;text-align:right;flex-shrink:0}
 .tx-detail-row .td-empty{display:none !important}
@@ -799,7 +799,7 @@ function buildRing(label, spent, budget, iconUrl, hideOnMobile, gids) {
   var ns = "http://www.w3.org/2000/svg";
   var svg = document.createElementNS(ns,"svg");
   svg.setAttribute("viewBox","0 0 80 80"); svg.className = "ring-svg";
-  var initRingSz = window.innerWidth < 400 ? "18vw" : "12vw";
+  var initRingSz = window.innerWidth < 400 ? "16vw" : "10vw";
   svg.style.width = initRingSz; svg.style.height = initRingSz;
   var bg = document.createElementNS(ns,"circle");
   bg.setAttribute("cx",cx);bg.setAttribute("cy",cy);bg.setAttribute("r",r);
@@ -1140,8 +1140,8 @@ function buildColHdr() {
   var hdr = document.getElementById("col-hdr");
   if (!hdr) return;
   hdr.innerHTML = "";
-  hdr.style.fontSize = isMobile ? "4.6vw" : "3vw";
-  hdr.style.gridTemplateColumns = isMobile ? "5fr 2fr 1.6fr" : "5.4fr 2fr 2fr 1.6fr";
+  hdr.style.fontSize = isMobile ? "4.1vw" : "2.6vw";
+  hdr.style.gridTemplateColumns = isMobile ? "5.2fr 1.6fr 1.6fr" : "5.6fr 1.6fr 1.6fr 1.6fr";
   var cols = isMobile ? ["Category","Amount","+/-"] : ["Category","Amount","Previous","+/-"];
   cols.forEach(function(t, i) {
     var d = document.createElement("div"); d.className = "ch"; d.textContent = t;
@@ -1728,17 +1728,17 @@ function applyLayout(){
   // Rings
   var ringSz=isMobile?"20vw":"10vw";
   document.querySelectorAll(".ring-svg").forEach(function(el){el.style.width=ringSz;el.style.height=ringSz;});
-  document.querySelectorAll(".ring-label").forEach(function(el){el.style.fontSize=isMobile?"3.8vw":"2.8vw";});
-  document.querySelectorAll(".ring-remain").forEach(function(el){el.style.fontSize=isMobile?"3.4vw":"2.4vw";});
+  document.querySelectorAll(".ring-label").forEach(function(el){el.style.fontSize=isMobile?"3.6vw":"2.4vw";});
+  document.querySelectorAll(".ring-remain").forEach(function(el){el.style.fontSize=isMobile?"3.2vw":"2.2vw";});
   document.querySelectorAll(".ring-icon").forEach(function(el){el.style.width=isMobile?"7vw":"4vw";el.style.height=isMobile?"7vw":"4vw";});
   document.querySelectorAll(".ring-item[data-hide-on-mobile]").forEach(function(el){el.style.display=isMobile?"none":"flex";});
   document.getElementById("expand-btn").style.fontSize=isMobile?"4.1vw":"2.7vw";
 
   var gridCols=isMobile?"5.8fr 1.6fr 1.6fr":"5.8fr 1.6fr 1.6fr 1.6fr";
-  var mainNmFs=isMobile?"4.1vw":"2.8vw",subNmFs=isMobile?"4.1vw":"2.8vw";
-  var amtFs=isMobile?"4.6vw":"2.8vw",subAmtFs=isMobile?"4.1vw":"2.8vw";
-  var lastFs=isMobile?"4.1vw":"2.8vw",pctFs=isMobile?"4.1vw":"2.8vw";
-  var catIcoSz=isMobile?"8vw":"7vw",subIcoSz=isMobile?"7.5vw":"6vw";
+  var mainNmFs=isMobile?"4.1vw":"2.8vw",subNmFs=isMobile?"4.1vw":"2.6vw";
+  var amtFs=isMobile?"4.1vw":"2.6vw",subAmtFs=isMobile?"4.1vw":"2.6vw";
+  var lastFs=isMobile?"4.1vw":"2.6vw",pctFs=isMobile?"4.1vw":"2.6vw";
+  var catIcoSz=isMobile?"8vw":"7vw",subIcoSz=isMobile?"7vw":"5.5vw";
   var chevFs=isMobile?"5.5vw":"4.5vw",rowPad=isMobile?"1vw 0.5vw":"0.5vw 0.5vw";
 
   document.querySelectorAll(".chevron").forEach(function(el){el.style.fontSize=chevFs;});
@@ -1760,7 +1760,7 @@ function applyLayout(){
   });
 
   var txIcoSz=isMobile?"12vw":"9vw";
-  document.querySelectorAll(".ttl").forEach(function(el){el.style.fontSize=isMobile?"4.6vw":"2.8vw";});
+  document.querySelectorAll(".ttl").forEach(function(el){el.style.fontSize=isMobile?"4.6vw":"2.6vw";});
   document.querySelectorAll(".dtl").forEach(function(el){el.style.fontSize=isMobile?"4vw":"2.5vw";});
   document.querySelectorAll(".amt").forEach(function(el){el.style.fontSize=isMobile?"4.6vw":"2.8vw";});
   document.querySelectorAll(".dte").forEach(function(el){el.style.fontSize=isMobile?"3.8vw":"2.5vw";});
@@ -2181,7 +2181,7 @@ function attachSwipeEvents(cardRow, container) {
 }
 
 window.addEventListener("resize", function(){
-  if (lastLoadedItems.length) renderSubscriptions(lastLoadedItems);
+  if (globalSubItems && globalSubItems.length) renderSubscriptions(globalSubItems);
 });
 
 /* ══ ADD RECORD (writes to the sheet via Apps Script Web App) ══ */
@@ -2275,10 +2275,11 @@ function deleteSubscription(itemId) {
     title: targetItem.name
   };
 
-  var containers = document.getElementById("sub-list").children;
-  if (containers[itemId]) {
-    containers[itemId].style.opacity = "0.3";
-    containers[itemId].style.pointerEvents = "none";
+  swipeContainer.setAttribute("data-id", itemId);
+  var targetContainer = document.querySelector(`[data-id="${itemId}"]`);
+  if (targetContainer) {
+    targetContainer.style.opacity = "0.3";
+    targetContainer.style.pointerEvents = "none";
   }
 
   fetch(APPS_SCRIPT_URL, {
