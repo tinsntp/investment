@@ -66,20 +66,14 @@ to{transform:rotate(360deg)}
 .add-field label{font-size:13px;margin-bottom:6px}
 .add-field input[type="text"],.add-field input[type="number"],.add-field input[type="date"]{height:44px !important;font-size:15px !important;padding:0 12px !important;border-radius:8px !important}
 }
-
 .sub-swipe-container{position:relative;width:100%;overflow:hidden;margin-bottom:12px;border-radius:12px;background:#191919}
-.sub-row{position:relative;z-index:2;background:#191919;width:100%;margin-bottom:0 !important;will-change:transform;cursor:grab;transition:background 0.2s ease,border-radius 0.2s ease,padding 0.2s ease}
+.sub-row{position:relative;z-index:2;background:#191919;width:100%;margin-bottom:0 !important;will-change:transform;cursor:grab}
 .sub-row:active{cursor:grabbing}
-.sub-icon,.sub-mid{transition:transform 0.2s cubic-bezier(0.16,1,0.3,1)}
-.sub-price{transition:opacity 0.15s ease,transform 0.15s ease}
 .sub-delete-action{position:absolute;top:0;right:0;bottom:0;width:70px;z-index:1;background-color:#ef4444;color:#ffffff;display:flex;align-items:center;justify-content:center;border-top-right-radius:12px;border-bottom-right-radius:12px;cursor:pointer}
 .sub-delete-action svg{pointer-events:none}
 .sub-delete-action:hover{background-color:#dc2626}
-.sub-swipe-container.swiped .sub-icon,.sub-swipe-container.swiped .sub-mid{transform:translateX(70px)}
-.sub-swipe-container.swiped .sub-price{opacity:0;transform:translateX(-10px);pointer-events:none}
 @media (min-pointer:fine) and (min-width:401px){.sub-swipe-container:hover .sub-row{width:calc(100% - 70px);border-top-right-radius:0;border-bottom-right-radius:0}
 .sub-swipe-container:hover .sub-delete-action{opacity:1;z-index:3}
-.sub-swipe-container:hover .sub-price{opacity:0;pointer-events:none}
 }
 
   
