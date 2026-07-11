@@ -101,8 +101,8 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 }.sub-row.visible-tx .chevron{transform:rotate(90deg)}
 .tx-details-container{display:none;width:100%}
 .tx-details-container.visible{display:block}
-.tx-date-badge{display:inline-flex;align-items:center;justify-content:center;width:5vw;height:5vw;border-radius:50%;background-color:rgba(255,255,255,0.08);color:rgba(255,255,255,0.6);font-size:2.6vw;font-weight:400;text-align:center;box-sizing:border-box}
-@media (max-width:400px){.tx-date-badge{width:6.5vw;height:6.5vw;font-size:3.6vw;background-color:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7)}
+.tx-date-badge{display:inline-flex;margin-right:1vw;align-items:center;justify-content:center;width:4vw;height:4vw;border-radius:50%;background-color:rgba(255,255,255,0.08);color:rgba(255,255,255,0.6);font-size:2.6vw;font-weight:400;text-align:center;box-sizing:border-box}
+@media (max-width:400px){.td-date{margin-right:1vw;}.tx-date-badge{width:6vw;height:6vw;font-size:3.4vw;background-color:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7)}
 }
 
 /*RECENT */
@@ -1151,7 +1151,7 @@ function buildColHdr() {
   hdr.innerHTML = "";
   hdr.style.fontSize = isMobile ? "4.1vw" : "2.6vw";
   hdr.style.gridTemplateColumns = isMobile ? "5.2fr 1.6fr 1.6fr" : "5.6fr 1.6fr 1.6fr 1.6fr";
-  var cols = isMobile ? ["☰ Category","# Amount","+/-"] : ["☰ Category","# Amount","# Previous","+/-"];
+  var cols = isMobile ? ["☰ Category","Amount","+/-"] : ["☰ Category","# Amount","# Previous","+/-"];
   cols.forEach(function(t, i) {
     var d = document.createElement("div"); d.className = "ch"; d.textContent = t;
     hdr.appendChild(d);
