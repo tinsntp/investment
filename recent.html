@@ -11,7 +11,7 @@ html, body {
   background:#191919;
   font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
   color:#fff; overflow:hidden;margin-top:15px;display: flex;
-  flex-direction: column;
+  flex-direction: column;padding-bottom:5px;
 }
 
 /* ── Tab bar ── */
@@ -140,7 +140,7 @@ html, body {
 }
 
 /*RECENT */
-#tx-list{display:flex;flex-direction:column;margin-top:5px}
+#tx-list{display:flex;flex-direction:column;margin-top:5px;margin:2vw;}
 .tx-group-hdr{font-size:2.3vw;font-weight:700;color:rgba(255,255,255,0.45);letter-spacing:0.05em;padding:2.5vw 0 1vw;margin-top:0.5vw}
 .tx-group-hdr:first-child{padding-top:0.5vw}
 .row{display:flex;align-items:center;padding:2vw 0;border-bottom:1px solid rgba(255,255,255,0.08);gap:3vw;cursor:pointer;transition:background 0.2s ease,border-radius 0.2s ease,padding 0.2s ease}
@@ -242,7 +242,7 @@ html, body {
 @keyframes caFlip { 0%{transform:rotateX(0deg);opacity:1} 40%{transform:rotateX(-90deg);opacity:0} 60%{transform:rotateX(-90deg);opacity:0} 100%{transform:rotateX(0deg);opacity:1} }
 
 /* ══ SUBSCRIPTION SLIDE ══ */
-.card{max-width:100%;margin:0 auto}
+.card{max-width:100%;margin: 2vw;}
 .sub-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .sub-title{font-size:15px;font-weight:700;color:rgba(255,255,255,0.85)}
 .sub-refresh-row{display:flex;align-items:center;gap:8px}
@@ -262,8 +262,7 @@ to{transform:rotate(360deg)}
 
 #sub-list{display:flex;flex-direction:column}
 #sub-loading,#sub-empty{font-size:13px;color:rgba(255,255,255,0.4);padding:24px 0;text-align:center}
-.sub-row:last-child{border-bottom:none}
-.sub-row{display:flex;align-items:center;padding:2vw 0;border-bottom:1px solid rgba(255,255,255,0.08);gap:3vw;cursor:pointer;transition:background 0.2s ease,border-radius 0.2s ease,padding 0.2s ease}
+.sub-row{display:flex;align-items:center;padding:2.5vw 0;border-bottom:1px solid rgba(255,255,255,0.08);gap:vw;cursor:pointer;transition:background 0.2s ease,border-radius 0.2s ease,padding 0.2s ease}
 .sub-row:hover{background:rgba(255,255,255,0.04)}
 .sub-icon{width:42px;height:42px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff}
 .sub-mid{flex:1;min-width:0}
@@ -301,10 +300,10 @@ to{transform:rotate(360deg)}
 .add-field label{font-size:13px;margin-bottom:6px}
 .add-field input[type="text"],.add-field input[type="number"],.add-field input[type="date"]{height:44px !important;font-size:15px !important;padding:0 12px !important;border-radius:8px !important}
 }
-.sub-swipe-container{position:relative;width:100%;overflow:hidden;margin-bottom:12px;border-radius:12px;background:#191919}
+.sub-swipe-container{position:relative;width:100%;overflow:hidden;margin-bottom:0;border-radius:12px;background:#191919;}
 .sub-row{position:relative;z-index:2;background:#191919;width:100%;margin-bottom:0 !important;will-change:transform;cursor:grab}
 .sub-row:active{cursor:grabbing}
-.sub-delete-action{position:absolute;top:0;right:0;bottom:0;width:70px;z-index:1;background-color:#ef4444;color:#ffffff;display:flex;align-items:center;justify-content:center;border-top-right-radius:12px;border-bottom-right-radius:12px;cursor:pointer}
+.sub-delete-action{position:absolute;margin-right:2px;top:0;right:0;bottom:0;width:70px;z-index:1;background-color:#ef4444;color:#ffffff;display:flex;align-items:center;justify-content:center;border-top-right-radius:12px;border-bottom-right-radius:12px;cursor:pointer}
 .sub-delete-action svg{pointer-events:none}
 .sub-delete-action:hover{background-color:#dc2626}
 @media (min-pointer:fine) and (min-width:401px){.sub-swipe-container:hover .sub-row{width:calc(100% - 70px);border-top-right-radius:0;border-bottom-right-radius:0}
@@ -1735,7 +1734,7 @@ function applyLayout(){
   document.getElementById("expand-btn").style.fontSize=isMobile?"4.8vw":"3vw";
 
   var gridCols=isMobile?"5.6fr 1.8fr 1.6fr":"5.4fr 2fr 2fr 1.6fr";
-  var mainNmFs=isMobile?"5vw":"3.2vw",subNmFs=isMobile?"4.6vw":"3vw";
+  var mainNmFs=isMobile?"4.5vw":"3.2vw",subNmFs=isMobile?"4.6vw":"3vw";
   var amtFs=isMobile?"5vw":"3.2vw",subAmtFs=isMobile?"4.6vw":"3vw";
   var lastFs=isMobile?"4.3vw":"2.8vw",pctFs=isMobile?"4.3vw":"2.8vw";
   var catIcoSz=isMobile?"10vw":"8vw",subIcoSz=isMobile?"8vw":"6vw";
