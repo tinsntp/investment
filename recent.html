@@ -10,7 +10,8 @@ html, body {
   width:100%; height:100%;
   background:#191919;
   font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
-  color:#fff; overflow:hidden;margin-top:15px
+  color:#fff; overflow:hidden;margin-top:15px;display: flex;
+  flex-direction: column;
 }
 
 /* ── Tab bar ── */
@@ -61,7 +62,7 @@ html, body {
 .det-col-hdr{display:grid;grid-template-columns:5fr 2fr 2fr 1.6fr;padding:0.8vw 0.5vw;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:0.5vw;font-size:1.9vw;font-weight:600;color:rgba(255,255,255,0.35)}
 .det-col-hdr .ch{text-align:right}
 .det-col-hdr .ch:first-child{text-align:left}
-.expand-txt{display:block;text-align:right;font-size:2.2vw;font-weight:600;color:rgba(255,255,255,0.75);border-radius:4vw;cursor:pointer;margin-top:15px;margin-bottom:2.5vw;background:rgba(255,255,255,0.08);border:0px solid rgba(255,255,255,0.25);padding:1vw 2.5vw}
+.expand-txt{display:block;text-align:right;font-size:2.2vw;font-weight:600;color:rgba(255,255,255,0.75);border-radius:4vw;cursor:pointer;margin-top:5px;margin-bottom:2.5vw;background:rgba(255,255,255,0.08);border:0px solid rgba(255,255,255,0.25);padding:1vw 2.5vw}
 .expand-txt:hover{color:#fff;background:rgba(255,255,255,0.1)}
 #cat-list{display:flex;flex-direction:column}
 .cat-row{display:grid;grid-template-columns:5fr 2fr 2fr 1.6fr;align-items:center;gap:1vw;padding:1.4vw 0.5vw;border-bottom:1px solid rgba(255,255,255,0.08);cursor:pointer;transition:background 0.15s}
@@ -135,7 +136,7 @@ html, body {
 .row:last-child { border-bottom:none; }
 .row:hover { background:rgba(255,255,255,0.04); border-radius:0vw; padding:2vw 1vw; }
 .row.expanded { background:rgba(255,255,255,0.04); border-radius:0vw; padding:2.2vw 1.5vw; }
-.ico { width:10vw; height:10vw; border-radius:50%; object-fit:contain; flex-shrink:0; background:rgba(255,255,255,0.08); padding:1.5vw; }
+.ico { width:10vw; height:10vw; border-radius:50%; object-fit:contain; flex-shrink:0; background:rgba(255,255,255,0.08); padding:1.0vw; }
 .ico-fb { width:10vw; height:10vw; border-radius:50%; flex-shrink:0; background:rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; font-size:4.5vw; font-weight:700; color:rgba(255,255,255,0.6); }
 .mid { flex:1; min-width:0; }
 .ttl { font-size:2.4vw; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:0.6vw; }
@@ -144,6 +145,20 @@ html, body {
 .rgt { display:flex; flex-direction:column; align-items:flex-end; flex-shrink:0; gap:0.8vw; }
 .amt { font-size:2.4vw; font-weight:700; color:#fff; white-space:nowrap; }
 .dte { font-size:1.9vw; color:rgba(255,255,255,0.4); white-space:nowrap; }
+
+.ttl {
+  display: flex;
+  align-items: center;
+  gap: 1.5vw; /* Adds space between your title text and the badge */
+}
+.recent-badge {
+    font-size:2.4vw; font-weight:700; color:#14b8a6;
+    background:rgba(74,222,128,0.14); border-radius:99px; padding: 0.4vw 1.2vw;
+    white-space:nowrap;
+  }
+  @media screen and (max-width: 400px) {
+  .recent-badge { display:none; }
+}
 
 /* ══ OVERVIEW SLIDE ══ */
 #slide-2 { padding:0; overflow:hidden; margin-top:10px}
@@ -1424,8 +1439,8 @@ function loadExpense() {
 }
 
 /* ══ RECENT TAB ══ */
-var CSV_RECENT = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=528094299";
-var NOISE_PATTERNS = [/GIAO DICH THE\s*[\d*]{4}\s*TAI/i,/NAP TIEN VI/i,/NAP VI DIEN TU/i,/TT QR VNPAY/i];
+var CSV_RECENT = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1492221762";
+var NOISE_PATTERNS = [/GIAO DICH THE\s*[\d*]{4}\s*TAI/i,/NAP TIEN VI/i,/NAP VI DIEN TU/i,/TT QR VNPAY/i,/MOMO - /i,/MOMO-CASHIN-/i,/SHOPEEPAY - /i,/Grab/i,/NGUYEN TRUNG TIN /i,/ xie xie m nhieu/i];
 function cleanDetail(s){if(!s)return"";for(var i=0;i<NOISE_PATTERNS.length;i++)s=s.replace(NOISE_PATTERNS[i],"").trim();return s.replace(/\s+/g," ").trim();}
 function fmtMoney(v){return"-\u20ab"+Math.round(Math.abs(v)).toLocaleString("en-US");}
 function fmtDate(raw){if(!raw)return"";var d=new Date(raw);if(!isNaN(d.getTime()))return d.toLocaleDateString("en-US",{day:"numeric",month:"long",year:"numeric"});return raw;}
@@ -1466,10 +1481,45 @@ function buildTxRow(item){
   var iconEl;
   if(item.icon&&item.icon.indexOf("http")===0){iconEl=document.createElement("img");iconEl.className="ico";iconEl.src=item.icon;iconEl.onerror=(function(t){return function(){var fb=document.createElement("div");fb.className="ico-fb";fb.textContent=t?t.charAt(0):"?";this.parentNode.replaceChild(fb,this);};})(item.title);}
   else{iconEl=document.createElement("div");iconEl.className="ico-fb";iconEl.textContent=item.icon||(item.title?item.title.charAt(0):"?");}
+  
   var mid=document.createElement("div");mid.className="mid";
   var ttl=document.createElement("div");ttl.className="ttl";ttl.textContent=item.title;
+  
+  // ── BADGE LOGIC START ──
+  var badgeText = "";
+  var rawColE = item.title ? item.title.trim().toUpperCase() : "";
+  var rawColH = item.badgeSource ? item.badgeSource.trim() : "";
+  var rawColG = item.rawDetail ? item.rawDetail.trim().toUpperCase() : "";
+
+  // 🟢 Now checking the raw column G data before noise cleaning
+  if (rawColG.includes("GIAO DICH THE")&&rawColG.includes("GRAB")) {
+    badgeText = "Card ***4768";
+  } else if (rawColG.includes("GIAO DICH THE")&& !rawColG.includes("GRAB")) {
+    badgeText = "Apple Pay";
+  } else if (!rawColH) {
+    badgeText = "Cash";
+  } else if (rawColG.includes("MOMO")) {
+    badgeText = "Momo";
+  } else if (rawColG.includes("SHOPEEPAY")) {
+    badgeText = "Shopeepay";
+  } else if (rawColE.includes("WITHDRAW")) {
+    badgeText = "***000";
+  } else if (rawColH.includes("*000")||rawColH.includes("*003")||rawColH.includes("*309")) {
+    badgeText = "Transfer";
+  } 
+
+  // Append badge element if text exists
+  if (badgeText) {
+    var badgeEl = document.createElement("span");
+    badgeEl.className = "recent-badge";
+    badgeEl.textContent = badgeText;
+    ttl.appendChild(badgeEl);
+  }
+  // ── BADGE LOGIC END ──
+
   var dtl=document.createElement("div");dtl.className="dtl";dtl.textContent=item.detail;
   mid.appendChild(ttl);mid.appendChild(dtl);
+  
   var rgt=document.createElement("div");rgt.className="rgt";
   var amt=document.createElement("div");amt.className="amt";amt.textContent=fmtMoney(item.amount);
   var dte=document.createElement("div");dte.className="dte";dte.textContent=fmtDate(item.date);
@@ -1488,7 +1538,7 @@ function loadRecent(){
       var lastGroup=null;
       for(var i=start;i<lines.length;i++){
         var cols=parseCsvRow(lines[i]);if(!cols[2])continue;
-        var item={date:cols[0]||"",icon:cols[5]||"",title:cols[2]||"",detail:cleanDetail(cols[4]||""),amount:parseVal(cols[3])};
+        var item={date:cols[2]||"",icon:cols[8]||"",title:cols[4]||"",rawDetail: cols[6] ||"",detail:cleanDetail(cols[6]||""),amount:parseVal(cols[5]),badgeSource:cols[7]||""};
         var group=relativeGroupLabel(item.date);
         if(group!==lastGroup){
           list.appendChild(buildGroupHeader(group));
