@@ -47,7 +47,7 @@ to{transform:rotate(360deg)}
 .add-modal{background:#232323;width:100%;max-width:480px;border-radius:5vw 5vw 0 0;padding:5vw 5vw 8vw;max-height:85vh;overflow-y:auto}
 .add-modal h3{font-size:4.2vw;margin-bottom:4vw}
 .add-field{margin-bottom:3.5vw}
-.add-field label{display:block;font-size:2.8vw;color:rgba(255,255,255,0.5);margin-bottom:1.2vw}
+.add-field label{display:block;font-size:3.8vw;color:rgba(255,255,255,0.5);margin-bottom:1.2vw}
 .add-field input{width: 100% !important;height: 11vw;padding:2.8vw 3vw;border-radius:2.5vw;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:#fff;font-size:3.4vw}
 .add-actions{display:flex;gap:3vw;margin-top:5vw}
 .add-actions button{flex:1;padding:3vw;border-radius:3vw;border:none;font-size:3.4vw;font-weight:600;cursor:pointer}
@@ -60,11 +60,44 @@ to{transform:rotate(360deg)}
 
 .form-row-2col{display:flex;gap:3vw;width:100%}
 .form-row-2col .add-field{flex:1;display:flex;flex-direction:column}
-.add-field input{width:100% !important;box-sizing:border-box}
-@media (min-width:401px){body{max-width:600px;margin:0 auto;box-shadow:0 0 40px rgba(0,0,0,0.5)}
+.add-field input[type="text"],
+.add-field input[type="number"],
+.add-field input[type="date"] {
+  width: 100% !important;
+  height: 11vw; /* Hard, identical height constraint for all fields */
+  background: #2a2a2a; /* Clean contrast matching your modal sheet color */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: #fff;
+  padding: 0 3vw;
+  font-size: 3.8vw;
+  outline: none;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+.add-field input[type="date"] {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+@media (min-width:401px){
+  body{margin:0 auto;box-shadow:0 0 40px rgba(0,0,0,0.5)}
 .form-group label{font-size:14px;margin-bottom:6px}
 .form-group input{height:45px;font-size:16px;padding:0 12px}
 .form-row-2col{gap:15px}
+.add-field label {
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+  .add-field input[type="text"],
+  .add-field input[type="number"],
+  .add-field input[type="date"] {
+    height: 44px;
+    font-size: 15px;
+    padding: 0 12px;
+    border-radius: 8px;
+  }
 }
   
 </style>
@@ -120,13 +153,15 @@ to{transform:rotate(360deg)}
         <input type="number" id="add-total-amount">
       </div>
     </div>
-    <div class="add-field">
-      <label>From Date</label>
-      <input type="date" id="add-start-date">
-    </div>
-    <div class="add-field">
-      <label>To Date</label>
-      <input type="date" id="add-end-date">
+    <div class="form-row-2col">
+      <div class="add-field">
+        <label>From Date</label>
+        <input type="date" id="add-start-date">
+      </div>
+      <div class="add-field">
+        <label>To Date</label>
+        <input type="date" id="add-end-date">
+      </div>
     </div>
     
     <div class="add-actions">
