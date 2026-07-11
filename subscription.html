@@ -57,140 +57,31 @@ to{transform:rotate(360deg)}
 .add-status.error{color:#FF69B4}
 .add-status.success{color:#14b8a6}
 
-/* ── Unify Row Layout & Enforce Gap ── */
-.form-row-2col {
-  display: flex !important;
-  flex-direction: row !important;
-  gap: 3vw !important; /* Forces the gap separation in the middle */
-  width: 100%;
-  margin-bottom: 4vw;
+
+.form-row-2col{display:flex !important;flex-direction:row !important;gap:3vw !important;width:100%;margin-bottom:4vw}
+.form-row-2col .add-field{flex:1 1 0% !important;min-width:0;display:flex;flex-direction:column}
+.add-field label{font-size:3.8vw;font-weight:600;color:rgba(255,255,255,0.5);margin-bottom:1.5vw}
+.add-field input[type="text"],.add-field input[type="number"],.add-field input[type="date"]{-webkit-appearance:none;-moz-appearance:none;appearance:none;width:100% !important;height:11vw !important;background:#2a2a2a !important;border:1px solid rgba(255,255,255,0.1) !important;border-radius:12px !important;color:#fff !important;padding:0 3vw !important;font-size:3.5vw !important;outline:none;box-sizing:border-box !important;display:flex !important;align-items:center !important;justify-content:center !important;text-align:left !important}
+@media (min-width:401px){.form-row-2col{gap:15px !important;margin-bottom:16px}
+.add-field label{font-size:13px;margin-bottom:6px}
+.add-field input[type="text"],.add-field input[type="number"],.add-field input[type="date"]{height:44px !important;font-size:15px !important;padding:0 12px !important;border-radius:8px !important}
 }
 
-.form-row-2col .add-field {
-  flex: 1 1 0% !important; /* Guarantees both columns take exactly 50% width */
-  min-width: 0; /* Prevents input content from stretching the container */
-  display: flex;
-  flex-direction: column;
+.sub-swipe-container{position:relative;width:100%;overflow:hidden;margin-bottom:12px;border-radius:12px;background:#191919}
+.sub-row{position:relative;z-index:2;background:#191919;width:100%;margin-bottom:0 !important;will-change:transform;cursor:grab;transition:background 0.2s ease,border-radius 0.2s ease,padding 0.2s ease}
+.sub-row:active{cursor:grabbing}
+.sub-icon,.sub-mid{transition:transform 0.2s cubic-bezier(0.16,1,0.3,1)}
+.sub-price{transition:opacity 0.15s ease,transform 0.15s ease}
+.sub-delete-action{position:absolute;top:0;right:0;bottom:0;width:70px;z-index:1;background-color:#ef4444;color:#ffffff;display:flex;align-items:center;justify-content:center;border-top-right-radius:12px;border-bottom-right-radius:12px;cursor:pointer}
+.sub-delete-action svg{pointer-events:none}
+.sub-delete-action:hover{background-color:#dc2626}
+.sub-swipe-container.swiped .sub-icon,.sub-swipe-container.swiped .sub-mid{transform:translateX(70px)}
+.sub-swipe-container.swiped .sub-price{opacity:0;transform:translateX(-10px);pointer-events:none}
+@media (min-pointer:fine) and (min-width:401px){.sub-swipe-container:hover .sub-row{width:calc(100% - 70px);border-top-right-radius:0;border-bottom-right-radius:0}
+.sub-swipe-container:hover .sub-delete-action{opacity:1;z-index:3}
+.sub-swipe-container:hover .sub-price{opacity:0;pointer-events:none}
 }
 
-.add-field label {
-  font-size: 3.8vw;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.5);
-  margin-bottom: 1.5vw;
-}
-
-/* ── Overriding Native iOS Date & Standard Input Styles ── */
-.add-field input[type="text"],
-.add-field input[type="number"],
-.add-field input[type="date"] {
-  -webkit-appearance: none; /* 🟢 Strips native iOS button/pill styling */
-  -moz-appearance: none;
-  appearance: none;
-  
-  width: 100% !important;
-  height: 11vw !important; /* Strict height match */
-  background: #2a2a2a !important; 
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 12px !important; /* Uniform rounded corners on all sides */
-  color: #fff !important;
-  padding: 0 3vw !important;
-  font-size: 3.5vw !important;
-  outline: none;
-  box-sizing: border-box !important;
-  
-  /* Centers the text perfectly on iOS screen layouts */
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: left !important;
-}
-
-/* ── Tablet Settings (iPad) ── */
-@media (min-width: 401px) {
-  .form-row-2col {
-    gap: 15px !important;
-    margin-bottom: 16px;
-  }
-  .add-field label {
-    font-size: 13px;
-    margin-bottom: 6px;
-  }
-  .add-field input[type="text"],
-  .add-field input[type="number"],
-  .add-field input[type="date"] {
-    height: 44px !important;
-    font-size: 15px !important;
-    padding: 0 12px !important;
-    border-radius: 8px !important;
-  }
-}
-/* ── The Parent Row Wrapper Context ── */
-.sub-swipe-container {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-  margin-bottom: 12px;
-  border-radius: 12px;
-  background: #191919;
-}
-
-/* Ensure sub-row stays on top but slides gracefully */
-.sub-row {
-  position: relative;
-  z-index: 2; 
-  background: #191919;
-  width: 100%;
-  margin-bottom: 0 !important;
-  will-change: transform;
-  cursor: grab;
-}
-
-.sub-row:active {
-  cursor: grabbing;
-}
-
-/* ── 🟢 Fixed: Always visible behind the card row ── */
-.sub-delete-action {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 70px; /* Maps to maxSwipeWidth */
-  z-index: 1; /* Perfectly layers directly beneath your moving card row */
-  background-color: #ef4444;
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-top-right-radius: 12px;
-  border-bottom-right-radius: 12px;
-  cursor: pointer;
-}
-
-.sub-delete-action svg {
-  pointer-events: none; /* Prevents raw icon lines from blocking clicks */
-}
-
-.sub-delete-action:hover {
-  background-color: #dc2626; /* Slight dark contrast when target is tracked */
-}
-
-/* ── 🟢 COMPUTER / LAPTOP DESKTOP HOVER RULES ── */
-@media (min-pointer: fine) and (min-width: 401px) {
-  /* On hover, safely pull back card item width to prevent amount overlap */
-  .sub-swipe-container:hover .sub-row {
-    width: calc(100% - 70px);
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  
-  /* Elevate and reveal the active clickable delete action zone layer */
-  .sub-swipe-container:hover .sub-delete-action {
-    opacity: 1;
-    z-index: 3; /* Pops on top of the row background so the mouse click registers instantly! */
-  }
-}
   
 </style>
 </head>
