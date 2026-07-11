@@ -6,106 +6,62 @@
 <title>Subscriptions</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  html, body {
-    width:100%; height:100%;
-    background:#191919;
-    font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
-    color:#fff;
-  }
-
-  .card {
-    max-width:100%;
-    margin:0 auto;
-  }
-
-  /* ── Header ── */
-  .sub-header-row {
-    display:flex; align-items:center; justify-content:space-between;
-    margin-bottom:14px;
-  }
-  .sub-title { font-size:15px; font-weight:700; color:rgba(255,255,255,0.85); }
-  .sub-refresh-row { display:flex; align-items:center; gap:8px; }
-  .sub-last-updated { font-size:11px; color:rgba(255,255,255,0.35); white-space:nowrap; }
-  .sub-refresh-btn {
-    border:none; background:transparent; color:rgba(255,255,255,0.5);
-    cursor:pointer; display:flex; align-items:center; justify-content:center;
-    padding:4px; border-radius:50%; transition:color 0.15s, background 0.15s;
-  }
-  .sub-refresh-btn:hover { color:#fff; background:rgba(255,255,255,0.08); }
-  .sub-refresh-btn.spinning svg { animation:subSpin 0.6s linear; }
-  @keyframes subSpin { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
-
-  /* ── Total row ── */
-  .sub-stats-row { display:flex; gap:28px; margin-bottom:30px; }
-  .sub-stat-val {
-    font-size:25px; font-weight:800; color:rgba(255,255,255,0.95); letter-spacing:-0.02em; line-height:1;
-    margin-bottom:4px; font-family:monospace;
-  }
-  .sub-stat-label {
-    font-size:12.5px; color:rgba(255,255,255,0.45);
-  }
-  .sub-stat-label .hl-teal { color:#2dd4bf; font-weight:600; }
-
-  /* ── List section ── */
-  .sub-list-title {
-    font-size:14px; font-weight:700; color:rgba(255,255,255,0.75); margin-bottom:12px;}
-
-  #sub-list { display:flex; flex-direction:column;}
-  #sub-loading, #sub-empty {
-    font-size:13px; color:rgba(255,255,255,0.4); padding:24px 0; text-align:center;
-  }
-  .sub-row:last-child { border-bottom:none; }
-
-  .sub-row {
-    display:flex; align-items:center; padding:2vw 0;
-  border-bottom:1px solid rgba(255,255,255,0.08); gap:3vw; cursor:pointer;
-  transition:background 0.2s ease, border-radius 0.2s ease, padding 0.2s ease;}
-  .sub-row:hover { background:rgba(255,255,255,0.04); }
-  .sub-icon {
-    width:42px; height:42px; border-radius:50%; flex-shrink:0;
-    display:flex; align-items:center; justify-content:center;
-    font-size:17px; font-weight:800; color:#fff;
-  }
-  
-  .sub-mid { flex:1; min-width:0; }
-  .sub-name-row {
-    display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px; flex-wrap:wrap;
-  }
-  .sub-name-left { display:flex; align-items:center; gap:8px; min-width:0; flex-wrap:wrap; }
-  .sub-name {
-    font-size:14.5px; font-weight:700; color:rgba(255,255,255,0.95); white-space:nowrap;
-    overflow:hidden; text-overflow:ellipsis;
-  }
-  .sub-badge {
-    font-size:10.5px; font-weight:700; color:#14b8a6;
-    background:rgba(74,222,128,0.14); border-radius:99px; padding:2px 9px;
-    white-space:nowrap;
-  }
-  @media screen and (max-width: 400px) {
-  .sub-badge { display:none; }
-}
-  .sub-expiry {
-    display:flex; align-items:center; gap:5px;
-    font-size:12px; color:rgba(255,255,255,0.45); white-space:nowrap;
-  }
-  .sub-expiry svg { flex-shrink:0; opacity:0.6; }
-  .sub-price {
-    font-size:14.5px; font-weight:700; color:rgba(255,255,255,0.95); text-align:right; white-space:nowrap;
-    flex-shrink:0;
-  }
-  .sub-price-unit {
-    font-size:11px; font-weight:500; color:rgba(255,255,255,0.4); margin-left:2px;
-  }
+  html,body{width:100%;height:100%;background:#191919;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;color:#fff}
+.card{max-width:100%;margin:0 auto}
+.sub-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.sub-title{font-size:15px;font-weight:700;color:rgba(255,255,255,0.85)}
+.sub-refresh-row{display:flex;align-items:center;gap:8px}
+.sub-last-updated{font-size:11px;color:rgba(255,255,255,0.35);white-space:nowrap}
+.sub-refresh-btn{border:none;background:transparent;color:rgba(255,255,255,0.5);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:4px;border-radius:50%;transition:color 0.15s,background 0.15s}
+.sub-refresh-btn:hover{color:#fff;background:rgba(255,255,255,0.08)}
+.sub-refresh-btn.spinning svg{animation:subSpin 0.6s linear}
+@keyframes subSpin{from{transform:rotate(0deg)}
+to{transform:rotate(360deg)}
+}.sub-stats-row{display:flex;gap:28px;margin-bottom:30px}
+.sub-stat-val{font-size:25px;font-weight:800;color:rgba(255,255,255,0.95);letter-spacing:-0.02em;line-height:1;margin-bottom:4px;font-family:monospace}
+.sub-stat-label{font-size:12.5px;color:rgba(255,255,255,0.45)}
+.sub-stat-label .hl-teal{color:#2dd4bf;font-weight:600}
+.sub-list-title{font-size:14px;font-weight:700;color:rgba(255,255,255,0.75);margin-bottom:12px}
+#sub-list{display:flex;flex-direction:column}
+#sub-loading,#sub-empty{font-size:13px;color:rgba(255,255,255,0.4);padding:24px 0;text-align:center}
+.sub-row:last-child{border-bottom:none}
+.sub-row{display:flex;align-items:center;padding:2vw 0;border-bottom:1px solid rgba(255,255,255,0.08);gap:3vw;cursor:pointer;transition:background 0.2s ease,border-radius 0.2s ease,padding 0.2s ease}
+.sub-row:hover{background:rgba(255,255,255,0.04)}
+.sub-icon{width:42px;height:42px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff}
+.sub-mid{flex:1;min-width:0}
+.sub-name-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;flex-wrap:wrap}
+.sub-name-left{display:flex;align-items:center;gap:8px;min-width:0;flex-wrap:wrap}
+.sub-name{font-size:14.5px;font-weight:700;color:rgba(255,255,255,0.95);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sub-badge{font-size:10.5px;font-weight:700;color:#14b8a6;background:rgba(74,222,128,0.14);border-radius:99px;padding:2px 9px;white-space:nowrap}
+@media screen and (max-width:400px){.sub-badge{display:none}
+}.sub-expiry{display:flex;align-items:center;gap:5px;font-size:12px;color:rgba(255,255,255,0.45);white-space:nowrap}
+.sub-expiry svg{flex-shrink:0;opacity:0.6}
+.sub-price{font-size:14.5px;font-weight:700;color:rgba(255,255,255,0.95);text-align:right;white-space:nowrap;flex-shrink:0}
+.sub-price-unit{font-size:11px;font-weight:500;color:rgba(255,255,255,0.4);margin-left:2px}
+.add-fab{position:fixed;right:5vw;bottom:5vw;z-index:500;width:13vw;height:13vw;max-width:52px;max-height:52px;border-radius:50%;background:#14b8a6;border:none;color:#fff;font-size:7vw;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,0.4);cursor:pointer}
+.add-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:600;align-items:flex-end;justify-content:center}
+.add-modal-overlay.open{display:flex}
+.add-modal{background:#232323;width:100%;max-width:480px;border-radius:5vw 5vw 0 0;padding:5vw 5vw 8vw;max-height:85vh;overflow-y:auto}
+.add-modal h3{font-size:4.2vw;margin-bottom:4vw}
+.add-field{margin-bottom:3.5vw}
+.add-field label{display:block;font-size:2.8vw;color:rgba(255,255,255,0.5);margin-bottom:1.2vw}
+.add-field input{width:100%;padding:2.8vw 3vw;border-radius:2.5vw;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:#fff;font-size:3.4vw}
+.add-actions{display:flex;gap:3vw;margin-top:5vw}
+.add-actions button{flex:1;padding:3vw;border-radius:3vw;border:none;font-size:3.4vw;font-weight:600;cursor:pointer}
+.add-cancel-btn{background:rgba(255,255,255,0.08);color:#fff}
+.add-submit-btn{background:#14b8a6;color:#fff}
+.add-submit-btn:disabled{opacity:0.5}
+.add-status{font-size:2.8vw;margin-top:2vw;text-align:center}
+.add-status.error{color:#FF69B4}
+.add-status.success{color:#14b8a6}
   
 </style>
 </head>
 <body>
 
 <div class="card" id="card">
-
   <div class="sub-header-row">
-    <div class="sub-title">Spending overview</div>
-    
+    <div class="sub-title">Spending overview</div> 
   </div>
 
   <div class="sub-stats-row">
@@ -122,6 +78,42 @@
   <div class="sub-list-title">Active subscription</div>
   <div id="sub-loading">Loading&hellip;</div>
   <div id="sub-list"></div>
+  
+</div>
+<button class="add-fab" id="add-fab">+</button>
+<div class="add-modal-overlay" id="add-modal-overlay">
+  <div class="add-modal">
+    <h3>Add Subscription</h3>
+    <div class="add-field">
+      <label>Subscription Name</label>
+      <input type="text" id="add-title">
+    </div>
+    <div class="add-field">
+      <label>Total Price</label>
+      <input type="number" id="add-total-amount">
+    </div>
+    <div class="add-field">
+      <label>Monthly Price</label>
+      <input type="number" id="add-amount">
+    </div>
+    <div class="add-field">
+      <label>From Date</label>
+      <input type="date" id="add-start-date">
+    </div>
+    <div class="add-field">
+      <label>To Date</label>
+      <input type="date" id="add-end-date">
+    </div>
+    <div class="add-field">
+      <label># of users</label>
+      <input type="number" id="add-user">
+    </div>
+    <div class="add-actions">
+      <button class="add-cancel-btn" id="add-cancel-btn">Cancel</button>
+      <button class="add-submit-btn" id="add-submit-btn">Save</button>
+    </div>
+    <div class="add-status" id="add-status"></div>
+  </div>
 </div>
 
 <script>
@@ -392,6 +384,75 @@ function renderSubscriptions(items) {
 
 window.addEventListener("resize", function(){
   if (lastLoadedItems.length) renderSubscriptions(lastLoadedItems);
+});
+
+/* ══ ADD RECORD (writes to the sheet via Apps Script Web App) ══ */
+var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzXNlnpRsCEaOuLP1IIHE2so-r1xnMq0i4SKKxp3IK8jmfesTG8IgaliNqTBvZNL-Hu/exec"; // ends in /exec
+
+var addOverlay = document.getElementById("add-modal-overlay");
+var addStatusEl = document.getElementById("add-status");
+var addSubmitBtn = document.getElementById("add-submit-btn");
+
+document.getElementById("add-fab").addEventListener("click", function(){
+  document.getElementById("add-title").value = "";
+  document.getElementById("add-total-amount").value = "";  
+  document.getElementById("add-amount").value = "";
+  document.getElementById("add-start-date").value = new Date().toISOString().slice(0,10);
+  document.getElementById("add-end-date").value = new Date().toISOString().slice(0,10);
+  document.getElementById("add-user").value = "";
+  addStatusEl.textContent = ""; addStatusEl.className = "add-status";
+  addOverlay.classList.add("open");
+});
+
+document.getElementById("add-cancel-btn").addEventListener("click", function(){
+  addOverlay.classList.remove("open");
+});
+addOverlay.addEventListener("click", function(e){
+  if (e.target === addOverlay) addOverlay.classList.remove("open");
+});
+
+document.getElementById("add-submit-btn").addEventListener("click", function(){
+
+  var title = document.getElementById("add-title").value.trim();
+  var totalamount = document.getElementById("add-total-amount").value;
+  var amount = document.getElementById("add-amount").value;
+  var startdate = document.getElementById("add-start-date").value;
+  var enddate = document.getElementById("add-end-date").value;
+  var users = document.getElementById("add-user").value;
+
+  if (!startdate || !enddate || !title || (!amount && !totalamount)) {
+    addStatusEl.textContent = "Dates, Title, and Amount are required.";
+    addStatusEl.className = "add-status error";
+    return;
+  }
+
+  addSubmitBtn.disabled = true;
+  addStatusEl.textContent = "Saving\u2026";
+  addStatusEl.className = "add-status";
+
+  // Apps Script Web Apps generally require no-cors from a static page,
+  // which means we can't read the response — we optimistically assume
+  // success if the request doesn't throw, then refresh the data.
+  fetch(APPS_SCRIPT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "text/plain" }, // avoids a CORS preflight
+    body: JSON.stringify({ title:title, totalamount:totalamount, amount:amount,startdate:startdate, enddate:enddate, users:users })
+  })
+  .then(function(){
+    addStatusEl.textContent = "Saved!";
+    addStatusEl.className = "add-status success";
+    setTimeout(function(){
+      addOverlay.classList.remove("open");
+      addSubmitBtn.disabled = false;
+      loadSubscriptions();
+    }, 700);
+  })
+  .catch(function(err){
+    addStatusEl.textContent = "Error: " + err.message;
+    addStatusEl.className = "add-status error";
+    addSubmitBtn.disabled = false;
+  });
 });
 
 loadSubscriptions();
