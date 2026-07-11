@@ -22,7 +22,7 @@ to{transform:rotate(360deg)}
 .sub-stat-label{font-size:12.5px;color:rgba(255,255,255,0.45)}
 .sub-stat-label .hl-teal{color:#2dd4bf;font-weight:600}
 .sub-list-title{display:flex;align-items:center;justify-content:left;gap:2vw;width:100%;font-size:14px;font-weight:700;color:rgba(255,255,255,0.75);margin-bottom:12px}
-.add-inline-btn{width:6vw;height:6vw;padding-top:2px;max-width:28px;max-height:28px;border-radius:50%;background:#14b8a6;border:none;color:#fff;font-size:4.5vw;font-weight:bold;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:opacity 0.2s}
+.add-inline-btn{width:6vw;height:6vw;max-width:28px;max-height:28px;border-radius:50%;background:#14b8a6;border:none;color:#fff;font-size:4.5vw;font-weight:bold;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:opacity 0.2s}
 .add-inline-btn:active{opacity:0.8}
 
 #sub-list{display:flex;flex-direction:column}
@@ -58,45 +58,72 @@ to{transform:rotate(360deg)}
 .add-status.error{color:#FF69B4}
 .add-status.success{color:#14b8a6}
 
-.form-row-2col{display:flex;gap:3vw;width:100%}
-.form-row-2col .add-field{flex:1;display:flex;flex-direction:column}
+/* ── Unify Row Layout & Enforce Gap ── */
+.form-row-2col {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 3vw !important; /* Forces the gap separation in the middle */
+  width: 100%;
+  margin-bottom: 4vw;
+}
+
+.form-row-2col .add-field {
+  flex: 1 1 0% !important; /* Guarantees both columns take exactly 50% width */
+  min-width: 0; /* Prevents input content from stretching the container */
+  display: flex;
+  flex-direction: column;
+}
+
+.add-field label {
+  font-size: 3.8vw;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 1.5vw;
+}
+
+/* ── Overriding Native iOS Date & Standard Input Styles ── */
 .add-field input[type="text"],
 .add-field input[type="number"],
 .add-field input[type="date"] {
+  -webkit-appearance: none; /* 🟢 Strips native iOS button/pill styling */
+  -moz-appearance: none;
+  appearance: none;
+  
   width: 100% !important;
-  height: 11vw; /* Hard, identical height constraint for all fields */
-  background: #2a2a2a; /* Clean contrast matching your modal sheet color */
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  color: #fff;
-  padding: 0 3vw;
-  font-size: 3.8vw;
+  height: 11vw !important; /* Strict height match */
+  background: #2a2a2a !important; 
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 12px !important; /* Uniform rounded corners on all sides */
+  color: #fff !important;
+  padding: 0 3vw !important;
+  font-size: 3.5vw !important;
   outline: none;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
+  box-sizing: border-box !important;
+  
+  /* Centers the text perfectly on iOS screen layouts */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
 }
-.add-field input[type="date"] {
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-@media (min-width:401px){
-  body{margin:0 auto;box-shadow:0 0 40px rgba(0,0,0,0.5)}
-.form-group label{font-size:14px;margin-bottom:6px}
-.form-group input{height:45px;font-size:16px;padding:0 12px}
-.form-row-2col{gap:15px}
-.add-field label {
+
+/* ── Tablet Settings (iPad) ── */
+@media (min-width: 401px) {
+  .form-row-2col {
+    gap: 15px !important;
+    margin-bottom: 16px;
+  }
+  .add-field label {
     font-size: 13px;
     margin-bottom: 6px;
   }
   .add-field input[type="text"],
   .add-field input[type="number"],
   .add-field input[type="date"] {
-    height: 44px;
-    font-size: 15px;
-    padding: 0 12px;
-    border-radius: 8px;
+    height: 44px !important;
+    font-size: 15px !important;
+    padding: 0 12px !important;
+    border-radius: 8px !important;
   }
 }
   
