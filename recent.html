@@ -293,7 +293,7 @@ to{transform:rotate(360deg)}
 
 /* ── Interactive Chart Layer ── */
 .chart-wrap{position:relative;width:100%;background:#191919;border:0px solid #2a2e39;border-radius:6px;margin-bottom:14px;overflow:hidden;user-select:none}
-#wave-svg { width:100%; height:260px; display:block; overflow:visible; }
+#wave-svg { width:100%; height:190px; display:block; overflow:visible; }
 
 /* Axis Styles */
 .axis-line { stroke:#2a2e39; stroke-width:1; }
@@ -342,9 +342,10 @@ tbody tr.current-row td{font-weight:600}
 .text-pink{color:#ff6097;font-weight:600}
 .text-muted{color:#787b86}
 .cycle-num-badge{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;border:1px solid #434651;background:#2a2e39;color:#fff;font-weight:700;font-size:10px}
-.live-indicator{background:#f7931a;color:#fff;border:0px solid #ffd700;font-weight:700;padding:1px 4px;border-radius:5px;font-size:9px;display:inline-block;margin-top:2px}
-
+tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 #loading-msg { font-size:12px; color:#787b86; text-align:center; padding:24px 0; }
+
+@media (max-width:400px){table {font-size:3.6vw;}  th, td { padding:5px 4px;}}
 
 </style>
 </head>
@@ -528,7 +529,7 @@ tbody tr.current-row td{font-weight:600}
 
         <!-- Dynamic Chart Engine Layout -->
         <div class="chart-wrap" id="chart-wrap">
-          <svg id="wave-svg" viewBox="0 0 640 260" preserveAspectRatio="none"></svg>
+          <svg id="wave-svg" viewBox="0 0 640 190" preserveAspectRatio="none"></svg>
         </div>
 
         <div class="legend-row">
@@ -2757,12 +2758,15 @@ function renderTradingViewChart() {
   svg.innerHTML = "";
 
   var ns = "http://www.w3.org/2000/svg";
-  var W = 640, H = 260;
+  var W = 640, H = 190; // Crisp, low-profile micro height
   var RIGHT_AXIS_W = 55, BOTTOM_AXIS_H = 24;
-  var PAD_X = -150, PAD_Y = 55;
+  
+  // Bring padding back into a normal positive range so the chart can breathe
+  var PAD_X = 35;  // Positive padding to keep the left side inside the canvas
+  var PAD_Y = 25;  // Lower padding to maximize the vertical range for lines
 
-  var plotW = W - RIGHT_AXIS_W - PAD_X;
-  var plotH = H - BOTTOM_AXIS_H - PAD_Y;
+  var plotW = W - RIGHT_AXIS_W - PAD_X; // 640 - 55 - 35 = 550px width
+  var plotH = H - BOTTOM_AXIS_H - PAD_Y; // 220 - 24 - 25 = 171px actual graphing height
 
   var logVals = globalPoints.map(function(p){ return Math.log10(p.value); });
   var baseMinL = Math.min.apply(null, logVals);
@@ -2770,8 +2774,8 @@ function renderTradingViewChart() {
   
   // Custom tailored 12% y-axis padding baseline allocation
   var logRange = baseMaxL - baseMinL;
-  baseMinL = baseMinL - (logRange * 0.05);
-  baseMaxL = baseMaxL + (logRange * 0.05);
+  baseMinL = baseMinL - (logRange * 0.3);
+  baseMaxL = baseMaxL + (logRange * 0.3);
   
   var midL = baseMinL + (baseMaxL - baseMinL) / 2;
 
@@ -3026,7 +3030,7 @@ function setupGlobalInteractivePhysics() {
   
   svg.addEventListener('mousedown', function(e) {
     var rect = svg.getBoundingClientRect();
-    var W = 640, H = 320;
+    var W = 600, H = 220;
     var RIGHT_AXIS_W = 55, BOTTOM_AXIS_H = 24;
     
     var mX = (e.clientX - rect.left) * (W / rect.width);
@@ -3145,10 +3149,7 @@ function renderStructuredTable(points) {
     var tdId = document.createElement("td");
     var bdy = document.createElement("span"); bdy.className = "cycle-num-badge"; bdy.textContent = c.id;
     tdId.appendChild(bdy);
-    if(c.isCurrent) {
-      var live = document.createElement("div"); live.className = "live-indicator";
-      live.textContent = "LIVE"; tdId.appendChild(document.createElement("br")); tdId.appendChild(live);
-    }
+    
     tr.appendChild(tdId);
 
     var tdDates = document.createElement("td");
