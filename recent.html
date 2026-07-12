@@ -128,6 +128,72 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .recent-badge{font-size:2.4vw;font-weight:700;color:#14b8a6;background:rgba(74,222,128,0.14);border-radius:99px;padding:0.4vw 1.2vw;white-space:nowrap}
 @media screen and (max-width:400px){.recent-badge{font-size:3.6vw}}
 
+#slide-1 {
+    position: relative; 
+}
+.tab-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+#add-cash {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10; /* Ensures it floats above list items */
+    
+    /* Your existing button styling */
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #14b8a6;
+    color: #ffffff;
+    border: none;
+    font-size: 20px;
+    font-weight: 400;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#add-cash.loading {
+    pointer-events: none;                /* Prevent double taps */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Do NOT add background-color here so it retains your exact original theme color */
+}
+
+/* The inline spinner element */
+.btn-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3); /* Faint background track */
+    border-top-color: #ffffff;                  /* Bright white moving indicator segment */
+    border-radius: 50%;                         /* Keeps the inner spinner perfectly round */
+    animation: spinCircle 0.8s linear infinite;  /* Continuous smooth rotation loop */
+    display: inline-block;
+}
+
+#add-cash.success-confirm {
+    background-color: #10b981 !important; /* Emerald Green success accent color */
+    color: #ffffff !important;
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease; /* Smooth fade effect between states */
+}
+
+@keyframes spinCircle {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 /* ══ OVERVIEW SLIDE ══ */
 #slide-2 { padding:0; overflow:hidden; margin-top:10px}
 #ca-wrap { display:flex; width:100%; height:100%; }
@@ -339,6 +405,8 @@ to{transform:rotate(360deg)}
     <!-- RECENT SLIDE -->
     <div class="slide" id="slide-1" data-idx="1">
       <div id="rec-msg">Loading...</div>
+      <div class="tab-header">
+        <button id="add-cash" class="action-btn">+</button></div>
       <div id="tx-list"></div>
     </div>
     <!-- OVERVIEW SLIDE -->
@@ -453,6 +521,26 @@ to{transform:rotate(360deg)}
     </div>
   </div>
 </div>
+<!-- CASH TRANSACTION MODAL POPUP -->
+<div id="cash-modal-overlay" class="add-modal-overlay">
+  <div class="add-modal">
+    <h3>Add Cash Transaction</h3>
+    
+    <div class="add-field">
+      <label>Expenses Detail</label>
+      <input type="text" id="cash-modal-input" autocomplete="off">
+    </div>
+
+    <!-- Status feedback element utilizing your error/success colors -->
+    <div id="cash-modal-status" class="add-status"></div>
+
+    <div class="add-actions">
+      <button id="cash-modal-cancel" class="add-cancel-btn">Cancel</button>
+      <button id="cash-modal-submit" class="add-submit-btn">Submit to Sheets</button>
+    </div>
+  </div>
+</div>
+<!-- Custom Subcription Modal Popup -->
 <div class="add-modal-overlay" id="add-modal-overlay">
   <div class="add-modal">
     <h3>Add Subscription</h3>
@@ -2374,99 +2462,117 @@ function deleteSubscription(itemId) {
     });
   });
 }
-function renderTradingViewWidget() {
-  var container = document.getElementById("tv-widget-container");
-  if (!container) return;
 
-  // 1. Completely destroy the old target div and rebuild it fresh
-  var oldTarget = document.getElementById("tv-widget-target");
-  if (oldTarget) oldTarget.remove();
+function initCashModal() {
+    var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyOmUuWZGQFOz17ZaMoE7NBMSl3eaX5F8jsXUY4cQMb0vYOHsvIfEZ8FSx7glyVQqpb/exec";
 
-  var newTarget = document.createElement("div");
-  newTarget.id = "tv-widget-target";
-  newTarget.className = "tradingview-widget-container__widget";
-  
-  // Force full size constraints on the dynamically generated element
-  newTarget.style.width = "100%";
-  newTarget.style.height = "100%";
-  container.appendChild(newTarget);
+    var addCashBtn = document.getElementById("add-cash");
+    var cashOverlay = document.getElementById("cash-modal-overlay");
+    var cashInput = document.getElementById("cash-modal-input");
+    var cashCancel = document.getElementById("cash-modal-cancel");
+    var cashSubmit = document.getElementById("cash-modal-submit");
+    var cashStatus = document.getElementById("cash-modal-status");
 
-  // 2. Remove any old leftover script instances from this container
-  var oldScript = container.querySelector("script");
-  if (oldScript) oldScript.remove();
+    if (!addCashBtn) return;
 
-  // 3. Create the configuration script block
-  var script = document.createElement("script");
-  script.type = "text/javascript";
-  script.src = "https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js";
-  script.async = true;
+    // Open Modal
+    addCashBtn.addEventListener("click", function() {
+        cashInput.value = "";
+        cashStatus.className = "add-status"; 
+        cashStatus.innerText = "";
+        cashOverlay.classList.add("open");
+        cashInput.focus();
+    });
 
-  // Your exact widget layout configuration options
-  var widgetOptions = {
-    "lineWidth": 2,
-    "lineType": 0,
-    "chartType": "area",
-    "fontColor": "rgb(106, 109, 120)",
-    "gridLineColor": "rgba(242, 242, 242, 0)",
-    "volumeUpColor": "rgba(34, 171, 148, 0.5)",
-    "volumeDownColor": "rgba(247, 82, 95, 0.5)",
-    "backgroundColor": "#0F0F0F",
-    "widgetFontColor": "#DBDBDB",
-    "upColor": "#22ab94",
-    "downColor": "#f7525f",
-    "borderUpColor": "#22ab94",
-    "borderDownColor": "#f7525f",
-    "wickUpColor": "#22ab94",
-    "wickDownColor": "#f7525f",
-    "colorTheme": "dark",
-    "isTransparent": true, 
-    "locale": "en",
-    "chartOnly": false,
-    "scalePosition": "right",
-    "scaleMode": "Normal",
-    "fontFamily": "-apple-system, BlinkMacSystemFont, Trebuchet MS, Roboto, Ubuntu, sans-serif",
-    "valuesTracking": "1",
-    "changeMode": "price-and-percent",
-    "symbols": [
-      ["COINBASE:BTCUSD|1M"],
-      ["PYTH:XAUUSD|1D"],
-      ["VANTAGE:SP500|1M"]
-    ],
-    "dateRanges": [
-      "1d|1",
-      "1m|30",
-      "3m|60",
-      "12m|1D",
-      "60m|1W",
-      "all|1M"
-    ],
-    "fontSize": "10",
-    "headerFontSize": "medium",
-    "autosize": true,
-    "width": "100%",
-    "height": "100%",
-    "noTimeScale": false,
-    "hideDateRanges": false,
-    "hideMarketStatus": false,
-    "hideSymbolLogo": false
-  };
+    // Close Modal
+    cashCancel.addEventListener("click", function() {
+        cashOverlay.classList.remove("open");
+    });
 
-  script.innerHTML = JSON.stringify(widgetOptions);
 
-  // 4. Append script to run layout parsing
-  container.appendChild(script);
+    cashSubmit.addEventListener("click", function() {
+        var rawText = cashInput.value.trim();
+        if (!rawText) return;
+
+        // Disable to prevent double-clicking
+        cashSubmit.disabled = true;
+        
+        var items = rawText.split(";");
+        var todayStr = new Date().toISOString().split('T')[0]; // yyyy-MM-dd
+        var validRequestsCount = 0;
+
+        // Loop fires completely synchronously and instantly (under 2ms total)
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i].trim();
+            if (!item) continue;
+
+            var parts = item.split("-");
+            if (parts.length < 2) continue;
+
+            var detail = parts[0].trim();
+            var rawAmount = parseFloat(parts[1].trim());
+            if (isNaN(rawAmount)) continue;
+
+            var finalAmount = rawAmount * 1000;
+            validRequestsCount++;
+
+            var payload = {
+                type: "Cash",
+                date: todayStr,
+                detail: detail,
+                amount: finalAmount
+            };
+
+            // Fire and Forget immediately - NO await, NO blocking chain
+            fetch(APPS_SCRIPT_URL, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain" }, 
+                body: JSON.stringify(payload)
+            }).catch(function(err) {
+                console.error("Background transmission failed:", err);
+            });
+        }
+
+        if (validRequestsCount > 0) {
+            // 1. Close popup immediately for maximum snappiness
+            cashOverlay.classList.remove("open");
+            cashSubmit.disabled = false;
+            
+            // 2. Set button to spinning state
+            if (addCashBtn) {
+                addCashBtn.classList.add("loading");
+                //addCashBtn.innerHTML = "&#8635;"; // ↻
+                addCashBtn.innerHTML = '<span class="btn-spinner"></span>';
+            }
+            
+            // 3. Keep spinning for exactly 9 seconds to match your custom latency balance
+            setTimeout(function() {
+                if (typeof loadRecent === "function") {
+                    loadRecent();
+                }
+                if (addCashBtn) {
+                    addCashBtn.classList.remove("loading");
+                    addCashBtn.classList.add("success-confirm");
+                    addCashBtn.innerHTML = "&#10003;"; // Unicode Checkmark Symbol Check ✓
+                }
+                
+                // 5. Wait 1.5 seconds for the user to see the success check, then reset back to normal
+                setTimeout(function() {
+                    if (addCashBtn) {
+                        addCashBtn.classList.remove("success-confirm");
+                        addCashBtn.innerHTML = "+"; // Reset back to clean plus icon
+                    }
+                }, 1500);
+            }, 11000);
+            
+        } else {
+            cashStatus.className = "add-status error";
+            cashStatus.innerText = "Error: Input formatting issue.";
+            cashSubmit.disabled = false;
+        }
+    });
 }
 
-
-function onTabChange(activeTabIndex) {
-  // Check if it matches your TradingView tab index layout slot
-  if (activeTabIndex === 4) { 
-    // A tiny 50ms delay gives the UI time to expand so TradingView can calculate width safely
-    setTimeout(function() {
-      renderTradingViewWidget();
-    }, 50);
-  }
-}
 
 loadSubscriptions();
 
@@ -2486,7 +2592,7 @@ setInterval(caLoadDonut,60000);
   positionTabLine();
 })();
 
-window.addEventListener("load",function(){positionTabLine();applyLayout();caApplyLayout();});
+window.addEventListener("load",function(){positionTabLine();applyLayout();caApplyLayout();initCashModal();});
 window.addEventListener("resize",applyLayout);
 
 
