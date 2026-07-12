@@ -208,7 +208,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 
 /* ══ SUBSCRIPTION SLIDE ══ */
 .card{max-width:100%;margin: 2vw;}
-.sub-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.sub-header-row{display:flex;align-items:center;justify-content:space-between;}
 .sub-title{font-size:14px;font-weight:700;color:rgba(255,255,255,0.85)}
 .sub-refresh-row{display:flex;align-items:center;gap:8px}
 .sub-last-updated{font-size:11px;color:rgba(255,255,255,0.35);white-space:nowrap}
@@ -276,6 +276,75 @@ to{transform:rotate(360deg)}
 .sub-delete-action:hover{background-color:#dc2626}
 .sub-delete-action{opacity:0;visibility:hidden;pointer-events:none;transition:opacity 0.2s ease,visibility 0.2s ease}
 .sub-swipe-container.swiped .sub-delete-action{opacity:1 !important;visibility:visible !important;pointer-events:auto !important}
+
+/* ══ BTC SLIDE ══ */
+.btc-card { max-width:100%; margin:0 auto; padding:12px; }
+
+/* ── Header ── */
+.header-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; }
+.title { font-size:15px; font-weight:700; display:flex; align-items:center; gap:6px; color:#fff; }
+.title .btc-glyph {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:20px; height:20px; border-radius:50%; background:#f7931a; color:#191919;
+  font-size:12px; font-weight:900; flex-shrink:0;
+}
+.subtitle { font-size:11px; color:#787b86;}
+.subtitle .now-pill { color:#2dd4bf; font-weight:700; margin-left:2px; }
+
+/* ── Interactive Chart Layer ── */
+.chart-wrap{position:relative;width:100%;background:#191919;border:0px solid #2a2e39;border-radius:6px;margin-bottom:14px;overflow:hidden;user-select:none}
+#wave-svg { width:100%; height:260px; display:block; overflow:visible; }
+
+/* Axis Styles */
+.axis-line { stroke:#2a2e39; stroke-width:1; }
+.grid-line { stroke:#1c2030; stroke-width:1; stroke-dasharray: 2,2; }
+.axis-text { font-size:12px; fill:#787b86; font-family:monospace; font-weight:500; }
+
+/* Axis Interactive Scales */
+.x-axis-hitbox { fill:transparent; cursor:ew-resize; }
+.y-axis-hitbox { fill:transparent; cursor:ns-resize; }
+.chart-body-hitbox { fill:transparent; cursor:grab; }
+.chart-body-hitbox:active { cursor:grabbing; }
+
+/* Interactive Crosshairs */
+.crosshair { stroke:#5d606b; stroke-width:1; stroke-dasharray:3,3; pointer-events:none; opacity:0; }
+.crosshair-tag { fill:#2a2e39; opacity:0; pointer-events:none; }
+.crosshair-text { font-size:11px; fill:#fff; font-family:monospace; font-weight:bold; opacity:0; pointer-events:none; }
+
+/* Labels & Overlays - Locked Font Scales */
+.wave-pt-label { font-size:14px; font-weight:700; fill:#fff;}
+.wave-pt-sublabel { font-size:12px; font-weight:600; }
+.trend-label-bg { fill:rgba(255,255,255,0.05); stroke:#2a2e39; stroke-width:1; rx:3; ry:3; }
+.trend-label-text { font-size:10px; font-weight:600; fill:#848794; text-anchor:middle; }
+
+/* ── Legend Row ── */
+.legend-row { display:flex; gap:14px; margin-bottom:16px; flex-wrap:wrap; padding:0 4px; }
+.legend-item { display:flex; align-items:center; gap:5px; font-size:12px; color:#787b86; }
+.legend-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+
+/* ── High Density Minimalist Table ── */
+.table-container { width:100%; overflow:hidden; border:1px solid #2a2e39; border-radius:8px;  }
+table { width:100%; border-collapse:collapse; text-align:left; font-size:14px; color:#d1d4dc; table-layout:fixed; }
+
+th, td { padding:8px 6px; border-bottom:1px solid #2a2e39; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+th { background:#191919; color:#787b86; font-weight:600; font-size:10px; text-transform:uppercase; letter-spacing:0.5px; }
+tr:last-child td { border-bottom:none; }
+
+tbody tr { transition: background 0.15s; }
+tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+
+/* High visibility styling for the active yellow/gold cycle row */
+tbody tr.current-row{background:rgba(255,255,255,0.02) !important;border-left:3px solid #fff}
+tbody tr.current-row td{font-weight:600}
+.font-mono{font-family:SFMono-Regular,Consolas,Liberation Mono,monospace}
+.text-right{text-align:right}
+.text-teal{color:#00bfa5;font-weight:600}
+.text-pink{color:#ff6097;font-weight:600}
+.text-muted{color:#787b86}
+.cycle-num-badge{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;border:1px solid #434651;background:#2a2e39;color:#fff;font-weight:700;font-size:10px}
+.live-indicator{background:#f7931a;color:#fff;border:0px solid #ffd700;font-weight:700;padding:1px 4px;border-radius:5px;font-size:9px;display:inline-block;margin-top:2px}
+
+#loading-msg { font-size:12px; color:#787b86; text-align:center; padding:24px 0; }
 
 </style>
 </head>
@@ -441,7 +510,6 @@ to{transform:rotate(360deg)}
       </div>
     </div>
     <!-- BTC SLIDE -->
-    <!-- BTC SLIDE CONTAINER -->
     <div class="slide" id="slide-4" data-idx="4">
       <!-- TradingView Widget BEGIN -->
       <div class="tradingview-widget-container">
@@ -452,6 +520,40 @@ to{transform:rotate(360deg)}
         </script>
       </div>
       <!-- TradingView Widget END -->
+      <div class="btc-card">
+        <div class="header-row">
+          <div class="title"><span class="btc-glyph">₿</span> BTC Cycle Tracker</div>
+        </div>
+        <div class="subtitle" id="subtitle">Loading matrix data...</div>
+
+        <!-- Dynamic Chart Engine Layout -->
+        <div class="chart-wrap" id="chart-wrap">
+          <svg id="wave-svg" viewBox="0 0 640 260" preserveAspectRatio="none"></svg>
+        </div>
+
+        <div class="legend-row">
+          <div class="legend-item"><span class="legend-dot" style="background:#b2b5be;"></span> Cycle Trendline</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#00bfa5;"></span> ATH</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#ff6097;"></span> ATL</div>
+        </div>
+
+        <div id="loading-msg">Fetching spreadsheet matrices&hellip;</div>
+        
+        <div class="table-container" id="table-container" style="display:none;">
+          <table id="cycle-table">
+            <thead>
+              <tr>
+                <th style="width: 10%;">#</th>
+                <th style="width: 26%;">Cycle</th>
+                <th style="width: 14%;">Range</th>
+                <th style="width: 24%;" class="text-right">ATH/ATL</th>
+                <th style="width: 26%;" class="text-right">Changed</th>
+              </tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
 
@@ -2543,11 +2645,555 @@ function initCashModal() {
     });
 }
 
+/* ══ BTC Cycle Tracker ══ */
+var CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=523826078";
+
+var globalPoints = [];
+var zoomX = 1.0;
+var zoomY = 1.0;
+var offsetX = 0; 
+var offsetY = 0; 
+
+var activeDragMode = null; 
+var lastMouseX = 0;
+var lastMouseY = 0;
+
+var FIXED_NOW_TIME = new Date("2026-07-12").getTime();
+
+function csvRow(line) {
+  var cols=[], cur="", inQ=false;
+  for (var i=0;i<line.length;i++) {
+    var c=line[i];
+    if (c==='"') inQ=!inQ;
+    else if (c===','&&!inQ) { cols.push(cur); cur=""; }
+    else cur+=c;
+  }
+  cols.push(cur);
+  return cols.map(function(s){ return s.replace(/^"|"$/g,"").trim(); });
+}
+
+function parseAmt(raw) {
+  if (!raw) return NaN;
+  var s = raw.replace(/[^\d,.\-]/g, "");
+  return parseFloat(s.replace(/,/g,""));
+}
+
+function parseSheetDate(raw) {
+  if (!raw) return null;
+  var months = {jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+  var match = raw.trim().match(/^(\d{1,2})[\/\-\s]([A-Za-z]{3,})[\/\-\s](\d{2,4})$/);
+  if (match) {
+    var mon = months[match[2].toLowerCase().slice(0,3)];
+    var yr = match[3].length <= 2 ? 2000 + parseInt(match[3]) : parseInt(match[3]);
+    return new Date(yr, mon, parseInt(match[1]));
+  }
+  var d = new Date(raw);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+function fmtUSD(v) {
+  if (isNaN(v) || v === null) return "—";
+  return "$" + Math.round(v).toLocaleString("en-US");
+}
+
+function fmtDateCompact(d) {
+  if (!d) return "—";
+  var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return months[d.getMonth()] + " '" + String(d.getFullYear()).slice(-2);
+}
+
+// Clean smooth curve spline path calculation
+function buildSmoothPath(pts) {
+  if (pts.length < 2) return "";
+  var d = "M " + pts[0].x + " " + pts[0].y;
+  for (var i = 0; i < pts.length - 1; i++) {
+    var p0 = pts[i], p1 = pts[i+1];
+    var cx = (p0.x + p1.x) / 2;
+    d += " C " + cx + " " + p0.y + " " + cx + " " + p1.y + " " + p1.x + " " + p1.y;
+  }
+  return d;
+}
+
+function loadCycles() {
+  fetch(CSV_URL + "&t=" + Date.now(), { cache:"no-store" })
+    .then(function(r){ return r.text(); })
+    .then(function(text){
+      var lines = text.split("\n").filter(function(l){ return l.trim(); });
+      var rows = lines.map(csvRow).slice(1);
+
+      globalPoints = [];
+      rows.forEach(function(cols){
+        var d = parseSheetDate(cols[2]);
+        if (!d) return;
+        var ath = parseAmt(cols[3]);
+        var atl = parseAmt(cols[4]);
+        var type = !isNaN(ath) ? "ath" : (!isNaN(atl) ? "atl" : null);
+        if (!type) return;
+
+        globalPoints.push({
+          cycleNum: cols[0] ? parseInt(cols[0]) : null,
+          rangeDay: parseAmt(cols[1]),
+          date: d,
+          value: type === "ath" ? ath : atl,
+          type: type,
+          changeStr: cols[5] || "",
+          isCurrent: cols[6] ? cols[6].trim().toLowerCase() === "true" : false
+        });
+      });
+
+      globalPoints.sort(function(a,b){ return a.date - b.date; });
+      
+      document.getElementById("loading-msg").style.display = "none";
+      document.getElementById("table-container").style.display = "block";
+      
+      renderTradingViewChart();
+      renderStructuredTable(globalPoints);
+      setupGlobalInteractivePhysics();
+    });
+}
+
+function renderTradingViewChart() {
+  var svg = document.getElementById("wave-svg");
+  svg.innerHTML = "";
+
+  var ns = "http://www.w3.org/2000/svg";
+  var W = 640, H = 260;
+  var RIGHT_AXIS_W = 55, BOTTOM_AXIS_H = 24;
+  var PAD_X = -150, PAD_Y = 55;
+
+  var plotW = W - RIGHT_AXIS_W - PAD_X;
+  var plotH = H - BOTTOM_AXIS_H - PAD_Y;
+
+  var logVals = globalPoints.map(function(p){ return Math.log10(p.value); });
+  var baseMinL = Math.min.apply(null, logVals);
+  var baseMaxL = Math.max.apply(null, logVals);
+  
+  // Custom tailored 12% y-axis padding baseline allocation
+  var logRange = baseMaxL - baseMinL;
+  baseMinL = baseMinL - (logRange * 0.05);
+  baseMaxL = baseMaxL + (logRange * 0.05);
+  
+  var midL = baseMinL + (baseMaxL - baseMinL) / 2;
+
+  var minT = globalPoints[0].date.getTime();
+  var maxT = globalPoints[globalPoints.length-1].date.getTime();
+  var totalRangeT = maxT - minT;
+  var midT = minT + totalRangeT / 2;
+
+  var currentMinT = (midT + offsetX) - (totalRangeT / 2) * zoomX;
+  var currentMaxT = (midT + offsetX) + (totalRangeT / 2) * zoomX;
+
+  var currentMinL = (midL + offsetY) - ((baseMaxL - baseMinL) / 2) * zoomY;
+  var currentMaxL = (midL + offsetY) + ((baseMaxL - baseMinL) / 2) * zoomY;
+
+  function getX(date) {
+    return PAD_X + ((date.getTime() - currentMinT) / (currentMaxT - currentMinT)) * plotW;
+  }
+  function getY(val) {
+    return PAD_Y + (1 - (Math.log10(val) - currentMinL) / (currentMaxL - currentMinL)) * plotH;
+  }
+
+  var priceTicks = [100, 300, 1000, 3000, 10000, 30000, 70000, 100000, 180000, 300000];
+  priceTicks.forEach(function(tk){
+    var y = getY(tk);
+    if(y > PAD_Y && y < (H - BOTTOM_AXIS_H)) {
+      var gl = document.createElementNS(ns,"line");
+      gl.setAttribute("x1", 0); gl.setAttribute("x2", W-RIGHT_AXIS_W);
+      gl.setAttribute("y1", y); gl.setAttribute("y2", y);
+      gl.setAttribute("class","grid-line"); svg.appendChild(gl);
+
+      var tx = document.createElementNS(ns,"text");
+      tx.setAttribute("x", W-RIGHT_AXIS_W + 5); tx.setAttribute("y", y + 4);
+      tx.setAttribute("class","axis-text");
+      tx.textContent = tk >= 1000 ? (tk/1000)+"K" : tk;
+      svg.appendChild(tx);
+    }
+  });
+
+  var xy = globalPoints.map(function(p){
+    return { x: getX(p.date), y: getY(p.value), p: p };
+  });
+
+  // Plot Duration Banners
+  for (var i = 0; i < xy.length - 1; i++) {
+    var p0 = xy[i], p1 = xy[i+1];
+    var midX = (p0.x + p1.x) / 2;
+    var midY = (p0.y + p1.y) / 2;
+
+    if (midX > PAD_X && midX < (W - RIGHT_AXIS_W) && midY > PAD_Y && midY < (H - BOTTOM_AXIS_H)) {
+      var diffDays = Math.round(Math.abs(p1.p.date - p0.p.date)/(1000*60*60*24));
+      var labelTxtStr = diffDays + " d";
+      var rectW = labelTxtStr.length * 6 + 8;
+      
+      var lBg = document.createElementNS(ns,"rect");
+      lBg.setAttribute("x", midX - rectW/2); lBg.setAttribute("y", midY - 7);
+      lBg.setAttribute("width", rectW); lBg.setAttribute("height", 14);
+      lBg.setAttribute("class","trend-label-bg");
+      svg.appendChild(lBg);
+
+      var lTx = document.createElementNS(ns,"text");
+      lTx.setAttribute("x", midX); lTx.setAttribute("y", midY + 3.5);
+      lTx.setAttribute("class","trend-label-text");
+      lTx.textContent = labelTxtStr;
+      svg.appendChild(lTx);
+    }
+  }
+
+  // ── Gradient Definitions ──
+  var defs = document.createElementNS(ns, "defs");
+  var grad = document.createElementNS(ns, "linearGradient");
+  grad.setAttribute("id", "waveGrad");
+  
+  // Use userSpaceOnUse so the color maps accurately across the chart canvas scale coordinates
+  grad.setAttribute("gradientUnits", "userSpaceOnUse");
+  grad.setAttribute("x1", PAD_X);
+  grad.setAttribute("y1", "0");
+  grad.setAttribute("x2", W - RIGHT_AXIS_W);
+  grad.setAttribute("y2", "0");
+  
+  [["0%", "#f472b6"], ["50%", "#a78bfa"], ["100%", "#2dd4bf"]].forEach(function(st) {
+    var s = document.createElementNS(ns, "stop");
+    s.setAttribute("offset", st[0]); 
+    s.setAttribute("stop-color", st[1]);
+    grad.appendChild(s);
+  });
+  defs.appendChild(grad);
+  svg.appendChild(defs);
+
+  // ── Unified Smooth Curves Splines ──
+  for (var i = 0; i < xy.length - 1; i++) {
+    var p0 = xy[i], p1 = xy[i+1];
+    
+    // Check if either endpoint belongs to the future sequence
+    var isFutureSegment = p0.p.date.getTime() > FIXED_NOW_TIME || p1.p.date.getTime() > FIXED_NOW_TIME;
+    
+    var segmentPath = document.createElementNS(ns, "path");
+    segmentPath.setAttribute("d", buildSmoothPath([p0, p1]));
+    segmentPath.setAttribute("fill", "none");
+    
+    if (isFutureSegment) {
+      // Dynamically determine directional color based on value action
+      var isUptrend = p1.p.value > p0.p.value;
+      var projectionColor = isUptrend ? "#00bfa5" : "#ff6097"; // Teal for upward targets, Pink for downward corrections
+      
+      segmentPath.setAttribute("stroke", projectionColor);
+      segmentPath.setAttribute("stroke-width", "1.6");
+      segmentPath.setAttribute("stroke-dasharray", "4,4");
+      segmentPath.setAttribute("opacity", "0.65"); // Slightly higher opacity for clean visibility
+    } else {
+      segmentPath.setAttribute("stroke", "url(#waveGrad)");
+      segmentPath.setAttribute("stroke-width", "2.5");
+    }
+    svg.appendChild(segmentPath);
+  }
+
+  var targetMarkerDate = null;
+  globalPoints.forEach(function(p) {
+    if (p.date.getFullYear() === 2026 && p.date.getMonth() === 9) { 
+      targetMarkerDate = p.date;
+    }
+  });
+
+  if (targetMarkerDate) {
+    var targetX = getX(targetMarkerDate);
+    if (targetX >= PAD_X && targetX <= (W - RIGHT_AXIS_W)) {
+      var tgtLine = document.createElementNS(ns,"line");
+      tgtLine.setAttribute("x1", targetX); tgtLine.setAttribute("x2", targetX);
+      tgtLine.setAttribute("y1", 0); tgtLine.setAttribute("y2", H-BOTTOM_AXIS_H);
+      tgtLine.setAttribute("stroke", "rgba(255, 255, 255, 0.45)"); 
+      tgtLine.setAttribute("stroke-width", "0.8");
+      tgtLine.setAttribute("style", "stroke-dasharray: 4,5;");
+      svg.appendChild(tgtLine);
+
+      var tgtLabel = document.createElementNS(ns,"text");
+      tgtLabel.setAttribute("x", targetX + 5); tgtLabel.setAttribute("y", 14);
+      tgtLabel.setAttribute("font-size", "10px"); tgtLabel.setAttribute("fill", "rgba(255, 255, 255, 0.4)");
+      tgtLabel.setAttribute("font-weight", "500");
+      tgtLabel.textContent = "next cycle";
+      svg.appendChild(tgtLabel);
+    }
+  }
+
+  // Draw customized point markers
+  xy.forEach(function(pt){
+    if (pt.x < PAD_X || pt.x > (W - RIGHT_AXIS_W) || pt.y < PAD_Y || pt.y > (H - BOTTOM_AXIS_H)) return;
+
+    var isTop = pt.p.type === "ath";
+    var isFuture = pt.p.date.getTime() > FIXED_NOW_TIME;
+    var markerColor = isTop ? "#00bfa5" : "#ff6097"; // Teal for ATH, Pink for ATL
+
+    var dot = document.createElementNS(ns,"circle");
+    dot.setAttribute("cx", pt.x); dot.setAttribute("cy", pt.y);
+    dot.setAttribute("r", "3.5");
+    dot.setAttribute("stroke", markerColor);
+    dot.setAttribute("stroke-width", "2");
+    
+    if (isFuture) {
+      dot.setAttribute("fill", "transparent"); // Border only for future records
+    } else {
+      dot.setAttribute("fill", markerColor); // Full fill for past records
+    }
+    svg.appendChild(dot);
+
+    var lblPrice = document.createElementNS(ns,"text");
+    lblPrice.setAttribute("x", pt.x); lblPrice.setAttribute("y", isTop ? pt.y - 24 : pt.y + 18);
+    lblPrice.setAttribute("text-anchor","middle"); lblPrice.setAttribute("class","wave-pt-label");
+    lblPrice.textContent = fmtUSD(pt.p.value);
+    svg.appendChild(lblPrice);
+
+    if(pt.p.changeStr) {
+      var lblPct = document.createElementNS(ns,"text");
+      lblPct.setAttribute("x", pt.x); lblPct.setAttribute("y", isTop ? pt.y - 8 : pt.y + 33);
+      lblPct.setAttribute("text-anchor","middle"); lblPct.setAttribute("class","wave-pt-sublabel");
+      lblPct.setAttribute("fill", pt.p.changeStr.charAt(0) === '-' ? "#ff6097" : "#00bfa5");
+      lblPct.textContent = pt.p.changeStr;
+      svg.appendChild(lblPct);
+    }
+
+    var tmLine = document.createElementNS(ns,"line");
+    tmLine.setAttribute("x1", pt.x); tmLine.setAttribute("x2", pt.x);
+    tmLine.setAttribute("y1", H-BOTTOM_AXIS_H); tmLine.setAttribute("y2", H-BOTTOM_AXIS_H - 4);
+    tmLine.setAttribute("class","axis-line"); svg.appendChild(tmLine);
+
+    var tmTx = document.createElementNS(ns,"text");
+    tmTx.setAttribute("x", pt.x); tmTx.setAttribute("y", H - 8);
+    tmTx.setAttribute("class","axis-text"); tmTx.setAttribute("text-anchor","middle");
+    tmTx.textContent = fmtDateCompact(pt.p.date);
+    svg.appendChild(tmTx);
+  });
+
+  var rAxis = document.createElementNS(ns,"line");
+  rAxis.setAttribute("x1", W-RIGHT_AXIS_W); rAxis.setAttribute("x2", W-RIGHT_AXIS_W);
+  rAxis.setAttribute("y1", 0); rAxis.setAttribute("y2", H-BOTTOM_AXIS_H);
+  rAxis.setAttribute("class","axis-line"); svg.appendChild(rAxis);
+
+  var bAxis = document.createElementNS(ns,"line");
+  bAxis.setAttribute("x1", 0); bAxis.setAttribute("x2", W);
+  bAxis.setAttribute("y1", H-BOTTOM_AXIS_H); bAxis.setAttribute("y2", H-BOTTOM_AXIS_H);
+  bAxis.setAttribute("class","axis-line"); svg.appendChild(bAxis);
+
+  var bodyHit = document.createElementNS(ns,"rect");
+  bodyHit.setAttribute("x", 0); bodyHit.setAttribute("y", 0);
+  bodyHit.setAttribute("width", W-RIGHT_AXIS_W); bodyHit.setAttribute("height", H-BOTTOM_AXIS_H);
+  bodyHit.setAttribute("class", "chart-body-hitbox");
+  svg.appendChild(bodyHit);
+
+  var xHit = document.createElementNS(ns,"rect");
+  xHit.setAttribute("x", 0); xHit.setAttribute("y", H-BOTTOM_AXIS_H);
+  xHit.setAttribute("width", W-RIGHT_AXIS_W); xHit.setAttribute("height", BOTTOM_AXIS_H);
+  xHit.setAttribute("class", "x-axis-hitbox");
+  svg.appendChild(xHit);
+
+  var yHit = document.createElementNS(ns,"rect");
+  yHit.setAttribute("x", W-RIGHT_AXIS_W); yHit.setAttribute("y", 0);
+  yHit.setAttribute("width", RIGHT_AXIS_W); yHit.setAttribute("height", H-BOTTOM_AXIS_H);
+  yHit.setAttribute("class", "y-axis-hitbox");
+  svg.appendChild(yHit);
+
+  var hCH = document.createElementNS(ns,"line"); hCH.setAttribute("class","crosshair"); svg.appendChild(hCH);
+  var vCH = document.createElementNS(ns,"line"); vCH.setAttribute("class","crosshair"); svg.appendChild(vCH);
+  var tagY = document.createElementNS(ns,"rect"); tagY.setAttribute("class","crosshair-tag"); tagY.setAttribute("width", RIGHT_AXIS_W - 4); tagY.setAttribute("height", 16); svg.appendChild(tagY);
+  var txtY = document.createElementNS(ns,"text"); txtY.setAttribute("class","crosshair-text"); svg.appendChild(txtY);
+
+  bodyHit.addEventListener('mousemove', function(e) {
+    if (activeDragMode) return;
+    var rect = svg.getBoundingClientRect();
+    var mX = (e.clientX - rect.left) * (W / rect.width);
+    var mY = (e.clientY - rect.top) * (H / rect.height);
+
+    hCH.setAttribute("x1", 0); hCH.setAttribute("x2", W - RIGHT_AXIS_W); hCH.setAttribute("y1", mY); hCH.setAttribute("y2", mY);
+    vCH.setAttribute("x1", mX); vCH.setAttribute("x2", mX); vCH.setAttribute("y1", 0); vCH.setAttribute("y2", H - BOTTOM_AXIS_H);
+    
+    var calcLog = currentMinL + (1 - (mY - PAD_Y)/plotH) * (currentMaxL - currentMinL);
+    var calcPrice = Math.pow(10, calcLog);
+
+    tagY.setAttribute("x", W - RIGHT_AXIS_W + 2); tagY.setAttribute("y", mY - 8);
+    txtY.setAttribute("x", W - RIGHT_AXIS_W + 5); txtY.setAttribute("y", mY + 4);
+    txtY.textContent = Math.round(calcPrice).toLocaleString();
+
+    hCH.style.opacity = 1; vCH.style.opacity = 1; tagY.style.opacity = 1; txtY.style.opacity = 1;
+  });
+
+  bodyHit.addEventListener('mouseleave', function() {
+    if(!activeDragMode) {
+      hCH.style.opacity = 0; vCH.style.opacity = 0; tagY.style.opacity = 0; txtY.style.opacity = 0;
+    }
+  });
+}
+
+function setupGlobalInteractivePhysics() {
+  var svg = document.getElementById("wave-svg");
+  
+  svg.addEventListener('mousedown', function(e) {
+    var rect = svg.getBoundingClientRect();
+    var W = 640, H = 320;
+    var RIGHT_AXIS_W = 55, BOTTOM_AXIS_H = 24;
+    
+    var mX = (e.clientX - rect.left) * (W / rect.width);
+    var mY = (e.clientY - rect.top) * (H / rect.height);
+    
+    lastMouseX = e.clientX;
+    lastMouseY = e.clientY;
+
+    if (mY >= H - BOTTOM_AXIS_H && mX < W - RIGHT_AXIS_W) {
+      activeDragMode = 'scaleX';
+    } else if (mX >= W - RIGHT_AXIS_W && mY < H - BOTTOM_AXIS_H) {
+      activeDragMode = 'scaleY';
+    } else if (mX < W - RIGHT_AXIS_W && mY < H - BOTTOM_AXIS_H) {
+      activeDragMode = 'pan';
+    }
+    if(activeDragMode) e.preventDefault();
+  });
+
+  window.addEventListener('mousemove', function(e) {
+    if (!activeDragMode) return;
+    
+    var deltaX = e.clientX - lastMouseX;
+    var deltaY = e.clientY - lastMouseY;
+    
+    lastMouseX = e.clientX;
+    lastMouseY = e.clientY;
+
+    var minT = globalPoints[0].date.getTime();
+    var maxT = globalPoints[globalPoints.length-1].date.getTime();
+    var totalRangeT = maxT - minT;
+
+    if (activeDragMode === 'pan') {
+      var timeShiftPerPixel = (totalRangeT * zoomX) / 550;
+      offsetX -= deltaX * timeShiftPerPixel;
+      
+      var logShiftPerPixel = (1.5 * zoomY) / 260;
+      offsetY += deltaY * logShiftPerPixel;
+      
+    } else if (activeDragMode === 'scaleX') {
+      zoomX += deltaX * 0.005;
+      if (zoomX < 0.1) zoomX = 0.1;
+      if (zoomX > 4.0) zoomX = 4.0;
+      
+    } else if (activeDragMode === 'scaleY') {
+      zoomY -= deltaY * 0.005;
+      if (zoomY < 0.1) zoomY = 0.1;
+      if (zoomY > 4.0) zoomY = 4.0;
+    }
+
+    renderTradingViewChart();
+  });
+
+  window.addEventListener('mouseup', function() {
+    activeDragMode = null;
+  });
+}
+
+function renderStructuredTable(points) {
+  var tbody = document.getElementById("table-body");
+  tbody.innerHTML = "";
+
+  var cycles = {};
+
+  function calculateCycleFromDate(dateObj) {
+    var year = dateObj.getFullYear();
+    if (year >= 2030) return 5 + Math.floor((year - 2030) / 4); 
+    if (year >= 2026) return 4;
+    if (year >= 2022) return 3;
+    if (year >= 2018) return 2;
+    return 1;
+  }
+
+  points.forEach(function(p) {
+    var cNum = p.cycleNum || calculateCycleFromDate(p.date);
+
+    if (!cycles[cNum]) {
+      cycles[cNum] = {
+        id: cNum,
+        ath: null, 
+        atl: null, 
+        isCurrent: false 
+      };
+    }
+
+    if (p.isCurrent) {
+      cycles[cNum].isCurrent = true;
+    }
+
+    if (p.type === 'ath') {
+      cycles[cNum].ath = p; 
+    }
+    if (p.type === 'atl') {
+      cycles[cNum].atl = p; 
+    }
+  });
+
+  var sortedCycles = Object.keys(cycles).map(function(k) {
+    return cycles[k];
+  });
+
+  sortedCycles.sort(function(a, b) {
+    return b.id - a.id;
+  });
+
+  var activeCycleObj = sortedCycles.find(function(c) { return c.isCurrent === true; });
+  var subtitleTrackedNum = activeCycleObj ? activeCycleObj.id : (sortedCycles[0] ? sortedCycles[0].id : "?");
+
+  sortedCycles.forEach(function(c) {
+    var tr = document.createElement("tr");
+
+    if (c.id === subtitleTrackedNum) {
+      c.isCurrent = true; 
+      tr.className = "current-row"; 
+    }
+
+    var tdId = document.createElement("td");
+    var bdy = document.createElement("span"); bdy.className = "cycle-num-badge"; bdy.textContent = c.id;
+    tdId.appendChild(bdy);
+    if(c.isCurrent) {
+      var live = document.createElement("div"); live.className = "live-indicator";
+      live.textContent = "LIVE"; tdId.appendChild(document.createElement("br")); tdId.appendChild(live);
+    }
+    tr.appendChild(tdId);
+
+    var tdDates = document.createElement("td");
+    tdDates.className = "font-mono";
+    var pDateStr = c.ath ? fmtDateCompact(c.ath.date) : "—";
+    var fDateStr = c.atl ? fmtDateCompact(c.atl.date) : "—";
+    tdDates.innerHTML = "<span class='text-teal'>▲ " + pDateStr + "</span><br><span class='text-pink'>▼ " + fDateStr + "</span>";
+    tr.appendChild(tdDates);
+
+    var tdDuration = document.createElement("td");
+    tdDuration.className = "font-mono text-muted";
+    var athDays = (c.ath && c.ath.rangeDay) ? c.ath.rangeDay + "d" : "—";
+    var atlDays = (c.atl && c.atl.rangeDay) ? c.atl.rangeDay + "d" : "—";
+    tdDuration.innerHTML = "<span>" + athDays + "</span><br><span>" + atlDays + "</span>";
+    tr.appendChild(tdDuration);
+
+    var tdPrices = document.createElement("td");
+    tdPrices.className = "font-mono text-right";
+    var pPrice = c.ath ? fmtUSD(c.ath.value) : "—";
+    var fPrice = c.atl ? fmtUSD(c.atl.value) : "—";
+    tdPrices.innerHTML = "<span class='text-teal'>" + pPrice + "</span><br><span class='text-pink'>" + fPrice + "</span>";
+    tr.appendChild(tdPrices);
+
+    var tdChanges = document.createElement("td");
+    tdChanges.className = "font-mono text-right";
+    var athChg = (c.ath && c.ath.changeStr) ? c.ath.changeStr : "—";
+    var atlChg = (c.atl && c.atl.changeStr) ? c.atl.changeStr : "—";
+    
+    var athClass = athChg.charAt(0) === '-' ? "text-pink" : "text-teal";
+    var atlClass = atlChg.charAt(0) === '-' ? "text-pink" : "text-teal";
+    
+    tdChanges.innerHTML = "<span class='" + athClass + "'>" + athChg + "</span><br><span class='" + atlClass + "'>" + atlChg + "</span>";
+    tr.appendChild(tdChanges);
+
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById("subtitle").innerHTML = "Fractal cycle matrix &middot; <span class='now-pill'>Tracking Cycle " + subtitleTrackedNum + "</span>";
+}
 
 loadSubscriptions();
-
 loadExpense();
 loadRecent();
+loadCycles();
+
 setInterval(loadExpense,60000);
 setInterval(loadRecent,60000);
 setInterval(caLoadBI,60000);
