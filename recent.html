@@ -2962,7 +2962,8 @@ function renderTradingViewChart() {
     var tmTx = document.createElementNS(ns,"text");
     tmTx.setAttribute("x", pt.x); tmTx.setAttribute("y", H - 8);
     tmTx.setAttribute("class","axis-text"); tmTx.setAttribute("text-anchor","middle");
-    tmTx.textContent = fmtDateCompact(pt.p.date);
+    //tmTx.textContent = fmtDateCompact(pt.p.date);
+    tmTx.textContent = String(pt.p.date.getFullYear()).slice(-2);
     svg.appendChild(tmTx);
   });
 
@@ -3027,40 +3028,100 @@ function renderTradingViewChart() {
 
 function setupGlobalInteractivePhysics() {
   var svg = document.getElementById("wave-svg");
-  
-  svg.addEventListener('mousedown', function(e) {
+  var lastTouchDist = 0; // Tracks pinch distance for mobile scaling
+
+  function getMouseOrTouchPos(e) {
     var rect = svg.getBoundingClientRect();
-    var W = 600, H = 220;
+    var W = 640, H = 220; // Matches your updated low-profile height
+    var clientX = e.clientX, clientY = e.clientY;
+    
+    // Fallback to primary touch coordinate if mobile event
+    if (e.touches && e.touches.length > 0) {
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    }
+    
+    return {
+      x: (clientX - rect.left) * (W / rect.width),
+      y: (clientY - rect.top) * (H / rect.height),
+      clientX: clientX,
+      clientY: clientY
+    };
+  }
+
+  function handleStart(clientX, clientY, mX, mY, isMultiTouch) {
+    var W = 640, H = 220;
     var RIGHT_AXIS_W = 55, BOTTOM_AXIS_H = 24;
     
-    var mX = (e.clientX - rect.left) * (W / rect.width);
-    var mY = (e.clientY - rect.top) * (H / rect.height);
-    
-    lastMouseX = e.clientX;
-    lastMouseY = e.clientY;
+    lastMouseX = clientX;
+    lastMouseY = clientY;
 
-    if (mY >= H - BOTTOM_AXIS_H && mX < W - RIGHT_AXIS_W) {
+    if (isMultiTouch) {
+      activeDragMode = 'pinch'; // Dedicated mobile dual-finger scale mode
+    } else if (mY >= H - BOTTOM_AXIS_H && mX < W - RIGHT_AXIS_W) {
       activeDragMode = 'scaleX';
     } else if (mX >= W - RIGHT_AXIS_W && mY < H - BOTTOM_AXIS_H) {
       activeDragMode = 'scaleY';
     } else if (mX < W - RIGHT_AXIS_W && mY < H - BOTTOM_AXIS_H) {
       activeDragMode = 'pan';
     }
-    if(activeDragMode) e.preventDefault();
+  }
+
+  // ── Desktop Mouse Bindings ──
+  svg.addEventListener('mousedown', function(e) {
+    var pos = getMouseOrTouchPos(e);
+    handleStart(pos.clientX, pos.clientY, pos.x, pos.y, false);
+    e.preventDefault();
   });
 
-  window.addEventListener('mousemove', function(e) {
+  // ── iOS Mobile Touch Bindings ──
+  svg.addEventListener('touchstart', function(e) {
+    if (e.touches.length === 2) {
+      // Setup pinch zoom calculation base
+      var dx = e.touches[0].clientX - e.touches[1].clientX;
+      var dy = e.touches[0].clientY - e.touches[1].clientY;
+      lastTouchDist = Math.sqrt(dx * dx + dy * dy);
+      handleStart(e.touches[0].clientX, e.touches[0].clientY, 0, 0, true);
+    } else {
+      var pos = getMouseOrTouchPos(e);
+      handleStart(pos.clientX, pos.clientY, pos.x, pos.y, false);
+    }
+    // Prevent iOS rubber-banding scroll while dragging inside the chart area
+    if (e.cancelable) e.preventDefault(); 
+  }, { passive: false });
+
+  // ── Unified Move Engine ──
+  var handleMove = function(e, clientX, clientY) {
     if (!activeDragMode) return;
-    
-    var deltaX = e.clientX - lastMouseX;
-    var deltaY = e.clientY - lastMouseY;
-    
-    lastMouseX = e.clientX;
-    lastMouseY = e.clientY;
 
     var minT = globalPoints[0].date.getTime();
     var maxT = globalPoints[globalPoints.length-1].date.getTime();
     var totalRangeT = maxT - minT;
+
+    // Handle iOS Pinch Zooming (2 fingers anywhere on chart)
+    if (activeDragMode === 'pinch' && e.touches && e.touches.length === 2) {
+      var dx = e.touches[0].clientX - e.touches[1].clientX;
+      var dy = e.touches[0].clientY - e.touches[1].clientY;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      
+      var scaleFactor = (lastTouchDist - dist) * 0.005;
+      zoomX += scaleFactor;
+      zoomY += scaleFactor; // Scales both axes cleanly together on pinch
+
+      if (zoomX < 0.1) zoomX = 0.1; if (zoomX > 4.0) zoomX = 4.0;
+      if (zoomY < 0.1) zoomY = 0.1; if (zoomY > 4.0) zoomY = 4.0;
+      
+      lastTouchDist = dist;
+      renderTradingViewChart();
+      return;
+    }
+
+    // Standard Drag/Scale Modes (1 finger or mouse)
+    var deltaX = clientX - lastMouseX;
+    var deltaY = clientY - lastMouseY;
+    
+    lastMouseX = clientX;
+    lastMouseY = clientY;
 
     if (activeDragMode === 'pan') {
       var timeShiftPerPixel = (totalRangeT * zoomX) / 550;
@@ -3081,11 +3142,23 @@ function setupGlobalInteractivePhysics() {
     }
 
     renderTradingViewChart();
+  };
+
+  window.addEventListener('mousemove', function(e) {
+    handleMove(e, e.clientX, e.clientY);
   });
 
-  window.addEventListener('mouseup', function() {
-    activeDragMode = null;
-  });
+  window.addEventListener('touchmove', function(e) {
+    if (!activeDragMode) return;
+    handleMove(e, e.touches[0].clientX, e.touches[0].clientY);
+    if (e.cancelable) e.preventDefault();
+  }, { passive: false });
+
+  // ── Reset Handles ──
+  var handleEnd = function() { activeDragMode = null; };
+  window.addEventListener('mouseup', handleEnd);
+  window.addEventListener('touchend', handleEnd);
+  window.addEventListener('touchcancel', handleEnd);
 }
 
 function renderStructuredTable(points) {
