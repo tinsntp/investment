@@ -180,8 +180,8 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 #add-cash.success-confirm {
     background-color: #10b981 !important; /* Emerald Green success accent color */
     color: #ffffff !important;
-    font-size: 20px;
-    font-weight: bold;
+    font-size: 15px;
+    font-weight: 500;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -675,6 +675,40 @@ function switchTab(idx) {
   positionTabLine();
 
   saveActiveTab(idx); // remember this as the last tab shown
+
+  // =========================================================================
+  // DYNAMIC AUTO-REFRESH ROUTER
+  // =========================================================================
+  switch (parseInt(idx)) {
+    case 0:
+      // Clear your custom memory variables if you have them
+      if (typeof expenseCache !== "undefined") expenseCache = null; 
+      
+      if (typeof loadExpense === "function") loadExpense();
+      break;
+      
+    case 1:
+      if (typeof recentCache !== "undefined") recentCache = null;
+      
+      if (typeof loadRecent === "function") loadRecent();
+      break;
+      
+    case 3:
+      if (typeof subCache !== "undefined") subCache = null;
+      
+      if (typeof loadSubscriptions === "function") loadSubscriptions();
+      break;
+      
+    case 5:
+      // Transaction Tab: Add specific loader if you have one, or share loadRecent()
+      if (typeof loadRecent === "function") loadRecent();
+      break;
+
+    default:
+      // Optional: Add log statement or fallbacks for development tracking
+      console.log("Switched to tab " + idx + " (No custom loader mapped)");
+      break;
+  }
 }
 
 function positionTabLine() {
@@ -2547,9 +2581,12 @@ function initCashModal() {
             
             // 3. Keep spinning for exactly 9 seconds to match your custom latency balance
             setTimeout(function() {
+                if (typeof recentCache !== "undefined") recentCache = null;
                 if (typeof loadRecent === "function") {
                     loadRecent();
                 }
+
+
                 if (addCashBtn) {
                     addCashBtn.classList.remove("loading");
                     addCashBtn.classList.add("success-confirm");
