@@ -130,7 +130,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 
 #slide-1{position:relative}
 .tab-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
-#add-cash{position:absolute;top:10px;right:10px;z-index:10;width:6vw;height:6vw;max-width:28px;max-height:28px;font-size:5vw;font-weight:500;border-radius:50%;background-color:#14b8a6;color:#ffffff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
+#add-cash{position:absolute;top:10px;right:10px;z-index:10;width:6vw;height:6vw;padding-bottom:1px;max-width:6vw;max-height:6vw;font-family:monospace!important;font-size:5vw;font-weight:500;border-radius:50%;background-color:#14b8a6;color:#ffffff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
 #add-cash.loading{pointer-events:none;display:flex;align-items:center;justify-content:center}
 .cash-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:600;align-items:center;justify-content:center}
 .cash-modal-overlay.open{display:flex!important}
@@ -223,7 +223,7 @@ to{transform:rotate(360deg)}
 .sub-stat-label{font-size:12.5px;color:rgba(255,255,255,0.45)}
 .sub-stat-label .hl-teal{color:#2dd4bf;font-weight:600}
 .sub-list-title{display:flex;align-items:center;justify-content:left;gap:2vw;width:100%;font-size:14px;font-weight:700;color:rgba(255,255,255,0.75);margin-bottom:12px}
-.add-inline-btn{width:6vw;height:6vw;max-width:28px;max-height:28px;font-size:5vw;font-weight:500;border-radius:50%;background:#14b8a6;border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:opacity 0.2s}
+.add-inline-btn{width:6vw;height:6vw;padding-bottom:px;max-width:6vw;max-height:6vw;font-family:monospace!important;font-size:5vw;font-weight:500;border-radius:50%;background:#14b8a6;border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:opacity 0.2s}
 .add-inline-btn:active{opacity:0.8}
 
 #sub-list{display:flex;flex-direction:column}
@@ -257,7 +257,8 @@ to{transform:rotate(360deg)}
 .add-status{font-size:2.8vw;margin-top:2vw;text-align:center}
 .add-status.error{color:#FF69B4}
 .add-status.success{color:#14b8a6}
-
+@media (max-width:400px){.add-cancel-btn,.add-submit-btn,.add-field label,.add-field input{font-size:3.8vw!important;}
+.add-modal h3{font-size:4vw}}
 
 .form-row-2col{display:flex !important;flex-direction:row !important;gap:3vw !important;width:100%;margin-bottom:4vw}
 .form-row-2col .add-field{flex:1 1 0% !important;min-width:0;display:flex;flex-direction:column}
@@ -467,7 +468,7 @@ to{transform:rotate(360deg)}
 </div>
 <!-- CASH TRANSACTION MODAL POPUP -->
 <div id="cash-modal-overlay" class="cash-modal-overlay">
-  <div class="add-modal">
+  <div class="add-modal" style="border-radius:5vw!important;">
     <h3>Add Cash Transaction</h3>
     
     <div class="add-field">
