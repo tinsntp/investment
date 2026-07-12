@@ -740,6 +740,10 @@ function switchTab(idx) {
       if (typeof loadSubscriptions === "function") loadSubscriptions();
       break;
 
+    case 4:
+      if (typeof loadSubscriptions === "function") loadCycles();
+      break;
+    
     default:
       // Optional: Add log statement or fallbacks for development tracking
       console.log("Switched to tab " + idx + " (No custom loader mapped)");
