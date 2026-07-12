@@ -2652,7 +2652,7 @@ function initCashModal() {
 }
 
 /* ══ BTC Cycle Tracker ══ */
-var CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=523826078";
+var BTC_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=523826078";
 
 var globalPoints = [];
 var zoomX = 1.0;
@@ -2721,7 +2721,7 @@ function buildSmoothPath(pts) {
 }
 
 function loadCycles() {
-  fetch(CSV_URL + "&t=" + Date.now(), { cache:"no-store" })
+  fetch(BTC_CSV_URL + "&t=" + Date.now(), { cache:"no-store" })
     .then(function(r){ return r.text(); })
     .then(function(text){
       var lines = text.split("\n").filter(function(l){ return l.trim(); });
