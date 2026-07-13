@@ -1013,7 +1013,7 @@ currentDebtSCXY = pts.map(function(p, i){
   if (range === "today") {
   verb = "You " + (isPos ? "gain " : "loss "); } else if (range.startsWith("-")) { verb = isPos ? "You gained " : "You lost "; } else {
   verb = "You " + (isPos ? "gain " : "loss "); }
-  subText.innerHTML = verb + '<span class="amt-hl ' + (isPos ? "pos" : "neg") + '">' + fmtFull(Math.abs(diff)) + "</span> " + directionText + ".";
+  subText.innerHTML = verb + '<span id="amt-hl" class="amt-hl ' + (isPos ? "pos" : "neg") + '">' + fmtFull(Math.abs(diff)) + "</span> " + directionText + ".";
 
   var pill = document.getElementById("change-pill");
   pill.style.display = "inline-flex";
@@ -1139,19 +1139,19 @@ if (
 }
   tooltip.style.top = (anchorY * scaleY) + "px";
 
-  var html = '<div class="tt-month">'+monthYearLabel(pt.date)+'</div>';
+  var html = '<div id="tooltip-month" class="tt-month">'+monthYearLabel(pt.date)+'</div>';
 
   if (lineVisibility.balance) {
     var deltaIsPos = pt.momDelta >= 0;
     var deltaTxt = (deltaIsPos ? "+" : "\u2212") + fmtFull(Math.abs(pt.momDelta));
-    html += '<div>'+fmtFull(pt.balance)+'</div>'+
-      '<div class="tt-delta '+(deltaIsPos?"pos":"neg")+'">'+(deltaIsPos?"&#9650;":"&#9660;")+' '+deltaTxt+' vs last month</div>';
+    html += '<div id="tooltip-balance" >'+fmtFull(pt.balance)+'</div>'+
+      '<div id="tooltip-gain" class="tt-delta '+(deltaIsPos?"pos":"neg")+'">'+(deltaIsPos?"&#9650;":"&#9660;")+' '+deltaTxt+' vs last month</div>';
   }
   if (lineVisibility.expense && ptExp) {
     var expDeltaIsPos = ptExp.momDelta >= 0;
     var expDeltaTxt = (expDeltaIsPos ? "+" : "\u2212") + fmtFull(Math.abs(ptExp.momDelta));
-    html += '<div style="margin-top:'+(lineVisibility.balance?"6px":"0")+';color:#f472b6;">'+fmtFull(ptExp.amount)+' expense</div>'+
-      '<div class="tt-delta" style="color:'+(expDeltaIsPos?"#f87171":"#2dd4bf")+';">'+(expDeltaIsPos?"&#9650;":"&#9660;")+' '+expDeltaTxt+' vs last month</div>';
+    html += '<div id="tooltip-expense-amt" style="margin-top:'+(lineVisibility.balance?"6px":"0")+';color:#f472b6;">'+fmtFull(ptExp.amount)+' expense</div>'+
+      '<div id="tooltip-expense" class="tt-delta" style="color:'+(expDeltaIsPos?"#f87171":"#2dd4bf")+';">'+(expDeltaIsPos?"&#9650;":"&#9660;")+' '+expDeltaTxt+' vs last month</div>';
   }
   if (lineVisibility.debt) {
 
@@ -1168,10 +1168,10 @@ if (
     var parts = [];
 
     if (currentDebtShinhanXY[idx].amount !== 0)
-        parts.push('<span style="color:#60a5fa;font-weight:600;font-size:11px">' +fmtShort(currentDebtShinhanXY[idx].amount)+'</span>');
+        parts.push('<span id="tooltip-debt" style="color:#60a5fa;font-weight:600;font-size:11px">' +fmtShort(currentDebtShinhanXY[idx].amount)+'</span>');
 
     if (currentDebtSCXY[idx].amount !== 0)
-        parts.push('<span style="color:#fbbf24;font-weight:600;font-size:11px">' +fmtShort(currentDebtSCXY[idx].amount)+'</span>');
+        parts.push('<span id="tooltip-debt" style="color:#fbbf24;font-weight:600;font-size:11px">' +fmtShort(currentDebtSCXY[idx].amount)+'</span>');
 
     // Only show total if there are at least 2 loans
     if (parts.length > 1)
@@ -1180,7 +1180,7 @@ if (
     // Show nothing if total debt is zero
     if (parts.length) {
         html +=
-            '<div style="margin-top:6px;font-weight:700;color:#fff;font-size:11px">' +
+            '<div id="tooltip-debt" style="margin-top:6px;font-weight:700;color:#fff;font-size:11px">' +
             parts.join("  ") +
             "</div>";
     }
@@ -1258,18 +1258,52 @@ var balanceVisible = true;
 function updateBalanceVisibility() {
   var vndEl = document.getElementById("balance-val");
   var usdEl = document.getElementById("balance-usd");
-  if (!vndEl || !usdEl) return;
+  var gainEl = document.getElementById("amt-hl");
+  var tooltip_balance = document.getElementById("tooltip-balance");
+  var tooltip_gain = document.getElementById("tooltip-gain");
+  var tooltip_expense = document.getElementById("tooltip-expense");
+  var tooltip_expense_amt = document.getElementById("tooltip-expense-amt");
+  var tooltip_debt = document.getElementById("tooltip-debt");
+  var tooltip_month = document.getElementById("tooltip-month");
+  var textElements = [
+    { el: vndEl,               key: 'realValue',      mask: "*********" },
+    { el: usdEl,               key: 'realUsd',        mask: "*********" },
+    { el: gainEl,              key: 'realValue',      mask: "*********" },
+    { el: tooltip_balance,     key: 'realValue',      mask: "*********" },
+    { el: tooltip_gain,        key: 'realValue',      mask: "*********" },
+    //{ el: tooltip_expense,     key: 'realValue',      mask: "*********" },
+    //{ el: tooltip_expense_amt, key: 'realValue',      mask: "*********" },
+    //{ el: tooltip_debt,        key: 'realValue',      mask: "*********" },
+    { el: tooltip_month,       key: 'realValue',      mask: "*********" }
+  ];
 
-  if (balanceVisible) {
-    vndEl.textContent = vndEl.dataset.realValue || vndEl.textContent;
-    usdEl.textContent = usdEl.dataset.realUsd || usdEl.textContent;
-  } else {
-    if (!vndEl.dataset.realValue) vndEl.dataset.realValue = vndEl.textContent;
-    if (!usdEl.dataset.realUsd) usdEl.dataset.realUsd = usdEl.textContent;
-
-    vndEl.textContent = "*********";
-    usdEl.textContent = "*********";
+  // Fast-pass guard gate: Exit safely if any DOM element is missing on the current page context
+  for (var i = 0; i < textElements.length; i++) {
+    if (!textElements[i].el) return;
   }
+
+  // Execute smart batch updates — writes ONLY when values actually change
+  textElements.forEach(function(item) {
+    var element = item.el;
+    var datasetKey = item.key;
+    var cachedValue = element.dataset[datasetKey];
+
+    if (balanceVisible) {
+      // Revert to original numerical asset strings only if needed
+      if (cachedValue && element.textContent !== cachedValue) {
+        element.textContent = cachedValue;
+      }
+    } else {
+      // First-time cache pass: store values inside data attributes before altering text
+      if (!cachedValue) {
+        element.dataset[datasetKey] = element.textContent;
+      }
+      // Apply privacy mask strictly once (avoids redundant paint rendering loops)
+      if (element.textContent !== item.mask) {
+        element.textContent = item.mask;
+      }
+    }
+  });
 }
 
 
