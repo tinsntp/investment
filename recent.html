@@ -23,7 +23,17 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .slide { width:20%; height:100%; overflow-y:auto; overflow-x:hidden; padding:0vw; flex-shrink:0; }
 
 /* ══ BTC STYLES ══ */
-.tradingview-widget-container{}
+.tradingview-widget-container{display: block !important;width: 100% !important;height:340px!important;}
+.tradingview-widget-container__widget {
+  width: 100% !important;
+  height: calc(340px - 30px) !important; /* Leaves 30px breathing room for copyright footer */
+}
+
+/* 3. Force the dynamically created iframe element to occupy the full box scale */
+.tradingview-widget-container iframe {
+  width: 100% !important;
+  height: 100% !important;
+}
 
 /* ══ DETAIL STYLES ══ */
 #rings-wrap{display:flex;flex-wrap:wrap;gap:1.5vw;justify-content:space-around;margin-bottom:1.5vw}
@@ -279,7 +289,7 @@ to{transform:rotate(360deg)}
 .sub-swipe-container.swiped .sub-delete-action{opacity:1 !important;visibility:visible !important;pointer-events:auto !important}
 
 /* ══ BTC SLIDE ══ */
-.btc-card { max-width:100%;}
+.btc-card { max-width:100%;margin-top:30px;}
 
 /* ── Header ── */
 .header-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; }
