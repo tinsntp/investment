@@ -328,7 +328,7 @@ to{transform:rotate(360deg)}
 .table-container { width:100%; overflow:hidden; border:1px solid #2a2e39; border-radius:8px;  }
 table { width:100%; border-collapse:collapse; text-align:left; font-size:14px; color:#d1d4dc; table-layout:fixed; }
 
-th, td { padding:6px 6px; border-bottom:1px solid #2a2e39; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+th, td { padding:5px 5px; border-bottom:1px solid #2a2e39; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 th { background:#191919; color:#787b86; font-weight:600; font-size:10px; text-transform:uppercase; letter-spacing:0.5px; }
 tr:last-child td { border-bottom:none; }
 
@@ -2188,8 +2188,8 @@ function renderSubscriptions(items) {
       iconEl.style.background = "rgba(255,255,255,0.08)";
       var imgEl = document.createElement("img");
       imgEl.src = item.iconUrl;
-      imgEl.style.width = "85%";
-      imgEl.style.height = "85%";
+      imgEl.style.width = "100%";
+      imgEl.style.height = "100%";
       imgEl.style.objectFit = "contain";
       imgEl.style.borderRadius = "50%";
       imgEl.onerror = (function(el, fallbackIcon){
@@ -2818,11 +2818,12 @@ function renderTradingViewChart() {
       gl.setAttribute("y1", y); gl.setAttribute("y2", y);
       gl.setAttribute("class","grid-line"); svg.appendChild(gl);
 
+      /*
       var tx = document.createElementNS(ns,"text");
       tx.setAttribute("x", W-RIGHT_AXIS_W + 5); tx.setAttribute("y", y + 4);
       tx.setAttribute("class","axis-text");
       tx.textContent = tk >= 1000 ? (tk/1000)+"K" : tk;
-      svg.appendChild(tx);
+      svg.appendChild(tx);*/
     }
   });
 
