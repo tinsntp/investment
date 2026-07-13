@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Finance</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;color:#fff;overflow:hidden;margin-top:15px;display:flex;flex-direction:column;padding-bottom:5px}
@@ -54,7 +55,11 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 
 .name-cell { display:flex; align-items:center; gap:1.5vw; min-width:0; overflow:hidden; }
 .sub-row .name-cell { padding-left:6vw; }
-.chevron { font-size:3.5vw; color:rgba(255,255,255,0.45); flex-shrink:0; user-select:none; line-height:1; }
+.chevron { font-size:3.5vw; color:rgba(255,255,255,0.45); flex-shrink:0; user-select:none; line-height:1; font-family: "FontAwesome", "Bootstrap Icons", sans-serif;}
+.bi {
+  font-size: 0.6rem!important; 
+  vertical-align: middle; /* Keeps the arrow centered with adjacent text */
+}
 .cat-ico { width:5vw; height:5vw; border-radius:50%; object-fit:contain; flex-shrink:0; background:rgba(255,255,255,0.08); padding:0.5vw; }
 .cat-ico-fb { width:5vw; height:5vw; border-radius:50%; flex-shrink:0; background:rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; font-size:2.3vw; color:rgba(255,255,255,0.6); }
 .sub-row .cat-ico, .sub-row .cat-ico-fb { width:4vw; height:4vw; }
@@ -136,6 +141,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .cash-modal-overlay.open{display:flex!important}.btn-spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,0.3);border-top-color:#ffffff;border-radius:50%;animation:spinCircle 0.8s linear infinite;display:inline-block}
 #add-cash.success-confirm{background-color:#10b981 !important;color:#ffffff !important;font-size:15px;font-weight:500;display:flex;align-items:center;justify-content:center;transition:background-color 0.3s ease}
 @keyframes spinCircle{to{transform:rotate(360deg)}}
+@media screen and (min-width:401px){#add-cash.success-confirm{font-size:3.4vw;} .btn-spinner{width:25px;height:25px;}}
 
 /* ══ OVERVIEW SLIDE ══ */
 #slide-2 { padding:0; overflow:hidden; margin-top:10px}
@@ -208,8 +214,8 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 
 /* ══ SUBSCRIPTION SLIDE ══ */
 .card{max-width:100%;margin: 2vw;}
-.sub-header-row{display:flex;align-items:center;justify-content:space-between;}
-.sub-title{font-size:14px;font-weight:700;color:rgba(255,255,255,0.85)}
+.sub-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.sub-title{font-size:14px;font-weight:500;color:rgba(255,255,255,0.75)}
 .sub-refresh-row{display:flex;align-items:center;gap:8px}
 .sub-last-updated{font-size:11px;color:rgba(255,255,255,0.35);white-space:nowrap}
 .sub-refresh-btn{border:none;background:transparent;color:rgba(255,255,255,0.5);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:4px;border-radius:50%;transition:color 0.15s,background 0.15s}
@@ -1251,14 +1257,13 @@ function buildCatRow(item, isSub, gid) {
   
   if (!isSub) {
     var chev = document.createElement("span");
-    chev.className = "chevron"; chev.id = "chev-"+gid; chev.textContent = "\u25b8";
+    chev.className = "chevron bi bi-chevron-right"; 
     nameCell.appendChild(chev);
   } else {
     // 1. Add a small chevron indicator next to sub-category names to make them look clickable
     var subChev = document.createElement("span");
-    subChev.className = "chevron sub-chev";
+    subChev.className = "chevron sub-chev bi bi-chevron-right";
     subChev.style.fontSize = "2.5vw";
-    subChev.textContent = "\u25b8 ";
     nameCell.appendChild(subChev);
   }
   
@@ -1276,7 +1281,7 @@ function buildCatRow(item, isSub, gid) {
       var isOpen = this.dataset.open === "1";
       this.dataset.open = isOpen ? "0" : "1";
       var chev2 = document.getElementById("chev-"+g);
-      if (chev2) chev2.textContent = isOpen ? "\u25b8" : "\u25be";
+      if (chev2) chev2.className = isOpen ? "bi bi-chevron-right" : "bi bi-chevron-down";
       
       document.querySelectorAll(".sub-row[data-group='"+g+"']").forEach(function(s){ 
         if (isOpen) {
