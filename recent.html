@@ -227,9 +227,9 @@ to{transform:rotate(360deg)}
 
 #sub-list{display:flex;flex-direction:column}
 #sub-loading,#sub-empty{font-size:13px;color:rgba(255,255,255,0.4);padding:24px 0;text-align:center}
-.sub-row{display:flex;align-items:center;border-bottom:1px solid rgba(255,255,255,0.08);gap:1.5vw;cursor:pointer;transition:background 0.2s ease,border-radius 0.2s ease,padding 0.2s ease}
+.sub-row{display:flex;align-items:center;border-bottom:1px solid rgba(255,255,255,0.08);cursor:pointer;transition:background 0.2s ease,border-radius 0.2s ease,padding 0.2s ease}
 .sub-row:hover{background:rgba(255,255,255,0.04)}
-.sub-icon{width:42px;height:42px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff}
+.sub-icon{width:46px;height:46px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff}
 .sub-mid{flex:1;min-width:0;margin:2vw}
 .sub-name-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;flex-wrap:wrap}
 .sub-name-left{display:flex;align-items:center;gap:8px;min-width:0;flex-wrap:wrap}
@@ -269,8 +269,9 @@ to{transform:rotate(360deg)}
 .add-field input[type="text"],.add-field input[type="number"],.add-field input[type="date"]{height:44px !important;font-size:15px !important;padding:0 12px !important;border-radius:8px !important}
 }
 .sub-swipe-container{position:relative;width:100%;overflow:hidden;margin-bottom:0;border-radius:12px;background:#191919;}
-.sub-row{position:relative;z-index:2;background:#191919;width:100%;padding:3vw 0 3vw 0;margin-bottom:0 !important;will-change:transform;cursor:grab}
+.sub-row{position:relative;z-index:2;background:#191919;width:100%;padding:1vw 0 1vw 0;margin-bottom:0 !important;will-change:transform;cursor:grab}
 .sub-row:active{cursor:grabbing}
+@media (max-width:400px){.sub-row{padding:3vw 0 3vw 0;}}
 .sub-delete-action{cursor: pointer;position:absolute;margin-right:2px;margin-bottom:0px;top:0;right:0;bottom:0;width:70px;z-index:1;background-color:#ef4444;color:#ffffff;display:flex;align-items:center;justify-content:center;border-top-right-radius:12px;border-bottom-right-radius:12px;}
 .sub-delete-action svg{pointer-events:none}
 .sub-delete-action:hover{background-color:#dc2626}
@@ -2187,8 +2188,8 @@ function renderSubscriptions(items) {
       iconEl.style.background = "rgba(255,255,255,0.08)";
       var imgEl = document.createElement("img");
       imgEl.src = item.iconUrl;
-      imgEl.style.width = "75%";
-      imgEl.style.height = "75%";
+      imgEl.style.width = "85%";
+      imgEl.style.height = "85%";
       imgEl.style.objectFit = "contain";
       imgEl.style.borderRadius = "50%";
       imgEl.onerror = (function(el, fallbackIcon){
