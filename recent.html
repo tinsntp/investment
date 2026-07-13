@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;color:#fff;overflow:hidden;margin-top:15px;display:flex;flex-direction:column;padding-bottom:5px}
+html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-family: -apple-system, BlinkMacSystemFont, "Lexend Light", Roboto, Helvetica, Arial, sans-serif;color:#fff;overflow:hidden;margin-top:15px;display:flex;flex-direction:column;padding-bottom:5px}
 .tab-bar{display:flex;align-items:stretch;border-bottom:1px solid rgba(255,255,255,0.1);position:relative;flex-shrink:0;padding:0 0vw}
 .tab-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:0.5vw;cursor:pointer;user-select:none;font-size:2.8vw;font-weight:600;color:rgba(255,255,255,0.4);transition:color 0.2s}
 .tab-btn.active { color:#fff; }
@@ -56,10 +56,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .name-cell { display:flex; align-items:center; gap:1.5vw; min-width:0; overflow:hidden; }
 .sub-row .name-cell { padding-left:6vw; }
 .chevron { font-size:3.5vw; color:rgba(255,255,255,0.45); flex-shrink:0; user-select:none; line-height:1; font-family: "FontAwesome", "Bootstrap Icons", sans-serif;}
-.bi {
-  font-size: 0.6rem!important; 
-  vertical-align: middle; /* Keeps the arrow centered with adjacent text */
-}
+.bi {font-size: 0.6rem!important;vertical-align: middle; }
 .cat-ico { width:5vw; height:5vw; border-radius:50%; object-fit:contain; flex-shrink:0; background:rgba(255,255,255,0.08); padding:0.5vw; }
 .cat-ico-fb { width:5vw; height:5vw; border-radius:50%; flex-shrink:0; background:rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; font-size:2.3vw; color:rgba(255,255,255,0.6); }
 .sub-row .cat-ico, .sub-row .cat-ico-fb { width:4vw; height:4vw; }
@@ -215,7 +212,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 /* ══ SUBSCRIPTION SLIDE ══ */
 .card{max-width:100%;margin: 2vw;}
 .sub-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
-.sub-title{font-size:14px;font-weight:500;color:rgba(255,255,255,0.75)}
+.sub-title{font-size:13px;font-weight:500;color:rgba(255,255,255,0.55)}
 .sub-refresh-row{display:flex;align-items:center;gap:8px}
 .sub-last-updated{font-size:11px;color:rgba(255,255,255,0.35);white-space:nowrap}
 .sub-refresh-btn{border:none;background:transparent;color:rgba(255,255,255,0.5);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:4px;border-radius:50%;transition:color 0.15s,background 0.15s}
@@ -227,7 +224,7 @@ to{transform:rotate(360deg)}
 .sub-stat-val{font-size:23px;font-weight:800;color:rgba(255,255,255,0.95);letter-spacing:-0.02em;line-height:1;margin-bottom:4px;font-family:monospace}
 .sub-stat-label{font-size:12.5px;color:rgba(255,255,255,0.45)}
 .sub-stat-label .hl-teal{color:#2dd4bf;font-weight:600}
-.sub-list-title{display:flex;align-items:center;justify-content:left;gap:2vw;width:100%;font-size:14px;font-weight:700;color:rgba(255,255,255,0.75);margin-bottom:12px}
+.sub-list-title{display:flex;align-items:center;justify-content:left;gap:2vw;width:100%;font-size:14px;font-weight:600;color:rgba(255,255,255,0.75);margin-bottom:12px}
 .add-inline-btn{width:6vw;height:6vw;padding-bottom:px;max-width:6vw;max-height:6vw;font-family:monospace!important;font-size:5vw;font-weight:500;border-radius:50%;background:#14b8a6;border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:opacity 0.2s}
 .add-inline-btn:active{opacity:0.8}
 
@@ -2810,8 +2807,8 @@ function renderTradingViewChart() {
   var currentMinT = (midT + offsetX) - (totalRangeT / 2) * zoomX;
   var currentMaxT = (midT + offsetX) + (totalRangeT / 2) * zoomX;
 
-  var currentMinL = (midL + offsetY) - ((baseMaxL - baseMinL) / 2) * zoomY;
-  var currentMaxL = (midL + offsetY) + ((baseMaxL - baseMinL) / 2) * zoomY;
+  var currentMinL = (midL + offsetY) - ((baseMaxL - baseMinL) / 1) * zoomY;
+  var currentMaxL = (midL + offsetY) + ((baseMaxL - baseMinL) / 1) * zoomY;
 
   function getX(date) {
     return PAD_X + ((date.getTime() - currentMinT) / (currentMaxT - currentMinT)) * plotW;
@@ -2909,8 +2906,9 @@ function renderTradingViewChart() {
       segmentPath.setAttribute("stroke-dasharray", "4,4");
       segmentPath.setAttribute("opacity", "0.65"); // Slightly higher opacity for clean visibility
     } else {
-      segmentPath.setAttribute("stroke", "url(#waveGrad)");
-      segmentPath.setAttribute("stroke-width", "2.5");
+      //segmentPath.setAttribute("stroke", "url(#waveGrad)");
+      segmentPath.setAttribute("stroke", "#fff");
+      segmentPath.setAttribute("stroke-width", "1.5");
     }
     svg.appendChild(segmentPath);
   }
