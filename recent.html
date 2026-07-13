@@ -23,7 +23,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .slide { width:20%; height:100%; overflow-y:auto; overflow-x:hidden; padding:0vw; flex-shrink:0; }
 
 /* ══ BTC STYLES ══ */
-.tradingview-widget-container{height:340px!important;}
+.tradingview-widget-container{height:360px!important;}
 
 /* ══ DETAIL STYLES ══ */
 #rings-wrap{display:flex;flex-wrap:wrap;gap:1.5vw;justify-content:space-around;margin-bottom:1.5vw}
@@ -229,7 +229,7 @@ to{transform:rotate(360deg)}
 #sub-loading,#sub-empty{font-size:13px;color:rgba(255,255,255,0.4);padding:24px 0;text-align:center}
 .sub-row{display:flex;align-items:center;border-bottom:1px solid rgba(255,255,255,0.08);cursor:pointer;transition:background 0.2s ease,border-radius 0.2s ease,padding 0.2s ease}
 .sub-row:hover{background:rgba(255,255,255,0.04)}
-.sub-icon{width:46px;height:46px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff}
+.sub-icon{width:40px;height:40px;margin-right:1vw;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff}
 .sub-mid{flex:1;min-width:0;margin:2vw}
 .sub-name-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;flex-wrap:wrap}
 .sub-name-left{display:flex;align-items:center;gap:8px;min-width:0;flex-wrap:wrap}
@@ -548,8 +548,8 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
               <tr>
                 <th style="width: 10%;">#</th>
                 <th style="width: 26%;">Cycle</th>
-                <th style="width: 14%;">Range</th>
-                <th style="width: 24%;" class="text-right">ATH/ATL</th>
+                <th style="width: 14%;">Days</th>
+                <th style="width: 24%;" class="text-right">ATH / ATL</th>
                 <th style="width: 26%;" class="text-right">Changed</th>
               </tr>
             </thead>
@@ -2774,8 +2774,8 @@ function renderTradingViewChart() {
   var RIGHT_AXIS_W = 55, BOTTOM_AXIS_H = 24;
   
   // Bring padding back into a normal positive range so the chart can breathe
-  var PAD_X = 35;  // Positive padding to keep the left side inside the canvas
-  var PAD_Y = 25;  // Lower padding to maximize the vertical range for lines
+  var PAD_X = -95;  // Positive padding to keep the left side inside the canvas
+  var PAD_Y = 55;  // Lower padding to maximize the vertical range for lines
 
   var plotW = W - RIGHT_AXIS_W - PAD_X; // 640 - 55 - 35 = 550px width
   var plotH = H - BOTTOM_AXIS_H - PAD_Y; // 220 - 24 - 25 = 171px actual graphing height
@@ -2786,8 +2786,8 @@ function renderTradingViewChart() {
   
   // Custom tailored 12% y-axis padding baseline allocation
   var logRange = baseMaxL - baseMinL;
-  baseMinL = baseMinL - (logRange * 0.3);
-  baseMaxL = baseMaxL + (logRange * 0.3);
+  baseMinL = baseMinL - (logRange * 0.1);
+  baseMaxL = baseMaxL + (logRange * 0.1);
   
   var midL = baseMinL + (baseMaxL - baseMinL) / 2;
 
