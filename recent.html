@@ -1212,7 +1212,7 @@ function renderTxRows(subCatName, containerEl) {
       row.innerHTML = `
         <div class="td-desc">
           ${iconHtml}
-          <span>${tx.detail ? cleanDetail(tx.cleanDetail) : '—'}</span>
+          <span class="td-detail">${tx.detail ? cleanDetail(tx.cleanDetail) : '—'}</span>
         </div>
         <div class="td-amt">${fmtK(tx.amount)}</div>
         <div class="td-empty"></div>
@@ -1957,9 +1957,9 @@ function applyLayout(){
   document.getElementById("expand-btn").style.fontSize=isMobile?"4.1vw":"2.7vw";
 
   var gridCols=isMobile?"5.8fr 1.6fr 1.6fr":"5.8fr 1.6fr 1.6fr 1.6fr";
-  var mainNmFs=isMobile?"4.1vw":"2.8vw",subNmFs=isMobile?"4.1vw":"2.6vw";
-  var amtFs=isMobile?"4.1vw":"2.6vw",subAmtFs=isMobile?"4.1vw":"2.6vw";
-  var lastFs=isMobile?"4.1vw":"2.6vw",pctFs=isMobile?"4.1vw":"2.6vw";
+  var mainNmFs=isMobile?"4.2vw":"2.9vw",subNmFs=isMobile?"4.2vw":"2.7vw";
+  var amtFs=isMobile?"4.2vw":"2.7vw",subAmtFs=isMobile?"4.2vw":"2.7vw";
+  var lastFs=isMobile?"4.2vw":"2.7vw",pctFs=isMobile?"4.1vw":"2.7vw";
   var catIcoSz=isMobile?"8vw":"7vw",subIcoSz=isMobile?"7vw":"5.5vw";
   var chevFs=isMobile?"5.5vw":"4.5vw",rowPad=isMobile?"1vw 0.5vw":"0.5vw 0.5vw";
 
@@ -1983,10 +1983,11 @@ function applyLayout(){
 
   //RECENT
   var txIcoSz=isMobile?"12vw":"9vw";
-  document.querySelectorAll(".ttl").forEach(function(el){el.style.fontSize=isMobile?"4.1vw":"2.6vw";});
-  document.querySelectorAll(".dtl").forEach(function(el){el.style.fontSize=isMobile?"3.8vw":"2.5vw";});
+  document.querySelectorAll(".td-detail").forEach(function(el){el.style.fontSize=isMobile?"4.2vw":"2.7vw";});
+  document.querySelectorAll(".ttl").forEach(function(el){el.style.fontSize=isMobile?"4.2vw":"2.7vw";});
+  document.querySelectorAll(".dtl").forEach(function(el){el.style.fontSize=isMobile?"3.9vw":"2.5vw";});
   document.querySelectorAll(".amt").forEach(function(el){el.style.fontSize=isMobile?"4.6vw":"2.8vw";});
-  document.querySelectorAll(".dte").forEach(function(el){el.style.fontSize=isMobile?"3.8vw":"2.5vw";});
+  document.querySelectorAll(".dte").forEach(function(el){el.style.fontSize=isMobile?"3.9vw":"2.5vw";});
   document.querySelectorAll(".tx-group-hdr").forEach(function(el){el.style.fontSize=isMobile?"4vw":"2.3vw";});
   document.querySelectorAll(".ico").forEach(function(el){el.style.width=txIcoSz;el.style.height=txIcoSz;});
   document.querySelectorAll(".ico-fb").forEach(function(el){el.style.width=txIcoSz;el.style.height=txIcoSz;el.style.fontSize=isMobile?"7vw":"4vw";});
