@@ -42,8 +42,8 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .ring-icon { width:4vw; height:4vw; object-fit:contain; border-radius:50%; margin-top:0.5vw; }
 .ring-icon-fb { width:4vw; height:4vw; margin-top:0.5vw; }
 .ring-svg { flex-shrink:0; }
-.ring-label { font-size:2.2vw; color:rgba(255,255,255,0.7); text-align:center; line-height:1.3; font-weight:600; white-space:normal; word-break:break-word; }
-.ring-remain { font-size:2vw; font-weight:700; text-align:center; white-space:normal; }
+.ring-label { font-size:2.2vw; color:rgba(255,255,255,0.7); text-align:center; line-height:1.3; font-weight:400; white-space:normal; word-break:break-word; }
+.ring-remain { font-size:2.2vw; font-weight:500; text-align:center; white-space:normal; }
 .ring-remain.ok   { color:#14b8a6; }   /* teal */
 .ring-remain.low  { color:#fbbf24; }   /* keep yellow */
 .ring-remain.over { color:#FF69B4; }   /* pink */
@@ -80,7 +80,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 #det-msg { font-size:3vw; color:rgba(255,255,255,0.4); text-align:center; padding:5vw; }
 
 .budget-card{margin-top:15px;padding:0 15px 0 15px;}
-.budget-title,.budget-label{font-size:12px;color:rgba(255,255,255,.55);margin-bottom:2px}
+.budget-title,.budget-label{font-size:12px;color:rgba(255,255,255,.55);margin-bottom:1px}
 .budget-total,#budget-spent,.marker-value,#budget-remaining{font-family:"JetBrains Mono";}
 .budget-total{font-size:18px;font-weight:500;color:rgba(255,255,255,.85);margin-bottom:16px}
 .budget-bar-wrap{position:relative;margin-bottom:10px}
@@ -116,7 +116,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 
 /*RECENT */
 #tx-list{display:flex;flex-direction:column;margin-top:5px;margin:2vw;}
-.tx-group-hdr{font-size:2.3vw;font-weight:700;color:rgba(255,255,255,0.45);letter-spacing:0.05em;padding:2.5vw 0 1vw;margin-top:0.5vw}
+.tx-group-hdr{font-size:2.3vw;font-weight:300;color:rgba(255,255,255,0.45);letter-spacing:0.05em;padding:2.5vw 0 1vw;margin-top:0.5vw}
 .tx-group-hdr:first-child{padding-top:0.5vw}
 .row{display:flex;align-items:center;padding:2vw 0;border-bottom:1px solid rgba(255,255,255,0.08);gap:3vw;cursor:pointer;transition:background 0.2s ease,border-radius 0.2s ease,padding 0.2s ease}
 
@@ -135,10 +135,9 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 
 .ttl{display:flex;align-items:center;gap:1.5vw}
 .recent-badge{font-size:2.4vw;font-weight:700;color:#14b8a6;background:rgba(74,222,128,0.14);border-radius:99px;padding:0.4vw 1.2vw;white-space:nowrap}
-.recent-badge .bi {
-  font-size: 0.8rem!important;
-  vertical-align: 0em;
-}
+.recent-badge .bi,label .bi {font-size: 0.8rem!important;vertical-align: 0em;}
+
+
 @media screen and (max-width:400px){.recent-badge{font-size:3.8vw}}
 
 #slide-1{position:relative}
@@ -425,7 +424,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
           </div>
           <div class="budget-col" style="text-align:right;">
             <div class="budget-label">Remaining</div>
-            <div id="budget-remaining" style="margin-top:5px;"></div>
+            <div id="budget-remaining" style="margin-top:2px;"></div>
           </div>
         </div>
       </div>
@@ -600,7 +599,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
     <h3>Add Cash Transaction</h3>
     
     <div class="add-field">
-      <label>Expenses Detail</label>
+      <label><i class="bi bi-basket3-fill"></i> Expense Detail</label>
       <input type="text" id="cash-modal-input" autocomplete="off">
     </div>
 
@@ -608,8 +607,8 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
     <div id="cash-modal-status" class="add-status"></div>
 
     <div class="add-actions">
-      <button id="cash-modal-cancel" class="add-cancel-btn">Cancel</button>
-      <button id="cash-modal-submit" class="add-submit-btn">Save</button>
+      <button id="cash-modal-cancel" class="add-cancel-btn"><label><i class="bi bi-x-circle"></i> Cancel</button>
+      <button id="cash-modal-submit" class="add-submit-btn"><label><i class="bi bi-check-circle"></i> Save</button>
     </div>
   </div>
 </div>
@@ -619,7 +618,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
     <h3>Add Subscription</h3>
     <div class="form-row-2col">
       <div class="add-field">
-        <label>Subscription Name</label>
+        <label><i class="bi bi-cloud-plus"></i> Service Name</label>
         <input type="text" id="add-title">
       </div>
       <div class="add-field">
@@ -629,27 +628,27 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
     </div>
     <div class="form-row-2col">
       <div class="add-field">
-        <label>Monthly Price</label>
+        <label><i class="bi bi-currency-dollar"></i> Monthly Price</label>
         <input type="number" id="add-amount">
       </div>
       <div class="add-field">
-        <label>Total Price</label>
+        <label><i class="bi bi-currency-dollar"></i> Total Price</label>
         <input type="number" id="add-total-amount">
       </div>
     </div>
     <div class="form-row-2col">
       <div class="add-field">
-        <label>From Date</label>
+        <label><i class="bi bi-calendar4"></i> From Date</label>
         <input type="date" id="add-start-date">
       </div>
       <div class="add-field">
-        <label>To Date</label>
+        <label><i class="bi bi-calendar4"></i> To Date</label>
         <input type="date" id="add-end-date">
       </div>
     </div>
     <div class="add-actions">
-      <button class="add-cancel-btn" id="add-cancel-btn">Cancel</button>
-      <button class="add-submit-btn" id="add-submit-btn">Save</button>
+      <button class="add-cancel-btn" id="add-cancel-btn"><label><i class="bi bi-x-circle"></i> Cancel</button>
+      <button class="add-submit-btn" id="add-submit-btn"><label><i class="bi bi-check-circle"></i> Save</button>
     </div>
     <div class="add-status" id="add-status"></div>
   </div>
@@ -1957,7 +1956,7 @@ function applyLayout(){
   var ringSz=isMobile?"20vw":"10vw";
   document.querySelectorAll(".ring-svg").forEach(function(el){el.style.width=ringSz;el.style.height=ringSz;});
   document.querySelectorAll(".ring-label").forEach(function(el){el.style.fontSize=isMobile?"3.6vw":"2.4vw";});
-  document.querySelectorAll(".ring-remain").forEach(function(el){el.style.fontSize=isMobile?"3.2vw":"2.2vw";});
+  document.querySelectorAll(".ring-remain").forEach(function(el){el.style.fontSize=isMobile?"3.4vw":"2.2vw";});
   document.querySelectorAll(".ring-icon").forEach(function(el){el.style.width=isMobile?"7vw":"4vw";el.style.height=isMobile?"7vw":"4vw";});
   document.querySelectorAll(".ring-item[data-hide-on-mobile]").forEach(function(el){el.style.display=isMobile?"none":"flex";});
   document.getElementById("expand-btn").style.fontSize=isMobile?"4.1vw":"2.7vw";
@@ -2831,7 +2830,7 @@ function renderTradingViewChart() {
   var RIGHT_AXIS_W = 55, BOTTOM_AXIS_H = 24;
   
   // Bring padding back into a normal positive range so the chart can breathe
-  var PAD_X = -95;  // Positive padding to keep the left side inside the canvas
+  var PAD_X = -145;  // Positive padding to keep the left side inside the canvas
   var PAD_Y = 55;  // Lower padding to maximize the vertical range for lines
 
   var plotW = W - RIGHT_AXIS_W - PAD_X; // 640 - 55 - 35 = 550px width
@@ -3271,7 +3270,7 @@ function renderStructuredTable(points) { var tbody = document.getElementById("ta
  tr.className = "current-row"; }
  var tdId = document.createElement("td"); var bdy = document.createElement("span"); bdy.className = "cycle-num-badge"; bdy.textContent = c.id; tdId.appendChild(bdy);
  tr.appendChild(tdId);
- var tdDates = document.createElement("td"); tdDates.className = "font-mono"; var pDateStr = c.ath ? fmtDateCompact(c.ath.date) : "—"; var fDateStr = c.atl ? fmtDateCompact(c.atl.date) : "—"; tdDates.innerHTML = "<span class='text-teal'>▲ " + pDateStr + "</span><br><span class='text-pink'>▼ " + fDateStr + "</span>"; tr.appendChild(tdDates);
+ var tdDates = document.createElement("td"); tdDates.className = "font-mono"; var pDateStr = c.ath ? fmtDateCompact(c.ath.date) : "—"; var fDateStr = c.atl ? fmtDateCompact(c.atl.date) : "—"; tdDates.innerHTML = "<span class='text-teal'><i class='bi bi-caret-up-fill'></i> " + pDateStr + "</span><br><span class='text-pink'><i class='bi bi-caret-down-fill'></i> " + fDateStr + "</span>"; tr.appendChild(tdDates);
  var tdDuration = document.createElement("td"); tdDuration.className = "font-mono text-muted"; var athDays = (c.ath && c.ath.rangeDay) ? c.ath.rangeDay + "d" : "—"; var atlDays = (c.atl && c.atl.rangeDay) ? c.atl.rangeDay + "d" : "—"; tdDuration.innerHTML = "<span>" + athDays + "</span><br><span>" + atlDays + "</span>"; tr.appendChild(tdDuration);
  var tdPrices = document.createElement("td"); tdPrices.className = "font-mono text-right"; var pPrice = c.ath ? fmtUSD(c.ath.value) : "—"; var fPrice = c.atl ? fmtUSD(c.atl.value) : "—"; tdPrices.innerHTML = "<span class='text-teal'>" + pPrice + "</span><br><span class='text-pink'>" + fPrice + "</span>"; tr.appendChild(tdPrices);
  var tdChanges = document.createElement("td"); tdChanges.className = "font-mono text-right"; var athChg = (c.ath && c.ath.changeStr) ? c.ath.changeStr : "—"; var atlChg = (c.atl && c.atl.changeStr) ? c.atl.changeStr : "—"; var athClass = athChg.charAt(0) === '-' ? "text-pink" : "text-teal"; var atlClass = atlChg.charAt(0) === '-' ? "text-pink" : "text-teal"; tdChanges.innerHTML = "<span class='" + athClass + "'>" + athChg + "</span><br><span class='" + atlClass + "'>" + atlChg + "</span>"; tr.appendChild(tdChanges);
