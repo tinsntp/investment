@@ -30,6 +30,54 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .slides-outer { flex:1; overflow:hidden; position:relative; }
 .slides-wrap { display:flex; width:500%; height:100%; transition:transform 0.3s cubic-bezier(0.4,0,0.2,1); }
 .slide { width:20%; height:100%; overflow-y:auto; overflow-x:hidden; padding:0vw; flex-shrink:0; }
+.sub-slides-outer {
+  width: 100%;
+  overflow: hidden;
+}
+.sub-slides-wrap {
+  display: flex;
+  width: 200%; 
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.sub-slide {
+  width: 50%; 
+  flex-shrink: 0;
+}
+/* Only targets the internal BTC sub-tab bar wrapper */
+.sub-tab-bar {
+  display: flex !important; /* Forces row layout */
+  justify-content: space-around;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Specific layout laws for the inner buttons to protect text + icons */
+.sub-tab-btn {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 6px !important;    /* Clean gap between bootstrap icon and span text */
+  
+  /* CRITICAL: Block the system from dropping text or shrinking it to 0px */
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+}
+
+/* Ensure children elements never get squeezed down */
+.sub-tab-btn i,
+.sub-tab-btn span {
+  display: inline-block !important;
+  flex-shrink: 0 !important;
+}
+
+/* Micro tweaks for narrow iPhone screens (e.g., iPhone SE) */
+@media (max-width: 400px) {
+  .sub-tab-btn {
+    font-size: 12px !important; /* Scale down text slightly instead of hiding it */
+    padding: 3px 3px !important;
+    gap: 4px !important;
+  }
+}
 
 /* ══ BTC STYLES ══ */
 .tradingview-widget-container{height:340px!important;}
@@ -362,6 +410,38 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 
 @media (max-width:400px){table {font-size:3.6vw;}  th, td { padding:4px 4px;}}
 
+/* BTC Risk Monitor */
+.btc-widget-container{background-color:#191919;color:#ffffff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;padding:16px 12px;width:100%;max-width:380px;margin:0 auto;box-sizing:border-box;border-radius:16px}
+.widget-title{font-size:14px;font-weight:500;margin-top:0;margin-bottom:16px;color:#8c92a0;letter-spacing:0.3px;text-align:center}
+.donuts-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:8px}
+.donut-item{display:flex;flex-direction:column;align-items:center;flex:1;min-width:0}
+.circle-wrapper{position:relative;width:80px;height:80px}
+.progress-ring{width:100%;height:100%;transform:rotate(-90deg);transform-origin:50% 50%}
+.progress-ring__bar{transition:stroke-dashoffset 0.5s ease}
+.circle-value{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:16px;font-weight:600;font-family:monospace}
+.circle-label{font-size:14px;color:#8c92a0;margin-top:6px;font-weight:400;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%}
+.widget-footer{display:flex;justify-content:space-between;align-items:center;background-color:#0b0c0e;border:1px solid #141619;padding:10px 8px;border-radius:12px}
+.footer-metric{display:flex;flex-direction:column;align-items:center;flex:1;text-align:center;min-width:0}
+.footer-metric .lbl{font-size:10px;color:#626875;text-transform:uppercase;font-weight:500;margin-bottom:2px;letter-spacing:0.1px;white-space:nowrap}
+.footer-metric .val{font-size:15px;font-weight:700;transition:color 0.3s;white-space:nowrap}
+.widget-divider{width:1px;height:20px;background-color:#1c1e22;margin:0 4px}
+
+
+  @media (max-width: 340px) {
+    .circle-wrapper {
+      width: 70px;
+      height: 70px;
+    }
+    .circle-value {
+      font-size: 14px;
+    }
+    .circle-label {
+      font-size: 11px;
+    }
+    .footer-metric .val {
+      font-size: 13px;
+    }
+  }
 </style>
 </head>
 <body>
@@ -544,42 +624,126 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
           <a href="https://www.tradingview.com/markets/" rel="noopener nofollow" target="_blank" style="color: #22ab94; text-decoration: none;">World markets</a> by TradingView
         </div>
       </div>
-      
       <!-- TradingView Widget END -->
-      <div class="btc-card">
-        <div class="header-row">
-          <div class="title"><span class="btc-glyph">₿</span> BTC Cycle Tracker</div>
-        </div>
-        <div class="subtitle" id="subtitle">Loading matrix data...</div>
 
-        <!-- Dynamic Chart Engine Layout -->
-        <div class="chart-wrap" id="chart-wrap">
-          <svg id="wave-svg" viewBox="0 0 640 200" preserveAspectRatio="none"></svg>
-        </div>
-
-        <div class="legend-row">
-          <div class="legend-item"><span class="legend-dot" style="background:#b2b5be;"></span> Cycle Trendline</div>
-          <div class="legend-item"><span class="legend-dot" style="background:#00bfa5;"></span> ATH</div>
-          <div class="legend-item"><span class="legend-dot" style="background:#ff6097;"></span> ATL</div>
-        </div>
-
-        <div id="loading-msg">Fetching spreadsheet matrices&hellip;</div>
+      <!-- Added 'sub-tab-bar' modifier -->
+      <div class="tab-bar sub-tab-bar" id="tab-bar">
         
-        <div class="table-container" id="table-container" style="display:none;">
-          <table id="cycle-table">
-            <thead>
-              <tr>
-                <th style="width: 9%;">#</th>
-                <th style="width: 30%;">Cycle</th>
-                <th style="width: 14%;">Days</th>
-                <th style="width: 23%;" class="text-right">ATH / ATL</th>
-                <th style="width: 25%;" class="text-right">Changed</th>
-              </tr>
-            </thead>
-            <tbody id="table-body"></tbody>
-          </table>
+        <!-- Added 'sub-tab-btn' modifiers -->
+        <div class="tab-btn sub-tab-btn active" data-sub-idx="0" id="tab-btn-10">
+          <i class="bi bi-graph-up"></i>
+          <span>Cycle Tracker</span>
+        </div>
+        
+        <div class="tab-btn sub-tab-btn" data-sub-idx="1" id="tab-btn-11">
+          <i class="bi bi-exclamation-triangle"></i>
+          <span>Monitor</span>
+        </div>
+
+      </div>
+
+      <!-- Khung trượt nội bộ dành riêng cho 2 tab nhỏ -->
+      <div class="sub-slides-outer">
+        <div class="sub-slides-wrap" id="sub-slides-wrap">
+          <!-- Tab nhỏ 1 -->
+          <div class="sub-slide">
+            <div class="btc-card">
+              
+              <div class="subtitle" id="subtitle">Loading matrix data...</div>
+
+              <!-- Dynamic Chart Engine Layout -->
+              <div class="chart-wrap" id="chart-wrap">
+                <svg id="wave-svg" viewBox="0 0 640 200" preserveAspectRatio="none"></svg>
+              </div>
+
+              <div class="legend-row">
+                <div class="legend-item"><span class="legend-dot" style="background:#b2b5be;"></span> Cycle Trendline</div>
+                <div class="legend-item"><span class="legend-dot" style="background:#00bfa5;"></span> ATH</div>
+                <div class="legend-item"><span class="legend-dot" style="background:#ff6097;"></span> ATL</div>
+              </div>
+
+              <div id="loading-msg">Fetching spreadsheet matrices&hellip;</div>
+              
+              <div class="table-container" id="table-container" style="display:none;">
+                <table id="cycle-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 9%;">#</th>
+                      <th style="width: 30%;">Cycle</th>
+                      <th style="width: 14%;">Days</th>
+                      <th style="width: 23%;" class="text-right">ATH / ATL</th>
+                      <th style="width: 25%;" class="text-right">Changed</th>
+                    </tr>
+                  </thead>
+                  <tbody id="table-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <!-- Tab nhỏ 2 -->
+          <div class="sub-slide">
+            <div class="btc-widget-container">
+              <div class="donuts-row">
+                <!-- Ring 1: Halving Progress -->
+                <div class="donut-item">
+                  <div class="circle-wrapper">
+                    <svg class="progress-ring" viewBox="0 0 80 80">
+                      <circle class="progress-ring__bg" stroke="#1c1e22" stroke-width="9" fill="transparent" r="31" cx="40" cy="40"/>
+                      <circle id="ring-halving" class="progress-ring__bar" stroke="#00f5d4" stroke-width="9" stroke-linecap="round" fill="transparent" r="31" cx="40" cy="40" stroke-dasharray="194.78" stroke-dashoffset="194.78"/>
+                    </svg>
+                    <div class="circle-value" id="val-halving">0%</div>
+                  </div>
+                  <div class="circle-label">Cycle Progress</div>
+                </div>
+
+                <!-- Ring 2: Pi Cycle MA Convergence -->
+                <div class="donut-item">
+                  <div class="circle-wrapper">
+                    <svg class="progress-ring" viewBox="0 0 80 80">
+                      <circle class="progress-ring__bg" stroke="#1c1e22" stroke-width="9" fill="transparent" r="31" cx="40" cy="40"/>
+                      <circle id="ring-pi" class="progress-ring__bar" stroke="#ffb11a" stroke-width="9" stroke-linecap="round" fill="transparent" r="31" cx="40" cy="40" stroke-dasharray="194.78" stroke-dashoffset="194.78"/>
+                    </svg>
+                    <div class="circle-value" id="val-pi">0%</div>
+                  </div>
+                  <div class="circle-label">MA Conv.</div>
+                </div>
+
+                <!-- Ring 3: Macro Risk Level -->
+                <div class="donut-item">
+                  <div class="circle-wrapper">
+                    <svg class="progress-ring" viewBox="0 0 80 80">
+                      <circle class="progress-ring__bg" stroke="#1c1e22" stroke-width="9" fill="transparent" r="31" cx="40" cy="40"/>
+                      <circle id="ring-risk" class="progress-ring__bar" stroke="#f72585" stroke-width="9" stroke-linecap="round" fill="transparent" r="31" cx="40" cy="40" stroke-dasharray="194.78" stroke-dashoffset="194.78"/>
+                    </svg>
+                    <div class="circle-value" id="val-risk">0%</div>
+                  </div>
+                  <div class="circle-label">Macro Risk</div>
+                </div>
+              </div>
+
+              <!-- Bottom Data Grid & Dynamic Output -->
+              <div class="widget-footer">
+                <div class="footer-metric">
+                  <span class="lbl">Implied Peak</span>
+                  <span class="val" id="target-price-display">$0</span>
+                </div>
+                <div class="widget-divider"></div>
+                <div class="footer-metric">
+                  <span class="lbl">Risk Status</span>
+                  <span class="val" id="risk-status-display">-</span>
+                </div>
+                <div class="widget-divider"></div>
+                <div class="footer-metric">
+                  <span class="lbl">Days Left</span>
+                  <span class="val" id="days-until-display">-</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
+      
     </div>
 
 
@@ -3296,7 +3460,120 @@ setInterval(caLoadDonut,60000);
   switchTab(activeIdx);
   positionTabLine();
 })();
+document.addEventListener("DOMContentLoaded", () => {
+  const subTabs = document.querySelectorAll(".sub-tab-btn");
+  const subSlidesWrap = document.getElementById("sub-slides-wrap");
 
+  // 1. FORCED INITIAL STATE: Explicitly highlight and position Tab 10 on boot
+  if (subTabs.length > 0) {
+    // Clear any ambiguity and lock the first tab as active
+    subTabs.forEach(t => t.classList.remove("active"));
+    subTabs[0].classList.add("active"); 
+  }
+  if (subSlidesWrap) {
+    subSlidesWrap.style.transform = "translateX(0%)";
+  }
+
+  // 2. Interactive Click Handler
+  subTabs.forEach(btn => {
+    btn.addEventListener("click", () => {
+      // Toggle highlights on click
+      subTabs.forEach(t => t.classList.remove("active"));
+      btn.classList.add("active");
+
+      // Slide content smoothly
+      const subIdx = btn.getAttribute("data-sub-idx");
+      if (subSlidesWrap) {
+        subSlidesWrap.style.transform = `translateX(-${subIdx * 50}%)`;
+      }
+    });
+  });
+});
+
+const halvingDates = [
+    new Date("2012-11-28"), new Date("2016-07-09"), 
+    new Date("2020-05-11"), new Date("2024-04-20"), 
+    new Date("2028-04-17"), new Date("2032-04-10")
+  ];
+
+  function getMetrics() {
+    const now = new Date();
+    let prev = null, next = null, idx = 0;
+
+    for (let i = 0; i < halvingDates.length - 1; i++) {
+      if (now >= halvingDates[i] && now < halvingDates[i+1]) {
+        prev = halvingDates[i];
+        next = halvingDates[i+1];
+        idx = i + 1;
+        break;
+      }
+    }
+    if (!prev) {
+      prev = halvingDates[halvingDates.length - 2];
+      next = halvingDates[halvingDates.length - 1];
+      idx = halvingDates.length - 1;
+    }
+
+    const oneDay = 24 * 60 * 60 * 1000;
+    const total = Math.round((next - prev) / oneDay);
+    const since = Math.round((now - prev) / oneDay);
+    const until = Math.round((next - now) / oneDay);
+    const progress = ((since / total) * 100).toFixed(1);
+
+    return { since, until, progress, idx };
+  }
+
+  const data = getMetrics();
+  
+  // New Circle math adjusted for radius r = 31 (to balance the thicker stroke-width = 9)
+  // C = 2 * PI * r = 2 * 3.1415926 * 31 = 194.78
+  const radius = 31;
+  const circumference = 2 * Math.PI * radius; 
+
+  function setRingProgress(elementId, valueId, percent) {
+    const el = document.getElementById(elementId);
+    const valEl = document.getElementById(valueId);
+    const offset = circumference - (percent / 100) * circumference;
+    el.style.strokeDashoffset = offset;
+    valEl.innerText = Math.round(percent) + "%";
+  }
+
+  const halvingProg = parseFloat(data.progress);
+  const piConv = Math.max(100 - halvingProg * 0.85, 0);
+  const macroRisk = Math.min(halvingProg * 1.1, 100);
+
+  // Apply visual updates
+  setRingProgress('ring-halving', 'val-halving', halvingProg);
+  setRingProgress('ring-pi', 'val-pi', piConv);
+  setRingProgress('ring-risk', 'val-risk', macroRisk);
+
+  const basePrice = 110000;
+  const multiplier = Math.pow(1.8, data.idx - 4);
+  const targetPrice = Math.round((basePrice * multiplier) * (0.4 + 0.6 * (halvingProg / 100)));
+
+  // English Risk Status definitions
+  let riskStatus = "Moderate";
+  let riskColor = "#ffffff";
+  if (halvingProg < 45) {
+    riskStatus = "Low Risk";
+    riskColor = "#00f5d4";
+  } else if (halvingProg >= 45 && halvingProg < 80) {
+    riskStatus = "Moderate";
+    riskColor = "#ffffff";
+  } else if (halvingProg >= 80 && halvingProg < 92) {
+    riskStatus = "High Risk";
+    riskColor = "#ffb11a";
+  } else {
+    riskStatus = "Extreme";
+    riskColor = "#f72585";
+  }
+
+  document.getElementById('target-price-display').innerText = "$" + targetPrice.toLocaleString();
+  document.getElementById('days-until-display').innerText = data.until + " days";
+  
+  const riskDisplay = document.getElementById('risk-status-display');
+  riskDisplay.innerText = riskStatus;
+  riskDisplay.style.color = riskColor;
 window.addEventListener("load",function(){positionTabLine();applyLayout();caApplyLayout();initCashModal();});
 window.addEventListener("resize",applyLayout);
 
