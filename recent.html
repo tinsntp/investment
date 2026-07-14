@@ -7,14 +7,18 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-family: -apple-system, BlinkMacSystemFont, "Gill Sans", Roboto, sans-serif!important;color:#fff;overflow:hidden;margin-top:15px;display:flex;flex-direction:column;padding-bottom:5px}
+html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-family: -apple-system, BlinkMacSystemFont, "Lexend Light", Roboto, sans-serif;color:#fff;overflow:hidden;margin-top:15px;display:flex;flex-direction:column;padding-bottom:5px}
 .tab-bar{display:flex;align-items:stretch;border-bottom:1px solid rgba(255,255,255,0.1);position:relative;flex-shrink:0;padding:0 0vw}
-.tab-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:0.5vw;cursor:pointer;user-select:none;font-size:2.8vw;font-weight:600;color:rgba(255,255,255,0.4);transition:color 0.2s}
+.tab-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:0vw;cursor:pointer;user-select:none;font-size:2.8vw;font-weight:600;color:rgba(255,255,255,0.4);transition:color 0.2s}
 .tab-btn.active { color:#fff; }
 .tab-btn img { width:3.5vw; height:3.5vw; object-fit:contain; opacity:0.4; transition:opacity 0.2s; }
 .tab-btn.active img { opacity:1; }
 .tab-line {position:absolute; bottom:0; height:2.5px; background:#fff; border-radius:2px; transition:left 0.25s ease, width 0.25s ease;}
 #tab-btn-2 { display:flex; }
+.tab-btn .bi {
+  font-size: 1.1rem!important;
+  vertical-align: 0em;
+}
 @media (max-width: 401px) {.tab-btn span {display: none;}.tab-btn.active span {display: inline-block; margin-left: 6px; font-size: 14px; }}
 @media (min-width: 400px) {.tab-btn span {display: none;}.tab-btn.active span {display: inline-block; margin-left: 6px; font-size: 14px; }}
 
@@ -128,6 +132,10 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 
 .ttl{display:flex;align-items:center;gap:1.5vw}
 .recent-badge{font-size:2.4vw;font-weight:700;color:#14b8a6;background:rgba(74,222,128,0.14);border-radius:99px;padding:0.4vw 1.2vw;white-space:nowrap}
+.recent-badge .bi {
+  font-size: 0.8rem!important;
+  vertical-align: 0em;
+}
 @media screen and (max-width:400px){.recent-badge{font-size:3.6vw}}
 
 #slide-1{position:relative}
@@ -358,27 +366,31 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 
 <div class="tab-bar" id="tab-bar">
   <div class="tab-btn active" data-idx="0" id="tab-btn-0">
-    <img src="https://github.com/tinsntp/investment/blob/main/icon/pie-chart-f.png?raw=true" />
+    <i class="bi bi-basket-fill"></i>
+    <!--<img src="https://github.com/tinsntp/investment/blob/main/icon/incomes.png?raw=true" />-->
     <span>Detail</span>
   </div>
   <div class="tab-btn" data-idx="1" id="tab-btn-1">
-    <img src="https://github.com/tinsntp/investment/blob/main/icon/recent-w.png?raw=true" />
+    <i class="bi bi-clock-fill"></i>
+    <!--<img src="https://github.com/tinsntp/investment/blob/main/icon/incomes.png?raw=true" />-->
     <span>Recent</span>
   </div>
   <div class="tab-btn" data-idx="2" id="tab-btn-2">
-    <img src="https://github.com/tinsntp/investment/blob/main/icon/development.png?raw=true" />
+    <i class="bi bi-activity"></i>
+    <!--<img src="https://github.com/tinsntp/investment/blob/main/icon/incomes.png?raw=true" />-->
     <span>Overview</span>
   </div>
   <div class="tab-btn" data-idx="3" id="tab-btn-3">
-    <img src="https://github.com/tinsntp/investment/blob/main/icon/cloud.png?raw=true" />
+    <i class="bi bi-cloud-fill"></i>
     <span>Subscription</span>
   </div>
   <div class="tab-btn" data-idx="4" id="tab-btn-4">
-    <img src="https://github.com/tinsntp/investment/blob/main/icon/bitcoin.png?raw=true" />
+    <i class="bi bi-currency-bitcoin"></i>
+    <!--<img src="https://github.com/tinsntp/investment/blob/main/icon/incomes.png?raw=true" />-->
     <span>BTC</span>
   </div>
   <div class="tab-btn" data-idx="5" id="tab-btn-5">
-    <img src="https://github.com/tinsntp/investment/blob/main/icon/up-and-down.png?raw=true" />
+    <i class="bi bi-arrow-down-up"></i>
     <span>Transaction</span>
   </div>
   <div class="tab-btn" data-idx="6" id="tab-btn-6">
@@ -1828,29 +1840,32 @@ function buildTxRow(item){
   var rawColG = item.rawDetail ? item.rawDetail.trim().toUpperCase() : "";
 
   // 🟢 Now checking the raw column G data before noise cleaning
-  if (rawColG.includes("GIAO DICH THE")&&rawColG.includes("GRAB")) {
-    badgeText = "Card ***4768";
-  } else if (rawColG.includes("GIAO DICH THE")&& !rawColG.includes("GRAB")) {
-    badgeText = "Apple Pay";
-  } else if (!rawColH) {
-    badgeText = "Cash";
-  } else if (rawColG.includes("MOMO")) {
-    badgeText = "Momo";
-  } else if (rawColG.includes("SHOPEEPAY")) {
-    badgeText = "Shopeepay";
-  } else if (rawColE.includes("WITHDRAW")) {
-    badgeText = "***000";
-  } else if (rawColH.includes("*000")||rawColH.includes("*003")||rawColH.includes("*309")) {
-    badgeText = "Transfer";
-  } 
+  if (rawColG.includes("GIAO DICH THE") && rawColG.includes("GRAB")) {
+  badgeText = '<i class="bi bi-credit-card-2-back"></i> ***4768';
+    } else if (rawColG.includes("GIAO DICH THE") && !rawColG.includes("GRAB")) {
+      badgeText = '<i class="bi bi-apple"></i> Pay';
+    } else if (!rawColH) {
+      badgeText = '<i class="bi bi-cash-stack"></i> Cash';
+    } else if (rawColG.includes("MOMO")) {
+      badgeText = '<i class="bi bi-wallet2"></i> Momo';
+    } else if (rawColG.includes("SHOPEEPAY")) {
+      badgeText = '<i class="bi bi-wallet2"></i> Shopeepay';
+    } else if (rawColE.includes("WITHDRAW")) {
+      badgeText = '<i class="bi bi-credit-card-2-back"></i> ***000';
+    } else if (rawColH.includes("*000") || rawColH.includes("*003") || rawColH.includes("*309")) {
+      badgeText = '<i class="bi bi-qr-code-scan"></i> Transfer';
+    } 
 
-  // Append badge element if text exists
-  if (badgeText) {
-    var badgeEl = document.createElement("span");
-    badgeEl.className = "recent-badge";
-    badgeEl.textContent = badgeText;
-    ttl.appendChild(badgeEl);
-  }
+    // Append badge element nếu có text
+    if (badgeText) {
+      var badgeEl = document.createElement("span");
+      badgeEl.className = "recent-badge";
+      
+      // ĐỔI TỪ textContent SANG innerHTML ĐỂ TRÌNH DUYỆT ĐỌC ĐƯỢC THẺ <i>
+      badgeEl.innerHTML = badgeText; 
+      
+      ttl.appendChild(badgeEl);
+    }
   // ── BADGE LOGIC END ──
 
   var dtl=document.createElement("div");dtl.className="dtl";dtl.textContent=item.detail;
