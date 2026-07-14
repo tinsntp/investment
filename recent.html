@@ -88,8 +88,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .budget-spent-row{display:flex;align-items:center;gap:8px}
 .budget-percent{display:inline-flex;align-items:center;justify-content:center;min-width:10px;height:20px;padding:0 10px;border-radius:999px;background:rgba(255,255,255,.10);color:rgba(255,255,255,.85);font-size:11.5px;line-height:1}
 #last-month-marker{position:absolute;top:-40px;transform:translateX(-50%);text-align:center;pointer-events:none}
-#last-month-marker .marker-value{font-size:11px;color:rgba(255,255,255,.65);margin-bottom:2px}
-#last-month-marker .triangle{width:0;height:0;margin:auto;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:7px solid #fff}
+#last-month-marker .marker-value{font-size:11px;color:rgba(255,255,255,.65);margin-bottom:-6px;}
 
 .tx-detail-row{display:grid !important;grid-template-columns:5fr 2fr 2fr 1.6fr;align-items:center;font-size:2.4vw;border-bottom:1px solid rgba(255,255,255,0.03);width:100%;box-sizing:border-box;cursor:pointer;transition:background 0.15s}
 .tx-detail-row:hover{background:rgba(255,255,255,0.04);border-radius:0vw}
@@ -427,7 +426,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
         </div>
       </div>
       <div class="button-container" style="display:flex;justify-content:flex-end;margin-bottom:10px;margin-top:10px">
-        <button class="expand-txt" id="expand-btn">&#9662; Expand All</button>
+        <button class="expand-txt" id="expand-btn" ><i class="bi bi-chevron-down"></i> Expand All</button>
       </div>
       <div id="col-hdr" class="det-col-hdr"></div>
       <div id="det-msg">Loading...</div>
@@ -1316,7 +1315,7 @@ function buildCatRow(item, isSub, gid) {
 
 document.getElementById("expand-btn").addEventListener("click", function() {
   allExpanded = !allExpanded;
-  this.textContent = allExpanded ? "\u25b4 Collapse All" : "\u25be Expand All";
+  this.innerHTML = allExpanded ? '<i class="bi bi-chevron-up"></i> Collapse All' : '<i class="bi bi-chevron-down"></i> Expand All';
   if (allExpanded) {
     document.querySelectorAll(".main-row").forEach(function(r){ r.classList.add("ring-highlighted"); });
   } else {
@@ -1325,7 +1324,7 @@ document.getElementById("expand-btn").addEventListener("click", function() {
   }
   document.querySelectorAll(".sub-row").forEach(function(s){ allExpanded?s.classList.add("visible"):s.classList.remove("visible"); });
   document.querySelectorAll(".main-row").forEach(function(r){ r.dataset.open=allExpanded?"1":"0"; });
-  document.querySelectorAll(".chevron").forEach(function(c){ c.textContent = allExpanded?"\u25be":"\u25b8"; });
+  document.querySelectorAll(".chevron").forEach(function(c){ c.textContent = allExpanded?"":""; });
 });
 
 function buildColHdr() {
@@ -1334,13 +1333,39 @@ function buildColHdr() {
   if (!hdr) return;
   hdr.innerHTML = "";
   hdr.style.fontSize = isMobile ? "3.9vw" : "2.6vw";
-  hdr.style.gridTemplateColumns = isMobile ? "5.2fr 1.6fr 1.6fr" : "5.6fr 1.6fr 1.6fr 1.6fr";
-  var cols = isMobile ? ["☰ Category","# Amount","+/-"] : ["☰ Category","# Amount","# Previous","+/-"];
+  hdr.style.gridTemplateColumns = isMobile ? "5.2fr 1.8fr 1.6fr" : "5.6fr 1.6fr 1.8fr 1.4fr";
+  var cols = isMobile ? ["Category","Amount","Change"] : ["Category","Amount","Previous","Change"];
+
+
   cols.forEach(function(t, i) {
-    var d = document.createElement("div"); d.className = "ch"; d.textContent = t;
-    hdr.appendChild(d);
-  });
+  var d = document.createElement("div"); 
+  d.className = "ch";
+  
+  var iconEl = document.createElement("i");
+  iconEl.style.display = "inline-block";
+  iconEl.style.marginRight = "4px";
+  iconEl.style.marginBottom = "2px";
+  iconEl.style.setProperty("font-size", "13px", "important");
+  // Chỉ định hướng icon trực tiếp theo tên cột chính xác
+  if (t === "Category") {
+    iconEl.className = "bi bi-list";
+  } else if (t === "Amount") {
+    iconEl.className = "bi bi-cash";
+  } else if (t === "Previous") {
+    iconEl.className = "bi bi-calendar4-event";
+  } else if (t === "Change") {
+    iconEl.className = "bi bi-droplet-half";
+    t = "";
+  }
+
+  if (iconEl.className) d.appendChild(iconEl);
+  if (t) d.appendChild(document.createTextNode(t));
+
+  hdr.appendChild(d);
+});
+  
 }
+
 
 /* ══ OVERVIEW TAB ══ */
 var CA_CSV_BI   = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=311369594";
@@ -1780,7 +1805,8 @@ function loadExpense() {
             var markerPercent = Math.min(lastMonthExpense / averageExpense, 1);
             var marker = document.getElementById("last-month-marker");
             marker.style.left = (markerPercent * 100) + "%";
-            marker.innerHTML = '<div class="marker-label">Last month</div>' + '<div class="marker-value">' + fmtAxis(lastMonthExpense) + '</div>' + '<div class="triangle"></div>';
+            marker.innerHTML = '<div class="marker-label">Last month</div>' + '<div class="marker-value">' + fmtAxis(lastMonthExpense) + '</div>' + 
+                   '<i class="bi bi-caret-up Custom-triangle"></i>';
             
       buildColHdr(); applyLayout();
     }).catch(function(err){document.getElementById("det-msg").textContent="Error: "+err.message;});
