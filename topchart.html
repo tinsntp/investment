@@ -4,11 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Total Balance</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  html,body{width:100%;height:100%;background:#191919;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;color:#fff}
+  html,body{width:100%;height:100%;background:#191919;font-family:-apple-system,BlinkMacSystemFont,"Lexend",sans-serif;color:#fff}
 .card-top{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
-.today-jp{font-size:12px;font-weight:600;color:rgba(255,255,255,.45);text-align:right;margin:0 50px -5px}
+.today-jp{font-size:12px;font-weight:500;color:rgba(255,255,255,.45);text-align:right;margin:0 50px -5px}
 @media (min-width:401px){.card-top{flex-direction:row;align-items:center;justify-content:space-between}
 .today-jp{flex:0 0 auto;margin-right:12px;white-space:nowrap;margin:-3px 0 5px}
 .range-selector{margin-left:auto}
@@ -19,8 +24,8 @@
 .range-btn{border:none;background:transparent;cursor:pointer;flex:0 0 auto;font-size:12.5px;font-weight:600;color:rgba(255,255,255,0.45);padding:5px 11px;border-radius:7px;transition:background 0.15s,color 0.15s}
 .range-btn:hover{color:rgba(255,255,255,0.75)}
 .range-btn.active{background:rgba(255,255,255,0.1);color:#fff}
-.card-balance,.card-balance-usd{font-family:monospace}
-.card-balance{font-size:36px;font-weight:700;color:#fff;letter-spacing:-0.02em;margin-bottom:5px;line-height:1}
+.card-balance,.card-balance-usd{font-family:"JetBrains Mono";}
+.card-balance{font-size:39px;font-weight:600;color:#fff;letter-spacing:-0.02em;margin-bottom:5px;line-height:1}
 .card-balance .cents{color:rgba(255,255,255,0.4);font-weight:700}
 .balance-group{display:inline-block}
 .card-balance-usd{width:auto;text-align:left;padding-right:45px;font-size:16px;margin-bottom:5px;color:rgba(255,255,255,.45)}
@@ -34,7 +39,7 @@
 .card-sub-text .amt-hl{font-weight:700}
 .card-sub-text .amt-hl.pos{color:#2dd4bf}
 .card-sub-text .amt-hl.neg{color:#f87171}
-.pill{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;font-weight:700;padding:6px 12px;border-radius:99px;white-space:nowrap;flex-shrink:0}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;font-weight:400;padding:6px 12px;border-radius:99px;white-space:nowrap;flex-shrink:0}
 .pill.pos{background:rgba(45,212,191,0.14);color:#2dd4bf}
 .pill.neg{background:rgba(248,113,113,0.14);color:#f87171}
 .chart-wrap{position:relative;width:100%;cursor:crosshair}
@@ -44,13 +49,13 @@
 .tooltip .arrow{color:#2dd4bf;margin-right:2px}
 .tooltip .arrow.neg{color:#f87171}
 .tooltip .tt-month{font-size:10.5px;font-weight:600;color:rgba(255,255,255,0.45);margin-bottom:2px}
-.tooltip .tt-delta{font-size:11px;font-weight:600;margin-top:2px}
+.tooltip .tt-delta{font-size:11px;font-weight:500;margin-top:2px}
 .tooltip .tt-delta.pos{color:#2dd4bf}
 .tooltip .tt-delta.neg{color:#f87171}
 #loading-msg{font-size:13px;color:rgba(255,255,255,0.4);text-align:center;padding:40px 0}
 .refresh-row{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:10px}
-.countdown-text{font-size:11px;color:rgba(255,255,255,0.35);white-space:nowrap}
-.last-updated{font-size:11px;color:rgba(255,255,255,0.35)}
+.countdown-text{font-size:11px;color:rgba(255,255,255,0.35);white-space:nowrap;font-weight:300;}
+.last-updated{font-size:11px;color:rgba(255,255,255,0.35);font-weight:300;}
 .refresh-btn{border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.6);font-size:11px;font-weight:600;padding:4px 5px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:background 0.15s,color 0.15s;margin-right:5px}
 .refresh-btn:hover{background:rgba(255,255,255,0.09);color:#fff}
 .refresh-btn.spinning svg{animation:refreshSpin 0.6s linear}
