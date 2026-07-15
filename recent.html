@@ -411,7 +411,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 @media (max-width:400px){table {font-size:3.6vw;}  th, td { padding:4px 4px;}}
 
 /* BTC Risk Monitor */
-.btc-widget-container{background-color:#191919;color:#ffffff;font-family:-apple-system,BlinkMacSystemFont,"Lexend",Roboto,Helvetica,Arial,sans-serif;padding:16px 12px;width:100%;margin:0 auto;box-sizing:border-box;border-radius:16px}
+.btc-widget-container{background-color:#191919;color:#ffffff;font-family:Lexend!important;padding:16px 12px;width:100%;margin:0 auto;box-sizing:border-box;border-radius:16px}
 .widget-title{font-size:14px;font-weight:500;margin-top:0;margin-bottom:16px;color:#8c92a0;letter-spacing:0.3px;text-align:center}
 .donuts-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:8px}
 .donut-item{display:flex;flex-direction:column;align-items:center;flex:1;min-width:0}
@@ -419,35 +419,109 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 .progress-ring{width:100%;height:100%;transform:rotate(-90deg);transform-origin:50% 50%}
 .progress-ring__bar{transition:stroke-dashoffset 0.5s ease}
 .circle-value{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:16px;font-weight:600;font-family:monospace}
-.circle-label{font-size:14px;color:#8c92a0;margin-top:6px;font-weight:400;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%}
+.circle-label{font-size:13px;color:#8c92a0;margin-top:6px;font-family:Lexend!important;font-weight:400;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%}
 .widget-footer{display:flex;justify-content:space-between;align-items:center;background-color:#0b0c0e;border:1px solid #141619;padding:10px 8px;border-radius:12px}
 .footer-metric{display:flex;flex-direction:column;align-items:center;flex:1;text-align:center;min-width:0}
-.footer-metric .lbl{font-size:10px;color:#626875;text-transform:uppercase;font-weight:500;margin-bottom:2px;letter-spacing:0.1px;white-space:nowrap}
-.footer-metric .val{font-size:15px;font-weight:700;transition:color 0.3s;white-space:nowrap}
+.footer-metric .lbl{font-size:11px;color:#626875;text-transform:uppercase;font-weight:500;margin-bottom:2px;letter-spacing:0.1px;white-space:nowrap}
+.footer-metric .val{font-size:15px;font-family:"JetBrains Mono"!important;font-weight:700;transition:color 0.3s;white-space:nowrap}
 .widget-divider{width:1px;height:20px;background-color:#1c1e22;margin:0 4px}
-@media (max-width:340px){.circle-wrapper{width:70px;height:70px}
-
+@media (max-width:400px){.circle-wrapper{width:70px;height:70px}
 .circle-value{font-size:14px}
-.circle-label{font-size:11px}
-.footer-metric .val{font-size:13px}
-}.cycle-timeline-container.cyber-theme{width:100%;background-color:#0b0e14;padding:16px 12px;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Lexend",Roboto,sans-serif;border-radius:14px;margin-top:30px}
+.circle-label{font-size:11.5px;}
+.footer-metric .val{font-size:13px}}
+
+.cycle-timeline-container.cyber-theme{width:100%;background-color:#0b0e14;padding:16px 12px;box-sizing:border-box;font-family:Lexend!important;border-radius:14px;margin-top:30px}
 .timeline-headers{display:flex;justify-content:space-between;margin-bottom:10px}
-.halving-label{font-size:11px;font-weight:600;color:#fafafa;letter-spacing:0.3px}
-.timeline-track{position:relative;display:flex;width:100%;height:130px;border-radius:4px;overflow:hidden;box-sizing:border-box;background-color:#0b0e14}
+.halving-label{font-size:12px;font-weight:600;color:#fafafa;letter-spacing:0.3px}
+.timeline-track {
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: 60px;            /* Or whatever your height is */
+
+  
+  /* REMOVE overflow: hidden; so the text bubble can display below */
+  overflow: visible;       
+  
+  /* Add margin-bottom so the text bubble doesn't overlap elements below it */
+  margin-bottom: 30px;     
+}
+
+.phase-bull {
+  border-top-left-radius: 5vw;
+  border-bottom-left-radius: 5vw;
+}
+
+/* Round the right side of the very last phase */
+.phase-pre {
+  border-top-right-radius: 5vw;
+  border-bottom-right-radius: 5vw;
+}
 .phase{height:100%;display:flex;align-items:center;justify-content:center;position:relative;border-right:1px solid rgba(0,245,212,0.15)}
 .phase:last-child{border-right:none}
 .phase-name{font-size:11px;font-weight:300;color:#ffffff;text-transform:uppercase;text-shadow:0px 2px 4px rgba(0,0,0,0.8);text-align:center;white-space:nowrap}
 .phase-name{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#ffffff;text-shadow:0px 1px 3px rgba(0,0,0,0.5)}
-.phase-name i.bi{font-size:20px!important;line-height:1;opacity:0.95;filter:drop-shadow(0px 2px 4px rgba(0,0,0,0.4))}
+.phase-name i.bi{font-size:17px!important;line-height:1;opacity:0.95;filter:drop-shadow(0px 2px 4px rgba(0,0,0,0.4))}
 .phase-bull{background:linear-gradient(180deg,#008080 0%,#061f1d 100%)}
 .phase-bear{background:linear-gradient(180deg,#0f172a 0%,#d81b60 100%)}
 .phase-accum{background:linear-gradient(180deg,#cfd8dc 0%,#07241f 100%)}
 .phase-pre{background:linear-gradient(180deg,#0f3642 0%,#5bc0be 100%)}
-.progress-indicator{position:absolute;top:0;bottom:0;left:var(--progress);transform:translate(-50%,0);display:flex;flex-direction:column;align-items:center;pointer-events:none;z-index:10}
-.indicator-line{position:absolute;top:0;bottom:0;width:2px;border-left:2px dashed #f1f5f9;opacity:0.85}
-.indicator-dot{position:absolute;top:75%;transform:translateY(-50%);width:14px;height:14px;border-radius:50%;background-color:#ff007f;border:2px solid #ffffff;box-shadow:0 0 12px #ff007f,0 0 4px #ff007f}
-.indicator-text{position:absolute;top:85%;font-size:10px;font-weight:800;color:#0e2e2b;white-space:nowrap;letter-spacing:0.5px;background-color:#f1f5f9;padding:2px 5px;border-radius:10px}
-.timeline-axis{display:flex;margin-top:8px;padding:0 2px}
+.progress-indicator {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  /* Do NOT set 'left' here; let the inline HTML style (e.g., style="left: 56%") handle it dynamically */
+  
+  width: 0;                    /* Setting width to 0 ensures everything inside centers perfectly */
+  transform: translateX(-50%); /* Centers the entire assembly on the left% line */
+  display: flex;
+  flex-direction: column;
+  align-items: center;         /* Horizontally aligns the line, dot, and text bubble */
+  z-index: 10;
+}
+
+/* The dashed vertical line */
+.indicator-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-left: 2px dashed #f1f5f9;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+/* The glowing pink dot */
+.indicator-dot {
+  position: absolute;
+  top: 100%;
+  transform: translateY(-50%); /* Only translate Y, flex align-items handles X centering */
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #ff007f;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 12px #ff007f, 0 0 4px #ff007f;
+  z-index: 2;
+}
+
+/* The Badge (Moved outside and below the track) */
+.indicator-text {
+  position: absolute;
+  top: calc(100% + 8px); 
+  /* Only let flex center it; do not set left: 50% or transform: translateX here */
+  
+  font-size: 10px;
+  font-weight: 800;margin-top:2px;
+  color: #0e2e2b; 
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+  background-color: #f1f5f9; 
+  padding: 2px 4px;
+  border-radius: 20px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+  z-index: 3;
+}.timeline-axis{display:flex;margin-top:8px;padding:0 2px}
 .timeline-axis span{font-size:11px;font-family:monospace;color:#475569;font-weight:400}
 .percent-axis{justify-content:space-between}
 .date-axis{margin-top:6px;border-top:1px dashed #1e293b;padding-top:6px;display:flex;justify-content:space-between;width:100%;font-weight:300;position:relative}
@@ -458,7 +532,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 .date-axis span:nth-child(4){text-align:center;transform:translateX(-50%)}
 .date-axis span:nth-child(5){text-align:right;transform:translateX(-100%);width:0}
 .timeline-footer{display:flex;justify-content:flex-end;margin-top:12px}
-.peak-prediction{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#00e5ff}
+.peak-prediction{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#00e5ff;margin-bottom:10px;}
 @media (max-width:350px){.timeline-track{height:115px}
 .phase-name{font-size:10px;letter-spacing:0px}
 .indicator-text{font-size:9px;padding:2px 4px}
@@ -778,10 +852,10 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
               <div class="phase phase-pre" style="flex: 25;"><span class="phase-name"><i class="bi bi-airplane-engines"></i>Pre-Halving</span></div>
 
               <!-- Tracker Pin Assembly (Dark Contrast for White Theme) -->
-              <div class="progress-indicator" id="progress-pin">
+              <div class="progress-indicator" id="progress-pin" style="left: 56.0%;">
                 <div class="indicator-line"></div>
                 <div class="indicator-dot"></div>
-                <div class="indicator-text" id="progress-text-label">0.0%</div>
+                <div class="indicator-text" id="progress-text-label">YOU ARE HERE: 56.0%</div>
               </div>
             </div>
 
@@ -797,6 +871,51 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
             <div class="timeline-footer">
               <span class="peak-prediction" id="lbl-peak-prediction">Expected Peak: --</span>
             </div>
+
+            <!-- TradingView Widget BEGIN -->
+<div class="tradingview-widget-container" style="height:100%;width:100%;">
+  <div class="tradingview-widget-container__widget" style="height:calc(100% - 32px);width:100%;"></div>
+  <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/symbols/BTCUSD/?exchange=CRYPTO" rel="noopener nofollow" target="_blank"><span class="blue-text">Bitcoin price</span></a><span class="trademark"> by TradingView</span></div>
+  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+  {
+  "allow_symbol_change": true,
+  "calendar": false,
+  "details": false,
+  "hide_side_toolbar": true,
+  "hide_top_toolbar": true,
+  "hide_legend": false,
+  "hide_volume": true,
+  "hotlist": false,
+  "interval": "W",
+  "locale": "en",
+  "save_image": true,
+  "style": "2",
+  "symbol": "CRYPTO:BTCUSD",
+  "theme": "dark",
+  "timezone": "Etc/UTC",
+  "backgroundColor": false,
+  "gridColor": "rgba(242, 242, 242, 0)",
+  "watchlist": [],
+  "withdateranges": false,
+  "compareSymbols": [],
+"studies": [
+  {
+    "id": "MASimple@tv-basicstudies",
+    "inputs": {
+      "length": 111
+    }
+  },
+    {
+      "id": "MASimple@tv-basicstudies",
+      "inputs": { "length": 350 }
+    }
+],
+
+  "autosize": true
+}
+  </script>
+</div>
+<!-- TradingView Widget END -->
           </div>
           </div>
         </div>
