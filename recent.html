@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
 <style>
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-family: "Lexend", Roboto, sans-serif;font-weight:300!important;color:#fff;overflow:hidden;margin-top:15px;display:flex;flex-direction:column;padding-bottom:5px}
@@ -27,60 +28,21 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 @media (min-width: 400px) {.tab-btn span {display: none;}.tab-btn.active span {display: inline-block; margin-left: 6px; font-size: 14px; }}
 
 /* ── Slides ── */
-.slides-outer { flex:1; overflow:hidden; position:relative; }
-.slides-wrap { display:flex; width:500%; height:100%; transition:transform 0.3s cubic-bezier(0.4,0,0.2,1); }
-.slide { width:20%; height:100%; overflow-y:auto; overflow-x:hidden; padding:0vw; flex-shrink:0; }
-.sub-slides-outer {
-  width: 100%;
-  overflow: hidden;
-}
-.sub-slides-wrap {
-  display: flex;
-  width: 200%; 
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.sub-slide {
-  width: 50%; 
-  flex-shrink: 0;
-}
-/* Only targets the internal BTC sub-tab bar wrapper */
-.sub-tab-bar {
-  display: flex !important; /* Forces row layout */
-  justify-content: space-around;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-/* Specific layout laws for the inner buttons to protect text + icons */
-.sub-tab-btn {
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  gap: 6px !important;    /* Clean gap between bootstrap icon and span text */
-  
-  /* CRITICAL: Block the system from dropping text or shrinking it to 0px */
-  flex-shrink: 0 !important;
-  white-space: nowrap !important;
-}
-
-/* Ensure children elements never get squeezed down */
-.sub-tab-btn i,
-.sub-tab-btn span {
-  display: inline-block !important;
-  flex-shrink: 0 !important;
-}
-
-/* Micro tweaks for narrow iPhone screens (e.g., iPhone SE) */
-@media (max-width: 400px) {
-  .sub-tab-btn {
-    font-size: 12px !important; /* Scale down text slightly instead of hiding it */
-    padding: 3px 3px !important;
-    gap: 4px !important;
-  }
-}
-
-/* ══ BTC STYLES ══ */
-.tradingview-widget-container{height:340px!important;}
+.slides-outer{flex:1;overflow:hidden;position:relative}
+.slides-wrap{display:flex;width:500%;height:100%;transition:transform 0.3s cubic-bezier(0.4,0,0.2,1)}
+.slide{width:20%;height:100%;overflow-y:auto;overflow-x:hidden;padding:0vw;flex-shrink:0}
+.sub-slides-outer{width:100%;overflow:hidden}
+.sub-slides-wrap{display:flex;width:200%;transition:transform 0.3s cubic-bezier(0.4,0,0.2,1)}
+.sub-slide{width:50%;flex-shrink:0}
+.sub-tab-bar{display:flex !important;justify-content:space-around;width:100%;box-sizing:border-box}
+.sub-tab-btn{display:flex !important;align-items:center;justify-content:center;gap:6px !important;flex-shrink:0 !important;white-space:nowrap !important}
+.sub-tab-btn i,.sub-tab-btn span{display:inline-block !important;flex-shrink:0 !important}
+@media (max-width:400px){.sub-tab-btn{font-size:12px !important;padding:3px 3px !important;gap:4px !important}
+}.tradingview-widget-container{width:100% !important;position:relative !important;overflow:hidden !important;border:none !important;background-color:rgb(25,25,25) !important}
+.tradingview-widget-container__widget{width:100% !important;position:relative !important;overflow:hidden !important}
+.tradingview-widget-container iframe{position:absolute !important;top:-1px !important;left:-1px !important;width:calc(100% + 2px) !important;border:none !important;outline:none !important;box-shadow:none !important}
+#chart-macro{height:200px !important}
+#chart-micro{height:340px !important}
 
 /* ══ DETAIL STYLES ══ */
 #rings-wrap{display:flex;flex-wrap:wrap;gap:1.5vw;justify-content:space-around;margin-bottom:1.5vw}
@@ -433,30 +395,9 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 .cycle-timeline-container.cyber-theme{width:100%;background-color:#0b0e14;padding:16px 12px;box-sizing:border-box;font-family:Lexend!important;border-radius:14px;margin-top:30px}
 .timeline-headers{display:flex;justify-content:space-between;margin-bottom:10px}
 .halving-label{font-size:12px;font-weight:600;color:#fafafa;letter-spacing:0.3px}
-.timeline-track {
-  display: flex;
-  position: relative;
-  width: 100%;
-  height: 60px;            /* Or whatever your height is */
-
-  
-  /* REMOVE overflow: hidden; so the text bubble can display below */
-  overflow: visible;       
-  
-  /* Add margin-bottom so the text bubble doesn't overlap elements below it */
-  margin-bottom: 30px;     
-}
-
-.phase-bull {
-  border-top-left-radius: 5vw;
-  border-bottom-left-radius: 5vw;
-}
-
-/* Round the right side of the very last phase */
-.phase-pre {
-  border-top-right-radius: 5vw;
-  border-bottom-right-radius: 5vw;
-}
+.timeline-track{display:flex;position:relative;width:100%;height:60px;overflow:visible;margin-bottom:30px}
+.phase-bull{border-top-left-radius:5vw;border-bottom-left-radius:5vw}
+.phase-pre{border-top-right-radius:5vw;border-bottom-right-radius:5vw}
 .phase{height:100%;display:flex;align-items:center;justify-content:center;position:relative;border-right:1px solid rgba(0,245,212,0.15)}
 .phase:last-child{border-right:none}
 .phase-name{font-size:11px;font-weight:300;color:#ffffff;text-transform:uppercase;text-shadow:0px 2px 4px rgba(0,0,0,0.8);text-align:center;white-space:nowrap}
@@ -466,62 +407,11 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 .phase-bear{background:linear-gradient(180deg,#0f172a 0%,#d81b60 100%)}
 .phase-accum{background:linear-gradient(180deg,#cfd8dc 0%,#07241f 100%)}
 .phase-pre{background:linear-gradient(180deg,#0f3642 0%,#5bc0be 100%)}
-.progress-indicator {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  /* Do NOT set 'left' here; let the inline HTML style (e.g., style="left: 56%") handle it dynamically */
-  
-  width: 0;                    /* Setting width to 0 ensures everything inside centers perfectly */
-  transform: translateX(-50%); /* Centers the entire assembly on the left% line */
-  display: flex;
-  flex-direction: column;
-  align-items: center;         /* Horizontally aligns the line, dot, and text bubble */
-  z-index: 10;
-}
-
-/* The dashed vertical line */
-.indicator-line {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 0;
-  border-left: 2px dashed #f1f5f9;
-  opacity: 0.85;
-  pointer-events: none;
-}
-
-/* The glowing pink dot */
-.indicator-dot {
-  position: absolute;
-  top: 100%;
-  transform: translateY(-50%); /* Only translate Y, flex align-items handles X centering */
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background-color: #ff007f;
-  border: 2px solid #ffffff;
-  box-shadow: 0 0 12px #ff007f, 0 0 4px #ff007f;
-  z-index: 2;
-}
-
-/* The Badge (Moved outside and below the track) */
-.indicator-text {
-  position: absolute;
-  top: calc(100% + 8px); 
-  /* Only let flex center it; do not set left: 50% or transform: translateX here */
-  
-  font-size: 10px;
-  font-weight: 800;margin-top:2px;
-  color: #0e2e2b; 
-  white-space: nowrap;
-  letter-spacing: 0.5px;
-  background-color: #f1f5f9; 
-  padding: 2px 4px;
-  border-radius: 20px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
-  z-index: 3;
-}.timeline-axis{display:flex;margin-top:8px;padding:0 2px}
+.progress-indicator{position:absolute;top:0;bottom:0;width:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;z-index:10}
+.indicator-line{position:absolute;top:0;bottom:0;width:0;border-left:2px dashed #f1f5f9;opacity:0.85;pointer-events:none}
+.indicator-dot{position:absolute;top:100%;transform:translateY(-50%);width:14px;height:14px;border-radius:50%;background-color:#ff007f;border:2px solid #ffffff;box-shadow:0 0 12px #ff007f,0 0 4px #ff007f;z-index:2}
+.indicator-text{position:absolute;top:calc(100% + 8px);font-size:10px;font-weight:800;margin-top:2px;color:#0e2e2b;white-space:nowrap;letter-spacing:0.5px;background-color:#f1f5f9;padding:2px 4px;border-radius:20px;box-shadow:0px 4px 10px rgba(0,0,0,0.4);z-index:3}
+.timeline-axis{display:flex;margin-top:8px;padding:0 2px}
 .timeline-axis span{font-size:11px;font-family:monospace;color:#475569;font-weight:400}
 .percent-axis{justify-content:space-between}
 .date-axis{margin-top:6px;border-top:1px dashed #1e293b;padding-top:6px;display:flex;justify-content:space-between;width:100%;font-weight:300;position:relative}
@@ -532,8 +422,8 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 .date-axis span:nth-child(4){text-align:center;transform:translateX(-50%)}
 .date-axis span:nth-child(5){text-align:right;transform:translateX(-100%);width:0}
 .timeline-footer{display:flex;justify-content:flex-end;margin-top:12px}
-.peak-prediction{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#00e5ff;margin-bottom:10px;}
-@media (max-width:350px){.timeline-track{height:115px}
+.peak-prediction{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#00e5ff;margin-bottom:10px}
+@media (max-width:400px){.timeline-track{height:60px}
 .phase-name{font-size:10px;letter-spacing:0px}
 .indicator-text{font-size:9px;padding:2px 4px}
 .date-axis span{font-size:9px}
@@ -541,7 +431,22 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 </style>
 </head>
 <body>
-
+<svg width="0" height="0">
+  <defs>
+    <linearGradient id="grad-halving" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00f5d4" />
+      <stop offset="100%" stop-color="#0088ff" />
+    </linearGradient>
+    <linearGradient id="grad-pi" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffb11a" />
+      <stop offset="100%" stop-color="#ff6a00" />
+    </linearGradient>
+    <linearGradient id="grad-risk" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f72585" />
+      <stop offset="100%" stop-color="#7209b7" />
+    </linearGradient>
+  </defs>
+</svg>
 <div class="tab-bar" id="tab-bar">
   <div class="tab-btn active" data-idx="0" id="tab-btn-0">
     <i class="bi bi-basket-fill"></i>
@@ -708,7 +613,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
     <!-- BTC SLIDE -->
     <div class="slide" id="slide-4" data-idx="4">
       <!-- TradingView Widget BEGIN -->
-      <div class="tradingview-widget-container" style="width: 100%; height: 340px; background: transparent; overflow: hidden;">
+      <div class="tradingview-widget-container" id="chart-micro" style="width: 100%; background: transparent; overflow: hidden;">
         <iframe 
           src="https://s.tradingview.com/embed-widget/symbol-overview/?locale=en#%7B%22lineWidth%22%3A2%2C%22lineType%22%3A0%2C%22chartType%22%3A%22area%22%2C%22fontColor%22%3A%22rgb(106%2C%20109%2C%20120)%22%2C%22gridLineColor%22%3A%22rgba(242%2C%20242%2C%20242%2C%200)%22%2C%22volumeUpColor%22%3A%22rgba(34%2C%20171%2C%20148%2C%200.5)%22%2C%22volumeDownColor%22%3A%22rgba(247%2C%2082%2C%2095%2C%200.5)%22%2C%22backgroundColor%22%3A%22rgba(0%2C%200%2C%200%2C%200)%22%2C%22widgetFontColor%22%3A%22%23DBDBDB%22%2C%22upColor%22%3A%22%2322ab94%22%2C%22downColor%22%3A%22%23f7525f%22%2C%22borderUpColor%22%3A%22%2322ab94%22%2C%22borderDownColor%22%3A%22%23f7525f%22%2C%22wickUpColor%22%3A%22%2322ab94%22%2C%22wickDownColor%22%3A%22%23f7525f%22%2C%22colorTheme%22%3A%22dark%22%2C%22isTransparent%22%3Atrue%2C%22locale%22%3A%22en%22%2C%22chartOnly%22%3Afalse%2C%22scalePosition%22%3A%22right%22%2C%22scaleMode%22%3A%22Normal%22%2C%22fontFamily%22%3A%22-apple-system%2C%20BlinkMacSystemFont%2C%20Trebuchet%20MS%2C%20Roboto%2C%20Ubuntu%2C%20sans-serif%22%2C%22valuesTracking%22%3A%221%22%2C%22changeMode%22%3A%22price-and-percent%22%2C%22symbols%22%3A%5B%5B%22Bitcoin%22%2C%22COINBASE%3ABTCUSD%7C1M%22%5D%2C%5B%22Gold%22%2C%22OANDA%3AXAUUSD%7C1D%22%5D%2C%5B%22DXY%22%2C%22CAPITALCOM%3ADXY%7C1Y%22%5D%5D%2C%22dateRanges%22%3A%5B%221d%7C1%22%2C%221m%7C30%22%2C%223m%7C60%22%2C%2212m%7C1D%22%2C%2260m%7C1W%22%2C%22all%7C1M%22%5D%2C%22fontSize%22%3A%2210%22%2C%22headerFontSize%22%3A%22medium%22%2C%22autosize%22%3Afalse%2C%22width%22%3A%22100%25%22%2C%22height%22%3A%22310%22%2C%22noTimeScale%22%3Afalse%2C%22hideDateRanges%22%3Afalse%2C%22hideMarketStatus%22%3Afalse%2C%22hideSymbolLogo%22%3Afalse%7D" 
           style="width: 100%; height: 310px; border: none; margin: 0; padding: 0; display: block; background: transparent;" 
@@ -785,7 +690,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
                   <div class="circle-wrapper">
                     <svg class="progress-ring" viewBox="0 0 80 80">
                       <circle class="progress-ring__bg" stroke="#1c1e22" stroke-width="9" fill="transparent" r="31" cx="40" cy="40"/>
-                      <circle id="ring-halving" class="progress-ring__bar" stroke="#00f5d4" stroke-width="9" stroke-linecap="round" fill="transparent" r="31" cx="40" cy="40" stroke-dasharray="194.78" stroke-dashoffset="194.78"/>
+                      <circle id="ring-halving" class="progress-ring__bar" stroke="url(#grad-halving)" stroke-width="9" stroke-linecap="round" fill="transparent" r="31" cx="40" cy="40" stroke-dasharray="194.78" stroke-dashoffset="194.78" transform="rotate(-90 40 40)"/>
                     </svg>
                     <div class="circle-value" id="val-halving">0%</div>
                   </div>
@@ -797,11 +702,11 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
                   <div class="circle-wrapper">
                     <svg class="progress-ring" viewBox="0 0 80 80">
                       <circle class="progress-ring__bg" stroke="#1c1e22" stroke-width="9" fill="transparent" r="31" cx="40" cy="40"/>
-                      <circle id="ring-pi" class="progress-ring__bar" stroke="#ffb11a" stroke-width="9" stroke-linecap="round" fill="transparent" r="31" cx="40" cy="40" stroke-dasharray="194.78" stroke-dashoffset="194.78"/>
+                      <circle id="ring-pi" class="progress-ring__bar" stroke="url(#grad-pi)" stroke-width="9" stroke-linecap="round" fill="transparent" r="31" cx="40" cy="40" stroke-dasharray="194.78" stroke-dashoffset="194.78" transform="rotate(-90 40 40)"/>
                     </svg>
                     <div class="circle-value" id="val-pi">0%</div>
                   </div>
-                  <div class="circle-label">MA Conv.</div>
+                  <div class="circle-label">Pi MA Conv.</div>
                 </div>
 
                 <!-- Ring 3: Macro Risk Level -->
@@ -809,7 +714,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
                   <div class="circle-wrapper">
                     <svg class="progress-ring" viewBox="0 0 80 80">
                       <circle class="progress-ring__bg" stroke="#1c1e22" stroke-width="9" fill="transparent" r="31" cx="40" cy="40"/>
-                      <circle id="ring-risk" class="progress-ring__bar" stroke="#f72585" stroke-width="9" stroke-linecap="round" fill="transparent" r="31" cx="40" cy="40" stroke-dasharray="194.78" stroke-dashoffset="194.78"/>
+                      <circle id="ring-risk" class="progress-ring__bar" stroke="url(#grad-risk)" stroke-width="9" stroke-linecap="round" fill="transparent" r="31" cx="40" cy="40" stroke-dasharray="194.78" stroke-dashoffset="194.78" transform="rotate(-90 40 40)"/>
                     </svg>
                     <div class="circle-value" id="val-risk">0%</div>
                   </div>
@@ -873,8 +778,8 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
             </div>
 
             <!-- TradingView Widget BEGIN -->
-            <div class="tradingview-widget-container" style="height:340px!important;outline: none;border: 0px solid transparent!important;width:100%">
-              <div class="tradingview-widget-container__widget" style="outline: none;border: 0px solid transparent!important;height:calc(100% - 32px);width:100%"></div>
+            <div class="tradingview-widget-container" id="chart-macro" style="width:100%">
+              <div class="tradingview-widget-container__widget" style="height:calc(100% - 32px);width:100%"></div>
               <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/symbols/BTCUSD/?exchange=CRYPTO" rel="noopener nofollow" target="_blank"><span class="blue-text"></span></a><span class="trademark"> </span></div>
               <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
               {
@@ -883,7 +788,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
               "details": false,
               "hide_side_toolbar": true,
               "hide_top_toolbar": true,
-              "hide_legend": true,
+              "hide_legend": false,
               "hide_volume": true,
               "hotlist": false,
               "interval": "D",
@@ -894,7 +799,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
               "theme": "dark",
               "timezone": "Etc/UTC",
               "backgroundColor": "rgba(25, 25, 25, 1)",
-              "gridColor": "rgba(242, 242, 242, 0)",
+              "gridColor": "rgba(242, 242, 242, 0)","isTransparent": true,
               "watchlist": [],
               "withdateranges": false,
               "compareSymbols": [],
@@ -3784,14 +3689,46 @@ function initFullyAutomatedTimeline() {
   document.getElementById('lbl-end-halving').innerText = `Halving ${currentCycleNumber + 1} (${formatHeaderDate(end)})`;
 
   // 7. Auto-calculate Expected Peak Target Window (Typically 12-18 months post-halving)
-  const peakStart = new Date(start.getTime());
-  peakStart.setMonth(peakStart.getMonth() + 12);
-  const peakEnd = new Date(start.getTime());
-  peakEnd.setMonth(peakEnd.getMonth() + 18);
-  
-  const peakStrStart = peakStart.toLocaleString('en-US', { month: 'short' });
-  const peakStrEnd = peakEnd.toLocaleString('en-US', { month: 'short', year: 'numeric' });
-  document.getElementById('lbl-peak-prediction').innerText = `Expected Peak: ${peakStrStart}-${peakStrEnd}`;
+  // 1. Establish the anchor: Bitcoin Genesis block (Jan 3, 2009)
+const lastHalving = new Date('2024-04-20T00:00:00Z');
+const cycleLengthMs = 4 * 365.25 * 24 * 60 * 60 * 1000; // Accurate 4-year cycle
+
+const today = new Date();
+
+// 2. Determine which cycle we are in
+let cycleStart = new Date(lastHalving.getTime());
+
+// If today is past the peak of the current cycle, we automatically look to the next one
+// Peak is defined as 18 months after halving
+let peakEnd = new Date(cycleStart.getTime());
+peakEnd.setMonth(peakEnd.getMonth() + 18);
+
+if (today > peakEnd) {
+    cycleStart = new Date(cycleStart.getTime() + cycleLengthMs);
+}
+
+// 3. Project the peak window based on the active cycle
+let peakStart = new Date(cycleStart.getTime());
+peakStart.setMonth(peakStart.getMonth() + 12); // Start of peak window
+
+let peakEndNew = new Date(cycleStart.getTime());
+peakEndNew.setMonth(peakEndNew.getMonth() + 18); // End of peak window
+
+// 4. Format
+const formatMonth = (date) => date.toLocaleString('en-US', { month: 'short' });
+const formatYear = (date) => date.toLocaleString('en-US', { year: 'numeric' });
+
+let displayString = "";
+
+// Check if the peak window starts and ends in the same year
+if (peakStart.getFullYear() === peakEndNew.getFullYear()) {
+  displayString = `${formatMonth(peakStart)}-${formatMonth(peakEndNew)} ${formatYear(peakEndNew)}`;
+} else {
+  // Fallback case just in case the window crosses a year boundary (e.g., Dec 2028 - Jun 2029)
+  displayString = `${formatMonth(peakStart)} ${formatYear(peakStart)} - ${formatMonth(peakEndNew)} ${formatYear(peakEndNew)}`;
+}
+
+document.getElementById('lbl-peak-prediction').innerText = `Expected Peak: ${displayString}`;
 
   // 8. Rebuild the Dynamic X-Axis Date Intervals grid (0%, 25%, 50%, 75%, 100%)
   const dateAxisContainer = document.getElementById('dynamic-date-axis');
