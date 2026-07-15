@@ -375,7 +375,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 /* BTC Risk Monitor */
 .btc-widget-container{background-color:#191919;color:#ffffff;font-family:Lexend!important;padding:16px 12px;width:100%;margin:0 auto;box-sizing:border-box;border-radius:16px}
 .widget-title{font-size:14px;font-weight:500;margin-top:0;margin-bottom:16px;color:#8c92a0;letter-spacing:0.3px;text-align:center}
-.donuts-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:8px}
+.donuts-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px}
 .donut-item{display:flex;flex-direction:column;align-items:center;flex:1;min-width:0}
 .circle-wrapper{position:relative;width:80px;height:80px}
 .progress-ring{width:100%;height:100%;transform:rotate(-90deg);transform-origin:50% 50%}
@@ -638,7 +638,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
         
         <div class="tab-btn sub-tab-btn" data-sub-idx="1" id="tab-btn-11">
           <i class="bi bi-exclamation-triangle"></i>
-          <span>Monitor</span>
+          <span>Indicators</span>
         </div>
 
       </div>
@@ -706,7 +706,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
                     </svg>
                     <div class="circle-value" id="val-pi">0%</div>
                   </div>
-                  <div class="circle-label">Pi MA Conv.</div>
+                  <div class="circle-label">Pi Cycle Top</div>
                 </div>
 
                 <!-- Ring 3: Macro Risk Level -->
@@ -718,14 +718,14 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
                     </svg>
                     <div class="circle-value" id="val-risk">0%</div>
                   </div>
-                  <div class="circle-label">Macro Risk</div>
+                  <div class="circle-label">Risk Score</div>
                 </div>
               </div>
 
               <!-- Bottom Data Grid & Dynamic Output -->
               <div class="widget-footer">
                 <div class="footer-metric">
-                  <span class="lbl">Implied Peak</span>
+                  <span class="lbl">Target Price</span>
                   <span class="val" id="target-price-display">$0</span>
                 </div>
                 <div class="widget-divider"></div>
@@ -777,36 +777,6 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
               <span class="peak-prediction" id="lbl-peak-prediction">Expected Peak: --</span>
             </div>
 
-            <!-- TradingView Widget BEGIN -->
-            <div class="tradingview-widget-container" id="chart-macro" style="width:100%">
-              <div class="tradingview-widget-container__widget" style="height:calc(100% - 32px);width:100%"></div>
-              <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/symbols/BTCUSD/?exchange=CRYPTO" rel="noopener nofollow" target="_blank"><span class="blue-text"></span></a><span class="trademark"> </span></div>
-              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
-              {
-              "allow_symbol_change": true,
-              "calendar": false,
-              "details": false,
-              "hide_side_toolbar": true,
-              "hide_top_toolbar": true,
-              "hide_legend": false,
-              "hide_volume": true,
-              "hotlist": false,
-              "interval": "D",
-              "locale": "en",
-              "save_image": true,
-              "style": "2",
-              "symbol": "CRYPTO:BTCUSD",
-              "theme": "dark",
-              "timezone": "Etc/UTC",
-              "backgroundColor": "rgba(25, 25, 25, 1)",
-              "gridColor": "rgba(242, 242, 242, 0)","isTransparent": true,
-              "watchlist": [],
-              "withdateranges": false,
-              "compareSymbols": [],
-              "studies":[{"id":"MASimple@tv-basicstudies","inputs":{"length":111}},{"id":"MASimple@tv-basicstudies","inputs":{"length":350}}],"autosize":true}
-              </script>
-            </div>
-            <!-- TradingView Widget END -->
           </div>
           </div>
         </div>
@@ -3045,6 +3015,7 @@ function loadCycles() {
       renderTradingViewChart();
       renderStructuredTable(globalPoints);
       setupGlobalInteractivePhysics();
+      loadMetrics();
     });
 }
 
@@ -3593,32 +3564,72 @@ const halvingDates = [
   }
 
   const data = getMetrics();
-  
-  // New Circle math adjusted for radius r = 31 (to balance the thicker stroke-width = 9)
-  // C = 2 * PI * r = 2 * 3.1415926 * 31 = 194.78
-  const radius = 31;
-  const circumference = 2 * Math.PI * radius; 
 
-  function setRingProgress(elementId, valueId, percent) {
-    const el = document.getElementById(elementId);
-    const valEl = document.getElementById(valueId);
-    const offset = circumference - (percent / 100) * circumference;
-    el.style.strokeDashoffset = offset;
-    valEl.innerText = Math.round(percent) + "%";
+// Cấu hình cố định
+const radius = 31;
+const circumference = 2 * Math.PI * radius;
+
+function setRingProgress(elementId, valueId, percent, isCrossed = false) {
+  const el = document.getElementById(elementId);
+  const valEl = document.getElementById(valueId);
+  if (!el || !valEl) return;
+
+  const offset = circumference - (Math.min(percent, 100) / 100) * circumference;
+  el.style.strokeDashoffset = offset;
+  valEl.innerText = Math.round(percent) + "%";
+
+  if (elementId === 'ring-risk') {
+    if (percent < 30) {
+      el.style.stroke = "#00f5d4"; // An toàn (Cyan)
+    } else if (percent < 60) {
+      el.style.stroke = "#ffb11a"; // Cẩn trọng (Vàng)
+    } else {
+      el.style.stroke = "#f72585"; // Nguy hiểm (Hồng/Đỏ)
+    }
   }
+  // Thêm logic đổi màu nếu bị Crossed (ví dụ chuyển sang màu cảnh báo)
+  if (isCrossed) {
+    el.style.stroke = "#ff4757"; // Màu đỏ cảnh báo
+  }
+}
+
+function loadMetrics() {
+  fetch(BTC_CSV_URL + "&t=" + Date.now(), { cache: "no-store" })
+    .then(r => r.text())
+    .then(text => {
+      const lines = text.split("\n").filter(l => l.trim());
+      
+      const getVal = (rowIdx, colIdx) => {
+        return (lines[rowIdx] || "").split(",")[colIdx]?.replace(/"/g, '').trim() || "";
+      };
+
+      const piConv = parseFloat(getVal(6, 12)) || 0;
+      const macroRisk = parseFloat(getVal(8, 11)) || 0;
+      const isCrossed = getVal(9, 12).toLowerCase() === "true";
+      const targetPrice = getVal(4, 12) || 0;
+
+      setRingProgress('ring-pi', 'val-pi', piConv, isCrossed);
+      setRingProgress('ring-risk', 'val-risk', macroRisk);
+      setRingProgress('ring-halving', 'val-halving', parseFloat(data.progress));
+      const numericPrice = Number(targetPrice);
+
+      if (!isNaN(numericPrice)) {
+        document.getElementById("target-price-display").innerText = "$" + numericPrice.toLocaleString('en-US', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+      } else {
+        document.getElementById("target-price-display").innerText = "$" + targetPrice;
+      }
+    })
+    .catch(err => console.error("Error loading metrics:", err));
+}
 
   const halvingProg = parseFloat(data.progress);
-  const piConv = Math.max(100 - halvingProg * 0.85, 0);
-  const macroRisk = Math.min(halvingProg * 1.1, 100);
-
-  // Apply visual updates
-  setRingProgress('ring-halving', 'val-halving', halvingProg);
-  setRingProgress('ring-pi', 'val-pi', piConv);
-  setRingProgress('ring-risk', 'val-risk', macroRisk);
 
   const basePrice = 110000;
   const multiplier = Math.pow(1.8, data.idx - 4);
-  const targetPrice = Math.round((basePrice * multiplier) * (0.4 + 0.6 * (halvingProg / 100)));
+  //const targetPrice = Math.round((basePrice * multiplier) * (0.4 + 0.6 * (halvingProg / 100)));
 
   // English Risk Status definitions
   let riskStatus = "Moderate";
@@ -3755,7 +3766,7 @@ document.getElementById('lbl-peak-prediction').innerText = `Expected Peak: ${dis
 document.addEventListener("DOMContentLoaded", initFullyAutomatedTimeline);
 initFullyAutomatedTimeline();
 
-  document.getElementById('target-price-display').innerText = "$" + targetPrice.toLocaleString();
+  
   document.getElementById('days-until-display').innerText = data.until + " days";
   
   const riskDisplay = document.getElementById('risk-status-display');
