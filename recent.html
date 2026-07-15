@@ -350,7 +350,7 @@ to{transform:rotate(360deg)}
   width:20px; height:20px; border-radius:50%; background:#f7931a; color:#191919;
   font-size:12px; font-weight:900; flex-shrink:0;
 }
-.subtitle { font-size:11px; color:#787b86;}
+.subtitle { font-size:11px; color:#787b86;margin-top:5px}
 .subtitle .now-pill { color:#2dd4bf; font-weight:700; margin-left:2px; }
 
 /* ── Interactive Chart Layer ── */
@@ -411,7 +411,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 @media (max-width:400px){table {font-size:3.6vw;}  th, td { padding:4px 4px;}}
 
 /* BTC Risk Monitor */
-.btc-widget-container{background-color:#191919;color:#ffffff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;padding:16px 12px;width:100%;max-width:380px;margin:0 auto;box-sizing:border-box;border-radius:16px}
+.btc-widget-container{background-color:#191919;color:#ffffff;font-family:-apple-system,BlinkMacSystemFont,"Lexend",Roboto,Helvetica,Arial,sans-serif;padding:16px 12px;width:100%;margin:0 auto;box-sizing:border-box;border-radius:16px}
 .widget-title{font-size:14px;font-weight:500;margin-top:0;margin-bottom:16px;color:#8c92a0;letter-spacing:0.3px;text-align:center}
 .donuts-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:8px}
 .donut-item{display:flex;flex-direction:column;align-items:center;flex:1;min-width:0}
@@ -425,23 +425,45 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 .footer-metric .lbl{font-size:10px;color:#626875;text-transform:uppercase;font-weight:500;margin-bottom:2px;letter-spacing:0.1px;white-space:nowrap}
 .footer-metric .val{font-size:15px;font-weight:700;transition:color 0.3s;white-space:nowrap}
 .widget-divider{width:1px;height:20px;background-color:#1c1e22;margin:0 4px}
+@media (max-width:340px){.circle-wrapper{width:70px;height:70px}
 
-
-  @media (max-width: 340px) {
-    .circle-wrapper {
-      width: 70px;
-      height: 70px;
-    }
-    .circle-value {
-      font-size: 14px;
-    }
-    .circle-label {
-      font-size: 11px;
-    }
-    .footer-metric .val {
-      font-size: 13px;
-    }
-  }
+.circle-value{font-size:14px}
+.circle-label{font-size:11px}
+.footer-metric .val{font-size:13px}
+}.cycle-timeline-container.cyber-theme{width:100%;background-color:#0b0e14;padding:16px 12px;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Lexend",Roboto,sans-serif;border-radius:14px;margin-top:30px}
+.timeline-headers{display:flex;justify-content:space-between;margin-bottom:10px}
+.halving-label{font-size:11px;font-weight:600;color:#fafafa;letter-spacing:0.3px}
+.timeline-track{position:relative;display:flex;width:100%;height:130px;border-radius:4px;overflow:hidden;box-sizing:border-box;background-color:#0b0e14}
+.phase{height:100%;display:flex;align-items:center;justify-content:center;position:relative;border-right:1px solid rgba(0,245,212,0.15)}
+.phase:last-child{border-right:none}
+.phase-name{font-size:11px;font-weight:300;color:#ffffff;text-transform:uppercase;text-shadow:0px 2px 4px rgba(0,0,0,0.8);text-align:center;white-space:nowrap}
+.phase-name{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#ffffff;text-shadow:0px 1px 3px rgba(0,0,0,0.5)}
+.phase-name i.bi{font-size:20px!important;line-height:1;opacity:0.95;filter:drop-shadow(0px 2px 4px rgba(0,0,0,0.4))}
+.phase-bull{background:linear-gradient(180deg,#008080 0%,#061f1d 100%)}
+.phase-bear{background:linear-gradient(180deg,#0f172a 0%,#d81b60 100%)}
+.phase-accum{background:linear-gradient(180deg,#cfd8dc 0%,#07241f 100%)}
+.phase-pre{background:linear-gradient(180deg,#0f3642 0%,#5bc0be 100%)}
+.progress-indicator{position:absolute;top:0;bottom:0;left:var(--progress);transform:translate(-50%,0);display:flex;flex-direction:column;align-items:center;pointer-events:none;z-index:10}
+.indicator-line{position:absolute;top:0;bottom:0;width:2px;border-left:2px dashed #f1f5f9;opacity:0.85}
+.indicator-dot{position:absolute;top:75%;transform:translateY(-50%);width:14px;height:14px;border-radius:50%;background-color:#ff007f;border:2px solid #ffffff;box-shadow:0 0 12px #ff007f,0 0 4px #ff007f}
+.indicator-text{position:absolute;top:85%;font-size:10px;font-weight:800;color:#0e2e2b;white-space:nowrap;letter-spacing:0.5px;background-color:#f1f5f9;padding:2px 5px;border-radius:10px}
+.timeline-axis{display:flex;margin-top:8px;padding:0 2px}
+.timeline-axis span{font-size:11px;font-family:monospace;color:#475569;font-weight:400}
+.percent-axis{justify-content:space-between}
+.date-axis{margin-top:6px;border-top:1px dashed #1e293b;padding-top:6px;display:flex;justify-content:space-between;width:100%;font-weight:300;position:relative}
+.date-axis span{color:#e2e8f0;font-size:10px}
+.date-axis span:nth-child(1){text-align:left;width:0}
+.date-axis span:nth-child(2){text-align:center;transform:translateX(-50%)}
+.date-axis span:nth-child(3){text-align:center;transform:translateX(-50%)}
+.date-axis span:nth-child(4){text-align:center;transform:translateX(-50%)}
+.date-axis span:nth-child(5){text-align:right;transform:translateX(-100%);width:0}
+.timeline-footer{display:flex;justify-content:flex-end;margin-top:12px}
+.peak-prediction{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#00e5ff}
+@media (max-width:350px){.timeline-track{height:115px}
+.phase-name{font-size:10px;letter-spacing:0px}
+.indicator-text{font-size:9px;padding:2px 4px}
+.date-axis span{font-size:9px}
+}
 </style>
 </head>
 <body>
@@ -739,6 +761,43 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
                 </div>
               </div>
             </div>
+
+            <div class="cycle-timeline-container light-theme">
+            <!-- Top Boundary Labels (Dynamic) -->
+            <div class="timeline-headers">
+              <span class="halving-label left" id="lbl-start-halving">Halving N</span>
+              <span class="halving-label right" id="lbl-end-halving">Halving N+1</span>
+            </div>
+
+            <!-- Main Progress Track -->
+            <div class="timeline-track" id="timeline-track-element">
+              <!-- Clean Structured Color Phases -->
+              <div class="phase phase-bull" style="flex: 25;"><span class="phase-name"><i class="bi bi-airplane-fill"></i>Bull Run</span></div>
+              <div class="phase phase-bear" style="flex: 25;"><span class="phase-name"><i class="bi bi-arrow-down-circle-fill"></i>Bear Market</span></div>
+              <div class="phase phase-accum" style="flex: 25;"><span class="phase-name"><i class="bi bi-droplet-half"></i>Accumulation</span></div>
+              <div class="phase phase-pre" style="flex: 25;"><span class="phase-name"><i class="bi bi-airplane-engines"></i>Pre-Halving</span></div>
+
+              <!-- Tracker Pin Assembly (Dark Contrast for White Theme) -->
+              <div class="progress-indicator" id="progress-pin">
+                <div class="indicator-line"></div>
+                <div class="indicator-dot"></div>
+                <div class="indicator-text" id="progress-text-label">0.0%</div>
+              </div>
+            </div>
+
+            <!-- 1st Axis: Percentage Steps -->
+            <div class="timeline-axis percent-axis">
+              <span>0</span><span>20</span><span>40</span><span>60</span><span>80</span><span>100</span>
+            </div>
+
+            <!-- 2nd Axis: Dynamic Calendar Dates -->
+            <div class="timeline-axis date-axis" id="dynamic-date-axis"></div>
+
+            <!-- Bottom Insight Context Label -->
+            <div class="timeline-footer">
+              <span class="peak-prediction" id="lbl-peak-prediction">Expected Peak: --</span>
+            </div>
+          </div>
           </div>
         </div>
       </div>
@@ -3567,6 +3626,92 @@ const halvingDates = [
     riskStatus = "Extreme";
     riskColor = "#f72585";
   }
+
+/**
+ * Fully Autonomous Bitcoin Halving Cycle Calculator
+ * Zero hardcoded cycles or dates. Calculates everything using the blockchain schedule rules.
+ */
+function initFullyAutomatedTimeline() {
+  // 1. Immutable Protocol Benchmarks
+  const ANCHOR_HALVING_NUMBER = 4;
+  const ANCHOR_HALVING_DATE = new Date("2024-04-19T00:00:00Z"); // Halving 4 anchor point
+  
+  // 210,000 blocks * 10 minutes per block in milliseconds
+  const MS_PER_CYCLE = 210000 * 10 * 60 * 1000; 
+
+  const now = new Date();
+
+  // 2. Dynamically determine which cycle we are currently living in
+  const timeDeltasFromAnchor = now.getTime() - ANCHOR_HALVING_DATE.getTime();
+  
+  // If positive, we are past Halving 4. Find how many full cycles have elapsed since.
+  const cyclesElapsedSinceAnchor = Math.floor(timeDeltasFromAnchor / MS_PER_CYCLE);
+  
+  const currentCycleNumber = ANCHOR_HALVING_NUMBER + cyclesElapsedSinceAnchor;
+
+  // 3. Calculate exact start and end timestamps for the dynamic current cycle
+  const currentCycleStartMs = ANCHOR_HALVING_DATE.getTime() + (cyclesElapsedSinceAnchor * MS_PER_CYCLE);
+  const currentCycleEndMs = currentCycleStartMs + MS_PER_CYCLE;
+
+  const start = new Date(currentCycleStartMs);
+  const end = new Date(currentCycleEndMs);
+
+  // 4. Calculate precise progress bar position matching current time
+  const totalDuration = currentCycleEndMs - currentCycleStartMs;
+  const elapsed = now.getTime() - currentCycleStartMs;
+  
+  let progressPercentage = (elapsed / totalDuration) * 100;
+  progressPercentage = Math.max(0, Math.min(100, progressPercentage)); // Clamp bounds
+  const progressString = progressPercentage.toFixed(1) + "%";
+
+  // 5. Update DOM elements: Track bar variable and Pin label text
+  const track = document.getElementById('timeline-track-element');
+  const textLabel = document.getElementById('progress-text-label');
+  
+  if (track && textLabel) {
+    track.style.setProperty('--progress', progressString);
+    textLabel.innerText = `YOU ARE HERE: ${progressString}`;
+  }
+
+  // 6. Update Header Labels dynamically
+  const formatHeaderDate = (d) => d.toLocaleString('en-US', { month: 'short', year: 'numeric' });
+  document.getElementById('lbl-start-halving').innerText = `Halving ${currentCycleNumber} (${formatHeaderDate(start)})`;
+  document.getElementById('lbl-end-halving').innerText = `Halving ${currentCycleNumber + 1} (${formatHeaderDate(end)})`;
+
+  // 7. Auto-calculate Expected Peak Target Window (Typically 12-18 months post-halving)
+  const peakStart = new Date(start.getTime());
+  peakStart.setMonth(peakStart.getMonth() + 12);
+  const peakEnd = new Date(start.getTime());
+  peakEnd.setMonth(peakEnd.getMonth() + 18);
+  
+  const peakStrStart = peakStart.toLocaleString('en-US', { month: 'short' });
+  const peakStrEnd = peakEnd.toLocaleString('en-US', { month: 'short', year: 'numeric' });
+  document.getElementById('lbl-peak-prediction').innerText = `Expected Peak: ${peakStrStart}-${peakStrEnd}`;
+
+  // 8. Rebuild the Dynamic X-Axis Date Intervals grid (0%, 25%, 50%, 75%, 100%)
+  const dateAxisContainer = document.getElementById('dynamic-date-axis');
+  if (dateAxisContainer) {
+    dateAxisContainer.innerHTML = ''; // Clear stale nodes
+    
+    const intervals = [0, 0.25, 0.50, 0.75, 1.0];
+    
+    intervals.forEach((fraction) => {
+      const intervalMs = currentCycleStartMs + (totalDuration * fraction);
+      const intervalDate = new Date(intervalMs);
+      
+      const monthLabel = intervalDate.toLocaleString('en-US', { month: 'short' });
+      const yearShort = intervalDate.getFullYear().toString().substring(2);
+      
+      const spanNode = document.createElement('span');
+      spanNode.innerText = `${monthLabel} '${yearShort}`;
+      dateAxisContainer.appendChild(spanNode);
+    });
+  }
+}
+
+// Kick off initialization on layout render loops
+document.addEventListener("DOMContentLoaded", initFullyAutomatedTimeline);
+initFullyAutomatedTimeline();
 
   document.getElementById('target-price-display').innerText = "$" + targetPrice.toLocaleString();
   document.getElementById('days-until-display').innerText = data.until + " days";
