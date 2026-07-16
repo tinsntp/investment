@@ -2079,7 +2079,7 @@ function loadExpense() {
 }
 
 /* ══ RECENT TAB ══ */
-var CSV_RECENT = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1492221762";
+var CSV_RECENT = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=112329761";
 var NOISE_PATTERNS = [/GIAO DICH THE\s*[\d*]{4}\s*TAI/i,/NAP TIEN VI/i,/NAP VI DIEN TU/i,/TT QR VNPAY/i,/MOMO - /i,/MOMO-CASHIN-/i,/SHOPEEPAY - /i,/Grab/i,/NGUYEN TRUNG TIN /i,/ xie xie m nhieu/i];
 function cleanDetail(s){if(!s)return"";for(var i=0;i<NOISE_PATTERNS.length;i++)s=s.replace(NOISE_PATTERNS[i],"").trim();return s.replace(/\s+/g," ").trim();}
 function fmtMoney(v){return"-\u20ab"+Math.round(Math.abs(v)).toLocaleString("en-US");}
@@ -2175,13 +2175,59 @@ function loadRecent(){
     .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.text();})
     .then(function(text){
       var lines=text.trim().split("\n").filter(function(l){return l.trim();});
-      var start=0,first=parseCsvRow(lines[0]);
-      if(isNaN(parseVal(first[3])))start=1;
-      var list=document.getElementById("tx-list");list.innerHTML="";
+      if (lines.length === 0) return;
+
+      // 1. Xác định xem dòng đầu tiên có phải là Header hay không
+      var startIdx = 0;
+      var firstRow = parseCsvRow(lines[0]);
+      if(isNaN(parseVal(firstRow[4]))) {
+        startIdx = 1;
+      }
+      
+      // 2. Lấy danh sách dữ liệu thực tế và ĐẢO NGƯỢC từ ASC sang DESC
+      var dataLines = lines.slice(startIdx);
+      dataLines.reverse();
+
+      var list=document.getElementById("tx-list");
+      list.innerHTML="";
       var lastGroup=null;
-      for(var i=start;i<lines.length;i++){
-        var cols=parseCsvRow(lines[i]);if(!cols[2])continue;
-        var item={date:cols[2]||"",icon:cols[8]||"",title:cols[4]||"",rawDetail: cols[6] ||"",detail:cleanDetail(cols[6]||""),amount:parseVal(cols[5]),badgeSource:cols[7]||""};
+
+      // ==========================================
+      // LẤY THỜI GIAN HIỆN TẠI ĐỂ LÀM MỐC LỌC
+      // ==========================================
+      var now = new Date();
+      var currentYear = now.getFullYear();
+      var currentMonth = now.getMonth(); // Tháng chạy từ 0 - 11
+      
+      // 3. Lặp qua các dòng đã đảo ngược để dựng giao diện
+      for(var i=0; i<dataLines.length; i++){
+        var cols=parseCsvRow(dataLines[i]);
+        
+        // Kiểm tra xem cột Date (Cột A - index 0) có dữ liệu hay không
+        if(!cols[0]) continue; 
+
+        // ==========================================
+        // BỘ LỌC HIỆU NĂNG: CHỈ LẤY THÁNG HIỆN TẠI
+        // ==========================================
+        var txDate = new Date(cols[0]);
+        if (!isNaN(txDate.getTime())) {
+          // Nếu năm hoặc tháng của giao dịch không khớp với hiện tại -> Bỏ qua không render
+          if (txDate.getFullYear() !== currentYear || txDate.getMonth() !== currentMonth) {
+            continue; 
+          }
+        }
+        
+        // Ánh xạ chuẩn xác theo cấu trúc sheet mới:
+        var item={
+          date: cols[0] || "",                         // Cột A (index 0)
+          icon: cols[11] || "",                         // Cột I - Icon (index 8)
+          title: cols[13] || "",                       // Cột N - Category (index 13)
+          rawDetail: cols[3] || "",                    // Cột D - Detail (index 3)
+          detail: cleanDetail(cols[3] || ""),          // Cột D - Detail (index 3)
+          amount: parseVal(cols[4]),                   // Cột E - Amount (index 4)
+          badgeSource: cols[12] || ""                  // Cột K - Expense (index 10)
+        };
+        
         var group=relativeGroupLabel(item.date);
         if(group!==lastGroup){
           list.appendChild(buildGroupHeader(group));
@@ -2189,9 +2235,12 @@ function loadRecent(){
         }
         list.appendChild(buildTxRow(item));
       }
+      
       document.getElementById("rec-msg").style.display="none";
       applyLayout();
-    }).catch(function(err){document.getElementById("rec-msg").textContent="Error: "+err.message;});
+    }).catch(function(err){
+      document.getElementById("rec-msg").textContent="Error: "+err.message;
+    });
 }
 document.getElementById("tx-list").addEventListener("click",function(e){
   var row=e.target;
