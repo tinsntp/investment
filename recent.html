@@ -1212,7 +1212,7 @@ function buildRing(label, spent, budget, iconUrl, hideOnMobile, gids) {
   // ==========================================
   // THAY ĐỔI ĐỘ DÀY (STHICKER) & ĐƯỜNG KÍNH (SMALLER)
   // ==========================================
-  var r = 24;  // Giảm bán kính từ 28 -> 24 để làm vòng nhỏ lại
+  var r = 28;  // Giảm bán kính từ 28 -> 24 để làm vòng nhỏ lại
   var sw = 8;  // Tăng độ dày nét từ 5 -> 8 để nét đậm hơn
   var cx = 40, cy = 40;
   
@@ -1293,7 +1293,7 @@ function buildRing(label, spent, budget, iconUrl, hideOnMobile, gids) {
   var pctTxt = document.createElementNS(ns, "text");
   pctTxt.setAttribute("x", "40"); pctTxt.setAttribute("y", "41"); // 41 giúp chữ căn giữa hoàn hảo hơn khi tăng độ dày nét
   pctTxt.setAttribute("text-anchor", "middle"); pctTxt.setAttribute("dominant-baseline", "middle");
-  pctTxt.setAttribute("fill", "#fff"); pctTxt.setAttribute("font-size", "15"); // Giảm cỡ chữ xuống 15 một chút cho cân đối với vòng mới nhỏ gọn
+  pctTxt.setAttribute("fill", "#fff"); pctTxt.setAttribute("font-size", "18"); // Giảm cỡ chữ xuống 15 một chút cho cân đối với vòng mới nhỏ gọn
   pctTxt.setAttribute("font-family", "JetBrains Mono");
   pctTxt.setAttribute("font-weight", "600");
   pctTxt.textContent = Math.round(displayPct) + "%";
