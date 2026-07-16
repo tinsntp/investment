@@ -311,6 +311,22 @@ to{transform:rotate(360deg)}
   align-items: center !important;
   justify-content: center !important;
 }
+
+Object.assign(modalOverlay.style, {
+    position: "fixed",
+    top: "0",
+    left: "0",
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.75)", // Slightly darker backdrop
+    backdropFilter: "blur(4px)",
+    webkitBackdropFilter: "blur(4px)",
+    zIndex: "2147483647", // Maximum 32-bit Integer z-index value possible
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    opacity: "1" // Force it visible immediately to bypass rendering engines
+  });
 /* ══ BTC SLIDE ══ */
 .btc-card { max-width:100%;}
 
@@ -2131,10 +2147,22 @@ function buildTxRow(item){
   var container = document.createElement("div");
   container.className = "sub-swipe-container";
 
+  // CRITICAL FIX: Save the transaction metadata directly on the element
+  container.setAttribute("data-date", item.date);
+  container.setAttribute("data-detail", item.detail || item.rawDetail || "");
+  container.setAttribute("data-amount", item.amount);
+  container.setAttribute("data-title", item.title || "");
+
   // 2. Tạo nút xóa ẩn phía dưới (sub-delete-action)
   var deleteBtn = document.createElement("div");
   deleteBtn.className = "sub-delete-action";
-  deleteBtn.setAttribute("data-id", item.id); // Đảm bảo gán đúng thuộc tính ID của item
+  deleteBtn.setAttribute("data-id", item.id);
+  
+  // CRITICAL FIX: Bind the click event passing 'this' element to deleteTx
+  deleteBtn.onclick = function() {
+    deleteTx(this);
+  };
+
   deleteBtn.innerHTML = `
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="3 6 5 6 21 6"></polyline>
@@ -2144,14 +2172,13 @@ function buildTxRow(item){
       </svg>
     `;
   
-  // Đưa nút xóa vào trong container trước
   container.appendChild(deleteBtn);
 
-  // 3. Tạo hàng hiển thị chính (giữ nguyên logic cũ của bạn)
+  // 3. Tạo hàng hiển thị chính
   var row = document.createElement("div");
   row.className = "row subs-row";
-  row.setAttribute("data-id", item.id); // Gán ID cho row để xử lý click/swipe
-  row.style.transition = "transform 0.2s ease"; // Thêm transition để vuốt mượt mà
+  row.setAttribute("data-id", item.id); 
+  row.style.transition = "transform 0.2s ease"; 
 
   var iconEl;
   if(item.icon && item.icon.indexOf("http")===0){
@@ -2233,7 +2260,7 @@ function buildTxRow(item){
   // 4. Đưa hàng chính vào container
   container.appendChild(row);
 
-  // 5. Trả về container thay vì trả về row lẻ như trước
+  // 5. Trả về container
   return container;
 }
 
@@ -2546,7 +2573,8 @@ function iconFor(name) {
 
 /* ══ LOAD + RENDER ══ */
 var lastLoadedItems = []; // cached so we can re-render on resize without refetching
-
+var globalSubItems = [];
+var globalTxItems = [];
 function loadSubscriptions() {
   fetch(CSV_URL + "&t=" + Date.now(), { cache:"no-store" })
     .then(function(r){ if(!r.ok) throw new Error("HTTP "+r.status); return r.text(); })
@@ -2840,14 +2868,20 @@ window.addEventListener("resize", function(){
     renderSubscriptions(globalSubItems);
   }
 });
+window.addEventListener("resize", function(){
+  if (globalTxItems && globalTxItems.length) {
+    buildTxRow(globalTxItems);
+  }
+});
 
 /* ══ ADD RECORD (writes to the sheet via Apps Script Web App) ══ */
 var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxb1lPB9kZh-Q5C01U-DjuesOVlHgDEorEBK-pavyJUd5jPxZSub-Rx6unOCTDdrCS2/exec"; // ends in /exec
+var EXPENSE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyuTi6N2-xRiwA0z1biRhB-PbnROT2pi-NG7Zq5IEiUdi3kqDoAUQWIL1gKduGRVZ_ZRw/exec"; // ends in /exec
 
 var addOverlay = document.getElementById("add-modal-overlay");
 var addStatusEl = document.getElementById("add-status");
 var addSubmitBtn = document.getElementById("add-submit-btn");
-var globalSubItems = []; // 🟢 Global variable to hold your data backup safely
+
 
 document.getElementById("add-fab").addEventListener("click", function(){
   document.getElementById("add-title").value = "";
@@ -2959,7 +2993,7 @@ function deleteSubscription(itemId) {
     </div>
   `;
 
-  document.body.appendChild(modalOverlay);
+  document.body.insertAdjacentElement('beforeend', modalOverlay);
   
   // Force browser layout reflow to trigger display transition smoothly
   setTimeout(function() { modalOverlay.style.opacity = "1"; }, 10);
@@ -2992,7 +3026,9 @@ function deleteSubscription(itemId) {
 
     var deletePayload = {
       action: "delete",
-      title: targetItem.name
+      date: targetItem.date,             // e.g., "7/1/2026 0:00:00"
+      detail: targetItem.detail || targetItem.rawDetail, // e.g., "generali"
+      amount: targetItem.amount          // e.g., 833000 (CRITICAL to prevent sorting mismatch!)
     };
 
     fetch(APPS_SCRIPT_URL, {
@@ -3021,7 +3057,10 @@ function initCashModal() {
     var cashSubmit = document.getElementById("cash-modal-submit");
     var cashStatus = document.getElementById("cash-modal-status");
 
-    if (!addCashBtn) return;
+    if (!addCashBtn || !cashOverlay || !cashSubmit) {
+        console.warn("Cash modal elements missing from the DOM. Skipping initialization.");
+        return;
+    }
 
     // Open Modal
     addCashBtn.addEventListener("click", function() {
@@ -3119,6 +3158,202 @@ function initCashModal() {
             cashSubmit.disabled = false;
         }
     });
+}
+
+function deleteTx(elementOrItem) {
+  var targetItem = null;
+  var rowContainer = null;
+
+  //console.log("--- DEBUG deleteTx ---");
+  //console.log("Raw Input Received:", elementOrItem);
+
+  // 1. RESOLVE DATA FROM INPUT
+  if (elementOrItem && typeof elementOrItem.closest === "function") {
+    // SCENARIO A: Received an HTML element
+    rowContainer = elementOrItem.closest(".sub-swipe-container");
+  } else if (elementOrItem && typeof elementOrItem === "object" && (elementOrItem.date || elementOrItem.detail)) {
+    // SCENARIO B: Received a data object directly
+    var dateVal = elementOrItem.date || elementOrItem.Ngay || elementOrItem.time || "";
+    var detailVal = elementOrItem.detail || elementOrItem.rawDetail || elementOrItem.MoTa || "";
+    var amountVal = elementOrItem.amount || elementOrItem.SoTien || 0;
+    var titleVal = elementOrItem.title || elementOrItem.Ten || "Transaction";
+
+    targetItem = {
+      date: dateVal,
+      detail: detailVal,
+      amount: Number(amountVal),
+      title: titleVal
+    };
+  }
+
+  // 2. FALLBACK SCENARIO: If elementOrItem was empty (undefined), find the row currently being swiped
+  if (!targetItem && !rowContainer) {
+    //console.log("Input was empty. Searching DOM for swiped or active row container...");
+    
+    // Find the row container that has been swiped open
+    rowContainer = document.querySelector(".sub-swipe-container.swiped") || 
+                   document.querySelector(".sub-swipe-container:hover") ||
+                   document.querySelector(".sub-swipe-container"); // Absolute fallback to the first row
+  }
+
+  // 3. EXTRACT FROM ROW CONTAINER
+  if (rowContainer && !targetItem) {
+    //console.log("Row Container resolved:", rowContainer);
+    targetItem = {
+      date: rowContainer.getAttribute("data-date"),
+      detail: rowContainer.getAttribute("data-detail"),
+      amount: Number(rowContainer.getAttribute("data-amount")),
+      title: rowContainer.getAttribute("data-title") || "Transaction"
+    };
+  }
+
+  //console.log("Resolved Target Item:", targetItem);
+
+  // 4. Fallback validation (With helpful console reports)
+  if (!targetItem) {
+    console.error("FAIL: Target item is completely null.");
+    alert("Unable to validate transaction details: No data received.");
+    return;
+  }
+  if (!targetItem.date) {
+    console.error("FAIL: Missing 'date' property.");
+    alert("Unable to validate transaction: Missing Date.");
+    return;
+  }
+  if (!targetItem.detail) {
+    console.error("FAIL: Missing 'detail' property.");
+    alert("Unable to validate transaction: Missing Details.");
+    return;
+  }
+
+  // 5. Initialize custom HTML overlay on the body root
+  var modalId = "expense-delete-modal";
+  var existingModal = document.getElementById(modalId);
+  if (existingModal) existingModal.remove();
+
+  var modalOverlay = document.createElement("div");
+  modalOverlay.id = modalId;
+  
+  Object.assign(modalOverlay.style, {
+    position: "fixed",
+    top: "0",
+    left: "0",
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.75)",
+    backdropFilter: "blur(4px)",
+    webkitBackdropFilter: "blur(4px)",
+    zIndex: "2147483647",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    opacity: "1"
+  });
+
+  var displayName = targetItem.title || targetItem.detail;
+  var displayAmount = typeof fmtMoney === "function" ? fmtMoney(targetItem.amount) : targetItem.amount;
+
+  modalOverlay.innerHTML = `
+    <div style="background: #1e1e1e; border: 1px solid rgba(255,255,255,0.1); width: 85%; max-width: 320px; border-radius: 16px; padding: 24px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+      <h3 style="color: #fff; margin: 0 0 12px 0; font-size: 16px!important; font-weight: 600; letter-spacing: -0.2px;">Delete expense transaction?</h3>
+      <p style="color: rgba(255,255,255,0.6); margin: 0 0 24px 0; font-size: 14px; line-height: 1.5;">
+        Are you sure you want to permanently delete the expense <strong>${displayName}</strong> amounting to <strong>${displayAmount}</strong>?
+      </p>
+      <div style="display: flex; gap: 12px;">
+        <button id="expense-del-cancel" style="flex: 1; background: rgba(255,255,255,0.08); border: none; color: #fff; padding: 12px; border-radius: 8px; font-size: 14px!important; font-weight: 500; cursor: pointer; transition: background 0.2s;">Cancel</button>
+        <button id="expense-del-confirm" style="flex: 1; background: #ff4d4d; border: none; color: #fff; padding: 12px; border-radius: 8px; font-size: 14px!important; font-weight: 600; cursor: pointer; transition: background 0.2s;">Delete</button>
+      </div>
+    </div>
+  `;
+
+  document.body.insertAdjacentElement('beforeend', modalOverlay);
+
+  // 6. Cleanup UI Function
+  var cleanupModal = function() {
+    modalOverlay.remove();
+    document.querySelectorAll(".sub-swipe-container.swiped").forEach(function(item) {
+      item.classList.remove("swiped");
+    });
+  };
+
+  // Cancel Event
+  // Sự kiện nút Cancel trong Modal xóa của bạn
+document.getElementById("expense-del-cancel").addEventListener("click", function(e) {
+  e.preventDefault();
+  cleanupModal(); // Đóng pop-up overlay
+  
+  // CƯỠNG CHẾ RESET TOÀN BỘ GIAO DIỆN DÒNG
+  // 1. Quét tất cả các phần tử có khả năng là dòng hoặc container chứa dòng
+  const selectors = [
+    '.sub-swipe-container', 
+    '.subs-row', 
+    '.sub-swipe-row', 
+    '[class*="swipe"]', 
+    '[class*="row"]'
+  ];
+  
+  selectors.forEach(selector => {
+    document.querySelectorAll(selector).forEach(el => {
+      // Đưa độ mờ và tương tác về bình thường
+      el.style.opacity = "1";
+      el.style.display = ""; 
+      el.style.visibility = "visible";
+      el.style.pointerEvents = "auto";
+      el.style.transition = "transform 0.2s ease, opacity 0.2s ease";
+      
+      // Đưa vị trí quẹt về 0 (trung tâm)
+      el.style.transform = "translateX(0px)";
+      
+      // Loại bỏ các class trạng thái quẹt nếu thư viện của bạn tự thêm vào
+      el.classList.remove("swiped", "active", "open", "deleting");
+    });
+  });
+
+  // 2. Ẩn toàn bộ nút "Delete" màu đỏ nằm ẩn dưới dòng (nếu có)
+  document.querySelectorAll('.delete-btn, .swipe-delete-btn, [class*="del-btn"]').forEach(btn => {
+    btn.style.opacity = "0";
+    btn.style.pointerEvents = "none";
+  });
+});
+
+  // Confirm Delete Event
+  document.getElementById("expense-del-confirm").addEventListener("click", function(e) {
+    e.preventDefault();
+    
+    if (rowContainer) {
+      rowContainer.style.opacity = "0.3";
+      rowContainer.style.pointerEvents = "none";
+    }
+
+    cleanupModal();
+
+    var deletePayload = {
+      action: "delete",
+      date: targetItem.date,
+      detail: targetItem.detail,
+      amount: targetItem.amount
+    };
+
+    fetch(EXPENSE_APPS_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify(deletePayload)
+    })
+    .then(function() {
+      setTimeout(function() { 
+        if (typeof loadExpenses === "function") {
+          loadExpenses(); 
+        } else if (typeof loadTransactions === "function") {
+          loadTransactions();
+        }
+      }, 300);
+    })
+    .catch(function(err) {
+      alert("Failed to delete transaction: " + err.message);
+      if (typeof loadExpenses === "function") loadExpenses();
+    });
+  });
 }
 
 /* ══ BTC Cycle Tracker ══ */
@@ -3979,33 +4214,18 @@ document.addEventListener("DOMContentLoaded", function () {
   if (txList) {
     txList.addEventListener("click", function (e) {
       
-      // 1. CHỈ xử lý khi click trúng nút xóa (.sub-delete-action)
+      // 1. Xử lý khi click trúng nút xóa (.sub-delete-action)
       const deleteBtn = e.target.closest(".sub-delete-action");
       if (deleteBtn) {
-        e.stopPropagation(); // Ngăn sự kiện loang ra ngoài làm đóng/mở row chi tiết
+        e.stopPropagation(); // Ngăn sự kiện loang ra
 
         const container = deleteBtn.closest(".sub-swipe-container");
-        const itemId = deleteBtn.getAttribute("data-id"); // Lấy ID từ nút xóa
+        const itemId = deleteBtn.getAttribute("data-id"); // Lấy ID của giao dịch
 
-        if (container && confirm("Bạn có chắc chắn muốn xóa giao dịch này?")) {
-          // Hiệu ứng co lại và biến mất mượt mà
-          container.style.transition = "all 0.3s ease";
-          container.style.height = "0px";
-          container.style.opacity = "0";
-          container.style.margin = "0";
-          container.style.padding = "0";
-          container.style.overflow = "hidden";
-
-          setTimeout(() => {
-            container.remove();
-            
-            // Gọi hàm xóa thực tế của bạn
-            if (typeof deleteTx === "function") {
-              deleteTx(itemId);
-            } else {
-              console.warn("Chưa định nghĩa hàm xóa giao dịch cho ID:", itemId);
-            }
-          }, 300);
+        if (container) {
+          // KHÔNG thu nhỏ dòng ở đây nữa! Gọi trực tiếp hàm deleteTx để hiện pop-up xác nhận.
+          // Chúng ta truyền thêm 'container' vào hàm deleteTx để xử lý ẩn dòng sau khi người dùng bấm CONFIRM.
+          deleteTx(itemId, container); 
         }
         return;
       }
