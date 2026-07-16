@@ -129,16 +129,13 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .tx-group-hdr{font-size:2.3vw;font-weight:300;color:rgba(255,255,255,0.45);letter-spacing:0.05em;padding:2.5vw 0 1vw;margin-top:0.5vw}
 .tx-group-hdr:first-child{padding-top:0.5vw}
 .row{display:flex;align-items:center;padding:2vw 0;border-bottom:1px solid rgba(255,255,255,0.08);gap:3vw;cursor:pointer;transition:background 0.2s ease,border-radius 0.2s ease,padding 0.2s ease}
-
 .row:last-child { border-bottom:none; }
 .row:hover { background:rgba(255,255,255,0.04); border-radius:0vw; padding:2vw 1vw; }
-.row.expanded { background:rgba(255,255,255,0.04); border-radius:0vw; padding:2.2vw 1.5vw; }
 .ico { width:10vw; height:10vw; border-radius:50%; object-fit:contain; flex-shrink:0; background:rgba(255,255,255,0.08); padding:1.0vw; }
 .ico-fb { width:10vw; height:10vw; border-radius:50%; flex-shrink:0; background:rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; font-size:4.5vw; font-weight:700; color:rgba(255,255,255,0.6); }
 .mid { flex:1; min-width:0; }
 .ttl { font-size:2.4vw; font-weight:500; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:0.6vw; }
 .dtl { font-size:2vw; color:rgba(255,255,255,0.5); line-height:1.4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.row.expanded .dtl { white-space:normal; overflow:visible; text-overflow:unset; }
 .rgt { display:flex; flex-direction:column; align-items:flex-end; flex-shrink:0; gap:0.8vw; }
 .amt { font-size:2.9vw; font-weight:700; color:#fff; white-space:nowrap; }
 .dte { font-size:1.9vw; color:rgba(255,255,255,0.4); white-space:nowrap; }
@@ -146,7 +143,13 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .ttl{display:flex;align-items:center;gap:1.5vw}
 .recent-badge{font-size:2.4vw;font-weight:700;color:#14b8a6;background:rgba(74,222,128,0.14);border-radius:99px;padding:0.4vw 1.2vw;white-space:nowrap}
 .recent-badge .bi,label .bi {font-size: 0.8rem!important;vertical-align: 0em;}
-
+/* Khi đang swiped (đã trượt), tắt hoàn toàn hiệu ứng zoom/scale của cả hover và active */
+.sub-swipe-container.swiped .row,
+.sub-swipe-container.swiped .row:active,
+.sub-swipe-container.swiped .row:hover {
+  transform: translateX(-73px) scale(1) !important; /* Thay -70px bằng khoảng cách trượt thực tế của bạn */
+}
+.sub-swipe-container .row.subs-row{border-bottom: 1px solid rgba(255, 255, 255, 0.08)!important;}
 
 @media screen and (max-width:400px){.recent-badge{font-size:3.8vw}}
 
@@ -300,7 +303,14 @@ to{transform:rotate(360deg)}
 .sub-delete-action:hover{background-color:#dc2626}
 .sub-delete-action{opacity:0;visibility:hidden;pointer-events:none;transition:opacity 0.2s ease,visibility 0.2s ease}
 .sub-swipe-container.swiped .sub-delete-action{opacity:1 !important;visibility:visible !important;pointer-events:auto !important}
-
+.sub-delete-action i {
+  font-size: 20px !important; /* Thay đổi kích thước tùy ý bạn (ví dụ: 18px, 22px, 24px...) */
+  
+  /* Đảm bảo icon luôn căn giữa hoàn hảo trong vòng tròn hoặc khung chứa */
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
 /* ══ BTC SLIDE ══ */
 .btc-card { max-width:100%;}
 
@@ -2117,13 +2127,56 @@ function buildGroupHeader(label){
   return hdr;
 }
 function buildTxRow(item){
-  var row=document.createElement("div");row.className="row";
-  var iconEl;
-  if(item.icon&&item.icon.indexOf("http")===0){iconEl=document.createElement("img");iconEl.className="ico";iconEl.src=item.icon;iconEl.onerror=(function(t){return function(){var fb=document.createElement("div");fb.className="ico-fb";fb.textContent=t?t.charAt(0):"?";this.parentNode.replaceChild(fb,this);};})(item.title);}
-  else{iconEl=document.createElement("div");iconEl.className="ico-fb";iconEl.textContent=item.icon||(item.title?item.title.charAt(0):"?");}
+  // 1. Tạo container bọc ngoài cùng (sub-swipe-container)
+  var container = document.createElement("div");
+  container.className = "sub-swipe-container";
+
+  // 2. Tạo nút xóa ẩn phía dưới (sub-delete-action)
+  var deleteBtn = document.createElement("div");
+  deleteBtn.className = "sub-delete-action";
+  deleteBtn.setAttribute("data-id", item.id); // Đảm bảo gán đúng thuộc tính ID của item
+  deleteBtn.innerHTML = `
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="3 6 5 6 21 6"></polyline>
+        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        <line x1="10" y1="11" x2="10" y2="17"></line>
+        <line x1="14" y1="11" x2="14" y2="17"></line>
+      </svg>
+    `;
   
-  var mid=document.createElement("div");mid.className="mid";
-  var ttl=document.createElement("div");ttl.className="ttl";ttl.textContent=item.title;
+  // Đưa nút xóa vào trong container trước
+  container.appendChild(deleteBtn);
+
+  // 3. Tạo hàng hiển thị chính (giữ nguyên logic cũ của bạn)
+  var row = document.createElement("div");
+  row.className = "row subs-row";
+  row.setAttribute("data-id", item.id); // Gán ID cho row để xử lý click/swipe
+  row.style.transition = "transform 0.2s ease"; // Thêm transition để vuốt mượt mà
+
+  var iconEl;
+  if(item.icon && item.icon.indexOf("http")===0){
+    iconEl = document.createElement("img");
+    iconEl.className = "ico";
+    iconEl.src = item.icon;
+    iconEl.onerror = (function(t){
+      return function(){
+        var fb = document.createElement("div");
+        fb.className = "ico-fb";
+        fb.textContent = t ? t.charAt(0) : "?";
+        this.parentNode.replaceChild(fb, this);
+      };
+    })(item.title);
+  } else {
+    iconEl = document.createElement("div");
+    iconEl.className = "ico-fb";
+    iconEl.textContent = item.icon || (item.title ? item.title.charAt(0) : "?");
+  }
+  
+  var mid = document.createElement("div");
+  mid.className = "mid";
+  var ttl = document.createElement("div");
+  ttl.className = "ttl";
+  ttl.textContent = item.title;
   
   // ── BADGE LOGIC START ──
   var badgeText = "";
@@ -2131,44 +2184,57 @@ function buildTxRow(item){
   var rawColH = item.badgeSource ? item.badgeSource.trim() : "";
   var rawColG = item.rawDetail ? item.rawDetail.trim().toUpperCase() : "";
 
-  // 🟢 Now checking the raw column G data before noise cleaning
   if (rawColG.includes("GIAO DICH THE") && rawColG.includes("GRAB")) {
-  badgeText = '<i class="bi bi-credit-card-2-back"></i> ***4768';
-    } else if (rawColG.includes("GIAO DICH THE") && !rawColG.includes("GRAB")) {
-      badgeText = '<i class="bi bi-apple"></i> Pay';
-    } else if (!rawColH) {
-      badgeText = '<i class="bi bi-cash-stack"></i> Cash';
-    } else if (rawColG.includes("MOMO")) {
-      badgeText = '<i class="bi bi-wallet2"></i> Momo';
-    } else if (rawColG.includes("SHOPEEPAY")) {
-      badgeText = '<i class="bi bi-wallet2"></i> Shopeepay';
-    } else if (rawColE.includes("WITHDRAW")) {
-      badgeText = '<i class="bi bi-credit-card-2-back"></i> ***000';
-    } else if (rawColH.includes("*000") || rawColH.includes("*003") || rawColH.includes("*309")) {
-      badgeText = '<i class="bi bi-qr-code-scan"></i> Transfer';
-    } 
+    badgeText = '<i class="bi bi-credit-card-2-back"></i> ***4768';
+  } else if (rawColG.includes("GIAO DICH THE") && !rawColG.includes("GRAB")) {
+    badgeText = '<i class="bi bi-apple"></i> Pay';
+  } else if (!rawColH) {
+    badgeText = '<i class="bi bi-cash-stack"></i> Cash';
+  } else if (rawColG.includes("MOMO")) {
+    badgeText = '<i class="bi bi-wallet2"></i> Momo';
+  } else if (rawColG.includes("SHOPEEPAY")) {
+    badgeText = '<i class="bi bi-wallet2"></i> Shopeepay';
+  } else if (rawColE.includes("WITHDRAW")) {
+    badgeText = '<i class="bi bi-credit-card-2-back"></i> ***000';
+  } else if (rawColH.includes("*000") || rawColH.includes("*003") || rawColH.includes("*309")) {
+    badgeText = '<i class="bi bi-qr-code-scan"></i> Transfer';
+  } 
 
-    // Append badge element nếu có text
-    if (badgeText) {
-      var badgeEl = document.createElement("span");
-      badgeEl.className = "recent-badge";
-      
-      // ĐỔI TỪ textContent SANG innerHTML ĐỂ TRÌNH DUYỆT ĐỌC ĐƯỢC THẺ <i>
-      badgeEl.innerHTML = badgeText; 
-      
-      ttl.appendChild(badgeEl);
-    }
+  if (badgeText) {
+    var badgeEl = document.createElement("span");
+    badgeEl.className = "recent-badge";
+    badgeEl.innerHTML = badgeText; 
+    ttl.appendChild(badgeEl);
+  }
   // ── BADGE LOGIC END ──
 
-  var dtl=document.createElement("div");dtl.className="dtl";dtl.textContent=item.detail;
-  mid.appendChild(ttl);mid.appendChild(dtl);
+  var dtl = document.createElement("div");
+  dtl.className = "dtl";
+  dtl.textContent = item.detail;
+  mid.appendChild(ttl);
+  mid.appendChild(dtl);
   
-  var rgt=document.createElement("div");rgt.className="rgt";
-  var amt=document.createElement("div");amt.className="amt";amt.textContent=fmtMoney(item.amount);
-  var dte=document.createElement("div");dte.className="dte";dte.textContent=fmtDate(item.date);
-  rgt.appendChild(amt);rgt.appendChild(dte);
-  row.appendChild(iconEl);row.appendChild(mid);row.appendChild(rgt);
-  return row;
+  var rgt = document.createElement("div");
+  rgt.className = "rgt";
+  var amt = document.createElement("div");
+  amt.className = "amt";
+  amt.textContent = fmtMoney(item.amount);
+  var dte = document.createElement("div");
+  dte.className = "dte";
+  dte.textContent = fmtDate(item.date);
+  
+  rgt.appendChild(amt);
+  rgt.appendChild(dte);
+  
+  row.appendChild(iconEl);
+  row.appendChild(mid);
+  row.appendChild(rgt);
+
+  // 4. Đưa hàng chính vào container
+  container.appendChild(row);
+
+  // 5. Trả về container thay vì trả về row lẻ như trước
+  return container;
 }
 
 
@@ -2211,25 +2277,80 @@ function loadRecent(){
       }
 
       document.getElementById("rec-msg").style.display="none";
-
+      
+      document.querySelectorAll("#tx-list .sub-swipe-container").forEach(function(container) {
+    var row = container.querySelector(".row");
+    if (row) {
+      attachSwipeEvents(row, container);
+    }
+  });
       applyLayout();
 
     }).catch(function(err){document.getElementById("rec-msg").textContent="Error: "+err.message;});
-
+    
 } 
 
 
+document.getElementById("tx-list").addEventListener("click", function(e) {
+  var target = e.target;
 
 
-document.getElementById("tx-list").addEventListener("click",function(e){
-  var row=e.target;
-  while(row&&!row.classList.contains("row"))row=row.parentNode;
-  if(!row)return;
-  var isExp=row.classList.contains("expanded");
-  document.querySelectorAll(".row.expanded").forEach(function(el){el.classList.remove("expanded");});
-  if(!isExp)row.classList.add("expanded");
-  applyLayout();
+  // 2. Tìm hàng (.row) tương ứng với vị trí click (Thay thế vòng lặp while cũ bằng closest)
+  var row = target.closest(".row");
+  if (!row) return;
+
+  // 3. Nếu hàng đang trong trạng thái vuốt (swiped), click vào row sẽ đóng nút delete lại
+  var container = row.closest(".sub-swipe-container");
+  if (container && container.classList.contains("swiped")) {
+    container.classList.remove("swiped");
+    row.style.transform = "translateX(0px)";
+    return;
+  }
+
+  // 4. Xử lý Toggle class Expanded để xem chi tiết giao dịch (Giữ nguyên logic gốc của bạn)
+  var isExp = row.classList.contains("expanded");
+  
+  // Đóng toàn bộ các hàng đang mở khác
+  document.querySelectorAll(".row.expanded").forEach(function(el) {
+    el.classList.remove("expanded");
+  });
+  
+  // Nếu hàng vừa click chưa mở thì mở nó lên
+  if (!isExp) {
+    row.classList.add("expanded");
+  }
+  
+  // Áp dụng lại layout
+  if (typeof applyLayout === "function") {
+    applyLayout();
+  }
 });
+
+function updateDetailInSheets(date, oldDetail, newDetail) {
+  var webAppUrl = "https://script.google.com/macros/s/AKfycbz45guEvRxnEpsrP3G553lYI-UCp78JMrCfK7aS5RX3K-Jd0C9-yhNkqW9Du2O-dkAjeA/exec";
+  
+  var payload = {
+    date: date,
+    oldDetail: oldDetail,
+    newDetail: newDetail
+  };
+  
+  fetch(webAppUrl, {
+    method: "POST",
+    mode: "no-cors", // Tránh lỗi CORS trên widget
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+  })
+  .then(function() {
+    alert("Đang yêu cầu cập nhật lên Sheets! CSV sẽ đồng bộ sau vài giây.");
+    // Có thể reload hoặc cập nhật UI tạm thời tại đây
+  })
+  .catch(function(err) {
+    console.error("Lỗi gửi update:", err);
+  });
+}
 
 /* ══ APPLY LAYOUT ══ */
 function applyLayout(){
@@ -2610,7 +2731,9 @@ function renderSubscriptions(items) {
 function closeAllSwipeRows() {
   document.querySelectorAll(".sub-swipe-container").forEach(function (container) {
     container.classList.remove("swiped");
-    var cardRow = container.querySelector(".subs-row");
+    
+    // 🟢 SỬA TẠI ĐÂY: Tìm class .subs-row HOẶC .row
+    var cardRow = container.querySelector(".subs-row, .row");
     if (cardRow) {
       cardRow.style.transition = "transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)";
       cardRow.style.transform = "translateX(0px)";
@@ -2665,7 +2788,9 @@ function attachSwipeEvents(cardRow, container) {
       }
       if (el !== container) {
         el.classList.remove("swiped");
-        var activeRow = el.querySelector(".subs-row");
+        
+        // 🟢 SỬA TẠI ĐÂY: Tìm class .subs-row HOẶC .row để đóng lại
+        var activeRow = el.querySelector(".subs-row, .row");
         if (activeRow) activeRow.style.transform = "translateX(0px)";
         var activeBtn = el.querySelector(".sub-delete-action");
         if (activeBtn) activeBtn.style.zIndex = "1";
@@ -3847,6 +3972,79 @@ document.getElementById('lbl-peak-prediction').innerText = `Expected Peak: ${dis
     });
   }
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+  const txList = document.getElementById("tx-list");
+
+  if (txList) {
+    txList.addEventListener("click", function (e) {
+      
+      // 1. CHỈ xử lý khi click trúng nút xóa (.sub-delete-action)
+      const deleteBtn = e.target.closest(".sub-delete-action");
+      if (deleteBtn) {
+        e.stopPropagation(); // Ngăn sự kiện loang ra ngoài làm đóng/mở row chi tiết
+
+        const container = deleteBtn.closest(".sub-swipe-container");
+        const itemId = deleteBtn.getAttribute("data-id"); // Lấy ID từ nút xóa
+
+        if (container && confirm("Bạn có chắc chắn muốn xóa giao dịch này?")) {
+          // Hiệu ứng co lại và biến mất mượt mà
+          container.style.transition = "all 0.3s ease";
+          container.style.height = "0px";
+          container.style.opacity = "0";
+          container.style.margin = "0";
+          container.style.padding = "0";
+          container.style.overflow = "hidden";
+
+          setTimeout(() => {
+            container.remove();
+            
+            // Gọi hàm xóa thực tế của bạn
+            if (typeof deleteTx === "function") {
+              deleteTx(itemId);
+            } else {
+              console.warn("Chưa định nghĩa hàm xóa giao dịch cho ID:", itemId);
+            }
+          }, 300);
+        }
+        return;
+      }
+
+      // 2. Xử lý click vào row để toggle class "swiped" (hiện nút xóa)
+      const rowItem = e.target.closest(".row");
+      if (rowItem) {
+        const container = rowItem.closest(".sub-swipe-container");
+        if (container) {
+          const isSwiped = container.classList.contains("swiped");
+
+          // Đóng các hàng khác đang mở nút xóa
+          document.querySelectorAll(".sub-swipe-container.swiped").forEach(item => {
+            if (item !== container) {
+              item.classList.remove("swiped");
+            }
+          });
+
+          // Toggle class swiped
+          if (isSwiped) {
+            container.classList.remove("swiped");
+          } else {
+            container.classList.add("swiped");
+          }
+        }
+      }
+    });
+  }
+
+  // Tự động đóng tất cả các nút xóa khi click ra bất kỳ vùng trống nào ngoài danh sách
+  document.addEventListener("click", function (e) {
+    if (!e.target.closest(".sub-swipe-container")) {
+      document.querySelectorAll(".sub-swipe-container.swiped").forEach(item => {
+        item.classList.remove("swiped");
+      });
+    }
+  });
+});
+
 
 // Kick off initialization on layout render loops
 document.addEventListener("DOMContentLoaded", initFullyAutomatedTimeline);
