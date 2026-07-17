@@ -197,13 +197,15 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .wallet-pocket{position:absolute;bottom:0;left:0;width:100%;height:160px;background:var(--card-pocket-bg);border-radius:0 0 24px 24px;z-index:10;padding:20px 24px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 -12px 24px rgba(0,0,0,0.6),inset 0 1px 1px rgba(255,255,255,0.1),inset 0 -10px 20px rgba(0,0,0,0.4)}
 .wallet-pocket::after{content:'';position:absolute;top:4px;left:8px;right:8px;bottom:8px;border-left:1.5px dashed rgba(255,255,255,0.12);border-right:1.5px dashed rgba(255,255,255,0.12);border-bottom:1.5px dashed rgba(255,255,255,0.12);border-bottom-left-radius:18px;border-bottom-right-radius:18px;pointer-events:none;z-index:12}
 .wallet-pocket::before{content:'';position:absolute;top:-12px;left:0;width:100%;height:13px;background:var(--card-pocket-bg);box-shadow:inset 0 1px 0 rgba(255,255,255,0.08);clip-path:polygon(14px 0%,calc(100% - 14px) 0%,100% 100%,0% 100%)}
-.pocket-header{display:flex;align-items:center;gap:8px;color:var(--text-muted);font-size:13px;font-weight:500;position:relative;z-index:15}
-.pocket-header .material-icons-round{font-size:16px}
-.total-balance-value{font-size:24px;font-family:"JetBrains Mono",monospace,sans-serif;font-weight:700;margin-top:4px;letter-spacing:-0.5px;position:relative;z-index:15}
-.usd-equivalence{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-muted);margin-top:2px;position:relative;z-index:15}
-.preview-section{margin-top:10px;width:100%;display:flex;flex-direction:column;gap:6px;position:relative;z-index:15}
+.pocket-header{margin-top:-10px;display:flex;align-items:center;gap:8px;color:var(--text-muted);font-size:13px;font-weight:500;position:relative;z-index:15}
+.pocket-header .material-icons-round{font-size:16px;}
+.total-balance-value{font-size:24px;font-family:"JetBrains Mono",monospace,sans-serif;font-weight:700;margin-top:2px;letter-spacing:-0.5px;position:relative;z-index:15}
+.usd-equivalence{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-muted);margin-top:-1px;position:relative;z-index:15}
+.preview-section{margin-top:15px;width:100%;display:flex;flex-direction:column;gap:6px;position:relative;z-index:15}
 .preview-row{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--text-muted);padding-top:6px;border-top:1px dashed rgba(255,255,255,0.08)}
 .preview-row-left{display:flex;align-items:center;gap:6px}
+.preview-row:first-child {border-top: none;}
+.preview-row:last-child {margin-top: -0px!important;}
 .preview-mini-icon{width:14px;height:14px;object-fit:contain;border-radius:3px}
 .pocket-footer{display:flex;justify-content:flex-end;align-items:center;position:relative;z-index:15}
 .pocket-logo{color:var(--text-muted);opacity:0.25;font-size:18px}
@@ -238,26 +240,128 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 #ca-col-right { flex:1; display:flex; flex-direction:column; gap:0; min-width:0; justify-content:top; padding:0; overflow:hidden; margin-top:10px }
 #ca-section-balance, #ca-section-income, #ca-section-expense, #ca-section-weather { display:flex; flex-direction:column; flex:0 0 auto; min-width:0; }
 
-/* Balance */
-#ca-card-balance { display:flex; flex-direction:column; gap:1.3vw; }
-.ca-list-item { display:flex; align-items:center; gap:1.6vw; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:1.8vw; padding:1vw 1.8vw; }
-.ca-list-icon { width:4vw; height:4vw; border-radius:50%; object-fit:contain; flex-shrink:0; background:rgba(255,255,255,0.06); padding:0.5vw; }
-.ca-bi-name { flex:1; font-size:2.88vw; font-weight:600; color:rgba(255,255,255,0.85); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.ca-bi-val { font-size:2.92vw; font-weight:700; color:rgba(255,255,255,0.85); white-space:nowrap; text-align:right; margin-left:auto; }
-.ca-list-pct { font-size:1.76vw; font-weight:600; color:rgba(255,255,255,0.45); background:rgba(255,255,255,0.07); border-radius:99vw; padding:0.4vw 1.2vw; white-space:nowrap; flex-shrink:0; }
-.ca-mini-ring { width:5vw; height:5vw; flex-shrink:0; }
-
 /* Income chart */
-#ca-card-income { display:flex; justify-content:space-between; align-items:stretch; gap:0.5vw; padding:0 2vw; }
-.ca-col-item { flex:1; display:flex; flex-direction:column; align-items:center; min-width:0; }
-.ca-col-zone-pos { flex:1; width:100%; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; }
-.ca-col-zone-neg { flex:1; width:100%; display:flex; flex-direction:column; justify-content:flex-start; align-items:center; }
-.ca-col-pct { font-size:1.76vw; font-weight:700; color:rgba(255,255,255,0.8); white-space:nowrap; margin-bottom:0.3vw; }
-.ca-col-icon-wrap { width:4vw; height:4vw; border-radius:50%; background:rgba(255,255,255,0.13); display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-bottom:0.4vw; }
-.ca-col-icon-wrap img { width:2.6vw; height:2.6vw; object-fit:contain; }
-.ca-col-val { font-size:1.84vw; color:rgba(255,255,255,0.55); white-space:nowrap; margin-bottom:0.4vw; text-align:center; }
-.ca-col-bar { width:70%; background:rgba(255,255,255,0.85); transition:height 0.5s ease; }
+.income-widget {
 
+  padding: 0;
+  background: transparent;
+  max-width: 100%; 
+  margin: 10px 0 30px 0;
+}
+
+/* Master Total Header */
+.income-total {
+  font-size: 23px; font-family:"JetBrains Mono";
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 10px; 
+  letter-spacing: -0.2px;
+  text-align: right;
+  text-decoration: none !important;
+}
+
+/* Segmented Progress Bar Track */
+.segmented-bar {
+  display: flex;
+  height: 10px; /* Thinner progress bar */
+  width: 100%;
+  background-color: #242426; 
+  border-radius: 100px; 
+  overflow: hidden; 
+  margin-bottom: 14px; 
+}
+
+.bar-segment {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+/* List Rows */
+.income-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3px 4px; /* Even tighter padding */
+  font-size: 13px; /* Reduced from 14px */
+  border-bottom: 1px solid #1c1c1e;
+  list-style: none !important;
+}
+.income-row:last-child {
+  border-bottom: none;
+}
+
+/* Left Side - Holds the relative container for the ring and the title */
+.income-row-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1.5; 
+  min-width: 0;
+}
+
+/* Circular Progress Ring Wrapper */
+.ring-container {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ring-svg {
+  transform: rotate(-90deg); /* Start the progress stroke at the top center */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 24px;
+  height: 24px;
+}
+
+/* Tiny Icon situated inside the center of the ring */
+.income-icon-image {
+  width: 13px; /* Scaled down further */
+  height: 13px;
+  object-fit: contain;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.income-title {
+  color: #a9a9b3; /* Uniform clean gray */
+  font-weight: 300;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 13px;
+}
+
+/* Center Column: Percentages */
+.income-percentage {
+  font-weight: 300;
+  flex: 0.8;
+  text-align: right; 
+  font-size: 12px; /* Smaller text */
+  padding-right: 10px;
+}
+
+.pct-positive { 
+  color: #12d3a6; 
+} 
+.pct-neutral { 
+  color: #f36b7f; 
+}
+
+/* Right Column: Values */
+.income-value {
+  font-weight: 300;
+  color: #ffffff;
+  flex: 1;
+  text-align: right;
+  font-size: 13px; /* Smaller text */
+  letter-spacing: 0.2px;
+}
 /* Donut */
 #ca-donut-wrap { width:25vw; height:25vw; position:relative; margin:0 auto 2vw auto; align-self:center; }
 #ca-donut-wrap svg { width:100%; height:100%; filter:drop-shadow(0 4px 24px rgba(0,0,0,0.5)); }
@@ -707,9 +811,17 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
         </div>
         <!-- Right column: Income + Weather + Countdown -->
         <div id="ca-col-right">
-          <div id="ca-section-income">
-            <div id="ca-card-income" style="display:none"></div>
+          <div class="income-widget">
+            <!-- 1. Big Total Balance Display -->
+            <div class="income-total" id="incomeTotal">$0.00</div>
+
+            <!-- 2. Segmented Progress Bar -->
+            <div class="segmented-bar" id="incomeSegmentedBar"></div>
+
+            <!-- 3. Dynamic List Rows -->
+            <div class="income-list" id="incomeListContainer"></div>
           </div>
+
           <div id="ca-section-weather">
             <div class="ca-wx">
               <div class="ca-wx-header">
@@ -1816,48 +1928,9 @@ function caCSV(row){var cols=[],cur="",q=false;for(var i=0;i<row.length;i++){var
 function caNum(s){if(!s)return NaN;s=s.trim();if(s.charAt(0)==="("&&s.charAt(s.length-1)===")") s="-"+s.slice(1,-1);s=s.replace(/[^\d.\-]/g,"");return parseFloat(s);}
 function caArc(cx,cy,r,sa,ea){var toR=function(a){return(a-90)*Math.PI/180;};var x1=cx+r*Math.cos(toR(sa)),y1=cy+r*Math.sin(toR(sa)),x2=cx+r*Math.cos(toR(ea)),y2=cy+r*Math.sin(toR(ea));return"M "+x1+" "+y1+" A "+r+" "+r+" 0 "+((ea-sa)>180?1:0)+" 1 "+x2+" "+y2;}
 
-function caRenderBalance(items){
-  var card=document.getElementById("ca-card-balance");card.innerHTML="";
-  var filtered=items.filter(function(d){return d.val&&Math.abs(d.val)>0;});
-  var total=filtered.filter(function(d){return!caSocial(d.name);}).reduce(function(s,d){return s+Math.abs(d.val);},0);
-  var sorted=filtered.slice().sort(function(a,b){var aS=caSocial(a.name),bS=caSocial(b.name);if(!aS&&bS)return -1;if(aS&&!bS)return 1;return Math.abs(b.val)-Math.abs(a.val);});
-  sorted.forEach(function(item){
-    var social=caSocial(item.name),pct=total>0?(Math.abs(item.val)/total*100):0;
-    var r=10,sw=3,circ=2*Math.PI*r,dash=social?0:(pct/100)*circ,gap=circ-dash;
-    var row=document.createElement("div");row.className="ca-list-item";row.dataset.pct=social?"":pct.toFixed(1);
-    var ico=document.createElement("img");ico.className="ca-list-icon";ico.src=item.icon;ico.onerror=function(){this.style.display="none";};
-    var nm=document.createElement("div");nm.className="ca-bi-name";nm.textContent=caStrip(item.name);
-    var rw=document.createElement("div");rw.className="ca-mini-ring";
-    rw.innerHTML='<svg viewBox="0 0 28 28" style="width:100%;height:100%;"><circle cx="14" cy="14" r="'+r+'" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="'+sw+'"/><circle cx="14" cy="14" r="'+r+'" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="'+sw+'" stroke-linecap="round" stroke-dasharray="'+dash.toFixed(2)+' '+gap.toFixed(2)+'" stroke-dashoffset="0" transform="rotate(-90 14 14)"/></svg>';
-    var vl=document.createElement("div");vl.className="ca-bi-val";vl.textContent=caFmt(item.val);
-    var pc=document.createElement("div");pc.className="ca-list-pct";pc.textContent=social?"---":pct.toFixed(0)+"%";
-    row.appendChild(ico);row.appendChild(nm);row.appendChild(rw);row.appendChild(vl);row.appendChild(pc);
-    card.appendChild(row);
-  });
-  card.style.display="flex"; caApplyLayout();
-}
 
-function caRenderIncome(items){
-  var card=document.getElementById("ca-card-income");card.innerHTML="";
-  var filtered=items.filter(function(d){return d.val&&Math.abs(d.val)>0;});
-  var total=filtered.reduce(function(s,d){return s+Math.abs(d.val);},0);
-  var sorted=filtered.slice().sort(function(a,b){return Math.abs(b.val)-Math.abs(a.val);});
-  var maxAbs=Math.max.apply(null,sorted.map(function(d){return Math.abs(d.val);}));maxAbs=maxAbs||1;
-  var isMobile=window.innerWidth<400;
-  var cardH=Math.max(isMobile?150:140,Math.min(window.innerWidth*(isMobile?0.6:0.32),isMobile?300:260));
-  var posH=cardH*0.55,negH=cardH*0.45,maxBar=Math.min(posH,negH)*0.55;
-  card.style.minHeight=cardH+"px";
-  sorted.forEach(function(item){
-    var isPos=item.val>=0,pct=total>0?(Math.abs(item.val)/total*100):0,barH=Math.max(4,(Math.abs(item.val)/maxAbs)*maxBar);
-    var col=document.createElement("div");col.className="ca-col-item";
-    var pz=document.createElement("div");pz.className="ca-col-zone-pos";pz.style.height=posH+"px";
-    var nz=document.createElement("div");nz.className="ca-col-zone-neg";nz.style.height=negH+"px";
-    if(isPos){pz.innerHTML='<div class="ca-col-pct">'+pct.toFixed(1)+'%</div><div class="ca-col-val">'+caFmtSgn(item.val)+'</div><div class="ca-col-icon-wrap"><img src="'+item.icon+'" onerror="this.style.display=\'none\'" /></div><div class="ca-col-bar" style="height:'+barH+'px;border-radius:1vw;"></div>';}
-    else{nz.innerHTML='<div class="ca-col-bar" style="height:'+barH+'px;border-radius:1vw;"></div><div class="ca-col-icon-wrap"><img src="'+item.icon+'" onerror="this.style.display=\'none\'" /></div><div class="ca-col-val">'+caFmtSgn(item.val)+'</div><div class="ca-col-pct">'+pct.toFixed(1)+'%</div>';}
-    col.appendChild(pz);col.appendChild(nz);card.appendChild(col);
-  });
-  card.style.display="flex";caApplyLayout();
-}
+
+
 
 function caSetCenter(l,v){var cl=document.getElementById("ca-center-label"),cv=document.getElementById("ca-center-val");if(cl)cl.textContent=l;if(cv)cv.textContent=v;}
 
@@ -1967,34 +2040,150 @@ function caRenderList(data){
     list.appendChild(row);
   });caApplyLayout();
 }
-/*
-function caLoadBI(){
-  fetch(CA_CSV_BI+"&t="+Date.now(),{cache:"no-store"})
-    .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.text();})
-    .then(function(text){
-      var rows=text.trim().split("\n").filter(function(r){return r.trim();});
-      var balance=[],income=[];
-      rows.forEach(function(row){
-        var cols=caCSV(row);
-        var bI=(cols[0]||"").replace(/^"|"$/g,"").trim(),bN=(cols[1]||"").replace(/^"|"$/g,"").trim(),bV=caNum(cols[2]);
-        var iI=(cols[4]||"").replace(/^"|"$/g,"").trim(),iN=(cols[5]||"").replace(/^"|"$/g,"").trim(),iV=caNum(cols[6]);
-        if(bN&&!isNaN(bV))balance.push({icon:bI,name:bN,val:bV});
-        if(iN&&!isNaN(iV))income.push({icon:iI,name:iN,val:iV});
+
+const PALETTE = ["#a8dadc", "#457b9d", "#1d3557", "#2a9d8f", "#e9c46a"];
+
+function formatVNDShort(value) {
+  var isNegative = value < 0;
+  var absValue = Math.abs(value);
+  var formatted = "";
+
+  if (absValue >= 1000000) {
+    formatted = "₫" + (absValue / 1000000).toFixed(1) + "M";
+  } else if (absValue >= 1000) {
+    formatted = "₫" + (absValue / 1000).toFixed(1) + "K";
+  } else {
+    formatted = "₫" + absValue;
+  }
+
+  return isNegative ? "-" + formatted : formatted;
+}
+
+function formatVNDNormal(value) {
+  return new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND'
+  }).format(value);
+}
+
+function caRenderIncomeWidget(incomeData) {
+  const totalDisplay = document.getElementById("incomeTotal");
+  const barContainer = document.getElementById("incomeSegmentedBar");
+  const listContainer = document.getElementById("incomeListContainer");
+
+  if (!totalDisplay || !barContainer || !listContainer) return;
+
+  barContainer.innerHTML = "";
+  listContainer.innerHTML = "";
+
+  const grandTotal = incomeData.reduce((sum, item) => sum + item.val, 0);
+  totalDisplay.textContent = formatVNDNormal(grandTotal);
+
+  incomeData.forEach((item, index) => {
+    const absVal = Math.abs(item.val);
+    const absTotal = incomeData.reduce((sum, i) => sum + Math.abs(i.val), 0);
+    const percentage = absTotal > 0 ? (absVal / absTotal) * 100 : 0;
+    const color = PALETTE[index % PALETTE.length];
+
+    // --- A. Progress Bar ---
+    if (percentage > 0) {
+      const segment = document.createElement("div");
+      segment.className = "bar-segment";
+      segment.style.width = `${percentage}%`;
+      segment.style.backgroundColor = color;
+      barContainer.appendChild(segment);
+    }
+
+    // --- B. Row Structure ---
+    const row = document.createElement("div");
+    row.className = "income-row";
+
+    const formattedPct = percentage.toFixed(2) + "%";
+    const formattedVal = formatVNDShort(item.val);
+    const pctColorClass = item.val >= 0 ? "pct-positive" : "pct-neutral";
+
+    // Strip out all emojis and non-standard symbols from the string
+    const cleanTitle = item.name.replace(/[^\x00-\x7F]/g, "").trim();
+
+    // SVG Circular Progress Ring Calculation
+    // Circumference = 2 * π * r (r=10 -> 2 * 3.14159 * 10 ≈ 62.83)
+    const radius = 10;
+    const circumference = 2 * Math.PI * radius;
+    const strokeDashoffset = circumference - (percentage / 100) * circumference;
+
+    row.innerHTML = `
+      <div class="income-row-left">
+        <!-- SVG Progress Ring wrapped around the icon -->
+        <div class="ring-container">
+          <svg class="ring-svg">
+            <!-- Background track circle -->
+            <circle cx="12" cy="12" r="${radius}" stroke="#242426" stroke-width="2" fill="transparent" />
+            <!-- Active progress stroke -->
+            <circle cx="12" cy="12" r="${radius}" stroke="${color}" stroke-width="2" fill="transparent"
+              stroke-dasharray="${circumference}" 
+              stroke-dashoffset="${strokeDashoffset}" 
+              stroke-linecap="round" />
+          </svg>
+          <img class="income-icon-image" src="${item.icon}" onerror="this.style.display='none';" />
+        </div>
+        <span class="income-title">${cleanTitle}</span>
+      </div>
+      <span class="income-percentage ${pctColorClass}">${formattedPct}</span>
+      <span class="income-value">${formattedVal}</span>
+    `;
+
+    listContainer.appendChild(row);
+  });
+}
+
+function caLoadBI() {
+  fetch(CA_CSV_BI + "&t=" + Date.now(), { cache: "no-store" })
+    .then(function(r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.text();
+    })
+    .then(function(text) {
+      var rows = text.trim().split("\n").filter(function(r) { return r.trim(); });
+      var income = [];
+
+      rows.forEach(function(row, index) {
+        // Skip CSV Header Row
+        if (index === 0) return;
+
+        var cols = caCSV(row);
+        
+        // Extracting columns E, F, and G (indices 4, 5, and 6)
+        var colE = (cols[4]||"").replace(/^"|"$/g,"").trim(); // Icon
+        var colF = (cols[5]||"").replace(/^"|"$/g,"").trim(); // Name/Group
+        var colG = caNum(cols[6]);                       // Value (e.g. 46670)
+
+        if (colF && !isNaN(colG)) {
+          income.push({ icon: colE, name: colF, val: colG });
+        }
       });
-      if(balance.length)caRenderBalance(balance);
-      if(income.length)caRenderIncome(income);
-    }).catch(function(err){console.warn("ca-bi:",err.message);});
-}*/
+
+      // Send the arrays to render
+      if (income.length) {
+        caRenderIncomeWidget(income);
+      }
+    })
+    .catch(function(err) {
+      console.warn("ca-bi:", err.message);
+    });
+}
 
 function caLoadDonut(){
   fetch(CA_CSV_DNUT+"&t="+Date.now(),{cache:"no-store"})
     .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.text();})
+    
     .then(function(text){
       var data=text.trim().split("\n").filter(function(r){return r.trim();}).map(function(row){
         var cols=caCSV(row);return{name:cols[0].replace(/^"|"$/g,"").trim(),val:caNum(cols[1])};
+        console.log("📊 All Rows Found in CSV:", data);
       }).filter(function(d){return d.name&&!isNaN(d.val);});
       if(!data.length)return;
       caGlobalData=data;caRenderDonut(data);caRenderList(data);
+      //console.log("📊 Final Donut Data Array:", data);
     }).catch(function(err){console.warn("ca-donut:",err.message);});
 }
 
@@ -4074,6 +4263,11 @@ setInterval(loadExpense,60000);
 setInterval(loadRecent,60000);
 //setInterval(caLoadBI,60000);
 setInterval(caLoadDonut,60000);
+
+// This forces the function to run immediately once the DOM is fully loaded
+document.addEventListener("DOMContentLoaded", function() {
+  caLoadBI();
+});
 
 /* ══ INIT: load saved tab order + last active tab, apply, then wire up UI ══ */
 (function() {
