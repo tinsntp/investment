@@ -233,13 +233,63 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 
 /* ══ OVERVIEW SLIDE ══ */
 #slide-2 { padding:0; overflow:hidden; margin-top:10px}
-#ca-wrap { display:flex; width:100%; height:100%; }
+/* Change the parent wrapper to a standard block layout */
+#ca-wrap { 
+  display: block; 
+  width: 100%; 
+}
 
-/* iPad: 2-column */
-#ca-col-left { flex:0.6; display:flex; flex-direction:column; gap:3vw; min-width:0; justify-content:top; padding:0; overflow:hidden; margin-top:10px}
-#ca-col-right { flex:0.4; display:flex; flex-direction:column; gap:0; min-width:0; justify-content:top; padding:0; overflow:hidden; margin-top:10px }
-#ca-section-balance, #ca-section-income, #ca-section-expense, #ca-section-weather { display:flex; flex-direction:column; flex:0 0 auto; min-width:0; }
+/* Force both columns to behave inline and sit in a single stream */
+#ca-col-left,
+#ca-col-right {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 3vw;
+  vertical-align: top; /* Ensures the tops align smoothly side-by-side */
+  min-width: 0;
+  justify-content: flex-start;
+  padding: 0;
+  overflow: hidden;
+  margin-top: 10px;
+}
 
+/* Adjust the respective widths using inline percentages */
+#ca-col-left { 
+  width: 60%; /* Leaving a tiny buffer for whitespace margins */
+}
+
+#ca-col-right { 
+  width: 40%;
+  gap: 0; 
+}
+
+#ca-section-balance, #ca-section-income, #ca-section-expense, #ca-section-weather { 
+  display: flex; 
+  flex-direction: column; 
+  flex: 0 0 auto; 
+  min-width: 0; 
+}
+
+/* Mobile rules remain completely untouched and clean */
+@media (max-width: 400px) {
+  #ca-wrap { 
+    display: flex !important;
+    flex-direction: column !important; 
+  }
+  
+  #ca-col-left, 
+  #ca-col-right {
+    display: flex !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-top: 0 !important;
+    margin-right: 0 !important;
+  }
+  
+  #ca-col-right {
+    margin-top: 20px !important; 
+  }
+}
 /* Income chart */
 .income-widget {
 
@@ -368,7 +418,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
   display: flex;
   justify-content: center;
   gap: 1.5vw;
-  margin: 10px 0 -10px 0;
+  margin-top: 10px;margin-bottom: 10px;
 }
 
 .ca-filter-btn {
@@ -384,6 +434,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
   font-size: 2vw;
   transition: all 0.25s ease;
 }
+.ca-filter-btn .bi{font-size:14px!important;}
 
 .ca-filter-btn:hover {
   background: rgba(255, 255, 255, 0.08);
@@ -769,7 +820,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
     <!-- OVERVIEW SLIDE -->
     <div class="slide" id="slide-2" data-idx="2">
       <div id="ca-wrap">
-        <!-- Left column: Balance + Donut -->
+        <!-- Left column: Balance Sheet & Wallet Controls -->
         <div id="ca-col-left">
           <div class="wallet-widget">
             <div class="wallet-container">
@@ -810,9 +861,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
                   </div>
                 </div>
 
-                <div class="pocket-footer">
-                  
-                </div>
+                <div class="pocket-footer"></div>
               </div>
               
             </div>
@@ -844,12 +893,9 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
               <button class="modal-close" onclick="closeModal()">Close</button>
             </div>
           </div>
-
-          
-        </div>
-        <!-- Right column: Income + Weather + Countdown -->
-        <div id="ca-col-right">
-         <div id="ca-section-expense">
+        </div><!-- NO SPACE CHARACTER BETWEEN THESE DIVS TO ENSURE STABLE INLINE FLOW --><div id="ca-col-right">
+          <!-- Right column: Chart Analysis & Dynamic Breakdown lists -->
+          <div id="ca-section-expense">
             <!-- Dynamic Filter Controls -->
             <div class="ca-filter-header">
               <button class="ca-filter-btn" id="ca-btn-income" title="Incomes">
@@ -858,7 +904,6 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
               <button class="ca-filter-btn active" id="ca-btn-expense" title="Expenses">
                 <i class="bi bi-basket"></i>
               </button>
-              
             </div>
 
             <div id="ca-donut-wrap">
@@ -870,7 +915,6 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
             </div>
             <div id="ca-list"></div>
           </div>
-
         </div>
       </div>
     </div>
@@ -2164,14 +2208,14 @@ function caRenderList(data) {
     row.className = "ca-list-row";
     
     var pcFs = window.innerWidth < 401 ? "4.6vw" : "2.6vw";
-    var pcMw = window.innerWidth < 401 ? "60px" : "45px";
+    var pcMw = window.innerWidth < 401 ? "80px" : "50px";
     var iconUrl = item.icon || defaultIcons[i % defaultIcons.length];
     var cleanName = item.name.replace(/[^\x00-\x7F]/g, "") .replace(/\bPNL\b/gi, "").replace(/\s+/g, " ").trim();
 
 
     // Render the layout: Ring + Icon | Name (un-truncated) | Pct% (aligned right) | Amount (aligned right)
     row.innerHTML = `
-      <div class="ca-list-left" style="margin-right: 0px;">
+      <div class="ca-list-left" style="margin-right: 2px;">
         ${caMiniRingMarkup(pct, p.solid)}
         <img class="ca-list-img" src="${iconUrl}" onerror="this.style.opacity='0';" />
       </div>
@@ -2179,7 +2223,7 @@ function caRenderList(data) {
         ${cleanName}
       </div>
       <div class="ca-list-pct" style="text-align: right; width: 22px; flex-shrink: 0; padding-right:2px;">
-        ${pct.toFixed(0)}%
+        ${pct.toFixed(1)}%
       </div>
       <div class="ca-list-val" style="text-align: right; flex-shrink: 0; min-width: ${pcMw};">
         ${caFmt(item.val)}
@@ -2251,14 +2295,14 @@ function caRenderDrill(items,title,color){
   header.addEventListener("click",function(){caHighlight(null);caRenderList(caGlobalData);});
   list.appendChild(header);
   var total=items.reduce(function(s,d){return s+Math.abs(d.val);},0);
-  var pcSMw = window.innerWidth < 401 ? "50px" : "40px";
+  var pcSMw = window.innerWidth < 401 ? "60px" : "40px";
   items.forEach(function(item){
     var pct=Math.abs(item.val)/total*100,r2=10,sw=3,circ=2*Math.PI*r2,dash=(pct/100)*circ,gap=circ-dash;
     var row=document.createElement("div");row.className="ca-list-row";row.style.cursor="default";
     row.innerHTML='<img src="'+item.icon+'" style="width:'+drIS+';height:'+drIS+';object-fit:contain;flex-shrink:0;" />'
       +'<div class="ca-list-name" style="font-size:'+drPcFs+';">'+item.name+'</div>'
       +'<svg viewBox="0 0 28 28" style="flex-shrink:0;width:3vw;height:3vw;"><circle cx="14" cy="14" r="'+r2+'" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="'+sw+'"/><circle cx="14" cy="14" r="'+r2+'" fill="none" stroke="'+color+'" stroke-width="'+sw+'" stroke-linecap="round" stroke-dasharray="'+dash.toFixed(2)+' '+gap.toFixed(2)+'" stroke-dashoffset="0" transform="rotate(-90 14 14)"/></svg>'
-      +'<div class="ca-list-pct" style="font-size:'+drPcFs+';flex-shrink:0;">'+pct.toFixed(0)+'%</div>'
+      +'<div class="ca-list-pct" style="font-size:'+drPcFs+';flex-shrink:0;">'+pct.toFixed(1)+'%</div>'
       +'<div class="ca-list-val" style="min-width: ' + pcSMw + '; font-size:' + drPcFs + '; text-align: right;">' + caFmt(Math.abs(item.val)) + '</div>';
 
       
@@ -2426,8 +2470,6 @@ caSwitchTab("income");
 function caApplyLayout(){
   var isMobile=window.innerWidth<400;
   var wrap=document.getElementById("ca-wrap");
-  var colL=document.getElementById("ca-col-left");
-  var colR=document.getElementById("ca-col-right");
   var sWx=document.getElementById("ca-section-weather");
   var donutWrap=document.getElementById("ca-donut-wrap");
   var sInc=document.getElementById("ca-section-income");
@@ -2435,12 +2477,8 @@ function caApplyLayout(){
   if(isMobile){
     // iPhone: stacked single column, hide weather+countdown
     if(wrap){wrap.style.flexDirection="column";wrap.style.overflowY="auto";wrap.style.overflowX="hidden";wrap.style.height="auto";wrap.style.minHeight="100%";}
-    if(colL){colL.style.padding="0";}
-    if(colR){colR.style.padding="0";}
     if(sWx)sWx.style.display="none";
     if(donutWrap){donutWrap.style.width="45vw";donutWrap.style.height="45vw";}
-    // Move income into left column above donut
-    if(colL&&sInc&&sExp){colL.insertBefore(sInc,sExp);}
     // Income chart sizes for mobile
     var sInc = document.getElementById("ca-section-income");
     if (sInc) sInc.style.marginTop = "5vw";
@@ -2465,16 +2503,12 @@ function caApplyLayout(){
   } else {
     // iPad: 2-column layout, show weather+countdown
     if(wrap){wrap.style.flexDirection="row";wrap.style.overflowY="hidden";wrap.style.height="100%";wrap.style.minHeight="";}
-    if(colL){colL.style.padding="0";}
-    if(colR){colR.style.padding="0";}
     if(sWx){sWx.style.display="flex";sWx.style.flexDirection="column";}
     if(donutWrap){donutWrap.style.width="25vw";donutWrap.style.height="25vw";donutWrap.style.marginTop="20px"}
-    // Ensure income is first in right column
-    if(colR&&sInc&&colR.firstChild!==sInc){colR.insertBefore(sInc,colR.firstChild);}
+
     // Income sizes for iPad
     var sInc = document.getElementById("ca-section-income");
-    if (sInc) sInc.style.marginTop = "10px";
-    if (sInc) sInc.style.marginBottom = "30px";
+   
     document.querySelectorAll(".ca-col-pct").forEach(function(el){el.style.fontSize="2.76vw";});
     document.querySelectorAll(".ca-col-val").forEach(function(el){el.style.fontSize="2.6vw";});
     document.querySelectorAll(".ca-col-icon-wrap").forEach(function(el){el.style.width="4vw";el.style.height="4vw";});
