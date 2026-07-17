@@ -236,8 +236,8 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 #ca-wrap { display:flex; width:100%; height:100%; }
 
 /* iPad: 2-column */
-#ca-col-left { flex:1; display:flex; flex-direction:column; gap:3vw; min-width:0; justify-content:top; padding:0; overflow:hidden; margin-top:10px}
-#ca-col-right { flex:1; display:flex; flex-direction:column; gap:0; min-width:0; justify-content:top; padding:0; overflow:hidden; margin-top:10px }
+#ca-col-left { flex:0.6; display:flex; flex-direction:column; gap:3vw; min-width:0; justify-content:top; padding:0; overflow:hidden; margin-top:10px}
+#ca-col-right { flex:0.4; display:flex; flex-direction:column; gap:0; min-width:0; justify-content:top; padding:0; overflow:hidden; margin-top:10px }
 #ca-section-balance, #ca-section-income, #ca-section-expense, #ca-section-weather { display:flex; flex-direction:column; flex:0 0 auto; min-width:0; }
 
 /* Income chart */
@@ -363,44 +363,91 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
   letter-spacing: 0.2px;
 }
 /* Donut */
+/* Container Filters */
+.ca-filter-header {
+  display: flex;
+  justify-content: center;
+  gap: 1.5vw;
+  margin: 10px 0 -10px 0;
+}
+
+.ca-filter-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.4);
+  padding: 1vw 1vw;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2vw;
+  transition: all 0.25s ease;
+}
+
+.ca-filter-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.ca-filter-btn.active {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
 #ca-donut-wrap { width:25vw; height:25vw; position:relative; margin:0 auto 2vw auto; align-self:center; }
 #ca-donut-wrap svg { width:100%; height:100%; filter:drop-shadow(0 4px 24px rgba(0,0,0,0.5)); }
 .ca-donut-center { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; pointer-events:none; }
 .ca-donut-center-label { font-size:1.67vw; color:rgba(255,255,255,0.45); margin-bottom:0.34vw; }
 .ca-donut-center-val { font-size:2.66vw; font-weight:700; color:#fff; }
+
 #ca-list { width:100%; padding:0 2.17vw; display:flex; flex-direction:column; }
-.ca-list-row { display:flex; align-items:center; padding:1.3vw 0; border-bottom:1px solid rgba(255,255,255,0.07); gap:1.45vw; cursor:pointer; transition:opacity 0.2s; }
+.ca-list-row {display:flex; align-items:center; padding:2px 0; border-bottom:1px solid rgba(255,255,255,0.07); gap:1.45vw; cursor:pointer; transition:opacity 0.2s; }
 .ca-list-row:last-child { border-bottom:none; }
 .ca-list-row.ca-dimmed { opacity:0.3; }
-.ca-list-name { flex:1; font-size:2.88vw; font-weight:600; color:#fff; }
-.ca-list-val { font-size:2.92vw; font-weight:600; color:rgba(255,255,255,0.85); white-space:nowrap; text-align:right; }
+
+/* Combined Left Block (Ring wrapper + Image inside) */
+.ca-list-left {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.ca-list-left svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.ca-list-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg); /* Rotate here to keep JS clean */
+}
+
+.ca-list-img {
+  position: relative;
+  width: 18px;  /* Sized down slightly to sit inside the 32px ring */
+  height: 18px;
+  object-fit: contain;
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.ca-list-name { flex:1; font-weight:300; color:#fff; }
+.ca-list-val { font-size:2.92vw; font-weight:300; color:rgba(255,255,255,0.85); white-space:nowrap; text-align:right; }
 .ca-donut-lbl { display:none !important;}
-
-/* Weather */
-.ca-wx { padding:0 2vw; margin-bottom:3vw; }
-.ca-wx-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:2vw; }
-.ca-wx-city { font-size:3.22vw; font-weight:700; color:#fff; line-height:1.1; }
-.ca-wx-date { font-size:2.42vw; color:rgba(255,255,255,0.55); margin-top:0.4vw; }
-.ca-wx-current { display:flex; align-items:center; gap:1vw; }
-.ca-wx-temp-big { font-size:3.57vw; font-weight:700; color:#fff; line-height:1; }
-.ca-wx-cond { font-size:2.19vw; color:rgba(255,255,255,0.55); margin-top:0.3vw; text-align:right; }
-.ca-wx-hourly { display:flex; overflow-x:auto; scrollbar-width:none; }
-.ca-wx-hourly::-webkit-scrollbar { display:none; }
-.ca-wx-hour { flex:1; display:flex; flex-direction:column; align-items:center; gap:0.6vw; padding:0 0.5vw; }
-.ca-wx-hour-time { font-size:2.3vw; color:rgba(255,255,255,0.5); }
-.ca-wx-hour-temp { font-size:2.76vw; font-weight:700; color:#fff; }
-.ca-wx-hour-wind { font-size:2.07vw; color:rgba(255,255,255,0.5); }
-
-/* Countdown */
-.ca-countdown { display:flex; gap:2vw; padding:0 2vw; justify-content:center; align-items:flex-end; }
-.ca-unit { display:flex; flex-direction:column; align-items:center; gap:1vw; flex:1 1 0; }
-.ca-card { position:relative; width:100%; aspect-ratio:1/1; background:#f5f5f5; border-radius:8%; display:flex; align-items:center; justify-content:center; box-shadow:0 0.5vw 1vw rgba(0,0,0,0.45),0 0.1vw 0.3vw rgba(0,0,0,0.3),inset 0 0.1vw 0 rgba(255,255,255,0.8); overflow:hidden; }
-.ca-card::after { content:''; position:absolute; left:0; right:0; top:50%; height:1.5px; background:rgba(0,0,0,0.12); z-index:2; }
-.ca-card::before { content:''; position:absolute; top:0; left:0; right:0; height:50%; background:rgba(0,0,0,0.04); z-index:1; border-radius:8% 8% 0 0; }
-.ca-card-number { font-size:8.05vw; font-weight:400; color:#222; letter-spacing:-0.05em; z-index:3; line-height:1; font-variant-numeric:tabular-nums; }
-.ca-label { font-size:2.53vw; color:#aaa; text-transform:capitalize; letter-spacing:0.03em; font-weight:450; white-space:nowrap; }
-.ca-card.ca-flip .ca-card-number { animation:caFlip 0.4s ease-in-out; }
-@keyframes caFlip { 0%{transform:rotateX(0deg);opacity:1} 40%{transform:rotateX(-90deg);opacity:0} 60%{transform:rotateX(-90deg);opacity:0} 100%{transform:rotateX(0deg);opacity:1} }
 
 /* ══ SUBSCRIPTION SLIDE ══ */
 .card{max-width:100%;margin: 2vw;}
@@ -798,7 +845,22 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
             </div>
           </div>
 
-          <div id="ca-section-expense">
+          
+        </div>
+        <!-- Right column: Income + Weather + Countdown -->
+        <div id="ca-col-right">
+         <div id="ca-section-expense">
+            <!-- Dynamic Filter Controls -->
+            <div class="ca-filter-header">
+              <button class="ca-filter-btn" id="ca-btn-income" title="Incomes">
+                <i class="bi bi-piggy-bank"></i>
+              </button>
+              <button class="ca-filter-btn active" id="ca-btn-expense" title="Expenses">
+                <i class="bi bi-basket"></i>
+              </button>
+              
+            </div>
+
             <div id="ca-donut-wrap">
               <svg id="ca-donut-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"></svg>
               <div class="ca-donut-center">
@@ -808,56 +870,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
             </div>
             <div id="ca-list"></div>
           </div>
-        </div>
-        <!-- Right column: Income + Weather + Countdown -->
-        <div id="ca-col-right">
-          <div class="income-widget">
-            <!-- 1. Big Total Balance Display -->
-            <div class="income-total" id="incomeTotal">$0.00</div>
 
-            <!-- 2. Segmented Progress Bar -->
-            <div class="segmented-bar" id="incomeSegmentedBar"></div>
-
-            <!-- 3. Dynamic List Rows -->
-            <div class="income-list" id="incomeListContainer"></div>
-          </div>
-
-          <div id="ca-section-weather">
-            <div class="ca-wx">
-              <div class="ca-wx-header">
-                <div>
-                  <div class="ca-wx-city">Ho Chi Minh City</div>
-                  <div class="ca-wx-date" id="ca-wx-date"></div>
-                </div>
-                <div class="ca-wx-current">
-                  <div>
-                    <div class="ca-wx-temp-big" id="ca-wx-temp">&#x2014;</div>
-                    <div class="ca-wx-cond" id="ca-wx-cond">&#x2014;</div>
-                  </div>
-                  <div id="ca-wx-icon-main"></div>
-                </div>
-              </div>
-              <div class="ca-wx-hourly" id="ca-wx-hourly"></div>
-            </div>
-            <div class="ca-countdown">
-              <div class="ca-unit">
-                <div class="ca-card" id="ca-card-years"><span class="ca-card-number" id="ca-years">00</span></div>
-                <span class="ca-label">Years</span>
-              </div>
-              <div class="ca-unit">
-                <div class="ca-card" id="ca-card-months"><span class="ca-card-number" id="ca-months">00</span></div>
-                <span class="ca-label">Months</span>
-              </div>
-              <div class="ca-unit">
-                <div class="ca-card" id="ca-card-weeks"><span class="ca-card-number" id="ca-weeks">00</span></div>
-                <span class="ca-label">Weeks</span>
-              </div>
-              <div class="ca-unit">
-                <div class="ca-card" id="ca-card-days"><span class="ca-card-number" id="ca-days">00</span></div>
-                <span class="ca-label">Days</span>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -1929,212 +1942,43 @@ function caNum(s){if(!s)return NaN;s=s.trim();if(s.charAt(0)==="("&&s.charAt(s.l
 function caArc(cx,cy,r,sa,ea){var toR=function(a){return(a-90)*Math.PI/180;};var x1=cx+r*Math.cos(toR(sa)),y1=cy+r*Math.sin(toR(sa)),x2=cx+r*Math.cos(toR(ea)),y2=cy+r*Math.sin(toR(ea));return"M "+x1+" "+y1+" A "+r+" "+r+" 0 "+((ea-sa)>180?1:0)+" 1 "+x2+" "+y2;}
 
 
-
-
-
 function caSetCenter(l,v){var cl=document.getElementById("ca-center-label"),cv=document.getElementById("ca-center-val");if(cl)cl.textContent=l;if(cv)cv.textContent=v;}
 
-function caHighlight(idx){
-  caActiveIdx=idx;
-  document.querySelectorAll(".ca-seg").forEach(function(el,i){el.style.opacity=(idx===null||i===idx)?"1":"0.2";el.setAttribute("stroke-width",(idx!==null&&i===idx)?"32":"28");});
-  document.querySelectorAll(".ca-list-row").forEach(function(el,i){el.classList.toggle("ca-dimmed",idx!==null&&i!==idx);});
-  if(idx===null)caSetCenter("Total",caFmtSh(caGlobalData.reduce(function(s,d){return s+d.val;},0)));
-  else caSetCenter(caGlobalData[idx].name,caFmtSh(caGlobalData[idx].val));
-}
-
-function caRenderDonut(data){
-  var svg=document.getElementById("ca-donut-svg");svg.innerHTML="";
-  var total=data.reduce(function(s,d){return s+Math.abs(d.val);},0);
-  var cx=100,cy=100,r=78,sw=28,GAP=4;
-  var ns="http://www.w3.org/2000/svg";
-  var defs=document.createElementNS(ns,"defs");
-  CA_PALETTE.forEach(function(p){
-    var g=document.createElementNS(ns,"linearGradient");g.setAttribute("id",p.id);g.setAttribute("x1","0%");g.setAttribute("y1","0%");g.setAttribute("x2","100%");g.setAttribute("y2","100%");
-    [["0%",p.from],["100%",p.to]].forEach(function(pair){var s=document.createElementNS(ns,"stop");s.setAttribute("offset",pair[0]);s.setAttribute("stop-color",pair[1]);g.appendChild(s);});
-    defs.appendChild(g);
-  });
-  svg.appendChild(defs);
-  var tr=document.createElementNS(ns,"circle");tr.setAttribute("cx",cx);tr.setAttribute("cy",cy);tr.setAttribute("r",r);tr.setAttribute("fill","none");tr.setAttribute("stroke","rgba(255,255,255,0.06)");tr.setAttribute("stroke-width",sw);svg.appendChild(tr);
-  var angle=0;
-  data.forEach(function(item,i){
-    var pct=Math.abs(item.val)/total,sweep=pct*360-GAP;if(sweep<=0){angle+=pct*360;return;}
-    var path=document.createElementNS(ns,"path");path.setAttribute("d",caArc(cx,cy,r,angle,angle+sweep));
-    path.setAttribute("fill","none");path.setAttribute("stroke","url(#"+CA_PALETTE[i%CA_PALETTE.length].id+")");
-    path.setAttribute("stroke-width",sw);path.setAttribute("stroke-linecap","round");path.setAttribute("class","ca-seg");
-    path.style.cursor="pointer";path.style.transition="opacity 0.25s, stroke-width 0.2s";
-    (function(ii){path.addEventListener("click",function(e){e.stopPropagation();caHighlight(caActiveIdx===ii?null:ii);});})(i);
-    svg.appendChild(path);angle+=pct*360;
-  });
-  svg.addEventListener("click",function(){caHighlight(null);});
-  caSetCenter("Total",caFmtSh(data.reduce(function(s,d){return s+d.val;},0)));
-  var wrap=document.getElementById("ca-donut-wrap");
-  wrap.querySelectorAll(".ca-donut-lbl").forEach(function(el){el.remove();});
-  var la=0;
-  data.forEach(function(item,i){
-    var pt=Math.abs(item.val)/total,mid=la+pt*360/2-90,rad=mid*Math.PI/180;
-    var lx=50+0.56*Math.cos(rad)*100,ly=50+0.56*Math.sin(rad)*100;
-    var lbl=document.createElement("div");lbl.className="ca-donut-lbl";lbl.style.left=lx+"%";lbl.style.top=ly+"%";
-    var icons=["https://raw.githubusercontent.com/tinsntp/investment/main/cash.png","https://raw.githubusercontent.com/tinsntp/investment/main/expense.png","https://raw.githubusercontent.com/tinsntp/investment/main/bank%20loan.png"];
-    lbl.innerHTML='<img src="'+icons[i%icons.length]+'" style="width:8vw;height:8vw;object-fit:contain;border-radius:50%;background:rgba(26,26,26,0.7);padding:1vw;" />'
-      +'<span style="font-size:3.8vw;font-weight:700;color:#fff;white-space:nowrap;text-shadow:0 1px 4px rgba(0,0,0,0.8);">'+caFmtSh(item.val)+'</span>';
-    wrap.appendChild(lbl);la+=pt*360;
-  });caApplyLayout();
-}
-
-function caMiniRing(pct,color){var r=10,sw=3,circ=2*Math.PI*r,dash=(pct/100)*circ,gap=circ-dash;return'<svg viewBox="0 0 28 28" style="flex-shrink:0;width:3.8vw;height:3.8vw;"><circle cx="14" cy="14" r="'+r+'" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="'+sw+'"/><circle cx="14" cy="14" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="'+sw+'" stroke-linecap="round" stroke-dasharray="'+dash.toFixed(2)+' '+gap.toFixed(2)+'" stroke-dashoffset="0" transform="rotate(-90 14 14)"/></svg>';}
-
-function caFetchTab1(cb){
-  if(caTab1Cache.length){cb(caTab1Cache);return;}
-  fetch(CA_CSV_TAB1+"&t="+Date.now(),{cache:"no-store"}).then(function(r){return r.text();})
-    .then(function(text){
-      caTab1Cache=text.trim().split("\n").filter(function(r){return r.trim();}).map(function(row){
-        var cols=caCSV(row);return{name:cols[0].replace(/^"|"$/g,"").trim(),val:caNum(cols[1])};
-      }).filter(function(d){return d.name&&!isNaN(d.val);});
-      cb(caTab1Cache);
-    });
-}
-
-function caRenderDrill(items,title,color){
-  var list=document.getElementById("ca-list");list.innerHTML="";
-  var header=document.createElement("div");
-  var drPcFs = window.innerWidth < 400 ? "4.6vw" : "2.6vw";
-  var drIS = window.innerWidth < 400 ? "3.35vw" : "3.35vw";
-  header.style.cssText="display:flex;align-items:center;gap:2vw;padding:2vw 0 3vw;cursor:pointer;";
-  header.innerHTML='<span style="font-size:'+drPcFs+';color:rgba(255,255,255,0.5);">\u25c2</span>'
-    +'<span style="font-size:'+drPcFs+';font-weight:700;color:'+color+';">'+title+'</span>';
-  header.addEventListener("click",function(){caHighlight(null);caRenderList(caGlobalData);});
-  list.appendChild(header);
-  var total=items.reduce(function(s,d){return s+Math.abs(d.val);},0);
+function caHighlight(idx, selectedName, selectedVal){
+  caActiveIdx = idx;
   
-  items.forEach(function(item){
-    var pct=Math.abs(item.val)/total*100,r2=10,sw=3,circ=2*Math.PI*r2,dash=(pct/100)*circ,gap=circ-dash;
-    var row=document.createElement("div");row.className="ca-list-row";row.style.cursor="default";
-    row.innerHTML='<img src="'+item.icon+'" style="width:'+drIS+';height:'+drIS+';object-fit:contain;flex-shrink:0;" />'
-      +'<div class="ca-list-name" style="font-size:'+drPcFs+';">'+item.name+'</div>'
-      +'<div class="ca-list-val" style="font-size:'+drPcFs+';">'+caFmt(Math.abs(item.val))+'</div>'
-      +'<svg viewBox="0 0 28 28" style="flex-shrink:0;width:4.8vw;height:4.8vw;"><circle cx="14" cy="14" r="'+r2+'" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="'+sw+'"/><circle cx="14" cy="14" r="'+r2+'" fill="none" stroke="'+color+'" stroke-width="'+sw+'" stroke-linecap="round" stroke-dasharray="'+dash.toFixed(2)+' '+gap.toFixed(2)+'" stroke-dashoffset="0" transform="rotate(-90 14 14)"/></svg>'
-      +'<div style="font-size:'+drPcFs+';color:rgba(255,255,255,0.55);flex-shrink:0;">'+pct.toFixed(1)+'%</div>';
-    list.appendChild(row);
-  });caApplyLayout();
-}
-
-function caRenderList(data){
-  var list=document.getElementById("ca-list");list.innerHTML="";
-  var total=data.reduce(function(s,d){return s+Math.abs(d.val);},0);
-  var icons=["https://raw.githubusercontent.com/tinsntp/investment/main/cash.png","https://raw.githubusercontent.com/tinsntp/investment/main/expense.png","https://raw.githubusercontent.com/tinsntp/investment/main/bank%20loan.png"];
-  data.forEach(function(item,i){
-    var p=CA_PALETTE[i%CA_PALETTE.length],pct=Math.abs(item.val)/total*100;
-    var row=document.createElement("div");row.className="ca-list-row";
-    var pcFs = window.innerWidth < 400 ? "4.6vw" : "2.6vw";
-    var pcIS = window.innerWidth < 400 ? "3.35vw" : "3.35vw";
-    row.innerHTML='<img src="'+icons[i%icons.length]+'" style="width:'+pcIS+';height:'+pcIS+';object-fit:contain;flex-shrink:0;filter:drop-shadow(0 0 3px '+p.glow+');" />'
-      +'<div class="ca-list-name" style="font-size:'+pcFs+';">'+item.name+'</div>'
-      +'<div class="ca-list-val" style="font-size:'+pcFs+';">'+caFmt(item.val)+'</div>'
-      +caMiniRing(pct,p.solid)
-      +'<div style="font-size:'+pcFs+';color:rgba(255,255,255,0.5);white-space:nowrap;flex-shrink:0;">'+pct.toFixed(1)+'%</div>';
-    (function(ii){row.addEventListener("click",function(){
-      if(ii===1){caHighlight(1);caFetchTab1(function(t1){var ei=["https://github.com/tinsntp/investment/blob/main/shop.png?raw=true","https://github.com/tinsntp/investment/blob/main/heart.png?raw=true","https://github.com/tinsntp/investment/blob/main/transaction.png?raw=true","https://github.com/tinsntp/investment/blob/main/shield.png?raw=true"];caRenderDrill(t1.slice(0,4).map(function(d,idx){return{name:d.name,val:d.val,icon:ei[idx]};}), "Average Expenses", CA_PALETTE[1].solid);});}
-      else if(ii===2){caHighlight(2);caFetchTab1(function(t1){var di=["https://github.com/tinsntp/investment/blob/main/sc.png?raw=true","https://github.com/tinsntp/investment/blob/main/shinhan.png?raw=true"];caRenderDrill(t1.slice(6,8).filter(function(d){return d.name&&!isNaN(d.val);}).map(function(d,idx){return{name:d.name,val:d.val,icon:di[idx]};}), "With Debts", CA_PALETTE[2].solid);});}
-      else{caHighlight(caActiveIdx===ii?null:ii);}
-    });})(i);
-    list.appendChild(row);
-  });caApplyLayout();
-}
-
-const PALETTE = ["#a8dadc", "#457b9d", "#1d3557", "#2a9d8f", "#e9c46a"];
-
-function formatVNDShort(value) {
-  var isNegative = value < 0;
-  var absValue = Math.abs(value);
-  var formatted = "";
-
-  if (absValue >= 1000000) {
-    formatted = "₫" + (absValue / 1000000).toFixed(1) + "M";
-  } else if (absValue >= 1000) {
-    formatted = "₫" + (absValue / 1000).toFixed(1) + "K";
-  } else {
-    formatted = "₫" + absValue;
-  }
-
-  return isNegative ? "-" + formatted : formatted;
-}
-
-function formatVNDNormal(value) {
-  return new Intl.NumberFormat('vi-VN', {
-    style: 'currency',
-    currency: 'VND'
-  }).format(value);
-}
-
-function caRenderIncomeWidget(incomeData) {
-  const totalDisplay = document.getElementById("incomeTotal");
-  const barContainer = document.getElementById("incomeSegmentedBar");
-  const listContainer = document.getElementById("incomeListContainer");
-
-  if (!totalDisplay || !barContainer || !listContainer) return;
-
-  barContainer.innerHTML = "";
-  listContainer.innerHTML = "";
-
-  const grandTotal = incomeData.reduce((sum, item) => sum + item.val, 0);
-  totalDisplay.textContent = formatVNDNormal(grandTotal);
-
-  incomeData.forEach((item, index) => {
-    const absVal = Math.abs(item.val);
-    const absTotal = incomeData.reduce((sum, i) => sum + Math.abs(i.val), 0);
-    const percentage = absTotal > 0 ? (absVal / absTotal) * 100 : 0;
-    const color = PALETTE[index % PALETTE.length];
-
-    // --- A. Progress Bar ---
-    if (percentage > 0) {
-      const segment = document.createElement("div");
-      segment.className = "bar-segment";
-      segment.style.width = `${percentage}%`;
-      segment.style.backgroundColor = color;
-      barContainer.appendChild(segment);
-    }
-
-    // --- B. Row Structure ---
-    const row = document.createElement("div");
-    row.className = "income-row";
-
-    const formattedPct = percentage.toFixed(2) + "%";
-    const formattedVal = formatVNDShort(item.val);
-    const pctColorClass = item.val >= 0 ? "pct-positive" : "pct-neutral";
-
-    // Strip out all emojis and non-standard symbols from the string
-    const cleanTitle = item.name.replace(/[^\x00-\x7F]/g, "").trim();
-
-    // SVG Circular Progress Ring Calculation
-    // Circumference = 2 * π * r (r=10 -> 2 * 3.14159 * 10 ≈ 62.83)
-    const radius = 10;
-    const circumference = 2 * Math.PI * radius;
-    const strokeDashoffset = circumference - (percentage / 100) * circumference;
-
-    row.innerHTML = `
-      <div class="income-row-left">
-        <!-- SVG Progress Ring wrapped around the icon -->
-        <div class="ring-container">
-          <svg class="ring-svg">
-            <!-- Background track circle -->
-            <circle cx="12" cy="12" r="${radius}" stroke="#242426" stroke-width="2" fill="transparent" />
-            <!-- Active progress stroke -->
-            <circle cx="12" cy="12" r="${radius}" stroke="${color}" stroke-width="2" fill="transparent"
-              stroke-dasharray="${circumference}" 
-              stroke-dashoffset="${strokeDashoffset}" 
-              stroke-linecap="round" />
-          </svg>
-          <img class="income-icon-image" src="${item.icon}" onerror="this.style.display='none';" />
-        </div>
-        <span class="income-title">${cleanTitle}</span>
-      </div>
-      <span class="income-percentage ${pctColorClass}">${formattedPct}</span>
-      <span class="income-value">${formattedVal}</span>
-    `;
-
-    listContainer.appendChild(row);
+  // 1. Highlight the donut segments
+  document.querySelectorAll(".ca-seg").forEach(function(el, i){
+    el.style.opacity = (idx === null || i === idx) ? "1" : "0.2";
+    el.setAttribute("stroke-width", (idx !== null && i === idx) ? "32" : "28");
   });
+  
+  // 2. Dim inactive rows
+  document.querySelectorAll(".ca-list-row").forEach(function(el, i){
+    el.classList.toggle("ca-dimmed", idx !== null && i !== idx);
+  });
+
+  // 3. Update center text safely
+  if (idx === null) {
+    // Reset to global sum
+    var totalVal = caGlobalData.reduce(function(s, d){ return s + d.val; }, 0);
+    caSetCenter("Total", caFmtSh(totalVal));
+  } else {
+    // If we explicitly passed name/val from the clicked row, use them!
+    if (selectedName !== undefined && selectedVal !== undefined) {
+      caSetCenter(selectedName, caFmtSh(selectedVal));
+    } else {
+      // Fallback defense in case parameters are missing
+      var fallbackItem = caGlobalData[idx];
+      if (fallbackItem && !isNaN(fallbackItem.val)) {
+        caSetCenter(fallbackItem.name, caFmtSh(fallbackItem.val));
+      } else {
+        caSetCenter("Selected", "đ0");
+      }
+    }
+  }
 }
+
 
 function caLoadBI() {
   fetch(CA_CSV_BI + "&t=" + Date.now(), { cache: "no-store" })
@@ -2162,10 +2006,6 @@ function caLoadBI() {
         }
       });
 
-      // Send the arrays to render
-      if (income.length) {
-        caRenderIncomeWidget(income);
-      }
     })
     .catch(function(err) {
       console.warn("ca-bi:", err.message);
@@ -2182,10 +2022,348 @@ function caLoadDonut(){
         console.log("📊 All Rows Found in CSV:", data);
       }).filter(function(d){return d.name&&!isNaN(d.val);});
       if(!data.length)return;
-      caGlobalData=data;caRenderDonut(data);caRenderList(data);
+      caGlobalData=data;caRenderDonut(data);
       //console.log("📊 Final Donut Data Array:", data);
     }).catch(function(err){console.warn("ca-donut:",err.message);});
 }
+
+// Color Palettes
+var CA_PALETTE_EXPENSE = [
+  // 1. Bright Light Violet (Now first)
+  { id: "e1", from: "#E8C5E5", to: "#D297D0", solid: "#E8C5E5", glow: "rgba(232,197,229,0.35)" },
+  
+  // 2. Soft Pastel Lavender (The blend transition)
+  { id: "e2", from: "#E8C3FE", to: "#C89DF2", solid: "#E8C3FE", glow: "rgba(232,195,254,0.4)" },
+  
+  // 3. Sweet Blush Pink (Now last)
+  { id: "e3", from: "#FFB6C1", to: "#FFA6C9", solid: "#FFB6C1", glow: "rgba(255,182,193,0.4)" }
+];
+var CA_PALETTE_INCOME = [
+  { id: "i1", from: "#12d3a6", to: "#028090", solid: "#12d3a6", glow: "rgba(18,211,166,0.3)" },
+  { id: "i2", from: "#00b4d8", to: "#0077b6", solid: "#00b4d8", glow: "rgba(0,180,216,0.3)" },
+  { id: "i3", from: "#90e0ef", to: "#0096c7", solid: "#90e0ef", glow: "rgba(144,224,239,0.3)" }
+];
+
+// Active Controller State
+var caActiveTab = "income"; // "expense" or "income"
+var caActiveIdx = null;
+
+// Dynamic Data Cache Stores
+var caGlobalData = []; // Cached Expense Items
+var caIncomeData = []; // Cached Income Items
+
+// Circular SVG Progress Ring Helper
+function caMiniRingMarkup(pct, color) {
+  var r = 14; // Radius adjusted to fit right on the outer boundary of 32px
+  var sw = 2.5; // Stroke width of the ring
+  var circ = 2 * Math.PI * r;
+  var dash = (pct / 100) * circ;
+  var gap = circ - dash;
+  
+  return '<svg class="ca-list-ring" viewBox="0 0 32 32">' +
+    // Light track background ring
+    '<circle cx="16" cy="16" r="'+r+'" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="'+sw+'"/>' +
+    // The active percentage ring
+    '<circle cx="16" cy="16" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="'+sw+'" stroke-linecap="round" ' +
+    'stroke-dasharray="'+dash.toFixed(2)+' '+gap.toFixed(2)+'" stroke-dashoffset="0"/>' +
+    '</svg>';
+}
+
+function caGetPalette() {
+  return caActiveTab === "income" ? CA_PALETTE_INCOME : CA_PALETTE_EXPENSE;
+}
+
+// Master Donut Rendering
+function caRenderDonut(data) {
+  var svg = document.getElementById("ca-donut-svg");
+  if (!svg) return;
+  svg.innerHTML = "";
+  
+  var total = data.reduce(function(s, d) { return s + Math.abs(d.val); }, 0);
+  var cx = 100, cy = 100, r = 78, sw = 28, GAP = 4;
+  var ns = "http://www.w3.org/2000/svg";
+  var palette = caGetPalette();
+
+  // Generate Gradients
+  var defs = document.createElementNS(ns, "defs");
+  palette.forEach(function(p) {
+    var g = document.createElementNS(ns, "linearGradient");
+    g.setAttribute("id", p.id);
+    g.setAttribute("x1", "0%"); g.setAttribute("y1", "0%");
+    g.setAttribute("x2", "100%"); g.setAttribute("y2", "100%");
+    [["0%", p.from], ["100%", p.to]].forEach(function(pair) {
+      var s = document.createElementNS(ns, "stop");
+      s.setAttribute("offset", pair[0]);
+      s.setAttribute("stop-color", pair[1]);
+      g.appendChild(s);
+    });
+    defs.appendChild(g);
+  });
+  svg.appendChild(defs);
+
+  // Base Background Ring
+  var tr = document.createElementNS(ns, "circle");
+  tr.setAttribute("cx", cx); tr.setAttribute("cy", cy); tr.setAttribute("r", r);
+  tr.setAttribute("fill", "none"); tr.setAttribute("stroke", "rgba(255,255,255,0.06)");
+  tr.setAttribute("stroke-width", sw);
+  svg.appendChild(tr);
+
+  var angle = 0;
+  data.forEach(function(item, i) {
+    var pct = Math.abs(item.val) / total;
+    var sweep = pct * 360 - GAP;
+    if (sweep <= 0) { angle += pct * 360; return; }
+
+    var path = document.createElementNS(ns, "path");
+    path.setAttribute("d", caArc(cx, cy, r, angle, angle + sweep));
+    path.setAttribute("fill", "none");
+    path.setAttribute("stroke", "url(#" + palette[i % palette.length].id + ")");
+    path.setAttribute("stroke-width", sw);
+    path.setAttribute("stroke-linecap", "round");
+    path.setAttribute("class", "ca-seg");
+    path.style.cursor = "pointer";
+    path.style.transition = "opacity 0.25s, stroke-width 0.2s";
+
+    (function(ii) {
+      path.addEventListener("click", function(e) {
+        e.stopPropagation();
+        caHighlight(caActiveIdx === ii ? null : ii);
+      });
+    })(i);
+
+    svg.appendChild(path);
+    angle += pct * 360;
+  });
+
+  svg.addEventListener("click", function() { caHighlight(null); });
+  
+  var totalRaw = data.reduce(function(s, d) { return s + d.val; }, 0);
+  caSetCenter(caActiveTab === "income" ? "Incomes" : "Expenses", caFmtSh(totalRaw));
+}
+
+// Master List Rendering (Dynamic Row Parsing & Ring Generation)
+// Master List Rendering
+function caRenderList(data) {
+  var list = document.getElementById("ca-list");
+  if (!list) return;
+  list.innerHTML = "";
+  
+  var total = data.reduce(function(s, d) { return s + Math.abs(d.val); }, 0);
+  var palette = caGetPalette();
+  
+  var defaultIcons = [
+    "https://raw.githubusercontent.com/tinsntp/investment/main/cash.png",
+    "https://raw.githubusercontent.com/tinsntp/investment/main/expense.png",
+    "https://raw.githubusercontent.com/tinsntp/investment/main/bank%20loan.png"
+  ];
+
+  data.forEach(function(item, i) {
+    var p = palette[i % palette.length];
+    var pct = total > 0 ? (Math.abs(item.val) / total * 100) : 0;
+    var row = document.createElement("div");
+    row.className = "ca-list-row";
+    
+    var pcFs = window.innerWidth < 401 ? "4.6vw" : "2.6vw";
+    var pcMw = window.innerWidth < 401 ? "60px" : "45px";
+    var iconUrl = item.icon || defaultIcons[i % defaultIcons.length];
+    var cleanName = item.name.replace(/[^\x00-\x7F]/g, "") .replace(/\bPNL\b/gi, "").replace(/\s+/g, " ").trim();
+
+
+    // Render the layout: Ring + Icon | Name (un-truncated) | Pct% (aligned right) | Amount (aligned right)
+    row.innerHTML = `
+      <div class="ca-list-left" style="margin-right: 0px;">
+        ${caMiniRingMarkup(pct, p.solid)}
+        <img class="ca-list-img" src="${iconUrl}" onerror="this.style.opacity='0';" />
+      </div>
+      <div class="ca-list-name" style="flex-grow: 1; min-width: 0; padding-right: 4px; overflow: visible; white-space: normal;">
+        ${cleanName}
+      </div>
+      <div class="ca-list-pct" style="text-align: right; width: 22px; flex-shrink: 0; padding-right:2px;">
+        ${pct.toFixed(0)}%
+      </div>
+      <div class="ca-list-val" style="text-align: right; flex-shrink: 0; min-width: ${pcMw};">
+        ${caFmt(item.val)}
+      </div>
+    `;
+
+    (function(ii) {
+      row.addEventListener("click", function() {
+        if (caActiveTab === "expense") {
+          if (ii === 1) {
+            caHighlight(1);
+            caFetchTab1(function(t1) {
+              var ei = [
+                "https://github.com/tinsntp/investment/blob/main/shop.png?raw=true",
+                "https://github.com/tinsntp/investment/blob/main/heart.png?raw=true",
+                "https://github.com/tinsntp/investment/blob/main/transaction.png?raw=true",
+                "https://github.com/tinsntp/investment/blob/main/shield.png?raw=true"
+              ];
+              caRenderDrill(t1.slice(0, 4).map(function(d, idx) {
+                return { name: d.name, val: d.val, icon: ei[idx] };
+              }), "Average Expenses", p.solid);
+            });
+          } else if (ii === 2) {
+            caHighlight(2);
+            caFetchTab1(function(t1) {
+              var di = [
+                "https://github.com/tinsntp/investment/blob/main/sc.png?raw=true",
+                "https://github.com/tinsntp/investment/blob/main/shinhan.png?raw=true"
+              ];
+              caRenderDrill(t1.slice(6, 8).filter(function(d) { return d.name && !isNaN(d.val); }).map(function(d, idx) {
+                return { name: d.name, val: d.val, icon: di[idx] };
+              }), "With Debts", p.solid);
+            });
+          } else {
+            // PASS cleanName INSTEAD OF item.name HERE
+            caHighlight(caActiveIdx === ii ? null : ii, cleanName, item.val);
+          }
+        } else {
+          // PASS cleanName INSTEAD OF item.name HERE
+          caHighlight(caActiveIdx === ii ? null : ii, cleanName, item.val);
+        }
+      });
+    })(i);
+
+    list.appendChild(row);
+  });
+  caApplyLayout();
+}
+
+function caFetchTab1(cb){
+  if(caTab1Cache.length){cb(caTab1Cache);return;}
+  fetch(CA_CSV_TAB1+"&t="+Date.now(),{cache:"no-store"}).then(function(r){return r.text();})
+    .then(function(text){
+      caTab1Cache=text.trim().split("\n").filter(function(r){return r.trim();}).map(function(row){
+        var cols=caCSV(row);return{name:cols[0].replace(/^"|"$/g,"").trim(),val:caNum(cols[1])};
+      }).filter(function(d){return d.name&&!isNaN(d.val);});
+      cb(caTab1Cache);
+    });
+}
+
+function caRenderDrill(items,title,color){
+  var list=document.getElementById("ca-list");list.innerHTML="";
+  var header=document.createElement("div");
+  var drPcFs = window.innerWidth < 400 ? "4.6vw" : "2.6vw";
+  var drIS = window.innerWidth < 400 ? "4.2vw" : "2.4vw";
+  header.style.cssText="display:flex;align-items:center;gap:2vw;padding:2vw 0 3vw;cursor:pointer;";
+  header.innerHTML='<span style="font-size:'+drPcFs+';color:rgba(255,255,255,0.5);"><i class="bi bi-chevron-left"></i></span>'
+    +'<span style="font-size:'+drPcFs+';font-weight:500;color:'+color+';">'+title+'</span>';
+  header.addEventListener("click",function(){caHighlight(null);caRenderList(caGlobalData);});
+  list.appendChild(header);
+  var total=items.reduce(function(s,d){return s+Math.abs(d.val);},0);
+  var pcSMw = window.innerWidth < 401 ? "50px" : "40px";
+  items.forEach(function(item){
+    var pct=Math.abs(item.val)/total*100,r2=10,sw=3,circ=2*Math.PI*r2,dash=(pct/100)*circ,gap=circ-dash;
+    var row=document.createElement("div");row.className="ca-list-row";row.style.cursor="default";
+    row.innerHTML='<img src="'+item.icon+'" style="width:'+drIS+';height:'+drIS+';object-fit:contain;flex-shrink:0;" />'
+      +'<div class="ca-list-name" style="font-size:'+drPcFs+';">'+item.name+'</div>'
+      +'<svg viewBox="0 0 28 28" style="flex-shrink:0;width:3vw;height:3vw;"><circle cx="14" cy="14" r="'+r2+'" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="'+sw+'"/><circle cx="14" cy="14" r="'+r2+'" fill="none" stroke="'+color+'" stroke-width="'+sw+'" stroke-linecap="round" stroke-dasharray="'+dash.toFixed(2)+' '+gap.toFixed(2)+'" stroke-dashoffset="0" transform="rotate(-90 14 14)"/></svg>'
+      +'<div class="ca-list-pct" style="font-size:'+drPcFs+';flex-shrink:0;">'+pct.toFixed(0)+'%</div>'
+      +'<div class="ca-list-val" style="min-width: ' + pcSMw + '; font-size:' + drPcFs + '; text-align: right;">' + caFmt(Math.abs(item.val)) + '</div>';
+
+      
+    list.appendChild(row);
+  });caApplyLayout();
+}
+// Handles switching tabs & pulling live CSV endpoints for each profile
+function caSwitchTab(tabName) {
+  caActiveTab = tabName;
+  caActiveIdx = null;
+
+  document.querySelectorAll(".ca-filter-btn").forEach(function(btn) {
+    btn.classList.remove("active");
+  });
+
+  if (tabName === "expense") {
+    document.getElementById("ca-btn-expense").classList.add("active");
+    
+    // Check if dynamic expenses are already cached
+    if (caGlobalData.length > 0) {
+      caRenderDonut(caGlobalData);
+      caRenderList(caGlobalData);
+    } else {
+      // Pull dynamic expense data
+      fetch(CA_CSV_DNUT + "&t=" + Date.now(), { cache: "no-store" })
+        .then(function(r) {
+          if (!r.ok) throw new Error("HTTP " + r.status);
+          return r.text();
+        })
+        .then(function(text) {
+          var data = text.trim().split("\n").filter(function(r) {
+            return r.trim();
+          }).map(function(row) {
+            var cols = caCSV(row);
+            return {
+              name: cols[0].replace(/^"|"$/g, "").trim(),
+              val: caNum(cols[1])
+            };
+          }).filter(function(d) {
+            return d.name && !isNaN(d.val);
+          });
+
+          if (!data.length) return;
+          caGlobalData = data; // Cache values
+          caRenderDonut(data);
+          caRenderList(data);
+        })
+        .catch(function(err) {
+          console.warn("ca-donut fetch error:", err.message);
+        });
+    }
+  } else {
+    document.getElementById("ca-btn-income").classList.add("active");
+
+    // Check if dynamic income is already cached
+    if (caIncomeData.length > 0) {
+      caRenderDonut(caIncomeData);
+      caRenderList(caIncomeData);
+    } else {
+      // Pull and parse dynamic income data using columns E, F, and G (Indices 4, 5, 6)
+      fetch(CA_CSV_BI + "&t=" + Date.now(), { cache: "no-store" })
+        .then(function(r) {
+          if (!r.ok) throw new Error("HTTP " + r.status);
+          return r.text();
+        })
+        .then(function(text) {
+          var rows = text.trim().split("\n").filter(function(r) { return r.trim(); });
+          var parsedIncome = [];
+
+          rows.forEach(function(row, index) {
+            // Skip the CSV Header row
+            if (index === 0) return;
+
+            var cols = caCSV(row);
+            var colE = (cols[4] || "").replace(/^"|"$/g, "").trim(); // Icon
+            var colF = (cols[5] || "").replace(/^"|"$/g, "").trim(); // Name
+            var colG = caNum(cols[6]);                               // Value
+
+            if (colF && !isNaN(colG)) {
+              parsedIncome.push({ icon: colE, name: colF, val: colG });
+            }
+          });
+
+          if (!parsedIncome.length) return;
+          caIncomeData = parsedIncome; // Cache values
+          caRenderDonut(parsedIncome);
+          caRenderList(parsedIncome);
+        })
+        .catch(function(err) {
+          console.warn("ca-bi fetch error:", err.message);
+        });
+    }
+  }
+}
+
+// Event Listeners setup
+document.getElementById("ca-btn-expense").addEventListener("click", function() {
+  caSwitchTab("expense");
+});
+document.getElementById("ca-btn-income").addEventListener("click", function() {
+  caSwitchTab("income");
+});
+
+// Run Initial setup (default view starts with live Expense data)
+caSwitchTab("income");
 
 /* ── Weather ── */
 (function(){
@@ -2275,11 +2453,11 @@ function caApplyLayout(){
     document.querySelectorAll(".ca-list-icon").forEach(function(el){el.style.width="8vw";el.style.height="8vw";});
     document.querySelectorAll(".ca-bi-name").forEach(function(el){el.style.fontSize="4.5vw";});
     document.querySelectorAll(".ca-bi-val").forEach(function(el){el.style.fontSize="4.5vw";});
-    document.querySelectorAll(".ca-list-pct").forEach(function(el){el.style.fontSize="4.2vw";});
+    document.querySelectorAll(".ca-list-pct").forEach(function(el){el.style.fontSize="4.1vw";});
     document.querySelectorAll(".ca-mini-ring").forEach(function(el){el.style.width="9vw";el.style.height="9vw";});
     // Donut list sizes for mobile
-    document.querySelectorAll(".ca-list-name").forEach(function(el){el.style.fontSize="5vw";});
-    document.querySelectorAll(".ca-list-val").forEach(function(el){el.style.fontSize="5vw";});
+    document.querySelectorAll(".ca-list-name").forEach(function(el){el.style.fontSize="4.6vw";});
+    document.querySelectorAll(".ca-list-val").forEach(function(el){el.style.fontSize="4.6vw";});
     document.querySelectorAll(".ca-donut-center-label").forEach(function(el){el.style.fontSize="3.3vw";});
     document.querySelectorAll(".ca-donut-center-val").forEach(function(el){el.style.fontSize="4.8vw";});
     document.querySelectorAll("#ca-list img").forEach(function(el){el.style.width="6vw";el.style.height="6vw";});
@@ -2306,11 +2484,11 @@ function caApplyLayout(){
     document.querySelectorAll(".ca-list-icon").forEach(function(el){el.style.width="4vw";el.style.height="4vw";});
     document.querySelectorAll(".ca-bi-name").forEach(function(el){el.style.fontSize="2.88vw";});
     document.querySelectorAll(".ca-bi-val").forEach(function(el){el.style.fontSize="2.92vw";});
-    document.querySelectorAll(".ca-list-pct").forEach(function(el){el.style.fontSize="1.76vw";});
+    document.querySelectorAll(".ca-list-pct").forEach(function(el){el.style.fontSize="2.3vw";});
     document.querySelectorAll(".ca-mini-ring").forEach(function(el){el.style.width="5vw";el.style.height="5vw";});
     // Donut list sizes for iPad
-    document.querySelectorAll(".ca-list-name").forEach(function(el){el.style.fontSize="2.88vw";});
-    document.querySelectorAll(".ca-list-val").forEach(function(el){el.style.fontSize="2.92vw";});
+    document.querySelectorAll(".ca-list-name").forEach(function(el){el.style.fontSize="2.5vw";});
+    document.querySelectorAll(".ca-list-val").forEach(function(el){el.style.fontSize="2.5vw";});
     document.querySelectorAll(".ca-donut-center-label").forEach(function(el){el.style.fontSize="2vw";});
     document.querySelectorAll(".ca-donut-center-val").forEach(function(el){el.style.fontSize="2.8vw";});
     document.querySelectorAll("#ca-list img").forEach(function(el){el.style.width="3.32vw";el.style.height="3.32vw";});
