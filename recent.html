@@ -413,12 +413,21 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
   letter-spacing: 0.2px;
 }
 /* Donut */
-/* Container Filters */
-.ca-filter-header {
+
+#ca-section-expense {
+  position: relative;
+  width: 100%;
   display: flex;
-  justify-content: center;
-  gap: 1.5vw;
-  margin-top: 10px;margin-bottom: 10px;
+  flex-direction: column;
+  align-items: center; /* Centers the donut and list horizontally */
+}
+.ca-filter-header {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  gap: 6px; /* Spacing between the income and expense buttons */
+  z-index: 10;
 }
 
 .ca-filter-btn {
@@ -432,7 +441,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
   align-items: center;
   justify-content: center;
   font-size: 2vw;
-  transition: all 0.25s ease;
+  transition: all 0.25s ease;z-index: 10;
 }
 .ca-filter-btn .bi{font-size:14px!important;}
 
@@ -496,9 +505,10 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
   z-index: 2;
 }
 
-.ca-list-name { flex:1; font-weight:300; color:#fff; }
-.ca-list-val { font-size:2.92vw; font-weight:300; color:rgba(255,255,255,0.85); white-space:nowrap; text-align:right; }
+.ca-list-name { flex:1; font-weight:300; }
+.ca-list-val { font-size:2.92vw; font-weight:300;white-space:nowrap; text-align:right; }
 .ca-donut-lbl { display:none !important;}
+.ca-list-name,.ca-list-val,.ca-list-pct{color:rgba(255,255,255,0.85);}
 
 /* ══ SUBSCRIPTION SLIDE ══ */
 .card{max-width:100%;margin: 2vw;}
@@ -1106,7 +1116,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 
             <!-- Bottom Insight Context Label -->
             <div class="timeline-footer">
-              <span class="peak-prediction" id="lbl-peak-prediction">Expected Peak: --</span>
+              
             </div>
 
           </div>
@@ -1974,7 +1984,7 @@ var CA_PALETTE  = [
   {from:"#FFB6C1",to:"#FF8FA3",solid:"#FFB6C1",glow:"rgba(255,182,193,0.4)",id:"cag1"},
   {from:"#FF69B4",to:"#e0408a",solid:"#FF69B4",glow:"rgba(255,105,180,0.4)",id:"cag2"}
 ];
-var caActiveIdx=null, caGlobalData=[], caTab1Cache=[];
+var caActiveIdx=null, caGlobalData=[], caTab1Cache=[];var caActiveDataset = [];
 
 function caFmt(v){var a=Math.abs(v),s=v<0?"\u2212":"";if(a>=1e9)return s+"\u20ab"+(a/1e9).toFixed(1)+"B";if(a>=1e6)return s+"\u20ab"+(a/1e6).toFixed(1)+"M";if(a>=1e3)return s+"\u20ab"+Math.round(a/1e3)+"K";return s+"\u20ab"+Math.round(a);}
 function caFmtSh(v){var a=Math.abs(v);return(v<0?"\u2212":"")+"\u0111"+(a>=1e9?(a/1e9).toFixed(1)+"B":a>=1e6?(a/1e6).toFixed(1)+"M":a>=1e3?Math.round(a/1e3)+"K":String(Math.round(a)));}
@@ -1990,7 +2000,7 @@ function caSetCenter(l,v){var cl=document.getElementById("ca-center-label"),cv=d
 
 function caHighlight(idx, selectedName, selectedVal){
   caActiveIdx = idx;
-  
+  var data = caActiveDataset || [];
   // 1. Highlight the donut segments
   document.querySelectorAll(".ca-seg").forEach(function(el, i){
     el.style.opacity = (idx === null || i === idx) ? "1" : "0.2";
@@ -2004,18 +2014,28 @@ function caHighlight(idx, selectedName, selectedVal){
 
   // 3. Update center text safely
   if (idx === null) {
-    // Reset to global sum
-    var totalVal = caGlobalData.reduce(function(s, d){ return s + d.val; }, 0);
-    caSetCenter("Total", caFmtSh(totalVal));
+    // Sum raw numbers exactly as they are to get the correct net total
+    var totalVal = data.reduce(function(s, d){ return s + d.val; }, 0);
+    var centerLabel = (caActiveTab === "income") ? "Incomes" : "Expenses";
+    
+    caSetCenter(centerLabel, caFmtSh(Math.abs(totalVal)));
   } else {
-    // If we explicitly passed name/val from the clicked row, use them!
     if (selectedName !== undefined && selectedVal !== undefined) {
-      caSetCenter(selectedName, caFmtSh(selectedVal));
+      // Clean emojis and extra spacing from the manually passed string
+      var cleanSelectedName = selectedName
+        .replace(/[^\x00-\x7F]/g, "").replace(/\bPNL\b/gi, "")
+        .trim();
+        
+      caSetCenter(cleanSelectedName, caFmtSh(Math.abs(selectedVal)));
     } else {
-      // Fallback defense in case parameters are missing
-      var fallbackItem = caGlobalData[idx];
+      var fallbackItem = data[idx];
       if (fallbackItem && !isNaN(fallbackItem.val)) {
-        caSetCenter(fallbackItem.name, caFmtSh(fallbackItem.val));
+        // Clean emojis and extra spacing from the fallback item name
+        var cleanFallbackName = fallbackItem.name
+          .replace(/[^\x00-\x7F]/g, "").replace(/\bPNL\b/gi, "")
+          .trim();
+
+        caSetCenter(cleanFallbackName, caFmtSh(Math.abs(fallbackItem.val)));
       } else {
         caSetCenter("Selected", "đ0");
       }
@@ -2062,12 +2082,19 @@ function caLoadDonut(){
     
     .then(function(text){
       var data=text.trim().split("\n").filter(function(r){return r.trim();}).map(function(row){
-        var cols=caCSV(row);return{name:cols[0].replace(/^"|"$/g,"").trim(),val:caNum(cols[1])};
-        console.log("📊 All Rows Found in CSV:", data);
+        var cols=caCSV(row);
+        return {name:cols[0].replace(/^"|"$/g,"").trim(),val:caNum(cols[1])};
       }).filter(function(d){return d.name&&!isNaN(d.val);});
+      
+      //console.log("📊 Cleaned Donut Data Array:", data); // Moved safely outside the map loop
+      
       if(!data.length)return;
-      caGlobalData=data;caRenderDonut(data);
-      //console.log("📊 Final Donut Data Array:", data);
+      
+      // Sync global states safely right before rendering
+      caGlobalData=data;
+      caActiveDataset=data; 
+      
+      caRenderDonut(data);
     }).catch(function(err){console.warn("ca-donut:",err.message);});
 }
 
@@ -2123,7 +2150,12 @@ function caRenderDonut(data) {
   if (!svg) return;
   svg.innerHTML = "";
   
+  // Save the raw, unfiltered data array globally so caHighlight can read it
+  caActiveDataset = data; 
+  
+  // 1. Calculate the total size for drawing donut rings using absolute values
   var total = data.reduce(function(s, d) { return s + Math.abs(d.val); }, 0);
+  
   var cx = 100, cy = 100, r = 78, sw = 28, GAP = 4;
   var ns = "http://www.w3.org/2000/svg";
   var palette = caGetPalette();
@@ -2152,6 +2184,7 @@ function caRenderDonut(data) {
   tr.setAttribute("stroke-width", sw);
   svg.appendChild(tr);
 
+  // 2. Render all chart paths from the original data array
   var angle = 0;
   data.forEach(function(item, i) {
     var pct = Math.abs(item.val) / total;
@@ -2181,11 +2214,16 @@ function caRenderDonut(data) {
 
   svg.addEventListener("click", function() { caHighlight(null); });
   
+  // 3. YOUR ORIGINAL MATH: Sum raw values directly to get 52.7M net balance
   var totalRaw = data.reduce(function(s, d) { return s + d.val; }, 0);
-  caSetCenter(caActiveTab === "income" ? "Incomes" : "Expenses", caFmtSh(totalRaw));
+  
+  // Force it positive ONLY for presentation layout inside caFmtSh
+  caSetCenter(
+    caActiveTab === "income" ? "Incomes" : "Expenses", 
+    caFmtSh(Math.abs(totalRaw))
+  );
 }
 
-// Master List Rendering (Dynamic Row Parsing & Ring Generation)
 // Master List Rendering
 function caRenderList(data) {
   var list = document.getElementById("ca-list");
@@ -2208,9 +2246,9 @@ function caRenderList(data) {
     row.className = "ca-list-row";
     
     var pcFs = window.innerWidth < 401 ? "4.6vw" : "2.6vw";
-    var pcMw = window.innerWidth < 401 ? "80px" : "50px";
+    var pcMw = window.innerWidth < 401 ? "80px" : "45px";
     var iconUrl = item.icon || defaultIcons[i % defaultIcons.length];
-    var cleanName = item.name.replace(/[^\x00-\x7F]/g, "") .replace(/\bPNL\b/gi, "").replace(/\s+/g, " ").trim();
+    var cleanName = item.name.replace(/[^\x00-\x7F]/g, "").replace(/\bPNL\b/gi, "").replace(/\s+/g, " ").trim();
 
 
     // Render the layout: Ring + Icon | Name (un-truncated) | Pct% (aligned right) | Amount (aligned right)
@@ -2223,7 +2261,7 @@ function caRenderList(data) {
         ${cleanName}
       </div>
       <div class="ca-list-pct" style="text-align: right; width: 22px; flex-shrink: 0; padding-right:2px;">
-        ${pct.toFixed(1)}%
+        ${pct.toFixed(0)}%
       </div>
       <div class="ca-list-val" style="text-align: right; flex-shrink: 0; min-width: ${pcMw};">
         ${caFmt(item.val)}
@@ -2300,9 +2338,8 @@ function caRenderDrill(items,title,color){
     var pct=Math.abs(item.val)/total*100,r2=10,sw=3,circ=2*Math.PI*r2,dash=(pct/100)*circ,gap=circ-dash;
     var row=document.createElement("div");row.className="ca-list-row";row.style.cursor="default";
     row.innerHTML='<img src="'+item.icon+'" style="width:'+drIS+';height:'+drIS+';object-fit:contain;flex-shrink:0;" />'
-      +'<div class="ca-list-name" style="font-size:'+drPcFs+';">'+item.name+'</div>'
-      +'<svg viewBox="0 0 28 28" style="flex-shrink:0;width:5vw;height:5vw;"><circle cx="14" cy="14" r="'+r2+'" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="'+sw+'"/><circle cx="14" cy="14" r="'+r2+'" fill="none" stroke="'+color+'" stroke-width="'+sw+'" stroke-linecap="round" stroke-dasharray="'+dash.toFixed(2)+' '+gap.toFixed(2)+'" stroke-dashoffset="0" transform="rotate(-90 14 14)"/></svg>'
-      +'<div class="ca-list-pct" style="font-size:'+drPcFs+';flex-shrink:0;">'+pct.toFixed(1)+'%</div>'
+      + '<div class="ca-list-name" style="font-size:' + drPcFs + '; flex-grow: 1;">' + item.name + '</div>'
+      +'<div class="ca-list-pct" style="font-size:'+drPcFs+';flex-shrink:0;">'+pct.toFixed(0)+'%</div>'
       +'<div class="ca-list-val" style="min-width: ' + pcSMw + '; font-size:' + drPcFs + '; text-align: right;">' + caFmt(Math.abs(item.val)) + '</div>';
 
       
@@ -2920,7 +2957,7 @@ function updateDetailInSheets(date, oldDetail, newDetail) {
 /* ══ APPLY LAYOUT ══ */
 function applyLayout(){
   var isMobile = window.innerWidth < 400;
-  if (!caDataLoaded) { caLoadDonut(); caDataLoaded=true; }
+  if (!caDataLoaded) { caDataLoaded=true; }
 
   // Tab bar
   document.querySelectorAll(".tab-btn").forEach(function(el){el.style.fontSize=isMobile?"4vw":"2.8vw";});
@@ -4473,13 +4510,7 @@ loadCycles();
 
 setInterval(loadExpense,60000);
 setInterval(loadRecent,60000);
-//setInterval(caLoadBI,60000);
 setInterval(caLoadDonut,60000);
-
-// This forces the function to run immediately once the DOM is fully loaded
-document.addEventListener("DOMContentLoaded", function() {
-  caLoadBI();
-});
 
 /* ══ INIT: load saved tab order + last active tab, apply, then wire up UI ══ */
 (function() {
@@ -4727,8 +4758,6 @@ if (peakStart.getFullYear() === peakEndNew.getFullYear()) {
   // Fallback case just in case the window crosses a year boundary (e.g., Dec 2028 - Jun 2029)
   displayString = `${formatMonth(peakStart)} ${formatYear(peakStart)} - ${formatMonth(peakEndNew)} ${formatYear(peakEndNew)}`;
 }
-
-document.getElementById('lbl-peak-prediction').innerText = `Expected Peak: ${displayString}`;
 
   // 8. Rebuild the Dynamic X-Axis Date Intervals grid (0%, 25%, 50%, 75%, 100%)
   const dateAxisContainer = document.getElementById('dynamic-date-axis');
