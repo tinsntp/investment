@@ -9,8 +9,24 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 <style>
+  :root {
+      --bg-dark: #0d0e12;
+      --card-pocket-bg: #16181e;
+      --card-pocket-lining-bg: #111217;
+      --text-main: #ffffff;
+      --text-muted: #8a8d97;
+      --btn-bg: #21242c;
+      --btn-hover: #2d313c;
+      --accent-pink-bg: #fbcad5;
+      --accent-pink-text: #4a1525;
+      --accent-purple-bg: #d5d3f8;
+      --accent-purple-text: #211c4a;
+      --accent-deposit: #e0245e;
+      --accent-deposit-bg: rgba(224, 36, 94, 0.15);
+    }
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-family: "Lexend", Roboto, sans-serif;font-weight:300!important;color:#fff;overflow:hidden;margin-top:15px;display:flex;flex-direction:column;padding-bottom:5px}
 .tab-bar{display:flex;align-items:stretch;border-bottom:1px solid rgba(255,255,255,0.1);position:relative;flex-shrink:0;padding:0 0vw}
@@ -162,6 +178,74 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 #add-cash.success-confirm{background-color:#10b981 !important;color:#ffffff !important;font-size:15px;font-weight:500;display:flex;align-items:center;justify-content:center;transition:background-color 0.3s ease}
 @keyframes spinCircle{to{transform:rotate(360deg)}}
 @media screen and (min-width:401px){#add-cash.success-confirm{font-size:3.4vw;} .btn-spinner{width:25px;height:25px;}}
+
+/* ══ WALLET SLIDE ══ */
+.wallet-widget {
+      width: 100%;
+      max-width: 380px; 
+      background: #060709;
+      border-radius: 28px;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      /* Deep external layered shadows mimicking real lighting depth */
+      box-shadow: 
+        0 10px 30px -10px rgba(0, 0, 0, 0.7),
+        0 30px 60px -15px rgba(0, 0, 0, 0.9),
+        inset 0 1px 0px 0px rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Wallet Container (Cards Stack + Pocket) */
+    .wallet-container{position:relative;height:240px;width:100%;margin-bottom:4px;background:#090a0d;border-radius:24px;box-shadow:inset 0 4px 12px rgba(0,0,0,0.6);overflow:hidden}
+.cards-stack{position:absolute;top:12px;left:12px;width:calc(100% - 24px);height:180px;z-index:1}
+.account-card{position:absolute;width:100%;height:44px;padding:12px 10px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:all 0.4s cubic-bezier(0.25,1,0.5,1);box-shadow:0 -4px 10px rgba(0,0,0,0.3)}
+.account-card.first-card{border-radius:12px 12px 0 0;padding-top:6px}
+.account-card.middle-card{border-radius:0px}
+.account-card.last-card{border-radius:0 0 12px 12px;height:120px;align-items:flex-start;padding-top:6px}
+.account-card .left-section{display:flex;align-items:center;gap:6px;font-weight:600;font-size:14px}
+.account-card .icon-img{width:18px;height:18px;object-fit:contain;border-radius:6px}
+.account-card .balance{font-weight:600;font-size:15px;letter-spacing:-0.3px}
+.account-card.card-pink{color:var(--accent-pink-text)}
+.account-card.card-purple{color:var(--accent-purple-text)}
+.account-card.card-color-b .left-section span{color:#1c2541}
+.account-card.card-color-a .left-section span{color:#ffffff}
+.wallet-pocket{position:absolute;bottom:0;left:0;width:100%;height:160px;background:var(--card-pocket-bg);border-radius:0 0 24px 24px;z-index:10;padding:20px 24px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 -12px 24px rgba(0,0,0,0.6),inset 0 1px 1px rgba(255,255,255,0.1),inset 0 -10px 20px rgba(0,0,0,0.4)}
+.wallet-pocket::after{content:'';position:absolute;top:4px;left:8px;right:8px;bottom:8px;border-left:1.5px dashed rgba(255,255,255,0.12);border-right:1.5px dashed rgba(255,255,255,0.12);border-bottom:1.5px dashed rgba(255,255,255,0.12);border-bottom-left-radius:18px;border-bottom-right-radius:18px;pointer-events:none;z-index:12}
+.wallet-pocket::before{content:'';position:absolute;top:-12px;left:0;width:100%;height:13px;background:var(--card-pocket-bg);box-shadow:inset 0 1px 0 rgba(255,255,255,0.08);clip-path:polygon(14px 0%,calc(100% - 14px) 0%,100% 100%,0% 100%)}
+.pocket-header{display:flex;align-items:center;gap:8px;color:var(--text-muted);font-size:13px;font-weight:500;position:relative;z-index:15}
+.pocket-header .material-icons-round{font-size:16px}
+.total-balance-value{font-size:24px;font-family:"JetBrains Mono",monospace,sans-serif;font-weight:700;margin-top:4px;letter-spacing:-0.5px;position:relative;z-index:15}
+.usd-equivalence{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-muted);margin-top:2px;position:relative;z-index:15}
+.preview-section{margin-top:10px;width:100%;display:flex;flex-direction:column;gap:6px;position:relative;z-index:15}
+.preview-row{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--text-muted);padding-top:6px;border-top:1px dashed rgba(255,255,255,0.08)}
+.preview-row-left{display:flex;align-items:center;gap:6px}
+.preview-mini-icon{width:14px;height:14px;object-fit:contain;border-radius:3px}
+.pocket-footer{display:flex;justify-content:flex-end;align-items:center;position:relative;z-index:15}
+.pocket-logo{color:var(--text-muted);opacity:0.25;font-size:18px}
+.total-balance-header{display:flex;align-items:center;gap:8px}
+.total-balance-header h2{margin:0;font-size:16px;color:#666}
+.eye-btn{background:none;border:none;padding:0;cursor:pointer;display:flex;align-items:center;color:#888;transition:color 0.2s}
+.eye-btn:hover{color:#333}
+.action-row{display:flex;justify-content:center;margin-left:auto;margin-right:auto;gap:8px;margin-top:-15px;width:95%}
+.btn{border:none;border-radius:10px;font-family:Lexend;height:30px;display:inline-flex;align-items:center;justify-content:center;gap:2px;font-weight:300;font-size:12px;cursor:pointer;transition:background 0.2s,transform 0.1s;color:var(--text-main)}
+.btn:active{transform:scale(0.97)}
+.btn-deposit{flex:1;background-color:var(--accent-deposit-bg);color:var(--accent-deposit)}
+.btn-deposit:hover{background-color:rgba(224,36,94,0.25)}
+.btn-withdraw{flex:1;background-color:var(--btn-bg)}
+.btn-withdraw:hover{background-color:var(--btn-hover)}
+.btn-square{width:28px;background-color:var(--btn-bg);flex-shrink:0}
+.btn-square:hover{background-color:var(--btn-hover)}
+.modal-backdrop{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);z-index:100;display:flex;justify-content:center;align-items:center;opacity:0;pointer-events:none;transition:opacity 0.3s ease}
+.modal-backdrop.active{opacity:1;pointer-events:auto}
+.modal-box{width:340px;background:#1c1e24;border-radius:20px;padding:24px;border:1px solid #2d313c;transform:translateY(20px);transition:transform 0.3s ease}
+.modal-backdrop.active .modal-box{transform:translateY(0)}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.modal-body{color:var(--text-muted);font-size:14px;line-height:1.5}
+.modal-close{margin-top:20px;width:100%;background:var(--btn-bg);border:none;height:40px;border-radius:10px;color:var(--text-main);font-weight:600;cursor:pointer}
+.modal-close:hover{background:var(--btn-hover)}
 
 /* ══ OVERVIEW SLIDE ══ */
 #slide-2 { padding:0; overflow:hidden; margin-top:10px}
@@ -554,9 +638,82 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
       <div id="ca-wrap">
         <!-- Left column: Balance + Donut -->
         <div id="ca-col-left">
-          <div id="ca-section-balance">
-            <div id="ca-card-balance" style="display:none"></div>
+          <div class="wallet-widget">
+            <div class="wallet-container">
+              
+              <!-- Cards Stack Area -->
+              <div class="cards-stack" id="cardsStack"></div>
+
+              <!-- Pocket Overlay (Total Balance Panel) -->
+              <div class="wallet-pocket">
+                <div>
+                  <div class="pocket-header" style="display: flex; align-items: center; gap: 8px;">
+                    <span class="material-icons-round">timelapse</span>
+                    <span>Total Balance</span>
+                    <span class="material-icons-round" id="visibilityToggle" style="cursor: pointer; font-size: 15px; color: #666;" onclick="toggleVisibility()">visibility</span>
+                  </div>
+                  <div class="total-balance-value" id="totalBalance">0 đ</div>
+                  <div class="usd-equivalence">
+                    <span id="usdBalance">$0.00 USD</span>
+                  </div>
+
+                  <!-- Bottom Preview Section for Excluded/Special Accounts -->
+                  <div class="preview-section">
+                    <!-- Social Account Row -->
+                    <div class="preview-row" id="socialAccountRow">
+                      <div class="preview-row-left">
+                        <img id="socialIcon" class="preview-mini-icon" src="" alt="Social Icon" onerror="this.style.display='none'">
+                        <span><i class="bi bi-asterisk"></i> Social Insurance</span>
+                      </div>
+                      <span id="socialBalance">0 đ</span>
+                    </div>
+
+                    <!-- Salary Account Row -->
+                    <div class="preview-row" id="salaryAccountRow">
+                      <div class="preview-row-left">
+                        <img id="salaryIcon" class="preview-mini-icon" src="" alt="Salary Icon" onerror="this.style.display='none'">
+                        <span><i class="bi bi-wallet"></i> Pending Salary</span>
+                      </div>
+                      <span id="salaryBalance">0 đ</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pocket-footer">
+                  
+                </div>
+              </div>
+              
+            </div>
+
+            <!-- Actions Row -->
+            <div class="action-row">
+              <button class="btn btn-deposit" onclick="openModal('Deposit')">
+                <span class="material-icons-round" style="font-size:18px;">arrow_circle_down</span>
+                Deposit
+              </button>
+              <button class="btn btn-withdraw" onclick="openModal('Withdraw')">
+                <span class="material-icons-round" style="font-size:18px;">arrow_circle_up</span>
+                Withdraw
+              </button>
+              <button class="btn btn-square" onclick="openModal('Transfer')" title="Transfer">
+                <span class="material-icons-round">swap_horiz</span>
+              </button>
+              <button class="btn btn-square" onclick="openModal('History')" title="History">
+                <span class="material-icons-round">history</span>
+              </button>
+            </div>
           </div>
+
+          <!-- Shared Pop-up Modal Container -->
+          <div class="modal-backdrop" id="modalBackdrop" onclick="closeModal()">
+            <div class="modal-box" onclick="event.stopPropagation()">
+              <div class="modal-title" id="modalTitle">Modal Title</div>
+              <div class="modal-body" id="modalBody">Modal action content goes here.</div>
+              <button class="modal-close" onclick="closeModal()">Close</button>
+            </div>
+          </div>
+
           <div id="ca-section-expense">
             <div id="ca-donut-wrap">
               <svg id="ca-donut-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"></svg>
@@ -1000,7 +1157,7 @@ function switchTab(idx) {
     
     default:
       // Optional: Add log statement or fallbacks for development tracking
-      console.log("Switched to tab " + idx + " (No custom loader mapped)");
+      //console.log("Switched to tab " + idx + " (No custom loader mapped)");
       break;
   }
 }
@@ -1830,7 +1987,7 @@ function caRenderList(data){
     list.appendChild(row);
   });caApplyLayout();
 }
-
+/*
 function caLoadBI(){
   fetch(CA_CSV_BI+"&t="+Date.now(),{cache:"no-store"})
     .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.text();})
@@ -1847,7 +2004,7 @@ function caLoadBI(){
       if(balance.length)caRenderBalance(balance);
       if(income.length)caRenderIncome(income);
     }).catch(function(err){console.warn("ca-bi:",err.message);});
-}
+}*/
 
 function caLoadDonut(){
   fetch(CA_CSV_DNUT+"&t="+Date.now(),{cache:"no-store"})
@@ -2382,7 +2539,7 @@ function updateDetailInSheets(date, oldDetail, newDetail) {
 /* ══ APPLY LAYOUT ══ */
 function applyLayout(){
   var isMobile = window.innerWidth < 400;
-  if (!caDataLoaded) { caLoadBI(); caLoadDonut(); caDataLoaded=true; }
+  if (!caDataLoaded) { caLoadDonut(); caDataLoaded=true; }
 
   // Tab bar
   document.querySelectorAll(".tab-btn").forEach(function(el){el.style.fontSize=isMobile?"4vw":"2.8vw";});
@@ -3935,7 +4092,7 @@ loadCycles();
 
 setInterval(loadExpense,60000);
 setInterval(loadRecent,60000);
-setInterval(caLoadBI,60000);
+//setInterval(caLoadBI,60000);
 setInterval(caLoadDonut,60000);
 
 /* ══ INIT: load saved tab order + last active tab, apply, then wire up UI ══ */
@@ -4265,10 +4422,177 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+const EXCLUDED_FROM_TOTAL = ['SOCIAL', 'SALARY']; 
+  const exchangeRateVNDtoUSD = 25450; 
+  const CARD_OVERLAP_OFFSET = 32; 
 
-// Kick off initialization on layout render loops
-document.addEventListener("DOMContentLoaded", initFullyAutomatedTimeline);
-initFullyAutomatedTimeline();
+  const mockAccountsData = [
+    { icon: "https://github.com/tinsntp/investment/blob/main/cash.png?raw=true", account: "CASH", amount: 12998000 },
+    { icon: "https://github.com/tinsntp/investment/blob/main/saving.png?raw=true", account: "SAVING", amount: 371000000 },
+    { icon: "https://github.com/tinsntp/investment/blob/main/stock.png?raw=true", account: "STOCK", amount: 0 },
+    { icon: "https://github.com/tinsntp/investment/blob/main/exness.png?raw=true", account: "FOREX", amount: 0 },
+    { icon: "https://github.com/tinsntp/investment/blob/main/social.png?raw=true", account: "SOCIAL", amount: 493667823 },
+    { icon: "https://github.com/tinsntp/investment/blob/main/ces.png?raw=true", account: "SALARY", amount: 163876801 }
+  ];
+
+  let cardsList = [];
+  let isBalanceHidden = false;
+  let totalBalanceVND = 0;
+  let totalBalanceUSD = 0;
+  
+  let socialAccountData = null;
+  let salaryAccountData = null;
+
+  function initCardWidget(data) {
+    socialAccountData = data.find(acc => acc.account.toUpperCase() === 'SOCIAL');
+    salaryAccountData = data.find(acc => acc.account.toUpperCase() === 'SALARY');
+
+    if (socialAccountData) document.getElementById('socialIcon').src = socialAccountData.icon;
+    if (salaryAccountData) document.getElementById('salaryIcon').src = salaryAccountData.icon;
+
+    // Filters out 0 balances/exclusions AND sorts descending
+    cardsList = data.filter(acc => {
+      const uppercaseName = acc.account.toUpperCase();
+      return acc.amount > 0 && !EXCLUDED_FROM_TOTAL.includes(uppercaseName);
+    }).sort((a, b) => b.amount - a.amount); 
+    
+    totalBalanceVND = cardsList.reduce((sum, acc) => sum + acc.amount, 0);
+    totalBalanceUSD = totalBalanceVND / exchangeRateVNDtoUSD;
+
+    updateBalanceDisplay();
+    renderCards();
+  }
+
+  function toggleVisibility() {
+    isBalanceHidden = !isBalanceHidden;
+    const eyeIcon = document.getElementById('visibilityToggle');
+    eyeIcon.innerText = isBalanceHidden ? 'visibility_off' : 'visibility';
+    updateBalanceDisplay();
+  }
+
+  function updateBalanceDisplay() {
+    const balanceValueEl = document.getElementById('totalBalance');
+    const usdValueEl = document.getElementById('usdBalance');
+    const socialBalanceEl = document.getElementById('socialBalance');
+    const salaryBalanceEl = document.getElementById('salaryBalance');
+
+    if (isBalanceHidden) {
+      balanceValueEl.innerText = '•••••••• đ';
+      usdValueEl.innerText = '•••••••• USD';
+      socialBalanceEl.innerText = '•••••••• đ';
+      salaryBalanceEl.innerText = '•••••••• đ';
+    } else {
+      balanceValueEl.innerText = `${totalBalanceVND.toLocaleString('vi-VN')} đ`;
+      usdValueEl.innerText = `$${totalBalanceUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`;
+      
+      if (socialAccountData) {
+        socialBalanceEl.innerText = `${socialAccountData.amount.toLocaleString('vi-VN')} đ`;
+      }
+      if (salaryAccountData) {
+        salaryBalanceEl.innerText = `${salaryAccountData.amount.toLocaleString('vi-VN')} đ`;
+      }
+    }
+  }
+
+  function renderCards() {
+    const container = document.getElementById('cardsStack');
+    container.innerHTML = '';
+
+    cardsList.forEach((acc, index) => {
+      const card = document.createElement('div');
+      
+      // 1. Define colors dynamically based on the account name
+      const accountName = acc.account.toLowerCase();
+      
+      let cardGradient = 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'; // Fallback background
+      let textColor = '#ffffff'; // Fallback text color
+
+      if (accountName.includes('cash')) {
+        cardGradient = 'linear-gradient(135deg, #0df2c9 0%, #ffffff 100%)';
+        textColor = '#1c2541'; // White text for the purple-pink card
+      } else if (accountName.includes('saving')) {
+        cardGradient = 'linear-gradient(135deg, #8338ec 0%, #ff007f 100%)';
+        textColor = '#fff'; // Dark blue text for the light mint-white card
+      } else if (accountName.includes('stock')) {
+        cardGradient = 'linear-gradient(135deg, #0B1B3D 0%, #183B70 100%)';
+        textColor = '#fff'; // Dark blue text for the light mint-white card
+      } else if (accountName.includes('crypto')) {
+        cardGradient = 'linear-gradient(135deg, #ffd200 0%, #f7971e 100%)';
+        textColor = '#fff'; // Dark blue text for the light mint-white card
+      }
+
+      // 2. Handle card positioning (first, middle, last)
+      let positionClass = 'middle-card';
+      if (index === 0) {
+        positionClass = 'first-card';
+      } else if (index === cardsList.length - 1) {
+        positionClass = 'last-card';
+      }
+
+      // 3. Set structural classes (no color classes needed anymore)
+      card.className = `account-card ${positionClass}`;
+      
+      // 4. Apply styling directly in JS (guarantees priority over CSS)
+      const offsetTop = index * CARD_OVERLAP_OFFSET; 
+      card.style.top = `${offsetTop}px`;
+      card.style.zIndex = index + 2;
+      card.style.background = cardGradient;
+
+      // 5. Render HTML content (we apply the dynamic textColor inline to the span)
+      card.innerHTML = `
+        <div class="left-section">
+          <img class="icon-img" src="${acc.icon}" alt="${acc.account}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135706.png'">
+          <span style="color: ${textColor} !important;">
+            ${acc.account.charAt(0).toUpperCase() + acc.account.slice(1).toLowerCase()}
+          </span>
+        </div>
+        <div class="balance" style="color: ${textColor} !important;">
+          ${acc.amount.toLocaleString('vi-VN')} đ
+        </div>
+      `;
+
+      card.addEventListener('click', () => {
+        reorderCards(index);
+      });
+
+      container.appendChild(card);
+    });
+  }
+
+  function reorderCards(selectedIndex) {
+    const targetCard = cardsList.splice(selectedIndex, 1)[0];
+    cardsList.push(targetCard);
+    renderCards();
+  }
+
+  function openModal(type) {
+    const backdrop = document.getElementById('modalBackdrop');
+    const title = document.getElementById('modalTitle');
+    const body = document.getElementById('modalBody');
+
+    title.innerHTML = `
+      <span class="material-icons-round" style="color:var(--accent-deposit)">settings_applications</span>
+      ${type} Portal
+    `;
+    
+    body.innerHTML = `
+      <p style="margin-bottom: 12px;">Active portal interface for performing transaction updates.</p>
+      <p>Dashboard leather design accents are synced with configuration updates.</p>
+    `;
+
+    backdrop.classList.add('active');
+  }
+
+  function closeModal() {
+    document.getElementById('modalBackdrop').classList.remove('active');
+  }
+
+  // Initialize with mock parameters
+  initCardWidget(mockAccountsData);
+
+  // Kick off initialization on layout render loops
+  document.addEventListener("DOMContentLoaded", initFullyAutomatedTimeline);
+  initFullyAutomatedTimeline();
 
   
   document.getElementById('days-until-display').innerText = data.until + " days";
@@ -4276,8 +4600,8 @@ initFullyAutomatedTimeline();
   const riskDisplay = document.getElementById('risk-status-display');
   riskDisplay.innerText = riskStatus;
   riskDisplay.style.color = riskColor;
-window.addEventListener("load",function(){positionTabLine();applyLayout();caApplyLayout();initCashModal();});
-window.addEventListener("resize",applyLayout);
+  window.addEventListener("load",function(){positionTabLine();applyLayout();caApplyLayout();initCashModal();});
+  window.addEventListener("resize",applyLayout);
 
 
 </script>
