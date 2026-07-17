@@ -180,26 +180,8 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 @media screen and (min-width:401px){#add-cash.success-confirm{font-size:3.4vw;} .btn-spinner{width:25px;height:25px;}}
 
 /* ══ WALLET SLIDE ══ */
-.wallet-widget {
-      width: 100%;
-      max-width: 380px; 
-      background: #060709;
-      border-radius: 28px;
-      padding: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      /* Deep external layered shadows mimicking real lighting depth */
-      box-shadow: 
-        0 10px 30px -10px rgba(0, 0, 0, 0.7),
-        0 30px 60px -15px rgba(0, 0, 0, 0.9),
-        inset 0 1px 0px 0px rgba(255, 255, 255, 0.1);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    /* Wallet Container (Cards Stack + Pocket) */
-    .wallet-container{position:relative;height:240px;width:100%;margin-bottom:4px;background:#090a0d;border-radius:24px;box-shadow:inset 0 4px 12px rgba(0,0,0,0.6);overflow:hidden}
+.wallet-widget{width:100%;padding:0px;overflow:hidden;display:flex;flex-direction:column;gap:16px}
+.wallet-container{position:relative;height:240px;width:100%;margin-bottom:4px;background:transparent;border-radius:24px;overflow:hidden}
 .cards-stack{position:absolute;top:12px;left:12px;width:calc(100% - 24px);height:180px;z-index:1}
 .account-card{position:absolute;width:100%;height:44px;padding:12px 10px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:all 0.4s cubic-bezier(0.25,1,0.5,1);box-shadow:0 -4px 10px rgba(0,0,0,0.3)}
 .account-card.first-card{border-radius:12px 12px 0 0;padding-top:6px}
@@ -662,7 +644,6 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
                     <!-- Social Account Row -->
                     <div class="preview-row" id="socialAccountRow">
                       <div class="preview-row-left">
-                        <img id="socialIcon" class="preview-mini-icon" src="" alt="Social Icon" onerror="this.style.display='none'">
                         <span><i class="bi bi-asterisk"></i> Social Insurance</span>
                       </div>
                       <span id="socialBalance">0 đ</span>
@@ -671,7 +652,6 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
                     <!-- Salary Account Row -->
                     <div class="preview-row" id="salaryAccountRow">
                       <div class="preview-row-left">
-                        <img id="salaryIcon" class="preview-mini-icon" src="" alt="Salary Icon" onerror="this.style.display='none'">
                         <span><i class="bi bi-wallet"></i> Pending Salary</span>
                       </div>
                       <span id="salaryBalance">0 đ</span>
@@ -4446,9 +4426,6 @@ const EXCLUDED_FROM_TOTAL = ['SOCIAL', 'SALARY'];
   function initCardWidget(data) {
     socialAccountData = data.find(acc => acc.account.toUpperCase() === 'SOCIAL');
     salaryAccountData = data.find(acc => acc.account.toUpperCase() === 'SALARY');
-
-    if (socialAccountData) document.getElementById('socialIcon').src = socialAccountData.icon;
-    if (salaryAccountData) document.getElementById('salaryIcon').src = salaryAccountData.icon;
 
     // Filters out 0 balances/exclusions AND sorts descending
     cardsList = data.filter(acc => {
