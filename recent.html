@@ -909,7 +909,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
             <!-- Dynamic Filter Controls -->
             <div class="ca-filter-header">
               <button class="ca-filter-btn" id="ca-btn-income" title="Incomes">
-                <i class="bi bi-piggy-bank"></i>
+                <i class="bi bi-piggy-bank-fill"></i>
               </button>
               <button class="ca-filter-btn active" id="ca-btn-expense" title="Expenses">
                 <i class="bi bi-basket"></i>
@@ -2026,7 +2026,7 @@ function caHighlight(idx, selectedName, selectedVal){
         .replace(/[^\x00-\x7F]/g, "").replace(/\bPNL\b/gi, "")
         .trim();
         
-      caSetCenter(cleanSelectedName, caFmtSh(Math.abs(selectedVal)));
+      caSetCenter(cleanSelectedName, caFmtSh(selectedVal));
     } else {
       var fallbackItem = data[idx];
       if (fallbackItem && !isNaN(fallbackItem.val)) {
@@ -2035,7 +2035,7 @@ function caHighlight(idx, selectedName, selectedVal){
           .replace(/[^\x00-\x7F]/g, "").replace(/\bPNL\b/gi, "")
           .trim();
 
-        caSetCenter(cleanFallbackName, caFmtSh(Math.abs(fallbackItem.val)));
+        caSetCenter(cleanFallbackName, caFmtSh(fallbackItem.val));
       } else {
         caSetCenter("Selected", "đ0");
       }
@@ -2250,37 +2250,34 @@ function caRenderList(data) {
     var iconUrl = item.icon || defaultIcons[i % defaultIcons.length];
     var cleanName = item.name.replace(/[^\x00-\x7F]/g, "").replace(/\bPNL\b/gi, "").replace(/\s+/g, " ").trim();
 
+    var valColor = item.val < 0 ? "#ff5252" : "#e0e0e0"; // Crisp light gray for primary text, pure coral red for negatives
+    var pctBg = item.val < 0 ? "rgba(255, 82, 82, 0.1)" : "rgba(255, 255, 255, 0.06)"; // Colored pill background
+    var pctText = item.val < 0 ? "#ff5252" : "#a0a0a5"; // Text color inside the pill
 
-    // Render the layout: Ring + Icon | Name (un-truncated) | Pct% (aligned right) | Amount (aligned right)
-    // Premium color palette mapping
-var valColor = item.val < 0 ? "#ff5252" : "#e0e0e0"; // Crisp light gray for primary text, pure coral red for negatives
-var pctBg = item.val < 0 ? "rgba(255, 82, 82, 0.1)" : "rgba(255, 255, 255, 0.06)"; // Colored pill background
-var pctText = item.val < 0 ? "#ff5252" : "#a0a0a5"; // Text color inside the pill
-
-row.innerHTML = `
-  <!-- Left Side Group: Aligns ring, icon, and text tightly -->
-  <div class="ca-list-left" style="margin-right: 1px; display: flex; align-items: center; position: relative; flex-shrink: 0;">
-    ${caMiniRingMarkup(pct, p.solid)}
-    <img class="ca-list-img" src="${iconUrl}" onerror="this.style.opacity='0';" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 16px; height: 16px;" />
-  </div>
-  
-  <!-- Content Body: Crisp, slightly smaller name with clean layout spacing -->
-  <div class="ca-list-name" style="flex-grow: 1; min-width: 0; padding-right: 0px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #efeff4; font-weight: 400; font-size: 12.5px; letter-spacing: -0.1px;">
-    ${cleanName}
-  </div>
-  
-  <!-- Mid Pill Badge: Instead of floating raw text, contain the % inside a sleek capsule -->
-  <div class="ca-list-pct-container" style="display: flex; align-items: center; padding-right: 0px; flex-shrink: 0;">
-    <span class="ca-list-pct" style="font-weight: 500; font-size: 11px!important; color: ${pctText}; background: ${pctBg}; padding: 2px 6px; border-radius: 10px; font-family: system-ui, -apple-system, sans-serif;">
-      ${pct.toFixed(0)}%
-    </span>
-  </div>
-  
-  <!-- Right Value: Clean, tabular numerals for perfect vertical scanning alignment -->
-  <div class="ca-list-val" style="text-align: right; flex-shrink: 0; min-width: ${pcMw}; font-weight: 500; font-size: 12.5px; color: ${valColor}; font-variant-numeric: tabular-nums; letter-spacing: -0.3px;">
-    ${caFmt(item.val)}
-  </div>
-`;
+    row.innerHTML = `
+      <!-- Left Side Group: Aligns ring, icon, and text tightly -->
+      <div class="ca-list-left" style="margin-right: 1px; display: flex; align-items: center; position: relative; flex-shrink: 0;">
+        ${caMiniRingMarkup(pct, p.solid)}
+        <img class="ca-list-img" src="${iconUrl}" onerror="this.style.opacity='0';" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 16px; height: 16px;" />
+      </div>
+      
+      <!-- Content Body: Crisp, slightly smaller name with clean layout spacing -->
+      <div class="ca-list-name" style="flex-grow: 1; min-width: 0; padding-right: 0px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #efeff4; font-weight: 300; font-size: 12.5px; letter-spacing: -0.1px;">
+        ${cleanName}
+      </div>
+      
+      <!-- Mid Pill Badge: Instead of floating raw text, contain the % inside a sleek capsule -->
+      <div class="ca-list-pct-container" style="display: flex; align-items: center; padding-right: 0px; flex-shrink: 0;">
+        <span class="ca-list-pct" style="font-weight: 300; font-size: 11px!important; color: ${pctText}; background: ${pctBg}; padding: 2px 6px; border-radius: 10px;">
+          ${pct.toFixed(0)}%
+        </span>
+      </div>
+      
+      <!-- Right Value: Clean, tabular numerals for perfect vertical scanning alignment -->
+      <div class="ca-list-val" style="text-align: right; flex-shrink: 0; min-width: ${pcMw}; font-weight: 600; font-size: 12.5px; color: ${valColor}; font-variant-numeric: tabular-nums; letter-spacing: -0.3px;">
+        ${caFmt(item.val)}
+      </div>
+    `;
 
     (function(ii) {
       row.addEventListener("click", function() {
@@ -2542,7 +2539,6 @@ function caApplyLayout(){
     document.querySelectorAll(".ca-list-icon").forEach(function(el){el.style.width="8vw";el.style.height="8vw";});
     document.querySelectorAll(".ca-bi-name").forEach(function(el){el.style.fontSize="4.5vw";});
     document.querySelectorAll(".ca-bi-val").forEach(function(el){el.style.fontSize="4.5vw";});
-    document.querySelectorAll(".ca-list-pct").forEach(function(el){el.style.fontSize="4.1vw";});
     document.querySelectorAll(".ca-mini-ring").forEach(function(el){el.style.width="9vw";el.style.height="9vw";});
     // Donut list sizes for mobile
     document.querySelectorAll(".ca-list-name").forEach(function(el){el.style.fontSize="4.6vw";});
@@ -2569,7 +2565,6 @@ function caApplyLayout(){
     document.querySelectorAll(".ca-list-icon").forEach(function(el){el.style.width="4vw";el.style.height="4vw";});
     document.querySelectorAll(".ca-bi-name").forEach(function(el){el.style.fontSize="2.88vw";});
     document.querySelectorAll(".ca-bi-val").forEach(function(el){el.style.fontSize="2.92vw";});
-    document.querySelectorAll(".ca-list-pct").forEach(function(el){el.style.fontSize="2.5vw";});
     document.querySelectorAll(".ca-mini-ring").forEach(function(el){el.style.width="5vw";el.style.height="5vw";});
     // Donut list sizes for iPad
     document.querySelectorAll(".ca-list-name").forEach(function(el){el.style.fontSize="2.5vw";});
