@@ -2337,7 +2337,7 @@ function caRenderDrill(items,title,color){
   header.addEventListener("click",function(){caHighlight(null);caRenderList(caGlobalData);});
   list.appendChild(header);
   var total=items.reduce(function(s,d){return s+Math.abs(d.val);},0);
-  var pcSMw = window.innerWidth < 401 ? "60px" : "40px";
+  var pcSMw = window.innerWidth < 401 ? "60px" : "45px";
   var maxPct = Math.max.apply(Math, items.map(function(item) {
   return (Math.abs(item.val) / total) * 100;
 }));
