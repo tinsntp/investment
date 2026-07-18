@@ -203,10 +203,221 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .btn-withdraw:hover{background-color:var(--btn-hover)}
 .btn-square{width:28px;background-color:var(--btn-bg);flex-shrink:0}
 .btn-square:hover{background-color:var(--btn-hover)}
-.modal-backdrop{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);z-index:100;display:flex;justify-content:center;align-items:center;opacity:0;pointer-events:none;transition:opacity 0.3s ease}
-.modal-backdrop.active{opacity:1;pointer-events:auto}
-.modal-box{width:340px;background:#1c1e24;border-radius:20px;padding:24px;border:1px solid #2d313c;transform:translateY(20px);transition:transform 0.3s ease}
-.modal-backdrop.active .modal-box{transform:translateY(0)}
+/* 1. Mặc định ẩn hoàn toàn để không lọt sang Tab 1 */
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 2. Kích hoạt hiển thị bắt buộc khi có class .active */
+.modal-backdrop.active {
+  display: flex !important;
+}
+
+/* 3. Khung nội dung xử lý hiệu ứng mượt mà ở đây */
+.modal-box {
+  width: 340px;
+  background: #1c1e24;
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid #2d313c;
+  
+  /* Hiệu ứng ban đầu khi modal xuất hiện */
+  opacity: 0;
+  transform: translateY(20px);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Khi backdrop active, hiển thị rõ ràng nội dung bên trong */
+.modal-backdrop.active .modal-box {
+  opacity: 1;
+  transform: translateY(0);
+}
+/* 1. Ensure the main container forms an anchor base point */
+.premium-select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* 2. The main visible button block */
+.custom-select-trigger {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 40px 14px 16px;
+  background: #111216;
+  border: 1px solid #2d313c;
+  border-radius: 12px;
+  color: #f8f9fa;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+/* 3. THE FIX: The floating option panel menu drawer */
+.custom-select-options {
+  position: absolute;       /* Forces the element to float OVER everything else */
+  top: calc(100% + 6px);    /* Places it cleanly right below the trigger box */
+  left: 0;
+  width: 100%;
+  background: #17191e;      /* Premium deep dark gray color palette background */
+  border: 1px solid #2d313c;
+  border-radius: 12px;
+  max-height: 220px;        /* Adds a standard bounding box constraint limits */
+  overflow-y: auto;         /* Displays custom smooth scrollbar if items list grows */
+  z-index: 999;             /* Forces it to pop above inputs and fields layouts */
+  
+  display: none;            /* Hides it by default until clicked */
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+  padding: 6px 0;
+}
+
+/* 4. Toggled dynamically by your JS function */
+.custom-select-options.show {
+  display: block !important;
+}
+
+/* 5. Custom option item styles */
+.custom-option-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  color: #cbd5e1;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+/* Charcoal gray hover selection rule */
+.custom-option-item:hover {
+  background: #2d3748;
+  color: #ffffff;
+}
+
+/* Force explicit layout sizing rules on icons */
+.custom-select-trigger img,
+.custom-option-item img {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.premium-select-wrapper::after {
+  content: '\e5cf'; /* Material Icons Expand More */
+  font-family: 'Material Icons Round';
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  pointer-events: none;
+}
+
+.premium-select {
+  width: 100%;
+  padding: 14px 40px 14px 16px;
+  background: #111216;
+  border: 1px solid #2d313c;
+  border-radius: 12px;
+  color: #f8f9fa;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+  cursor: pointer;
+  appearance: none; /* Strip native style */
+  -webkit-appearance: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  
+  /* FORCE BROWSER TO USE OS DARK SYSTEM DROPDOWN OVERLAYS (Fixes native bright blue hover highlights) */
+  color-scheme: dark;
+}
+
+/* Subtle slate-gray outline focus state (Replaces harsh yellow outline) */
+.premium-select:focus {
+  border-color: #4a5568; 
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.05);
+}
+
+.premium-select option {
+  background-color: #1a1d24; /* Base dropdown list background color */
+  color: #f8f9fa;
+}
+
+/* Fallback fallback rules for standard compliant browser engines */
+.premium-select option:checked,
+.premium-select option:hover {
+  box-shadow: 0 0 10px 100px #2d3748 inset !important; 
+  background-color: #2d3748 !important;
+  color: #ffffff !important;
+}
+
+/* Smart Instant Chip Badges */
+.quick-amt-group {
+  display: flex;
+  gap: 6px;                  /* Reduced from 8px to squeeze space */
+  margin-top: 4px;            /* Reduced from 8px to minimize gap to next fields */
+  min-height: 32px;
+  
+  /* ENHANCEMENT: Keep chips strictly inline on a single line */
+  overflow-x: auto;
+  white-space: nowrap;
+  flex-wrap: nowrap !important; /* Forces layout tracking to never break rows */
+  padding-bottom: 4px;
+}
+
+/* Hidden scrollbar footprints for modern browsers */
+.quick-amt-group::-webkit-scrollbar {
+  display: none;
+}
+
+.quick-amt-chip {
+  flex: 0 0 auto;             /* Keeps the chips from compressing under small wrappers */
+  background: #1e222b;
+  border: 1px solid #2d313c;
+  color: #cbd5e1;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+/* Updated hover style matching your grey/slate theme */
+.quick-amt-chip:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: #4a5568;
+  color: #f8f9fa;
+}
+/* Update or add these properties to your existing dropdown styles */
+.custom-select-trigger, 
+.custom-option-item {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between icon and text */
+}
+
+/* Ensure the wrapper trigger box preserves the custom icon markup sizing layout cleanly */
+.custom-select-trigger img {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
 .modal-title{font-size:18px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
 .modal-body{color:var(--text-muted);font-size:14px;line-height:1.5}
 .modal-close{margin-top:20px;width:100%;background:var(--btn-bg);border:none;height:40px;border-radius:10px;color:var(--text-main);font-weight:600;cursor:pointer}
@@ -637,14 +848,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
             </div>
           </div>
 
-          <!-- Shared Pop-up Modal Container -->
-          <div class="modal-backdrop" id="modalBackdrop" onclick="closeModal()">
-            <div class="modal-box" onclick="event.stopPropagation()">
-              <div class="modal-title" id="modalTitle">Modal Title</div>
-              <div class="modal-body" id="modalBody">Modal action content goes here.</div>
-              <button class="modal-close" onclick="closeModal()">Close</button>
-            </div>
-          </div>
+          
         </div><!-- NO SPACE CHARACTER BETWEEN THESE DIVS TO ENSURE STABLE INLINE FLOW --><div id="ca-col-right">
           <!-- Right column: Chart Analysis & Dynamic Breakdown lists -->
           <div id="ca-section-expense">
@@ -876,6 +1080,13 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
     <div class="slide" id="slide-6" data-idx="6">
       
     </div>
+  </div>
+</div>
+<!-- Shared Pop-up Modal Container -->
+<div class="modal-backdrop" id="modalBackdrop" onclick="closeModal()">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-title" id="modalTitle">Modal Title</div>
+    <div class="modal-body" id="modalBody">Modal action content goes here.</div>
   </div>
 </div>
 <!-- CASH TRANSACTION MODAL POPUP -->
@@ -1716,6 +1927,7 @@ function buildColHdr() {
 
 
 /* ══ OVERVIEW TAB ══ */
+
 var CA_CSV_BI   = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=311369594";
 var CA_CSV_DNUT = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1134096431";
 var CA_CSV_TAB1 = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv";
@@ -3147,8 +3359,8 @@ window.addEventListener("resize", function(){
 });
 
 /* ══ ADD RECORD (writes to the sheet via Apps Script Web App) ══ */
-var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxb1lPB9kZh-Q5C01U-DjuesOVlHgDEorEBK-pavyJUd5jPxZSub-Rx6unOCTDdrCS2/exec"; // ends in /exec
-var EXPENSE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyuTi6N2-xRiwA0z1biRhB-PbnROT2pi-NG7Zq5IEiUdi3kqDoAUQWIL1gKduGRVZ_ZRw/exec"; // ends in /exec
+var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxb1lPB9kZh-Q5C01U-DjuesOVlHgDEorEBK-pavyJUd5jPxZSub-Rx6unOCTDdrCS2/exec";
+var EXPENSE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZGJ15sQOsTx-a34eZPlgRCOf31NEhP3VUF1d3jHUqMGv52rhfev0YDBcMwOTxvBoYLQ/exec";
 
 var addOverlay = document.getElementById("add-modal-overlay");
 var addStatusEl = document.getElementById("add-status");
@@ -3192,9 +3404,6 @@ document.getElementById("add-submit-btn").addEventListener("click", function(){
   addStatusEl.textContent = "Saving\u2026";
   addStatusEl.className = "add-status";
 
-  // Apps Script Web Apps generally require no-cors from a static page,
-  // which means we can't read the response — we optimistically assume
-  // success if the request doesn't throw, then refresh the data.
   fetch(APPS_SCRIPT_URL, {
     method: "POST",
     mode: "no-cors",
@@ -3550,9 +3759,9 @@ function deleteTx(elementOrItem) {
 
   // Cancel Event
   // Sự kiện nút Cancel trong Modal xóa của bạn
-document.getElementById("expense-del-cancel").addEventListener("click", function(e) {
-  e.preventDefault();
-  cleanupModal(); // Đóng pop-up overlay
+  document.getElementById("expense-del-cancel").addEventListener("click", function(e) {
+    e.preventDefault();
+    cleanupModal(); // Đóng pop-up overlay
   
   // CƯỠNG CHẾ RESET TOÀN BỘ GIAO DIỆN DÒNG
   // 1. Quét tất cả các phần tử có khả năng là dòng hoặc container chứa dòng
@@ -3627,6 +3836,8 @@ document.getElementById("expense-del-cancel").addEventListener("click", function
     });
   });
 }
+
+
 
 /* ══ BTC Cycle Tracker ══ */
 var BTC_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=523826078";
@@ -4476,6 +4687,7 @@ if (peakStart.getFullYear() === peakEndNew.getFullYear()) {
   }
 }
 
+/* Wallet Cards*/
 document.addEventListener("DOMContentLoaded", function () {
   const txList = document.getElementById("tx-list");
 
@@ -4575,7 +4787,7 @@ document.addEventListener("DOMContentLoaded", function () {
         accountsData = temporaryAccounts;
         
         initCardWidget(accountsData);
-        console.log("Đã nạp xong dữ liệu Cards:", accountsData);
+        
 
       })
       .catch(function(err) {
@@ -4729,24 +4941,18 @@ document.addEventListener("DOMContentLoaded", function () {
       container.appendChild(card);
     });
     // Trích đoạn cuối hàm renderCards()
-  const walletContainer = document.querySelector('.wallet-container');
-  
-  if (walletContainer && cardsList.length > 0) {
-    const CARD_OVERLAP_OFFSET = 18; 
-    const individualCardHeight = 15; 
+    const walletContainer = document.querySelector('.wallet-container');
     
-    // Chiều cao tối thiểu của riêng bộ thẻ stack
-    const stackHeight = ((cardsList.length - 1) * CARD_OVERLAP_OFFSET) + individualCardHeight;
-    
-    // Cộng thêm chiều cao của khối bảng đen (ước tính khoảng 220px dựa trên ảnh) 
-    // để đẩy khung container dài ra, giúp các thẻ bên dưới lộ ra ngoài
-    const balanceBoardHeight = 220; 
-    
-    const computedHeight = stackHeight + balanceBoardHeight;
-    
-    walletContainer.style.height = `${computedHeight}px`;
-    walletContainer.style.overflow = "visible"; // Đảm bảo không bị cắt ngọn
-  }
+    if (walletContainer && cardsList.length > 0) {
+      const CARD_OVERLAP_OFFSET = 6+(4*cardsList.length);
+      const individualCardHeight = 15; 
+      const stackHeight = ((cardsList.length - 1) * CARD_OVERLAP_OFFSET) + individualCardHeight;
+      const balanceBoardHeight = 220; 
+      const computedHeight = stackHeight + balanceBoardHeight;
+      
+      walletContainer.style.height = `${computedHeight}px`;
+      walletContainer.style.overflow = "visible"; // Đảm bảo không bị cắt ngọn
+    }
     
   }
 
@@ -4756,27 +4962,305 @@ document.addEventListener("DOMContentLoaded", function () {
     renderCards();
   }
 
-  function openModal(type) {
+  // Biến toàn cục để lưu trữ tài khoản đang được chọn thao tác
+  let currentActiveAccount = null; 
+
+  // Function to open the modal and dynamically populate the account dropdown
+  function openModal(type, defaultAccountName = null) {
     const backdrop = document.getElementById('modalBackdrop');
     const title = document.getElementById('modalTitle');
     const body = document.getElementById('modalBody');
 
+    const isDeposit = type === 'Deposit';
+    const iconColor = isDeposit ? '#28a745' : '#dc3545';
+    const iconName = isDeposit ? 'arrow_circle_down' : 'arrow_circle_up';
+
+    let initialTriggerText = "Select Account";
+    let accountOptionsHTML = ''; 
+    let hiddenInputValue = '';
+
+    if (typeof accountsData !== 'undefined' && Array.isArray(accountsData)) {
+      // Filter out unwanted accounts directly from your global dataset
+      const usableAccounts = accountsData.filter(acc => acc.account !== "Salary" && acc.account !== "SOCIAL");
+
+      // Dropdown Default Display Logic: 
+      // If defaultAccountName is invalid, missing, or filtered out, fallback to SAVING or the first allowed account
+      let targetAccountObj = usableAccounts.find(acc => acc.account === defaultAccountName);
+      if (!targetAccountObj && usableAccounts.length > 0) {
+        targetAccountObj = usableAccounts.find(acc => acc.account === "SAVING") || usableAccounts[0];
+      }
+      
+      if (targetAccountObj) {
+        hiddenInputValue = targetAccountObj.account;
+      }
+
+      usableAccounts.forEach(function(acc) {
+        const balanceFormatted = Math.round(acc.amount).toLocaleString('vi-VN') + ' ₫';
+        const iconUrl = acc.icon || 'https://cdn-icons-png.flaticon.com/512/3135/3135706.png';
+        
+        const innerContentHTML = `
+          <img src="${iconUrl}" 
+               style="width: 20px; height: 20px; border-radius: 4px; object-fit: cover;" 
+               onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135706.png'">
+          <span>${acc.account} — Bal: ${balanceFormatted}</span>
+        `;
+        
+        // Set the active display text matching our determined default target account
+        if (targetAccountObj && acc.account === targetAccountObj.account) {
+          initialTriggerText = innerContentHTML;
+        }
+        
+        accountOptionsHTML += `
+          <div class="custom-option-item" data-value="${acc.account}" onclick="handleCustomSelect(this)">
+            ${innerContentHTML}
+          </div>
+        `;
+      });
+    }
+
     title.innerHTML = `
-      <span class="material-icons-round" style="color:var(--accent-deposit)">settings_applications</span>
-      ${type} Portal
+      <span class="material-icons-round" style="color: ${iconColor}; font-size: 24px;">${iconName}</span>
+      <span style="color: #f8f9fa; font-weight: 600;">${type} Portal</span>
     `;
-    
+
     body.innerHTML = `
-      <p style="margin-bottom: 12px;">Active portal interface for performing transaction updates.</p>
-      <p>Dashboard leather design accents are synced with configuration updates.</p>
+      <!-- 1. Custom Account Dropdown Section -->
+      <div class="modal-field-group" style="margin-bottom: 16px;">
+        <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Select Account:</label>
+        <div class="premium-select-wrapper">
+          <div class="custom-select-trigger" id="customSelectTrigger" onclick="toggleCustomDropdown(event)">
+            ${initialTriggerText}
+          </div>
+          <input type="hidden" id="targetAccount" value="${hiddenInputValue}" />
+          <div class="custom-select-options" id="customSelectOptions">
+            ${accountOptionsHTML}
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Amount Input Section -->
+      <div class="modal-field-group" style="margin-bottom: 16px;">
+        <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Enter Amount (VND):</label>
+        <input type="text" 
+               id="transactionAmount" 
+               placeholder="0" 
+               oninput="handleAmountInput(this)"
+               style="width: 100%; padding: 14px 16px; background: #111216; border: 1px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-size: 14px; box-sizing: border-box; outline: none;" />
+        
+        <div class="quick-amt-group" id="dynamicChipsContainer"></div>
+      </div>
+
+      <!-- 3. Transaction Details Input Section -->
+      <div class="modal-field-group" style="margin-bottom: 16px;">
+        <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Detail Note:</label>
+        <input type="text" 
+               id="transactionDetail" 
+               placeholder="e.g., Trading deposit, transfer..." 
+               style="width: 100%; padding: 14px 16px; background: #111216; border: 1px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-size: 14px; box-sizing: border-box; outline: none;" />
+      </div>
+
+      <!-- Hidden Error Alert Strip -->
+      <div id="modalErrorMessage" 
+           style="display: none; padding: 12px; margin-bottom: 16px; background: rgba(220, 53, 69, 0.1); border: 1px solid #dc3545; color: #ea868f; border-radius: 8px; font-size: 13px; font-weight: 500;">
+      </div>
+
+      <!-- ✨ NEW: Hidden Premium Success Alert Strip -->
+      <div id="modalSuccessMessage" 
+           style="display: none; padding: 14px; margin-bottom: 16px; background: rgba(40, 167, 69, 0.15); border: 1px solid #28a745; color: #75b798; border-radius: 12px; font-size: 14px; font-weight: 500; text-align: center; align-items: center; justify-content: center; gap: 8px;">
+        <span class="material-icons-round" style="color: #28a745; font-size: 18px;">check_circle</span>
+        <span id="successText">Transaction successfully processed!</span>
+      </div>
+
+      <!-- 4. Main Controller Actions -->
+      <div style="display: flex; gap: 12px;">
+        <button onclick="closeModal()" 
+                id="modalCancelBtn"
+                style="flex: 1; padding: 14px; background: #1e222b; border: 1px solid #2d313c; color: #cbd5e1; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+          Cancel
+        </button>
+        <button onclick="processTransaction('${type}')" 
+                class="btn-submit-tx"
+                style="flex: 2; padding: 14px; background: #2d3748; border: none; color: #ffffff; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;"
+                onmouseover="this.style.background='#3a465c'" 
+                onmouseout="this.style.background='#2d3748'">
+          Confirm Transaction
+        </button>
+      </div>
     `;
 
     backdrop.classList.add('active');
+    backdrop.style.pointerEvents = 'auto';
+
+    // Pre-load regular quick amount suggestions right away
+    window.generateDynamicChips("");
+
+    setTimeout(function() {
+      const amountInput = document.getElementById('transactionAmount');
+      if (amountInput) amountInput.focus();
+    }, 50);
+  }
+
+  // Generates quick select buttons dynamically (e.g., typing '5' suggests 500k, 5M, 50M)
+  function handleAmountSuggestions(val) {
+    const container = document.getElementById('quickAmountContainer');
+    container.innerHTML = ''; // Wipe trace parameters
+    
+    const numericBase = parseFloat(val);
+    if (isNaN(numericBase) || numericBase <= 0) return;
+
+    // Array of zeros to append to base values
+    const multiplierSteps = [100000, 1000000, 10000000];
+    
+    multiplierSteps.forEach(function(factor) {
+      const calculatedValue = numericBase * factor;
+      // Cap layout rendering safely below extreme bounds
+      if (calculatedValue <= 5000000000) {
+        const displayString = calculatedValue.toLocaleString('vi-VN') + ' ₫';
+        
+        const chipElement = document.createElement('div');
+        chipElement.className = 'quick-amt-chip';
+        chipElement.textContent = displayString;
+        chipElement.onclick = function() {
+          const amountField = document.getElementById('transactionAmount');
+          amountField.value = calculatedValue;
+          container.innerHTML = ''; // Clear options out when chosen
+        };
+        
+        container.appendChild(chipElement);
+      }
+    });
+  }
+
+  function handleCustomSelect(element) {
+    const selectedValue = element.getAttribute('data-value');
+    
+    // Captures the complete HTML inside (including the image node tag)
+    const selectedInnerHtml = element.innerHTML;
+    
+    document.getElementById('targetAccount').value = selectedValue;
+    document.getElementById('customSelectTrigger').innerHTML = selectedInnerHtml;
+    
+    // Close the panel layout overlay
+    document.getElementById('customSelectOptions').classList.remove('show');
+  }
+
+  function processTransaction(type) {
+    const accountSelect = document.getElementById('targetAccount');
+    const amountInput = document.getElementById('transactionAmount');
+    const detailInput = document.getElementById('transactionDetail');
+    const errorDiv = document.getElementById('modalErrorMessage');
+    const successDiv = document.getElementById('modalSuccessMessage');
+    const successTextSpan = document.getElementById('successText');
+    const submitBtn = document.querySelector('.btn-submit-tx');
+    const cancelBtn = document.getElementById('modalCancelBtn');
+
+    const selectedAccountName = accountSelect ? accountSelect.value : 'SAVING';
+    const amount = amountInput ? parseFloat(amountInput.value) : 0;
+    const detailText = detailInput ? detailInput.value.trim() : '';
+
+    // Guard Clause checking validation rules
+    if (isNaN(amount) || amount <= 0) {
+      if (errorDiv) {
+        errorDiv.textContent = "Please enter a valid amount.";
+        errorDiv.style.display = "block";
+      } else {
+        alert("Please enter a valid amount.");
+      }
+      return;
+    }
+
+    // Reset layout layers on fresh attempt
+    if (errorDiv) {
+      errorDiv.textContent = "";
+      errorDiv.style.display = "none";
+    }
+    if (successDiv) {
+      successDiv.style.display = "none";
+    }
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = "0.6";
+      submitBtn.textContent = "Processing...";
+    }
+    if (cancelBtn) {
+      cancelBtn.disabled = true;
+      cancelBtn.style.opacity = "0.5";
+    }
+
+    const actionPayloadName = type === 'Deposit' ? 'wallet_deposit' : 'wallet_withdraw';
+
+    const payload = {
+      action: actionPayloadName,
+      account: selectedAccountName,
+      amount: amount,
+      detail: detailText
+    };
+
+    fetch(EXPENSE_APPS_SCRIPT_URL, {
+      method: "POST",
+      mode: "cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    })
+    .then(function(response) {
+      if (!response.ok) throw new Error("Network response error: " + response.status);
+      return response.json();
+    })
+    .then(function(result) {
+      if (result.status === "success") {
+        // Force underlying spreadsheet background refresh
+        if (typeof caLoadAccounts === 'function') {
+          caLoadAccounts();
+        }
+
+        // ✨ Inject the customized string matching your execution pathway
+        if (successDiv && successTextSpan) {
+          successTextSpan.textContent = `${type} successfully!`;
+          successDiv.style.display = "flex";
+          
+          if (submitBtn) submitBtn.style.display = "none";
+          if (cancelBtn) cancelBtn.style.display = "none";
+        }
+
+        // Hold open momentarily for clean UI visual confirmation, then exit
+        setTimeout(function() {
+          closeModal();
+        }, 1200);
+
+      } else {
+        throw new Error(result.message || "Execution exception.");
+      }
+    })
+    .catch(function(err) {
+      console.error(err);
+      if (errorDiv) {
+        errorDiv.textContent = "Server Error: " + err.message;
+        errorDiv.style.display = "block";
+      } else {
+        alert("Server Error: " + err.message);
+      }
+
+      // Re-enable interactive elements so user can fix and retry on failure
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = "1";
+        submitBtn.textContent = "Confirm Transaction";
+      }
+      if (cancelBtn) {
+        cancelBtn.disabled = false;
+        cancelBtn.style.opacity = "1";
+      }
+    });
   }
 
   function closeModal() {
-    document.getElementById('modalBackdrop').classList.remove('active');
+    const backdrop = document.getElementById('modalBackdrop');
+    backdrop.style.pointerEvents = 'none'; 
+    backdrop.classList.remove('active');
   }
+
+  
 
   // Initialize with mock parameters
   caLoadAccounts();
@@ -4793,7 +5277,173 @@ document.addEventListener("DOMContentLoaded", function () {
   riskDisplay.style.color = riskColor;
   window.addEventListener("load",function(){positionTabLine();applyLayout();caApplyLayout();initCashModal();});
   window.addEventListener("resize",applyLayout);
+  // 1. Toggle visibility of the floating options list drawer
+  window.toggleCustomDropdown = function(event) {
+    if (event) event.stopPropagation(); // Prevents instant closing handlers from misfiring
+    
+    const menu = document.getElementById('customSelectOptions');
+    if (menu) {
+      menu.classList.toggle('show');
+    }
+  };
 
+  // 2. Handle selection, update hidden input value, and close dropdown
+  window.handleCustomSelect = function(element) {
+    const selectedValue = element.getAttribute('data-value');
+    const selectedInnerHtml = element.innerHTML;
+    
+    // Update hidden input so your sheet submission payloads don't break
+    const hiddenInput = document.getElementById('targetAccount');
+    const triggerBtn = document.getElementById('customSelectTrigger');
+    
+    if (hiddenInput) hiddenInput.value = selectedValue;
+    if (triggerBtn) triggerBtn.innerHTML = selectedInnerHtml;
+    
+    // Close the panel layout overlay cleanly
+    const menu = document.getElementById('customSelectOptions');
+    if (menu) {
+      menu.classList.remove('show');
+    }
+  };
+
+  // 3. Automatically close the custom dropdown panel if the user clicks anywhere else outside of it
+  window.addEventListener('click', function(event) {
+    const triggerBtn = document.getElementById('customSelectTrigger');
+    const menu = document.getElementById('customSelectOptions');
+    
+    // If the user clicks outside the component entirely, shut the drawer
+    if (menu && menu.classList.contains('show') && triggerBtn && !triggerBtn.contains(event.target)) {
+      menu.classList.remove('show');
+    }
+  });
+
+  // Clean formatting interface entry tracker
+  window.handleAmountInput = function(inputElement) {
+    // Strip everything except pure numbers
+    let rawDigits = inputElement.value.replace(/,/g, '');
+    
+    if (rawDigits === '') {
+      inputElement.value = '';
+      window.generateDynamicChips('');
+      return;
+    }
+    
+    // Format with thousands separator commas
+    let numericValue = parseFloat(rawDigits);
+    if (!isNaN(numericValue)) {
+      inputElement.value = numericValue.toLocaleString('en-US');
+      window.generateDynamicChips(rawDigits);
+    }
+  };
+
+  window.generateDynamicChips = function(rawValue) {
+    const container = document.getElementById('dynamicChipsContainer');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    const trimmed = rawValue.trim();
+
+    // ENHANCEMENT: Default premium amounts starting strictly at 500K minimum
+    if (trimmed === "") {
+      const defaultAmounts = [500000, 1000000, 2000000, 5000000, 10000000, 20000000];
+      defaultAmounts.forEach(amount => {
+        createChipElement(container, amount);
+      });
+      return;
+    }
+
+    const num = parseFloat(trimmed);
+    if (isNaN(num) || num <= 0) return;
+
+    // Scenario A: Full raw value typed (e.g., >= 1000)
+    if (num >= 1000) {
+      const multipliers = [1, 2, 5];
+      multipliers.forEach(multiplier => {
+        const multipliedAmt = num * multiplier;
+        // Enforce the strict 500K floor limits
+        if (multipliedAmt >= 500000) {
+          createChipElement(container, multipliedAmt);
+        }
+      });
+      return;
+    }
+
+    // Scenario B: Smart Translation scaling steps (typing short single digits like 5)
+    const scaleBases = [
+      100000,     // 100K base
+      1000000,    // M base
+      10000000,   // 10M base
+      100000000   // 100M base
+    ];
+
+    scaleBases.forEach(base => {
+      const projectedAmount = num * base;
+      // Strictly filtering out anything less than 500K to clean out low brackets
+      if (projectedAmount >= 500000 && projectedAmount <= 500000000) {
+        createChipElement(container, projectedAmount);
+      }
+    });
+  };
+
+  function createChipElement(container, totalAmount) {
+    let displayLabel = '';
+    
+    if (totalAmount >= 1000000) {
+      const clearMillions = totalAmount / 1000000;
+      displayLabel = `+${clearMillions % 1 === 0 ? clearMillions : clearMillions.toFixed(1)}M`;
+    } else if (totalAmount >= 1000) {
+      const clearThousands = totalAmount / 1000;
+      displayLabel = `+${clearThousands % 1 === 0 ? clearThousands : clearThousands.toFixed(0)}K`;
+    } else {
+      displayLabel = `+${totalAmount}`;
+    }
+    
+    const chip = document.createElement('div');
+    chip.className = 'quick-amt-chip';
+    chip.innerText = displayLabel;
+    
+    chip.onclick = () => {
+      const inputField = document.getElementById('transactionAmount');
+      if (inputField) {
+        // Set value with uniform clean thousands separators
+        inputField.value = totalAmount.toLocaleString('en-US');
+        // Pass pure number back down to update chips array matrix
+        window.generateDynamicChips(totalAmount.toString());
+      }
+    };
+    
+    container.appendChild(chip);
+  }
+
+// Isolated helper tool to output chips without script repetition
+function createChipElement(container, totalAmount) {
+  let displayLabel = '';
+  
+  if (totalAmount >= 1000000) {
+    const clearMillions = totalAmount / 1000000;
+    displayLabel = `+${clearMillions % 1 === 0 ? clearMillions : clearMillions.toFixed(1)}M`;
+  } else if (totalAmount >= 1000) {
+    const clearThousands = totalAmount / 1000;
+    displayLabel = `+${clearThousands % 1 === 0 ? clearThousands : clearThousands.toFixed(0)}K`;
+  } else {
+    displayLabel = `+${totalAmount}`;
+  }
+  
+  const chip = document.createElement('div');
+  chip.className = 'quick-amt-chip';
+  chip.innerText = displayLabel;
+  
+  chip.onclick = () => {
+    const inputField = document.getElementById('transactionAmount');
+    if (inputField) {
+      inputField.value = totalAmount;
+      // Re-trigger calculation to transition smoothly to step multipliers
+      window.generateDynamicChips(inputField.value);
+    }
+  };
+  
+  container.appendChild(chip);
+}
 
 </script>
 
