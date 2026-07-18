@@ -10,9 +10,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;500;600;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
 <style>
-:root{--bg-dark:#0d0e12;--card-pocket-bg:#16181e;--card-pocket-lining-bg:#111217;--text-main:#ffffff;--text-muted:#8a8d97;--btn-bg:#21242c;--btn-hover:#2d313c;--accent-pink-bg:#fbcad5;--accent-pink-text:#4a1525;--accent-purple-bg:#d5d3f8;--accent-purple-text:#211c4a;--accent-deposit:#e0245e;--accent-deposit-bg:rgba(224,36,94,0.15)}
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-family: "Lexend", Roboto, sans-serif;font-weight:300!important;color:#fff;overflow:hidden;margin-top:15px;display:flex;flex-direction:column;padding-bottom:5px}
 .tab-bar{display:flex;align-items:stretch;border-bottom:1px solid rgba(255,255,255,0.1);position:relative;flex-shrink:0;padding:0 0vw}
@@ -23,7 +23,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .tab-btn i{font-size:3.8vw!important;}
 .tab-line {position:absolute; bottom:0; height:2.5px; background:#fff; border-radius:2px; transition:left 0.25s ease, width 0.25s ease;}
 #tab-btn-2 { display:flex; }
-:root{--bg-dark:#0d0e12;--card-pocket-bg:#16181e;--card-pocket-lining-bg:#111217;--text-main:#ffffff;--text-muted:#8a8d97;--btn-bg:#21242c;--btn-hover:#2d313c;--accent-pink-bg:#fbcad5;--accent-pink-text:#4a1525;--accent-purple-bg:#d5d3f8;--accent-purple-text:#211c4a;--accent-deposit:#e0245e;--accent-deposit-bg:rgba(224,36,94,0.15)}
+:root{--bg-dark:#0d0e12;--card-pocket-bg:#16181e;--card-pocket-lining-bg:#111217;--text-main:#ffffff;--text-muted:#8a8d97;--btn-bg:#21242c;--btn-hover:#2d313c;--accent-pink-bg:#fbcad5;--accent-pink-text:#4a1525;--accent-purple-bg:#d5d3f8;--accent-purple-text:#211c4a;--accent-deposit:#ff007f;--accent-deposit-bg:rgba(190, 24, 93, 0.12)}
 @media (max-width: 401px) {.tab-btn span {display: none;}.tab-btn.active span {display: inline-block; margin-left: 6px; font-size: 14px; }.tab-btn i{font-size:5.3vw!important;}}
 @media (min-width: 400px) {.tab-btn span {display: none;}.tab-btn.active span {display: inline-block; margin-left: 6px; font-size: 14px; }}
 
@@ -170,7 +170,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .account-card.last-card{border-radius:0 0 12px 12px;height:120px;align-items:flex-start;padding-top:7px}
 .account-card .left-section{display:flex;align-items:center;gap:6px;font-weight:600;font-size:14px}
 .account-card .icon-img{width:18px;height:18px;object-fit:contain;border-radius:6px}
-.account-card .balance{font-weight:600;font-size:15px;letter-spacing:-0.3px}
+.account-card .balance{font-family:DM Sans;font-weight:400;font-size:15px;letter-spacing:-0.3px}
 .account-card.card-pink{color:var(--accent-pink-text)}
 .account-card.card-purple{color:var(--accent-purple-text)}
 .account-card.card-color-b .left-section span{color:#1c2541}
@@ -371,8 +371,6 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
   gap: 6px;                  /* Reduced from 8px to squeeze space */
   margin-top: 4px;            /* Reduced from 8px to minimize gap to next fields */
   min-height: 32px;
-  
-  /* ENHANCEMENT: Keep chips strictly inline on a single line */
   overflow-x: auto;
   white-space: nowrap;
   flex-wrap: nowrap !important; /* Forces layout tracking to never break rows */
@@ -387,7 +385,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .quick-amt-chip {
   flex: 0 0 auto;             /* Keeps the chips from compressing under small wrappers */
   background: #1e222b;
-  border: 1px solid #2d313c;
+  border: 0px solid #2d313c;
   color: #cbd5e1;
   padding: 6px 12px;
   border-radius: 8px;
@@ -463,7 +461,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 #ca-donut-wrap svg { width:100%; height:100%; filter:drop-shadow(0 4px 24px rgba(0,0,0,0.5)); }
 .ca-donut-center { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; pointer-events:none; }
 .ca-donut-center-label { font-size:1.67vw; color:rgba(255,255,255,0.45); margin-bottom:0.34vw; }
-.ca-donut-center-val { font-size:2.66vw; font-weight:700; color:#fff; }
+.ca-donut-center-val { font-family:DM Sans; font-size:2.66vw; font-weight:500; color:#fff; }
 
 #ca-list { width:100%; padding:0 4vw; display:flex; flex-direction:column; }
 .ca-list-row {display:flex; align-items:center; border-bottom:1px solid rgba(255,255,255,0.07); gap:1.45vw; cursor:pointer; transition:opacity 0.2s; }
@@ -478,10 +476,10 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .ca-list-ring{position:absolute;top:0;left:0;width:100%;height:100%;transform:rotate(-90deg)}
 .ca-list-img{position:relative;width:18px;height:18px;object-fit:contain;border-radius:50%;z-index:2}
 
-.ca-list-name { flex:1; font-weight:300; }
-.ca-list-val { font-size:2.92vw; font-weight:600;white-space:nowrap; text-align:right; }
-.ca-donut-lbl { display:none !important;}
-.ca-list-name,.ca-list-val,.ca-list-pct{color:rgba(255,255,255,0.85);}
+.ca-list-name {flex:1; color:rgba(255,255,255,0.85); font-weight:300; }
+.ca-list-val {font-size:2.92vw; font-weight:600;white-space:nowrap; text-align:right; }
+.ca-donut-lbl {display:none !important;}
+.ca-list-val,.ca-list-pct{font-family:DM Sans; color:rgba(255,255,255,0.85);}
 
 /* ══ SUBSCRIPTION SLIDE ══ */
 .card{max-width:100%;margin: 2vw;}
@@ -3364,7 +3362,7 @@ window.addEventListener("resize", function(){
 
 /* ══ ADD RECORD (writes to the sheet via Apps Script Web App) ══ */
 var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxb1lPB9kZh-Q5C01U-DjuesOVlHgDEorEBK-pavyJUd5jPxZSub-Rx6unOCTDdrCS2/exec";
-var EXPENSE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZGJ15sQOsTx-a34eZPlgRCOf31NEhP3VUF1d3jHUqMGv52rhfev0YDBcMwOTxvBoYLQ/exec";
+var EXPENSE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwKvIk6srkx87Y1vGcneJmY-GKhR_dLpfFXbqdKvLUvhgSp1ovshshMIBoOL1w8rqNv-Q/exec";
 
 var addOverlay = document.getElementById("add-modal-overlay");
 var addStatusEl = document.getElementById("add-status");
@@ -5051,7 +5049,7 @@ function initFullyAutomatedTimeline() {
 
     title.innerHTML = `
       <span class="material-icons-round" style="color: ${iconColor}; font-size: 24px;">${iconName}</span>
-      <span style="color: #f8f9fa; font-weight: 600;">${isTransfer ? 'Transfer Funds' : type + ' Account'}</span>
+      <span style="color: #f8f9fa; font-weight: 600;">${isTransfer ? 'Transfer Accounts' : type + ' Account'}</span>
     `;
 
     // 1. Force the swapState fallback checks to favor TPBank explicitly (case-insensitive)
@@ -5097,118 +5095,116 @@ function initFullyAutomatedTimeline() {
       });
 
       const currentFromAccount = window.swapState?.fromAccount || 'TPBank***000';
-const currentToAccount = window.swapState?.toAccount || 'Select Account';
+      const currentToAccount = window.swapState?.toAccount || 'Select Account';
 
-// 1. Get From Balance
-const fromBalanceValue = window.swapState?.fromBalance;
-const fromBalanceText = (fromBalanceValue !== undefined && fromBalanceValue !== null)
-  ? ` (₫${Math.round(fromBalanceValue).toLocaleString('vi-VN')})` 
-  : '';
+      // 1. Get From Balance
+      const fromBalanceValue = window.swapState?.fromBalance;
+      const fromBalanceText = (fromBalanceValue !== undefined && fromBalanceValue !== null)
+        ? ` (₫${Math.round(fromBalanceValue).toLocaleString('vi-VN')})` 
+        : '';
 
-// 2. Get To Balance with an explicit fallback to the accounts list if toBalance is missing
-let toBalanceValue = window.swapState?.toBalance;
+      // 2. Get To Balance with an explicit fallback to the accounts list if toBalance is missing
+      let toBalanceValue = window.swapState?.toBalance;
 
-if ((toBalanceValue === undefined || toBalanceValue === null) && window.swapState?.accounts) {
-  // Look for the account object matching the current selected To account name
-  const matchedAccount = window.swapState.accounts.find(acc => acc.accountName === currentToAccount || acc.id === currentToAccount);
-  if (matchedAccount) {
-    toBalanceValue = matchedAccount.balance;
-  }
-}
+      if ((toBalanceValue === undefined || toBalanceValue === null) && window.swapState?.accounts) {
+        // Look for the account object matching the current selected To account name
+        const matchedAccount = window.swapState.accounts.find(acc => acc.accountName === currentToAccount || acc.id === currentToAccount);
+        if (matchedAccount) {
+          toBalanceValue = matchedAccount.balance;
+        }
+      }
 
-// Only format if it's a real account and we successfully found a numeric balance
-const toBalanceText = (currentToAccount !== 'Select Account' && toBalanceValue !== undefined && toBalanceValue !== null)
-  ? ` (₫${Math.round(toBalanceValue).toLocaleString('vi-VN')})` 
-  : '';
+      // Only format if it's a real account and we successfully found a numeric balance
+      const toBalanceText = (currentToAccount !== 'Select Account' && toBalanceValue !== undefined && toBalanceValue !== null)
+        ? ` (₫${Math.round(toBalanceValue).toLocaleString('vi-VN')})` 
+        : '';
 
-body.innerHTML = `
-  <div style="background: #17181d; padding: 16px; border-radius: 20px; box-sizing: border-box; margin-bottom: 16px;">
-    <div style="display: flex; flex-direction: column; gap: 12px;">
-      
-      <!-- TOP CARD: STACKED ACCOUNT PICKERS (TOP-BOTTOM) -->
-      <div style="background: #111216; border: 1px solid #2d313c; border-radius: 16px; padding: 14px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; position: relative;">
-        
-        <!-- FROM SECTION (TOP) -->
-        <div style="display: flex; flex-direction: column; width: 100%; gap: 6px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-            <div style="color: #6c757d; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">FROM</div>
-            <!-- MAX BUTTON INTEGRATED HERE -->
-            <span onclick="window.applyMaxBalance()" style="color: #8a3ffc; font-size: 11px; font-weight: 600; cursor: pointer; background: rgba(138, 63, 252, 0.1); padding: 2px 6px; border-radius: 4px; user-select: none;">MAX</span>
-          </div>
-          
-          <div class="premium-select-wrapper" style="position: relative; width: 100%;">
-            <div class="custom-select-trigger" id="transferFromTrigger" onclick="window.toggleTransferDropdown('from', event)" style="padding: 10px 12px; background: #22252d; border: 1px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: space-between; width: 100%; box-sizing: border-box; cursor: pointer;">
-              <div style="display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1;">
-                <img id="transferFromIcon" src="${window.swapState?.fromIcon || ''}" style="width: 18px; height: 18px; border-radius: 4px; object-fit: cover; flex-shrink: 0;">
-                <span id="fromAccountLabel" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                  ${currentFromAccount}${fromBalanceText}
+      body.innerHTML = `
+        <div style="">
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            
+            <!-- TOP CARD: STACKED ACCOUNT PICKERS (TOP-BOTTOM) -->
+            <div style="background: #111216; border: 0px solid #2d313c; border-radius: 16px; padding: 14px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; position: relative;">
+              
+              <!-- FROM SECTION (TOP) -->
+              <div style="display: flex; flex-direction: column; width: 100%; gap: 6px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                  <div style="color: #6c757d; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;"></div>
+                  <!-- MAX BUTTON INTEGRATED HERE -->
+                  <span onclick="window.applyMaxBalance()" style="color: #8a3ffc; font-size: 11px; font-weight: 600; cursor: pointer; background: rgba(138, 63, 252, 0.1); padding: 2px 6px; border-radius: 4px; user-select: none;">MAX</span>
+                </div>
+                
+                <div class="premium-select-wrapper" style="position: relative; width: 100%;">
+                  <div class="custom-select-trigger" id="transferFromTrigger" onclick="window.toggleTransferDropdown('from', event)" style="padding: 10px 12px; background: #22252d; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: space-between; width: 100%; box-sizing: border-box; cursor: pointer;">
+                    <div style="display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1;">
+                      <img id="transferFromIcon" src="${window.swapState?.fromIcon || ''}" style="width: 18px; height: 18px; border-radius: 4px; object-fit: cover; flex-shrink: 0;">
+                      <span id="fromAccountLabel" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                        ${currentFromAccount}${fromBalanceText}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="custom-select-options" id="transferFromOptions" style="display:none; position:absolute; left:0; top:calc(100% + 4px); background:#1e222b; border:0px solid #2d313c; border-radius:12px; width:100%; max-height:200px; overflow-y:auto; z-index:100; box-shadow:0 8px 24px rgba(0,0,0,0.5);">
+                      ${fromOptionsHTML}
+                  </div>
+                </div>
+              </div>
+
+              <!-- MIDDLE LAYER: DIRECTIONAL GLYPH DIVIDER -->
+              <div style="display: flex; align-items: center; justify-content: center; width: 100%; position: relative; margin: -4px 0;">
+                <div style="position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: #2d313c; z-index: 1;"></div>
+                <button type="button" onclick="window.flipTransferDirection()" style="background: #22252d; border: 0px solid #2d313c; color: #f8f9fa; width: 30px; height: 30px; min-width: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; z-index: 2; box-shadow: 0 2px 8px rgba(0,0,0,0.4);">
+                  <span class="material-icons-round" style="font-size: 16px;">swap_vert</span>
+                </button>
+              </div>
+
+              <!-- TO SECTION (BOTTOM) -->
+              <div style="display: flex; flex-direction: column; width: 100%; gap: 6px;">
+                <div class="premium-select-wrapper" style="position: relative; width: 100%;">
+                  <div class="custom-select-trigger" id="transferToTrigger" onclick="window.toggleTransferDropdown('to', event)" style="padding: 10px 12px; background: #22252d; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: space-between; width: 100%; box-sizing: border-box; cursor: pointer;">
+                    <div style="display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1;">
+                      <img id="transferToIcon" src="${window.swapState?.toIcon || ''}" style="width: 18px; height: 18px; border-radius: 4px; object-fit: cover; flex-shrink: 0;">
+                      <span id="toAccountLabel" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                        ${currentToAccount}${toBalanceText}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="custom-select-options" id="transferToOptions" style="display:none; position:absolute; left:0; top:calc(100% + 4px); background:#1e222b; border:0px solid #2d313c; border-radius:12px; width:100%; max-height:200px; overflow-y:auto; z-index:100; box-shadow:0 8px 24px rgba(0,0,0,0.5);">
+                      ${toOptionsHTML}
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+
+            <!-- BOTTOM CARD: VALUE TRACKING NUMERIC ELEMENT -->
+            <div style="background: #111216; border: 0px solid #2d313c; border-radius: 16px; padding: 14px; box-sizing: border-box;">
+              <div style="color: #6c757d; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Amount (VND)</div>
+              <div style="position: relative; display: flex; align-items: center;">
+                <input type="text" 
+                      id="transactionAmount" 
+                      placeholder="0" 
+                      oninput="window.handleTransferAmountInput(this)"
+                      style="width: 100%; padding: 4px 32px 4px 0; background: transparent; border: none; color: #f8f9fa; font-family:DM Sans!important;font-size: 28px; font-weight: 500; outline: none; box-sizing: border-box;" />
+                <span class="material-icons-round" 
+                      id="clearAmountBtn"
+                      onclick="window.clearAmountField()"
+                      style="display: none; position: absolute; right: 0; top: 50%; transform: translateY(-50%); color: #6c757d; font-size: 20px; cursor: pointer; user-select: none;">
+                  cancel
                 </span>
               </div>
             </div>
-            <div class="custom-select-options" id="transferFromOptions" style="display:none; position:absolute; left:0; top:calc(100% + 4px); background:#1e222b; border:1px solid #2d313c; border-radius:12px; width:100%; max-height:200px; overflow-y:auto; z-index:100; box-shadow:0 8px 24px rgba(0,0,0,0.5);">
-                ${fromOptionsHTML}
-            </div>
+
           </div>
+          <div class="quick-amt-group" id="dynamicChipsContainer" style="font-family:DM Sans!important;display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; justify-content: flex-start;"></div>
         </div>
-
-        <!-- MIDDLE LAYER: DIRECTIONAL GLYPH DIVIDER -->
-        <div style="display: flex; align-items: center; justify-content: center; width: 100%; position: relative; margin: -4px 0;">
-          <div style="position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: #2d313c; z-index: 1;"></div>
-          <button type="button" onclick="window.flipTransferDirection()" style="background: #22252d; border: 1px solid #2d313c; color: #f8f9fa; width: 30px; height: 30px; min-width: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; z-index: 2; box-shadow: 0 2px 8px rgba(0,0,0,0.4);">
-            <span class="material-icons-round" style="font-size: 16px;">swap_vert</span>
-          </button>
-        </div>
-
-        <!-- TO SECTION (BOTTOM) -->
-        <div style="display: flex; flex-direction: column; width: 100%; gap: 6px;">
-          <div style="color: #6c757d; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">TO</div>
-          
-          <div class="premium-select-wrapper" style="position: relative; width: 100%;">
-            <div class="custom-select-trigger" id="transferToTrigger" onclick="window.toggleTransferDropdown('to', event)" style="padding: 10px 12px; background: #22252d; border: 1px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: space-between; width: 100%; box-sizing: border-box; cursor: pointer;">
-              <div style="display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1;">
-                <img id="transferToIcon" src="${window.swapState?.toIcon || ''}" style="width: 18px; height: 18px; border-radius: 4px; object-fit: cover; flex-shrink: 0;">
-                <span id="toAccountLabel" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                  ${currentToAccount}${toBalanceText}
-                </span>
-              </div>
-            </div>
-            <div class="custom-select-options" id="transferToOptions" style="display:none; position:absolute; left:0; top:calc(100% + 4px); background:#1e222b; border:1px solid #2d313c; border-radius:12px; width:100%; max-height:200px; overflow-y:auto; z-index:100; box-shadow:0 8px 24px rgba(0,0,0,0.5);">
-                ${toOptionsHTML}
-            </div>
-          </div>
-        </div>
-        
-      </div>
-
-      <!-- BOTTOM CARD: VALUE TRACKING NUMERIC ELEMENT -->
-      <div style="background: #111216; border: 1px solid #2d313c; border-radius: 16px; padding: 14px; box-sizing: border-box;">
-        <div style="color: #6c757d; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Amount (VND)</div>
-        <div style="position: relative; display: flex; align-items: center;">
-          <input type="text" 
-                 id="transactionAmount" 
-                 placeholder="0" 
-                 oninput="window.handleTransferAmountInput(this)"
-                 style="width: 100%; padding: 4px 32px 4px 0; background: transparent; border: none; color: #f8f9fa; font-size: 28px; font-weight: 600; outline: none; box-sizing: border-box;" />
-          <span class="material-icons-round" 
-                id="clearAmountBtn"
-                onclick="window.clearAmountField()"
-                style="display: none; position: absolute; right: 0; top: 50%; transform: translateY(-50%); color: #6c757d; font-size: 20px; cursor: pointer; user-select: none;">
-            cancel
-          </span>
-        </div>
-      </div>
-
-    </div>
-    <div class="quick-amt-group" id="dynamicChipsContainer" style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; justify-content: flex-start;"></div>
-  </div>
-`;
-    } else {
+      `;
+      } else {
         // Fallback layout style for Deposit/Withdraw remains standard
         body.innerHTML = `
           <div class="modal-field-group" style="margin-bottom: 16px;">
             <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Select Account:</label>
             <div class="premium-select-wrapper">
-              <div class="custom-select-trigger" id="customSelectTrigger" onclick="toggleCustomDropdown(event)">
+              <div class="custom-select-trigger" id="customSelectTrigger" onclick="toggleCustomDropdown(event)" style="font-weight:600;border:none;">
                 ${initialTriggerText}
               </div>
               <input type="hidden" id="targetAccount" value="${hiddenInputValue}" />
@@ -5225,7 +5221,7 @@ body.innerHTML = `
                      id="transactionAmount" 
                      placeholder="0" 
                      oninput="handleAmountInput(this)"
-                     style="width: 100%; padding: 14px 44px 14px 16px; background: #111216; border: 1px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-size: 14px; box-sizing: border-box; outline: none;" />
+                     style="width: 100%; padding: 14px 44px 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:DM Sans; font-size: 28px; box-sizing: border-box; outline: none;" />
               <span class="material-icons-round" 
                     id="clearAmountBtn"
                     onclick="clearAmountField()"
@@ -5235,7 +5231,7 @@ body.innerHTML = `
                 cancel
               </span>
             </div>
-            <div class="quick-amt-group" id="dynamicChipsContainer" style="margin-top: 12px;"></div>
+            <div class="quick-amt-group" id="dynamicChipsContainer" style="font-family:DM Sans!important;margin-top: 12px;"></div>
           </div>
 
           <div class="modal-field-group" style="margin-bottom: 16px;">
@@ -5243,23 +5239,25 @@ body.innerHTML = `
             <input type="text" 
                    id="transactionDetail" 
                    placeholder="e.g., Trading deposit, transfer..." 
-                   style="width: 100%; padding: 14px 16px; background: #111216; border: 1px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-size: 14px; box-sizing: border-box; outline: none;" />
+                   style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend;font-size: 14px; font-weight:300!important;box-sizing: border-box; outline: none;" />
           </div>
         `;
     }
 
     body.innerHTML += `
-      <div id="modalErrorMessage" style="display: none; padding: 12px; margin-bottom: 16px; background: rgba(220, 53, 69, 0.1); border: 1px solid #dc3545; color: #ea868f; border-radius: 8px; font-size: 13px; font-weight: 500;"></div>
-      <div id="modalSuccessMessage" style="display: none; padding: 14px; margin-bottom: 16px; background: rgba(40, 167, 69, 0.15); border: 1px solid #28a745; color: #75b798; border-radius: 12px; font-size: 14px; font-weight: 500; text-align: center; align-items: center; justify-content: center; gap: 8px;">
+      <div id="modalErrorMessage" style="display: none; padding: 12px; margin-bottom: 16px; background: rgba(220, 53, 69, 0.1); border: 0px solid #dc3545; color: #ea868f; border-radius: 8px; font-size: 13px; font-weight: 500;"></div>
+      <div id="modalSuccessMessage" style="display: none; padding: 14px; margin-bottom: 16px; background: rgba(40, 167, 69, 0.15); border: 0px solid #28a745; color: #75b798; border-radius: 12px; font-size: 14px; font-weight: 500; text-align: center; align-items: center; justify-content: center; gap: 8px;">
         <span class="material-icons-round" style="color: #28a745; font-size: 18px;">check_circle</span>
         <span id="successText">Transaction successfully processed!</span>
       </div>
 
-      <div style="display: flex; gap: 12px;">
-        <button onclick="closeModal()" id="modalCancelBtn" style="flex: 1; font-family:Lexend!important; padding: 14px; background: #1e222b; border: 1px solid #2d313c; color: #cbd5e1; border-radius: 12px; font-weight: 600; cursor: pointer;">Cancel</button>
-        <button onclick="processTransaction('${type}')" class="btn-submit-tx" style="flex: 2; font-family:Lexend!important; padding: 14px; background: #2d3748; border: none; color: #ffffff; border-radius: 12px; font-weight: 600; cursor: pointer;">Confirm Transaction</button>
+      <div style="display: flex; gap: 12px;margin-top: 16px; ">
+        <button onclick="closeModal()" id="modalCancelBtn" style="flex: 1; font-family:Lexend!important; font-size:14px!important; padding: 14px; background: #1e222b; border: 0px solid #2d313c; color: #cbd5e1; border-radius: 12px; font-weight: 600; cursor: pointer;">Cancel</button>
+        <button onclick="processTransaction('${type}')" class="btn-submit-tx" style="flex: 2; font-family:Lexend!important; font-size:14px!important;padding: 14px; background: #2d3748; border: none; color: #ffffff; border-radius: 12px; font-weight: 600; cursor: pointer;">Confirm Transaction</button>
       </div>
     `;
+
+    
 
     backdrop.classList.add('active');
     backdrop.style.pointerEvents = 'auto';
@@ -5275,7 +5273,7 @@ body.innerHTML = `
       const amountInput = document.getElementById('transactionAmount');
       if (amountInput) amountInput.focus();
     }, 50);
-}
+  }
 
   // Generates quick select buttons dynamically (e.g., typing '5' suggests 500k, 5M, 50M)
   function handleAmountSuggestions(val) {
@@ -5331,12 +5329,14 @@ body.innerHTML = `
     const submitBtn = document.querySelector('.btn-submit-tx');
     const cancelBtn = document.getElementById('modalCancelBtn');
 
-    const selectedAccountName = accountSelect ? accountSelect.value : 'SAVING';
-    const rawAmountString = amountInput ? amountInput.value.replace(/,/g, '') : '0';
+    // Handle standard replacement formatting safely for both commas or dots masks
+    const rawAmountString = amountInput ? amountInput.value.replace(/[\.,\s]/g, '') : '0';
     const amount = parseFloat(rawAmountString);
     const detailText = detailInput ? detailInput.value.trim() : '';
 
-    // Guard Clause checking validation rules
+    const isTransfer = type === 'Transfer';
+
+    // 1. Guard Clause checking validation rules
     if (isNaN(amount) || amount <= 0) {
       if (errorDiv) {
         errorDiv.textContent = "Please enter a valid amount.";
@@ -5345,6 +5345,28 @@ body.innerHTML = `
         alert("Please enter a valid amount.");
       }
       return;
+    }
+
+    // EXTRA GUARD: Handle explicit balance checking rules exclusively for transfers
+    if (isTransfer && window.swapState) {
+      if (amount > (window.swapState.fromBalance || 0)) {
+        if (errorDiv) {
+          errorDiv.textContent = "Insufficient balance in source account.";
+          errorDiv.style.display = "block";
+        } else {
+          alert("Insufficient balance in source account.");
+        }
+        return;
+      }
+      if (window.swapState.toAccount === 'Select Account' || !window.swapState.toAccount) {
+        if (errorDiv) {
+          errorDiv.textContent = "Please select a valid destination account.";
+          errorDiv.style.display = "block";
+        } else {
+          alert("Please select a valid destination account.");
+        }
+        return;
+      }
     }
 
     // Reset layout layers on fresh attempt
@@ -5366,15 +5388,30 @@ body.innerHTML = `
       cancelBtn.style.opacity = "0.5";
     }
 
-    const actionPayloadName = type === 'Deposit' ? 'wallet_deposit' : 'wallet_withdraw';
+    // 2. Dynamic Payload Construction Mapping
+    let payload = {};
 
-    const payload = {
-      action: actionPayloadName,
-      account: selectedAccountName,
-      amount: amount,
-      detail: detailText
-    };
+    if (isTransfer && window.swapState) {
+      payload = {
+        action: "wallet_transfer",
+        fromAccount: window.swapState.fromAccount,
+        toAccount: window.swapState.toAccount,
+        amount: amount,
+        detail: detailText || `Transfer from ${window.swapState.fromAccount} to ${window.swapState.toAccount}`
+      };
+    } else {
+      const selectedAccountName = accountSelect ? accountSelect.value : 'SAVING';
+      const actionPayloadName = type === 'Deposit' ? 'wallet_deposit' : 'wallet_withdraw';
+      
+      payload = {
+        action: actionPayloadName,
+        account: selectedAccountName,
+        amount: amount,
+        detail: detailText
+      };
+    }
 
+    // 3. Dispatch Packet Handling Layer
     fetch(EXPENSE_APPS_SCRIPT_URL, {
       method: "POST",
       mode: "cors",
@@ -5392,9 +5429,17 @@ body.innerHTML = `
           caLoadAccounts();
         }
 
+        // Apply real-time local balance adjustments instantly if processing an active transfer
+        if (isTransfer && window.swapState) {
+          window.swapState.fromBalance -= amount;
+          if (window.swapState.toBalance !== undefined) {
+             window.swapState.toBalance += amount;
+          }
+        }
+
         // ✨ Inject the customized string matching your execution pathway
         if (successDiv && successTextSpan) {
-          successTextSpan.textContent = `${type} successfully!`;
+          successTextSpan.textContent = isTransfer ? "Transfer processed successfully!" : `${type} successfully!`;
           successDiv.style.display = "flex";
           
           if (submitBtn) submitBtn.style.display = "none";
@@ -5403,7 +5448,9 @@ body.innerHTML = `
 
         // Hold open momentarily for clean UI visual confirmation, then exit
         setTimeout(function() {
-          closeModal();
+          if (typeof closeModal === 'function') {
+            closeModal();
+          }
         }, 1200);
 
       } else {
@@ -5423,7 +5470,7 @@ body.innerHTML = `
       if (submitBtn) {
         submitBtn.disabled = false;
         submitBtn.style.opacity = "1";
-        submitBtn.textContent = "Confirm Transaction";
+        submitBtn.textContent = isTransfer ? "Confirm Transfer" : "Confirm Transaction";
       }
       if (cancelBtn) {
         cancelBtn.disabled = false;
@@ -5811,16 +5858,33 @@ body.innerHTML = `
                 window.swapState.fromIcon = match.icon || 'https://cdn-icons-png.flaticon.com/512/3135/3135706.png';
                 window.swapState.fromBalance = Math.round(match.amount);
                 
-                // Update text label, image source, and balance indicator
-                document.getElementById('fromAccountLabel').textContent = match.account;
-                document.getElementById('transferFromIcon').src = window.swapState.fromIcon;
-                document.getElementById('fromAccountBalance').textContent = window.swapState.fromBalance.toLocaleString('en-US');
+                const formattedBalance = window.swapState.fromBalance.toLocaleString('en-US');
+
+                // Target Elements
+                const labelEl = document.getElementById('fromAccountLabel');
+                const iconEl = document.getElementById('transferFromIcon');
+                const balEl = document.getElementById('fromAccountBalance');
+
+                // ✨ FIX: Keep both Name and Balance visible in the main label window
+                if (labelEl) {
+                    labelEl.textContent = `${match.account} ($${formattedBalance})`;
+                }
+                if (iconEl) {
+                    iconEl.src = window.swapState.fromIcon;
+                }
+                if (balEl) {
+                    balEl.textContent = formattedBalance;
+                }
             }
-            document.getElementById('transferFromOptions').style.display = 'none';
+            
+            const fromMenu = document.getElementById('transferFromOptions');
+            if (fromMenu) fromMenu.style.display = 'none';
             
             // Re-validate the amount against the new account balance
             const currentInput = document.getElementById('transactionAmount');
-            if (currentInput) window.handleTransferAmountInput(currentInput);
+            if (currentInput && typeof window.handleTransferAmountInput === 'function') {
+                window.handleTransferAmountInput(currentInput);
+            }
         };
     });
 
@@ -5835,11 +5899,21 @@ body.innerHTML = `
                 window.swapState.toAccount = match.account;
                 window.swapState.toIcon = match.icon || 'https://cdn-icons-png.flaticon.com/512/3135/3135706.png';
                 
-                // Update the destination label and icon
-                document.getElementById('toAccountLabel').textContent = match.account;
-                document.getElementById('transferToIcon').src = window.swapState.toIcon;
+                const targetToBalance = Math.round(match.amount).toLocaleString('en-US');
+                const toLabelEl = document.getElementById('toAccountLabel');
+                const toIconEl = document.getElementById('transferToIcon');
+
+                // Keep destination layout looking identical to the source layout wrapper
+                if (toLabelEl) {
+                    toLabelEl.textContent = `${match.account} ($${targetToBalance})`;
+                }
+                if (toIconEl) {
+                    toIconEl.src = window.swapState.toIcon;
+                }
             }
-            document.getElementById('transferToOptions').style.display = 'none';
+            
+            const toMenu = document.getElementById('transferToOptions');
+            if (toMenu) toMenu.style.display = 'none';
         };
     });
   };
@@ -5887,6 +5961,7 @@ body.innerHTML = `
     }
   };
 
+  
   
 
 </script>
