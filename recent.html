@@ -1262,7 +1262,11 @@ function switchTab(idx) {
       break;
 
     case 4:
-      if (typeof loadSubscriptions === "function") loadCycles();
+      if (typeof loadCycles === "function") loadCycles();
+      break;
+    
+    case 5:
+      if (typeof renderCards === "function") renderCards();
       break;
     
     default:
@@ -4995,14 +4999,14 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       usableAccounts.forEach(function(acc) {
-        const balanceFormatted = Math.round(acc.amount).toLocaleString('vi-VN') + ' ₫';
+        const balanceFormatted ='₫'+Math.round(acc.amount).toLocaleString('vi-VN');
         const iconUrl = acc.icon || 'https://cdn-icons-png.flaticon.com/512/3135/3135706.png';
         
         const innerContentHTML = `
           <img src="${iconUrl}" 
                style="width: 20px; height: 20px; border-radius: 4px; object-fit: cover;" 
                onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135706.png'">
-          <span>${acc.account} — Bal: ${balanceFormatted}</span>
+          <span>${acc.account} (${balanceFormatted})</span>
         `;
         
         // Set the active display text matching our determined default target account
@@ -5020,7 +5024,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     title.innerHTML = `
       <span class="material-icons-round" style="color: ${iconColor}; font-size: 24px;">${iconName}</span>
-      <span style="color: #f8f9fa; font-weight: 600;">${type} Portal</span>
+      <span style="color: #f8f9fa; font-weight: 600;">${type} Account</span>
     `;
 
     body.innerHTML = `
@@ -5041,13 +5045,27 @@ document.addEventListener("DOMContentLoaded", function () {
       <!-- 2. Amount Input Section -->
       <div class="modal-field-group" style="margin-bottom: 16px;">
         <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Enter Amount (VND):</label>
-        <input type="text" 
-               id="transactionAmount" 
-               placeholder="0" 
-               oninput="handleAmountInput(this)"
-               style="width: 100%; padding: 14px 16px; background: #111216; border: 1px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-size: 14px; box-sizing: border-box; outline: none;" />
         
-        <div class="quick-amt-group" id="dynamicChipsContainer"></div>
+        <!-- Premium Relative Wrapper for Absolute Icon Positioning -->
+        <div style="position: relative; width: 100%;">
+          <input type="text" 
+                 id="transactionAmount" 
+                 placeholder="0" 
+                 oninput="handleAmountInput(this)"
+                 style="width: 100%; padding: 14px 44px 14px 16px; background: #111216; border: 1px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-size: 14px; box-sizing: border-box; outline: none;" />
+          
+          <!-- Smooth Charcoal Clear Button Icon -->
+          <span class="material-icons-round" 
+                id="clearAmountBtn"
+                onclick="clearAmountField()"
+                style="display: none; position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: #6c757d; font-size: 20px; cursor: pointer; transition: color 0.2s; user-select: none;"
+                onmouseover="this.style.color='#f8f9fa'" 
+                onmouseout="this.style.color='#6c757d'">
+            cancel
+          </span>
+        </div>
+        
+        <div class="quick-amt-group" id="dynamicChipsContainer" style="margin-top: 12px;"></div>
       </div>
 
       <!-- 3. Transaction Details Input Section -->
@@ -5155,7 +5173,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const cancelBtn = document.getElementById('modalCancelBtn');
 
     const selectedAccountName = accountSelect ? accountSelect.value : 'SAVING';
-    const amount = amountInput ? parseFloat(amountInput.value) : 0;
+    const rawAmountString = amountInput ? amountInput.value.replace(/,/g, '') : '0';
+    const amount = parseFloat(rawAmountString);
     const detailText = detailInput ? detailInput.value.trim() : '';
 
     // Guard Clause checking validation rules
@@ -5317,21 +5336,53 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Clean formatting interface entry tracker
+  // ✨ NEW: Wipes out the amount string, hides the clear icon, and resets chips to default loadout
+  window.clearAmountField = function() {
+    const inputField = document.getElementById('transactionAmount');
+    const clearBtn = document.getElementById('clearAmountBtn');
+    
+    if (inputField) {
+      inputField.value = '';
+      inputField.focus(); // Keep focus active for fast re-entry
+    }
+    
+    if (clearBtn) {
+      clearBtn.style.display = 'none';
+    }
+    
+    // Re-render baseline suggestion chips (500K, 1M, etc.)
+    window.generateDynamicChips('');
+  };
+
+  // 🔄 UPDATED: Show/hide clear icon button in real-time as user interacts
   window.handleAmountInput = function(inputElement) {
-    // Strip everything except pure numbers
-    let rawDigits = inputElement.value.replace(/,/g, '');
+    const clearBtn = document.getElementById('clearAmountBtn');
+    const selectionStart = inputElement.selectionStart;
+    const selectionEnd = inputElement.selectionEnd;
+    const originalLength = inputElement.value.length;
+
+    let rawDigits = inputElement.value.replace(/\D/g, '');
     
     if (rawDigits === '') {
       inputElement.value = '';
+      if (clearBtn) clearBtn.style.display = 'none'; // Hide if completely empty
       window.generateDynamicChips('');
       return;
     }
     
-    // Format with thousands separator commas
-    let numericValue = parseFloat(rawDigits);
+    // Display clear button if there are text values inside
+    if (clearBtn) {
+      clearBtn.style.display = 'block';
+    }
+    
+    let numericValue = parseInt(rawDigits, 10);
     if (!isNaN(numericValue)) {
       inputElement.value = numericValue.toLocaleString('en-US');
+      
+      const newLength = inputElement.value.length;
+      const lengthDifference = newLength - originalLength;
+      inputElement.setSelectionRange(selectionStart + lengthDifference, selectionEnd + lengthDifference);
+      
       window.generateDynamicChips(rawDigits);
     }
   };
@@ -5341,9 +5392,9 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!container) return;
     
     container.innerHTML = '';
-    const trimmed = rawValue.trim();
+    const trimmed = rawValue.toString().trim().replace(/\D/g, ''); // Ensure strict digit sanitization
 
-    // ENHANCEMENT: Default premium amounts starting strictly at 500K minimum
+    // Default premium amounts starting strictly at 500K minimum
     if (trimmed === "") {
       const defaultAmounts = [500000, 1000000, 2000000, 5000000, 10000000, 20000000];
       defaultAmounts.forEach(amount => {
@@ -5352,7 +5403,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    const num = parseFloat(trimmed);
+    const num = parseInt(trimmed, 10);
     if (isNaN(num) || num <= 0) return;
 
     // Scenario A: Full raw value typed (e.g., >= 1000)
@@ -5360,7 +5411,6 @@ document.addEventListener("DOMContentLoaded", function () {
       const multipliers = [1, 2, 5];
       multipliers.forEach(multiplier => {
         const multipliedAmt = num * multiplier;
-        // Enforce the strict 500K floor limits
         if (multipliedAmt >= 500000) {
           createChipElement(container, multipliedAmt);
         }
@@ -5378,7 +5428,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     scaleBases.forEach(base => {
       const projectedAmount = num * base;
-      // Strictly filtering out anything less than 500K to clean out low brackets
       if (projectedAmount >= 500000 && projectedAmount <= 500000000) {
         createChipElement(container, projectedAmount);
       }
@@ -5386,39 +5435,9 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   function createChipElement(container, totalAmount) {
-    let displayLabel = '';
-    
-    if (totalAmount >= 1000000) {
-      const clearMillions = totalAmount / 1000000;
-      displayLabel = `+${clearMillions % 1 === 0 ? clearMillions : clearMillions.toFixed(1)}M`;
-    } else if (totalAmount >= 1000) {
-      const clearThousands = totalAmount / 1000;
-      displayLabel = `+${clearThousands % 1 === 0 ? clearThousands : clearThousands.toFixed(0)}K`;
-    } else {
-      displayLabel = `+${totalAmount}`;
-    }
-    
-    const chip = document.createElement('div');
-    chip.className = 'quick-amt-chip';
-    chip.innerText = displayLabel;
-    
-    chip.onclick = () => {
-      const inputField = document.getElementById('transactionAmount');
-      if (inputField) {
-        // Set value with uniform clean thousands separators
-        inputField.value = totalAmount.toLocaleString('en-US');
-        // Pass pure number back down to update chips array matrix
-        window.generateDynamicChips(totalAmount.toString());
-      }
-    };
-    
-    container.appendChild(chip);
-  }
-
-// Isolated helper tool to output chips without script repetition
-function createChipElement(container, totalAmount) {
   let displayLabel = '';
   
+  // 1. Math calculation logic to transform pure raw numbers into pristine short labels (K/M)
   if (totalAmount >= 1000000) {
     const clearMillions = totalAmount / 1000000;
     displayLabel = `+${clearMillions % 1 === 0 ? clearMillions : clearMillions.toFixed(1)}M`;
@@ -5429,19 +5448,25 @@ function createChipElement(container, totalAmount) {
     displayLabel = `+${totalAmount}`;
   }
   
+  // 2. Creating the DOM element node explicitly in memory
   const chip = document.createElement('div');
-  chip.className = 'quick-amt-chip';
+  chip.className = 'quick-amt-chip'; // <--- This inherits your custom dashboard CSS layout styling
   chip.innerText = displayLabel;
   
+  // 3. Injecting the interactive control logic directly onto the object
   chip.onclick = () => {
     const inputField = document.getElementById('transactionAmount');
+    const clearBtn = document.getElementById('clearAmountBtn');
     if (inputField) {
-      inputField.value = totalAmount;
-      // Re-trigger calculation to transition smoothly to step multipliers
-      window.generateDynamicChips(inputField.value);
+      inputField.value = parseInt(totalAmount, 10).toLocaleString('en-US');
+      
+      if (clearBtn) clearBtn.style.display = 'block';
+      
+      window.generateDynamicChips(totalAmount);
     }
   };
   
+  // 4. Pushing the finished node out to your visual layout row
   container.appendChild(chip);
 }
 
