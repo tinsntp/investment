@@ -2210,7 +2210,7 @@ function caRenderList(data) {
     row.className = "ca-list-row";
     
     var pcFs = window.innerWidth < 401 ? "4.6vw" : "2.6vw";
-    var pcMw = window.innerWidth < 401 ? "100px" : "50px";
+    var pcMw = window.innerWidth < 401 ? "100px" : "45px";
     var amtNumber = window.innerWidth < 401 ? caFmtFull(item.val) : caFmt(item.val);
     var maxVal = Math.max.apply(Math, data.map(function(item) { return Math.abs(item.val); }));
     var isMax = Math.abs(item.val) >= (maxVal - 0.01);
@@ -4632,67 +4632,67 @@ function initFullyAutomatedTimeline() {
 
   // 7. Auto-calculate Expected Peak Target Window (Typically 12-18 months post-halving)
   // 1. Establish the anchor: Bitcoin Genesis block (Jan 3, 2009)
-const lastHalving = new Date('2024-04-20T00:00:00Z');
-const cycleLengthMs = 4 * 365.25 * 24 * 60 * 60 * 1000; // Accurate 4-year cycle
+  const lastHalving = new Date('2024-04-20T00:00:00Z');
+  const cycleLengthMs = 4 * 365.25 * 24 * 60 * 60 * 1000; // Accurate 4-year cycle
 
-const today = new Date();
+  const today = new Date();
 
-// 2. Determine which cycle we are in
-let cycleStart = new Date(lastHalving.getTime());
+  // 2. Determine which cycle we are in
+  let cycleStart = new Date(lastHalving.getTime());
 
-// If today is past the peak of the current cycle, we automatically look to the next one
-// Peak is defined as 18 months after halving
-let peakEnd = new Date(cycleStart.getTime());
-peakEnd.setMonth(peakEnd.getMonth() + 18);
+  // If today is past the peak of the current cycle, we automatically look to the next one
+  // Peak is defined as 18 months after halving
+  let peakEnd = new Date(cycleStart.getTime());
+  peakEnd.setMonth(peakEnd.getMonth() + 18);
 
-if (today > peakEnd) {
-    cycleStart = new Date(cycleStart.getTime() + cycleLengthMs);
-}
-
-// 3. Project the peak window based on the active cycle
-let peakStart = new Date(cycleStart.getTime());
-peakStart.setMonth(peakStart.getMonth() + 12); // Start of peak window
-
-let peakEndNew = new Date(cycleStart.getTime());
-peakEndNew.setMonth(peakEndNew.getMonth() + 18); // End of peak window
-
-// 4. Format
-const formatMonth = (date) => date.toLocaleString('en-US', { month: 'short' });
-const formatYear = (date) => date.toLocaleString('en-US', { year: 'numeric' });
-
-let displayString = "";
-
-// Check if the peak window starts and ends in the same year
-if (peakStart.getFullYear() === peakEndNew.getFullYear()) {
-  displayString = `${formatMonth(peakStart)}-${formatMonth(peakEndNew)} ${formatYear(peakEndNew)}`;
-} else {
-  // Fallback case just in case the window crosses a year boundary (e.g., Dec 2028 - Jun 2029)
-  displayString = `${formatMonth(peakStart)} ${formatYear(peakStart)} - ${formatMonth(peakEndNew)} ${formatYear(peakEndNew)}`;
-}
-
-  // 8. Rebuild the Dynamic X-Axis Date Intervals grid (0%, 25%, 50%, 75%, 100%)
-  const dateAxisContainer = document.getElementById('dynamic-date-axis');
-  if (dateAxisContainer) {
-    dateAxisContainer.innerHTML = ''; // Clear stale nodes
-    
-    const intervals = [0, 0.25, 0.50, 0.75, 1.0];
-    
-    intervals.forEach((fraction) => {
-      const intervalMs = currentCycleStartMs + (totalDuration * fraction);
-      const intervalDate = new Date(intervalMs);
-      
-      const monthLabel = intervalDate.toLocaleString('en-US', { month: 'short' });
-      const yearShort = intervalDate.getFullYear().toString().substring(2);
-      
-      const spanNode = document.createElement('span');
-      spanNode.innerText = `${monthLabel} '${yearShort}`;
-      dateAxisContainer.appendChild(spanNode);
-    });
+  if (today > peakEnd) {
+      cycleStart = new Date(cycleStart.getTime() + cycleLengthMs);
   }
-}
 
-/* Wallet Cards*/
-document.addEventListener("DOMContentLoaded", function () {
+  // 3. Project the peak window based on the active cycle
+  let peakStart = new Date(cycleStart.getTime());
+  peakStart.setMonth(peakStart.getMonth() + 12); // Start of peak window
+
+  let peakEndNew = new Date(cycleStart.getTime());
+  peakEndNew.setMonth(peakEndNew.getMonth() + 18); // End of peak window
+
+  // 4. Format
+  const formatMonth = (date) => date.toLocaleString('en-US', { month: 'short' });
+  const formatYear = (date) => date.toLocaleString('en-US', { year: 'numeric' });
+
+  let displayString = "";
+
+  // Check if the peak window starts and ends in the same year
+  if (peakStart.getFullYear() === peakEndNew.getFullYear()) {
+    displayString = `${formatMonth(peakStart)}-${formatMonth(peakEndNew)} ${formatYear(peakEndNew)}`;
+  } else {
+    // Fallback case just in case the window crosses a year boundary (e.g., Dec 2028 - Jun 2029)
+    displayString = `${formatMonth(peakStart)} ${formatYear(peakStart)} - ${formatMonth(peakEndNew)} ${formatYear(peakEndNew)}`;
+  }
+
+    // 8. Rebuild the Dynamic X-Axis Date Intervals grid (0%, 25%, 50%, 75%, 100%)
+    const dateAxisContainer = document.getElementById('dynamic-date-axis');
+    if (dateAxisContainer) {
+      dateAxisContainer.innerHTML = ''; // Clear stale nodes
+      
+      const intervals = [0, 0.25, 0.50, 0.75, 1.0];
+      
+      intervals.forEach((fraction) => {
+        const intervalMs = currentCycleStartMs + (totalDuration * fraction);
+        const intervalDate = new Date(intervalMs);
+        
+        const monthLabel = intervalDate.toLocaleString('en-US', { month: 'short' });
+        const yearShort = intervalDate.getFullYear().toString().substring(2);
+        
+        const spanNode = document.createElement('span');
+        spanNode.innerText = `${monthLabel} '${yearShort}`;
+        dateAxisContainer.appendChild(spanNode);
+      });
+    }
+  }
+
+  /* Wallet Cards*/
+  document.addEventListener("DOMContentLoaded", function () {
   const txList = document.getElementById("tx-list");
 
   if (txList) {
@@ -4739,15 +4739,15 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Tự động đóng tất cả các nút xóa khi click ra bất kỳ vùng trống nào ngoài danh sách
-  document.addEventListener("click", function (e) {
-    if (!e.target.closest(".sub-swipe-container")) {
-      document.querySelectorAll(".sub-swipe-container.swiped").forEach(item => {
-        item.classList.remove("swiped");
-      });
-    }
+    // Tự động đóng tất cả các nút xóa khi click ra bất kỳ vùng trống nào ngoài danh sách
+    document.addEventListener("click", function (e) {
+      if (!e.target.closest(".sub-swipe-container")) {
+        document.querySelectorAll(".sub-swipe-container.swiped").forEach(item => {
+          item.classList.remove("swiped");
+        });
+      }
+    });
   });
-});
 
   const EXCLUDED_FROM_TOTAL = ['SOCIAL', 'SALARY']; 
   const exchangeRateVNDtoUSD = 26300; 
@@ -4976,28 +4976,43 @@ document.addEventListener("DOMContentLoaded", function () {
     const body = document.getElementById('modalBody');
 
     const isDeposit = type === 'Deposit';
-    const iconColor = isDeposit ? '#28a745' : '#dc3545';
-    const iconName = isDeposit ? 'arrow_circle_down' : 'arrow_circle_up';
+    const isTransfer = type === 'Transfer';
+    
+    let iconColor = '#dc3545';
+    let iconName = 'arrow_circle_up';
+    if (isDeposit) {
+        iconColor = '#28a745';
+        iconName = 'arrow_circle_down';
+    } else if (isTransfer) {
+        iconColor = '#8a3ffc';
+        iconName = 'swap_horizontal_circle';
+    }
 
     let initialTriggerText = "Select Account";
     let accountOptionsHTML = ''; 
     let hiddenInputValue = '';
+    
+    let usableAccounts = [];
+    let defaultAccountObj = null;
+    let fallbackDestinationObj = null;
 
     if (typeof accountsData !== 'undefined' && Array.isArray(accountsData)) {
-      // Filter out unwanted accounts directly from your global dataset
-      const usableAccounts = accountsData.filter(acc => acc.account !== "Salary" && acc.account !== "SOCIAL");
+      usableAccounts = accountsData.filter(acc => acc.account !== "Salary" && acc.account !== "SOCIAL");
 
-      // Dropdown Default Display Logic: 
-      // If defaultAccountName is invalid, missing, or filtered out, fallback to SAVING or the first allowed account
-      let targetAccountObj = usableAccounts.find(acc => acc.account === defaultAccountName);
-      if (!targetAccountObj && usableAccounts.length > 0) {
-        targetAccountObj = usableAccounts.find(acc => acc.account === "SAVING") || usableAccounts[0];
+      defaultAccountObj = usableAccounts.find(acc => acc.account === defaultAccountName);
+      if (!defaultAccountObj && usableAccounts.length > 0) {
+        defaultAccountObj = usableAccounts.find(acc => acc.account === "TPBank***000") || 
+                            usableAccounts.find(acc => acc.account === "SAVING") || 
+                            usableAccounts[0];
       }
       
-      if (targetAccountObj) {
-        hiddenInputValue = targetAccountObj.account;
+      fallbackDestinationObj = usableAccounts.find(acc => acc.account !== (defaultAccountObj ? defaultAccountObj.account : '')) || usableAccounts[0];
+
+      if (defaultAccountObj) {
+        hiddenInputValue = defaultAccountObj.account;
       }
 
+      // Pre-build options for dropdown lists
       usableAccounts.forEach(function(acc) {
         const balanceFormatted ='₫'+Math.round(acc.amount).toLocaleString('vi-VN');
         const iconUrl = acc.icon || 'https://cdn-icons-png.flaticon.com/512/3135/3135706.png';
@@ -5009,8 +5024,7 @@ document.addEventListener("DOMContentLoaded", function () {
           <span>${acc.account} (${balanceFormatted})</span>
         `;
         
-        // Set the active display text matching our determined default target account
-        if (targetAccountObj && acc.account === targetAccountObj.account) {
+        if (defaultAccountObj && acc.account === defaultAccountObj.account) {
           initialTriggerText = innerContentHTML;
         }
         
@@ -5021,102 +5035,247 @@ document.addEventListener("DOMContentLoaded", function () {
         `;
       });
     }
+    
+    // Set up tracking state variables safely
+    if (isTransfer) {
+        if (!window.swapState) {
+            window.swapState = {
+                fromAccount: defaultAccountObj ? defaultAccountObj.account : "",
+                fromIcon: defaultAccountObj ? (defaultAccountObj.icon || 'https://cdn-icons-png.flaticon.com/512/3135/3135706.png') : 'https://cdn-icons-png.flaticon.com/512/3135/3135706.png',
+                fromBalance: defaultAccountObj ? Math.round(defaultAccountObj.amount) : 0,
+                toAccount: fallbackDestinationObj ? fallbackDestinationObj.account : "",
+                toIcon: fallbackDestinationObj ? (fallbackDestinationObj.icon || 'https://cdn-icons-png.flaticon.com/512/3135/3135706.png') : 'https://cdn-icons-png.flaticon.com/512/3135/3135706.png'
+            };
+        }
+    }
 
     title.innerHTML = `
       <span class="material-icons-round" style="color: ${iconColor}; font-size: 24px;">${iconName}</span>
-      <span style="color: #f8f9fa; font-weight: 600;">${type} Account</span>
+      <span style="color: #f8f9fa; font-weight: 600;">${isTransfer ? 'Transfer Funds' : type + ' Account'}</span>
     `;
 
-    body.innerHTML = `
-      <!-- 1. Custom Account Dropdown Section -->
-      <div class="modal-field-group" style="margin-bottom: 16px;">
-        <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Select Account:</label>
-        <div class="premium-select-wrapper">
-          <div class="custom-select-trigger" id="customSelectTrigger" onclick="toggleCustomDropdown(event)">
-            ${initialTriggerText}
+    // 1. Force the swapState fallback checks to favor TPBank explicitly (case-insensitive)
+    if (isTransfer) {
+        // Search using lowercase comparisons to safely grab any variation of "TPBank"
+        let tpBankData = usableAccounts.find(acc => 
+            acc.account && acc.account.toLowerCase().includes("tpbank")
+        );
+        
+        let initialSrcAcc = tpBankData || defaultAccountObj || usableAccounts[0];
+        
+        // Find a destination that doesn't conflict with our source selection
+        let initialDstAcc = usableAccounts.find(acc => acc.account !== initialSrcAcc.account) || usableAccounts[0];
+
+        window.swapState = {
+            fromAccount: initialSrcAcc ? initialSrcAcc.account : "TPBank***000",
+            fromIcon: initialSrcAcc ? (initialSrcAcc.icon || 'https://cdn-icons-png.flaticon.com/512/3135/3135706.png') : 'https://cdn-icons-png.flaticon.com/512/3135/3135706.png',
+            fromBalance: initialSrcAcc ? Math.round(initialSrcAcc.amount) : 0,
+            toAccount: initialDstAcc ? initialDstAcc.account : "Select Account",
+            toIcon: initialDstAcc ? (initialDstAcc.icon || 'https://cdn-icons-png.flaticon.com/512/3135/3135706.png') : 'https://cdn-icons-png.flaticon.com/512/3135/3135706.png',
+            // FIX: Capture the destination account balance so it's ready on first load
+            toBalance: initialDstAcc ? Math.round(initialDstAcc.amount) : 0
+        };
+    }
+
+    // 2. Refactored HTML layout string with flex wraps to prevent visual container breakage
+    if (isTransfer) {
+      let fromOptionsHTML = '';
+      let toOptionsHTML = '';
+
+      usableAccounts.forEach(acc => {
+          const balanceFormatted ='₫'+Math.round(acc.amount).toLocaleString('vi-VN');
+          const iconUrl = acc.icon || 'https://cdn-icons-png.flaticon.com/512/3135/3135706.png';
+          
+          const optionRow = `
+            <div class="custom-option-item" style="display:flex; align-items:center; gap:8px; padding:10px; cursor:pointer;" data-value="${acc.account}">
+              <img src="${iconUrl}" style="width:18px; height:18px; border-radius:4px; object-fit:cover;">
+              <span>${acc.account} (${balanceFormatted})</span>
+            </div>
+          `;
+          fromOptionsHTML += optionRow;
+          toOptionsHTML += optionRow;
+      });
+
+      const currentFromAccount = window.swapState?.fromAccount || 'TPBank***000';
+const currentToAccount = window.swapState?.toAccount || 'Select Account';
+
+// 1. Get From Balance
+const fromBalanceValue = window.swapState?.fromBalance;
+const fromBalanceText = (fromBalanceValue !== undefined && fromBalanceValue !== null)
+  ? ` (₫${Math.round(fromBalanceValue).toLocaleString('vi-VN')})` 
+  : '';
+
+// 2. Get To Balance with an explicit fallback to the accounts list if toBalance is missing
+let toBalanceValue = window.swapState?.toBalance;
+
+if ((toBalanceValue === undefined || toBalanceValue === null) && window.swapState?.accounts) {
+  // Look for the account object matching the current selected To account name
+  const matchedAccount = window.swapState.accounts.find(acc => acc.accountName === currentToAccount || acc.id === currentToAccount);
+  if (matchedAccount) {
+    toBalanceValue = matchedAccount.balance;
+  }
+}
+
+// Only format if it's a real account and we successfully found a numeric balance
+const toBalanceText = (currentToAccount !== 'Select Account' && toBalanceValue !== undefined && toBalanceValue !== null)
+  ? ` (₫${Math.round(toBalanceValue).toLocaleString('vi-VN')})` 
+  : '';
+
+body.innerHTML = `
+  <div style="background: #17181d; padding: 16px; border-radius: 20px; box-sizing: border-box; margin-bottom: 16px;">
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      
+      <!-- TOP CARD: STACKED ACCOUNT PICKERS (TOP-BOTTOM) -->
+      <div style="background: #111216; border: 1px solid #2d313c; border-radius: 16px; padding: 14px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; position: relative;">
+        
+        <!-- FROM SECTION (TOP) -->
+        <div style="display: flex; flex-direction: column; width: 100%; gap: 6px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <div style="color: #6c757d; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">FROM</div>
+            <!-- MAX BUTTON INTEGRATED HERE -->
+            <span onclick="window.applyMaxBalance()" style="color: #8a3ffc; font-size: 11px; font-weight: 600; cursor: pointer; background: rgba(138, 63, 252, 0.1); padding: 2px 6px; border-radius: 4px; user-select: none;">MAX</span>
           </div>
-          <input type="hidden" id="targetAccount" value="${hiddenInputValue}" />
-          <div class="custom-select-options" id="customSelectOptions">
-            ${accountOptionsHTML}
+          
+          <div class="premium-select-wrapper" style="position: relative; width: 100%;">
+            <div class="custom-select-trigger" id="transferFromTrigger" onclick="window.toggleTransferDropdown('from', event)" style="padding: 10px 12px; background: #22252d; border: 1px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: space-between; width: 100%; box-sizing: border-box; cursor: pointer;">
+              <div style="display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1;">
+                <img id="transferFromIcon" src="${window.swapState?.fromIcon || ''}" style="width: 18px; height: 18px; border-radius: 4px; object-fit: cover; flex-shrink: 0;">
+                <span id="fromAccountLabel" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                  ${currentFromAccount}${fromBalanceText}
+                </span>
+              </div>
+            </div>
+            <div class="custom-select-options" id="transferFromOptions" style="display:none; position:absolute; left:0; top:calc(100% + 4px); background:#1e222b; border:1px solid #2d313c; border-radius:12px; width:100%; max-height:200px; overflow-y:auto; z-index:100; box-shadow:0 8px 24px rgba(0,0,0,0.5);">
+                ${fromOptionsHTML}
+            </div>
           </div>
         </div>
+
+        <!-- MIDDLE LAYER: DIRECTIONAL GLYPH DIVIDER -->
+        <div style="display: flex; align-items: center; justify-content: center; width: 100%; position: relative; margin: -4px 0;">
+          <div style="position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: #2d313c; z-index: 1;"></div>
+          <button type="button" onclick="window.flipTransferDirection()" style="background: #22252d; border: 1px solid #2d313c; color: #f8f9fa; width: 30px; height: 30px; min-width: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; z-index: 2; box-shadow: 0 2px 8px rgba(0,0,0,0.4);">
+            <span class="material-icons-round" style="font-size: 16px;">swap_vert</span>
+          </button>
+        </div>
+
+        <!-- TO SECTION (BOTTOM) -->
+        <div style="display: flex; flex-direction: column; width: 100%; gap: 6px;">
+          <div style="color: #6c757d; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;">TO</div>
+          
+          <div class="premium-select-wrapper" style="position: relative; width: 100%;">
+            <div class="custom-select-trigger" id="transferToTrigger" onclick="window.toggleTransferDropdown('to', event)" style="padding: 10px 12px; background: #22252d; border: 1px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: space-between; width: 100%; box-sizing: border-box; cursor: pointer;">
+              <div style="display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1;">
+                <img id="transferToIcon" src="${window.swapState?.toIcon || ''}" style="width: 18px; height: 18px; border-radius: 4px; object-fit: cover; flex-shrink: 0;">
+                <span id="toAccountLabel" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                  ${currentToAccount}${toBalanceText}
+                </span>
+              </div>
+            </div>
+            <div class="custom-select-options" id="transferToOptions" style="display:none; position:absolute; left:0; top:calc(100% + 4px); background:#1e222b; border:1px solid #2d313c; border-radius:12px; width:100%; max-height:200px; overflow-y:auto; z-index:100; box-shadow:0 8px 24px rgba(0,0,0,0.5);">
+                ${toOptionsHTML}
+            </div>
+          </div>
+        </div>
+        
       </div>
 
-      <!-- 2. Amount Input Section -->
-      <div class="modal-field-group" style="margin-bottom: 16px;">
-        <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Enter Amount (VND):</label>
-        
-        <!-- Premium Relative Wrapper for Absolute Icon Positioning -->
-        <div style="position: relative; width: 100%;">
+      <!-- BOTTOM CARD: VALUE TRACKING NUMERIC ELEMENT -->
+      <div style="background: #111216; border: 1px solid #2d313c; border-radius: 16px; padding: 14px; box-sizing: border-box;">
+        <div style="color: #6c757d; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Amount (VND)</div>
+        <div style="position: relative; display: flex; align-items: center;">
           <input type="text" 
                  id="transactionAmount" 
                  placeholder="0" 
-                 oninput="handleAmountInput(this)"
-                 style="width: 100%; padding: 14px 44px 14px 16px; background: #111216; border: 1px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-size: 14px; box-sizing: border-box; outline: none;" />
-          
-          <!-- Smooth Charcoal Clear Button Icon -->
+                 oninput="window.handleTransferAmountInput(this)"
+                 style="width: 100%; padding: 4px 32px 4px 0; background: transparent; border: none; color: #f8f9fa; font-size: 28px; font-weight: 600; outline: none; box-sizing: border-box;" />
           <span class="material-icons-round" 
                 id="clearAmountBtn"
-                onclick="clearAmountField()"
-                style="display: none; position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: #6c757d; font-size: 20px; cursor: pointer; transition: color 0.2s; user-select: none;"
-                onmouseover="this.style.color='#f8f9fa'" 
-                onmouseout="this.style.color='#6c757d'">
+                onclick="window.clearAmountField()"
+                style="display: none; position: absolute; right: 0; top: 50%; transform: translateY(-50%); color: #6c757d; font-size: 20px; cursor: pointer; user-select: none;">
             cancel
           </span>
         </div>
-        
-        <div class="quick-amt-group" id="dynamicChipsContainer" style="margin-top: 12px;"></div>
       </div>
 
-      <!-- 3. Transaction Details Input Section -->
-      <div class="modal-field-group" style="margin-bottom: 16px;">
-        <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Detail Note:</label>
-        <input type="text" 
-               id="transactionDetail" 
-               placeholder="e.g., Trading deposit, transfer..." 
-               style="width: 100%; padding: 14px 16px; background: #111216; border: 1px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-size: 14px; box-sizing: border-box; outline: none;" />
-      </div>
+    </div>
+    <div class="quick-amt-group" id="dynamicChipsContainer" style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; justify-content: flex-start;"></div>
+  </div>
+`;
+    } else {
+        // Fallback layout style for Deposit/Withdraw remains standard
+        body.innerHTML = `
+          <div class="modal-field-group" style="margin-bottom: 16px;">
+            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Select Account:</label>
+            <div class="premium-select-wrapper">
+              <div class="custom-select-trigger" id="customSelectTrigger" onclick="toggleCustomDropdown(event)">
+                ${initialTriggerText}
+              </div>
+              <input type="hidden" id="targetAccount" value="${hiddenInputValue}" />
+              <div class="custom-select-options" id="customSelectOptions">
+                ${accountOptionsHTML}
+              </div>
+            </div>
+          </div>
 
-      <!-- Hidden Error Alert Strip -->
-      <div id="modalErrorMessage" 
-           style="display: none; padding: 12px; margin-bottom: 16px; background: rgba(220, 53, 69, 0.1); border: 1px solid #dc3545; color: #ea868f; border-radius: 8px; font-size: 13px; font-weight: 500;">
-      </div>
+          <div class="modal-field-group" style="margin-bottom: 16px;">
+            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Enter Amount (VND):</label>
+            <div style="position: relative; width: 100%;">
+              <input type="text" 
+                     id="transactionAmount" 
+                     placeholder="0" 
+                     oninput="handleAmountInput(this)"
+                     style="width: 100%; padding: 14px 44px 14px 16px; background: #111216; border: 1px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-size: 14px; box-sizing: border-box; outline: none;" />
+              <span class="material-icons-round" 
+                    id="clearAmountBtn"
+                    onclick="clearAmountField()"
+                    style="display: none; position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: #6c757d; font-size: 20px; cursor: pointer; transition: color 0.2s; user-select: none;"
+                    onmouseover="this.style.color='#f8f9fa'" 
+                    onmouseout="this.style.color='#6c757d'">
+                cancel
+              </span>
+            </div>
+            <div class="quick-amt-group" id="dynamicChipsContainer" style="margin-top: 12px;"></div>
+          </div>
 
-      <!-- ✨ NEW: Hidden Premium Success Alert Strip -->
-      <div id="modalSuccessMessage" 
-           style="display: none; padding: 14px; margin-bottom: 16px; background: rgba(40, 167, 69, 0.15); border: 1px solid #28a745; color: #75b798; border-radius: 12px; font-size: 14px; font-weight: 500; text-align: center; align-items: center; justify-content: center; gap: 8px;">
+          <div class="modal-field-group" style="margin-bottom: 16px;">
+            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Detail Note:</label>
+            <input type="text" 
+                   id="transactionDetail" 
+                   placeholder="e.g., Trading deposit, transfer..." 
+                   style="width: 100%; padding: 14px 16px; background: #111216; border: 1px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-size: 14px; box-sizing: border-box; outline: none;" />
+          </div>
+        `;
+    }
+
+    body.innerHTML += `
+      <div id="modalErrorMessage" style="display: none; padding: 12px; margin-bottom: 16px; background: rgba(220, 53, 69, 0.1); border: 1px solid #dc3545; color: #ea868f; border-radius: 8px; font-size: 13px; font-weight: 500;"></div>
+      <div id="modalSuccessMessage" style="display: none; padding: 14px; margin-bottom: 16px; background: rgba(40, 167, 69, 0.15); border: 1px solid #28a745; color: #75b798; border-radius: 12px; font-size: 14px; font-weight: 500; text-align: center; align-items: center; justify-content: center; gap: 8px;">
         <span class="material-icons-round" style="color: #28a745; font-size: 18px;">check_circle</span>
         <span id="successText">Transaction successfully processed!</span>
       </div>
 
-      <!-- 4. Main Controller Actions -->
       <div style="display: flex; gap: 12px;">
-        <button onclick="closeModal()" 
-                id="modalCancelBtn"
-                style="flex: 1; font-family:Lexend!important; padding: 14px; background: #1e222b; border: 1px solid #2d313c; color: #cbd5e1; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
-          Cancel
-        </button>
-        <button onclick="processTransaction('${type}')" 
-                class="btn-submit-tx"
-                style="flex: 2; font-family:Lexend!important; padding: 14px; background: #2d3748; border: none; color: #ffffff; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;"
-                onmouseover="this.style.background='#3a465c'" 
-                onmouseout="this.style.background='#2d3748'">
-          Confirm Transaction
-        </button>
+        <button onclick="closeModal()" id="modalCancelBtn" style="flex: 1; font-family:Lexend!important; padding: 14px; background: #1e222b; border: 1px solid #2d313c; color: #cbd5e1; border-radius: 12px; font-weight: 600; cursor: pointer;">Cancel</button>
+        <button onclick="processTransaction('${type}')" class="btn-submit-tx" style="flex: 2; font-family:Lexend!important; padding: 14px; background: #2d3748; border: none; color: #ffffff; border-radius: 12px; font-weight: 600; cursor: pointer;">Confirm Transaction</button>
       </div>
     `;
 
     backdrop.classList.add('active');
     backdrop.style.pointerEvents = 'auto';
 
-    // Pre-load regular quick amount suggestions right away
     window.generateDynamicChips("");
+
+    // Bind dropdown click handlers inside the newly generated elements
+    if (isTransfer) {
+        window.initTransferDropdownListeners();
+    }
 
     setTimeout(function() {
       const amountInput = document.getElementById('transactionAmount');
       if (amountInput) amountInput.focus();
     }, 50);
-  }
+}
 
   // Generates quick select buttons dynamically (e.g., typing '5' suggests 500k, 5M, 50M)
   function handleAmountSuggestions(val) {
@@ -5353,6 +5512,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Re-render baseline suggestion chips (500K, 1M, etc.)
     window.generateDynamicChips('');
   };
+  
 
   // 🔄 UPDATED: Show/hide clear icon button in real-time as user interacts
   window.handleAmountInput = function(inputElement) {
@@ -5435,40 +5595,299 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   function createChipElement(container, totalAmount) {
-  let displayLabel = '';
-  
-  // 1. Math calculation logic to transform pure raw numbers into pristine short labels (K/M)
-  if (totalAmount >= 1000000) {
-    const clearMillions = totalAmount / 1000000;
-    displayLabel = `+${clearMillions % 1 === 0 ? clearMillions : clearMillions.toFixed(1)}M`;
-  } else if (totalAmount >= 1000) {
-    const clearThousands = totalAmount / 1000;
-    displayLabel = `+${clearThousands % 1 === 0 ? clearThousands : clearThousands.toFixed(0)}K`;
-  } else {
-    displayLabel = `+${totalAmount}`;
+    let displayLabel = '';
+    
+    // 1. Math calculation logic to transform pure raw numbers into pristine short labels (K/M)
+    if (totalAmount >= 1000000) {
+      const clearMillions = totalAmount / 1000000;
+      displayLabel = `+${clearMillions % 1 === 0 ? clearMillions : clearMillions.toFixed(1)}M`;
+    } else if (totalAmount >= 1000) {
+      const clearThousands = totalAmount / 1000;
+      displayLabel = `+${clearThousands % 1 === 0 ? clearThousands : clearThousands.toFixed(0)}K`;
+    } else {
+      displayLabel = `+${totalAmount}`;
+    }
+    
+    // 2. Creating the DOM element node explicitly in memory
+    const chip = document.createElement('div');
+    chip.className = 'quick-amt-chip'; // <--- This inherits your custom dashboard CSS layout styling
+    chip.innerText = displayLabel;
+    
+    // 3. Injecting the interactive control logic directly onto the object
+    chip.onclick = () => {
+      const inputField = document.getElementById('transactionAmount');
+      const clearBtn = document.getElementById('clearAmountBtn');
+      if (inputField) {
+        inputField.value = parseInt(totalAmount, 10).toLocaleString('en-US');
+        
+        if (clearBtn) clearBtn.style.display = 'block';
+        
+        window.generateDynamicChips(totalAmount);
+      }
+    };
+    
+    // 4. Pushing the finished node out to your visual layout row
+    container.appendChild(chip);
   }
-  
-  // 2. Creating the DOM element node explicitly in memory
-  const chip = document.createElement('div');
-  chip.className = 'quick-amt-chip'; // <--- This inherits your custom dashboard CSS layout styling
-  chip.innerText = displayLabel;
-  
-  // 3. Injecting the interactive control logic directly onto the object
-  chip.onclick = () => {
-    const inputField = document.getElementById('transactionAmount');
-    const clearBtn = document.getElementById('clearAmountBtn');
-    if (inputField) {
-      inputField.value = parseInt(totalAmount, 10).toLocaleString('en-US');
-      
-      if (clearBtn) clearBtn.style.display = 'block';
-      
-      window.generateDynamicChips(totalAmount);
+  window.flipTransferDirection = function() {
+    if (!window.swapState) return;
+
+    // 1. Swap internal state variables completely
+    const tempAccount = window.swapState.fromAccount;
+    const tempIcon = window.swapState.fromIcon;
+    const tempBalance = window.swapState.fromBalance;
+
+    window.swapState.fromAccount = window.swapState.toAccount;
+    window.swapState.fromIcon = window.swapState.toIcon;
+    window.swapState.fromBalance = window.swapState.toBalance || 0;
+
+    window.swapState.toAccount = tempAccount;
+    window.swapState.toIcon = tempIcon;
+    window.swapState.toBalance = tempBalance;
+
+    // 2. Clear out character trail variants
+    const cleanFromStr = window.swapState.fromAccount.replace(/[︾v▼]/g, '').trim();
+    const cleanToStr = window.swapState.toAccount.replace(/[︾v▼]/g, '').trim();
+
+    // 3. Reformat active label indicators to include newly assigned balances
+    const fromBalText = ` (₫${Math.round(window.swapState.fromBalance).toLocaleString('vi-VN')})`;
+    const toBalText = window.swapState.toBalance ? ` (₫${Math.round(window.swapState.toBalance).toLocaleString('vi-VN')})` : '';
+
+    // 4. Force DOM elements to visually represent the changes
+    document.getElementById('fromAccountLabel').textContent = `${cleanFromStr}${fromBalText}`;
+    document.getElementById('transferFromIcon').src = window.swapState.fromIcon;
+
+    document.getElementById('toAccountLabel').textContent = `${cleanToStr}${toBalText}`;
+    document.getElementById('transferToIcon').src = window.swapState.toIcon;
+
+    // 5. Fire option rebuild if dynamic routing logic is active
+    if (typeof window.reloadDropdownMenus === 'function') {
+        window.reloadDropdownMenus();
     }
   };
   
-  // 4. Pushing the finished node out to your visual layout row
-  container.appendChild(chip);
-}
+  // Opens an interactive floating menu contextually underneath the clicked Transfer pill
+  window.openTransferAccountPicker = function(side, event) {
+    event.stopPropagation();
+    
+    // Remove any existing active custom pickers first to avoid clones
+    const existingPicker = document.getElementById('transferAccountPickerMenu');
+    if (existingPicker) existingPicker.remove();
+
+    if (typeof accountsData === 'undefined' || !Array.isArray(accountsData)) return;
+    const usableAccounts = accountsData.filter(acc => acc.account !== "Salary" && acc.account !== "SOCIAL");
+
+    // Create a absolute positioned dropdown menu matching your app's ecosystem theme
+    const menu = document.createElement('div');
+    menu.id = 'transferAccountPickerMenu';
+    menu.style.cssText = `
+        position: absolute;
+        top: calc(100% + 6px);
+        right: 0;
+        background: #1e222b;
+        border: 1px solid #2d313c;
+        border-radius: 12px;
+        min-width: 220px;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 9999;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+        padding: 4px;
+    `;
+
+    // Populate selectable options
+    usableAccounts.forEach(acc => {
+        // Prevent choosing the same account for both source and destination cards
+        if (side === 'from' && acc.account === window.swapState.toAccount) return;
+        if (side === 'to' && acc.account === window.swapState.fromAccount) return;
+
+        const balanceFormatted = '₫' + Math.round(acc.amount).toLocaleString('vi-VN');
+        const iconUrl = acc.icon || 'https://cdn-icons-png.flaticon.com/512/3135/3135706.png';
+
+        const item = document.createElement('div');
+        item.style.cssText = `
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            color: #cbd5e1;
+            font-size: 13px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background 0.15s;
+        `;
+        item.innerHTML = `
+          <img src="${iconUrl}" style="width: 18px; height: 18px; border-radius: 4px; object-fit: cover;">
+          <span style="flex-grow:1; text-align:left;">${acc.account}</span>
+          <span style="color: #6c757d; font-size:11px;">${balanceFormatted}</span>
+        `;
+
+        item.onmouseenter = () => item.style.background = '#2d313c';
+        item.onmouseleave = () => item.style.background = 'transparent';
+        
+        item.onclick = (e) => {
+            e.stopPropagation();
+            window.selectTransferAccount(side, acc.account, Math.round(acc.amount));
+            menu.remove();
+        };
+
+        menu.appendChild(item);
+    });
+
+    // Append the dynamic menu inside the target button element wrapper
+    const targetButton = event.currentTarget;
+    targetButton.appendChild(menu);
+
+    // Global listener to close dropdown when clicking anywhere outside
+    const closePicker = () => {
+        menu.remove();
+        document.removeEventListener('click', closePicker);
+    };
+    document.addEventListener('click', closePicker);
+  };
+
+  // Handles state updates when a new account is chosen from the picker
+  window.selectTransferAccount = function(side, accountName, accountBalance) {
+      if (!window.swapState) return;
+
+      if (side === 'from') {
+          window.swapState.fromAccount = accountName;
+          window.swapState.fromBalance = accountBalance;
+          
+          // Refresh balance text element dynamically
+          const balanceDisplay = document.getElementById('fromAccountBalance');
+          if (balanceDisplay) balanceDisplay.textContent = accountBalance.toLocaleString('en-US');
+          const fromLabel = document.getElementById('fromAccountLabel');
+          if (fromLabel) fromLabel.textContent = accountName;
+      } else {
+          window.swapState.toAccount = accountName;
+          const toLabel = document.getElementById('toAccountLabel');
+          if (toLabel) toLabel.textContent = accountName;
+      }
+
+      // Force re-calculate currency equivalents or balance conditions right away
+      const amountInput = document.getElementById('transactionAmount');
+      if (amountInput && typeof window.handleAmountInput === 'function') {
+          window.handleAmountInput(amountInput);
+      }
+  };
+
+  window.handleTransferAmountInput = function(inputElement) {
+    let valueStr = inputElement.value.replace(/[^0-9]/g, '');
+    let numericVal = parseInt(valueStr, 10) || 0;
+
+    if (numericVal === 0) {
+        inputElement.value = '';
+    } else {
+        inputElement.value = numericVal.toLocaleString('vi-VN');
+    }
+
+    // Toggle clear cancellation marks
+    const clearBtn = document.getElementById('clearAmountBtn');
+    if (clearBtn) {
+        clearBtn.style.display = numericVal > 0 ? 'block' : 'none';
+    }
+
+  };
+
+  window.initTransferDropdownListeners = function() {
+    // 1. Global click listener to close dropdowns when clicking outside
+    document.addEventListener('click', function() {
+        const fromMenu = document.getElementById('transferFromOptions');
+        const toMenu = document.getElementById('transferToOptions');
+        if (fromMenu) fromMenu.style.display = 'none';
+        if (toMenu) toMenu.style.display = 'none';
+    }, { once: false });
+
+    // 2. Handle item selection from the FROM menu
+    document.querySelectorAll('#transferFromOptions .custom-option-item').forEach(item => {
+        item.onclick = function(e) {
+            e.stopPropagation();
+            const accountValue = this.getAttribute('data-value');
+            const match = accountsData.find(a => a.account === accountValue);
+            
+            if (match) {
+                window.swapState.fromAccount = match.account;
+                window.swapState.fromIcon = match.icon || 'https://cdn-icons-png.flaticon.com/512/3135/3135706.png';
+                window.swapState.fromBalance = Math.round(match.amount);
+                
+                // Update text label, image source, and balance indicator
+                document.getElementById('fromAccountLabel').textContent = match.account;
+                document.getElementById('transferFromIcon').src = window.swapState.fromIcon;
+                document.getElementById('fromAccountBalance').textContent = window.swapState.fromBalance.toLocaleString('en-US');
+            }
+            document.getElementById('transferFromOptions').style.display = 'none';
+            
+            // Re-validate the amount against the new account balance
+            const currentInput = document.getElementById('transactionAmount');
+            if (currentInput) window.handleTransferAmountInput(currentInput);
+        };
+    });
+
+    // 3. Handle item selection from the TO menu
+    document.querySelectorAll('#transferToOptions .custom-option-item').forEach(item => {
+        item.onclick = function(e) {
+            e.stopPropagation();
+            const accountValue = this.getAttribute('data-value');
+            const match = accountsData.find(a => a.account === accountValue);
+            
+            if (match) {
+                window.swapState.toAccount = match.account;
+                window.swapState.toIcon = match.icon || 'https://cdn-icons-png.flaticon.com/512/3135/3135706.png';
+                
+                // Update the destination label and icon
+                document.getElementById('toAccountLabel').textContent = match.account;
+                document.getElementById('transferToIcon').src = window.swapState.toIcon;
+            }
+            document.getElementById('transferToOptions').style.display = 'none';
+        };
+    });
+  };
+
+  window.toggleTransferDropdown = function(side, event) {
+    // Prevent the window click listener from immediately closing the dropdown we are trying to open
+    event.stopPropagation();
+    
+    const fromMenu = document.getElementById('transferFromOptions');
+    const toMenu = document.getElementById('transferToOptions');
+    
+    if (!fromMenu || !toMenu) return;
+
+    if (side === 'from') {
+        // Hide the "To" menu and toggle the "From" menu
+        toMenu.style.display = 'none';
+        fromMenu.style.display = fromMenu.style.display === 'block' ? 'none' : 'block';
+    } else {
+        // Hide the "From" menu and toggle the "To" menu
+        fromMenu.style.display = 'none';
+        toMenu.style.display = toMenu.style.display === 'block' ? 'none' : 'block';
+    }
+  };
+
+  window.applyMaxBalance = function() {
+    if (!window.swapState || typeof window.swapState.fromBalance === 'undefined') return;
+
+    const amountInput = document.getElementById('transactionAmount');
+    if (!amountInput) return;
+
+    const maxAmt = window.swapState.fromBalance;
+
+    if (maxAmt <= 0) {
+        amountInput.value = '';
+    } else {
+        // Format with thousand separators matching your local vi-VN standard
+        amountInput.value = maxAmt.toLocaleString('vi-VN');
+    }
+
+    // Fire the input handler to update alternative text representations ($0.00) and toggle clear buttons
+    if (typeof window.handleTransferAmountInput === 'function') {
+        window.handleTransferAmountInput(amountInput);
+    } else if (typeof window.handleAmountInput === 'function') {
+        window.handleAmountInput(amountInput);
+    }
+  };
+
+  
 
 </script>
 
