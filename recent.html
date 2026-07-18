@@ -205,7 +205,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .btn-square:hover{background-color:var(--btn-hover)}
 /* 1. Mặc định ẩn hoàn toàn để không lọt sang Tab 1 */
 .modal-backdrop {
-  display: none;
+  display: none;padding-bottom:20vh;
   position: fixed;
   top: 0;
   left: 0;
@@ -1095,7 +1095,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
     <h3>Add Cash Transaction</h3>
     
     <div class="add-field">
-      <label><i class="bi bi-basket3-fill"></i> Expense Detail</label>
+      <label>Expense Detail</label>
       <input type="text" id="cash-modal-input" autocomplete="off">
     </div>
 
@@ -1103,8 +1103,8 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
     <div id="cash-modal-status" class="add-status"></div>
 
     <div class="add-actions">
-      <button id="cash-modal-cancel" class="add-cancel-btn"><label><i class="bi bi-x-circle"></i> Cancel</button>
-      <button id="cash-modal-submit" class="add-submit-btn"><label><i class="bi bi-check-circle"></i> Save</button>
+      <button id="cash-modal-cancel" class="add-cancel-btn"><label>Cancel</button>
+      <button id="cash-modal-submit" class="add-submit-btn"><label>Save</button>
     </div>
   </div>
 </div>
@@ -1114,7 +1114,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
     <h3>Add Subscription</h3>
     <div class="form-row-2col">
       <div class="add-field">
-        <label><i class="bi bi-cloud-plus"></i> Service Name</label>
+        <label>Service Name</label>
         <input type="text" id="add-title">
       </div>
       <div class="add-field">
@@ -1124,11 +1124,11 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
     </div>
     <div class="form-row-2col">
       <div class="add-field">
-        <label><i class="bi bi-currency-dollar"></i> Monthly Price</label>
+        <label>Monthly Price</label>
         <input type="number" id="add-amount">
       </div>
       <div class="add-field">
-        <label><i class="bi bi-currency-dollar"></i> Total Price</label>
+        <label>Total Price</label>
         <input type="number" id="add-total-amount">
       </div>
     </div>
@@ -1143,8 +1143,8 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
       </div>
     </div>
     <div class="add-actions">
-      <button class="add-cancel-btn" id="add-cancel-btn"><label><i class="bi bi-x-circle"></i> Cancel</button>
-      <button class="add-submit-btn" id="add-submit-btn"><label><i class="bi bi-check-circle"></i> Save</button>
+      <button class="add-cancel-btn" id="add-cancel-btn">Cancel</button>
+      <button class="add-submit-btn" id="add-submit-btn">Save</button>
     </div>
     <div class="add-status" id="add-status"></div>
   </div>
@@ -5093,12 +5093,12 @@ document.addEventListener("DOMContentLoaded", function () {
       <div style="display: flex; gap: 12px;">
         <button onclick="closeModal()" 
                 id="modalCancelBtn"
-                style="flex: 1; padding: 14px; background: #1e222b; border: 1px solid #2d313c; color: #cbd5e1; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                style="flex: 1; font-family:Lexend!important; padding: 14px; background: #1e222b; border: 1px solid #2d313c; color: #cbd5e1; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
           Cancel
         </button>
         <button onclick="processTransaction('${type}')" 
                 class="btn-submit-tx"
-                style="flex: 2; padding: 14px; background: #2d3748; border: none; color: #ffffff; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;"
+                style="flex: 2; font-family:Lexend!important; padding: 14px; background: #2d3748; border: none; color: #ffffff; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;"
                 onmouseover="this.style.background='#3a465c'" 
                 onmouseout="this.style.background='#2d3748'">
           Confirm Transaction
