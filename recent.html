@@ -5045,6 +5045,56 @@ function setupGlobalInteractivePhysics() {
   const container = document.getElementById('historyListContainer');
   if (!container) return;
 
+  if (!document.getElementById('ca-history-responsive-styles')) {
+    const styleNode = document.createElement('style');
+    styleNode.id = 'ca-history-responsive-styles';
+    styleNode.innerHTML = `
+      .sub-swipe-container:last-child { border-bottom: none !important; }
+      
+      /* Base Responsive Display Utilities */
+      .ca-d-inline { display: inline !important; }
+      .ca-d-none { display: none !important; }
+      .tx-group-hdr{margin-top:10px!important;font-weight: 300!important;}
+      
+      /* --- Adaptive Layout Sizing using increased vw units --- */
+      @media (max-width: 400px) {
+        .ca-history-row { padding: 1.5vw 1.2vw !important; gap: 2.5vw !important; }
+        .ca-history-icon-wrap { width: 5.5vw !important; }
+        .ca-history-ico { width: 5.5vw !important; height: 5.5vw !important; max-width: 9vw !important; max-height: 9vw !important; }
+        .ca-history-fb { width: 5.5vw !important; height: 5.5vw !important; font-size: 4vw !important; }
+        
+        .ca-history-ttl,.ca-history-dtl { font-size: 3.4vw !important; }
+        .ca-history-badge-txt { font-size: 2.8vw !important; }
+        .ca-history-dte,.tx-group-hdr { font-size: 3.2vw !important; }
+        
+        .ca-history-rgt-wrap { display: flex; flex-direction: row; align-items: center; gap: 2.5vw; flex-shrink: 0; }
+        .ca-history-amt { font-size: 3.4vw !important; min-width:60px; padding-right: 2vw !important; text-align: right; font-weight: 600; white-space: nowrap; }
+        
+        .ca-display-desktop { display: none !important; }
+        .ca-display-mobile { display: inline !important; }
+      }
+
+      @media (min-width: 401px) {
+        .ca-history-row { padding: 1.2vw 1.2vw !important; gap: 2vw !important; }
+        .ca-history-icon-wrap { width: 5.5vw !important; }
+        .ca-history-ico { width: 4.5vw !important; height: 4.5vw !important; max-width: 5.5vw !important; max-height: 5.5vw !important; }
+        .ca-history-fb { width: 4.5vw !important; height: 4.5vw !important; font-size: 2.4vw !important; }
+        
+        .ca-history-ttl { font-size: 2.6vw !important; }
+        .ca-history-dtl { font-size: 2.6vw !important; } 
+        .ca-history-badge-txt { font-size: 2.2vw !important; }
+        .ca-history-dte,.tx-group-hdr { font-size: 2.2vw !important;}
+        
+        .ca-history-rgt-wrap { display: flex; flex-direction: row; align-items: center; gap: 2vw; flex-shrink: 0; min-width: max-content; }
+        .ca-history-amt { font-size: 2.6vw !important; min-width:90px;padding-right: 0px !important; text-align: right; font-weight: 600; white-space: nowrap; }
+        
+        .ca-display-desktop { display: inline !important; }
+        .ca-display-mobile { display: none !important; }
+      }
+    `;
+    document.head.appendChild(styleNode);
+  }
+
   container.innerHTML = '<div class="history-loading" style="padding: 1vw 0; text-align: center; color: rgba(255,255,255,0.45); font-size: 1.6vw;">Loading transaction records...</div>';
 
   function getPeriodHeader(dateStr) {
@@ -5052,7 +5102,7 @@ function setupGlobalInteractivePhysics() {
       var d = new Date(dateStr);
       if (isNaN(d.getTime())) return "Other";
       
-      var now = new Date(); // 2026
+      var now = new Date();
       var diffMonths = (now.getFullYear() - d.getFullYear()) * 12 + (now.getMonth() - d.getMonth());
       
       if (diffMonths === 0) return "This Month";
@@ -5113,55 +5163,57 @@ function setupGlobalInteractivePhysics() {
           var periodGroup = getPeriodHeader(dateVal);
           if (periodGroup !== currentPeriod) {
             currentPeriod = periodGroup;
-            htmlMarkup += `<div class="tx-group-hdr" style="padding: 1.2vw 0 0.4vw; margin-top: 0.1vw; font-size: 1.8vw;">${currentPeriod}</div>`;
+            htmlMarkup += `<div class="tx-group-hdr" style="padding: 1vw 0 0.3vw; margin-top: 0.1vw; font-size: 1.8vw;">${currentPeriod}</div>`;
           }
 
-          // Short Date Formatter (MMM dd)
-          var shortDate = "MMM dd";
+          var formattedDateStr = "MMM dd";
           try {
             var dObj = new Date(dateVal);
             if (!isNaN(dObj.getTime())) {
-              shortDate = dObj.toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
+              var monthName = dObj.toLocaleDateString('en-US', { month: 'short' });
+              var dayNum = String(dObj.getDate()).padStart(2, '0');
+              formattedDateStr = monthName + ' ' + dayNum;
             }
           } catch(e) {}
 
+          var absoluteAmt = Math.abs(cleanAmt);
+          var fullAmountText = isNaN(absoluteAmt) ? amountRaw : new Intl.NumberFormat('vi-VN').format(absoluteAmt);
           var shortAmountText = formatShortNum(cleanAmt);
 
           var isNegative = cleanAmt < 0;
           var amountPrefix = isNegative ? '-' : '+';
-          var themeColor = isNegative ? 'rgb(255, 105, 180)' : '#00b4d8'; 
-          var badgeBg    = isNegative ? 'rgba(255, 105, 180, 0.1)' : 'rgba(0, 180, 216, 0.1)';
+          var themeColor = isNegative ? 'rgb(255, 105, 180)' : '#14b8a6'; // Custom Pink vs New Green Teal
+          var badgeBg    = isNegative ? 'rgba(255, 105, 180, 0.1)' : 'rgba(20, 184, 166, 0.1)';
 
-          // Strict micro sizing for icons (3.2vw handles full scaling visibility beautifully)
           var iconHtml = '';
           if (incomeIconUrl && incomeIconUrl.toLowerCase() !== 'n/a') {
-            iconHtml = `<img src="${incomeIconUrl}" class="ico" style="width: 3.2vw; height: 3.2vw; max-width: 3.2vw; max-height: 3.2vw; padding: 0.2vw;" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`;
+            iconHtml = `<img src="${incomeIconUrl}" class="ico ca-history-ico" style="padding: 0.1vw;" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`;
           }
           var fallbackLetter = (typeVal || "?").charAt(0).toUpperCase();
-          iconHtml += `<div class="ico-fb" style="width: 3.2vw; height: 3.2vw; font-size: 1.8vw; display: ${incomeIconUrl ? 'none' : 'flex'}">${fallbackLetter}</div>`;
+          iconHtml += `<div class="ico-fb ca-history-fb" style="display: ${incomeIconUrl ? 'none' : 'flex'}">${fallbackLetter}</div>`;
 
           var accountBadgeHtml = '';
           if (accountVal) {
             accountBadgeHtml = `
               <div style="display: inline-flex; align-items: center; gap: 0.4vw; background: ${badgeBg}; padding: 0.2vw 0.8vw; border-radius: 4px; margin-left: 0.8vw;">
                 ${accountIconUrl ? `<img src="${accountIconUrl}" style="width: 2.2vw; height: 2.2vw; object-fit: contain; border-radius: 50%;" />` : ''}
-                <span style="color: ${themeColor}; font-size: 1.7vw; font-weight: 600; letter-spacing: 0.02em;">${accountVal}</span>
+                <span class="ca-history-badge-txt" style="color: ${themeColor}; font-weight: 600; letter-spacing: 0.02em;">${accountVal}</span>
               </div>
             `;
           }
 
           htmlMarkup += `
             <div class="sub-swipe-container" style="border-bottom: 1px solid rgba(255,255,255,0.02); background: transparent;">
-              <div class="subs-row" style="display: flex; align-items: center; padding: 0.6vw 0.5vw; gap: 1.2vw;">
+              <div class="subs-row ca-history-row" style="display: flex; align-items: center;">
                 
-                <div style="display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 3.2vw;">
+                <div class="ca-history-icon-wrap" style="display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                   ${iconHtml}
                 </div>
 
                 <div class="mid" style="display: flex; align-items: center; justify-content: space-between; gap: 1.2vw; min-width: 0;">
                   <div style="display: flex; align-items: center; gap: 0.8vw; min-width: 0; flex: 1;">
-                    <span class="ttl" style="margin-bottom: 0; font-size: 1.9vw; flex-shrink: 0;">${typeVal}</span>
-                    <span class="dtl" style="font-size: 1.6vw; color: rgba(255,255,255,0.35); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;">
+                    <span class="ttl ca-history-ttl" style="margin-bottom: 0; flex-shrink: 0;">${typeVal}</span>
+                    <span class="dtl ca-history-dtl" style="color: rgba(255,255,255,0.35); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;">
                       — ${detailVal}
                     </span>
                     ${accountBadgeHtml}
@@ -5169,11 +5221,14 @@ function setupGlobalInteractivePhysics() {
                 </div>
 
                 <div class="rgt" style="flex-direction: row; align-items: center; gap: 1.2vw; flex-shrink: 0;">
-                  <div class="dte" style="background: rgba(255,255,255,0.04); padding: 0.2vw 0.6vw; border-radius: 3px; font-size: 1.4vw; font-family: sans-serif; color: rgba(255,255,255,0.5); text-transform: uppercase;">
-                    ${shortDate}
+                  <div class="dte ca-history-dte" style="background: rgba(255,255,255,0.04); padding: 0.2vw 0.6vw; border-radius: 3px; font-family: sans-serif; color: rgba(255,255,255,0.5);">
+                    ${formattedDateStr}
                   </div>
-                  <div class="amt" style="color: ${themeColor}; font-size: 2.1vw; width: 10vw; text-align: right; font-weight: 600;">
-                    ${amountPrefix}${shortAmountText}
+                  
+                  <div class="amt ca-history-amt" style="color: ${themeColor}; text-align: right; font-weight: 600;">
+                    <!-- Handled through absolute display blocks to prevent layout overlaps -->
+                    <span class="ca-display-desktop">${amountPrefix}${fullAmountText}</span>
+                    <span class="ca-display-mobile">${amountPrefix}${shortAmountText}</span>
                   </div>
                 </div>
 
@@ -5189,7 +5244,7 @@ function setupGlobalInteractivePhysics() {
       console.warn("ca-history-list:", err.message);
       container.innerHTML = `<div class="history-error" style="padding: 2vw; text-align: center; color: rgb(255, 105, 180); font-size: 1.6vw;">Failed to load transaction logs.</div>`;
     });
-}
+  }
 
   function reorderCards(selectedIndex) {
     const targetCard = cardsList.splice(selectedIndex, 1)[0];
@@ -6068,6 +6123,10 @@ function setupGlobalInteractivePhysics() {
         clearBtn.style.display = numericVal > 0 ? 'block' : 'none';
     }
 
+    // SUCCESS FIX: Recalculate and render dynamic chips on every keystroke
+    if (typeof window.generateDynamicChips === 'function') {
+        window.generateDynamicChips(numericVal);
+    }
   };
 
   window.initTransferDropdownListeners = function() {
