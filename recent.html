@@ -760,7 +760,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
     <!--<img src="https://github.com/tinsntp/investment/blob/main/icon/incomes.png?raw=true" />-->
     <span>Recent</span>
   </div>
-  <div class="tab-btn" data-idx="2" id="tab-btn-2">
+  <div class="tab-btn" data-idx="5" id="tab-btn-5">
     <i class="bi bi-activity"></i>
     <!--<img src="https://github.com/tinsntp/investment/blob/main/icon/incomes.png?raw=true" />-->
     <span>Overview</span>
@@ -774,7 +774,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
     <!--<img src="https://github.com/tinsntp/investment/blob/main/icon/incomes.png?raw=true" />-->
     <span>BTC</span>
   </div>
-  <div class="tab-btn" data-idx="5" id="tab-btn-5">
+  <div class="tab-btn" data-idx="2" id="tab-btn-2">
     <i class="bi bi-arrow-down-up"></i>
     <span>Transaction</span>
   </div>
@@ -826,7 +826,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
       <div id="tx-list"></div>
     </div>
     <!-- OVERVIEW SLIDE -->
-    <div class="slide" id="slide-2" data-idx="2">
+    <div class="slide" id="slide-5" data-idx="5">
       <div id="ca-wrap">
         <!-- Left column: Balance Sheet & Wallet Controls -->
         <div id="ca-col-left">
@@ -843,6 +843,13 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
                     <span class="material-icons-round">timelapse</span>
                     <span>Total Balance</span>
                     <span class="material-icons-round" id="visibilityToggle" style="cursor: pointer; font-size: 15px; color: #666;" onclick="toggleVisibility()">visibility</span>
+                    <span class="material-icons-round" id="refreshCardsBtn" 
+                          style="cursor: pointer; font-size: 15px; color: #666; transition: transform 0.3s ease; display: flex; align-items: center; justify-content: center;" 
+                          onclick="window.handleRefreshCards(event)"
+                          onmouseover="this.style.color='#f8f9fa'; this.style.transform='rotate(180deg)';" 
+                          onmouseout="this.style.color='#666'; this.style.transform='rotate(0deg)';">
+                      refresh
+                    </span>
                   </div>
                   <div class="total-balance-value" id="totalBalance">0 đ</div>
                   <div class="usd-equivalence">
@@ -1157,7 +1164,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 
 
     <!-- TRANSACTION SLIDE -->
-    <div class="slide" id="slide-5" data-idx="5">
+    <div class="slide" id="slide-2" data-idx="2">
       
     </div>
     <!-- F.I.R.E. SLIDE -->
@@ -1330,6 +1337,7 @@ function switchTab(idx) {
 
   // =========================================================================
   // DYNAMIC AUTO-REFRESH ROUTER
+  //  0 Detail 1 Recent 5 Overview 3 Subs 4 BTC 2 Transaction 6 F.I.R.E.
   // =========================================================================
   switch (parseInt(idx)) {
     case 0:
@@ -1350,204 +1358,38 @@ function switchTab(idx) {
       break;
     
     case 5:
-      if (typeof renderCards === "function") renderCards();
+      if (typeof renderCards === "function") {
+        renderCards();
+      }
+      
+      if (typeof caLoadAccounts === "function") {
+        caLoadAccounts();
+      }
+
+      // 2. Safe Execution for Transaction History
+      if (typeof loadTransactionHistory === "function") {
+        try {
+          loadTransactionHistory();
+        } catch (error) {
+          // If the metric ring variables are in a TDZ state, catch it gracefully
+          console.warn("Transaction history waiting on metrics data initialization:", error.message);
+        }
+      }
       break;
     
-    default:
-      // Optional: Add log statement or fallbacks for development tracking
-      //console.log("Switched to tab " + idx + " (No custom loader mapped)");
-      break;
-  }
-}
-
-function positionTabLine() {
-  var visibleBtns = Array.prototype.slice.call(document.querySelectorAll(".tab-btn"))
-    .filter(function(b) { return window.getComputedStyle(b).display !== "none"; });
-  var line = document.getElementById("tab-line");
-  var ab = visibleBtns.find(function(b) { return parseInt(b.dataset.idx) === currentTab; });
-  if (!ab) return;
-  line.style.left = ab.offsetLeft+"px";
-  line.style.width = ab.offsetWidth+"px";
-}
-
-/* ══ DRAG TO REORDER TABS (with tap-to-switch support, content follows) ══ */
-(function() {
-  var tabBar = document.getElementById("tab-bar");
-  var slidesWrap = document.getElementById("slides-wrap");
-  var dragEl = null;
-  var startX = 0;
-  var placeholder = null;
-  var pointerId = null;
-  var isDragging = false;      // becomes true only once movement passes threshold
-  var DRAG_THRESHOLD = 6;      // px — below this, treat as a tap not a drag
-
-  function getTabs() {
-    return Array.prototype.slice.call(tabBar.querySelectorAll(".tab-btn"));
-  }
-
-  function beginDragVisuals() {
-    var rect = dragEl.getBoundingClientRect();
-
-    placeholder = document.createElement("div");
-    placeholder.className = "tab-btn";
-    placeholder.style.visibility = "hidden";
-    placeholder.style.flex = window.getComputedStyle(dragEl).flex;
-    tabBar.insertBefore(placeholder, dragEl);
-
-    dragEl.style.position = "fixed";
-    dragEl.style.left = rect.left + "px";
-    dragEl.style.top = rect.top + "px";
-    dragEl.style.width = rect.width + "px";
-    dragEl.style.height = rect.height + "px";
-    dragEl.style.zIndex = "1000";
-    dragEl.style.pointerEvents = "none";
-    dragEl.style.transition = "none";
-
-    document.getElementById("tab-line").style.display = "none";
-  }
-
-  function onPointerDown(e) {
-    var btn = e.target.closest(".tab-btn");
-    if (!btn) return;
-    dragEl = btn;
-    pointerId = e.pointerId;
-    startX = e.clientX;
-    isDragging = false;
-
-    dragEl.setPointerCapture(pointerId);
-
-    tabBar.addEventListener("pointermove", onPointerMove);
-    tabBar.addEventListener("pointerup", onPointerUp);
-    tabBar.addEventListener("pointercancel", onPointerCancel);
-  }
-
-  function onPointerMove(e) {
-    if (!dragEl) return;
-    var dx = e.clientX - startX;
-
-    if (!isDragging) {
-      if (Math.abs(dx) < DRAG_THRESHOLD) return; // still just a tap so far
-      isDragging = true;
-      beginDragVisuals();
-    }
-
-    var rect = placeholder.getBoundingClientRect();
-    dragEl.style.left = (rect.left + dx) + "px";
-
-    var dragCenter = e.clientX;
-    var tabs = getTabs().filter(function(t) { return t !== dragEl && t !== placeholder; });
-
-    for (var i = 0; i < tabs.length; i++) {
-      var r = tabs[i].getBoundingClientRect();
-      var center = r.left + r.width / 2;
-      if (dragCenter < center) {
-        if (tabs[i] !== placeholder.nextSibling) {
-          tabBar.insertBefore(placeholder, tabs[i]);
-        }
-        return;
-      }
-    }
-    tabBar.appendChild(placeholder);
-  }
-
-  function cleanupListeners() {
-    tabBar.removeEventListener("pointermove", onPointerMove);
-    tabBar.removeEventListener("pointerup", onPointerUp);
-    tabBar.removeEventListener("pointercancel", onPointerCancel);
-    if (dragEl && pointerId !== null) {
-      try { dragEl.releasePointerCapture(pointerId); } catch (e) {}
+      default:
+        
+        break;
     }
   }
 
-  function onPointerUp(e) {
-    if (!dragEl) return;
-
-    if (!isDragging) {
-      // It was just a tap — switch to this tab directly.
-      var tappedIdx = parseInt(dragEl.dataset.idx);
-      cleanupListeners();
-      dragEl = null;
-      placeholder = null;
-      switchTab(tappedIdx);
-      return;
-    }
-
-    cleanupListeners();
-
-    tabBar.insertBefore(dragEl, placeholder);
-    placeholder.remove();
-    placeholder = null;
-
-    dragEl.style.position = "";
-    dragEl.style.left = "";
-    dragEl.style.top = "";
-    dragEl.style.width = "";
-    dragEl.style.height = "";
-    dragEl.style.zIndex = "";
-    dragEl.style.pointerEvents = "";
-    dragEl.style.transition = "";
-
-    document.getElementById("tab-line").style.display = "";
-
-    var droppedIdx = parseInt(dragEl.dataset.idx);
-    dragEl = null;
-
-    // Reorder the content slides to match the new tab order
-    var newOrder = getTabs().map(function(b) { return parseInt(b.dataset.idx); });
-    var slides = Array.prototype.slice.call(slidesWrap.querySelectorAll(".slide"));
-    newOrder.forEach(function(idx) {
-      var slide = slides.find(function(s) { return parseInt(s.dataset.idx) === idx; });
-      if (slide) slidesWrap.appendChild(slide);
-    });
-
-    // Treat the drop itself as also selecting that tab
-    switchTab(droppedIdx);
-    saveTabOrder(newOrder);
-  }
-
-  function onPointerCancel() {
-    if (!dragEl) return;
-    cleanupListeners();
-
-    if (isDragging && placeholder) {
-      tabBar.insertBefore(dragEl, placeholder);
-      placeholder.remove();
-      dragEl.style.position = "";
-      dragEl.style.left = "";
-      dragEl.style.top = "";
-      dragEl.style.width = "";
-      dragEl.style.height = "";
-      dragEl.style.zIndex = "";
-      dragEl.style.pointerEvents = "";
-      dragEl.style.transition = "";
-      document.getElementById("tab-line").style.display = "";
-    }
-    placeholder = null;
-    dragEl = null;
-    isDragging = false;
-    positionTabLine();
-  }
-
-  tabBar.addEventListener("pointerdown", onPointerDown);
-})();
-
-
-/* ══ SHARED UTILS ══ */
-function parseCsvRow(line) {
-  var cols=[], cur="", inQ=false;
-  for (var i=0;i<line.length;i++) {
-    var c=line[i];
-    if(c==='"'){inQ=!inQ;}
-    else if(c===','&&!inQ){cols.push(cur.replace(/^"|"$/g,"").trim());cur="";}
-    else{cur+=c;}
-  }
-  cols.push(cur.replace(/^"|"$/g,"").trim()); return cols;
-}
-function parseNum(s){if(!s)return 0;s=s.trim();if(s.charAt(0)==="("&&s.charAt(s.length-1)===")") s="-"+s.slice(1,-1);s=s.replace(/[^\d.\-]/g,"");var v=parseFloat(s);return isNaN(v)?0:v;}
-function parseVal(s){if(!s)return NaN;s=s.trim();if(s.charAt(0)==="("&&s.charAt(s.length-1)===")") s="-"+s.slice(1,-1);s=s.replace(/[^\d.\-]/g,"");return parseFloat(s);}
-function fmtK(v){var a=Math.abs(v);if(a>=1000000)return"\u20ab"+(v/1000000).toFixed(1)+"M";if(a>=1000)return"\u20ab"+Math.round(v/1000)+"K";return"\u20ab"+Math.round(v);}
-function pctInfo(curr,last){if(!last||last===0)return{html:"\u2014",cls:"flat"};var pct=(curr-last)/Math.abs(last)*100;if(Math.abs(pct)<0.5)return{html:"\u00b10%",cls:"flat"};var cls=pct>0?"up":"down";var arrow=pct>0?'<i class="bi bi-caret-up-fill"></i>':'<i class="bi bi-caret-down-fill"></i>';return{html:arrow+Math.abs(pct).toFixed(0)+"%",cls:cls}}
-function ringColor(pct){if(pct>90)return"rgba(255,255,255,0.8)";if(pct>70)return"#fbbf24";return"#14b8a6";}
+  function positionTabLine(){var visibleBtns=Array.prototype.slice.call(document.querySelectorAll(".tab-btn")).filter(function(b){return window.getComputedStyle(b).display!=="none"});var line=document.getElementById("tab-line");var ab=visibleBtns.find(function(b){return parseInt(b.dataset.idx)===currentTab});if(!ab)return;line.style.left=ab.offsetLeft+"px";line.style.width=ab.offsetWidth+"px"}(function(){var tabBar=document.getElementById("tab-bar");var slidesWrap=document.getElementById("slides-wrap");var dragEl=null;var startX=0;var placeholder=null;var pointerId=null;var isDragging=false;var DRAG_THRESHOLD=6;function getTabs(){return Array.prototype.slice.call(tabBar.querySelectorAll(".tab-btn"))}function beginDragVisuals(){var rect=dragEl.getBoundingClientRect();placeholder=document.createElement("div");placeholder.className="tab-btn";placeholder.style.visibility="hidden";placeholder.style.flex=window.getComputedStyle(dragEl).flex;tabBar.insertBefore(placeholder,dragEl);dragEl.style.position="fixed";dragEl.style.left=rect.left+"px";dragEl.style.top=rect.top+"px";dragEl.style.width=rect.width+"px";dragEl.style.height=rect.height+"px";dragEl.style.zIndex="1000";dragEl.style.pointerEvents="none";dragEl.style.transition="none";document.getElementById("tab-line").style.display="none"}function onPointerDown(e){var btn=e.target.closest(".tab-btn");if(!btn)return;dragEl=btn;pointerId=e.pointerId;startX=e.clientX;isDragging=false;dragEl.setPointerCapture(pointerId);tabBar.addEventListener("pointermove",onPointerMove);tabBar.addEventListener("pointerup",onPointerUp);tabBar.addEventListener("pointercancel",onPointerCancel)}function onPointerMove(e){if(!dragEl)return;var dx=e.clientX-startX;if(!isDragging){if(Math.abs(dx)<DRAG_THRESHOLD)return;isDragging=true;beginDragVisuals()}var rect=placeholder.getBoundingClientRect();dragEl.style.left=(rect.left+dx)+"px";var dragCenter=e.clientX;var tabs=getTabs().filter(function(t){return t!==dragEl&&t!==placeholder});for(var i=0;i<tabs.length;i++){var r=tabs[i].getBoundingClientRect();var center=r.left+r.width/2;if(dragCenter<center){if(tabs[i]!==placeholder.nextSibling){tabBar.insertBefore(placeholder,tabs[i])}return}}tabBar.appendChild(placeholder)}function cleanupListeners(){tabBar.removeEventListener("pointermove",onPointerMove);tabBar.removeEventListener("pointerup",onPointerUp);tabBar.removeEventListener("pointercancel",onPointerCancel);if(dragEl&&pointerId!==null){try{dragEl.releasePointerCapture(pointerId)}catch(e){}}}function onPointerUp(e){if(!dragEl)return;if(!isDragging){var tappedIdx=parseInt(dragEl.dataset.idx);cleanupListeners();dragEl=null;placeholder=null;switchTab(tappedIdx);return}cleanupListeners();tabBar.insertBefore(dragEl,placeholder);placeholder.remove();placeholder=null;dragEl.style.position="";dragEl.style.left="";dragEl.style.top="";dragEl.style.width="";dragEl.style.height="";dragEl.style.zIndex="";dragEl.style.pointerEvents="";dragEl.style.transition="";document.getElementById("tab-line").style.display="";var droppedIdx=parseInt(dragEl.dataset.idx);dragEl=null;var newOrder=getTabs().map(function(b){return parseInt(b.dataset.idx)});var slides=Array.prototype.slice.call(slidesWrap.querySelectorAll(".slide"));newOrder.forEach(function(idx){var slide=slides.find(function(s){return parseInt(s.dataset.idx)===idx});if(slide)slidesWrap.appendChild(slide)});switchTab(droppedIdx);saveTabOrder(newOrder)}function onPointerCancel(){if(!dragEl)return;cleanupListeners();if(isDragging&&placeholder){tabBar.insertBefore(dragEl,placeholder);placeholder.remove();dragEl.style.position="";dragEl.style.left="";dragEl.style.top="";dragEl.style.width="";dragEl.style.height="";dragEl.style.zIndex="";dragEl.style.pointerEvents="";dragEl.style.transition="";document.getElementById("tab-line").style.display=""}placeholder=null;dragEl=null;isDragging=false;positionTabLine()}tabBar.addEventListener("pointerdown",onPointerDown)})(); 
+  function parseCsvRow(line){var cols=[],cur="",inQ=false;for(var i=0;i<line.length;i++){var c=line[i];if(c==='"'){inQ=!inQ}else if(c===','&&!inQ){cols.push(cur.replace(/^"|"$/g,"").trim());cur=""}else{cur+=c}}cols.push(cur.replace(/^"|"$/g,"").trim());return cols}
+  function parseNum(s){if(!s)return 0;s=s.trim();if(s.charAt(0)==="("&&s.charAt(s.length-1)===")") s="-"+s.slice(1,-1);s=s.replace(/[^\d.\-]/g,"");var v=parseFloat(s);return isNaN(v)?0:v;}
+  function parseVal(s){if(!s)return NaN;s=s.trim();if(s.charAt(0)==="("&&s.charAt(s.length-1)===")") s="-"+s.slice(1,-1);s=s.replace(/[^\d.\-]/g,"");return parseFloat(s);}
+  function fmtK(v){var a=Math.abs(v);if(a>=1000000)return"\u20ab"+(v/1000000).toFixed(1)+"M";if(a>=1000)return"\u20ab"+Math.round(v/1000)+"K";return"\u20ab"+Math.round(v);}
+  function pctInfo(curr,last){if(!last||last===0)return{html:"\u2014",cls:"flat"};var pct=(curr-last)/Math.abs(last)*100;if(Math.abs(pct)<0.5)return{html:"\u00b10%",cls:"flat"};var cls=pct>0?"up":"down";var arrow=pct>0?'<i class="bi bi-caret-up-fill"></i>':'<i class="bi bi-caret-down-fill"></i>';return{html:arrow+Math.abs(pct).toFixed(0)+"%",cls:cls}}
+  function ringColor(pct){if(pct>90)return"rgba(255,255,255,0.8)";if(pct>70)return"#fbbf24";return"#14b8a6";}
 
 /* ══ DETAIL TAB ══ */
 var CSV_EXPENSE = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1324702331";
@@ -6525,7 +6367,31 @@ function setupGlobalInteractivePhysics() {
     dropdown.innerHTML = optionsHtml;
   }
   
-  
+  window.handleRefreshCards = function(event) {
+    if (event) event.stopPropagation();
+
+    // 1. Visual click feedback (spin the refresh wheel)
+    const refreshBtn = document.getElementById('refreshCardsBtn');
+    if (refreshBtn) {
+      refreshBtn.style.transition = 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+      refreshBtn.style.transform = 'rotate(360deg)';
+      setTimeout(() => {
+        refreshBtn.style.transform = 'rotate(0deg)';
+      }, 500);
+    }
+
+    // 2. Wipe the slate clean, fetch fresh states, and rebuild the cards completely
+    if (typeof renderCards === 'function') {
+      renderCards();
+    } else if (typeof window.renderCards === 'function') {
+      window.renderCards();
+    }
+
+    // Reload financial account assets balances and update raw structural history tracking logs safely
+    if (typeof caLoadAccounts === 'function') caLoadAccounts();
+    if (typeof loadTransactionHistory === 'function') loadTransactionHistory();
+    
+  };
 
 </script>
 
