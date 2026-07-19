@@ -2053,7 +2053,7 @@ function caRenderList(data) {
           ${pct.toFixed(0)}%
         </span>
       </div>
-      <div class="ca-list-val" style="text-align: right; flex-shrink: 0; min-width: ${pcMw}; font-weight: 600; font-size: 12.5px; color: ${valColor}; font-variant-numeric: tabular-nums; letter-spacing: -0.3px;">
+      <div class="ca-list-val" style="text-align: right; flex-shrink: 0; min-width: ${pcMw}; font-weight: 400; font-size: 12.5px; color: ${valColor}; font-variant-numeric: tabular-nums; letter-spacing: -0.3px;">
         ${amtNumber}
       </div>
     `;
@@ -2980,7 +2980,7 @@ function renderSubscriptions(items) {
       imgEl.style.width = "100%";
       imgEl.style.height = "100%";
       imgEl.style.objectFit = "contain";
-      imgEl.style.borderRadius = "2vw";
+      imgEl.style.borderRadius = "2.5vw";
       imgEl.onerror = (function(el, fallbackIcon){
         return function(){
           el.style.background = fallbackIcon.bg;
