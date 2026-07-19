@@ -927,7 +927,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
             </div>
             
             <!-- ENHANCED DROPDOWN SELECTOR BLOCK -->
-            <div class="filter-dropdown-wrapper" style="position: relative; font-family: 'DM Sans', sans-serif; min-width: 135px; z-index: 10;">
+            <div class="filter-dropdown-wrapper" style="position: relative; font-family: 'DM Sans', sans-serif; min-width: 125px; z-index: 10;">
               
               <!-- Toggle Trigger -->
               <div class="filter-dropdown-trigger" 
@@ -5068,7 +5068,7 @@ function setupGlobalInteractivePhysics() {
         
         .ca-history-ttl,.ca-history-dtl { font-size: 3.4vw !important; }
         .ca-history-badge-txt { font-size: 2.8vw !important; }
-        .ca-history-dte,.tx-group-hdr { font-size: 3.2vw !important; }
+        .ca-history-dte,.tx-group-hdr { font-size: 3.3vw !important; }
         
         .ca-history-rgt-wrap { display: flex; flex-direction: row; align-items: center; gap: 2.5vw; flex-shrink: 0; }
         .ca-history-amt { font-size: 3.4vw !important; min-width:50px; padding-right: 2vw !important; text-align: right; font-weight: 600; white-space: nowrap; }
@@ -5086,7 +5086,7 @@ function setupGlobalInteractivePhysics() {
         .ca-history-ttl { font-size: 2.6vw !important; }
         .ca-history-dtl { font-size: 2.6vw !important; } 
         .ca-history-badge-txt { font-size: 2.2vw !important; }
-        .ca-history-dte,.tx-group-hdr { font-size: 2.2vw !important;}
+        .ca-history-dte,.tx-group-hdr { font-size: 2.5vw !important;}
         
         .ca-history-rgt-wrap { display: flex; flex-direction: row; align-items: center; gap: 2vw; flex-shrink: 0; min-width: max-content; }
         .ca-history-amt { font-size: 2.6vw !important; min-width:100px;padding-right: 0px !important; text-align: right; font-weight: 600; white-space: nowrap; }
@@ -5426,13 +5426,7 @@ function setupGlobalInteractivePhysics() {
             <div style="background: #111216; border: 0px solid #2d313c; border-radius: 16px; padding: 14px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; position: relative;">
               
               <!-- FROM SECTION (TOP) -->
-              <div style="display: flex; flex-direction: column; width: 100%; gap: 6px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                  <div style="color: #6c757d; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500;"></div>
-                  <!-- MAX BUTTON INTEGRATED HERE -->
-                  <span onclick="window.applyMaxBalance()" style="color: #8a3ffc; font-size: 11px; font-weight: 600; cursor: pointer; background: rgba(138, 63, 252, 0.1); padding: 2px 6px; border-radius: 4px; user-select: none;">MAX</span>
-                </div>
-                
+              <div style="display: flex; flex-direction: column; width: 100%; gap: 6px;">         
                 <div class="premium-select-wrapper" style="position: relative; width: 100%;">
                   <div class="custom-select-trigger" id="transferFromTrigger" onclick="window.toggleTransferDropdown('from', event)" style="padding: 10px 12px; background: #22252d; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: space-between; width: 100%; box-sizing: border-box; cursor: pointer;">
                     <div style="display: flex; align-items: center; gap: 8px; min-width: 0; flex: 1;">
@@ -5477,7 +5471,11 @@ function setupGlobalInteractivePhysics() {
 
             <!-- BOTTOM CARD: VALUE TRACKING NUMERIC ELEMENT -->
             <div style="background: #111216; border: 0px solid #2d313c; border-radius: 16px; padding: 14px; box-sizing: border-box;">
-              <div style="color: #6c757d; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Amount (VND)</div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                <div style="color: #6c757d; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Amount (VND)</div>
+                  <span onclick="window.applyMaxBalance()" style="color: #8a3ffc; font-size: 11px; font-weight: 600; cursor: pointer; background: rgba(138, 63, 252, 0.1); padding: 2px 6px; border-radius: 4px; user-select: none;">MAX</span>
+                </div>
               <div style="position: relative; display: flex; align-items: center;">
                 <input type="text" 
                       id="transactionAmount" 
@@ -6340,9 +6338,9 @@ function setupGlobalInteractivePhysics() {
   }
   });
 
-  // 1. OPEN/CLOSE DISPLAY HANDLING
+  // 1. DROPDOWN TOGGLE CONTEXT
   window.toggleFilterDropdown = function(event) {
-    event.stopPropagation();
+    event.stopPropagation(); // Stop immediate bubbling to document listener
     const optionsPanel = document.getElementById('transactionFilterOptions');
     const arrowIcon = document.getElementById('filterDropdownArrow');
     
@@ -6354,42 +6352,33 @@ function setupGlobalInteractivePhysics() {
     if (!isCurrentlyOpen) {
       optionsPanel.style.display = 'block';
       if (arrowIcon) arrowIcon.style.transform = 'rotate(180deg)';
+      
+      // Explicitly guarantee dropdown list options inherit natural block visibility
+      const optItems = optionsPanel.getElementsByClassName('filter-opt-item');
+      for (let item of optItems) {
+        item.style.setProperty('display', 'flex', 'important');
+      }
     }
   };
 
-  // 2. SELECTION DISPATCHER
-  window.selectTransactionFilter = function(filterType, labelText, iconName) {
+  // 2 & 3. CONSOLIDATED SELECTION DISPATCHER & UI FILTER RULE
+  window.selectTransactionFilter = function(filterVal, displayLabel, iconUrlOrName) {
+    // Update the primary button header component view layout
     const labelElement = document.getElementById('currentFilterLabel');
-    
-    // Color code matching your dashboard themes
     if (labelElement) {
-      let iconColor = '#6c757d';
-      if (filterType === 'deposit') iconColor = '#14b8a6';
-      if (filterType === 'withdraw') iconColor = 'rgb(255, 105, 180)';
-      if (filterType === 'transfer') iconColor = '#8a3ffc';
+      const isVisualUrl = iconUrlOrName && (iconUrlOrName.includes('/') || iconUrlOrName.includes('.'));
+      const visualIconHtml = isVisualUrl 
+        ? `<img src="${iconUrlOrName}" style="width: 15px; height: 15px; object-fit: contain; border-radius: 2px;" alt="">`
+        : `<span class="material-icons-round" style="font-size: 15px;">${iconUrlOrName || 'filter_list'}</span>`;
 
-      labelElement.innerHTML = `
-        <span class="material-icons-round" style="font-size: 15px; color: ${iconColor};">${iconName}</span>
-        ${labelText}
-      `;
+      labelElement.innerHTML = `${visualIconHtml} ${displayLabel}`;
     }
 
-    window.closeAllFilterDropdowns();
-
-    // Execute DOM row sorting
-    window.filterHistoryRowsUI(filterType);
-  };
-
-  // 3. INTERNAL DOM FILTER RULE (Hides/Shows cards seamlessly)
-  window.selectTransactionFilter = function(filterVal, displayLabel) {
-    const selectedLabelEl = document.getElementById('selectedFilterText');
-    if (selectedLabelEl) selectedLabelEl.innerText = displayLabel;
-    
     const container = document.getElementById('historyListContainer');
     if (!container) return;
 
-    // Target ONLY rows inside the transaction history list container
-    const rows = container.getElementsByClassName('sub-swipe-container');
+    // Target ONLY the row nodes, preventing selector leakage into panel components
+    const rows = container.querySelectorAll('#historyListContainer > .sub-swipe-container');
     const query = filterVal.toLowerCase();
 
     for (let row of rows) {
@@ -6404,18 +6393,20 @@ function setupGlobalInteractivePhysics() {
       if (query === 'all') {
         isMatch = true;
       } else if (query === 'deposit') {
-        isMatch = !isNegativeRow;
+        // Must be positive AND must be classified as a deposit row
+        isMatch = !isNegativeRow && (typeAttr.indexOf('deposit') !== -1);
       } else if (query === 'withdraw' || query === 'expense') {
-        isMatch = isNegativeRow;
+        // FIX FOR BUG 2: Check BOTH negative indicator AND that the string explicitly matches the action class type
+        isMatch = isNegativeRow && (typeAttr.indexOf('withdraw') !== -1 || typeAttr.indexOf('expense') !== -1 || typeAttr === query);
       } else {
+        // Dynamic fallback matching criteria for categories pulled from column entries
         isMatch = (typeAttr.indexOf(query) !== -1);
       }
 
-      // TYPO FIXED HERE: Removed the extra .style
       row.style.setProperty('display', isMatch ? 'block' : 'none', 'important');
     }
 
-    // Clear empty timeline period headers
+    // Clear out empty time blocks
     const headers = container.getElementsByClassName('tx-group-hdr');
     for (let hdr of headers) {
       let next = hdr.nextElementSibling;
@@ -6431,16 +6422,8 @@ function setupGlobalInteractivePhysics() {
       hdr.style.display = hasVisibleRows ? 'block' : 'none';
     }
 
-    // Close the dropdown view frame and ensure items stay unhidden
-    const optionsDiv = document.getElementById('transactionFilterOptions');
-    if (optionsDiv) {
-      optionsDiv.style.display = 'none';
-      
-      const optItems = optionsDiv.getElementsByClassName('filter-opt-item');
-      for (let item of optItems) {
-        item.style.display = 'flex';
-      }
-    }
+    // Close the drop panel frame window cleanly without breaking item layout rules
+    window.closeAllFilterDropdowns();
   };
 
   // 4. WINDOW BLUR CLEANUP CLOSURES
@@ -6452,8 +6435,12 @@ function setupGlobalInteractivePhysics() {
     if (arrowIcon) arrowIcon.style.transform = 'rotate(0deg)';
   };
 
-  // Auto close whenever clicking outside the target bounds
-  document.addEventListener('click', function() {
+  // Auto close whenever clicking outside the target container element targets
+  document.addEventListener('click', function(e) {
+    // Prevent immediate window closure if clicking inside the main action wrapper button node
+    const labelBtn = document.getElementById('currentFilterLabel');
+    if (labelBtn && labelBtn.contains(e.target)) return;
+    
     window.closeAllFilterDropdowns();
   });
 
