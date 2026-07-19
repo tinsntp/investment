@@ -471,7 +471,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 /* ══ OVERVIEW SLIDE ══ */
 #slide-2 { padding:0; overflow:hidden; margin-top:10px}
 #ca-wrap { display: block;  width: 100%; }
-
+#ca-section-expense{margin-top:10px}
 #ca-col-left,
 #ca-col-right{display:inline-flex;flex-direction:column;gap:3vw;vertical-align:top;min-width:0;justify-content:flex-start;padding:0;overflow:hidden;margin-top:10px}
 #ca-col-left { width: 60%;}
@@ -927,16 +927,16 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
             </div>
             
             <!-- ENHANCED DROPDOWN SELECTOR BLOCK -->
-            <div class="filter-dropdown-wrapper" style="position: relative; font-family: 'DM Sans', sans-serif; min-width: 145px; z-index: 10;">
+            <div class="filter-dropdown-wrapper" style="position: relative; font-family: 'DM Sans', sans-serif; min-width: 135px; z-index: 10;">
               
               <!-- Toggle Trigger -->
               <div class="filter-dropdown-trigger" 
                   id="transactionFilterTrigger" 
                   onclick="window.toggleFilterDropdown(event)" 
-                  style="padding: 6px 12px; background: #111216; border: 1px solid #2d313c; border-radius: 10px; color: #f8f9fa; font-size: 12px; font-weight: 500; display: flex; align-items: center; justify-content: space-between; gap: 6px; cursor: pointer; user-select: none;">
+                  style="padding: 6px 12px; background: #21242c; border: 0px solid #2d313c; border-radius: 10px; color: #f8f9fa; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: space-between; gap: 6px; cursor: pointer; user-select: none;">
                 <span id="currentFilterLabel" style="display: flex; align-items: center; gap: 6px;">
                   <span class="material-icons-round" style="font-size: 15px; color: #6c757d;">filter_list</span>
-                  All Transactions
+                  All
                 </span>
                 <span class="material-icons-round" id="filterDropdownArrow" style="font-size: 15px; color: #6c757d; transition: transform 0.2s;">expand_more</span>
               </div>
@@ -945,35 +945,6 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
               <div class="filter-dropdown-options" 
                   id="transactionFilterOptions" 
                   style="display: none; position: absolute; right: 0; top: calc(100% + 4px); background: #1e222b; border: 1px solid #2d313c; border-radius: 10px; overflow: hidden; min-width: 155px; box-shadow: 0 8px 24px rgba(0,0,0,0.6);">
-                
-                <div class="filter-opt-item" onclick="window.selectTransactionFilter('all', 'All Transactions', 'filter_list')" 
-                    style="padding: 8px 12px; color: #f8f9fa; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;"
-                    onmouseover="this.style.background='#22252d'" onmouseout="this.style.background='transparent'">
-                  <span class="material-icons-round" style="font-size: 15px; color: #6c757d;">filter_list</span>
-                  All Transactions
-                </div>
-                
-                <div class="filter-opt-item" onclick="window.selectTransactionFilter('deposit', 'Deposits', 'arrow_downward')" 
-                    style="padding: 8px 12px; color: #f8f9fa; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;"
-                    onmouseover="this.style.background='#22252d'" onmouseout="this.style.background='transparent'">
-                  <span class="material-icons-round" style="font-size: 15px; color: #14b8a6;">arrow_downward</span>
-                  Deposits
-                </div>
-                
-                <div class="filter-opt-item" onclick="window.selectTransactionFilter('withdraw', 'Withdrawals', 'arrow_upward')" 
-                    style="padding: 8px 12px; color: #f8f9fa; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;"
-                    onmouseover="this.style.background='#22252d'" onmouseout="this.style.background='transparent'">
-                  <span class="material-icons-round" style="font-size: 15px; color: rgb(255, 105, 180);">arrow_upward</span>
-                  Withdrawals
-                </div>
-                
-                <div class="filter-opt-item" onclick="window.selectTransactionFilter('transfer', 'Transfers', 'swap_horiz')" 
-                    style="padding: 8px 12px; color: #f8f9fa; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;"
-                    onmouseover="this.style.background='#22252d'" onmouseout="this.style.background='transparent'">
-                  <span class="material-icons-round" style="font-size: 15px; color: #8a3ffc;">swap_horiz</span>
-                  Transfers
-                </div>
-
               </div>
             </div>
           </div>
@@ -5161,122 +5132,129 @@ function setupGlobalInteractivePhysics() {
   }
 
   fetch(CA_CSV_BI + "&t=" + Date.now(), { cache: "no-store" })
-    .then(function(r) {
-      if (!r.ok) throw new Error("HTTP " + r.status);
-      return r.text();
-    })
-    .then(function(text) {
-      var rows = text.trim().split("\n").filter(function(r) { return r.trim(); });
-      var htmlMarkup = '';
-      var currentPeriod = '';
+  .then(function(r) {
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    return r.text();
+  })
+  .then(function(text) {
+    var rows = text.trim().split("\n").filter(function(r) { return r.trim(); });
+    var htmlMarkup = '';
+    var currentPeriod = '';
+    
+    // Map to store unique types as keys and their corresponding icon URLs as values
+    var uniqueTypesMap = new Map();
 
-      rows.forEach(function(row, index) {
-        if (index === 0) return;
+    rows.forEach(function(row, index) {
+      if (index === 0) return;
 
-        var cols = caCSV(row);
-        
-        var dateVal    = (cols[10] || "").replace(/^"|"$/g, "").trim();
-        var typeVal    = (cols[11] || "").replace(/^"|"$/g, "").trim();
-        var amountRaw  = (cols[12] || "").replace(/^"|"$/g, "").trim();
-        var accountVal = (cols[13] || "").replace(/^"|"$/g, "").trim();
-        var detailVal  = (cols[14] || "").replace(/^"|"$/g, "").trim();
-        
-        var incomeIconUrl  = (cols[22] || "").replace(/^"|"$/g, "").trim();
-        var accountIconUrl = (cols[23] || "").replace(/^"|"$/g, "").trim();
+      var cols = caCSV(row);
+      
+      var dateVal    = (cols[10] || "").replace(/^"|"$/g, "").trim();
+      var typeVal    = (cols[11] || "").replace(/^"|"$/g, "").trim(); // Column L
+      var amountRaw  = (cols[12] || "").replace(/^"|"$/g, "").trim();
+      var accountVal = (cols[13] || "").replace(/^"|"$/g, "").trim();
+      var detailVal  = (cols[14] || "").replace(/^"|"$/g, "").trim();
+      
+      var incomeIconUrl  = (cols[22] || "").replace(/^"|"$/g, "").trim(); // Target Icon asset
+      var accountIconUrl = (cols[23] || "").replace(/^"|"$/g, "").trim();
 
-        var lowerType = typeVal.toLowerCase();
-        if (lowerType.indexOf('salary') !== -1 || lowerType.indexOf('social') !== -1) {
-          return; 
+      var lowerType = typeVal.toLowerCase();
+      if (lowerType.indexOf('salary') !== -1 || lowerType.indexOf('social') !== -1) {
+        return; 
+      }
+
+      var cleanAmt = caNum(amountRaw);
+      
+      if (dateVal && typeVal) {
+        // Collect the category type and link its visual icon image link
+        if (incomeIconUrl && incomeIconUrl.toLowerCase() !== 'n/a') {
+          uniqueTypesMap.set(typeVal, incomeIconUrl);
+        } else if (!uniqueTypesMap.has(typeVal)) {
+          uniqueTypesMap.set(typeVal, ''); // Fallback to character icon if empty
         }
 
-        var cleanAmt = caNum(amountRaw);
-        
-        if (dateVal && typeVal) {
-          var periodGroup = getPeriodHeader(dateVal);
-          if (periodGroup !== currentPeriod) {
-            currentPeriod = periodGroup;
-            htmlMarkup += `<div class="tx-group-hdr" style="padding: 1vw 0 0.3vw; margin-top: 0.1vw; font-size: 1.8vw;">${currentPeriod}</div>`;
+        var periodGroup = getPeriodHeader(dateVal);
+        if (periodGroup !== currentPeriod) {
+          currentPeriod = periodGroup;
+          htmlMarkup += `<div class="tx-group-hdr" style="padding: 1vw 0 0.3vw; margin-top: 0.1vw; font-size: 1.8vw;">${currentPeriod}</div>`;
+        }
+
+        var formattedDateStr = "MMM dd";
+        try {
+          var dObj = new Date(dateVal);
+          if (!isNaN(dObj.getTime())) {
+            var monthName = dObj.toLocaleDateString('en-US', { month: 'short' });
+            var dayNum = String(dObj.getDate()).padStart(2, '0');
+            formattedDateStr = monthName + ' ' + dayNum;
           }
+        } catch(e) {}
 
-          var formattedDateStr = "MMM dd";
-          try {
-            var dObj = new Date(dateVal);
-            if (!isNaN(dObj.getTime())) {
-              var monthName = dObj.toLocaleDateString('en-US', { month: 'short' });
-              var dayNum = String(dObj.getDate()).padStart(2, '0');
-              formattedDateStr = monthName + ' ' + dayNum;
-            }
-          } catch(e) {}
+        var absoluteAmt = Math.abs(cleanAmt);
+        var fullAmountText = isNaN(absoluteAmt) ? amountRaw : new Intl.NumberFormat('vi-VN').format(absoluteAmt);
+        var shortAmountText = formatShortNum(cleanAmt);
 
-          var absoluteAmt = Math.abs(cleanAmt);
-          var fullAmountText = isNaN(absoluteAmt) ? amountRaw : new Intl.NumberFormat('vi-VN').format(absoluteAmt);
-          var shortAmountText = formatShortNum(cleanAmt);
+        var isNegative = cleanAmt < 0;
+        var amountPrefix = isNegative ? '-' : '+';
+        var themeColor = isNegative ? 'rgb(255, 105, 180)' : '#14b8a6';
+        var badgeBg    = isNegative ? 'rgba(255, 105, 180, 0.1)' : 'rgba(20, 184, 166, 0.1)';
 
-          var isNegative = cleanAmt < 0;
-          var amountPrefix = isNegative ? '-' : '+';
-          var themeColor = isNegative ? 'rgb(255, 105, 180)' : '#14b8a6'; // Custom Pink vs New Green Teal
-          var badgeBg    = isNegative ? 'rgba(255, 105, 180, 0.1)' : 'rgba(20, 184, 166, 0.1)';
+        var iconHtml = '';
+        if (incomeIconUrl && incomeIconUrl.toLowerCase() !== 'n/a') {
+          iconHtml = `<img src="${incomeIconUrl}" class="ico ca-history-ico" style="padding: 0.1vw;" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`;
+        }
+        var fallbackLetter = (typeVal || "?").charAt(0).toUpperCase();
+        iconHtml += `<div class="ico-fb ca-history-fb" style="display: ${incomeIconUrl ? 'none' : 'flex'}">${fallbackLetter}</div>`;
 
-          var iconHtml = '';
-          if (incomeIconUrl && incomeIconUrl.toLowerCase() !== 'n/a') {
-            iconHtml = `<img src="${incomeIconUrl}" class="ico ca-history-ico" style="padding: 0.1vw;" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`;
-          }
-          var fallbackLetter = (typeVal || "?").charAt(0).toUpperCase();
-          iconHtml += `<div class="ico-fb ca-history-fb" style="display: ${incomeIconUrl ? 'none' : 'flex'}">${fallbackLetter}</div>`;
-
-          var accountBadgeHtml = '';
-          if (accountVal) {
-            accountBadgeHtml = `
-              <div style="display: inline-flex; align-items: center; gap: 0.4vw; background: ${badgeBg}; padding: 0.2vw 0.8vw; border-radius: 4px; margin-left: 0.8vw;">
-                ${accountIconUrl ? `<img src="${accountIconUrl}" style="width: 2.2vw; height: 2.2vw; object-fit: contain; border-radius: 50%;" />` : ''}
-                <span class="ca-history-badge-txt" style="color: ${themeColor}; font-weight: 600; letter-spacing: 0.02em;">${accountVal}</span>
-              </div>
-            `;
-          }
-
-          htmlMarkup += `
-            <div class="sub-swipe-container" style="border-bottom: 1px solid rgba(255,255,255,0.02); background: transparent;">
-              <div class="subs-row ca-history-row" style="display: flex; align-items: center;">
-                
-                <div class="ca-history-icon-wrap" style="display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                  ${iconHtml}
-                </div>
-
-                <div class="mid" style="display: flex; align-items: center; justify-content: space-between; gap: 1.2vw; min-width: 0;">
-                  <div style="display: flex; align-items: center; gap: 0.8vw; min-width: 0; flex: 1;">
-                    <span class="ttl ca-history-ttl" style="margin-bottom: 0; flex-shrink: 0;">${typeVal}</span>
-                    <span class="dtl ca-history-dtl" style="color: rgba(255,255,255,0.35); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;">
-                      — ${detailVal}
-                    </span>
-                    ${accountBadgeHtml}
-                  </div>
-                </div>
-
-                <div class="rgt" style="flex-direction: row; align-items: center; gap: 1.2vw; flex-shrink: 0;">
-                  <div class="dte ca-history-dte" style="background: rgba(255,255,255,0.04); padding: 0.2vw 0.6vw; border-radius: 3px; font-family: sans-serif; color: rgba(255,255,255,0.5);">
-                    ${formattedDateStr}
-                  </div>
-                  
-                  <div class="amt ca-history-amt" style="color: ${themeColor}; text-align: right; font-weight: 600;">
-                    <!-- Handled through absolute display blocks to prevent layout overlaps -->
-                    <span class="ca-display-desktop">${amountPrefix}${fullAmountText}</span>
-                    <span class="ca-display-mobile">${amountPrefix}${shortAmountText}</span>
-                  </div>
-                </div>
-
-              </div>
+        var accountBadgeHtml = '';
+        if (accountVal) {
+          accountBadgeHtml = `
+            <div style="display: inline-flex; align-items: center; gap: 0.4vw; background: ${badgeBg}; padding: 0.2vw 0.8vw; border-radius: 4px; margin-left: 0.8vw;">
+              ${accountIconUrl ? `<img src="${accountIconUrl}" style="width: 2.2vw; height: 2.2vw; object-fit: contain; border-radius: 50%;" />` : ''}
+              <span class="ca-history-badge-txt" style="color: ${themeColor}; font-weight: 600; letter-spacing: 0.02em;">${accountVal}</span>
             </div>
           `;
-          
         }
-      });
 
-      container.innerHTML = htmlMarkup || '<div class="history-empty" style="padding: 2vw; text-align: center; color: rgba(255,255,255,0.4); font-size: 1.6vw;">No history logs recorded.</div>';
-    })
-    .catch(function(err) {
-      console.warn("ca-history-list:", err.message);
-      container.innerHTML = `<div class="history-error" style="padding: 2vw; text-align: center; color: rgb(255, 105, 180); font-size: 1.6vw;">Failed to load transaction logs.</div>`;
+        htmlMarkup += `
+          <div class="sub-swipe-container" data-tx-type="${typeVal}" style="border-bottom: 1px solid rgba(255,255,255,0.02); background: transparent;">
+            <div class="subs-row ca-history-row" style="display: flex; align-items: center;">
+              
+              <div class="ca-history-icon-wrap" style="display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                ${iconHtml}
+              </div>
+
+              <div class="mid" style="display: flex; align-items: center; justify-content: space-between; gap: 1.2vw; min-width: 0;">
+                <div style="display: flex; align-items: center; gap: 0.8vw; min-width: 0; flex: 1;">
+                  <span class="ttl ca-history-ttl" style="margin-bottom: 0; flex-shrink: 0;">${typeVal}</span>
+                  <span class="dtl ca-history-dtl" style="color: rgba(255,255,255,0.35); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;">
+                    — ${detailVal}
+                  </span>
+                  ${accountBadgeHtml}
+                </div>
+              </div>
+
+              <div class="rgt" style="flex-direction: row; align-items: center; gap: 1.2vw; flex-shrink: 0;">
+                <div class="dte ca-history-dte" style="background: rgba(255,255,255,0.04); padding: 0.2vw 0.6vw; border-radius: 3px; font-family: sans-serif; color: rgba(255,255,255,0.5);">
+                  ${formattedDateStr}
+                </div>
+                
+                <div class="amt ca-history-amt" style="color: ${themeColor}; text-align: right; font-weight: 600;">
+                  <span class="ca-display-desktop">${amountPrefix}${fullAmountText}</span>
+                  <span class="ca-display-mobile">${amountPrefix}${shortAmountText}</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        `;
+      }
     });
+
+    // Populate Dynamic Dropdown Menu with Column L icons bound correctly
+    updateDropdownOptions(uniqueTypesMap);
+
+    container.innerHTML = htmlMarkup || '<div class="history-empty" style="padding: 2vw; text-align: center; color: rgba(255,255,255,0.4); font-size: 1.6vw;">No history logs recorded.</div>';
+  });
   }
 
   function reorderCards(selectedIndex) {
@@ -6403,22 +6381,64 @@ function setupGlobalInteractivePhysics() {
   };
 
   // 3. INTERNAL DOM FILTER RULE (Hides/Shows cards seamlessly)
-  window.filterHistoryRowsUI = function(filterType) {
+  window.selectTransactionFilter = function(filterVal, displayLabel) {
+    const selectedLabelEl = document.getElementById('selectedFilterText');
+    if (selectedLabelEl) selectedLabelEl.innerText = displayLabel;
+    
     const container = document.getElementById('historyListContainer');
     if (!container) return;
 
-    const cards = container.getElementsByClassName('history-card');
-    
-    for (let card of cards) {
-      if (filterType === 'all') {
-        card.style.display = 'flex';
+    // Target ONLY rows inside the transaction history list container
+    const rows = container.getElementsByClassName('sub-swipe-container');
+    const query = filterVal.toLowerCase();
+
+    for (let row of rows) {
+      const rawTypeAttr = row.getAttribute('data-tx-type') || '';
+      const typeAttr = rawTypeAttr.toLowerCase();
+      
+      const amtSpan = row.querySelector('.ca-history-amt');
+      const isNegativeRow = amtSpan ? amtSpan.innerText.indexOf('-') !== -1 : false;
+
+      let isMatch = false;
+
+      if (query === 'all') {
+        isMatch = true;
+      } else if (query === 'deposit') {
+        isMatch = !isNegativeRow;
+      } else if (query === 'withdraw' || query === 'expense') {
+        isMatch = isNegativeRow;
       } else {
-        // Looks for your standard class signatures: tx-deposit, tx-transfer, tx-withdraw
-        if (card.classList.contains(`tx-${filterType}`)) {
-          card.style.display = 'flex';
-        } else {
-          card.style.display = 'none';
+        isMatch = (typeAttr.indexOf(query) !== -1);
+      }
+
+      // TYPO FIXED HERE: Removed the extra .style
+      row.style.setProperty('display', isMatch ? 'block' : 'none', 'important');
+    }
+
+    // Clear empty timeline period headers
+    const headers = container.getElementsByClassName('tx-group-hdr');
+    for (let hdr of headers) {
+      let next = hdr.nextElementSibling;
+      let hasVisibleRows = false;
+      
+      while (next && !next.classList.contains('tx-group-hdr')) {
+        if (next.classList.contains('sub-swipe-container') && next.style.display !== 'none') {
+          hasVisibleRows = true;
+          break;
         }
+        next = next.nextElementSibling;
+      }
+      hdr.style.display = hasVisibleRows ? 'block' : 'none';
+    }
+
+    // Close the dropdown view frame and ensure items stay unhidden
+    const optionsDiv = document.getElementById('transactionFilterOptions');
+    if (optionsDiv) {
+      optionsDiv.style.display = 'none';
+      
+      const optItems = optionsDiv.getElementsByClassName('filter-opt-item');
+      for (let item of optItems) {
+        item.style.display = 'flex';
       }
     }
   };
@@ -6436,6 +6456,88 @@ function setupGlobalInteractivePhysics() {
   document.addEventListener('click', function() {
     window.closeAllFilterDropdowns();
   });
+
+  function updateDropdownOptions(uniqueTypesMap) {
+    const dropdown = document.getElementById('transactionFilterOptions');
+    if (!dropdown) return;
+
+    // 1. Get custom icons from your CSV map if they exist
+    var depositIcon = uniqueTypesMap.get('Deposit') || uniqueTypesMap.get('deposit');
+    var withdrawIcon = uniqueTypesMap.get('Withdraw') || uniqueTypesMap.get('withdraw');
+
+    // Helper to generate either the custom image tag or the fallback material icon
+    function getVisualIcon(iconUrl, defaultMaterialIcon, iconColor) {
+      if (iconUrl && iconUrl.toLowerCase() !== 'n/a') {
+        return `
+          <img src="${iconUrl}" style="width: 18px; height: 18px; object-fit: contain; border-radius: 4px;" alt="" 
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <span class="material-icons-round" style="display: none; font-size: 15px; color: ${iconColor}; width: 18px; height: 18px; align-items: center; justify-content: center;">${defaultMaterialIcon}</span>
+        `;
+      }
+      return `<span class="material-icons-round" style="font-size: 15px; color: ${iconColor}; display: flex; align-items: center; justify-content: center; width: 18px; height: 18px;">${defaultMaterialIcon}</span>`;
+    }
+
+    // 2. Generate the core layout headers using the processed icons
+    let optionsHtml = `
+      <div class="filter-opt-item" onclick="window.selectTransactionFilter('all', 'All')" 
+          style="padding: 8px 12px; color: #f8f9fa; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;"
+          onmouseover="this.style.background='#22252d'" onmouseout="this.style.background='transparent'">
+        <span class="material-icons-round" style="font-size: 15px; color: #6c757d; display: flex; align-items: center; justify-content: center; width: 18px; height: 18px;">filter_list</span>
+        All
+      </div>
+      
+      <div class="filter-opt-item" onclick="window.selectTransactionFilter('deposit', 'Deposits')" 
+          style="padding: 8px 12px; color: #f8f9fa; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;"
+          onmouseover="this.style.background='#22252d'" onmouseout="this.style.background='transparent'">
+        <div style="display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0;">
+          ${getVisualIcon(depositIcon, 'arrow_downward', '#14b8a6')}
+        </div>
+        Deposits
+      </div>
+      
+      <div class="filter-opt-item" onclick="window.selectTransactionFilter('withdraw', 'Withdrawals')" 
+          style="padding: 8px 12px; color: #f8f9fa; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;"
+          onmouseover="this.style.background='#22252d'" onmouseout="this.style.background='transparent'">
+        <div style="display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0;">
+          ${getVisualIcon(withdrawIcon, 'arrow_upward', 'rgb(255, 105, 180)')}
+        </div>
+        Withdrawals
+      </div>
+    `;
+
+    // 3. Append all remaining unique items found in Column L
+    uniqueTypesMap.forEach(function(iconUrl, type) {
+      // Skip duplicating the core filter macros we just handled above
+      var lowerT = type.toLowerCase();
+      if (lowerT === 'deposit' || lowerT === 'withdraw') return;
+
+      let visualIconHtml = '';
+      if (iconUrl && iconUrl.toLowerCase() !== 'n/a') {
+        visualIconHtml = `<img src="${iconUrl}" style="width: 18px; height: 18px; object-fit: contain; border-radius: 4px;" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`;
+      }
+      
+      var fallbackChar = (type || "?").charAt(0).toUpperCase();
+      visualIconHtml += `
+        <div style="display: ${iconUrl ? 'none' : 'flex'}; width: 18px; height: 18px; background: rgba(255,255,255,0.1); border-radius: 4px; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: #3b82f6;">
+          ${fallbackChar}
+        </div>
+      `;
+
+      optionsHtml += `
+        <div class="filter-opt-item" onclick="window.selectTransactionFilter('${type}', '${type}')" 
+            style="padding: 8px 12px; color: #f8f9fa; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;"
+            onmouseover="this.style.background='#22252d'" onmouseout="this.style.background='transparent'">
+          <div style="display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0;">
+            ${visualIconHtml}
+          </div>
+          ${type}
+        </div>
+      `;
+    });
+
+    dropdown.innerHTML = optionsHtml;
+  }
+  
   
 
 </script>
