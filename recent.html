@@ -201,8 +201,245 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .btn-deposit:hover{background-color:rgba(224,36,94,0.25)}
 .btn-withdraw{flex:1;background-color:var(--btn-bg)}
 .btn-withdraw:hover{background-color:var(--btn-hover)}
-.btn-square{width:28px;background-color:var(--btn-bg);flex-shrink:0}
-.btn-square:hover{background-color:var(--btn-hover)}
+/* --- 1. History Button & Active Connected Effects --- */
+.btn-square {
+  position: relative; /* Essential for aligning the indicator arrow */
+  width: 28px;
+  height: 28px;
+  background-color: var(--btn-bg, #1a1a1a);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.8);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 🌸 Pink Active States when opened/clicked */
+#btn-square-history.is-active {
+  background-color: rgba(224, 36, 94, 0.15) !important;
+  color: #e0245e !important;
+  border: 0px solid #e0245e !important;
+  animation: buttonPulse 2s infinite ease-in-out;
+}
+
+/* Creating the downward connection arrow underneath the active button */
+#btn-square-history.is-active::after {
+  content: '';
+  position: absolute;
+  bottom: -9px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  z-index: 100;
+}
+
+/* Pulse animation to explicitly draw the user's eye to the change */
+@keyframes buttonPulse {
+  0% { box-shadow: 0 0 0 0 rgba(224, 36, 94, 0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(224, 36, 94, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(224, 36, 94, 0); }
+}
+
+/* --- 2. Full Width History Panel --- */
+.history-panel {
+  background: #121212;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 12px;
+  margin-top: 16px;
+  width: 100%; /* Spans all the way across to the right edge */
+  clear: both; /* Prevents other flex boxes from floating next to it */
+  overflow: hidden;
+  box-sizing: border-box;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), 
+              opacity 0.25s ease, 
+              border-color 0.3s ease;
+}
+
+/* Highlight panel border matching the active indicator button */
+.history-panel.is-expanded {
+  border-color: #e0245e;
+}
+
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.01), transparent);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.history-header h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.history-title-icon {
+  font-size: 18px;
+  color: #e0245e;
+}
+
+.badge-all {
+  font-size: 11px;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.6);
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+/* --- 3. Full Two-Column Card Layout Engine --- */
+.history-list {
+  padding: 10px;
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.history-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.tx-main-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tx-name {
+  font-size: 13.5px;
+  color: #ffffff;
+}
+
+.tx-date {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.tx-side-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+}
+
+.tx-amount {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.tx-deposit .tx-amount {
+  color: #e0245e;
+}
+
+.text-muted {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.tx-status {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.status-success {
+  background: rgba(224, 36, 94, 0.1);
+  color: #e0245e;
+}
+
+.status-pending {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* --- 1. Mobile Layout Flow Engine (iPhone / Viewport < 401px up to 767px) --- */
+@media (max-width: 400px) {
+  .history-panel {
+    display: block !important;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    margin-top: 0;
+    
+    /* Hardware acceleration layer optimization */
+    transform: translateY(-8px);
+    will-change: max-height, opacity, transform;
+    
+    /* Smooth cubic-bezier timing engine */
+    transition: 
+      max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.25s ease-out,
+      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      margin-top 0.3s ease;
+  }
+
+  /* Target state after dynamic DOM insertion takes place */
+  .history-panel.is-expanded {
+    max-height: 1000px; /* Safe ceiling value accommodating history rows + donut wrapper */
+    opacity: 1;
+    transform: translateY(0);
+    margin-top: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* --- 2. Desktop/iPad Restructuring Alignment (Restores layout rule logic) --- */
+@media (min-width: 401px) {
+  .main-dashboard-container, 
+  .ca-col-left {
+    display: block; /* Disables flex order positioning so it inherits standard HTML stack flow */
+  }
+  
+  .history-panel {
+    max-height: 600px !important;
+    opacity: 1 !important;
+    margin-top: 20px;
+    order: initial; /* Resets order constraints completely */
+  }
+}
+
+/* --- 📑 iPad & Desktop Layout (>= 401px) --- */
+@media (min-width: 401px) {
+  #walletHistorySection {
+    /* Baseline smooth transitions for tablet view */
+    transition: 
+      max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.25s ease,
+      margin-top 0.3s ease,
+      padding 0.3s ease;
+    overflow: hidden;
+  }
+
+  /* 🔥 Overrides the permanent layout block state when hidden by the user */
+  #walletHistorySection.is-hidden-ipad {
+    display: block !important; /* Keep display property block so transition works */
+    max-height: 0 !important;
+    opacity: 0 !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    border: none !important;
+    pointer-events: none !important;
+  }
+}
 
 .modal-backdrop{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);z-index:9999;justify-content:center;align-items:flex-start;padding-top:40px}
 .modal-backdrop.active{display:flex !important}
@@ -650,14 +887,15 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
               <button class="btn btn-square" onclick="openModal('Transfer')" title="Transfer">
                 <span class="material-icons-round">swap_horiz</span>
               </button>
-              <button class="btn btn-square" onclick="openModal('History')" title="History">
+              
+              <!-- The trigger button -->
+              <button class="btn btn-square" id="btn-square-history" title="History">
                 <span class="material-icons-round">history</span>
               </button>
             </div>
           </div>
 
-          
-        </div><!-- NO SPACE CHARACTER BETWEEN THESE DIVS TO ENSURE STABLE INLINE FLOW --><div id="ca-col-right">
+        </div><div id="ca-col-right">
           <!-- Right column: Chart Analysis & Dynamic Breakdown lists -->
           <div id="ca-section-expense">
             <!-- Dynamic Filter Controls -->
@@ -680,7 +918,42 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
             <div id="ca-list"></div>
           </div>
         </div>
+        <!-- ✨ Expanded Layout Wrapper -->
+        <div id="walletHistorySection" class="history-panel">
+          <div class="history-header">
+            <div class="header-left">
+              <span class="history-title-icon material-icons-round">receipt_long</span>
+              <h3>Transaction History</h3>
+            </div>
+            <span class="badge-all">All Accounts</span>
+          </div>
+          
+          <div class="history-list" id="historyListContainer">
+            <div class="history-card tx-deposit">
+              <div class="tx-main-col">
+                <span class="tx-name">Deposit to Saving</span>
+                <span class="tx-date">Today, 14:20</span>
+              </div>
+              <div class="tx-side-col">
+                <span class="tx-amount">+đ5,000,000</span>
+                <span class="tx-status status-success">Completed</span>
+              </div>
+            </div>
+            
+            <div class="history-card tx-transfer">
+              <div class="tx-main-col">
+                <span class="tx-name">Transfer to Piggy cash</span>
+                <span class="tx-date">Yesterday, 09:15</span>
+              </div>
+              <div class="tx-side-col">
+                <span class="tx-amount text-muted">đ1,200,000</span>
+                <span class="tx-status status-pending">Pending</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+      
     </div>
     <!-- SUBSCRIPTION SLIDE -->
     <div class="slide" id="slide-3" data-idx="3">
@@ -2141,7 +2414,7 @@ function caRenderDrill(items,title,color){
       + '<div class="ca-list-name" style="font-size:' + drPcFs + '; flex-grow: 1;">' + displayName + '</div>'
       +'<div class="ca-list-pct-container" style="display: flex; align-items: center; padding-right: 0px; flex-shrink: 0;">'
       +'<span class="ca-list-pct" style="font-weight: 300;font-size:11px;background: '+pctBg+';color: '+pctText+'; padding: 2px 6px; border-radius: 10px;flex-shrink:0;">'+pct.toFixed(0)+'%</span></div>'
-      +'<div class="ca-list-val" style="min-width: ' + pcSMw + '; font-size:' + drPcFs + ';color: '+pctText+'; text-align: right;">' + amtNumber + '</div>';
+      +'<div class="ca-list-val" style="min-width: ' + pcSMw + '; font-weight: 500; font-size:' + drPcFs + ';color: '+pctText+'; text-align: right;">' + amtNumber + '</div>';
 
     list.appendChild(row);
   });caApplyLayout();
@@ -4182,187 +4455,187 @@ function setupGlobalInteractivePhysics() {
   window.addEventListener('touchcancel', handleEnd);
 }
 
-function renderStructuredTable(points) { var tbody = document.getElementById("table-body"); tbody.innerHTML = "";
- var cycles = {};
- function calculateCycleFromDate(dateObj) { var year = dateObj.getFullYear(); if (year >= 2030) return 5 + Math.floor((year - 2030) / 4); if (year >= 2026) return 4;
- if (year >= 2022) return 3;
- if (year >= 2018) return 2;
- return 1;
- }
- points.forEach(function(p) {
- var cNum = p.cycleNum || calculateCycleFromDate(p.date); if (!cycles[cNum]) {
- cycles[cNum] = {
- id: cNum,
- ath: null,
- atl: null,
- isCurrent: false
- };
- }
- if (p.isCurrent) {
- cycles[cNum].isCurrent = true; }
- if (p.type === 'ath') {
- cycles[cNum].ath = p;
- }
- if (p.type === 'atl') {
- cycles[cNum].atl = p;
- }
- });
- var sortedCycles = Object.keys(cycles).map(function(k) { return cycles[k];
- });
- sortedCycles.sort(function(a, b) { return b.id - a.id;
- });
- var activeCycleObj = sortedCycles.find(function(c) { return c.isCurrent === true; }); var subtitleTrackedNum = activeCycleObj ? activeCycleObj.id : (sortedCycles[0] ? sortedCycles[0].id : "?"); sortedCycles.forEach(function(c) { var tr = document.createElement("tr"); if (c.id === subtitleTrackedNum) { c.isCurrent = true;
- tr.className = "current-row"; }
- var tdId = document.createElement("td"); var bdy = document.createElement("span"); bdy.className = "cycle-num-badge"; bdy.textContent = c.id; tdId.appendChild(bdy);
- tr.appendChild(tdId);
- var tdDates = document.createElement("td"); tdDates.className = "font-mono"; var pDateStr = c.ath ? fmtDateCompact(c.ath.date) : "—"; var fDateStr = c.atl ? fmtDateCompact(c.atl.date) : "—"; tdDates.innerHTML = "<span class='text-teal'><i class='bi bi-caret-up-fill'></i> " + pDateStr + "</span><br><span class='text-pink'><i class='bi bi-caret-down-fill'></i> " + fDateStr + "</span>"; tr.appendChild(tdDates);
- var tdDuration = document.createElement("td"); tdDuration.className = "font-mono text-muted"; var athDays = (c.ath && c.ath.rangeDay) ? c.ath.rangeDay + "d" : "—"; var atlDays = (c.atl && c.atl.rangeDay) ? c.atl.rangeDay + "d" : "—"; tdDuration.innerHTML = "<span>" + athDays + "</span><br><span>" + atlDays + "</span>"; tr.appendChild(tdDuration);
- var tdPrices = document.createElement("td"); tdPrices.className = "font-mono text-right"; var pPrice = c.ath ? fmtUSD(c.ath.value) : "—"; var fPrice = c.atl ? fmtUSD(c.atl.value) : "—"; tdPrices.innerHTML = "<span class='text-teal'>" + pPrice + "</span><br><span class='text-pink'>" + fPrice + "</span>"; tr.appendChild(tdPrices);
- var tdChanges = document.createElement("td"); tdChanges.className = "font-mono text-right"; var athChg = (c.ath && c.ath.changeStr) ? c.ath.changeStr : "—"; var atlChg = (c.atl && c.atl.changeStr) ? c.atl.changeStr : "—"; var athClass = athChg.charAt(0) === '-' ? "text-pink" : "text-teal"; var atlClass = atlChg.charAt(0) === '-' ? "text-pink" : "text-teal"; tdChanges.innerHTML = "<span class='" + athClass + "'>" + athChg + "</span><br><span class='" + atlClass + "'>" + atlChg + "</span>"; tr.appendChild(tdChanges);
- tbody.appendChild(tr);
- });
- document.getElementById("subtitle").innerHTML = "Fractal cycle matrix &middot; <span class='now-pill'>Tracking Cycle " + subtitleTrackedNum + "</span>"; }
-
-loadSubscriptions();
-loadExpense();
-loadRecent();
-loadCycles();
-setInterval(loadExpense,60000);
-setInterval(loadRecent,60000);
-setInterval(caLoadDonut,60000);
-
-/* ══ INIT: load saved tab order + last active tab, apply, then wire up UI ══ */
-(function() {
-  var order = loadTabOrder();
-  var activeIdx = loadActiveTab();
-  applyTabOrder(order);
-  switchTab(activeIdx);
-  positionTabLine();
-})();
-document.addEventListener("DOMContentLoaded", () => {
-  const subTabs = document.querySelectorAll(".sub-tab-btn");
-  const subSlidesWrap = document.getElementById("sub-slides-wrap");
-
-  // 1. FORCED INITIAL STATE: Explicitly highlight and position Tab 10 on boot
-  if (subTabs.length > 0) {
-    // Clear any ambiguity and lock the first tab as active
-    subTabs.forEach(t => t.classList.remove("active"));
-    subTabs[0].classList.add("active"); 
+  function renderStructuredTable(points) { var tbody = document.getElementById("table-body"); tbody.innerHTML = "";
+  var cycles = {};
+  function calculateCycleFromDate(dateObj) { var year = dateObj.getFullYear(); if (year >= 2030) return 5 + Math.floor((year - 2030) / 4); if (year >= 2026) return 4;
+  if (year >= 2022) return 3;
+  if (year >= 2018) return 2;
+  return 1;
   }
-  if (subSlidesWrap) {
-    subSlidesWrap.style.transform = "translateX(0%)";
+  points.forEach(function(p) {
+  var cNum = p.cycleNum || calculateCycleFromDate(p.date); if (!cycles[cNum]) {
+  cycles[cNum] = {
+  id: cNum,
+  ath: null,
+  atl: null,
+  isCurrent: false
+  };
   }
+  if (p.isCurrent) {
+  cycles[cNum].isCurrent = true; }
+  if (p.type === 'ath') {
+  cycles[cNum].ath = p;
+  }
+  if (p.type === 'atl') {
+  cycles[cNum].atl = p;
+  }
+  });
+  var sortedCycles = Object.keys(cycles).map(function(k) { return cycles[k];
+  });
+  sortedCycles.sort(function(a, b) { return b.id - a.id;
+  });
+  var activeCycleObj = sortedCycles.find(function(c) { return c.isCurrent === true; }); var subtitleTrackedNum = activeCycleObj ? activeCycleObj.id : (sortedCycles[0] ? sortedCycles[0].id : "?"); sortedCycles.forEach(function(c) { var tr = document.createElement("tr"); if (c.id === subtitleTrackedNum) { c.isCurrent = true;
+  tr.className = "current-row"; }
+  var tdId = document.createElement("td"); var bdy = document.createElement("span"); bdy.className = "cycle-num-badge"; bdy.textContent = c.id; tdId.appendChild(bdy);
+  tr.appendChild(tdId);
+  var tdDates = document.createElement("td"); tdDates.className = "font-mono"; var pDateStr = c.ath ? fmtDateCompact(c.ath.date) : "—"; var fDateStr = c.atl ? fmtDateCompact(c.atl.date) : "—"; tdDates.innerHTML = "<span class='text-teal'><i class='bi bi-caret-up-fill'></i> " + pDateStr + "</span><br><span class='text-pink'><i class='bi bi-caret-down-fill'></i> " + fDateStr + "</span>"; tr.appendChild(tdDates);
+  var tdDuration = document.createElement("td"); tdDuration.className = "font-mono text-muted"; var athDays = (c.ath && c.ath.rangeDay) ? c.ath.rangeDay + "d" : "—"; var atlDays = (c.atl && c.atl.rangeDay) ? c.atl.rangeDay + "d" : "—"; tdDuration.innerHTML = "<span>" + athDays + "</span><br><span>" + atlDays + "</span>"; tr.appendChild(tdDuration);
+  var tdPrices = document.createElement("td"); tdPrices.className = "font-mono text-right"; var pPrice = c.ath ? fmtUSD(c.ath.value) : "—"; var fPrice = c.atl ? fmtUSD(c.atl.value) : "—"; tdPrices.innerHTML = "<span class='text-teal'>" + pPrice + "</span><br><span class='text-pink'>" + fPrice + "</span>"; tr.appendChild(tdPrices);
+  var tdChanges = document.createElement("td"); tdChanges.className = "font-mono text-right"; var athChg = (c.ath && c.ath.changeStr) ? c.ath.changeStr : "—"; var atlChg = (c.atl && c.atl.changeStr) ? c.atl.changeStr : "—"; var athClass = athChg.charAt(0) === '-' ? "text-pink" : "text-teal"; var atlClass = atlChg.charAt(0) === '-' ? "text-pink" : "text-teal"; tdChanges.innerHTML = "<span class='" + athClass + "'>" + athChg + "</span><br><span class='" + atlClass + "'>" + atlChg + "</span>"; tr.appendChild(tdChanges);
+  tbody.appendChild(tr);
+  });
+  document.getElementById("subtitle").innerHTML = "Fractal cycle matrix &middot; <span class='now-pill'>Tracking Cycle " + subtitleTrackedNum + "</span>"; }
 
-  // 2. Interactive Click Handler
-  subTabs.forEach(btn => {
-    btn.addEventListener("click", () => {
-      // Toggle highlights on click
+  loadSubscriptions();
+  loadExpense();
+  loadRecent();
+  loadCycles();
+  setInterval(loadExpense,60000);
+  setInterval(loadRecent,60000);
+  setInterval(caLoadDonut,60000);
+
+  /* ══ INIT: load saved tab order + last active tab, apply, then wire up UI ══ */
+  (function() {
+    var order = loadTabOrder();
+    var activeIdx = loadActiveTab();
+    applyTabOrder(order);
+    switchTab(activeIdx);
+    positionTabLine();
+  })();
+  document.addEventListener("DOMContentLoaded", () => {
+    const subTabs = document.querySelectorAll(".sub-tab-btn");
+    const subSlidesWrap = document.getElementById("sub-slides-wrap");
+
+    // 1. FORCED INITIAL STATE: Explicitly highlight and position Tab 10 on boot
+    if (subTabs.length > 0) {
+      // Clear any ambiguity and lock the first tab as active
       subTabs.forEach(t => t.classList.remove("active"));
-      btn.classList.add("active");
+      subTabs[0].classList.add("active"); 
+    }
+    if (subSlidesWrap) {
+      subSlidesWrap.style.transform = "translateX(0%)";
+    }
 
-      // Slide content smoothly
-      const subIdx = btn.getAttribute("data-sub-idx");
-      if (subSlidesWrap) {
-        subSlidesWrap.style.transform = `translateX(-${subIdx * 50}%)`;
-      }
+    // 2. Interactive Click Handler
+    subTabs.forEach(btn => {
+      btn.addEventListener("click", () => {
+        // Toggle highlights on click
+        subTabs.forEach(t => t.classList.remove("active"));
+        btn.classList.add("active");
+
+        // Slide content smoothly
+        const subIdx = btn.getAttribute("data-sub-idx");
+        if (subSlidesWrap) {
+          subSlidesWrap.style.transform = `translateX(-${subIdx * 50}%)`;
+        }
+      });
     });
   });
-});
 
-const halvingDates = [
-    new Date("2012-11-28"), new Date("2016-07-09"), 
-    new Date("2020-05-11"), new Date("2024-04-20"), 
-    new Date("2028-04-17"), new Date("2032-04-10")
-  ];
+  const halvingDates = [
+      new Date("2012-11-28"), new Date("2016-07-09"), 
+      new Date("2020-05-11"), new Date("2024-04-20"), 
+      new Date("2028-04-17"), new Date("2032-04-10")
+    ];
 
-  function getMetrics() {
-    const now = new Date();
-    let prev = null, next = null, idx = 0;
+    function getMetrics() {
+      const now = new Date();
+      let prev = null, next = null, idx = 0;
 
-    for (let i = 0; i < halvingDates.length - 1; i++) {
-      if (now >= halvingDates[i] && now < halvingDates[i+1]) {
-        prev = halvingDates[i];
-        next = halvingDates[i+1];
-        idx = i + 1;
-        break;
+      for (let i = 0; i < halvingDates.length - 1; i++) {
+        if (now >= halvingDates[i] && now < halvingDates[i+1]) {
+          prev = halvingDates[i];
+          next = halvingDates[i+1];
+          idx = i + 1;
+          break;
+        }
       }
+      if (!prev) {
+        prev = halvingDates[halvingDates.length - 2];
+        next = halvingDates[halvingDates.length - 1];
+        idx = halvingDates.length - 1;
+      }
+
+      const oneDay = 24 * 60 * 60 * 1000;
+      const total = Math.round((next - prev) / oneDay);
+      const since = Math.round((now - prev) / oneDay);
+      const until = Math.round((next - now) / oneDay);
+      const progress = ((since / total) * 100).toFixed(1);
+
+      return { since, until, progress, idx };
     }
-    if (!prev) {
-      prev = halvingDates[halvingDates.length - 2];
-      next = halvingDates[halvingDates.length - 1];
-      idx = halvingDates.length - 1;
-    }
 
-    const oneDay = 24 * 60 * 60 * 1000;
-    const total = Math.round((next - prev) / oneDay);
-    const since = Math.round((now - prev) / oneDay);
-    const until = Math.round((next - now) / oneDay);
-    const progress = ((since / total) * 100).toFixed(1);
+    const data = getMetrics();
 
-    return { since, until, progress, idx };
-  }
+  // Cấu hình cố định
+  const radius = 31;
+  const circumference = 2 * Math.PI * radius;
 
-  const data = getMetrics();
+  function setRingProgress(elementId, valueId, percent, isCrossed = false) {
+    const el = document.getElementById(elementId);
+    const valEl = document.getElementById(valueId);
+    if (!el || !valEl) return;
 
-// Cấu hình cố định
-const radius = 31;
-const circumference = 2 * Math.PI * radius;
+    const offset = circumference - (Math.min(percent, 100) / 100) * circumference;
+    el.style.strokeDashoffset = offset;
+    valEl.innerText = Math.round(percent) + "%";
 
-function setRingProgress(elementId, valueId, percent, isCrossed = false) {
-  const el = document.getElementById(elementId);
-  const valEl = document.getElementById(valueId);
-  if (!el || !valEl) return;
-
-  const offset = circumference - (Math.min(percent, 100) / 100) * circumference;
-  el.style.strokeDashoffset = offset;
-  valEl.innerText = Math.round(percent) + "%";
-
-  if (elementId === 'ring-risk') {
-    if (percent < 30) {
-      el.style.stroke = "#00f5d4"; // An toàn (Cyan)
-    } else if (percent < 60) {
-      el.style.stroke = "#ffb11a"; // Cẩn trọng (Vàng)
-    } else {
-      el.style.stroke = "#f72585"; // Nguy hiểm (Hồng/Đỏ)
-    }
-  }
-  // Thêm logic đổi màu nếu bị Crossed (ví dụ chuyển sang màu cảnh báo)
-  if (isCrossed) {
-    el.style.stroke = "#ff4757"; // Màu đỏ cảnh báo
-  }
-}
-
-function loadMetrics() {
-  fetch(BTC_CSV_URL + "&t=" + Date.now(), { cache: "no-store" })
-    .then(r => r.text())
-    .then(text => {
-      const lines = text.split("\n").filter(l => l.trim());
-      
-      const getVal = (rowIdx, colIdx) => {
-        return (lines[rowIdx] || "").split(",")[colIdx]?.replace(/"/g, '').trim() || "";
-      };
-
-      const piConv = parseFloat(getVal(6, 12)) || 0;
-      const macroRisk = parseFloat(getVal(8, 11)) || 0;
-      const isCrossed = getVal(9, 12).toLowerCase() === "true";
-      const targetPrice = getVal(4, 12) || 0;
-
-      setRingProgress('ring-pi', 'val-pi', piConv, isCrossed);
-      setRingProgress('ring-risk', 'val-risk', macroRisk);
-      setRingProgress('ring-halving', 'val-halving', parseFloat(data.progress));
-      const numericPrice = Number(targetPrice);
-
-      if (!isNaN(numericPrice)) {
-        document.getElementById("target-price-display").innerText = "$" + numericPrice.toLocaleString('en-US', {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-        });
+    if (elementId === 'ring-risk') {
+      if (percent < 30) {
+        el.style.stroke = "#00f5d4"; // An toàn (Cyan)
+      } else if (percent < 60) {
+        el.style.stroke = "#ffb11a"; // Cẩn trọng (Vàng)
       } else {
-        document.getElementById("target-price-display").innerText = "$" + targetPrice;
+        el.style.stroke = "#f72585"; // Nguy hiểm (Hồng/Đỏ)
       }
-    })
-    .catch(err => console.error("Error loading metrics:", err));
-}
+    }
+    // Thêm logic đổi màu nếu bị Crossed (ví dụ chuyển sang màu cảnh báo)
+    if (isCrossed) {
+      el.style.stroke = "#ff4757"; // Màu đỏ cảnh báo
+    }
+  }
+
+  function loadMetrics() {
+    fetch(BTC_CSV_URL + "&t=" + Date.now(), { cache: "no-store" })
+      .then(r => r.text())
+      .then(text => {
+        const lines = text.split("\n").filter(l => l.trim());
+        
+        const getVal = (rowIdx, colIdx) => {
+          return (lines[rowIdx] || "").split(",")[colIdx]?.replace(/"/g, '').trim() || "";
+        };
+
+        const piConv = parseFloat(getVal(6, 12)) || 0;
+        const macroRisk = parseFloat(getVal(8, 11)) || 0;
+        const isCrossed = getVal(9, 12).toLowerCase() === "true";
+        const targetPrice = getVal(4, 12) || 0;
+
+        setRingProgress('ring-pi', 'val-pi', piConv, isCrossed);
+        setRingProgress('ring-risk', 'val-risk', macroRisk);
+        setRingProgress('ring-halving', 'val-halving', parseFloat(data.progress));
+        const numericPrice = Number(targetPrice);
+
+        if (!isNaN(numericPrice)) {
+          document.getElementById("target-price-display").innerText = "$" + numericPrice.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          });
+        } else {
+          document.getElementById("target-price-display").innerText = "$" + targetPrice;
+        }
+      })
+      .catch(err => console.error("Error loading metrics:", err));
+  }
 
   const halvingProg = parseFloat(data.progress);
 
@@ -4387,116 +4660,116 @@ function loadMetrics() {
     riskColor = "#f72585";
   }
 
-/**
- * Fully Autonomous Bitcoin Halving Cycle Calculator
- * Zero hardcoded cycles or dates. Calculates everything using the blockchain schedule rules.
- */
-function initFullyAutomatedTimeline() {
-  // 1. Immutable Protocol Benchmarks
-  const ANCHOR_HALVING_NUMBER = 4;
-  const ANCHOR_HALVING_DATE = new Date("2024-04-19T00:00:00Z"); // Halving 4 anchor point
-  
-  // 210,000 blocks * 10 minutes per block in milliseconds
-  const MS_PER_CYCLE = 210000 * 10 * 60 * 1000; 
+  /**
+  * Fully Autonomous Bitcoin Halving Cycle Calculator
+  * Zero hardcoded cycles or dates. Calculates everything using the blockchain schedule rules.
+  */
+  function initFullyAutomatedTimeline() {
+    // 1. Immutable Protocol Benchmarks
+    const ANCHOR_HALVING_NUMBER = 4;
+    const ANCHOR_HALVING_DATE = new Date("2024-04-19T00:00:00Z"); // Halving 4 anchor point
+    
+    // 210,000 blocks * 10 minutes per block in milliseconds
+    const MS_PER_CYCLE = 210000 * 10 * 60 * 1000; 
 
-  const now = new Date();
+    const now = new Date();
 
-  // 2. Dynamically determine which cycle we are currently living in
-  const timeDeltasFromAnchor = now.getTime() - ANCHOR_HALVING_DATE.getTime();
-  
-  // If positive, we are past Halving 4. Find how many full cycles have elapsed since.
-  const cyclesElapsedSinceAnchor = Math.floor(timeDeltasFromAnchor / MS_PER_CYCLE);
-  
-  const currentCycleNumber = ANCHOR_HALVING_NUMBER + cyclesElapsedSinceAnchor;
+    // 2. Dynamically determine which cycle we are currently living in
+    const timeDeltasFromAnchor = now.getTime() - ANCHOR_HALVING_DATE.getTime();
+    
+    // If positive, we are past Halving 4. Find how many full cycles have elapsed since.
+    const cyclesElapsedSinceAnchor = Math.floor(timeDeltasFromAnchor / MS_PER_CYCLE);
+    
+    const currentCycleNumber = ANCHOR_HALVING_NUMBER + cyclesElapsedSinceAnchor;
 
-  // 3. Calculate exact start and end timestamps for the dynamic current cycle
-  const currentCycleStartMs = ANCHOR_HALVING_DATE.getTime() + (cyclesElapsedSinceAnchor * MS_PER_CYCLE);
-  const currentCycleEndMs = currentCycleStartMs + MS_PER_CYCLE;
+    // 3. Calculate exact start and end timestamps for the dynamic current cycle
+    const currentCycleStartMs = ANCHOR_HALVING_DATE.getTime() + (cyclesElapsedSinceAnchor * MS_PER_CYCLE);
+    const currentCycleEndMs = currentCycleStartMs + MS_PER_CYCLE;
 
-  const start = new Date(currentCycleStartMs);
-  const end = new Date(currentCycleEndMs);
+    const start = new Date(currentCycleStartMs);
+    const end = new Date(currentCycleEndMs);
 
-  // 4. Calculate precise progress bar position matching current time
-  const totalDuration = currentCycleEndMs - currentCycleStartMs;
-  const elapsed = now.getTime() - currentCycleStartMs;
-  
-  let progressPercentage = (elapsed / totalDuration) * 100;
-  progressPercentage = Math.max(0, Math.min(100, progressPercentage)); // Clamp bounds
-  const progressString = progressPercentage.toFixed(1) + "%";
+    // 4. Calculate precise progress bar position matching current time
+    const totalDuration = currentCycleEndMs - currentCycleStartMs;
+    const elapsed = now.getTime() - currentCycleStartMs;
+    
+    let progressPercentage = (elapsed / totalDuration) * 100;
+    progressPercentage = Math.max(0, Math.min(100, progressPercentage)); // Clamp bounds
+    const progressString = progressPercentage.toFixed(1) + "%";
 
-  // 5. Update DOM elements: Track bar variable and Pin label text
-  const track = document.getElementById('timeline-track-element');
-  const textLabel = document.getElementById('progress-text-label');
-  
-  if (track && textLabel) {
-    track.style.setProperty('--progress', progressString);
-    textLabel.innerText = `YOU ARE HERE: ${progressString}`;
-  }
-
-  // 6. Update Header Labels dynamically
-  const formatHeaderDate = (d) => d.toLocaleString('en-US', { month: 'short', year: 'numeric' });
-  document.getElementById('lbl-start-halving').innerText = `Halving ${currentCycleNumber} (${formatHeaderDate(start)})`;
-  document.getElementById('lbl-end-halving').innerText = `Halving ${currentCycleNumber + 1} (${formatHeaderDate(end)})`;
-
-  // 7. Auto-calculate Expected Peak Target Window (Typically 12-18 months post-halving)
-  // 1. Establish the anchor: Bitcoin Genesis block (Jan 3, 2009)
-  const lastHalving = new Date('2024-04-20T00:00:00Z');
-  const cycleLengthMs = 4 * 365.25 * 24 * 60 * 60 * 1000; // Accurate 4-year cycle
-
-  const today = new Date();
-
-  // 2. Determine which cycle we are in
-  let cycleStart = new Date(lastHalving.getTime());
-
-  // If today is past the peak of the current cycle, we automatically look to the next one
-  // Peak is defined as 18 months after halving
-  let peakEnd = new Date(cycleStart.getTime());
-  peakEnd.setMonth(peakEnd.getMonth() + 18);
-
-  if (today > peakEnd) {
-      cycleStart = new Date(cycleStart.getTime() + cycleLengthMs);
-  }
-
-  // 3. Project the peak window based on the active cycle
-  let peakStart = new Date(cycleStart.getTime());
-  peakStart.setMonth(peakStart.getMonth() + 12); // Start of peak window
-
-  let peakEndNew = new Date(cycleStart.getTime());
-  peakEndNew.setMonth(peakEndNew.getMonth() + 18); // End of peak window
-
-  // 4. Format
-  const formatMonth = (date) => date.toLocaleString('en-US', { month: 'short' });
-  const formatYear = (date) => date.toLocaleString('en-US', { year: 'numeric' });
-
-  let displayString = "";
-
-  // Check if the peak window starts and ends in the same year
-  if (peakStart.getFullYear() === peakEndNew.getFullYear()) {
-    displayString = `${formatMonth(peakStart)}-${formatMonth(peakEndNew)} ${formatYear(peakEndNew)}`;
-  } else {
-    // Fallback case just in case the window crosses a year boundary (e.g., Dec 2028 - Jun 2029)
-    displayString = `${formatMonth(peakStart)} ${formatYear(peakStart)} - ${formatMonth(peakEndNew)} ${formatYear(peakEndNew)}`;
-  }
-
-    // 8. Rebuild the Dynamic X-Axis Date Intervals grid (0%, 25%, 50%, 75%, 100%)
-    const dateAxisContainer = document.getElementById('dynamic-date-axis');
-    if (dateAxisContainer) {
-      dateAxisContainer.innerHTML = ''; // Clear stale nodes
-      
-      const intervals = [0, 0.25, 0.50, 0.75, 1.0];
-      
-      intervals.forEach((fraction) => {
-        const intervalMs = currentCycleStartMs + (totalDuration * fraction);
-        const intervalDate = new Date(intervalMs);
-        
-        const monthLabel = intervalDate.toLocaleString('en-US', { month: 'short' });
-        const yearShort = intervalDate.getFullYear().toString().substring(2);
-        
-        const spanNode = document.createElement('span');
-        spanNode.innerText = `${monthLabel} '${yearShort}`;
-        dateAxisContainer.appendChild(spanNode);
-      });
+    // 5. Update DOM elements: Track bar variable and Pin label text
+    const track = document.getElementById('timeline-track-element');
+    const textLabel = document.getElementById('progress-text-label');
+    
+    if (track && textLabel) {
+      track.style.setProperty('--progress', progressString);
+      textLabel.innerText = `YOU ARE HERE: ${progressString}`;
     }
+
+    // 6. Update Header Labels dynamically
+    const formatHeaderDate = (d) => d.toLocaleString('en-US', { month: 'short', year: 'numeric' });
+    document.getElementById('lbl-start-halving').innerText = `Halving ${currentCycleNumber} (${formatHeaderDate(start)})`;
+    document.getElementById('lbl-end-halving').innerText = `Halving ${currentCycleNumber + 1} (${formatHeaderDate(end)})`;
+
+    // 7. Auto-calculate Expected Peak Target Window (Typically 12-18 months post-halving)
+    // 1. Establish the anchor: Bitcoin Genesis block (Jan 3, 2009)
+    const lastHalving = new Date('2024-04-20T00:00:00Z');
+    const cycleLengthMs = 4 * 365.25 * 24 * 60 * 60 * 1000; // Accurate 4-year cycle
+
+    const today = new Date();
+
+    // 2. Determine which cycle we are in
+    let cycleStart = new Date(lastHalving.getTime());
+
+    // If today is past the peak of the current cycle, we automatically look to the next one
+    // Peak is defined as 18 months after halving
+    let peakEnd = new Date(cycleStart.getTime());
+    peakEnd.setMonth(peakEnd.getMonth() + 18);
+
+    if (today > peakEnd) {
+        cycleStart = new Date(cycleStart.getTime() + cycleLengthMs);
+    }
+
+    // 3. Project the peak window based on the active cycle
+    let peakStart = new Date(cycleStart.getTime());
+    peakStart.setMonth(peakStart.getMonth() + 12); // Start of peak window
+
+    let peakEndNew = new Date(cycleStart.getTime());
+    peakEndNew.setMonth(peakEndNew.getMonth() + 18); // End of peak window
+
+    // 4. Format
+    const formatMonth = (date) => date.toLocaleString('en-US', { month: 'short' });
+    const formatYear = (date) => date.toLocaleString('en-US', { year: 'numeric' });
+
+    let displayString = "";
+
+    // Check if the peak window starts and ends in the same year
+    if (peakStart.getFullYear() === peakEndNew.getFullYear()) {
+      displayString = `${formatMonth(peakStart)}-${formatMonth(peakEndNew)} ${formatYear(peakEndNew)}`;
+    } else {
+      // Fallback case just in case the window crosses a year boundary (e.g., Dec 2028 - Jun 2029)
+      displayString = `${formatMonth(peakStart)} ${formatYear(peakStart)} - ${formatMonth(peakEndNew)} ${formatYear(peakEndNew)}`;
+    }
+
+      // 8. Rebuild the Dynamic X-Axis Date Intervals grid (0%, 25%, 50%, 75%, 100%)
+      const dateAxisContainer = document.getElementById('dynamic-date-axis');
+      if (dateAxisContainer) {
+        dateAxisContainer.innerHTML = ''; // Clear stale nodes
+        
+        const intervals = [0, 0.25, 0.50, 0.75, 1.0];
+        
+        intervals.forEach((fraction) => {
+          const intervalMs = currentCycleStartMs + (totalDuration * fraction);
+          const intervalDate = new Date(intervalMs);
+          
+          const monthLabel = intervalDate.toLocaleString('en-US', { month: 'short' });
+          const yearShort = intervalDate.getFullYear().toString().substring(2);
+          
+          const spanNode = document.createElement('span');
+          spanNode.innerText = `${monthLabel} '${yearShort}`;
+          dateAxisContainer.appendChild(spanNode);
+        });
+      }
   }
 
   /* Wallet Cards*/
@@ -5770,6 +6043,82 @@ function initFullyAutomatedTimeline() {
         window.handleAmountInput(amountInput);
     }
   };
+
+  (() => {
+    const isMobile = window.innerWidth < 401;
+    if (!isMobile) {
+      // Find the button early if possible, or wait for the microtask queue
+      document.addEventListener('readystatechange', () => {
+        const historyBtn = document.getElementById('btn-square-history');
+        if (historyBtn) historyBtn.classList.add('is-active');
+      });
+    }
+  })();
+  document.addEventListener('DOMContentLoaded', () => {
+  const historyBtn = document.getElementById('btn-square-history');
+  const historyPanel = document.getElementById('walletHistorySection');
+  const donutSection = document.getElementById('ca-section-expense');
+  const colRight = document.getElementById('ca-col-right');
+  const colLeft = document.getElementById('ca-col-left');
+  const caWrap = document.getElementById('ca-wrap');
+
+  // Track state globally (default to true/visible on iPad on initial load)
+  let isHistoryActive = window.innerWidth >= 401;
+
+  if (historyBtn && historyPanel && donutSection) {
+    historyBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      
+      const isMobile = window.innerWidth < 401;
+      
+      if (isMobile) {
+        // 📱 Mobile iPhone logic
+        const isOpen = historyPanel.classList.toggle('is-expanded');
+        this.classList.toggle('is-active', isOpen);
+        isHistoryActive = isOpen;
+        
+        if (isOpen) {
+          if (colLeft) colLeft.insertAdjacentElement('afterend', historyPanel);
+          historyPanel.appendChild(donutSection);
+          
+          void historyPanel.offsetHeight;
+          
+          setTimeout(() => {
+            historyPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }, 300);
+        } else {
+          historyPanel.classList.remove('is-expanded');
+          setTimeout(() => {
+            if (colRight) colRight.appendChild(donutSection);
+            if (caWrap) caWrap.appendChild(historyPanel);
+          }, 350);
+        }
+      } else {
+        // 📑 Tablet iPad logic: Explicitly toggle active state
+        isHistoryActive = !isHistoryActive;
+        this.classList.toggle('is-active', isHistoryActive);
+        
+        // Toggle the iPad hide class to completely collapse it
+        historyPanel.classList.toggle('is-hidden-ipad', !isHistoryActive);
+      }
+    });
+
+    // Reset clean states cleanly if window changes size
+    window.addEventListener('resize', () => {
+      const isMobile = window.innerWidth < 401;
+      if (!isMobile) {
+        if (colRight && !colRight.contains(donutSection)) {
+          colRight.appendChild(donutSection);
+        }
+        if (caWrap && caWrap.lastElementChild !== historyPanel) {
+          caWrap.appendChild(historyPanel);
+        }
+        historyBtn.classList.toggle('is-active', isHistoryActive);
+        historyPanel.classList.toggle('is-hidden-ipad', !isHistoryActive);
+      }
+    });
+  }
+});
 
   
   
