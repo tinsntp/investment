@@ -1934,38 +1934,6 @@ function caHighlight(idx, selectedName, selectedVal){
 }
 
 
-function caLoadBI() {
-  fetch(CA_CSV_BI + "&t=" + Date.now(), { cache: "no-store" })
-    .then(function(r) {
-      if (!r.ok) throw new Error("HTTP " + r.status);
-      return r.text();
-    })
-    .then(function(text) {
-      var rows = text.trim().split("\n").filter(function(r) { return r.trim(); });
-      var income = [];
-
-      rows.forEach(function(row, index) {
-        // Skip CSV Header Row
-        if (index === 0) return;
-
-        var cols = caCSV(row);
-        
-        // Extracting columns E, F, and G (indices 4, 5, and 6)
-        var colE = (cols[4]||"").replace(/^"|"$/g,"").trim(); // Icon
-        var colF = (cols[5]||"").replace(/^"|"$/g,"").trim(); // Name/Group
-        var colG = caNum(cols[6]);                       // Value (e.g. 46670)
-
-        if (colF && !isNaN(colG)) {
-          income.push({ icon: colE, name: colF, val: colG });
-        }
-      });
-
-    })
-    .catch(function(err) {
-      console.warn("ca-bi:", err.message);
-    });
-}
-
 function caLoadDonut(){
   fetch(CA_CSV_DNUT+"&t="+Date.now(),{cache:"no-store"})
     .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.text();})
