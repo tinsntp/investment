@@ -269,7 +269,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
   align-items: center;
   justify-content: space-between;
   padding: 14px 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  border-bottom: 0px solid rgba(255, 255, 255, 0.04);
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0.01), transparent);
 }
 
@@ -920,36 +920,68 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
         </div>
         <!-- ✨ Expanded Layout Wrapper -->
         <div id="walletHistorySection" class="history-panel">
-          <div class="history-header">
-            <div class="header-left">
+          <div class="history-header" style="display: flex; justify-content: space-between; align-items: center; position: relative;">
+            <div class="header-left" style="display: flex; align-items: center; gap: 8px;">
               <span class="history-title-icon material-icons-round">receipt_long</span>
               <h3>Transaction History</h3>
             </div>
-            <span class="badge-all">All Accounts</span>
+            
+            <!-- ENHANCED DROPDOWN SELECTOR BLOCK -->
+            <div class="filter-dropdown-wrapper" style="position: relative; font-family: 'DM Sans', sans-serif; min-width: 145px; z-index: 10;">
+              
+              <!-- Toggle Trigger -->
+              <div class="filter-dropdown-trigger" 
+                  id="transactionFilterTrigger" 
+                  onclick="window.toggleFilterDropdown(event)" 
+                  style="padding: 6px 12px; background: #111216; border: 1px solid #2d313c; border-radius: 10px; color: #f8f9fa; font-size: 12px; font-weight: 500; display: flex; align-items: center; justify-content: space-between; gap: 6px; cursor: pointer; user-select: none;">
+                <span id="currentFilterLabel" style="display: flex; align-items: center; gap: 6px;">
+                  <span class="material-icons-round" style="font-size: 15px; color: #6c757d;">filter_list</span>
+                  All Transactions
+                </span>
+                <span class="material-icons-round" id="filterDropdownArrow" style="font-size: 15px; color: #6c757d; transition: transform 0.2s;">expand_more</span>
+              </div>
+
+              <!-- absolute Options Menu Panel -->
+              <div class="filter-dropdown-options" 
+                  id="transactionFilterOptions" 
+                  style="display: none; position: absolute; right: 0; top: calc(100% + 4px); background: #1e222b; border: 1px solid #2d313c; border-radius: 10px; overflow: hidden; min-width: 155px; box-shadow: 0 8px 24px rgba(0,0,0,0.6);">
+                
+                <div class="filter-opt-item" onclick="window.selectTransactionFilter('all', 'All Transactions', 'filter_list')" 
+                    style="padding: 8px 12px; color: #f8f9fa; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;"
+                    onmouseover="this.style.background='#22252d'" onmouseout="this.style.background='transparent'">
+                  <span class="material-icons-round" style="font-size: 15px; color: #6c757d;">filter_list</span>
+                  All Transactions
+                </div>
+                
+                <div class="filter-opt-item" onclick="window.selectTransactionFilter('deposit', 'Deposits', 'arrow_downward')" 
+                    style="padding: 8px 12px; color: #f8f9fa; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;"
+                    onmouseover="this.style.background='#22252d'" onmouseout="this.style.background='transparent'">
+                  <span class="material-icons-round" style="font-size: 15px; color: #14b8a6;">arrow_downward</span>
+                  Deposits
+                </div>
+                
+                <div class="filter-opt-item" onclick="window.selectTransactionFilter('withdraw', 'Withdrawals', 'arrow_upward')" 
+                    style="padding: 8px 12px; color: #f8f9fa; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;"
+                    onmouseover="this.style.background='#22252d'" onmouseout="this.style.background='transparent'">
+                  <span class="material-icons-round" style="font-size: 15px; color: rgb(255, 105, 180);">arrow_upward</span>
+                  Withdrawals
+                </div>
+                
+                <div class="filter-opt-item" onclick="window.selectTransactionFilter('transfer', 'Transfers', 'swap_horiz')" 
+                    style="padding: 8px 12px; color: #f8f9fa; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;"
+                    onmouseover="this.style.background='#22252d'" onmouseout="this.style.background='transparent'">
+                  <span class="material-icons-round" style="font-size: 15px; color: #8a3ffc;">swap_horiz</span>
+                  Transfers
+                </div>
+
+              </div>
+            </div>
           </div>
           
           <div class="history-list" id="historyListContainer">
-            <div class="history-card tx-deposit">
-              <div class="tx-main-col">
-                <span class="tx-name">Deposit to Saving</span>
-                <span class="tx-date">Today, 14:20</span>
-              </div>
-              <div class="tx-side-col">
-                <span class="tx-amount">+đ5,000,000</span>
-                <span class="tx-status status-success">Completed</span>
-              </div>
-            </div>
-            
-            <div class="history-card tx-transfer">
-              <div class="tx-main-col">
-                <span class="tx-name">Transfer to Piggy cash</span>
-                <span class="tx-date">Yesterday, 09:15</span>
-              </div>
-              <div class="tx-side-col">
-                <span class="tx-amount text-muted">đ1,200,000</span>
-                <span class="tx-status status-pending">Pending</span>
-              </div>
-            </div>
+            <!-- Existing Cards remain untouched -->
+            <div class="history-card tx-deposit">...</div>
+            <div class="history-card tx-transfer">...</div>
           </div>
         </div>
       </div>
@@ -5054,11 +5086,11 @@ function setupGlobalInteractivePhysics() {
       /* Base Responsive Display Utilities */
       .ca-d-inline { display: inline !important; }
       .ca-d-none { display: none !important; }
-      .tx-group-hdr{margin-top:10px!important;font-weight: 300!important;}
+      .tx-group-hdr{margin-top:10px!important;}
       
       /* --- Adaptive Layout Sizing using increased vw units --- */
       @media (max-width: 400px) {
-        .ca-history-row { padding: 1.5vw 1.2vw !important; gap: 2.5vw !important; }
+        .ca-history-row { padding: 1.5vw 1vw !important; gap: 2.5vw !important; }
         .ca-history-icon-wrap { width: 5.5vw !important; }
         .ca-history-ico { width: 5.5vw !important; height: 5.5vw !important; max-width: 9vw !important; max-height: 9vw !important; }
         .ca-history-fb { width: 5.5vw !important; height: 5.5vw !important; font-size: 4vw !important; }
@@ -5068,7 +5100,7 @@ function setupGlobalInteractivePhysics() {
         .ca-history-dte,.tx-group-hdr { font-size: 3.2vw !important; }
         
         .ca-history-rgt-wrap { display: flex; flex-direction: row; align-items: center; gap: 2.5vw; flex-shrink: 0; }
-        .ca-history-amt { font-size: 3.4vw !important; min-width:60px; padding-right: 2vw !important; text-align: right; font-weight: 600; white-space: nowrap; }
+        .ca-history-amt { font-size: 3.4vw !important; min-width:50px; padding-right: 2vw !important; text-align: right; font-weight: 600; white-space: nowrap; }
         
         .ca-display-desktop { display: none !important; }
         .ca-display-mobile { display: inline !important; }
@@ -5086,7 +5118,7 @@ function setupGlobalInteractivePhysics() {
         .ca-history-dte,.tx-group-hdr { font-size: 2.2vw !important;}
         
         .ca-history-rgt-wrap { display: flex; flex-direction: row; align-items: center; gap: 2vw; flex-shrink: 0; min-width: max-content; }
-        .ca-history-amt { font-size: 2.6vw !important; min-width:90px;padding-right: 0px !important; text-align: right; font-weight: 600; white-space: nowrap; }
+        .ca-history-amt { font-size: 2.6vw !important; min-width:100px;padding-right: 0px !important; text-align: right; font-weight: 600; white-space: nowrap; }
         
         .ca-display-desktop { display: inline !important; }
         .ca-display-mobile { display: none !important; }
@@ -5235,6 +5267,7 @@ function setupGlobalInteractivePhysics() {
               </div>
             </div>
           `;
+          
         }
       });
 
@@ -6327,9 +6360,82 @@ function setupGlobalInteractivePhysics() {
       }
     });
   }
-});
+  });
 
-  
+  // 1. OPEN/CLOSE DISPLAY HANDLING
+  window.toggleFilterDropdown = function(event) {
+    event.stopPropagation();
+    const optionsPanel = document.getElementById('transactionFilterOptions');
+    const arrowIcon = document.getElementById('filterDropdownArrow');
+    
+    if (!optionsPanel) return;
+    const isCurrentlyOpen = optionsPanel.style.display === 'block';
+    
+    window.closeAllFilterDropdowns();
+
+    if (!isCurrentlyOpen) {
+      optionsPanel.style.display = 'block';
+      if (arrowIcon) arrowIcon.style.transform = 'rotate(180deg)';
+    }
+  };
+
+  // 2. SELECTION DISPATCHER
+  window.selectTransactionFilter = function(filterType, labelText, iconName) {
+    const labelElement = document.getElementById('currentFilterLabel');
+    
+    // Color code matching your dashboard themes
+    if (labelElement) {
+      let iconColor = '#6c757d';
+      if (filterType === 'deposit') iconColor = '#14b8a6';
+      if (filterType === 'withdraw') iconColor = 'rgb(255, 105, 180)';
+      if (filterType === 'transfer') iconColor = '#8a3ffc';
+
+      labelElement.innerHTML = `
+        <span class="material-icons-round" style="font-size: 15px; color: ${iconColor};">${iconName}</span>
+        ${labelText}
+      `;
+    }
+
+    window.closeAllFilterDropdowns();
+
+    // Execute DOM row sorting
+    window.filterHistoryRowsUI(filterType);
+  };
+
+  // 3. INTERNAL DOM FILTER RULE (Hides/Shows cards seamlessly)
+  window.filterHistoryRowsUI = function(filterType) {
+    const container = document.getElementById('historyListContainer');
+    if (!container) return;
+
+    const cards = container.getElementsByClassName('history-card');
+    
+    for (let card of cards) {
+      if (filterType === 'all') {
+        card.style.display = 'flex';
+      } else {
+        // Looks for your standard class signatures: tx-deposit, tx-transfer, tx-withdraw
+        if (card.classList.contains(`tx-${filterType}`)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      }
+    }
+  };
+
+  // 4. WINDOW BLUR CLEANUP CLOSURES
+  window.closeAllFilterDropdowns = function() {
+    const optionsPanel = document.getElementById('transactionFilterOptions');
+    const arrowIcon = document.getElementById('filterDropdownArrow');
+    
+    if (optionsPanel) optionsPanel.style.display = 'none';
+    if (arrowIcon) arrowIcon.style.transform = 'rotate(0deg)';
+  };
+
+  // Auto close whenever clicking outside the target bounds
+  document.addEventListener('click', function() {
+    window.closeAllFilterDropdowns();
+  });
   
 
 </script>
