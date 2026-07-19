@@ -5041,6 +5041,156 @@ function setupGlobalInteractivePhysics() {
     
   }
 
+  function loadTransactionHistory() {
+  const container = document.getElementById('historyListContainer');
+  if (!container) return;
+
+  container.innerHTML = '<div class="history-loading" style="padding: 1vw 0; text-align: center; color: rgba(255,255,255,0.45); font-size: 1.6vw;">Loading transaction records...</div>';
+
+  function getPeriodHeader(dateStr) {
+    try {
+      var d = new Date(dateStr);
+      if (isNaN(d.getTime())) return "Other";
+      
+      var now = new Date(); // 2026
+      var diffMonths = (now.getFullYear() - d.getFullYear()) * 12 + (now.getMonth() - d.getMonth());
+      
+      if (diffMonths === 0) return "This Month";
+      if (diffMonths === 1) return "Last Month";
+      if (now.getFullYear() === d.getFullYear()) return "This Year";
+      
+      return d.getFullYear().toString();
+    } catch(e) {
+      return "Other";
+    }
+  }
+
+  function formatShortNum(num) {
+    var absNum = Math.abs(num);
+    if (absNum >= 1000000) {
+      var val = absNum / 1000000;
+      return (val % 1 === 0 ? val : val.toFixed(1)) + 'M';
+    }
+    if (absNum >= 1000) {
+      var val = absNum / 1000;
+      return (val % 1 === 0 ? val : val.toFixed(1)) + 'K';
+    }
+    return absNum.toString();
+  }
+
+  fetch(CA_CSV_BI + "&t=" + Date.now(), { cache: "no-store" })
+    .then(function(r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.text();
+    })
+    .then(function(text) {
+      var rows = text.trim().split("\n").filter(function(r) { return r.trim(); });
+      var htmlMarkup = '';
+      var currentPeriod = '';
+
+      rows.forEach(function(row, index) {
+        if (index === 0) return;
+
+        var cols = caCSV(row);
+        
+        var dateVal    = (cols[10] || "").replace(/^"|"$/g, "").trim();
+        var typeVal    = (cols[11] || "").replace(/^"|"$/g, "").trim();
+        var amountRaw  = (cols[12] || "").replace(/^"|"$/g, "").trim();
+        var accountVal = (cols[13] || "").replace(/^"|"$/g, "").trim();
+        var detailVal  = (cols[14] || "").replace(/^"|"$/g, "").trim();
+        
+        var incomeIconUrl  = (cols[22] || "").replace(/^"|"$/g, "").trim();
+        var accountIconUrl = (cols[23] || "").replace(/^"|"$/g, "").trim();
+
+        var lowerType = typeVal.toLowerCase();
+        if (lowerType.indexOf('salary') !== -1 || lowerType.indexOf('social') !== -1) {
+          return; 
+        }
+
+        var cleanAmt = caNum(amountRaw);
+        
+        if (dateVal && typeVal) {
+          var periodGroup = getPeriodHeader(dateVal);
+          if (periodGroup !== currentPeriod) {
+            currentPeriod = periodGroup;
+            htmlMarkup += `<div class="tx-group-hdr" style="padding: 1.2vw 0 0.4vw; margin-top: 0.1vw; font-size: 1.8vw;">${currentPeriod}</div>`;
+          }
+
+          // Short Date Formatter (MMM dd)
+          var shortDate = "MMM dd";
+          try {
+            var dObj = new Date(dateVal);
+            if (!isNaN(dObj.getTime())) {
+              shortDate = dObj.toLocaleDateString('en-US', { month: 'short', day: '2-digit' });
+            }
+          } catch(e) {}
+
+          var shortAmountText = formatShortNum(cleanAmt);
+
+          var isNegative = cleanAmt < 0;
+          var amountPrefix = isNegative ? '-' : '+';
+          var themeColor = isNegative ? 'rgb(255, 105, 180)' : '#00b4d8'; 
+          var badgeBg    = isNegative ? 'rgba(255, 105, 180, 0.1)' : 'rgba(0, 180, 216, 0.1)';
+
+          // Strict micro sizing for icons (3.2vw handles full scaling visibility beautifully)
+          var iconHtml = '';
+          if (incomeIconUrl && incomeIconUrl.toLowerCase() !== 'n/a') {
+            iconHtml = `<img src="${incomeIconUrl}" class="ico" style="width: 3.2vw; height: 3.2vw; max-width: 3.2vw; max-height: 3.2vw; padding: 0.2vw;" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`;
+          }
+          var fallbackLetter = (typeVal || "?").charAt(0).toUpperCase();
+          iconHtml += `<div class="ico-fb" style="width: 3.2vw; height: 3.2vw; font-size: 1.8vw; display: ${incomeIconUrl ? 'none' : 'flex'}">${fallbackLetter}</div>`;
+
+          var accountBadgeHtml = '';
+          if (accountVal) {
+            accountBadgeHtml = `
+              <div style="display: inline-flex; align-items: center; gap: 0.4vw; background: ${badgeBg}; padding: 0.2vw 0.8vw; border-radius: 4px; margin-left: 0.8vw;">
+                ${accountIconUrl ? `<img src="${accountIconUrl}" style="width: 2.2vw; height: 2.2vw; object-fit: contain; border-radius: 50%;" />` : ''}
+                <span style="color: ${themeColor}; font-size: 1.7vw; font-weight: 600; letter-spacing: 0.02em;">${accountVal}</span>
+              </div>
+            `;
+          }
+
+          htmlMarkup += `
+            <div class="sub-swipe-container" style="border-bottom: 1px solid rgba(255,255,255,0.02); background: transparent;">
+              <div class="subs-row" style="display: flex; align-items: center; padding: 0.6vw 0.5vw; gap: 1.2vw;">
+                
+                <div style="display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 3.2vw;">
+                  ${iconHtml}
+                </div>
+
+                <div class="mid" style="display: flex; align-items: center; justify-content: space-between; gap: 1.2vw; min-width: 0;">
+                  <div style="display: flex; align-items: center; gap: 0.8vw; min-width: 0; flex: 1;">
+                    <span class="ttl" style="margin-bottom: 0; font-size: 1.9vw; flex-shrink: 0;">${typeVal}</span>
+                    <span class="dtl" style="font-size: 1.6vw; color: rgba(255,255,255,0.35); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;">
+                      — ${detailVal}
+                    </span>
+                    ${accountBadgeHtml}
+                  </div>
+                </div>
+
+                <div class="rgt" style="flex-direction: row; align-items: center; gap: 1.2vw; flex-shrink: 0;">
+                  <div class="dte" style="background: rgba(255,255,255,0.04); padding: 0.2vw 0.6vw; border-radius: 3px; font-size: 1.4vw; font-family: sans-serif; color: rgba(255,255,255,0.5); text-transform: uppercase;">
+                    ${shortDate}
+                  </div>
+                  <div class="amt" style="color: ${themeColor}; font-size: 2.1vw; width: 10vw; text-align: right; font-weight: 600;">
+                    ${amountPrefix}${shortAmountText}
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          `;
+        }
+      });
+
+      container.innerHTML = htmlMarkup || '<div class="history-empty" style="padding: 2vw; text-align: center; color: rgba(255,255,255,0.4); font-size: 1.6vw;">No history logs recorded.</div>';
+    })
+    .catch(function(err) {
+      console.warn("ca-history-list:", err.message);
+      container.innerHTML = `<div class="history-error" style="padding: 2vw; text-align: center; color: rgb(255, 105, 180); font-size: 1.6vw;">Failed to load transaction logs.</div>`;
+    });
+}
+
   function reorderCards(selectedIndex) {
     const targetCard = cardsList.splice(selectedIndex, 1)[0];
     cardsList.push(targetCard);
@@ -5571,7 +5721,7 @@ function setupGlobalInteractivePhysics() {
   
 
   // Initialize with mock parameters
-  caLoadAccounts();
+  caLoadAccounts();loadTransactionHistory();
 
   // Kick off initialization on layout render loops
   document.addEventListener("DOMContentLoaded", initFullyAutomatedTimeline);
