@@ -147,13 +147,13 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 
 #slide-1{position:relative}
 .tab-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
-#add-cash{position:absolute;top:10px;right:10px;z-index:10;width:7vw;height:7vw;padding-bottom:1px;max-width:7vw;max-height:7vw;font-family:monospace!important;font-size:5vw;font-weight:500;border-radius:50%;background-color:#14b8a6;color:#ffffff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
+#add-cash{position:absolute;top:10px;right:10px;z-index:10;width:8vw;height:8vw;padding-bottom:1px;max-width:7vw;max-height:7vw;font-family:monospace!important;font-size:5vw;font-weight:500;border-radius:50%;background-color:#14b8a6;color:#ffffff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
 #add-cash.loading{pointer-events:none;display:flex;align-items:center;justify-content:center}
 .cash-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:600;align-items:flex-start;justify-content:center;padding-top:20vh;overflow-y:auto}
 .cash-modal-overlay.open{display:flex!important}.btn-spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,0.3);border-top-color:#ffffff;border-radius:50%;animation:spinCircle 0.8s linear infinite;display:inline-block}
 #add-cash.success-confirm{background-color:#10b981 !important;color:#ffffff !important;font-size:15px;font-weight:500;display:flex;align-items:center;justify-content:center;transition:background-color 0.3s ease}
 @keyframes spinCircle{to{transform:rotate(360deg)}}
-@media screen and (min-width:401px){#add-cash.success-confirm{font-size:3.4vw;} .btn-spinner{width:25px;height:25px;}}
+@media screen and (min-width:401px){#add-cash.success-confirm{font-size:3.4vw;} .btn-spinner{width:20px;height:20px;}}
 
 /* ══ WALLET SLIDE ══ */
 .wallet-widget{width:100%;padding:0px;overflow:hidden;display:flex;flex-direction:column;gap:16px}
@@ -242,7 +242,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 /* --- 2. Full Width History Panel --- */
 .history-panel {
   background: #121212;
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  border: 0px solid rgba(255, 255, 255, 0.04);
   border-radius: 12px;
   margin-top: 16px;
   width: 100%; /* Spans all the way across to the right edge */
@@ -255,10 +255,6 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
               border-color 0.3s ease;
 }
 
-/* Highlight panel border matching the active indicator button */
-.history-panel.is-expanded {
-  border-color: #e0245e;
-}
 
 .history-header {
   display: flex;
@@ -604,7 +600,7 @@ Object.assign(modalOverlay.style{position:"fixed",top:"0",left:"0",width:"100%",
 .sub-swipe-container.swiped .row,
 .sub-swipe-container.swiped .row:active,
 .sub-swipe-container.swiped .row:hover { transform: translateX(-73px) scale(1) !important;}
-.sub-swipe-container .row.subs-row{position: relative;background-color: #1c1c1e;z-index: 2;transition: transform 0.2s ease;border-bottom: 1px solid rgba(255, 255, 255, 0.06)!important;}
+.sub-swipe-container .row.subs-row{position: relative;background-color: #191919;z-index: 2;transition: transform 0.2s ease;border-bottom: 1px solid rgba(255, 255, 255, 0.06)!important;}
 
 
 /* ══ BTC SLIDE ══ */
@@ -937,7 +933,6 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
             
             <!-- ENHANCED DROPDOWN SELECTOR BLOCK -->
             <div class="filter-dropdown-wrapper" style="position: relative; font-family: 'DM Sans', sans-serif; min-width: 125px; z-index: 10;">
-              
               <!-- Toggle Trigger -->
               <div class="filter-dropdown-trigger" 
                   id="transactionFilterTrigger" 
@@ -959,7 +954,6 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
           </div>
           
           <div class="history-list" id="historyListContainer">
-            <!-- Existing Cards remain untouched -->
             <div class="history-card tx-deposit">...</div>
             <div class="history-card tx-transfer">...</div>
           </div>
@@ -1186,7 +1180,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
     <div id="cash-modal-status" class="add-status"></div>
     <div class="add-actions">
       <button id="cash-modal-cancel" class="add-cancel-btn"><label>Cancel</button>
-      <button id="cash-modal-submit" class="add-submit-btn"><label>Save</button>
+      <button id="cash-modal-submit" class="add-submit-btn"><label>Add</button>
     </div>
   </div>
 </div>
@@ -1882,41 +1876,45 @@ function caSetCenter(l,v){var cl=document.getElementById("ca-center-label"),cv=d
 function caHighlight(idx, selectedName, selectedVal){
   caActiveIdx = idx;
   var data = caActiveDataset || [];
-  // 1. Highlight the donut segments
-  document.querySelectorAll(".ca-seg").forEach(function(el, i){
-    el.style.opacity = (idx === null || i === idx) ? "1" : "0.2";
-    el.setAttribute("stroke-width", (idx !== null && i === idx) ? "32" : "28");
+
+  // FIX: Match segments by data-index rather than querySelectorAll index
+  document.querySelectorAll(".ca-seg").forEach(function(el){
+    var segIdx = parseInt(el.getAttribute("data-index"), 10);
+    var isMatch = (idx !== null && segIdx === idx);
+    
+    el.style.opacity = (idx === null || isMatch) ? "1" : "0.2";
+    el.setAttribute("stroke-width", isMatch ? "32" : "28");
   });
   
-  // 2. Dim inactive rows
+  // Dim inactive list rows (list rows match 1:1 with data array index)
   document.querySelectorAll(".ca-list-row").forEach(function(el, i){
     el.classList.toggle("ca-dimmed", idx !== null && i !== idx);
   });
 
-  // 3. Update center text safely
+  // Update center text safely
   if (idx === null) {
-    // Sum raw numbers exactly as they are to get the correct net total
-    var totalVal = data.reduce(function(s, d){ return s + d.val; }, 0);
+    var totalVal = data.reduce(function(s, d){ return s + (d.val || 0); }, 0);
     var centerLabel = (caActiveTab === "income") ? "Incomes" : "Expenses";
     
-    caSetCenter(centerLabel, caFmtSh(Math.abs(totalVal)));
+    var formattedVal = (totalVal < 0 ? "-" : "") + caFmtSh(Math.abs(totalVal));
+    caSetCenter(centerLabel, formattedVal);
   } else {
     if (selectedName !== undefined && selectedVal !== undefined) {
-      // Clean emojis and extra spacing from the manually passed string
       var cleanSelectedName = selectedName
         .replace(/[^\x00-\x7F]/g, "").replace(/\bPNL\b/gi, "")
         .trim();
         
-      caSetCenter(cleanSelectedName, caFmtSh(selectedVal));
+      var formattedSelectedVal = (selectedVal < 0 ? "-" : "") + caFmtSh(Math.abs(selectedVal));
+      caSetCenter(cleanSelectedName, formattedSelectedVal);
     } else {
       var fallbackItem = data[idx];
       if (fallbackItem && !isNaN(fallbackItem.val)) {
-        // Clean emojis and extra spacing from the fallback item name
         var cleanFallbackName = fallbackItem.name
           .replace(/[^\x00-\x7F]/g, "").replace(/\bPNL\b/gi, "")
           .trim();
 
-        caSetCenter(cleanFallbackName, caFmtSh(fallbackItem.val));
+        var formattedFallbackVal = (fallbackItem.val < 0 ? "-" : "") + caFmtSh(Math.abs(fallbackItem.val));
+        caSetCenter(cleanFallbackName, formattedFallbackVal);
       } else {
         caSetCenter("Selected", "đ0");
       }
@@ -1925,26 +1923,31 @@ function caHighlight(idx, selectedName, selectedVal){
 }
 
 
-function caLoadDonut(){
-  fetch(CA_CSV_DNUT+"&t="+Date.now(),{cache:"no-store"})
-    .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.text();})
-    
-    .then(function(text){
-      var data=text.trim().split("\n").filter(function(r){return r.trim();}).map(function(row){
-        var cols=caCSV(row);
-        return {name:cols[0].replace(/^"|"$/g,"").trim(),val:caNum(cols[1])};
-      }).filter(function(d){return d.name&&!isNaN(d.val);});
-      
-      //console.log("📊 Cleaned Donut Data Array:", data); // Moved safely outside the map loop
-      
-      if(!data.length)return;
-      
-      // Sync global states safely right before rendering
-      caGlobalData=data;
-      caActiveDataset=data; 
-      
-      caRenderDonut(data);
-    }).catch(function(err){console.warn("ca-donut:",err.message);});
+function caLoadDonut() {
+  fetch(CA_CSV_DNUT + "&t=" + Date.now(), { cache: "no-store" })
+    .then(function(r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.text();
+    })
+    .then(function(text) {
+      var data = text.trim().split("\n").filter(function(r) { return r.trim(); }).map(function(row) {
+        var cols = caCSV(row);
+        return { name: cols[0].replace(/^"|"$/g, "").trim(), val: caNum(cols[1]) };
+      }).filter(function(d) { return d.name && !isNaN(d.val); });
+
+      if (!data.length) return;
+
+      // 1. Sync global state
+      caGlobalData = data;
+      caActiveDataset = data; 
+
+      // 2. Pass current active tab explicitly to avoid 'undefined' fallback bugs!
+      var currentTab = caActiveTab || "income";
+      caRenderDonut(data, currentTab);
+
+    }).catch(function(err) {
+      console.warn("ca-donut:", err.message);
+    });
 }
 
 // Color Palettes
@@ -1994,16 +1997,19 @@ function caGetPalette() {
 }
 
 // Master Donut Rendering
-function caRenderDonut(data) {
+function caRenderDonut(data, tabType) {
   var svg = document.getElementById("ca-donut-svg");
   if (!svg) return;
   svg.innerHTML = "";
   
-  // Save the raw, unfiltered data array globally so caHighlight can read it
+  // 1. Save global state and sync active tab
   caActiveDataset = data; 
+  if (tabType) {
+    caActiveTab = tabType;
+  }
   
-  // 1. Calculate the total size for drawing donut rings using absolute values
-  var total = data.reduce(function(s, d) { return s + Math.abs(d.val); }, 0);
+  // 2. Calculate the total size for drawing donut rings using absolute values
+  var total = data.reduce(function(s, d) { return s + Math.abs(d.val || 0); }, 0);
   
   var cx = 100, cy = 100, r = 78, sw = 28, GAP = 4;
   var ns = "http://www.w3.org/2000/svg";
@@ -2033,10 +2039,11 @@ function caRenderDonut(data) {
   tr.setAttribute("stroke-width", sw);
   svg.appendChild(tr);
 
-  // 2. Render all chart paths from the original data array
+  // 3. Render all chart paths with explicit data-index attributes
   var angle = 0;
   data.forEach(function(item, i) {
-    var pct = Math.abs(item.val) / total;
+    var val = Math.abs(item.val || 0);
+    var pct = total > 0 ? (val / total) : 0;
     var sweep = pct * 360 - GAP;
     if (sweep <= 0) { angle += pct * 360; return; }
 
@@ -2047,6 +2054,10 @@ function caRenderDonut(data) {
     path.setAttribute("stroke-width", sw);
     path.setAttribute("stroke-linecap", "round");
     path.setAttribute("class", "ca-seg");
+    
+    // FIX: Assign explicit data-index so caHighlight matches array index 1:1
+    path.setAttribute("data-index", i);
+
     path.style.cursor = "pointer";
     path.style.transition = "opacity 0.25s, stroke-width 0.2s";
 
@@ -2063,14 +2074,8 @@ function caRenderDonut(data) {
 
   svg.addEventListener("click", function() { caHighlight(null); });
   
-  // 3. YOUR ORIGINAL MATH: Sum raw values directly to get 52.7M net balance
-  var totalRaw = data.reduce(function(s, d) { return s + d.val; }, 0);
-  
-  // Force it positive ONLY for presentation layout inside caFmtSh
-  caSetCenter(
-    caActiveTab === "income" ? "Incomes" : "Expenses", 
-    caFmtSh(Math.abs(totalRaw))
-  );
+  // 4. Delegate center text and initial state handling directly to caHighlight
+  caHighlight(null);
 }
 
 // Master List Rendering
@@ -2684,7 +2689,7 @@ function loadExpense() {
     Object.assign(row.style, {
         position: "relative",
         zIndex: "2", // Higher z-index completely covers the buttons behind it
-        backgroundColor: "#1c1c1e", // Lớp nền tối che kín 2 nút ẩn phía sau
+        
         transition: "transform 0.2s ease"
     }); 
 
@@ -2773,40 +2778,139 @@ function loadExpense() {
   }
 
 
-  function loadRecent(){
-    fetch(CSV_RECENT+"&t="+Date.now(),{cache:"no-store"})
-      .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.text();})
-      .then(function(text){
-        var lines=text.trim().split("\n").filter(function(l){return l.trim();});
-        var start=0,first=parseCsvRow(lines[0]);
-        if(isNaN(parseVal(first[3])))start=1;
-        var list=document.getElementById("tx-list");list.innerHTML="";
-        var lastGroup=null;
+  // State variables to track paginated loading
+  var allParsedItems = [];
+  var loadedCount = 0;
+  var PAGE_SIZE = 20;
+  var lastRenderedGroup = null;
 
-        for(var i=start;i<lines.length;i++){
-          var cols=parseCsvRow(lines[i]);if(!cols[2])continue;
-          var item={date:cols[2]||"",icon:cols[8]||"",title:cols[4]||"",rawDetail: cols[6] ||"",detail:cleanDetail(cols[6]||""),amount:parseVal(cols[5]),badgeSource:cols[7]||""};
-          var group=relativeGroupLabel(item.date);
-          if(group!==lastGroup){
-            list.appendChild(buildGroupHeader(group));
-            lastGroup=group;
-          }
-          list.appendChild(buildTxRow(item));
+  // Global/Module-level state variables
+  window.allParsedItems = [];
+  window.loadedCount = 0;
+  window.PAGE_SIZE = 20;
+  window.lastRenderedGroup = null;
+
+  // State variables
+  window.allParsedItems = [];
+  window.loadedCount = 0;
+  window.PAGE_SIZE = 20;
+  window.lastRenderedGroup = null;
+
+  function loadRecent() {
+    fetch(CSV_RECENT + "&t=" + Date.now(), { cache: "no-store" })
+      .then(function(r) {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.text();
+      })
+      .then(function(text) {
+        var lines = text.trim().split("\n").filter(function(l) { return l.trim(); });
+        var start = 0, first = parseCsvRow(lines[0]);
+        if (isNaN(parseVal(first[3]))) start = 1;
+
+        // 1. Reset state
+        window.allParsedItems = [];
+        window.loadedCount = 0;
+        window.lastRenderedGroup = null;
+
+        for (var i = start; i < lines.length; i++) {
+          var cols = parseCsvRow(lines[i]);
+          if (!cols[2]) continue;
+          window.allParsedItems.push({
+            date: cols[2] || "",
+            icon: cols[8] || "",
+            title: cols[4] || "",
+            rawDetail: cols[6] || "",
+            detail: cleanDetail(cols[6] || ""),
+            amount: parseVal(cols[5]),
+            badgeSource: cols[7] || ""
+          });
         }
 
-        document.getElementById("rec-msg").style.display="none";
-        
-        // Simply attach swipe mechanics without DOM injection clutter
-        document.querySelectorAll("#tx-list .sub-swipe-container").forEach(function(container) {
-          var row = container.querySelector(".row");
-          if (row) {
-            attachSwipeEvents(row, container);
-          }
-        });
-        
+        var list = document.getElementById("tx-list");
+        if (list) list.innerHTML = "";
+
+        // 2. Render initial 20 items
+        renderNextChunk();
+
+        document.getElementById("rec-msg").style.display = "none";
         applyLayout();
 
-      }).catch(function(err){document.getElementById("rec-msg").textContent="Error: "+err.message;});
+        // 3. Setup Sentinel Observer for Infinite Scroll
+        setupInfiniteScrollObserver();
+
+      }).catch(function(err) {
+        document.getElementById("rec-msg").textContent = "Error: " + err.message;
+      });
+  }
+
+  function renderNextChunk() {
+    var list = document.getElementById("tx-list");
+    if (!list || window.loadedCount >= window.allParsedItems.length) return;
+
+    var nextBatch = window.allParsedItems.slice(window.loadedCount, window.loadedCount + window.PAGE_SIZE);
+    var fragment = document.createDocumentFragment();
+
+    nextBatch.forEach(function(item) {
+      var group = relativeGroupLabel(item.date);
+      if (group !== window.lastRenderedGroup) {
+        fragment.appendChild(buildGroupHeader(group));
+        window.lastRenderedGroup = group;
+      }
+      
+      var rowNode = buildTxRow(item);
+      fragment.appendChild(rowNode);
+    });
+
+    // Remove existing sentinel before appending new rows
+    var oldSentinel = document.getElementById("tx-list-sentinel");
+    if (oldSentinel) oldSentinel.remove();
+
+    list.appendChild(fragment);
+    window.loadedCount += nextBatch.length;
+
+    // Re-append bottom sentinel marker if there are still more items to load
+    if (window.loadedCount < window.allParsedItems.length) {
+      var sentinel = document.createElement("div");
+      sentinel.id = "tx-list-sentinel";
+      sentinel.style.height = "20px";
+      sentinel.style.width = "100%";
+      list.appendChild(sentinel);
+
+      // Re-observe the new sentinel position
+      if (window.txObserver) {
+        window.txObserver.observe(sentinel);
+      }
+    }
+
+    // Attach swipe events
+    document.querySelectorAll("#tx-list .sub-swipe-container").forEach(function(container) {
+      var row = container.querySelector(".row");
+      if (row && !container.dataset.swipeAttached) {
+        attachSwipeEvents(row, container);
+        container.dataset.swipeAttached = "true";
+      }
+    });
+  }
+
+  function setupInfiniteScrollObserver() {
+    // Disconnect any existing observer
+    if (window.txObserver) window.txObserver.disconnect();
+
+    window.txObserver = new IntersectionObserver(function(entries) {
+      // If the sentinel element comes into view (or within 200px of view)
+      if (entries[0].isIntersecting) {
+        renderNextChunk();
+      }
+    }, {
+      root: null, // Watch window viewport
+      rootMargin: "200px", // Trigger 200px BEFORE user reaches the bottom
+      threshold: 0.1
+    });
+
+    var sentinel = document.getElementById("tx-list-sentinel");
+    if (sentinel) {
+      window.txObserver.observe(sentinel);
+    }
   }
 
 
@@ -3340,6 +3444,75 @@ addOverlay.addEventListener("click", function(e){
   if (e.target === addOverlay) addOverlay.classList.remove("open");
 });
 
+// 1. Áp dụng Style cho 2 nút Cancel & Save
+var addCancelBtn = document.getElementById("add-cancel-btn") || document.getElementById("add-close-btn");
+var addSubmitBtn = document.getElementById("add-submit-btn");
+var addStatusEl = document.getElementById("add-status-el") || document.getElementById("add-status");
+var addOverlay = document.getElementById("add-modal-overlay") || document.getElementById("add-overlay");
+
+if (addCancelBtn) {
+  Object.assign(addCancelBtn.style, {
+    flex: "1",
+    background: "rgba(255, 255, 255, 0.08)",
+    border: "none",
+    color: "#fff",
+    padding: "12px",
+    borderRadius: "8px",
+    fontSize: "14px",
+    fontWeight: "500",
+    cursor: "pointer",
+    transition: "background 0.2s"
+  });
+  
+  addCancelBtn.addEventListener("click", function() {
+    if (addOverlay) addOverlay.classList.remove("open");
+  });
+}
+
+if (addSubmitBtn) {
+  Object.assign(addSubmitBtn.style, {
+    flex: "1",
+    background: "#2b394a",
+    border: "none",
+    color: "#fff",
+    padding: "12px",
+    borderRadius: "8px",
+    fontSize: "14px",
+    fontWeight: "600",
+    cursor: "pointer",
+    transition: "background 0.2s"
+  });
+  
+  var actionContainer = addSubmitBtn.parentElement;
+  if (actionContainer) {
+    actionContainer.style.display = "flex";
+    actionContainer.style.gap = "12px";
+    actionContainer.style.marginTop = "16px";
+  }
+}
+
+// Hàm hỗ trợ ẩn 2 nút và hiển thị message thế vào vị trí đó
+function showStatusInPlace(msg, isError) {
+  if (!addStatusEl) return;
+  addStatusEl.textContent = msg;
+  addStatusEl.className = "add-status " + (isError ? "error" : "success");
+  
+  // Ẩn 2 nút bấm đi
+  if (addCancelBtn) addCancelBtn.style.display = "none";
+  if (addSubmitBtn) addSubmitBtn.style.display = "none";
+}
+
+// Hàm khôi phục lại 2 nút bấm
+function restoreButtons() {
+  if (addCancelBtn) addCancelBtn.style.display = "block";
+  if (addSubmitBtn) addSubmitBtn.style.display = "block";
+  if (addStatusEl) {
+    addStatusEl.textContent = "";
+    addStatusEl.className = "add-status";
+  }
+}
+
+// 2. Logic Submit gốc
 document.getElementById("add-submit-btn").addEventListener("click", function(){
 
   var title = document.getElementById("add-title").value.trim();
@@ -3350,14 +3523,13 @@ document.getElementById("add-submit-btn").addEventListener("click", function(){
   var users = document.getElementById("add-user").value;
 
   if (!startdate || !enddate || !title || (!amount && !totalamount)) {
-    addStatusEl.textContent = "Dates, Title, and Amount are required.";
-    addStatusEl.className = "add-status error";
+    showStatusInPlace("Dates, Title, and Amount are required.", true);
+    setTimeout(restoreButtons, 2000); // Tự hiện lại 2 nút sau 2s để người dùng sửa
     return;
   }
 
   addSubmitBtn.disabled = true;
-  addStatusEl.textContent = "Saving\u2026";
-  addStatusEl.className = "add-status";
+  showStatusInPlace("Saving\u2026", false);
 
   fetch(APPS_SCRIPT_URL, {
     method: "POST",
@@ -3366,18 +3538,18 @@ document.getElementById("add-submit-btn").addEventListener("click", function(){
     body: JSON.stringify({ title:title, totalamount:totalamount, amount:amount,startdate:startdate, enddate:enddate, users:users })
   })
   .then(function(){
-    addStatusEl.textContent = "Saved!";
-    addStatusEl.className = "add-status success";
+    showStatusInPlace("Saved!", false);
     setTimeout(function(){
       addOverlay.classList.remove("open");
       addSubmitBtn.disabled = false;
+      restoreButtons();
       loadSubscriptions();
     }, 700);
   })
   .catch(function(err){
-    addStatusEl.textContent = "Error: " + err.message;
-    addStatusEl.className = "add-status error";
+    showStatusInPlace("Error: " + err.message, true);
     addSubmitBtn.disabled = false;
+    setTimeout(restoreButtons, 2500);
   });
 });
 
@@ -3483,7 +3655,7 @@ function deleteSubscription(itemId) {
   });
 }
 
-function initCashModal() {
+  function initCashModal() {
     var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzhzqJ1weEPxJBpjDuUdyNCwcoY9cuWOTjuhrePUKVWy71J-nExGjOPpe4S9Tpo9KA/exec";
 
     var addCashBtn = document.getElementById("add-cash");
@@ -3498,6 +3670,45 @@ function initCashModal() {
         return;
     }
 
+    // 🌟 ÁP DỤNG STYLING CHUẨN ĐỒNG BỘ CHO HAI NÚT CANCEL & SAVE (SUBMIT)
+    if (cashCancel) {
+        Object.assign(cashCancel.style, {
+            flex: "1",
+            background: "rgba(255, 255, 255, 0.08)",
+            border: "none",
+            color: "#fff",
+            padding: "12px",
+            borderRadius: "12px",
+            fontSize: "14px",
+            fontWeight: "500",
+            cursor: "pointer",
+            transition: "background 0.2s"
+        });
+    }
+
+    if (cashSubmit) {
+        Object.assign(cashSubmit.style, {
+            flex: "1",
+            background: "#2b394a", // Hoặc tone màu chính của app (ví dụ #4a76a8 / #2563eb)
+            border: "none",
+            color: "#fff",
+            padding: "12px",
+            borderRadius: "12px",
+            fontSize: "14px",
+            fontWeight: "600",
+            cursor: "pointer",
+            transition: "background 0.2s"
+        });
+    }
+
+    // Nếu container bao ngoài nút chưa có flex & gap, gán bổ sung để căn ngang đều
+    var actionContainer = (cashCancel && cashCancel.parentElement) || (cashSubmit && cashSubmit.parentElement);
+    if (actionContainer) {
+        actionContainer.style.display = "flex";
+        actionContainer.style.gap = "12px";
+        actionContainer.style.marginTop = "16px";
+    }
+
     // Open Modal
     addCashBtn.addEventListener("click", function() {
         cashInput.value = "";
@@ -3508,10 +3719,11 @@ function initCashModal() {
     });
 
     // Close Modal
-    cashCancel.addEventListener("click", function() {
-        cashOverlay.classList.remove("open");
-    });
-
+    if (cashCancel) {
+        cashCancel.addEventListener("click", function() {
+            cashOverlay.classList.remove("open");
+        });
+    }
 
     cashSubmit.addEventListener("click", function() {
         var rawText = cashInput.value.trim();
@@ -3524,7 +3736,7 @@ function initCashModal() {
         var todayStr = new Date().toISOString().split('T')[0]; // yyyy-MM-dd
         var validRequestsCount = 0;
 
-        // Loop fires completely synchronously and instantly (under 2ms total)
+        // Loop fires completely synchronously and instantly
         for (var i = 0; i < items.length; i++) {
             var item = items[i].trim();
             if (!item) continue;
@@ -3546,7 +3758,7 @@ function initCashModal() {
                 amount: finalAmount
             };
 
-            // Fire and Forget immediately - NO await, NO blocking chain
+            // Fire and Forget immediately
             fetch(APPS_SCRIPT_URL, {
                 method: "POST",
                 headers: { "Content-Type": "text/plain" }, 
@@ -3564,11 +3776,10 @@ function initCashModal() {
             // 2. Set button to spinning state
             if (addCashBtn) {
                 addCashBtn.classList.add("loading");
-                //addCashBtn.innerHTML = "&#8635;"; // ↻
                 addCashBtn.innerHTML = '<span class="btn-spinner"></span>';
             }
             
-            // 3. Keep spinning for exactly 9 seconds to match your custom latency balance
+            // 3. Keep spinning & trigger reload after delay
             setTimeout(function() {
                 if (typeof loadRecent === "function") {
                     loadRecent();
@@ -3579,7 +3790,7 @@ function initCashModal() {
                     addCashBtn.innerHTML = "&#10003;"; // Unicode Checkmark Symbol Check ✓
                 }
                 
-                // 5. Wait 1.5 seconds for the user to see the success check, then reset back to normal
+                // 4. Wait 1.5 seconds for the checkmark, then reset
                 setTimeout(function() {
                     if (addCashBtn) {
                         addCashBtn.classList.remove("success-confirm");
@@ -3877,11 +4088,10 @@ function initCashModal() {
         zIndex: "2147483647",
         display: "flex",
         alignItems: "flex-start",
-        justifyContent: "center",paddingTop: "80px",
+        justifyContent: "center",paddingTop: "200px",
         opacity: "1"
     });
 
-    // --- 1. XỬ LÝ LOGIC ĐỘNG ĐỂ TẠO CHUỖI HTML CHO ICON ---
     // --- 1. XỬ LÝ LOGIC ĐỘNG ĐỂ TẠO CHUỖI HTML CHO ICON DẠNG THẺ IMG ---
     var iconHtml = '';
     var fallbackChar = targetItem.title ? targetItem.title.charAt(0) : "?";
@@ -5268,216 +5478,252 @@ function setupGlobalInteractivePhysics() {
   }
 
   function loadTransactionHistory() {
-  const container = document.getElementById('historyListContainer');
-  if (!container) return;
+    const container = document.getElementById('historyListContainer');
+    if (!container) return;
 
-  if (!document.getElementById('ca-history-responsive-styles')) {
-    const styleNode = document.createElement('style');
-    styleNode.id = 'ca-history-responsive-styles';
-    styleNode.innerHTML = `
-      .sub-swipe-container:last-child { border-bottom: none !important; }
-      
-      /* Base Responsive Display Utilities */
-      .ca-d-inline { display: inline !important; }
-      .ca-d-none { display: none !important; }
-      .tx-group-hdr{margin-top:10px!important;}
-      
-      /* --- Adaptive Layout Sizing using increased vw units --- */
-      @media (max-width: 400px) {
-        .ca-history-row { padding: 1.5vw 1vw !important; gap: 2.5vw !important; }
-        .ca-history-icon-wrap { width: 5.5vw !important; }
-        .ca-history-ico { width: 5.5vw !important; height: 5.5vw !important; max-width: 9vw !important; max-height: 9vw !important; }
-        .ca-history-fb { width: 5.5vw !important; height: 5.5vw !important; font-size: 4vw !important; }
+    if (!document.getElementById('ca-history-responsive-styles')) {
+      const styleNode = document.createElement('style');
+      styleNode.id = 'ca-history-responsive-styles';
+      styleNode.innerHTML = `
+        .sub-swipe-container:last-child { border-bottom: none !important; }
         
-        .ca-history-ttl,.ca-history-dtl { font-size: 3.6vw !important; }
-        .ca-history-badge-txt { font-size: 3vw !important; }
-        .ca-history-dte,.tx-group-hdr { font-size: 3.5vw !important; }
+        /* Base Responsive Display Utilities */
+        .ca-d-inline { display: inline !important; }
+        .ca-d-none { display: none !important; }
+        .tx-group-hdr{margin-top:10px!important;}
         
-        .ca-history-rgt-wrap { display: flex; flex-direction: row; align-items: center; gap: 2.5vw; flex-shrink: 0; }
-        .ca-history-amt { font-size: 3.6vw !important; min-width:50px; padding-right: 2vw !important; text-align: right; font-weight: 600; white-space: nowrap; }
-        
-        .ca-display-desktop { display: none !important; }
-        .ca-display-mobile { display: inline !important; }
-      }
-
-      @media (min-width: 401px) {
-        .ca-history-row { padding: 1.2vw 1.2vw !important; gap: 2vw !important; }
-        .ca-history-icon-wrap { width: 5.5vw !important; }
-        .ca-history-ico { width: 4.5vw !important; height: 4.5vw !important; max-width: 5.5vw !important; max-height: 5.5vw !important; }
-        .ca-history-fb { width: 4.5vw !important; height: 4.5vw !important; font-size: 2.4vw !important; }
-        
-        .ca-history-ttl { font-size: 2.6vw !important; }
-        .ca-history-dtl { font-size: 2.6vw !important; } 
-        .ca-history-badge-txt { font-size: 2.2vw !important; }
-        .ca-history-dte,.tx-group-hdr { font-size: 2.5vw !important;}
-        
-        .ca-history-rgt-wrap { display: flex; flex-direction: row; align-items: center; gap: 2vw; flex-shrink: 0; min-width: max-content; }
-        .ca-history-amt { font-size: 2.6vw !important; min-width:100px;padding-right: 0px !important; text-align: right; font-weight: 600; white-space: nowrap; }
-        
-        .ca-display-desktop { display: inline !important; }
-        .ca-display-mobile { display: none !important; }
-      }
-    `;
-    document.head.appendChild(styleNode);
-  }
-
-  container.innerHTML = '<div class="history-loading" style="padding: 1vw 0; text-align: center; color: rgba(255,255,255,0.45); font-size: 1.6vw;">Loading transaction records...</div>';
-
-  function getPeriodHeader(dateStr) {
-    try {
-      var d = new Date(dateStr);
-      if (isNaN(d.getTime())) return "Other";
-      
-      var now = new Date();
-      var diffMonths = (now.getFullYear() - d.getFullYear()) * 12 + (now.getMonth() - d.getMonth());
-      
-      if (diffMonths === 0) return "This Month";
-      if (diffMonths === 1) return "Last Month";
-      if (now.getFullYear() === d.getFullYear()) return "This Year";
-      
-      return d.getFullYear().toString();
-    } catch(e) {
-      return "Other";
-    }
-  }
-
-  function formatShortNum(num) {
-    var absNum = Math.abs(num);
-    if (absNum >= 1000000) {
-      var val = absNum / 1000000;
-      return (val % 1 === 0 ? val : val.toFixed(1)) + 'M';
-    }
-    if (absNum >= 1000) {
-      var val = absNum / 1000;
-      return (val % 1 === 0 ? val : val.toFixed(1)) + 'K';
-    }
-    return absNum.toString();
-  }
-
-  fetch(CA_CSV_BI + "&t=" + Date.now(), { cache: "no-store" })
-  .then(function(r) {
-    if (!r.ok) throw new Error("HTTP " + r.status);
-    return r.text();
-  })
-  .then(function(text) {
-    var rows = text.trim().split("\n").filter(function(r) { return r.trim(); });
-    var htmlMarkup = '';
-    var currentPeriod = '';
-    
-    // Map to store unique types as keys and their corresponding icon URLs as values
-    var uniqueTypesMap = new Map();
-
-    rows.forEach(function(row, index) {
-      if (index === 0) return;
-
-      var cols = caCSV(row);
-      
-      var dateVal    = (cols[10] || "").replace(/^"|"$/g, "").trim();
-      var typeVal    = (cols[11] || "").replace(/^"|"$/g, "").trim(); // Column L
-      var amountRaw  = (cols[12] || "").replace(/^"|"$/g, "").trim();
-      var accountVal = (cols[13] || "").replace(/^"|"$/g, "").trim();
-      var detailVal  = (cols[14] || "").replace(/^"|"$/g, "").trim();
-      
-      var incomeIconUrl  = (cols[22] || "").replace(/^"|"$/g, "").trim(); // Target Icon asset
-      var accountIconUrl = (cols[23] || "").replace(/^"|"$/g, "").trim();
-
-      var lowerType = typeVal.toLowerCase();
-      if (lowerType.indexOf('salary') !== -1 || lowerType.indexOf('social') !== -1) {
-        return; 
-      }
-
-      var cleanAmt = caNum(amountRaw);
-      
-      if (dateVal && typeVal) {
-        // Collect the category type and link its visual icon image link
-        if (incomeIconUrl && incomeIconUrl.toLowerCase() !== 'n/a') {
-          uniqueTypesMap.set(typeVal, incomeIconUrl);
-        } else if (!uniqueTypesMap.has(typeVal)) {
-          uniqueTypesMap.set(typeVal, ''); // Fallback to character icon if empty
+        /* --- Adaptive Layout Sizing using increased vw units --- */
+        @media (max-width: 400px) {
+          .ca-history-row { padding: 1.5vw 1vw !important; gap: 2.5vw !important; }
+          .ca-history-icon-wrap { width: 5.5vw !important; }
+          .ca-history-ico { width: 5.5vw !important; height: 5.5vw !important; max-width: 9vw !important; max-height: 9vw !important; }
+          .ca-history-fb { width: 5.5vw !important; height: 5.5vw !important; font-size: 4vw !important; }
+          
+          .ca-history-ttl,.ca-history-dtl { font-size: 3.6vw !important; }
+          .ca-history-badge-txt { font-size: 3vw !important; }
+          .ca-history-dte,.tx-group-hdr { font-size: 3.5vw !important; }
+          
+          .ca-history-rgt-wrap { display: flex; flex-direction: row; align-items: center; gap: 2.5vw; flex-shrink: 0; }
+          .ca-history-amt { font-size: 3.6vw !important; min-width:50px; padding-right: 2vw !important; text-align: right; font-weight: 600; white-space: nowrap; }
+          
+          .ca-display-desktop { display: none !important; }
+          .ca-display-mobile { display: inline !important; }
         }
 
-        var periodGroup = getPeriodHeader(dateVal);
-        if (periodGroup !== currentPeriod) {
-          currentPeriod = periodGroup;
-          htmlMarkup += `<div class="tx-group-hdr" style="padding: 1vw 0 0.3vw; margin-top: 0.1vw; font-size: 1.8vw;">${currentPeriod}</div>`;
+        @media (min-width: 401px) {
+          .ca-history-row { padding: 1.2vw 1.2vw !important; gap: 2vw !important; }
+          .ca-history-icon-wrap { width: 5.5vw !important; }
+          .ca-history-ico { width: 4.5vw !important; height: 4.5vw !important; max-width: 5.5vw !important; max-height: 5.5vw !important; }
+          .ca-history-fb { width: 4.5vw !important; height: 4.5vw !important; font-size: 2.4vw !important; }
+          
+          .ca-history-ttl { font-size: 2.6vw !important; }
+          .ca-history-dtl { font-size: 2.6vw !important; } 
+          .ca-history-badge-txt { font-size: 2.2vw !important; }
+          .ca-history-dte,.tx-group-hdr { font-size: 2.5vw !important;}
+          
+          .ca-history-rgt-wrap { display: flex; flex-direction: row; align-items: center; gap: 2vw; flex-shrink: 0; min-width: max-content; }
+          .ca-history-amt { font-size: 2.6vw !important; min-width:100px;padding-right: 0px !important; text-align: right; font-weight: 600; white-space: nowrap; }
+          
+          .ca-display-desktop { display: inline !important; }
+          .ca-display-mobile { display: none !important; }
         }
+      `;
+      document.head.appendChild(styleNode);
+    }
 
-        var formattedDateStr = "MMM dd";
-        try {
-          var dObj = new Date(dateVal);
-          if (!isNaN(dObj.getTime())) {
-            var monthName = dObj.toLocaleDateString('en-US', { month: 'short' });
-            var dayNum = String(dObj.getDate()).padStart(2, '0');
-            formattedDateStr = monthName + ' ' + dayNum;
+    container.innerHTML = '<div class="history-loading" style="padding: 1vw 0; text-align: center; color: rgba(255,255,255,0.45); font-size: 1.6vw;">Loading transaction records...</div>';
+
+    function getPeriodHeader(dateStr) {
+      try {
+        var d = new Date(dateStr);
+        if (isNaN(d.getTime())) return "Other";
+        
+        var now = new Date();
+        var diffMonths = (now.getFullYear() - d.getFullYear()) * 12 + (now.getMonth() - d.getMonth());
+        
+        if (diffMonths === 0) return "This Month";
+        if (diffMonths === 1) return "Last Month";
+        if (now.getFullYear() === d.getFullYear()) return "This Year";
+        
+        return d.getFullYear().toString();
+      } catch(e) {
+        return "Other";
+      }
+    }
+
+    function formatShortNum(num) {
+      var absNum = Math.abs(num);
+      if (absNum >= 1000000) {
+        var val = absNum / 1000000;
+        return (val % 1 === 0 ? val : val.toFixed(1)) + 'M';
+      }
+      if (absNum >= 1000) {
+        var val = absNum / 1000;
+        return (val % 1 === 0 ? val : val.toFixed(1)) + 'K';
+      }
+      return absNum.toString();
+    }
+
+    fetch(CA_CSV_BI + "&t=" + Date.now(), { cache: "no-store" })
+      .then(function(r) {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.text();
+      })
+      .then(function(text) {
+        var rawRows = text.trim().split("\n").filter(function(r) { return r.trim(); });
+        var htmlMarkup = '';
+        var currentPeriod = '';
+        
+        // Map to store unique types as keys and their corresponding icon URLs as values
+        var uniqueTypesMap = new Map();
+
+        // 1. Separate header row from data rows
+        var dataRows = rawRows.slice(1);
+
+        // Get current year to identify future years
+        var currentYear = new Date().getFullYear();
+
+        // 2. Sort rows: Past/Current years first (Descending), Future years at the bottom (Descending)
+        dataRows.sort(function(rowA, rowB) {
+          var colsA = caCSV(rowA);
+          var colsB = caCSV(rowB);
+          
+          var dateAStr = (colsA[10] || "").replace(/^"|"$/g, "").trim();
+          var dateBStr = (colsB[10] || "").replace(/^"|"$/g, "").trim();
+          
+          var dateA = new Date(dateAStr);
+          var dateB = new Date(dateBStr);
+
+          var timeA = dateA.getTime() || 0;
+          var timeB = dateB.getTime() || 0;
+
+          var yearA = dateA.getFullYear();
+          var yearB = dateB.getFullYear();
+
+          var isFutureA = yearA > currentYear;
+          var isFutureB = yearB > currentYear;
+
+          // If one is in a future year and the other is not:
+          // Keep non-future record higher up (return -1 if A is non-future, 1 if B is non-future)
+          if (isFutureA !== isFutureB) {
+            return isFutureA ? 1 : -1;
           }
-        } catch(e) {}
 
-        var absoluteAmt = Math.abs(cleanAmt);
-        var fullAmountText = isNaN(absoluteAmt) ? amountRaw : new Intl.NumberFormat('vi-VN').format(absoluteAmt);
-        var shortAmountText = formatShortNum(cleanAmt);
+          // Otherwise, if both are in future years OR both are past/current years,
+          // sort them in standard Descending order (newest first)
+          return timeB - timeA;
+        });
 
-        var isNegative = cleanAmt < 0;
-        var amountPrefix = isNegative ? '-' : '+';
-        var themeColor = isNegative ? 'rgb(255, 105, 180)' : '#14b8a6';
-        var badgeBg    = isNegative ? 'rgba(255, 105, 180, 0.1)' : 'rgba(20, 184, 166, 0.1)';
+        // 3. Process sorted rows
+        dataRows.forEach(function(row) {
+          var cols = caCSV(row);
+          
+          var dateVal    = (cols[10] || "").replace(/^"|"$/g, "").trim();
+          var typeVal    = (cols[11] || "").replace(/^"|"$/g, "").trim(); // Column L
+          var amountRaw  = (cols[12] || "").replace(/^"|"$/g, "").trim();
+          var accountVal = (cols[13] || "").replace(/^"|"$/g, "").trim();
+          var detailVal  = (cols[14] || "").replace(/^"|"$/g, "").trim();
+          
+          var incomeIconUrl  = (cols[22] || "").replace(/^"|"$/g, "").trim(); // Target Icon asset
+          var accountIconUrl = (cols[23] || "").replace(/^"|"$/g, "").trim();
 
-        var iconHtml = '';
-        if (incomeIconUrl && incomeIconUrl.toLowerCase() !== 'n/a') {
-          iconHtml = `<img src="${incomeIconUrl}" class="ico ca-history-ico" style="padding: 0.1vw;" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`;
-        }
-        var fallbackLetter = (typeVal || "?").charAt(0).toUpperCase();
-        iconHtml += `<div class="ico-fb ca-history-fb" style="display: ${incomeIconUrl ? 'none' : 'flex'}">${fallbackLetter}</div>`;
+          var lowerType = typeVal.toLowerCase();
+          if (lowerType.indexOf('salary') !== -1 || lowerType.indexOf('social') !== -1) {
+            return; 
+          }
 
-        var accountBadgeHtml = '';
-        if (accountVal) {
-          accountBadgeHtml = `
-            <div style="display: inline-flex; align-items: center; gap: 0.4vw; background: ${badgeBg}; padding: 0.2vw 0.8vw; border-radius: 4px; margin-left: 0.8vw;">
-              ${accountIconUrl ? `<img src="${accountIconUrl}" style="width: 2.2vw; height: 2.2vw; object-fit: contain; border-radius: 50%;" />` : ''}
-              <span class="ca-history-badge-txt" style="color: ${themeColor}; font-weight: 600; letter-spacing: 0.02em;">${accountVal}</span>
-            </div>
-          `;
-        }
+          var cleanAmt = caNum(amountRaw);
+          
+          if (dateVal && typeVal) {
+            // Collect the category type and link its visual icon image link
+            if (incomeIconUrl && incomeIconUrl.toLowerCase() !== 'n/a') {
+              uniqueTypesMap.set(typeVal, incomeIconUrl);
+            } else if (!uniqueTypesMap.has(typeVal)) {
+              uniqueTypesMap.set(typeVal, ''); // Fallback to character icon if empty
+            }
 
-        htmlMarkup += `
-          <div class="sub-swipe-container" data-tx-type="${typeVal}" style="border-bottom: 1px solid rgba(255,255,255,0.02); background: transparent;">
-            <div class="subs-row ca-history-row" style="display: flex; align-items: center;">
-              
-              <div class="ca-history-icon-wrap" style="display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                ${iconHtml}
-              </div>
+            var periodGroup = getPeriodHeader(dateVal);
+            if (periodGroup !== currentPeriod) {
+              currentPeriod = periodGroup;
+              htmlMarkup += `<div class="tx-group-hdr" style="padding: 1vw 0 0.3vw; margin-top: 0.1vw; font-size: 1.8vw;">${currentPeriod}</div>`;
+            }
 
-              <div class="mid" style="display: flex; align-items: center; justify-content: space-between; gap: 1.2vw; min-width: 0;">
-                <div style="display: flex; align-items: center; gap: 0.8vw; min-width: 0; flex: 1;">
-                  <span class="ttl ca-history-ttl" style="margin-bottom: 0; flex-shrink: 0;">${typeVal}</span>
-                  <span class="dtl ca-history-dtl" style="color: rgba(255,255,255,0.35); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;">
-                    — ${detailVal}
-                  </span>
-                  ${accountBadgeHtml}
+            var formattedDateStr = "MMM dd";
+            try {
+              var dObj = new Date(dateVal);
+              if (!isNaN(dObj.getTime())) {
+                var monthName = dObj.toLocaleDateString('en-US', { month: 'short' });
+                var dayNum = String(dObj.getDate()).padStart(2, '0');
+                formattedDateStr = monthName + ' ' + dayNum;
+              }
+            } catch(e) {}
+
+            var absoluteAmt = Math.abs(cleanAmt);
+            var fullAmountText = isNaN(absoluteAmt) ? amountRaw : new Intl.NumberFormat('vi-VN').format(absoluteAmt);
+            var shortAmountText = formatShortNum(cleanAmt);
+
+            var isNegative = cleanAmt < 0;
+            var amountPrefix = isNegative ? '-' : '+';
+            var themeColor = isNegative ? 'rgb(255, 105, 180)' : '#14b8a6';
+            var badgeBg    = isNegative ? 'rgba(255, 105, 180, 0.1)' : 'rgba(20, 184, 166, 0.1)';
+
+            var iconHtml = '';
+            if (incomeIconUrl && incomeIconUrl.toLowerCase() !== 'n/a') {
+              iconHtml = `<img src="${incomeIconUrl}" class="ico ca-history-ico" style="padding: 0.1vw;" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`;
+            }
+            var fallbackLetter = (typeVal || "?").charAt(0).toUpperCase();
+            iconHtml += `<div class="ico-fb ca-history-fb" style="display: ${incomeIconUrl ? 'none' : 'flex'}">${fallbackLetter}</div>`;
+
+            var accountBadgeHtml = '';
+            if (accountVal) {
+              accountBadgeHtml = `
+                <div style="display: inline-flex; align-items: center; gap: 0.4vw; background: ${badgeBg}; padding: 0.2vw 0.8vw; border-radius: 4px; margin-left: 0.8vw;">
+                  ${accountIconUrl ? `<img src="${accountIconUrl}" style="width: 2.2vw; height: 2.2vw; object-fit: contain; border-radius: 50%;" />` : ''}
+                  <span class="ca-history-badge-txt" style="color: ${themeColor}; font-weight: 600; letter-spacing: 0.02em;">${accountVal}</span>
+                </div>
+              `;
+            }
+
+            htmlMarkup += `
+              <div class="sub-swipe-container" data-tx-type="${typeVal}" style="border-bottom: 1px solid rgba(255,255,255,0.02); background: transparent;">
+                <div class="subs-row ca-history-row" style="display: flex; align-items: center;">
+                  
+                  <div class="ca-history-icon-wrap" style="display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    ${iconHtml}
+                  </div>
+
+                  <div class="mid" style="display: flex; align-items: center; justify-content: space-between; gap: 1.2vw; min-width: 0;">
+                    <div style="display: flex; align-items: center; gap: 0.8vw; min-width: 0; flex: 1;">
+                      <span class="ttl ca-history-ttl" style="margin-bottom: 0; flex-shrink: 0;">${typeVal}</span>
+                      <span class="dtl ca-history-dtl" style="color: rgba(255,255,255,0.35); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;">
+                        — ${detailVal}
+                      </span>
+                      ${accountBadgeHtml}
+                    </div>
+                  </div>
+
+                  <div class="rgt" style="flex-direction: row; align-items: center; gap: 1.2vw; flex-shrink: 0;">
+                    <div class="dte ca-history-dte" style="background: rgba(255,255,255,0.04); padding: 0.2vw 0.6vw; border-radius: 3px; font-family: sans-serif; color: rgba(255,255,255,0.5);">
+                      ${formattedDateStr}
+                    </div>
+                    
+                    <div class="amt ca-history-amt" style="color: ${themeColor}; text-align: right; font-weight: 600;">
+                      <span class="ca-display-desktop">${amountPrefix}${fullAmountText}</span>
+                      <span class="ca-display-mobile">${amountPrefix}${shortAmountText}</span>
+                    </div>
+                  </div>
+
                 </div>
               </div>
+            `;
+          }
+        });
 
-              <div class="rgt" style="flex-direction: row; align-items: center; gap: 1.2vw; flex-shrink: 0;">
-                <div class="dte ca-history-dte" style="background: rgba(255,255,255,0.04); padding: 0.2vw 0.6vw; border-radius: 3px; font-family: sans-serif; color: rgba(255,255,255,0.5);">
-                  ${formattedDateStr}
-                </div>
-                
-                <div class="amt ca-history-amt" style="color: ${themeColor}; text-align: right; font-weight: 600;">
-                  <span class="ca-display-desktop">${amountPrefix}${fullAmountText}</span>
-                  <span class="ca-display-mobile">${amountPrefix}${shortAmountText}</span>
-                </div>
-              </div>
+        // Populate Dynamic Dropdown Menu with Column L icons bound correctly
+        updateDropdownOptions(uniqueTypesMap);
 
-            </div>
-          </div>
-        `;
-      }
-    });
-
-    // Populate Dynamic Dropdown Menu with Column L icons bound correctly
-    updateDropdownOptions(uniqueTypesMap);
-
-    container.innerHTML = htmlMarkup || '<div class="history-empty" style="padding: 2vw; text-align: center; color: rgba(255,255,255,0.4); font-size: 1.6vw;">No history logs recorded.</div>';
-  });
+        container.innerHTML = htmlMarkup || '<div class="history-empty" style="padding: 2vw; text-align: center; color: rgba(255,255,255,0.4); font-size: 1.6vw;">No history logs recorded.</div>';
+      });
   }
 
   function reorderCards(selectedIndex) {
@@ -5771,8 +6017,8 @@ function setupGlobalInteractivePhysics() {
       </div>
 
       <div style="display: flex; gap: 12px;margin-top: 16px; ">
-        <button onclick="closeModal()" id="modalCancelBtn" style="flex: 1; font-family:Lexend!important; font-size:14px!important; padding: 14px; background: #1e222b; border: 0px solid #2d313c; color: #cbd5e1; border-radius: 12px; font-weight: 600; cursor: pointer;">Cancel</button>
-        <button onclick="processTransaction('${type}')" class="btn-submit-tx" style="flex: 2; font-family:Lexend!important; font-size:14px!important;padding: 14px; background: #2d3748; border: none; color: #ffffff; border-radius: 12px; font-weight: 600; cursor: pointer;">Confirm Transaction</button>
+        <button onclick="closeModal()" id="modalCancelBtn" style="flex: 1; font-family:Lexend!important; font-size:14px!important; padding: 13px; background: #1e222b; border: 0px solid #2d313c; color: #cbd5e1; border-radius: 12px; font-weight: 600; cursor: pointer;">Cancel</button>
+        <button onclick="processTransaction('${type}')" class="btn-submit-tx" style="flex: 2; font-family:Lexend!important; font-size:13px!important;padding: 14px; background: #2d3748; border: none; color: #ffffff; border-radius: 12px; font-weight: 600; cursor: pointer;">Confirm Transaction</button>
       </div>
     `;
 
@@ -6173,31 +6419,34 @@ function setupGlobalInteractivePhysics() {
     const num = parseInt(trimmed, 10);
     if (isNaN(num) || num <= 0) return;
 
-    // Scenario A: Full raw value typed (e.g., >= 1000)
-    if (num >= 1000) {
-      const multipliers = [1, 2, 5];
-      multipliers.forEach(multiplier => {
-        const multipliedAmt = num * multiplier;
-        if (multipliedAmt >= 500000) {
-          createChipElement(container, multipliedAmt);
-        }
+    // Set to store unique chip values
+    const chipSet = new Set();
+
+    // 1. Zero-padding / Scaling Step (Appends x1,000, x10,000, x100,000, etc.)
+    // Transforms '1854' -> 1,854,000, 18,540,000, 185,400,000
+    const scaleMultipliers = [1, 10, 100, 1000, 10000, 100000, 1000000];
+
+    scaleMultipliers.forEach(mult => {
+      const projected = num * mult;
+      // Keep suggestions within a realistic financial range (>= 500k and <= 1 Billion)
+      if (projected >= 500000 && projected <= 1000000000) {
+        chipSet.add(projected);
+      }
+    });
+
+    // 2. Multiplier Step (x2, x5 relative suggestions if user types a large exact amount e.g. 500000)
+    if (num >= 500000) {
+      [num, num * 2, num * 5].forEach(amt => {
+        if (amt <= 1000000000) chipSet.add(amt);
       });
-      return;
     }
 
-    // Scenario B: Smart Translation scaling steps (typing short single digits like 5)
-    const scaleBases = [
-      100000,     // 100K base
-      1000000,    // M base
-      10000000,   // 10M base
-      100000000   // 100M base
-    ];
+    // Sort generated suggestions in ascending numerical order
+    const sortedAmounts = Array.from(chipSet).sort((a, b) => a - b);
 
-    scaleBases.forEach(base => {
-      const projectedAmount = num * base;
-      if (projectedAmount >= 500000 && projectedAmount <= 500000000) {
-        createChipElement(container, projectedAmount);
-      }
+    // Render chips
+    sortedAmounts.forEach(amount => {
+      createChipElement(container, amount);
     });
   };
 
@@ -6536,69 +6785,69 @@ function setupGlobalInteractivePhysics() {
     }
   })();
   document.addEventListener('DOMContentLoaded', () => {
-  const historyBtn = document.getElementById('btn-square-history');
-  const historyPanel = document.getElementById('walletHistorySection');
-  const donutSection = document.getElementById('ca-section-expense');
-  const colRight = document.getElementById('ca-col-right');
-  const colLeft = document.getElementById('ca-col-left');
-  const caWrap = document.getElementById('ca-wrap');
+    const historyBtn = document.getElementById('btn-square-history');
+    const historyPanel = document.getElementById('walletHistorySection');
+    const donutSection = document.getElementById('ca-section-expense');
+    const colRight = document.getElementById('ca-col-right');
+    const colLeft = document.getElementById('ca-col-left');
+    const caWrap = document.getElementById('ca-wrap');
 
-  // Track state globally (default to true/visible on iPad on initial load)
-  let isHistoryActive = window.innerWidth >= 401;
+    // Track state globally (default to true/visible on iPad on initial load)
+    let isHistoryActive = window.innerWidth >= 401;
 
-  if (historyBtn && historyPanel && donutSection) {
-    historyBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      
-      const isMobile = window.innerWidth < 401;
-      
-      if (isMobile) {
-        // 📱 Mobile iPhone logic
-        const isOpen = historyPanel.classList.toggle('is-expanded');
-        this.classList.toggle('is-active', isOpen);
-        isHistoryActive = isOpen;
+    if (historyBtn && historyPanel && donutSection) {
+      historyBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
         
-        if (isOpen) {
-          if (colLeft) colLeft.insertAdjacentElement('afterend', historyPanel);
-          historyPanel.appendChild(donutSection);
+        const isMobile = window.innerWidth < 401;
+        
+        if (isMobile) {
+          // 📱 Mobile iPhone logic
+          const isOpen = historyPanel.classList.toggle('is-expanded');
+          this.classList.toggle('is-active', isOpen);
+          isHistoryActive = isOpen;
           
-          void historyPanel.offsetHeight;
-          
-          setTimeout(() => {
-            historyPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          }, 300);
+          if (isOpen) {
+            if (colLeft) colLeft.insertAdjacentElement('afterend', historyPanel);
+            historyPanel.appendChild(donutSection);
+            
+            void historyPanel.offsetHeight;
+            
+            setTimeout(() => {
+              historyPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 300);
+          } else {
+            historyPanel.classList.remove('is-expanded');
+            setTimeout(() => {
+              if (colRight) colRight.appendChild(donutSection);
+              if (caWrap) caWrap.appendChild(historyPanel);
+            }, 350);
+          }
         } else {
-          historyPanel.classList.remove('is-expanded');
-          setTimeout(() => {
-            if (colRight) colRight.appendChild(donutSection);
-            if (caWrap) caWrap.appendChild(historyPanel);
-          }, 350);
+          // 📑 Tablet iPad logic: Explicitly toggle active state
+          isHistoryActive = !isHistoryActive;
+          this.classList.toggle('is-active', isHistoryActive);
+          
+          // Toggle the iPad hide class to completely collapse it
+          historyPanel.classList.toggle('is-hidden-ipad', !isHistoryActive);
         }
-      } else {
-        // 📑 Tablet iPad logic: Explicitly toggle active state
-        isHistoryActive = !isHistoryActive;
-        this.classList.toggle('is-active', isHistoryActive);
-        
-        // Toggle the iPad hide class to completely collapse it
-        historyPanel.classList.toggle('is-hidden-ipad', !isHistoryActive);
-      }
-    });
+      });
 
-    // Reset clean states cleanly if window changes size
-    window.addEventListener('resize', () => {
-      const isMobile = window.innerWidth < 401;
-      if (!isMobile) {
-        if (colRight && !colRight.contains(donutSection)) {
-          colRight.appendChild(donutSection);
+      // Reset clean states cleanly if window changes size
+      window.addEventListener('resize', () => {
+        const isMobile = window.innerWidth < 401;
+        if (!isMobile) {
+          if (colRight && !colRight.contains(donutSection)) {
+            colRight.appendChild(donutSection);
+          }
+          if (caWrap && caWrap.lastElementChild !== historyPanel) {
+            caWrap.appendChild(historyPanel);
+          }
+          historyBtn.classList.toggle('is-active', isHistoryActive);
+          historyPanel.classList.toggle('is-hidden-ipad', !isHistoryActive);
         }
-        if (caWrap && caWrap.lastElementChild !== historyPanel) {
-          caWrap.appendChild(historyPanel);
-        }
-        historyBtn.classList.toggle('is-active', isHistoryActive);
-        historyPanel.classList.toggle('is-hidden-ipad', !isHistoryActive);
-      }
-    });
-  }
+      });
+    }
   });
 
   // 1. DROPDOWN TOGGLE CONTEXT
@@ -6711,9 +6960,10 @@ function setupGlobalInteractivePhysics() {
     const dropdown = document.getElementById('transactionFilterOptions');
     if (!dropdown) return;
 
-    // 1. Get custom icons from your CSV map if they exist
-    var depositIcon = uniqueTypesMap.get('Deposit') || uniqueTypesMap.get('deposit');
-    var withdrawIcon = uniqueTypesMap.get('Withdraw') || uniqueTypesMap.get('withdraw');
+    // 1. Get custom icons from your CSV map (handles all naming variations)
+    var depositIcon = uniqueTypesMap.get('Deposit') || uniqueTypesMap.get('deposit') || uniqueTypesMap.get('Deposits') || uniqueTypesMap.get('deposits');
+    
+    var withdrawIcon = uniqueTypesMap.get('Withdrawal') || uniqueTypesMap.get('withdrawal') || uniqueTypesMap.get('Withdrawals') || uniqueTypesMap.get('withdrawals') || uniqueTypesMap.get('Withdraw') || uniqueTypesMap.get('withdraw');
 
     // Helper to generate either the custom image tag or the fallback material icon
     function getVisualIcon(iconUrl, defaultMaterialIcon, iconColor) {
@@ -6745,7 +6995,7 @@ function setupGlobalInteractivePhysics() {
         Deposits
       </div>
       
-      <div class="filter-opt-item" onclick="window.selectTransactionFilter('withdraw', 'Withdrawals')" 
+      <div class="filter-opt-item" onclick="window.selectTransactionFilter('withdrawal', 'Withdrawals')" 
           style="padding: 8px 12px; color: #f8f9fa; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;"
           onmouseover="this.style.background='#22252d'" onmouseout="this.style.background='transparent'">
         <div style="display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0;">
@@ -6757,9 +7007,10 @@ function setupGlobalInteractivePhysics() {
 
     // 3. Append all remaining unique items found in Column L
     uniqueTypesMap.forEach(function(iconUrl, type) {
-      // Skip duplicating the core filter macros we just handled above
-      var lowerT = type.toLowerCase();
-      if (lowerT === 'deposit' || lowerT === 'withdraw') return;
+      var lowerT = (type || "").toLowerCase().trim();
+      
+      // Catches 'withdraw', 'withdrawal', 'withdrawals', 'deposit', 'deposits'
+      if (lowerT.startsWith('withdraw') || lowerT.startsWith('deposit')) return;
 
       let visualIconHtml = '';
       if (iconUrl && iconUrl.toLowerCase() !== 'n/a') {
