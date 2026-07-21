@@ -149,7 +149,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .tab-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
 #add-cash{position:absolute;top:10px;right:10px;z-index:10;width:8vw;height:8vw;padding-bottom:1px;max-width:7vw;max-height:7vw;font-family:monospace!important;font-size:5vw;font-weight:500;border-radius:50%;background-color:#14b8a6;color:#ffffff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
 #add-cash.loading{pointer-events:none;display:flex;align-items:center;justify-content:center}
-.cash-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:600;align-items:flex-start;justify-content:center;padding-top:20vh;overflow-y:auto}
+.cash-modal-overlay{display:none;position:fixed;inset:0; z-index:600;align-items:flex-start;justify-content:center;padding-top:20vh;overflow-y:auto}
 .cash-modal-overlay.open{display:flex!important}.btn-spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,0.3);border-top-color:#ffffff;border-radius:50%;animation:spinCircle 0.8s linear infinite;display:inline-block}
 #add-cash.success-confirm{background-color:#10b981 !important;color:#ffffff !important;font-size:15px;font-weight:500;display:flex;align-items:center;justify-content:center;transition:background-color 0.3s ease}
 @keyframes spinCircle{to{transform:rotate(360deg)}}
@@ -558,7 +558,7 @@ to{transform:rotate(360deg)}
 .add-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:600;align-items:flex-start;justify-content:center;padding-top:26vh;overflow-y:auto}
 .add-modal-overlay.open{display:flex!important;}
 @media (min-width:401px){.add-modal{border-radius:5vw 5vw 0 0!important;}.add-modal-overlay{align-items:flex-end;}}
-.add-modal{background:#232323;width:100%;max-width:480px;border-radius:5vw;padding:5vw 5vw 8vw;max-height:85vh;overflow-y:auto}
+.add-modal{background:#232323;width:90%;max-width:480px;border-radius:5vw;padding:5vw 5vw 8vw;max-height:85vh;overflow-y:auto}
 .add-modal h3{font-size:3.4vw;margin-bottom:4vw}
 .add-field{margin-bottom:3.5vw}
 .add-field label{display:block;font-size:2.6vw!important;font-weight:300!important;color:rgba(255,255,255,0.5);margin-bottom:1.2vw}
@@ -2861,14 +2861,14 @@ function loadExpense() {
       fragment.appendChild(rowNode);
     });
 
-    // Remove existing sentinel before appending new rows
+    // Remove old sentinel
     var oldSentinel = document.getElementById("tx-list-sentinel");
     if (oldSentinel) oldSentinel.remove();
 
     list.appendChild(fragment);
     window.loadedCount += nextBatch.length;
 
-    // Re-append bottom sentinel marker if there are still more items to load
+    // Re-append bottom sentinel
     if (window.loadedCount < window.allParsedItems.length) {
       var sentinel = document.createElement("div");
       sentinel.id = "tx-list-sentinel";
@@ -2876,7 +2876,6 @@ function loadExpense() {
       sentinel.style.width = "100%";
       list.appendChild(sentinel);
 
-      // Re-observe the new sentinel position
       if (window.txObserver) {
         window.txObserver.observe(sentinel);
       }
@@ -2890,6 +2889,11 @@ function loadExpense() {
         container.dataset.swipeAttached = "true";
       }
     });
+
+    // FIX: Re-run layout calculations on newly appended DOM elements!
+    if (typeof applyLayout === "function") {
+      applyLayout();
+    }
   }
 
   function setupInfiniteScrollObserver() {
@@ -3666,144 +3670,159 @@ function deleteSubscription(itemId) {
     var cashStatus = document.getElementById("cash-modal-status");
 
     if (!addCashBtn || !cashOverlay || !cashSubmit) {
-        console.warn("Cash modal elements missing from the DOM. Skipping initialization.");
-        return;
+      console.warn("Cash modal elements missing from the DOM. Skipping initialization.");
+      return;
     }
 
-    // 🌟 ÁP DỤNG STYLING CHUẨN ĐỒNG BỘ CHO HAI NÚT CANCEL & SAVE (SUBMIT)
+    // 1. REUSE OVERLAY STYLE EXACTLY
+    Object.assign(cashOverlay.style, {
+      position: "fixed",
+      top: "0",
+      left: "0",
+      width: "100%",
+      height: "100%",
+      backgroundColor: "rgba(0, 0, 0, 0.75)",
+      backdropFilter: "blur(4px)",
+      webkitBackdropFilter: "blur(4px)",
+      zIndex: "2147483647",
+      display: "none", // Managed via open/close
+      alignItems: "flex-start",
+      justifyContent: "center",
+      paddingTop: "200px",
+      opacity: "1"
+    });
+
+    // 2. REUSE CANCEL BUTTON STYLE EXACTLY
     if (cashCancel) {
-        Object.assign(cashCancel.style, {
-            flex: "1",
-            background: "rgba(255, 255, 255, 0.08)",
-            border: "none",
-            color: "#fff",
-            padding: "12px",
-            borderRadius: "12px",
-            fontSize: "14px",
-            fontWeight: "500",
-            cursor: "pointer",
-            transition: "background 0.2s"
-        });
+      Object.assign(cashCancel.style, {
+        flex: "1",
+        fontFamily: "Lexend, sans-serif",
+        fontSize: "14px",
+        padding: "14px",
+        background: "#1e222b",
+        border: "0px solid #2d313c",
+        color: "#cbd5e1",
+        borderRadius: "12px",
+        fontWeight: "600",
+        cursor: "pointer"
+      });
     }
 
+    // 3. REUSE SAVE/SUBMIT BUTTON STYLE EXACTLY
     if (cashSubmit) {
-        Object.assign(cashSubmit.style, {
-            flex: "1",
-            background: "#2b394a", // Hoặc tone màu chính của app (ví dụ #4a76a8 / #2563eb)
-            border: "none",
-            color: "#fff",
-            padding: "12px",
-            borderRadius: "12px",
-            fontSize: "14px",
-            fontWeight: "600",
-            cursor: "pointer",
-            transition: "background 0.2s"
-        });
+      Object.assign(cashSubmit.style, {
+        flex: "2",
+        fontFamily: "Lexend, sans-serif",
+        fontSize: "14px",
+        padding: "14px",
+        background: "#2d3748",
+        border: "none",
+        color: "#ffffff",
+        borderRadius: "12px",
+        fontWeight: "600",
+        cursor: "pointer"
+      });
     }
 
-    // Nếu container bao ngoài nút chưa có flex & gap, gán bổ sung để căn ngang đều
+    // 4. REUSE BUTTON CONTAINER LAYOUT EXACTLY
     var actionContainer = (cashCancel && cashCancel.parentElement) || (cashSubmit && cashSubmit.parentElement);
     if (actionContainer) {
-        actionContainer.style.display = "flex";
-        actionContainer.style.gap = "12px";
-        actionContainer.style.marginTop = "16px";
+      actionContainer.style.display = "flex";
+      actionContainer.style.gap = "12px";
     }
 
     // Open Modal
     addCashBtn.addEventListener("click", function() {
-        cashInput.value = "";
+      cashInput.value = "";
+      if (cashStatus) {
         cashStatus.className = "add-status"; 
         cashStatus.innerText = "";
-        cashOverlay.classList.add("open");
-        cashInput.focus();
+      }
+      cashOverlay.style.display = "flex";
+      setTimeout(function() { cashInput.focus(); }, 50);
     });
 
     // Close Modal
     if (cashCancel) {
-        cashCancel.addEventListener("click", function() {
-            cashOverlay.classList.remove("open");
-        });
+      cashCancel.addEventListener("click", function() {
+        cashOverlay.style.display = "none";
+      });
     }
 
+    // Submit Handler
     cashSubmit.addEventListener("click", function() {
-        var rawText = cashInput.value.trim();
-        if (!rawText) return;
+      var rawText = cashInput.value.trim();
+      if (!rawText) return;
 
-        // Disable to prevent double-clicking
-        cashSubmit.disabled = true;
+      cashSubmit.disabled = true;
+      
+      var items = rawText.split(";");
+      var todayStr = new Date().toISOString().split('T')[0];
+      var validRequestsCount = 0;
+
+      for (var i = 0; i < items.length; i++) {
+        var item = items[i].trim();
+        if (!item) continue;
+
+        var parts = item.split("-");
+        if (parts.length < 2) continue;
+
+        var detail = parts[0].trim();
+        var rawAmount = parseFloat(parts[1].trim());
+        if (isNaN(rawAmount)) continue;
+
+        validRequestsCount++;
+
+        var payload = {
+          type: "Cash",
+          date: todayStr,
+          detail: detail,
+          amount: rawAmount * 1000
+        };
+
+        fetch(APPS_SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain" }, 
+          body: JSON.stringify(payload)
+        }).catch(function(err) {
+          console.error("Background transmission failed:", err);
+        });
+      }
+
+      if (validRequestsCount > 0) {
+        cashOverlay.style.display = "none";
+        cashSubmit.disabled = false;
         
-        var items = rawText.split(";");
-        var todayStr = new Date().toISOString().split('T')[0]; // yyyy-MM-dd
-        var validRequestsCount = 0;
-
-        // Loop fires completely synchronously and instantly
-        for (var i = 0; i < items.length; i++) {
-            var item = items[i].trim();
-            if (!item) continue;
-
-            var parts = item.split("-");
-            if (parts.length < 2) continue;
-
-            var detail = parts[0].trim();
-            var rawAmount = parseFloat(parts[1].trim());
-            if (isNaN(rawAmount)) continue;
-
-            var finalAmount = rawAmount * 1000;
-            validRequestsCount++;
-
-            var payload = {
-                type: "Cash",
-                date: todayStr,
-                detail: detail,
-                amount: finalAmount
-            };
-
-            // Fire and Forget immediately
-            fetch(APPS_SCRIPT_URL, {
-                method: "POST",
-                headers: { "Content-Type": "text/plain" }, 
-                body: JSON.stringify(payload)
-            }).catch(function(err) {
-                console.error("Background transmission failed:", err);
-            });
+        if (addCashBtn) {
+          addCashBtn.classList.add("loading");
+          addCashBtn.innerHTML = '<span class="btn-spinner"></span>';
         }
-
-        if (validRequestsCount > 0) {
-            // 1. Close popup immediately for maximum snappiness
-            cashOverlay.classList.remove("open");
-            cashSubmit.disabled = false;
-            
-            // 2. Set button to spinning state
+        
+        setTimeout(function() {
+          if (typeof loadRecent === "function") {
+            loadRecent();
+          }
+          if (addCashBtn) {
+            addCashBtn.classList.remove("loading");
+            addCashBtn.classList.add("success-confirm");
+            addCashBtn.innerHTML = "&#10003;";
+          }
+          
+          setTimeout(function() {
             if (addCashBtn) {
-                addCashBtn.classList.add("loading");
-                addCashBtn.innerHTML = '<span class="btn-spinner"></span>';
+              addCashBtn.classList.remove("success-confirm");
+              addCashBtn.innerHTML = "+";
             }
-            
-            // 3. Keep spinning & trigger reload after delay
-            setTimeout(function() {
-                if (typeof loadRecent === "function") {
-                    loadRecent();
-                }
-                if (addCashBtn) {
-                    addCashBtn.classList.remove("loading");
-                    addCashBtn.classList.add("success-confirm");
-                    addCashBtn.innerHTML = "&#10003;"; // Unicode Checkmark Symbol Check ✓
-                }
-                
-                // 4. Wait 1.5 seconds for the checkmark, then reset
-                setTimeout(function() {
-                    if (addCashBtn) {
-                        addCashBtn.classList.remove("success-confirm");
-                        addCashBtn.innerHTML = "+"; // Reset back to clean plus icon
-                    }
-                }, 1500);
-            }, 11000);
-            
-        } else {
-            cashStatus.className = "add-status error";
-            cashStatus.innerText = "Error: Input formatting issue.";
-            cashSubmit.disabled = false;
+          }, 1500);
+        }, 11000);
+        
+      } else {
+        if (cashStatus) {
+          cashStatus.className = "add-status error";
+          cashStatus.innerText = "Error: Input formatting issue.";
         }
+        cashSubmit.disabled = false;
+      }
     });
   }
 
@@ -4103,7 +4122,7 @@ function deleteSubscription(itemId) {
 
     var formattedAmount = new Intl.NumberFormat('en-US').format(targetItem.amount || 0);
     modalOverlay.innerHTML = `
-      <div style="background: #1e1e1e; border: 0px solid rgba(255,255,255,0.1); width: 85%; max-width: 80%; border-radius: 16px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); box-sizing: border-box;">
+      <div style="background: #1e1e1e; border: 0px solid rgba(255,255,255,0.1); width: 85%; max-width: 90%; border-radius: 16px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); box-sizing: border-box;">
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-bottom: 16px; border-bottom: 0px solid rgba(255,255,255,0.05);">
                   <div style="display: flex; align-items: center; gap: 10px; text-align: left; max-width: 55%;">
             ${iconHtml} 
@@ -5488,7 +5507,25 @@ function setupGlobalInteractivePhysics() {
         /* Base Responsive Display Utilities */
         .ca-d-inline { display: inline !important; }
         .ca-d-none { display: none !important; }
-        .tx-group-hdr{margin-top:10px!important;}
+        .tx-group-hdr { margin-top: 10px !important; }
+        
+        /* Action buttons layout */
+        .sub-swipe-container { position: relative; overflow: hidden; }
+        .ca-history-row { transition: transform 0.2s ease; background: transparent; }
+        .ca-row-actions {
+          position: absolute; right: 0; top: 0; bottom: 0;
+          display: flex; align-items: center; gap: 0.4vw;
+          padding-right: 0.8vw; opacity: 0; transition: opacity 0.2s ease;
+        }
+        .sub-swipe-container:hover .ca-row-actions { opacity: 1; }
+        
+        .ca-act-btn {
+          border: none; background: rgba(255,255,255,0.08); color: #fff;
+          border-radius: 4px; padding: 0.4vw 0.8vw; font-size: 2vw;
+          cursor: pointer; transition: background 0.2s;
+        }
+        .ca-act-btn:hover { background: rgba(255,255,255,0.18); }
+        .ca-act-btn.del:hover { background: rgba(239, 68, 68, 0.3); color: #f87171; }
         
         /* --- Adaptive Layout Sizing using increased vw units --- */
         @media (max-width: 400px) {
@@ -5503,6 +5540,7 @@ function setupGlobalInteractivePhysics() {
           
           .ca-history-rgt-wrap { display: flex; flex-direction: row; align-items: center; gap: 2.5vw; flex-shrink: 0; }
           .ca-history-amt { font-size: 3.6vw !important; min-width:50px; padding-right: 2vw !important; text-align: right; font-weight: 600; white-space: nowrap; }
+          .ca-act-btn { font-size: 3.2vw !important; padding: 1vw 1.8vw !important; }
           
           .ca-display-desktop { display: none !important; }
           .ca-display-mobile { display: inline !important; }
@@ -5571,17 +5609,11 @@ function setupGlobalInteractivePhysics() {
         var rawRows = text.trim().split("\n").filter(function(r) { return r.trim(); });
         var htmlMarkup = '';
         var currentPeriod = '';
-        
-        // Map to store unique types as keys and their corresponding icon URLs as values
         var uniqueTypesMap = new Map();
 
-        // 1. Separate header row from data rows
         var dataRows = rawRows.slice(1);
-
-        // Get current year to identify future years
         var currentYear = new Date().getFullYear();
 
-        // 2. Sort rows: Past/Current years first (Descending), Future years at the bottom (Descending)
         dataRows.sort(function(rowA, rowB) {
           var colsA = caCSV(rowA);
           var colsB = caCSV(rowB);
@@ -5601,28 +5633,25 @@ function setupGlobalInteractivePhysics() {
           var isFutureA = yearA > currentYear;
           var isFutureB = yearB > currentYear;
 
-          // If one is in a future year and the other is not:
-          // Keep non-future record higher up (return -1 if A is non-future, 1 if B is non-future)
           if (isFutureA !== isFutureB) {
             return isFutureA ? 1 : -1;
           }
 
-          // Otherwise, if both are in future years OR both are past/current years,
-          // sort them in standard Descending order (newest first)
           return timeB - timeA;
         });
 
-        // 3. Process sorted rows
-        dataRows.forEach(function(row) {
+        dataRows.forEach(function(row, index) {
           var cols = caCSV(row);
           
+          // Row unique ID (uses primary key/ID from CSV column if present, or index fallback)
+          var txId       = (cols[0] || index).toString().replace(/^"|"$/g, "").trim();
           var dateVal    = (cols[10] || "").replace(/^"|"$/g, "").trim();
-          var typeVal    = (cols[11] || "").replace(/^"|"$/g, "").trim(); // Column L
+          var typeVal    = (cols[11] || "").replace(/^"|"$/g, "").trim();
           var amountRaw  = (cols[12] || "").replace(/^"|"$/g, "").trim();
           var accountVal = (cols[13] || "").replace(/^"|"$/g, "").trim();
           var detailVal  = (cols[14] || "").replace(/^"|"$/g, "").trim();
           
-          var incomeIconUrl  = (cols[22] || "").replace(/^"|"$/g, "").trim(); // Target Icon asset
+          var incomeIconUrl  = (cols[22] || "").replace(/^"|"$/g, "").trim();
           var accountIconUrl = (cols[23] || "").replace(/^"|"$/g, "").trim();
 
           var lowerType = typeVal.toLowerCase();
@@ -5633,11 +5662,10 @@ function setupGlobalInteractivePhysics() {
           var cleanAmt = caNum(amountRaw);
           
           if (dateVal && typeVal) {
-            // Collect the category type and link its visual icon image link
             if (incomeIconUrl && incomeIconUrl.toLowerCase() !== 'n/a') {
               uniqueTypesMap.set(typeVal, incomeIconUrl);
             } else if (!uniqueTypesMap.has(typeVal)) {
-              uniqueTypesMap.set(typeVal, ''); // Fallback to character icon if empty
+              uniqueTypesMap.set(typeVal, '');
             }
 
             var periodGroup = getPeriodHeader(dateVal);
@@ -5683,7 +5711,7 @@ function setupGlobalInteractivePhysics() {
             }
 
             htmlMarkup += `
-              <div class="sub-swipe-container" data-tx-type="${typeVal}" style="border-bottom: 1px solid rgba(255,255,255,0.02); background: transparent;">
+              <div class="sub-swipe-container" data-tx-id="${txId}" data-tx-type="${typeVal}" data-tx-amt="${cleanAmt}" data-tx-date="${dateVal}" data-tx-detail="${detailVal}" data-tx-account="${accountVal}" style="border-bottom: 1px solid rgba(255,255,255,0.02); background: transparent;">
                 <div class="subs-row ca-history-row" style="display: flex; align-items: center;">
                   
                   <div class="ca-history-icon-wrap" style="display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
@@ -5712,12 +5740,17 @@ function setupGlobalInteractivePhysics() {
                   </div>
 
                 </div>
+
+                <!-- Edit / Delete Action Buttons Overlay -->
+                <div class="ca-row-actions">
+                  <button class="ca-act-btn edit" onclick="handleEditTransaction(this.closest('.sub-swipe-container'))" title="Edit">✏️</button>
+                  <button class="ca-act-btn del" onclick="handleDeleteTransaction(this.closest('.sub-swipe-container'))" title="Delete">🗑️</button>
+                </div>
               </div>
             `;
           }
         });
 
-        // Populate Dynamic Dropdown Menu with Column L icons bound correctly
         updateDropdownOptions(uniqueTypesMap);
 
         container.innerHTML = htmlMarkup || '<div class="history-empty" style="padding: 2vw; text-align: center; color: rgba(255,255,255,0.4); font-size: 1.6vw;">No history logs recorded.</div>';
