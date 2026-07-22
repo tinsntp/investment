@@ -513,7 +513,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .ca-list-left{position:relative;width:24px;height:24px;display:flex;align-items:center;justify-content:center;margin-right:12px;flex-shrink:0}
 .ca-list-left svg{position:absolute;top:0;left:0;width:100%;height:100%}
 .ca-list-ring{position:absolute;top:0;left:0;width:100%;height:100%;transform:rotate(-90deg)}
-.ca-list-img{position:relative;width:18px;height:18px;object-fit:contain;border-radius:50%;z-index:2}
+.ca-list-img{position:relative;width:20px;height:20px;object-fit:contain;border-radius:50%;z-index:2}
 
 .ca-list-name {flex:1; color:rgba(255,255,255,0.85); font-weight:300; }
 .ca-list-val {font-size:2.92vw; font-weight:600;white-space:nowrap; text-align:right; }
@@ -573,6 +573,22 @@ to{transform:rotate(360deg)}
 .add-status.success{color:#14b8a6}
 @media (max-width:400px){.add-cancel-btn,.add-submit-btn,.add-field label,.add-field input{font-size:4.1vw!important;font-weight:300!important;}
 .add-modal h3{font-size:4.5vw}}
+/* Subtle pulse transition for refreshing containers */
+.data-refreshing {
+  opacity: 0.35 !important;
+  filter: blur(1px);
+  pointer-events: none;
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+.data-refreshed {
+  animation: flashHighlight 0.6s ease-out;
+}
+
+@keyframes flashHighlight {
+  0% { opacity: 0.4; }
+  100% { opacity: 1; filter: blur(0); }
+}
 
 .form-row-2col{display:flex !important;flex-direction:row !important;gap:3vw !important;width:100%;margin-bottom:4vw}
 .form-row-2col .add-field{flex:1 1 0% !important;min-width:0;display:flex;flex-direction:column}
@@ -583,9 +599,9 @@ to{transform:rotate(360deg)}
 .add-field input[type="text"],.add-field input[type="number"],.add-field input[type="date"]{height:44px !important;font-size:15px !important;padding:0 12px !important;border-radius:8px !important}
 }
 .sub-swipe-container{border-bottom: none;position:relative;width:100%;overflow:hidden;margin-bottom:0;border-radius:0px;background:#191919;}
-.subs-row{position:relative;z-index:2;width:100%;padding-right:1vw!important;padding-left:1vw!important;margin-bottom:0 !important;will-change:transform;cursor:grab}
+.subs-row{position:relative;z-index:2;width:100%;padding:2vw 0 2vw 0!important;margin-bottom:0 !important;will-change:transform;cursor:grab}
 .subs-row:active{cursor:grabbing}
-@media (max-width:400px){.subs-row{padding:3vw 0 3vw 0;}}
+@media (max-width:400px){.subs-row{padding:2vw 0 2vw 0;}}
 .sub-delete-action{cursor: pointer;position:absolute;margin-right:2px;margin-bottom:0px;top:0;right:0;bottom:0;width:70px;z-index:3;background-color:#ef4444;color:#ffffff;display:flex;align-items:center;justify-content:center;border-top-right-radius:12px;border-bottom-right-radius:12px;}
 .sub-delete-action svg{pointer-events:none}
 .sub-delete-action:hover{background-color:#dc2626}
@@ -2168,13 +2184,13 @@ function caRenderList(data) {
     row.innerHTML = `
       <div class="ca-list-left" style="margin-right: 1px; display: flex; align-items: center; position: relative; flex-shrink: 0;">
         ${caMiniRingMarkup(pct, p.solid)}
-        <img class="ca-list-img" src="${iconUrl}" onerror="this.style.opacity='0';" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 16px; height: 16px;" />
+        <img class="ca-list-img" src="${iconUrl}" onerror="this.style.opacity='0';" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);" />
       </div>
-      <div class="ca-list-name" style="flex-grow: 1; min-width: 0; padding-right: 0px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #efeff4; font-weight: 300; font-size: 12.5px; letter-spacing: -0.1px;">
+      <div class="ca-list-name" style="flex-grow: 1; min-width: 0; padding-right: 0px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #efeff4; font-weight: 300; font-size: 12px; letter-spacing: -0.1px;">
         ${cleanName}
       </div>
       <div class="ca-list-pct-container" style="display: flex; align-items: center; padding-right: 0px; flex-shrink: 0;">
-        <span class="ca-list-pct" style="font-weight: 300; font-size: 11px!important; color: ${pctText}; background: ${pctBg}; padding: 2px 6px; border-radius: 10px;">
+        <span class="ca-list-pct" style="font-weight: 400; font-size: 11.5px!important; color: ${pctText}; background: ${pctBg}; padding: 2px 6px; border-radius: 10px;">
           ${pct.toFixed(0)}%
         </span>
       </div>
@@ -2240,8 +2256,8 @@ function caFetchTab1(cb){
 function caRenderDrill(items,title,color){
   var list=document.getElementById("ca-list");list.innerHTML="";
   var header=document.createElement("div");
-  var drPcFs = window.innerWidth < 400 ? "4.4vw" : "2.4vw";
-  var drIS = window.innerWidth < 400 ? "4.2vw" : "2.4vw";
+  var drPcFs = window.innerWidth < 400 ? "4.2vw" : "2.4vw";
+  var drIS = window.innerWidth < 400 ? "4vw" : "2.4vw";
   header.style.cssText="display:flex;align-items:center;gap:2vw;padding:2vw 0 3vw;cursor:pointer;";
   header.innerHTML='<span style="font-size:'+drPcFs+';color:'+color+';"><i class="bi bi-chevron-left"></i></span>'
     +'<span style="font-size:'+drPcFs+';font-weight:500;color:'+color+';">'+title+'</span>';
@@ -2265,7 +2281,7 @@ function caRenderDrill(items,title,color){
     row.innerHTML='<img src="'+item.icon+'" style="width:'+drIS+';height:'+drIS+';object-fit:contain;flex-shrink:0;" />'
       + '<div class="ca-list-name" style="font-size:' + drPcFs + '; flex-grow: 1;">' + displayName + '</div>'
       +'<div class="ca-list-pct-container" style="display: flex; align-items: center; padding-right: 0px; flex-shrink: 0;">'
-      +'<span class="ca-list-pct" style="font-weight: 300;font-size:11px;background: '+pctBg+';color: '+pctText+'; padding: 2px 6px; border-radius: 10px;flex-shrink:0;">'+pct.toFixed(0)+'%</span></div>'
+      +'<span class="ca-list-pct" style="font-weight: 400;font-size:11.5px;background: '+pctBg+';color: '+pctText+'; padding: 2px 6px; border-radius: 10px;flex-shrink:0;">'+pct.toFixed(0)+'%</span></div>'
       +'<div class="ca-list-val" style="min-width: ' + pcSMw + '; font-weight: 500; font-size:' + drPcFs + ';color: '+pctText+'; text-align: right;">' + amtNumber + '</div>';
 
     list.appendChild(row);
@@ -2455,11 +2471,11 @@ function caApplyLayout(){
     document.querySelectorAll(".ca-bi-val").forEach(function(el){el.style.fontSize="4.5vw";});
     document.querySelectorAll(".ca-mini-ring").forEach(function(el){el.style.width="9vw";el.style.height="9vw";});
     // Donut list sizes for mobile
-    document.querySelectorAll(".ca-list-name").forEach(function(el){el.style.fontSize="4.2vw";});
+    document.querySelectorAll(".ca-list-name").forEach(function(el){el.style.fontSize="4vw";});
     document.querySelectorAll(".ca-list-val").forEach(function(el){el.style.fontSize="4.2vw";});
     document.querySelectorAll(".ca-donut-center-label").forEach(function(el){el.style.fontSize="3.3vw";});
     document.querySelectorAll(".ca-donut-center-val").forEach(function(el){el.style.fontSize="4.8vw";});
-    document.querySelectorAll("#ca-list img").forEach(function(el){el.style.width="6vw";el.style.height="6vw";});
+    document.querySelectorAll("#ca-list img").forEach(function(el){el.style.width="4.8vw";el.style.height="4.8vw";});
     
   } else {
     // iPad: 2-column layout, show weather+countdown
@@ -2485,7 +2501,7 @@ function caApplyLayout(){
     document.querySelectorAll(".ca-list-val").forEach(function(el){el.style.fontSize="2.3vw";});
     document.querySelectorAll(".ca-donut-center-label").forEach(function(el){el.style.fontSize="2vw";});
     document.querySelectorAll(".ca-donut-center-val").forEach(function(el){el.style.fontSize="2.8vw";});
-    document.querySelectorAll("#ca-list img").forEach(function(el){el.style.width="3.32vw";el.style.height="3.32vw";});
+    document.querySelectorAll("#ca-list img").forEach(function(el){el.style.width="3.2vw";el.style.height="3.2vw";});
   }
 }
 
@@ -3128,10 +3144,7 @@ function csvRow(line){var cols=[],cur="",inQ=false;for(var i=0;i<line.length;i++
 
 /* ══ MOBILE DISPLAY-NAME SHORTENING (iPhone view only, ≤400px) ══ */
 var MOBILE_SHORT_NAMES = [
-  { match: "fpt adsl vl", short: "ADSL VL" },
-  { match: "fpt adsl tg", short: "ADSL TG" },
-  { match: "kungfu stocks pro", short: "KFSP" },
-  { match: "youtube premium",   short: "Premium" }
+  { match: "kungfu stogcks pro", short: "KFSP" }
 ];
 
 function getDisplayName(fullName, isMobile) {
@@ -3223,15 +3236,37 @@ function renderSubscriptions(items) {
     var swipeContainer = document.createElement("div");
     swipeContainer.className = "sub-swipe-container";
 
-    // 🟢 2. Create the Hidden Delete Action Layer underneath
-    // Find this section inside your items.forEach loop:
+    var itemId = item.id || index;
+    swipeContainer.setAttribute("data-id", itemId);
+
+    // 🟢 2. Create the Hidden Action Buttons (Edit + Delete)
+    var editAction = document.createElement("div");
+    editAction.className = "sub-edit-action";
+    // Suppose you want each button to be 50px wide instead of default/60px
+    var actionWidth = 60; 
+
+
+    // 2. Edit Action (Offset by the Delete button's width)
+    editAction.style.position = "absolute";
+    editAction.style.right = actionWidth + "px"; // 50px offset from right
+    editAction.style.top = "0";
+    editAction.style.bottom = "0";
+    editAction.style.width = actionWidth + "px"; // 50px
+    editAction.innerHTML = `
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+      </svg>
+    `;
+
     var deleteAction = document.createElement("div");
     deleteAction.className = "sub-delete-action";
-    var itemId = item.id || index;
+    deleteAction.style.position = "absolute";
+    deleteAction.style.right = "0px";
+    deleteAction.style.top = "0";
+    deleteAction.style.bottom = "0";
+    deleteAction.style.width = actionWidth + "px"; // 50px
 
-    // 1. Remove the old setAttribute("onclick", ...) entirely! 
-    // 2. Instead, explicitly mark the parent swipe container with a dataset ID tracking key:
-    swipeContainer.setAttribute("data-id", itemId);
 
     // 3. Attach standard and mobile touch event handlers directly to the trash layout box:
     deleteAction.addEventListener("click", function(e) {
@@ -3303,18 +3338,30 @@ function renderSubscriptions(items) {
     nameLeft.appendChild(nameEl);
     nameLeft.appendChild(badge);
 
+    // 1. Create Price Element (Top-Right)
     var priceEl = document.createElement("div");
     priceEl.className = "sub-price";
-    priceEl.innerHTML = fmtFull(item.price) + '<span class="sub-price-unit">/month</span>';
+    priceEl.innerHTML = fmtFull(item.price);
 
     nameRow.appendChild(nameLeft);
     nameRow.appendChild(priceEl);
 
+    // 2. Create Expiry & Unit Element (Bottom Row)
     var expEl = document.createElement("div");
     expEl.className = "sub-expiry";
+
+    // Inline styling directly on the container to force flex alignment
+    expEl.style.display = "flex";
+    expEl.style.alignItems = "center";
+    expEl.style.justifyContent = "space-between";
+    expEl.style.width = "100%";
+
     expEl.innerHTML =
-      '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>' +
-      '<span>Expired: ' + fmtExpiryDate(item.expiry) + '</span>';
+      '<div class="sub-expiry-left" style="display: flex; align-items: center; gap: 4px;">' +
+        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>' +
+        '<span>Expired: ' + fmtExpiryDate(item.expiry) + '</span>' +
+      '</div>' +
+      '<span class="sub-price-unit" style="font-size: 12px; font-weight:300; color:rgba(255,255,255,0.45);opacity: 0.8; text-align: right;">per month</span>';
 
     mid.appendChild(nameRow);
     mid.appendChild(expEl);
@@ -3323,6 +3370,7 @@ function renderSubscriptions(items) {
     row.appendChild(mid);
 
     // 🟢 4. Glue everything together inside the container setup
+    swipeContainer.appendChild(editAction);
     swipeContainer.appendChild(deleteAction);
     swipeContainer.appendChild(row);
     
@@ -4292,94 +4340,184 @@ function deleteSubscription(itemId) {
 
     // SAVE/CONFIRM UPDATE CLICK EVENT
     document.getElementById("expense-edit-save").addEventListener("click", function(e) {
-        e.preventDefault();
+    e.preventDefault();
 
-        var saveBtn = document.getElementById("expense-edit-save");
-        var cancelBtn = document.getElementById("expense-edit-cancel");
-        var buttonsContainer = document.getElementById("modalActionButtonsContainer");
-        var errorEl = document.getElementById("modalErrorMessage");
-        var errorTextEl = document.getElementById("errorText");
-        var successEl = document.getElementById("modalSuccessMessage");
-        var successTextEl = document.getElementById("successText");
+    var saveBtn = document.getElementById("expense-edit-save");
+    var cancelBtn = document.getElementById("expense-edit-cancel");
+    var addCashBtn = document.getElementById("add-cash");
+    
+    var buttonsContainer = document.getElementById("modalActionButtonsContainer");
+    var errorEl = document.getElementById("modalErrorMessage");
+    var errorTextEl = document.getElementById("errorText");
+    var successEl = document.getElementById("modalSuccessMessage");
+    var successTextEl = document.getElementById("successText");
 
+    if (errorEl) errorEl.style.display = "none";
+    if (successEl) successEl.style.display = "none";
+
+    var updatedTitle = document.getElementById("expense-edit-title").value.trim();
+    var amountRawString = document.getElementById("expense-edit-amount").value.replace(/,/g, "");
+    var updatedAmount = Number(amountRawString) || 0;
+    var updatedDetail = document.getElementById("expense-edit-detail").value.trim();
+
+    // Validation: Empty detail field check
+    if (!updatedDetail) {
+        if (buttonsContainer) buttonsContainer.style.display = "none";
+        if (errorTextEl) errorTextEl.textContent = "Details field cannot be empty.";
+        if (errorEl) {
+            errorEl.style.display = "flex";
+            setTimeout(restoreButtonsFromError, 2500);
+        }
+        return;
+    }
+
+    // Disable modal buttons during processing
+    if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.style.opacity = "0.5";
+        saveBtn.textContent = "Processing...";
+    }
+    if (cancelBtn) cancelBtn.disabled = true;
+
+    if (rowContainer) {
+        rowContainer.style.opacity = "0.3";
+        rowContainer.style.pointerEvents = "none";
+    }
+
+    var updatePayload = {
+        action: "update",
+        date: targetItem.date,
+        oldDetail: targetItem.detail,
+        oldAmount: targetItem.amount,
+        title: updatedTitle,
+        detail: updatedDetail,
+        amount: updatedAmount
+    };
+
+    fetch(EXPENSE_APPS_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify(updatePayload)
+    })
+    .then(function() {
+        // Show success state briefly inside the modal first
+        if (buttonsContainer) buttonsContainer.style.display = "none";
         if (errorEl) errorEl.style.display = "none";
+        
+        if (successTextEl) successTextEl.textContent = "Transaction updated!";
+        if (successEl) successEl.style.display = "flex";
+
+        setTimeout(function() { 
+          // 🎯 1. POP-UP IS CLOSED HERE
+          cleanupModal();
+
+          // 🎯 Reset row opacity, interactions, and transforms for target row (if present)
+          if (typeof rowContainer !== "undefined" && rowContainer) {
+              rowContainer.style.opacity = "1";
+              rowContainer.style.pointerEvents = "auto";
+              rowContainer.style.transform = "";
+              
+              var targetInner = rowContainer.querySelector(".subs-row, .row, [style*='transform']");
+              if (targetInner) {
+                  targetInner.style.transform = "";
+              }
+          }
+
+          // 🎯 Wipe swipe classes, transforms, and zIndex across ALL rows
+          document.querySelectorAll(".sub-swipe-container, .swiped").forEach(function(item) {
+              item.classList.remove("swiped");
+              item.style.transform = ""; 
+              
+              var innerRows = item.querySelectorAll(".subs-row, .row, div");
+              innerRows.forEach(function(inner) {
+                  if (inner.style.transform) {
+                      inner.style.transform = "";
+                  }
+              });
+
+              var delAct = item.querySelector(".sub-delete-action");
+              var editAct = item.querySelector(".sub-edit-action");
+              if (delAct) delAct.style.zIndex = "1";
+              if (editAct) editAct.style.zIndex = "1";
+          });
+
+          // 🎯 2. START SPINNER ON addCashBtn WHEN DATA REFRESH BEGINS
+          if (addCashBtn) {
+              addCashBtn.classList.add("loading");
+              addCashBtn.innerHTML = '<span class="btn-spinner"></span>';
+          }
+
+          // Refresh data
+          if (typeof loadExpenses === "function") {
+              loadExpenses(); 
+          } else if (typeof loadTransactions === "function") {
+              loadTransactions();
+          }
+
+          // 🎯 3. TRANSITION TO CHECKMARK AFTER DATA REFRESH LATENCY
+          setTimeout(function() {
+              if (addCashBtn) {
+                  addCashBtn.classList.remove("loading");
+                  addCashBtn.classList.add("success-confirm");
+                  addCashBtn.innerHTML = "&#10003;";
+              }
+
+              // 🎯 4. RESET BACK TO "+" AFTER DISPLAYING CHECKMARK
+              setTimeout(function() {
+                  if (addCashBtn) {
+                      addCashBtn.classList.remove("success-confirm");
+                      addCashBtn.innerHTML = "+";
+                  }
+
+                  // 🎯 Target your main list/history container
+                  var listContainer = document.getElementById("tx-list");
+
+                  if (listContainer) {
+                      listContainer.classList.add("data-refreshing");
+                  }
+
+                  // Run data reload
+                  if (typeof loadRecent === "function") {
+                      loadRecent();
+                  }
+
+                  // Remove transition effect once render completes
+                  setTimeout(function() {
+                      if (listContainer) {
+                          listContainer.classList.remove("data-refreshing");
+                          listContainer.classList.add("data-refreshed");
+
+                          setTimeout(function() {
+                              listContainer.classList.remove("data-refreshed");
+                          }, 600);
+                      }
+                  }, 400); // Small buffer to match network request/DOM update
+
+              }, 1500);
+
+          }, 1500); 
+
+      }, 1200);
+    })
+    .catch(function(err) {
+        // Restore standard save button state on error
+        if (saveBtn) {
+            saveBtn.disabled = false;
+            saveBtn.style.opacity = "1";
+            saveBtn.textContent = "Update";
+        }
+        if (cancelBtn) cancelBtn.disabled = false;
+
+        if (buttonsContainer) buttonsContainer.style.display = "none";
         if (successEl) successEl.style.display = "none";
 
-        var updatedTitle = document.getElementById("expense-edit-title").value.trim();
-        var amountRawString = document.getElementById("expense-edit-amount").value.replace(/,/g, "");
-        var updatedAmount = Number(amountRawString) || 0;
-        var updatedDetail = document.getElementById("expense-edit-detail").value.trim();
+        if (errorTextEl) errorTextEl.textContent = "Failed: " + err.message;
+        if (errorEl) errorEl.style.display = "flex";
 
-        // Xử lý khi bỏ trống Details field
-        if (!updatedDetail) {
-            if (buttonsContainer) buttonsContainer.style.display = "none";
-            if (errorTextEl) errorTextEl.textContent = "Details field cannot be empty.";
-            if (errorEl) {
-                errorEl.style.display = "flex";
-                // Tự động trả lại cụm nút sau 2.5 giây để người dùng điền lại
-                setTimeout(restoreButtonsFromError, 2500);
-            }
-            return;
-        }
-
-        // Đưa các nút vào trạng thái Loading trước khi bắn Fetch
-        if (saveBtn) {
-            saveBtn.disabled = true;
-            saveBtn.style.opacity = "0.5";
-            saveBtn.textContent = "Processing...";
-        }
-        if (cancelBtn) cancelBtn.disabled = true;
-
-        if (rowContainer) {
-            rowContainer.style.opacity = "0.3";
-            rowContainer.style.pointerEvents = "none";
-        }
-
-        var updatePayload = {
-            action: "update",
-            date: targetItem.date,
-            oldDetail: targetItem.detail,
-            oldAmount: targetItem.amount,
-            title: updatedTitle,
-            detail: updatedDetail,
-            amount: updatedAmount
-        };
-
-        fetch(EXPENSE_APPS_SCRIPT_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "text/plain" },
-            body: JSON.stringify(updatePayload)
-        })
-        .then(function() {
-            // 🟢 THÀNH CÔNG: Ẩn cụm nút, chiếm trọn vị trí góc đáy bằng khối thông báo xanh
-            if (buttonsContainer) buttonsContainer.style.display = "none";
-            if (errorEl) errorEl.style.display = "none";
-            
-            if (successTextEl) successTextEl.textContent = "Transaction updated!";
-            if (successEl) successEl.style.display = "flex";
-
-            setTimeout(function() { 
-                cleanupModal();
-                if (typeof loadExpenses === "function") {
-                    loadExpenses(); 
-                } else if (typeof loadTransactions === "function") {
-                    loadTransactions();
-                }
-            }, 1200);
-        })
-        .catch(function(err) {
-            // 🔴 THẤT BẠI: Ẩn cụm nút, chiếm trọn vị trí góc đáy bằng khối thông báo đỏ y hệt như thành công
-            if (buttonsContainer) buttonsContainer.style.display = "none";
-            if (successEl) successEl.style.display = "none";
-
-            if (errorTextEl) errorTextEl.textContent = "Failed: " + err.message;
-            if (errorEl) errorEl.style.display = "flex";
-
-            // Tự động khôi phục cụm nút bấm lại sau 3 giây để họ có cơ hội thử lại mà không bị khóa chết UI
-            setTimeout(restoreButtonsFromError, 3000);
-        });
+        setTimeout(restoreButtonsFromError, 3000);
     });
+});
   }
 
   // ----------------------------------------------------
@@ -4733,7 +4871,7 @@ function deleteSubscription(itemId) {
             <input type="text" 
                    id="history-edit-detail" 
                    value="${targetItem.detail || ''}" 
-                   style="font-family: 'Lexend', sans-serif !important; width: 100%; background: rgba(255,255,255,0.05); border: 0px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; color: #fff; font-size: 14px; box-sizing: border-box; outline: none; transition: border-color 0.2s;" 
+                   style="font-family: 'Lexend', sans-serif !important; height:37px!important;width: 100%; background: rgba(255,255,255,0.05); border: 0px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; color: #fff; font-size: 14px; box-sizing: border-box; outline: none; transition: border-color 0.2s;" 
                    onfocus="this.style.borderColor='rgba(255,255,255,0.25)'" 
                    onblur="this.style.borderColor='rgba(255,255,255,0.1)'"/>
           </div>
@@ -4743,7 +4881,7 @@ function deleteSubscription(itemId) {
             <input type="date" 
                    id="history-edit-date" 
                    value="${inputFormattedDate}" 
-                   style="font-family: 'Lexend', sans-serif !important; width: 100%; background: rgba(255,255,255,0.05); border: 0px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 8px; color: #fff; font-size: 13px; box-sizing: border-box; outline: none; transition: border-color 0.2s; color-scheme: dark;" 
+                   style="font-family: 'Lexend', sans-serif !important; height:37px!important;width: 100%; background: rgba(255,255,255,0.05); border: 0px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 8px; color: #fff; font-size: 13px; box-sizing: border-box; outline: none; transition: border-color 0.2s; color-scheme: dark;" 
                    onfocus="this.style.borderColor='rgba(255,255,255,0.25)'" 
                    onblur="this.style.borderColor='rgba(255,255,255,0.1)'"/>
           </div>
@@ -4922,23 +5060,84 @@ function deleteSubscription(itemId) {
             if (successEl) successEl.style.display = "flex";
 
             setTimeout(function() { 
-                cleanupModal();
-                if (typeof loadHistoryTransactions === "function") {
-                    loadHistoryTransactions(); 
-                } else if (typeof loadTransactions === "function") {
-                    loadTransactions();
-                }
-            }, 1200);
+              // 1. Close modal popup
+              cleanupModal();
+
+              // 🎯 2. Completely clear inline styles on the target rowContainer itself
+              if (rowContainer) {
+                  rowContainer.style.opacity = "1";
+                  rowContainer.style.pointerEvents = "auto";
+                  rowContainer.style.transform = ""; // Removes inline transform completely
+                  
+                  // Also clear transform on inner row elements inside target row
+                  var targetInner = rowContainer.querySelector(".ca-history-row, .subs-row, .row, [style*='transform']");
+                  if (targetInner) {
+                      targetInner.style.transform = "";
+                  }
+              }
+
+              // 🎯 3. Wipe swipe classes and inline transforms across ALL rows
+              document.querySelectorAll(".sub-swipe-container, .swiped").forEach(function(item) {
+                  item.classList.remove("swiped");
+                  item.style.transform = ""; // Reset wrapper transform if set directly
+                  
+                  // Reset every possible inner row element
+                  var innerRows = item.querySelectorAll(".ca-history-row, .subs-row, .row, div");
+                  innerRows.forEach(function(inner) {
+                      if (inner.style.transform) {
+                          inner.style.transform = "";
+                      }
+                  });
+
+                  // Reset action button z-indices back to base level
+                  var delAct = item.querySelector(".sub-delete-action");
+                  var editAct = item.querySelector(".sub-edit-action");
+                  if (delAct) delAct.style.zIndex = "1";
+                  if (editAct) editAct.style.zIndex = "1";
+              });
+
+              // 4. Start refreshing effect on #historyListContainer
+              var historyContainer = document.getElementById("historyListContainer");
+              if (historyContainer) {
+                  historyContainer.classList.add("data-refreshing");
+              }
+
+              // 5. Trigger the history data reload
+              if (typeof loadHistoryTransactions === "function") {
+                  loadHistoryTransactions(); 
+              } else if (typeof loadTransactions === "function") {
+                  loadTransactions();
+              }
+
+              // 6. Smoothly fade back in once reloaded
+              setTimeout(function() {
+                  if (historyContainer) {
+                      historyContainer.classList.remove("data-refreshing");
+                      historyContainer.classList.add("data-refreshed");
+
+                      setTimeout(function() {
+                          historyContainer.classList.remove("data-refreshed");
+                      }, 600);
+                  }
+              }, 500);
+
+          }, 1200);
         })
         .catch(function(err) {
-            if (buttonsContainer) buttonsContainer.style.display = "none";
-            if (successEl) successEl.style.display = "none";
+          // 🎯 Reset row state on failure
+          if (rowContainer) {
+              rowContainer.style.opacity = "1";
+              rowContainer.style.pointerEvents = "auto";
+          }
 
-            if (errorTextEl) errorTextEl.textContent = "Failed: " + err.message;
-            if (errorEl) errorEl.style.display = "flex";
+          if (buttonsContainer) buttonsContainer.style.display = "none";
+          if (successEl) successEl.style.display = "none";
 
-            setTimeout(restoreButtonsFromError, 3000);
-        });
+          if (errorTextEl) errorTextEl.textContent = "Failed: " + err.message;
+          if (errorEl) errorEl.style.display = "flex";
+
+          setTimeout(restoreButtonsFromError, 3000);
+      });
     });
   }
 
