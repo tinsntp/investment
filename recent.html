@@ -1465,18 +1465,30 @@ function buildRing(label, spent, budget, iconUrl, hideOnMobile, gids) {
 
   // Thiết lập dải màu gradient dựa trên việc có vượt quá 100% hay không
   var gradColors = "";
-  if (realPct > 100) {
-    // Khi vượt quá 100%: Chuyển sắc từ Cam Cháy (#ff4d00) sang Đỏ Neon (#ff0055)
-    gradColors = `
-      <stop offset="0%" stop-color="#fff" />
-      <stop offset="100%" stop-color="#ff0055" />
-    `;
+    if (realPct > 100) {
+      // Khi vượt quá 100%: Chuyển sắc từ Trắng sang Đỏ Neon (#ff0055)
+      gradColors = `
+        <stop offset="0%" stop-color="#fff" />
+        <stop offset="100%" stop-color="#ff0055" />
+      `;
+  } else if (realPct > 90) {
+      // Khi trên 90%: Chuyển sắc từ Cam (#f97316) sang Xanh Ngọc (#14b8a6)
+      gradColors = `
+        <stop offset="0%" stop-color="#14b8a6" />
+        <stop offset="50%" stop-color="#f97316" />
+      `;
+  } else if (realPct > 80) {
+      // Khi trên 80%: Chuyển sắc từ Vàng (#eab308) sang Xanh Ngọc (#14b8a6)
+      gradColors = `
+        <stop offset="0%" stop-color="#14b8a6" />
+        <stop offset="70%" stop-color="#eab308" />
+      `;
   } else {
-    // Khi dưới hoặc bằng 100%: Chuyển sắc từ Xanh Dương sang màu Trạng thái gốc
-    gradColors = `
-      <stop offset="0%" stop-color="#008080" />
-      <stop offset="100%" stop-color="${baseColor}" />
-    `;
+      // Khi dưới hoặc bằng 80%: Chuyển sắc từ Xanh Dương/Teal sang màu Trạng thái gốc
+      gradColors = `
+        <stop offset="0%" stop-color="#008080" />
+        <stop offset="100%" stop-color="${baseColor}" />
+      `;
   }
 
   // Gán dải màu tương ứng vào SVG
@@ -6420,6 +6432,36 @@ function setupGlobalInteractivePhysics() {
           }
         });
 
+        const filterOptionsContainer = document.getElementById('transactionFilterOptions');
+        if (filterOptionsContainer) {
+          // Start with the default "All" option
+          let filterItemsHtml = `
+            <div class="filter-option-item" onclick="selectTransactionFilter('all', 'All Transactions', 'filter_list')" style="padding: 8px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+              <span class="material-icons-round" style="font-size: 12px;">filter_list</span>
+              <span style="font-size: 12px;">All</span>
+            </div>
+          `;
+
+          // Dynamically add every unique transaction type found in your CSV (Salary, Deposit, etc.)
+          uniqueTypesMap.forEach((iconUrl, typeName) => {
+            const iconHtml = (iconUrl && iconUrl.toLowerCase() !== 'n/a')
+              ? `<img src="${iconUrl}" style="width: 16px; height: 16px; object-fit: contain; border-radius: 2px;" alt="" />`
+              : `<span class="material-icons-round" style="font-size: 12px;">label</span>`;
+
+            // Safe escaped string for onclick handler
+            const safeType = typeName.replace(/'/g, "\\'");
+
+            filterItemsHtml += `
+              <div class="filter-option-item" onclick="selectTransactionFilter('${safeType}', '${safeType}', '${iconUrl || 'label'}')" style="padding: 8px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                ${iconHtml}
+                <span style="font-size: 12px;">${typeName}</span>
+              </div>
+            `;
+          });
+
+          filterOptionsContainer.innerHTML = filterItemsHtml;
+        }
+
         container.innerHTML = htmlMarkup || '<div style="padding: 2vw; text-align: center; color: rgba(255,255,255,0.3);">No transactions found.</div>';
         // Add touch/swipe handler via Delegation
       })
@@ -7610,9 +7652,9 @@ function setupGlobalInteractivePhysics() {
       } else if (query === 'deposit') {
         // Must be positive AND must be classified as a deposit row
         isMatch = !isNegativeRow && (typeAttr.indexOf('deposit') !== -1);
-      } else if (query === 'withdraw' || query === 'expense') {
+      } else if (query === 'withdrawal' || query === 'expense') {
         // FIX FOR BUG 2: Check BOTH negative indicator AND that the string explicitly matches the action class type
-        isMatch = isNegativeRow && (typeAttr.indexOf('withdraw') !== -1 || typeAttr.indexOf('expense') !== -1 || typeAttr === query);
+        isMatch = isNegativeRow && (typeAttr.indexOf('withdrawal') !== -1 || typeAttr.indexOf('expense') !== -1 || typeAttr === query);
       } else {
         // Dynamic fallback matching criteria for categories pulled from column entries
         isMatch = (typeAttr.indexOf(query) !== -1);
