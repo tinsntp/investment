@@ -211,241 +211,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .btn-withdraw{flex:1;background-color:var(--btn-bg)}
 .btn-withdraw:hover{background-color:var(--btn-hover)}
 /* --- 1. History Button & Active Connected Effects --- */
-.btn-square {
-  position: relative; /* Essential for aligning the indicator arrow */
-  width: 28px;
-  height: 28px;
-  background-color: var(--btn-bg, #1a1a1a);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 0px solid rgba(255, 255, 255, 0.05);
-  cursor: pointer;
-  color: rgba(255, 255, 255, 0.8);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* 🌸 Pink Active States when opened/clicked */
-#btn-square-history.is-active {
-  background-color: rgba(224, 36, 94, 0.15) !important;
-  color: #e0245e !important;
-  border: 0px solid #e0245e !important;
-  animation: buttonPulse 2s infinite ease-in-out;
-}
-
-/* Creating the downward connection arrow underneath the active button */
-#btn-square-history.is-active::after {
-  content: '';
-  position: absolute;
-  bottom: -9px;
-  left: 50%;
-  transform: translateX(-50%);
-
-  z-index: 100;
-}
-
-/* Pulse animation to explicitly draw the user's eye to the change */
-@keyframes buttonPulse {
-  0% { box-shadow: 0 0 0 0 rgba(224, 36, 94, 0.4); }
-  70% { box-shadow: 0 0 0 6px rgba(224, 36, 94, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(224, 36, 94, 0); }
-}
-
-/* --- 2. Full Width History Panel --- */
-.history-panel {
-  background: #121212;
-  border: 0px solid rgba(255, 255, 255, 0.04);
-  border-radius: 12px;
-  margin-top: 16px;
-  width: 100%; /* Spans all the way across to the right edge */
-  clear: both; /* Prevents other flex boxes from floating next to it */
-  overflow: hidden;
-  box-sizing: border-box;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), 
-              opacity 0.25s ease, 
-              border-color 0.3s ease;
-}
-
-
-.history-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 16px;
-  border-bottom: 0px solid rgba(255, 255, 255, 0.04);
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.01), transparent);
-}
-
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.history-header h3 {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.history-title-icon {
-  font-size: 18px;
-  color: #e0245e;
-}
-
-.badge-all {
-  font-size: 11px;
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.6);
-  padding: 2px 8px;
-  border-radius: 20px;
-}
-
-/* --- 3. Full Two-Column Card Layout Engine --- */
-.history-list {
-  padding: 10px;
-  max-height: 350px;
-  overflow-y: auto;
-}
-
-.history-card {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-  padding: 12px 16px;
-  border-radius: 8px;
-  margin-bottom: 6px;
-  background: rgba(255, 255, 255, 0.01);
-  border: 1px solid rgba(255, 255, 255, 0.02);
-}
-
-.tx-main-col {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.tx-name {
-  font-size: 13.5px;
-  color: #ffffff;
-}
-
-.tx-date {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.4);
-}
-
-.tx-side-col {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  align-items: flex-end;
-}
-
-.tx-amount {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.tx-deposit .tx-amount {
-  color: #e0245e;
-}
-
-.text-muted {
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.tx-status {
-  font-size: 10px;
-  font-weight: 500;
-  padding: 1px 5px;
-  border-radius: 4px;
-}
-
-.status-success {
-  background: rgba(224, 36, 94, 0.1);
-  color: #e0245e;
-}
-
-.status-pending {
-  background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.5);
-}
-
-/* --- 1. Mobile Layout Flow Engine (iPhone / Viewport < 401px up to 767px) --- */
-@media (max-width: 400px) {
-  .history-panel {
-    display: block !important;
-    max-height: 0;
-    opacity: 0;
-    overflow: hidden;
-    margin-top: 0;
-    
-    /* Hardware acceleration layer optimization */
-    transform: translateY(-8px);
-    will-change: max-height, opacity, transform;
-    
-    /* Smooth cubic-bezier timing engine */
-    transition: 
-      max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-      opacity 0.25s ease-out,
-      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-      margin-top 0.3s ease;
-  }
-
-  /* Target state after dynamic DOM insertion takes place */
-  .history-panel.is-expanded {
-    max-height: 1000px; /* Safe ceiling value accommodating history rows + donut wrapper */
-    opacity: 1;
-    transform: translateY(0);
-    margin-top: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-  }
-}
-
-/* --- 2. Desktop/iPad Restructuring Alignment (Restores layout rule logic) --- */
-@media (min-width: 401px) {
-  .main-dashboard-container, 
-  .ca-col-left {
-    display: block; /* Disables flex order positioning so it inherits standard HTML stack flow */
-  }
-  
-  .history-panel {
-    max-height: 600px !important;
-    opacity: 1 !important;
-    margin-top: 20px;
-    order: initial; /* Resets order constraints completely */
-  }
-}
-
-/* --- 📑 iPad & Desktop Layout (>= 401px) --- */
-@media (min-width: 401px) {
-  #walletHistorySection {
-    /* Baseline smooth transitions for tablet view */
-    transition: 
-      max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-      opacity 0.25s ease,
-      margin-top 0.3s ease,
-      padding 0.3s ease;
-    overflow: hidden;
-  }
-
-  /* 🔥 Overrides the permanent layout block state when hidden by the user */
-  #walletHistorySection.is-hidden-ipad {
-    display: block !important; /* Keep display property block so transition works */
-    max-height: 0 !important;
-    opacity: 0 !important;
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    border: none !important;
-    pointer-events: none !important;
-  }
-}
-
+.btn-square{position:relative;width:28px;height:28px;background-color:var(--btn-bg, #1a1a1a);border-radius:8px;display:flex;align-items:center;justify-content:center;border:0 solid rgba(255,255,255,.05);cursor:pointer;color:rgba(255,255,255,.8);transition:all .25s cubic-bezier(.4,0,.2,1)}#btn-square-history.is-active{background-color:rgba(224,36,94,.15)!important;color:#e0245e!important;border:0 solid #e0245e!important;animation:buttonPulse 2s infinite ease-in-out}#btn-square-history.is-active::after{content:"";position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);z-index:100}@keyframes buttonPulse{0%{box-shadow:0 0 0 0 rgba(224,36,94,.4)}70%{box-shadow:0 0 0 6px transparent}to{box-shadow:0 0 0 0 transparent}}.history-panel{background:#121212;border:0 solid rgba(255,255,255,.04);border-radius:12px;margin-top:16px;width:100%;clear:both;overflow:hidden;box-sizing:border-box;box-shadow:0 8px 24px rgba(0,0,0,.3);transition:max-height .35s cubic-bezier(.4,0,.2,1),opacity .25s ease,border-color .3s ease}.history-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:0 solid rgba(255,255,255,.04);background:linear-gradient(to bottom,rgba(255,255,255,.01),transparent)}.header-left{display:flex;align-items:center;gap:8px}.history-header h3{margin:0;font-size:14px;font-weight:500;color:rgba(255,255,255,.9)}.history-title-icon{font-size:18px;color:#e0245e}.badge-all{font-size:11px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.6);padding:2px 8px;border-radius:20px}.history-list{padding:10px;max-height:350px;overflow-y:auto}.history-card{display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:12px 16px;border-radius:8px;margin-bottom:6px;background:rgba(255,255,255,.01);border:1px solid rgba(255,255,255,.02)}.tx-main-col{display:flex;flex-direction:column;gap:4px}.tx-name{font-size:13.5px;color:#fff}.tx-date{font-size:11px;color:rgba(255,255,255,.4)}.tx-side-col{display:flex;flex-direction:column;gap:4px;align-items:flex-end}.tx-amount{font-size:14px;font-weight:600}.tx-deposit .tx-amount{color:#e0245e}.text-muted{color:rgba(255,255,255,.7)}.tx-status{font-size:10px;font-weight:500;padding:1px 5px;border-radius:4px}.status-success{background:rgba(224,36,94,.1);color:#e0245e}.status-pending{background:rgba(255,255,255,.05);color:rgba(255,255,255,.5)}@media (max-width:400px){.history-panel{display:block!important;max-height:0;opacity:0;overflow:hidden;margin-top:0;transform:translateY(-8px);will-change:max-height,opacity,transform;transition:max-height .35s cubic-bezier(.4,0,.2,1),opacity .25s ease-out,transform .3s cubic-bezier(.4,0,.2,1),margin-top .3s ease}.history-panel.is-expanded{max-height:1000px;opacity:1;transform:translateY(0);margin-top:16px;border:1px solid rgba(255,255,255,.05)}}@media (min-width:401px){.main-dashboard-container,.ca-col-left{display:block}.history-panel{max-height:600px!important;opacity:1!important;margin-top:20px;order:initial}}@media (min-width:401px){#walletHistorySection{transition:max-height .35s cubic-bezier(.4,0,.2,1),opacity .25s ease,margin-top .3s ease,padding .3s ease;overflow:hidden}#walletHistorySection.is-hidden-ipad{display:block!important;max-height:0!important;opacity:0!important;margin-top:0!important;padding-top:0!important;padding-bottom:0!important;border:0!important;pointer-events:none!important}}
 .modal-backdrop{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);z-index:9999;justify-content:center;align-items:flex-start;padding-top:40px}
 .modal-backdrop.active{display:flex !important}
 .modal-box{width:340px;background:#1c1e24;border-radius:20px;padding:24px;border:1px solid #2d313c;opacity:0;transform:translateY(20px);transition:transform 0.3s ease,opacity 0.3s ease}
@@ -614,7 +380,7 @@ to{transform:rotate(360deg)}
 .sub-swipe-container{border-bottom: none;position:relative;width:100%;overflow:hidden;margin-bottom:0;border-radius:0px;background:#191919;}
 .subs-row{position:relative;z-index:2;width:100%;padding:2vw 0 2vw 0!important;margin-bottom:0 !important;will-change:transform;cursor:grab}
 .subs-row:active{cursor:grabbing}
-@media (max-width:400px){.subs-row{padding:2.5vw 0 2.5vw 0;}}
+@media (max-width:400px){.subs-row{padding:2.5vw 0 2.5vw 0!important;}}
 .sub-delete-action{cursor: pointer;position:absolute;margin-right:2px;margin-bottom:0px;top:0;right:0;bottom:0;width:70px;z-index:3;background-color:#ef4444;color:#ffffff;display:flex;align-items:center;justify-content:center;border-top-right-radius:12px;border-bottom-right-radius:12px;}
 .sub-delete-action svg{pointer-events:none}
 .sub-delete-action:hover{background-color:#dc2626}
@@ -794,7 +560,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .title-group h1{font-size:16px;font-weight:800;letter-spacing:-0.02em;background:linear-gradient(135deg,#ffffff 0%,#cbd5e1 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .title-group p{font-size:10px;color:var(--text-muted);font-weight:500}
-.live-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:20px;background:rgba(16,185,129,0.1);font-size:9px;font-weight:700;color:var(--accent-teal);text-transform:uppercase}
+.live-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:20px;background:rgba(16,185,129,0.1);font-size:11px;font-weight:700;color:var(--accent-teal);text-transform:uppercase}
 .live-dot{width:4px;height:4px;border-radius:50%;background:var(--accent-teal);box-shadow:0 0 6px var(--accent-teal);animation:pulse 2s infinite}
 @keyframes pulse{0%{opacity:0.4;transform:scale(0.9)}
 50%{opacity:1;transform:scale(1.2)}
@@ -802,11 +568,11 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 }.hero-card{position:relative;border-radius:14px;padding:12px 14px;margin-bottom:12px;background:linear-gradient(135deg,rgba(30,41,59,0.6) 0%,rgba(15,23,42,0.8) 100%);box-shadow:0 12px 24px -10px rgba(0,0,0,0.5);backdrop-filter:blur(16px)}
 .hero-caption-row{display:flex;align-items:center;justify-content:space-between}
 .hero-caption{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-secondary)}
-.hero-main-val{font-size:24px;font-weight:800;color:#fff;margin:2px 0 8px 0}
+.hero-main-val{font-size:24px;font-family:"JetBrains Mono";font-weight:800;color:#fff;margin:2px 0 8px 0}
 .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .hero-stat-box{background:rgba(15,23,42,0.6);border-radius:8px;padding:6px 8px}
 .hero-stat-label{font-size:9px;color:var(--text-muted)}
-.hero-stat-num{font-size:14px;font-weight:700}
+.hero-stat-num{font-family:DM Sans;font-size:14px;font-weight:700}
 .chart-card{background:var(--surface-card);border-radius:12px;padding:10px 12px;margin-bottom:12px}
 .chart-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-secondary);margin-bottom:8px}
 .stacked-bar-container{height:10px;width:100%;border-radius:5px;overflow:hidden;display:flex;background:rgba(255,255,255,0.05);margin-bottom:8px}
@@ -829,12 +595,13 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 .cat-title{font-size:12.5px;font-weight:700;color:#fff;line-height:1.2}
 .cat-desc{font-size:11px;color:var(--text-muted);font-weight:500;margin-top:1px;line-height:1.1}
 .risk-badge{font-size:10px;font-weight:700;text-transform:uppercase;padding:1px 5px;border-radius:8px}
-.risk-badge.badge-core{background:rgba(16,185,129,0.15);color:#34d399}
-.risk-badge.badge-growth{background:rgba(59,130,246,0.15);color:#60a5fa}
+.risk-badge.badge-core{background:rgba(236,72,153,0.15);color:#f472b6}
+.risk-badge.badge-growth{background:rgba(20,184,166,0.15);color:#2dd4bf}
 .risk-badge.badge-highrisk{background:rgba(244,63,94,0.15);color:#f87171}
+.risk-badge.badge-medrisk {background:rgba(245, 158, 11, 0.15);color:#fbbf24;}
 .cat-metrics{display:flex;flex-direction:column;align-items:flex-end;gap:1px;flex-shrink:0}
-.cat-val-main{font-size:14.5px;font-weight:700;color:#fff}
-.cat-val-sub{display:flex;align-items:center;gap:4px;font-size:12px}
+.cat-val-main{font-family:DM Sans;font-size:14.5px;font-weight:700;color:#fff}
+.cat-val-sub{font-family:DM Sans;display:flex;align-items:center;gap:4px;font-size:12px}
 .chevron-btn{width:18px;height:18px;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:transform 0.25s ease;flex-shrink:0}
 .cat-card.open .chevron-btn{transform:rotate(180deg);color:#fff}
 .cat-bar-container{height:2.5px;width:100%;background:rgba(255,255,255,0.05)}
@@ -843,11 +610,11 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 .cat-card.open .cat-children-wrapper{display:block}
 .child-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;margin-left:6px}
 .child-info-block{display:flex;flex-direction:column;min-width:0;padding-right:6px}
-.child-title{font-size:11.5px;font-weight:600;color:var(--text-primary)}
-.child-desc{font-size:10px;color:var(--text-muted);margin-top:1px}
+.child-title{font-size:12.5px;font-weight:600;color:var(--text-primary)}
+.child-desc{font-size:11px;color:var(--text-muted);margin-top:1px}
 .child-metrics{display:flex;flex-direction:column;align-items:flex-end;gap:1px;flex-shrink:0}
-.child-val-main{font-size:13px;font-weight:600}
-.child-val-sub{display:flex;align-items:center;gap:3px;font-size:11px}
+.child-val-main{font-family:DM Sans;font-size:13px;font-weight:600}
+.child-val-sub{font-family:DM Sans;display:flex;align-items:center;gap:3px;font-size:11px}
 .pos{color:var(--accent-teal);font-weight:600}
 .neg{color:var(--accent-rose);font-weight:600}
 .neutral{color:var(--text-muted)}
@@ -5867,6 +5634,7 @@ function setupGlobalInteractivePhysics() {
   });
   document.getElementById("subtitle").innerHTML = "Fractal cycle matrix &middot; <span class='now-pill'>Tracking Cycle " + subtitleTrackedNum + "</span>"; }
 
+  /*F.I.R.E.*/
   var FIRE_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1815442176";
   var CHART_COLORS = ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b', '#ec4899', '#06b6d4'];
 
@@ -5933,8 +5701,13 @@ function setupGlobalInteractivePhysics() {
       badgeType = "badge-growth"; badgeLabel = "Growth";
       clean = clean.replace(/\s*\(?\s*Growth\s*\)?/gi, "");
     } else if (/high\s*risk/i.test(clean)) {
-      badgeType = "badge-highrisk"; badgeLabel = "High Risk";
+      badgeType = "badge-highrisk"; 
+      badgeLabel = "High Risk";
       clean = clean.replace(/\s*\(?\s*High\s*Risk\s*\)?/gi, "");
+    } else if (/medium\s*risk|med\s*risk/i.test(clean)) {
+      badgeType = "badge-medrisk"; 
+      badgeLabel = "Medium Risk";
+      clean = clean.replace(/\s*\(?\s*(Medium|Med)\s*Risk\s*\)?/gi, "");
     }
 
     clean = clean.replace(/^[\s\-–—:]+|[\s\-–—:]+$/g, "").trim();
@@ -6014,10 +5787,10 @@ function setupGlobalInteractivePhysics() {
     var str = rawTitle.toLowerCase();
     
     // Savings / Deposit
-    if (/tiết kiệm|tiet kiem|thang|saving|savings|deposit|bank/i.test(str)) return "Thang tiết kiệm";
+    if (/tiết kiệm|tiet kiem|thang|saving|savings|deposit|bank/i.test(str)) return "Savings";
     
     // Stocks / Equities
-    if (/chứng khoán|chung khoan|stock|stocks|equity|equities|share|shares|trade|trading/i.test(str)) return "Chứng khoán";
+    if (/chứng khoán|chung khoan|stock|stocks|equity|equities|share|shares|trade|trading/i.test(str)) return "Stocks";
     
     // Crypto
     if (/crypto|cryptocurrency|coin|btc|eth|token/i.test(str)) return "Crypto";
@@ -6026,7 +5799,7 @@ function setupGlobalInteractivePhysics() {
     if (/forex|fx|currency|currencies|foreign exchange/i.test(str)) return "Forex";
     
     // Real Estate / Property
-    if (/chung cư|chung cu|bất động sản|bat dong san|nhà|đất|real estate|property|estate|housing|apartment|condo/i.test(str)) return "Bất động sản";
+    if (/chung cư|chung cu|bất động sản|bat dong san|nhà|đất|real estate|property|estate|housing|apartment|condo/i.test(str)) return "Real Estate";
 
     // Fallback: take only the first 2 words if no keyword matches
     return rawTitle.split(/\s+/).slice(0, 2).join(" ");
@@ -6289,13 +6062,7 @@ function setupGlobalInteractivePhysics() {
     }
   }
 
-  loadPortfolio();
-
-  loadSubscriptions();
-  loadExpense();
-  loadRecent();
-  loadCycles();
-  setInterval(loadRecent,60000);
+  
 
 
   /* ══ INIT: load saved tab order + last active tab, apply, then wire up UI ══ */
@@ -8585,6 +8352,14 @@ function setupGlobalInteractivePhysics() {
     if (typeof loadTransactionHistory === 'function') loadTransactionHistory();
     
   };
+  
+
+  loadSubscriptions();
+  loadExpense();
+  loadRecent();
+  loadCycles();
+  loadPortfolio();
+  setInterval(loadRecent,60000);
 
 </script>
 
