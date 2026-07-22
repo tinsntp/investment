@@ -816,7 +816,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 .legend-color-dot{width:6px;height:6px;border-radius:50%}
 .section-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .section-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted)}
-.toggle-mode-btn{background:rgba(255,255,255,0.08);border:none;color:var(--text-primary);font-family:var(--font-sans);font-size:10px;font-weight:600;padding:4px 10px;border-radius:5px;cursor:pointer;transition:all 0.2s ease}
+.toggle-mode-btn{background:rgba(255,255,255,0.08);border:none;color:var(--text-primary);font-family:var(--font-sans);font-size:10px;font-weight:600;padding:4px 10px;border-radius:8px;cursor:pointer;transition:all 0.2s ease}
 .toggle-mode-btn:hover{background:rgba(255,255,255,0.16)}
 #category-list{display:flex;flex-direction:column;gap:8px}
 .cat-card{background:var(--surface-card);border-radius:12px;overflow:hidden;backdrop-filter:blur(12px)}
@@ -827,8 +827,8 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 .cat-info{flex:1;min-width:0;display:flex;flex-direction:column}
 .title-with-badge{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
 .cat-title{font-size:12.5px;font-weight:700;color:#fff;line-height:1.2}
-.cat-desc{font-size:9px;color:var(--text-muted);font-weight:500;margin-top:1px;line-height:1.1}
-.risk-badge{font-size:8px;font-weight:700;text-transform:uppercase;padding:1px 5px;border-radius:5px}
+.cat-desc{font-size:11px;color:var(--text-muted);font-weight:500;margin-top:1px;line-height:1.1}
+.risk-badge{font-size:10px;font-weight:700;text-transform:uppercase;padding:1px 5px;border-radius:8px}
 .risk-badge.badge-core{background:rgba(16,185,129,0.15);color:#34d399}
 .risk-badge.badge-growth{background:rgba(59,130,246,0.15);color:#60a5fa}
 .risk-badge.badge-highrisk{background:rgba(244,63,94,0.15);color:#f87171}
@@ -1285,7 +1285,6 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
       <div class="app-container">
         <header class="header">
           <div class="title-group">
-            <h1>Investment Portfolio Planning</h1>
             <p>Tentative F. I. R. E. by Oct 2030</p>
           </div>
         </header>
@@ -6015,7 +6014,7 @@ function setupGlobalInteractivePhysics() {
     var str = rawTitle.toLowerCase();
     
     // Savings / Deposit
-    if (/tiết kiệm|tiet kiem|thang|saving|savings|deposit|bank/i.test(str)) return "Tháng tiết kiệm";
+    if (/tiết kiệm|tiet kiem|thang|saving|savings|deposit|bank/i.test(str)) return "Thang tiết kiệm";
     
     // Stocks / Equities
     if (/chứng khoán|chung khoan|stock|stocks|equity|equities|share|shares|trade|trading/i.test(str)) return "Chứng khoán";
