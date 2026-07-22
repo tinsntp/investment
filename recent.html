@@ -6076,7 +6076,7 @@ function setupGlobalInteractivePhysics() {
 
     var maxInvested = Math.max.apply(null, categories.map(function(c) { return c.invested || 0; }).concat([1]));
 
-    categories.forEach(function(cat) {
+    categories.forEach(function(cat,idx) {
       var card = document.createElement("div");
       card.className = "cat-card";
 
@@ -6180,7 +6180,9 @@ function setupGlobalInteractivePhysics() {
       }
 
       if (cat.children.length > 0) {
-        card.classList.add("open");
+        if (idx < categories.length - 1) {
+          card.classList.add("open");
+        }
         var wrapper = document.createElement("div");
         wrapper.className = "cat-children-wrapper";
 
