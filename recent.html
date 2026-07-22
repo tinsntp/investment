@@ -23,7 +23,20 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .tab-btn i{font-size:3.8vw!important;}
 .tab-line {position:absolute; bottom:0; height:2.5px; background:#fff; border-radius:2px; transition:left 0.25s ease, width 0.25s ease;}
 #tab-btn-2 { display:flex; }
-:root{--bg-dark:#0d0e12;--card-pocket-bg:#16181e;--card-pocket-lining-bg:#111217;--text-main:#ffffff;--text-muted:#8a8d97;--btn-bg:#21242c;--btn-hover:#2d313c;--accent-pink-bg:#fbcad5;--accent-pink-text:#4a1525;--accent-purple-bg:#d5d3f8;--accent-purple-text:#211c4a;--accent-deposit:#ff007f;--accent-deposit-bg:rgba(190, 24, 93, 0.12)}
+:root{--bg-dark:#0d0e12;--card-pocket-bg:#16181e;--card-pocket-lining-bg:#111217;--text-main:#ffffff;--text-muted:#8a8d97;--btn-bg:#21242c;--btn-hover:#2d313c;--accent-pink-bg:#fbcad5;--accent-pink-text:#4a1525;--accent-purple-bg:#d5d3f8;--accent-purple-text:#211c4a;--accent-deposit:#ff007f;--accent-deposit-bg:rgba(190, 24, 93, 0.12);
+    --surface-card: rgba(22, 28, 45, 0.75);
+    --surface-hover: rgba(30, 41, 59, 0.85);
+    --surface-child: rgba(13, 19, 33, 0.9);
+    
+    --accent-teal: #10b981;
+    --accent-teal-glow: rgba(16, 185, 129, 0.25);
+    --accent-rose: #f43f5e;
+    --accent-purple: #8b5cf6;
+    --accent-blue: #3b82f6;
+
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    }
 @media (max-width: 401px) {.tab-btn span {display: none;}.tab-btn.active span {display: inline-block; margin-left: 6px; font-size: 14px; }.tab-btn i{font-size:5.3vw!important;}}
 @media (min-width: 400px) {.tab-btn span {display: none;}.tab-btn.active span {display: inline-block; margin-left: 6px; font-size: 14px; }}
 
@@ -775,6 +788,70 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 .indicator-text{font-size:9px;padding:2px 4px}
 .date-axis span{font-size:9px}
 }
+
+/*F. I. R. E.*/
+.app-container{width:100%;max-width:520px;margin:0 auto;padding:16px 12px 32px 12px}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.title-group h1{font-size:16px;font-weight:800;letter-spacing:-0.02em;background:linear-gradient(135deg,#ffffff 0%,#cbd5e1 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.title-group p{font-size:10px;color:var(--text-muted);font-weight:500}
+.live-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:20px;background:rgba(16,185,129,0.1);font-size:9px;font-weight:700;color:var(--accent-teal);text-transform:uppercase}
+.live-dot{width:4px;height:4px;border-radius:50%;background:var(--accent-teal);box-shadow:0 0 6px var(--accent-teal);animation:pulse 2s infinite}
+@keyframes pulse{0%{opacity:0.4;transform:scale(0.9)}
+50%{opacity:1;transform:scale(1.2)}
+100%{opacity:0.4;transform:scale(0.9)}
+}.hero-card{position:relative;border-radius:14px;padding:12px 14px;margin-bottom:12px;background:linear-gradient(135deg,rgba(30,41,59,0.6) 0%,rgba(15,23,42,0.8) 100%);box-shadow:0 12px 24px -10px rgba(0,0,0,0.5);backdrop-filter:blur(16px)}
+.hero-caption-row{display:flex;align-items:center;justify-content:space-between}
+.hero-caption{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-secondary)}
+.hero-main-val{font-size:22px;font-weight:800;color:#fff;margin:2px 0 8px 0}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hero-stat-box{background:rgba(15,23,42,0.6);border-radius:8px;padding:6px 8px}
+.hero-stat-label{font-size:9px;color:var(--text-muted)}
+.hero-stat-num{font-size:12px;font-weight:700}
+.chart-card{background:var(--surface-card);border-radius:12px;padding:10px 12px;margin-bottom:12px}
+.chart-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-secondary);margin-bottom:8px}
+.stacked-bar-container{height:10px;width:100%;border-radius:5px;overflow:hidden;display:flex;background:rgba(255,255,255,0.05);margin-bottom:8px}
+.stacked-bar-segment{height:100%;transition:width 0.5s ease}
+.chart-legend{display:flex;flex-wrap:wrap;gap:8px}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:9.5px;color:var(--text-secondary)}
+.legend-color-dot{width:6px;height:6px;border-radius:50%}
+.section-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.section-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted)}
+.toggle-mode-btn{background:rgba(255,255,255,0.08);border:none;color:var(--text-primary);font-family:var(--font-sans);font-size:10px;font-weight:600;padding:4px 10px;border-radius:5px;cursor:pointer;transition:all 0.2s ease}
+.toggle-mode-btn:hover{background:rgba(255,255,255,0.16)}
+#category-list{display:flex;flex-direction:column;gap:8px}
+.cat-card{background:var(--surface-card);border-radius:12px;overflow:hidden;backdrop-filter:blur(12px)}
+.cat-head{display:flex;align-items:center;gap:8px;padding:8px 12px;user-select:none}
+.cat-icon-container{width:28px;height:28px;border-radius:8px;flex-shrink:0;background:linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02));display:flex;align-items:center;justify-content:center;overflow:hidden}
+.cat-icon-img{width:100%;height:100%;object-fit:cover}
+.cat-icon-fallback{font-size:12px;font-weight:800;color:var(--accent-purple)}
+.cat-info{flex:1;min-width:0;display:flex;flex-direction:column}
+.title-with-badge{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.cat-title{font-size:12.5px;font-weight:700;color:#fff;line-height:1.2}
+.cat-desc{font-size:9px;color:var(--text-muted);font-weight:500;margin-top:1px;line-height:1.1}
+.risk-badge{font-size:8px;font-weight:700;text-transform:uppercase;padding:1px 5px;border-radius:3px}
+.risk-badge.badge-core{background:rgba(16,185,129,0.15);color:#34d399}
+.risk-badge.badge-growth{background:rgba(59,130,246,0.15);color:#60a5fa}
+.risk-badge.badge-highrisk{background:rgba(244,63,94,0.15);color:#f87171}
+.cat-metrics{display:flex;flex-direction:column;align-items:flex-end;gap:1px;flex-shrink:0}
+.cat-val-main{font-size:12.5px;font-weight:700;color:#fff}
+.cat-val-sub{display:flex;align-items:center;gap:4px;font-size:9.5px}
+.chevron-btn{width:18px;height:18px;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:transform 0.25s ease;flex-shrink:0}
+.cat-card.open .chevron-btn{transform:rotate(180deg);color:#fff}
+.cat-bar-container{height:2.5px;width:100%;background:rgba(255,255,255,0.05)}
+.cat-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent-teal),var(--accent-blue))}
+.cat-children-wrapper{display:none;background:var(--surface-child);padding:4px 38px 4px 12px}
+.cat-card.open .cat-children-wrapper{display:block}
+.child-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;margin-left:6px}
+.child-info-block{display:flex;flex-direction:column;min-width:0;padding-right:6px}
+.child-title{font-size:11.5px;font-weight:600;color:var(--text-primary)}
+.child-desc{font-size:10px;color:var(--text-muted);margin-top:1px}
+.child-metrics{display:flex;flex-direction:column;align-items:flex-end;gap:1px;flex-shrink:0}
+.child-val-main{font-size:11px;font-weight:600}
+.child-val-sub{display:flex;align-items:center;gap:3px;font-size:8.5px}
+.pos{color:var(--accent-teal);font-weight:600}
+.neg{color:var(--accent-rose);font-weight:600}
+.neutral{color:var(--text-muted)}
+#loading-msg{text-align:center;padding:30px;color:var(--text-muted);font-size:11px}
 </style>
 </head>
 <body>
@@ -1205,7 +1282,52 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
     </div>
     <!-- F.I.R.E. SLIDE -->
     <div class="slide" id="slide-6" data-idx="6">
-      
+      <div class="app-container">
+        <header class="header">
+          <div class="title-group">
+            <h1>Investment Portfolio Planning</h1>
+            <p>Tentative F. I. R. E. by Oct 2030</p>
+          </div>
+        </header>
+
+        <!-- Hero Overview Card -->
+        <div class="hero-card" id="hero-card" style="display:none;">
+          <div class="hero-caption-row">
+            <div class="hero-caption"><span>Total </span><i class="bi bi-fire" aria-hidden="true"></i><span>F. I. R. E. BUDGET</span></div>
+            <div class="live-badge">
+              <span class="live-dot"></span> Live
+            </div>
+          </div>
+          <div class="hero-main-val" id="hero-invested">&#x2014;</div>
+          
+          <div class="hero-grid">
+            <div class="hero-stat-box">
+              <div class="hero-stat-label">Total Return %</div>
+              <div class="hero-stat-num" id="hero-pct">&#x2014;</div>
+            </div>
+            <div class="hero-stat-box">
+              <div class="hero-stat-label">Total Return per month</div>
+              <div class="hero-stat-num" id="hero-amt">&#x2014;</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visual Asset Allocation Chart -->
+        <div class="chart-card" id="chart-card" style="display:none;">
+          <div class="chart-title">Allocation Ratio</div>
+          <div class="stacked-bar-container" id="stacked-bar"></div>
+          <div class="chart-legend" id="chart-legend"></div>
+        </div>
+
+        <!-- Category List -->
+        <div id="category-section" style="display:none;">
+          <div class="section-header-row">
+            <div class="section-label">Asset Breakdown</div>
+            <button class="toggle-mode-btn" id="toggle-all-btn">Expand All</button>
+          </div>
+          <div id="category-list"></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -5746,11 +5868,434 @@ function setupGlobalInteractivePhysics() {
   });
   document.getElementById("subtitle").innerHTML = "Fractal cycle matrix &middot; <span class='now-pill'>Tracking Cycle " + subtitleTrackedNum + "</span>"; }
 
+  var FIRE_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1815442176";
+  var CHART_COLORS = ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b', '#ec4899', '#06b6d4'];
+
+  function parseCSVLine(line) {
+    var cols = [], cur = "", inQ = false;
+    for (var i = 0; i < line.length; i++) {
+      var c = line[i];
+      if (c === '"') { inQ = !inQ; }
+      else if (c === ',' && !inQ) { cols.push(cur); cur = ""; }
+      else { cur += c; }
+    }
+    cols.push(cur);
+    return cols.map(function(s) { return s.replace(/^"|"$/g, ""); });
+  }
+
+  function parseMAmt(raw) {
+    if (!raw) return null;
+    var m = raw.trim().match(/([+\-]?[\d,]+(?:\.\d+)?)\s*M/i);
+    return m ? parseFloat(m[1].replace(/,/g, "")) : null;
+  }
+
+  function parsePct(raw) {
+    if (!raw) return null;
+    var m = raw.trim().match(/([+\-]?[\d.]+)\s*%/);
+    return m ? parseFloat(m[1]) : null;
+  }
+
+  function fmtM(v, forcePlus) {
+    if (v === null || v === undefined) return null;
+    var sign = (v > 0 && forcePlus) ? "+" : (v < 0 ? "\u2212" : "");
+    var a = Math.abs(v);
+    return sign + ((a % 1 === 0) ? a.toLocaleString("en-US") : a.toLocaleString("en-US", {minimumFractionDigits: 1, maximumFractionDigits: 1})) + "M \u0111";
+  }
+
+  function fmtPct(v) {
+    if (v === null || v === undefined) return null;
+    var sign = v > 0 ? "+" : (v < 0 ? "\u2212" : "");
+    return sign + Math.abs(v).toFixed(v % 1 === 0 ? 0 : 1) + "%";
+  }
+
+  function parseTitleDesc(rawStr) {
+    if (!rawStr) return { title: "", desc: "" };
+    var str = rawStr.trim();
+    
+    var parts = [];
+    if (str.indexOf("+") !== -1) parts = str.split("+");
+    else if (str.indexOf(":") !== -1) parts = str.split(":");
+    else if (str.indexOf(" - ") !== -1) parts = str.split(" - ");
+    else parts = [str];
+
+    var title = parts[0].trim();
+    var desc = parts.length > 1 ? parts.slice(1).join(" ").trim() : "";
+    return { title: title, desc: desc };
+  }
+
+  function extractAndCleanBadge(titleText) {
+    var badgeType = null, badgeLabel = "";
+    var clean = titleText;
+
+    if (/core/i.test(clean)) {
+      badgeType = "badge-core"; badgeLabel = "Core";
+      clean = clean.replace(/\s*\(?\s*Core\s*\)?/gi, "");
+    } else if (/growth/i.test(clean)) {
+      badgeType = "badge-growth"; badgeLabel = "Growth";
+      clean = clean.replace(/\s*\(?\s*Growth\s*\)?/gi, "");
+    } else if (/high\s*risk/i.test(clean)) {
+      badgeType = "badge-highrisk"; badgeLabel = "High Risk";
+      clean = clean.replace(/\s*\(?\s*High\s*Risk\s*\)?/gi, "");
+    }
+
+    clean = clean.replace(/^[\s\-–—:]+|[\s\-–—:]+$/g, "").trim();
+    return { cleanTitle: clean || titleText, badgeType: badgeType, badgeLabel: badgeLabel };
+  }
+
+  function loadPortfolio() {
+    fetch(FIRE_CSV_URL + "&t=" + Date.now(), { cache: "no-store" })
+      .then(function(r) { return r.text(); })
+      .then(function(text) {
+        var lines = text.split("\n").filter(function(l) { return l.trim(); });
+        var rows = lines.map(parseCSVLine).slice(1);
+
+        var overview = null;
+        var categories = [];
+        var currentCat = null;
+
+        rows.forEach(function(cols) {
+          var iconUrl = (cols[0] || "").trim();
+          var rawName = cols[1] || "";
+          var name = rawName.trim();
+          var invested = parseMAmt(cols[2]);
+          var pct = parsePct(cols[3]);
+          var returned = parseMAmt(cols[4]);
+
+          if (!name && (invested !== null || pct !== null) && !overview) {
+            overview = { invested: invested, pct: pct, returned: returned };
+            return;
+          }
+          if (!name) return;
+
+          var isParent = iconUrl.length > 0 && iconUrl.indexOf("http") === 0;
+
+          if (isParent || !currentCat) {
+            currentCat = { icon: iconUrl, rawName: name, invested: invested, pct: pct, returned: returned, children: [] };
+            categories.push(currentCat);
+          } else {
+            currentCat.children.push({ rawName: name, invested: invested, pct: pct, returned: returned });
+          }
+        });
+
+        document.getElementById("loading-msg").style.display = "none";
+        document.getElementById("category-section").style.display = "block";
+
+        renderOverview(overview, categories);
+        renderChart(categories);
+        renderCategories(categories);
+      })
+      .catch(function(err) {
+        document.getElementById("loading-msg").innerHTML = '<span style="color:var(--accent-rose)">Failed to sync portfolio.</span>';
+      });
+  }
+
+  function renderOverview(overview, categories) {
+    var heroEl = document.getElementById("hero-card");
+    if (!overview) {
+      var totalInvested = categories.reduce(function(s, c) { return s + (c.invested || 0); }, 0);
+      var totalReturned = categories.reduce(function(s, c) { return s + (c.returned || 0); }, 0);
+      overview = { invested: totalInvested, returned: totalReturned, pct: (totalInvested ? (totalReturned / totalInvested * 100) : null) };
+    }
+    if (!overview.invested) return;
+
+    heroEl.style.display = "block";
+    document.getElementById("hero-invested").textContent = overview.invested != null ? (overview.invested * 1000000).toLocaleString("en-US") + " đ" : "—";
+    
+    var pctEl = document.getElementById("hero-pct");
+    var amtEl = document.getElementById("hero-amt");
+    pctEl.textContent = overview.pct !== null ? fmtPct(overview.pct) : "\u2014";
+    pctEl.className = "hero-stat-num " + (overview.pct > 0 ? "pos" : (overview.pct < 0 ? "neg" : "neutral"));
+    
+    amtEl.textContent = overview.returned !== null ? fmtM(overview.returned, true) : "\u2014";
+    amtEl.className = "hero-stat-num " + (overview.returned > 0 ? "pos" : (overview.returned < 0 ? "neg" : "neutral"));
+  }
+
+  // Helper to extract clean, concise legend keywords
+  function extractLegendKeyword(rawTitle) {
+    var str = rawTitle.toLowerCase();
+    
+    // Savings / Deposit
+    if (/tiết kiệm|tiet kiem|thang|saving|savings|deposit|bank/i.test(str)) return "Tháng tiết kiệm";
+    
+    // Stocks / Equities
+    if (/chứng khoán|chung khoan|stock|stocks|equity|equities|share|shares|trade|trading/i.test(str)) return "Chứng khoán";
+    
+    // Crypto
+    if (/crypto|cryptocurrency|coin|btc|eth|token/i.test(str)) return "Crypto";
+    
+    // Forex
+    if (/forex|fx|currency|currencies|foreign exchange/i.test(str)) return "Forex";
+    
+    // Real Estate / Property
+    if (/chung cư|chung cu|bất động sản|bat dong san|nhà|đất|real estate|property|estate|housing|apartment|condo/i.test(str)) return "Bất động sản";
+
+    // Fallback: take only the first 2 words if no keyword matches
+    return rawTitle.split(/\s+/).slice(0, 2).join(" ");
+  }
+
+  function renderChart(categories) {
+    var chartCard = document.getElementById("chart-card");
+    var stackedBar = document.getElementById("stacked-bar");
+    var legend = document.getElementById("chart-legend");
+    
+    stackedBar.innerHTML = "";
+    legend.innerHTML = "";
+
+    var totalVal = categories.reduce(function(s, c) { return s + (c.invested || 0); }, 0);
+    if (totalVal <= 0) return;
+
+    chartCard.style.display = "block";
+
+    categories.forEach(function(cat, idx) {
+      if (!cat.invested) return;
+      var pct = (cat.invested / totalVal) * 100;
+      var color = CHART_COLORS[idx % CHART_COLORS.length];
+
+      var parsed = parseTitleDesc(cat.rawName);
+      var badgeInfo = extractAndCleanBadge(parsed.title);
+      
+      // Extract short keyword for legend
+      var shortLabel = extractLegendKeyword(badgeInfo.cleanTitle);
+
+      var seg = document.createElement("div");
+      seg.className = "stacked-bar-segment";
+      seg.style.width = pct + "%";
+      seg.style.backgroundColor = color;
+      stackedBar.appendChild(seg);
+
+      var item = document.createElement("div");
+      item.className = "legend-item";
+      item.innerHTML = '<span class="legend-color-dot" style="background:' + color + '"></span>' +
+                      '<span>' + shortLabel + ' (' + pct.toFixed(0) + '%)</span>';
+      legend.appendChild(item);
+    });
+  }
+
+  function renderCategories(categories) {
+    var list = document.getElementById("category-list");
+    list.innerHTML = "";
+
+    var maxInvested = Math.max.apply(null, categories.map(function(c) { return c.invested || 0; }).concat([1]));
+
+    categories.forEach(function(cat) {
+      var card = document.createElement("div");
+      card.className = "cat-card";
+
+      var parsedCat = parseTitleDesc(cat.rawName);
+      var badgeInfo = extractAndCleanBadge(parsedCat.title);
+
+      var head = document.createElement("div");
+      head.className = "cat-head";
+
+      var iconContainer = document.createElement("div");
+      iconContainer.className = "cat-icon-container";
+
+      if (cat.icon && cat.icon.indexOf("http") === 0) {
+        var img = document.createElement("img");
+        img.className = "cat-icon-img";
+        img.src = cat.icon;
+        img.onerror = function() {
+          iconContainer.innerHTML = '<span class="cat-icon-fallback">' + badgeInfo.cleanTitle.charAt(0) + '</span>';
+        };
+        iconContainer.appendChild(img);
+      } else {
+        iconContainer.innerHTML = '<span class="cat-icon-fallback">' + badgeInfo.cleanTitle.charAt(0) + '</span>';
+      }
+
+      var info = document.createElement("div");
+      info.className = "cat-info";
+      
+      var titleWithBadge = document.createElement("div");
+      titleWithBadge.className = "title-with-badge";
+
+      var title = document.createElement("div");
+      title.className = "cat-title";
+      title.textContent = badgeInfo.cleanTitle;
+      titleWithBadge.appendChild(title);
+
+      if (badgeInfo.badgeType) {
+        var badgeSpan = document.createElement("span");
+        badgeSpan.className = "risk-badge " + badgeInfo.badgeType;
+        badgeSpan.textContent = badgeInfo.badgeLabel;
+        titleWithBadge.appendChild(badgeSpan);
+      }
+
+      info.appendChild(titleWithBadge);
+
+      if (parsedCat.desc) {
+        var descEl = document.createElement("div");
+        descEl.className = "cat-desc";
+        descEl.textContent = parsedCat.desc;
+        info.appendChild(descEl);
+      }
+
+      var metrics = document.createElement("div");
+      metrics.className = "cat-metrics";
+
+      var valMain = document.createElement("div");
+      valMain.className = "cat-val-main";
+      valMain.textContent = cat.invested !== null ? fmtM(cat.invested, false) : "\u2014";
+      metrics.appendChild(valMain);
+
+      if (cat.pct !== null || cat.returned !== null) {
+        var valSub = document.createElement("div");
+        valSub.className = "cat-val-sub";
+
+        if (cat.pct !== null) {
+          var pctSpan = document.createElement("span");
+          pctSpan.className = cat.pct > 0 ? "pos" : (cat.pct < 0 ? "neg" : "neutral");
+          pctSpan.textContent = fmtPct(cat.pct);
+          valSub.appendChild(pctSpan);
+        }
+        if (cat.returned !== null) {
+          var amtSpan = document.createElement("span");
+          amtSpan.className = cat.returned > 0 ? "pos" : (cat.returned < 0 ? "neg" : "neutral");
+          amtSpan.textContent = fmtM(cat.returned, true);
+          valSub.appendChild(amtSpan);
+        }
+        metrics.appendChild(valSub);
+      }
+
+      head.appendChild(iconContainer);
+      head.appendChild(info);
+      head.appendChild(metrics);
+
+      var chevron = document.createElement("div");
+      chevron.className = "chevron-btn";
+      if (cat.children.length > 0) {
+        chevron.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+        head.style.cursor = "pointer";
+      }
+      head.appendChild(chevron);
+
+      card.appendChild(head);
+
+      if (cat.invested) {
+        var barContainer = document.createElement("div");
+        barContainer.className = "cat-bar-container";
+        var barFill = document.createElement("div");
+        barFill.className = "cat-bar-fill";
+        barFill.style.width = Math.min(100, (cat.invested / maxInvested * 100)) + "%";
+        barContainer.appendChild(barFill);
+        card.appendChild(barContainer);
+      }
+
+      if (cat.children.length > 0) {
+        card.classList.add("open");
+        var wrapper = document.createElement("div");
+        wrapper.className = "cat-children-wrapper";
+
+        cat.children.forEach(function(ch) {
+          var childRow = document.createElement("div");
+          childRow.className = "child-row";
+
+          var chParsed = parseTitleDesc(ch.rawName);
+
+          var chInfoBlock = document.createElement("div");
+          chInfoBlock.className = "child-info-block";
+
+          var chTitle = document.createElement("div");
+          chTitle.className = "child-title";
+          chTitle.textContent = chParsed.title;
+          chInfoBlock.appendChild(chTitle);
+
+          if (chParsed.desc) {
+            var chDesc = document.createElement("div");
+            chDesc.className = "child-desc";
+            chDesc.textContent = chParsed.desc;
+            chInfoBlock.appendChild(chDesc);
+          }
+
+          var chMetrics = document.createElement("div");
+          chMetrics.className = "child-metrics";
+
+          var chValMain = document.createElement("div");
+          chValMain.className = "child-val-main";
+          chValMain.textContent = ch.invested !== null ? fmtM(ch.invested, false) : "\u2014";
+          chMetrics.appendChild(chValMain);
+
+          if (ch.pct !== null || ch.returned !== null) {
+            var chValSub = document.createElement("div");
+            chValSub.className = "child-val-sub";
+
+            if (ch.pct !== null) {
+              var chPctSpan = document.createElement("span");
+              chPctSpan.className = ch.pct > 0 ? "pos" : (ch.pct < 0 ? "neg" : "neutral");
+              chPctSpan.textContent = fmtPct(ch.pct);
+              chValSub.appendChild(chPctSpan);
+            }
+            if (ch.returned !== null) {
+              var chAmtSpan = document.createElement("span");
+              chAmtSpan.className = ch.returned > 0 ? "pos" : (ch.returned < 0 ? "neg" : "neutral");
+              chAmtSpan.textContent = fmtM(ch.returned, true);
+              chValSub.appendChild(chAmtSpan);
+            }
+            chMetrics.appendChild(chValSub);
+          }
+
+          childRow.appendChild(chInfoBlock);
+          childRow.appendChild(chMetrics);
+
+          wrapper.appendChild(childRow);
+        });
+
+        card.appendChild(wrapper);
+
+        head.addEventListener("click", function() {
+          card.classList.toggle("open");
+          updateToggleButtonState();
+        });
+      }
+
+      list.appendChild(card);
+    });
+
+    var btn = document.getElementById("toggle-all-btn");
+    if (btn) btn.onclick = toggleExpandAll;
+    updateToggleButtonState();
+  }
+
+  function toggleExpandAll() {
+    var expandableCards = Array.from(document.querySelectorAll(".cat-card")).filter(function(c) {
+      return c.querySelector(".cat-children-wrapper") !== null;
+    });
+    
+    var openCards = expandableCards.filter(function(c) { return c.classList.contains("open"); });
+    var shouldExpand = openCards.length < expandableCards.length;
+
+    expandableCards.forEach(function(card) {
+      if (shouldExpand) card.classList.add("open");
+      else card.classList.remove("open");
+    });
+
+    updateToggleButtonState();
+  }
+
+  function updateToggleButtonState() {
+    var btn = document.getElementById("toggle-all-btn");
+    if (!btn) return;
+    
+    var expandableCards = Array.from(document.querySelectorAll(".cat-card")).filter(function(c) {
+      return c.querySelector(".cat-children-wrapper") !== null;
+    });
+    
+    var openCards = expandableCards.filter(function(c) { return c.classList.contains("open"); });
+
+    if (expandableCards.length > 0 && openCards.length === expandableCards.length) {
+      btn.textContent = "Collapse All";
+    } else {
+      btn.textContent = "Expand All";
+    }
+  }
+
+  loadPortfolio();
+
   loadSubscriptions();
   loadExpense();
   loadRecent();
   loadCycles();
   setInterval(loadRecent,60000);
+
 
   /* ══ INIT: load saved tab order + last active tab, apply, then wire up UI ══ */
   (function() {
