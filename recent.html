@@ -601,7 +601,7 @@ to{transform:rotate(360deg)}
 .sub-swipe-container{border-bottom: none;position:relative;width:100%;overflow:hidden;margin-bottom:0;border-radius:0px;background:#191919;}
 .subs-row{position:relative;z-index:2;width:100%;padding:2vw 0 2vw 0!important;margin-bottom:0 !important;will-change:transform;cursor:grab}
 .subs-row:active{cursor:grabbing}
-@media (max-width:400px){.subs-row{padding:2vw 0 2vw 0;}}
+@media (max-width:400px){.subs-row{padding:2.5vw 0 2.5vw 0;}}
 .sub-delete-action{cursor: pointer;position:absolute;margin-right:2px;margin-bottom:0px;top:0;right:0;bottom:0;width:70px;z-index:3;background-color:#ef4444;color:#ffffff;display:flex;align-items:center;justify-content:center;border-top-right-radius:12px;border-bottom-right-radius:12px;}
 .sub-delete-action svg{pointer-events:none}
 .sub-delete-action:hover{background-color:#dc2626}
@@ -1900,43 +1900,43 @@ function buildColHdr() {
 }
 
 
-/* ══ OVERVIEW TAB ══ */
+  /* ══ OVERVIEW TAB ══ */
 
-var CA_CSV_BI   = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=311369594";
-var CA_CSV_DNUT = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1134096431";
-var CA_CSV_TAB1 = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv";
-var CA_PALETTE  = [
-  {from:"rgba(255,255,255,2.5)",to:"rgba(255,255,255,0.95)",solid:"rgba(255,255,255,0.85)",glow:"rgba(255,255,255,0.1)",id:"cag0"},
-  {from:"#FFB6C1",to:"#FF8FA3",solid:"#FFB6C1",glow:"rgba(255,182,193,0.4)",id:"cag1"},
-  {from:"#FF69B4",to:"#e0408a",solid:"#FF69B4",glow:"rgba(255,105,180,0.4)",id:"cag2"}
-];
-var caActiveIdx=null, caGlobalData=[], caTab1Cache=[];var caActiveDataset = [];
+  var CA_CSV_BI   = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=311369594";
+  var CA_CSV_DNUT = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1134096431";
+  var CA_CSV_TAB1 = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv";
+  var CA_PALETTE  = [
+    {from:"rgba(255,255,255,2.5)",to:"rgba(255,255,255,0.95)",solid:"rgba(255,255,255,0.85)",glow:"rgba(255,255,255,0.1)",id:"cag0"},
+    {from:"#FFB6C1",to:"#FF8FA3",solid:"#FFB6C1",glow:"rgba(255,182,193,0.4)",id:"cag1"},
+    {from:"#FF69B4",to:"#e0408a",solid:"#FF69B4",glow:"rgba(255,105,180,0.4)",id:"cag2"}
+  ];
+  var caActiveIdx=null, caGlobalData=[], caTab1Cache=[];var caActiveDataset = [];
 
-function caFmt(v){var a=Math.abs(v),s=v<0?"\u2212":"";if(a>=1e9)return s+"\u20ab"+(a/1e9).toFixed(1)+"B";if(a>=1e6)return s+"\u20ab"+(a/1e6).toFixed(1)+"M";if(a>=1e3)return s+"\u20ab"+Math.round(a/1e3)+"K";return s+"\u20ab"+Math.round(a);}
-function caFmtSh(v){var a=Math.abs(v);return(v<0?"\u2212":"")+"\u0111"+(a>=1e9?(a/1e9).toFixed(1)+"B":a>=1e6?(a/1e6).toFixed(1)+"M":a>=1e3?Math.round(a/1e3)+"K":String(Math.round(a)));}
-function caFmtSgn(v){var a=Math.abs(v),s=a>=1e9?(a/1e9).toFixed(1)+"B":a>=1e6?(a/1e6).toFixed(1)+"M":a>=1e3?(a/1e3).toFixed(1)+"K":String(Math.round(a));return(v<0?"-":"+")+s;}
-function caStrip(str){return str.replace(/\p{Emoji}/gu,"").trim();}
-function caSocial(n){return caStrip(n).toUpperCase().indexOf("SOCIAL")>=0;}
-function caCSV(row){var cols=[],cur="",q=false;for(var i=0;i<row.length;i++){var ch=row[i];if(ch==='"')q=!q;else if(ch===","&&!q){cols.push(cur);cur="";}else cur+=ch;}cols.push(cur);return cols;}
-function caNum(s){if(!s)return NaN;s=s.trim();if(s.charAt(0)==="("&&s.charAt(s.length-1)===")") s="-"+s.slice(1,-1);s=s.replace(/[^\d.\-]/g,"");return parseFloat(s);}
-function caArc(cx,cy,r,sa,ea){var toR=function(a){return(a-90)*Math.PI/180;};var x1=cx+r*Math.cos(toR(sa)),y1=cy+r*Math.sin(toR(sa)),x2=cx+r*Math.cos(toR(ea)),y2=cy+r*Math.sin(toR(ea));return"M "+x1+" "+y1+" A "+r+" "+r+" 0 "+((ea-sa)>180?1:0)+" 1 "+x2+" "+y2;}
-function caFmtFull(v) {
-  var a = Math.abs(v);
-  var s = v < 0 ? "\u2212" : ""; // Uses your clean typography minus sign [−]
-  
-  // Formats numbers with regular commas/periods based on regional locale (e.g., 50,400,000)
-  var formattedNum = Math.round(a).toLocaleString("en-US"); 
-  
-  return s + "\u20ab" + formattedNum; // Returns standard complete string: ₫50,400,000
-}
+  function caFmt(v){var a=Math.abs(v),s=v<0?"\u2212":"";if(a>=1e9)return s+"\u20ab"+(a/1e9).toFixed(1)+"B";if(a>=1e6)return s+"\u20ab"+(a/1e6).toFixed(1)+"M";if(a>=1e3)return s+"\u20ab"+Math.round(a/1e3)+"K";return s+"\u20ab"+Math.round(a);}
+  function caFmtSh(v){var a=Math.abs(v);return(v<0?"\u2212":"")+"\u0111"+(a>=1e9?(a/1e9).toFixed(1)+"B":a>=1e6?(a/1e6).toFixed(1)+"M":a>=1e3?Math.round(a/1e3)+"K":String(Math.round(a)));}
+  function caFmtSgn(v){var a=Math.abs(v),s=a>=1e9?(a/1e9).toFixed(1)+"B":a>=1e6?(a/1e6).toFixed(1)+"M":a>=1e3?(a/1e3).toFixed(1)+"K":String(Math.round(a));return(v<0?"-":"+")+s;}
+  function caStrip(str){return str.replace(/\p{Emoji}/gu,"").trim();}
+  function caSocial(n){return caStrip(n).toUpperCase().indexOf("SOCIAL")>=0;}
+  function caCSV(row){var cols=[],cur="",q=false;for(var i=0;i<row.length;i++){var ch=row[i];if(ch==='"')q=!q;else if(ch===","&&!q){cols.push(cur);cur="";}else cur+=ch;}cols.push(cur);return cols;}
+  function caNum(s){if(!s)return NaN;s=s.trim();if(s.charAt(0)==="("&&s.charAt(s.length-1)===")") s="-"+s.slice(1,-1);s=s.replace(/[^\d.\-]/g,"");return parseFloat(s);}
+  function caArc(cx,cy,r,sa,ea){var toR=function(a){return(a-90)*Math.PI/180;};var x1=cx+r*Math.cos(toR(sa)),y1=cy+r*Math.sin(toR(sa)),x2=cx+r*Math.cos(toR(ea)),y2=cy+r*Math.sin(toR(ea));return"M "+x1+" "+y1+" A "+r+" "+r+" 0 "+((ea-sa)>180?1:0)+" 1 "+x2+" "+y2;}
+  function caFmtFull(v) {
+    var a = Math.abs(v);
+    var s = v < 0 ? "\u2212" : ""; // Uses your clean typography minus sign [−]
+    
+    // Formats numbers with regular commas/periods based on regional locale (e.g., 50,400,000)
+    var formattedNum = Math.round(a).toLocaleString("en-US"); 
+    
+    return s + "\u20ab" + formattedNum; // Returns standard complete string: ₫50,400,000
+  }
 
-function caSetCenter(l,v){var cl=document.getElementById("ca-center-label"),cv=document.getElementById("ca-center-val");if(cl)cl.textContent=l;if(cv)cv.textContent=v;}
+  function caSetCenter(l,v){var cl=document.getElementById("ca-center-label"),cv=document.getElementById("ca-center-val");if(cl)cl.textContent=l;if(cv)cv.textContent=v;}
 
-function caHighlight(idx, selectedName, selectedVal){
+  function caHighlight(idx, selectedName, selectedVal){
   caActiveIdx = idx;
   var data = caActiveDataset || [];
 
-  // FIX: Match segments by data-index rather than querySelectorAll index
+  // 1. Match segments by data-index
   document.querySelectorAll(".ca-seg").forEach(function(el){
     var segIdx = parseInt(el.getAttribute("data-index"), 10);
     var isMatch = (idx !== null && segIdx === idx);
@@ -1945,18 +1945,26 @@ function caHighlight(idx, selectedName, selectedVal){
     el.setAttribute("stroke-width", isMatch ? "32" : "28");
   });
   
-  // Dim inactive list rows (list rows match 1:1 with data array index)
+  // 2. Dim inactive list rows
   document.querySelectorAll(".ca-list-row").forEach(function(el, i){
     el.classList.toggle("ca-dimmed", idx !== null && i !== idx);
   });
 
-  // Update center text safely
+  // 3. Update center text & prepare filter params
+  var filterTerm = "";
+  var filterDisplayLabel = "";
+
   if (idx === null) {
     var totalVal = data.reduce(function(s, d){ return s + (d.val || 0); }, 0);
-    var centerLabel = (caActiveTab === "income") ? "Incomes" : "Expenses";
+    var isIncomeTab = (typeof caActiveTab !== "undefined" && caActiveTab === "income");
+    var centerLabel = isIncomeTab ? "Incomes" : "Expenses";
     
     var formattedVal = (totalVal < 0 ? "-" : "") + caFmtSh(Math.abs(totalVal));
     caSetCenter(centerLabel, formattedVal);
+
+    filterTerm = "all";
+    filterDisplayLabel = "All";
+
   } else {
     if (selectedName !== undefined && selectedVal !== undefined) {
       var cleanSelectedName = selectedName
@@ -1965,6 +1973,10 @@ function caHighlight(idx, selectedName, selectedVal){
         
       var formattedSelectedVal = (selectedVal < 0 ? "-" : "") + caFmtSh(Math.abs(selectedVal));
       caSetCenter(cleanSelectedName, formattedSelectedVal);
+
+      // 🎯 If Expense tab, force filter term to "all" so the list never filters by category
+      filterTerm = (caActiveTab === "expense") ? "all" : cleanSelectedName;
+      filterDisplayLabel = (caActiveTab === "expense") ? "All" : cleanSelectedName;
     } else {
       var fallbackItem = data[idx];
       if (fallbackItem && !isNaN(fallbackItem.val)) {
@@ -1974,9 +1986,28 @@ function caHighlight(idx, selectedName, selectedVal){
 
         var formattedFallbackVal = (fallbackItem.val < 0 ? "-" : "") + caFmtSh(Math.abs(fallbackItem.val));
         caSetCenter(cleanFallbackName, formattedFallbackVal);
+
+        var extractedTerm = fallbackItem.type || fallbackItem.category || cleanFallbackName;
+        // 🎯 If Expense tab, force filter term to "all"
+        filterTerm = (caActiveTab === "expense") ? "all" : extractedTerm;
+        filterDisplayLabel = (caActiveTab === "expense") ? "All" : cleanFallbackName;
       } else {
         caSetCenter("Selected", "đ0");
+        filterTerm = "all";
+        filterDisplayLabel = "All";
       }
+    }
+  }
+
+  // 4. Apply filter to transaction list
+  if (typeof window.selectTransactionFilter === "function") {
+    var filterIcon = (idx !== null && data[idx] && data[idx].icon) ? data[idx].icon : "filter_list";
+
+    if (caActiveTab === "income") {
+      window.selectTransactionFilter(filterTerm, filterDisplayLabel, filterIcon);
+    } else {
+      // 🎯 On Expense tab, always send 'all' and 'All' regardless of segment selection
+      window.selectTransactionFilter("all", "All", filterIcon);
     }
   }
 }
@@ -4865,23 +4896,22 @@ function deleteSubscription(itemId) {
 
         <!-- LEFT-RIGHT INLINE ROW: DATE & DESCRIPTION / DETAILS -->
         <div style="display: flex; gap: 12px; margin-bottom: 24px; text-align: left;">
-          <!-- DESCRIPTION / DETAILS (RIGHT) -->
+          
           <div style="flex: 1;">
             <label style="color: rgba(255,255,255,0.5); font-size: 12px; display: block; margin-bottom: 6px;">Description</label>
             <input type="text" 
                    id="history-edit-detail" 
                    value="${targetItem.detail || ''}" 
-                   style="font-family: 'Lexend', sans-serif !important; height:37px!important;width: 100%; background: rgba(255,255,255,0.05); border: 0px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; color: #fff; font-size: 14px; box-sizing: border-box; outline: none; transition: border-color 0.2s;" 
+                   style="font-family: 'Lexend', sans-serif !important; height:11vw!important;width: 100%; background: rgba(255,255,255,0.05); border: 0px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; color: #fff; font-size: 14px; box-sizing: border-box; outline: none; transition: border-color 0.2s;" 
                    onfocus="this.style.borderColor='rgba(255,255,255,0.25)'" 
                    onblur="this.style.borderColor='rgba(255,255,255,0.1)'"/>
           </div>
-          <!-- DATE PICKER (LEFT) -->
           <div style="width: 40%; flex-shrink: 0;">
             <label style="color: rgba(255,255,255,0.5); font-size: 12px; display: block; margin-bottom: 6px;">Date</label>
             <input type="date" 
                    id="history-edit-date" 
                    value="${inputFormattedDate}" 
-                   style="font-family: 'Lexend', sans-serif !important; height:37px!important;width: 100%; background: rgba(255,255,255,0.05); border: 0px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 8px; color: #fff; font-size: 13px; box-sizing: border-box; outline: none; transition: border-color 0.2s; color-scheme: dark;" 
+                   style="font-family: 'Lexend', sans-serif !important; height:11vw!important;width: 100%; background: rgba(255,255,255,0.05); border: 0px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 8px; color: #fff; font-size: 13px; box-sizing: border-box; outline: none; transition: border-color 0.2s; color-scheme: dark;" 
                    onfocus="this.style.borderColor='rgba(255,255,255,0.25)'" 
                    onblur="this.style.borderColor='rgba(255,255,255,0.1)'"/>
           </div>
@@ -6635,7 +6665,7 @@ function setupGlobalInteractivePhysics() {
         if (filterOptionsContainer) {
           // Start with the default "All" option
           let filterItemsHtml = `
-            <div class="filter-option-item" onclick="selectTransactionFilter('all', 'All Transactions', 'filter_list')" style="padding: 8px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+            <div class="filter-option-item" onclick="selectTransactionFilter('all', 'All', 'filter_list')" style="padding: 8px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
               <span class="material-icons-round" style="font-size: 12px;">filter_list</span>
               <span style="font-size: 12px;">All</span>
             </div>
@@ -6653,7 +6683,7 @@ function setupGlobalInteractivePhysics() {
             filterItemsHtml += `
               <div class="filter-option-item" onclick="selectTransactionFilter('${safeType}', '${safeType}', '${iconUrl || 'label'}')" style="padding: 8px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
                 ${iconHtml}
-                <span style="font-size: 12px;">${typeName}</span>
+                <span style="font-size: 12px;font-family:Lexend!important">${typeName}</span>
               </div>
             `;
           });
