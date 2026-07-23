@@ -149,7 +149,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .mid { flex:1; min-width:0; }
 .ttl { font-size:2.4vw; opacity:0.95;font-weight:400; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:0.6vw; }
 .dtl { font-size:2vw; font-weight:300; color:rgba(255,255,255,0.5); line-height:1.4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.rgt { display:flex; flex-direction:column; align-items:flex-end; flex-shrink:0; gap:0.8vw; }
+.rgt { margin-right:1.5vw;display:flex; flex-direction:column; align-items:flex-end; flex-shrink:0; gap:0.8vw; }
 .amt { font-family:DM Sans;opacity:0.95;font-weight:500; color:#fff; white-space:nowrap; }
 .dte { font-size:1.9vw; color:rgba(255,255,255,0.4); white-space:nowrap; }
 
@@ -161,7 +161,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 
 #slide-1{position:relative}
 .tab-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
-#add-cash{position:absolute;top:10px;right:10px;z-index:10;width:8vw;height:8vw;padding-bottom:1px;max-width:7vw;max-height:7vw;font-family:monospace!important;font-size:5vw;font-weight:500;border-radius:50%;background-color:#14b8a6;color:#ffffff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
+#add-cash{position:absolute;top:10px;right:10px;z-index:10;width:10vw;height:10vw;padding-bottom:1px;max-width:7vw;max-height:7vw;font-family:monospace!important;font-size:5vw;font-weight:500;border-radius:50%;background-color:#14b8a6;color:#ffffff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
 #add-cash.loading{pointer-events:none;display:flex;align-items:center;justify-content:center}
 .cash-modal-overlay{display:none;position:fixed;inset:0; z-index:600;align-items:flex-start;justify-content:center;padding-top:20vh;overflow-y:auto}
 .cash-modal-overlay.open{display:flex!important}.btn-spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,0.3);border-top-color:#ffffff;border-radius:50%;animation:spinCircle 0.8s linear infinite;display:inline-block}
@@ -303,7 +303,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 /* ══ SUBSCRIPTION SLIDE ══ */
 .card{max-width:100%;margin: 2vw;}
 .sub-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
-.sub-title{font-size:13px;font-weight:400;color:rgba(255,255,255,0.55)}
+.sub-title{font-size:13px;font-weight:300;color:rgba(255,255,255,0.55)}
 .sub-refresh-row{display:flex;align-items:center;gap:8px}
 .sub-last-updated{font-size:11px;color:rgba(255,255,255,0.35);white-space:nowrap}
 .sub-refresh-btn{border:none;background:transparent;color:rgba(255,255,255,0.5);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:4px;border-radius:50%;transition:color 0.15s,background 0.15s}
@@ -312,7 +312,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 @keyframes subSpin{from{transform:rotate(0deg)}
 to{transform:rotate(360deg)}
 }.sub-stats-row{display:flex;gap:28px;margin-bottom:30px}
-.sub-stat-val{font-size:23px;font-weight:500;color:rgba(255,255,255,0.95);letter-spacing:-0.02em;line-height:1;margin-bottom:4px;font-family:"JetBrains Mono";}
+.sub-stat-val{font-size:24px;font-weight:500;color:rgba(255,255,255,0.95);letter-spacing:-0.02em;line-height:1;margin-bottom:4px;font-family:DM Sans;}
 .sub-stat-label{font-size:12.5px;color:rgba(255,255,255,0.45)}
 .sub-stat-label .hl-teal{color:#2dd4bf;font-weight:600}
 .sub-list-title{display:flex;align-items:center;justify-content:left;gap:2vw;width:100%;font-size:14.5px;font-weight:300;color:rgba(255,255,255,0.75);margin-bottom:12px}
@@ -327,11 +327,11 @@ to{transform:rotate(360deg)}
 .sub-mid{flex:1;min-width:0;margin:2vw}
 .sub-name-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;flex-wrap:wrap}
 .sub-name-left{display:flex;align-items:center;gap:8px;min-width:0;flex-wrap:wrap}
-.sub-name{font-size:14.5px;font-weight:400;color:rgba(255,255,255,0.95);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sub-name{opacity:0.9;font-size:14.5px;font-weight:400;color:rgba(255,255,255,0.95);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sub-badge{font-size:12.5px;font-weight:700;color:#14b8a6;background:rgba(74,222,128,0.14);border-radius:99px;padding:2px 9px;white-space:nowrap}
 .sub-expiry{display:flex;align-items:center;gap:5px;font-size:12px;color:rgba(255,255,255,0.45);white-space:nowrap}
 .sub-expiry svg{flex-shrink:0;opacity:0.6}
-.sub-price{font-size:15px;font-weight:600;color:rgba(255,255,255,0.95);text-align:right;white-space:nowrap;flex-shrink:0}
+.sub-price{opacity:0.9;font-size:15px;font-family:DM Sans;font-weight:600;color:rgba(255,255,255,0.95);text-align:right;white-space:nowrap;flex-shrink:0}
 .sub-price-unit{font-size:11px;font-weight:500;color:rgba(255,255,255,0.4);margin-left:2px}
 @media (min-width:401px){.sub-badge::after{content:" subscription"}}
 
@@ -368,6 +368,17 @@ to{transform:rotate(360deg)}
 @keyframes flashHighlight {
   0% { opacity: 0.4; }
   100% { opacity: 1; filter: blur(0); }
+}
+
+@keyframes filterSpinner {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.filter-icon-spinner {
+  display: inline-block;
+  animation: filterSpinner 0.8s linear infinite;
+  color: #3b82f6 !important; /* Optional: highlights the spinner while loading */
 }
 
 .form-row-2col{display:flex !important;flex-direction:row !important;gap:3vw !important;width:100%;margin-bottom:4vw}
@@ -567,10 +578,10 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 50%{opacity:1;transform:scale(1.2)}
 100%{opacity:0.4;transform:scale(0.9)}
 }.hero-card{position:relative;border-radius:14px;padding:12px 14px;margin-bottom:12px;background:linear-gradient(135deg,rgba(30,41,59,0.6) 0%,rgba(15,23,42,0.8) 100%);box-shadow:0 12px 24px -10px rgba(0,0,0,0.5);backdrop-filter:blur(16px)}
-.hero-caption-row{display:flex;align-items:center;justify-content:space-between}
+.hero-caption-row{display:flex;align-items:center;justify-content: center;}
 .hero-caption{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-secondary)}
-.hero-main-val{font-size:24px;font-family:"JetBrains Mono";font-weight:800;color:#fff;margin:2px 0 8px 0}
-.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hero-main-val{text-align:center;font-size:24px;font-family:"JetBrains Mono";font-weight:800;color:#fff;margin:2px 0 0px 0}
+.hero-grid{display:grid;grid-template-columns:0.9fr 1.1fr;gap:8px}
 .hero-stat-box{background:rgba(15,23,42,0.6);border-radius:8px;padding:6px 8px}
 .hero-stat-label{font-size:9px;color:var(--text-muted)}
 .hero-stat-num{font-family:DM Sans;font-size:14px;font-weight:700}
@@ -587,7 +598,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 .toggle-mode-btn:hover{background:rgba(255,255,255,0.16)}
 #category-list{display:flex;flex-direction:column;gap:8px}
 .cat-card{background:var(--surface-card);border-radius:12px;overflow:hidden;backdrop-filter:blur(12px)}
-.cat-head{display:flex;align-items:center;gap:8px;padding:8px 12px;user-select:none}
+.cat-head{display:flex;align-items:center;gap:8px;padding:8px 2px;user-select:none}
 .cat-icon-container{width:28px;height:28px;border-radius:8px;flex-shrink:0;background:linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02));display:flex;align-items:center;justify-content:center;overflow:hidden}
 .cat-icon-img{width:100%;height:100%;object-fit:cover}
 .cat-icon-fallback{font-size:12px;font-weight:800;color:var(--accent-purple)}
@@ -607,7 +618,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 .cat-card.open .chevron-btn{transform:rotate(180deg);color:#fff}
 .cat-bar-container{height:2.5px;width:100%;background:rgba(255,255,255,0.05)}
 .cat-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent-teal),var(--accent-blue))}
-.cat-children-wrapper{display:none;background:var(--surface-child);padding:4px 38px 4px 12px}
+.cat-children-wrapper{display:none;background:var(--surface-child);padding:4px 30px 4px 12px}
 .cat-card.open .cat-children-wrapper{display:block}
 .child-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;margin-left:6px}
 .child-info-block{display:flex;flex-direction:column;min-width:0;padding-right:6px}
@@ -832,7 +843,8 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
                   onclick="window.toggleFilterDropdown(event)" 
                   style="padding: 6px 12px; background: #21242c; border: 0px solid #2d313c; border-radius: 10px; color: #f8f9fa; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: space-between; gap: 6px; cursor: pointer; user-select: none;">
                 <span id="currentFilterLabel" style="display: flex; align-items: center; gap: 6px;">
-                  <span class="material-icons-round" style="font-size: 15px; color: #6c757d;">filter_list</span>
+                  <!-- ADDED id="filterIcon" HERE -->
+                  <span class="material-icons-round" id="filterIcon" style="font-size: 15px; color: #6c757d;">filter_list</span>
                   All
                 </span>
                 <span class="material-icons-round" id="filterDropdownArrow" style="font-size: 15px; color: #6c757d; transition: transform 0.2s;">expand_more</span>
@@ -1070,8 +1082,8 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
           
           <div class="hero-grid">
             <div class="hero-stat-box">
-              <div class="hero-stat-label">Total Return %</div>
-              <div class="hero-stat-num" id="hero-pct">&#x2014;</div>
+              <div class="hero-stat-label" style="text-align:right">&#x2014;</div>
+              <div class="hero-stat-num" id="hero-pct" style="text-align:right">&#x2014;</div>
             </div>
             <div class="hero-stat-box">
               <div class="hero-stat-label">Total Return per month</div>
@@ -1288,12 +1300,10 @@ function switchTab(idx) {
         caLoadAccounts();
       }
 
-      // 2. Safe Execution for Transaction History
       if (typeof loadTransactionHistory === "function") {
         try {
           loadTransactionHistory();
         } catch (error) {
-          // If the metric ring variables are in a TDZ state, catch it gracefully
           console.warn("Transaction history waiting on metrics data initialization:", error.message);
         }
       }
@@ -4845,7 +4855,7 @@ function deleteSubscription(itemId) {
             <input type="text" 
                    id="history-edit-detail" 
                    value="${targetItem.detail || ''}" 
-                   style="font-family: 'Lexend', sans-serif !important; height:9vw!important;width: 100%; background: rgba(255,255,255,0.05); border: 0px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; color: #fff; font-size: 14px; box-sizing: border-box; outline: none; transition: border-color 0.2s;" 
+                   style="font-family: 'Lexend', sans-serif !important; height:10vw!important;width: 100%; background: rgba(255,255,255,0.05); border: 0px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; color: #fff; font-size: 14px; box-sizing: border-box; outline: none; transition: border-color 0.2s;" 
                    onfocus="this.style.borderColor='rgba(255,255,255,0.25)'" 
                    onblur="this.style.borderColor='rgba(255,255,255,0.1)'"/>
           </div>
@@ -4854,7 +4864,7 @@ function deleteSubscription(itemId) {
             <input type="date" 
                    id="history-edit-date" 
                    value="${inputFormattedDate}" 
-                   style="font-family: 'Lexend', sans-serif !important; -webkit-appearance:none;-moz-appearance:none;appearance:none;width:100% !important;height:9vw !important;width: 100%; background: rgba(255,255,255,0.05); border: 0px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 8px; color: #fff; font-size: 13px; box-sizing: border-box; outline: none; transition: border-color 0.2s; color-scheme: dark;" 
+                   style="font-family: 'Lexend', sans-serif !important; -webkit-appearance:none;-moz-appearance:none;appearance:none;width:100% !important;height:10vw !important;width: 100%; background: rgba(255,255,255,0.05); border: 0px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 8px; color: #fff; font-size: 13px; box-sizing: border-box; outline: none; transition: border-color 0.2s; color-scheme: dark;" 
                    onfocus="this.style.borderColor='rgba(255,255,255,0.25)'" 
                    onblur="this.style.borderColor='rgba(255,255,255,0.1)'"/>
           </div>
@@ -5832,7 +5842,7 @@ function setupGlobalInteractivePhysics() {
     pctEl.textContent = overview.pct !== null ? fmtPct(overview.pct) : "\u2014";
     pctEl.className = "hero-stat-num " + (overview.pct > 0 ? "pos" : (overview.pct < 0 ? "neg" : "neutral"));
     
-    amtEl.textContent = overview.returned !== null ? fmtM(overview.returned, true) : "\u2014";
+    amtEl.textContent = overview.returned !== null ? (overview.returned* 1000000).toLocaleString("en-US") + " đ" : "\u2014";
     amtEl.className = "hero-stat-num " + (overview.returned > 0 ? "pos" : (overview.returned < 0 ? "neg" : "neutral"));
   }
 
@@ -6818,38 +6828,10 @@ function setupGlobalInteractivePhysics() {
       document.head.appendChild(styleNode);
     }
 
-    container.innerHTML = '<div class="history-loading" style="padding: 1vw 0; text-align: center; color: rgba(255,255,255,0.45); font-size: 1.6vw;">Loading transaction records...</div>';
-
-    function getPeriodHeader(dateStr) {
-      try {
-        var d = new Date(dateStr);
-        if (isNaN(d.getTime())) return "Other";
-        
-        var now = new Date();
-        var diffMonths = (now.getFullYear() - d.getFullYear()) * 12 + (now.getMonth() - d.getMonth());
-        
-        if (diffMonths === 0) return "This Month";
-        if (diffMonths === 1) return "Last Month";
-        if (now.getFullYear() === d.getFullYear()) return "This Year";
-        
-        return d.getFullYear().toString();
-      } catch(e) {
-        return "Other";
-      }
-    }
-
-    function formatShortNum(num) {
-      var absNum = Math.abs(num);
-      if (absNum >= 1000000) {
-        var val = absNum / 1000000;
-        return (val % 1 === 0 ? val : val.toFixed(1)) + 'M';
-      }
-      if (absNum >= 1000) {
-        var val = absNum / 1000;
-        return (val % 1 === 0 ? val : val.toFixed(1)) + 'K';
-      }
-      return absNum.toString();
-    }
+    //container.innerHTML = '<div class="history-loading" style="padding: 1vw 0; text-align: center; color: rgba(255,255,255,0.45); font-size: 1.6vw;">Loading transaction records...</div>';
+    showFilterSpinner();
+    
+    function getPeriodHeader(dateStr){try{var d=new Date(dateStr);if(isNaN(d.getTime()))return"Other";var now=new Date,diffMonths=12*(now.getFullYear()-d.getFullYear())+(now.getMonth()-d.getMonth());return 0===diffMonths?"This Month":1===diffMonths?"Last Month":now.getFullYear()===d.getFullYear()?"This Year":d.getFullYear().toString()}catch(e){return"Other"}}function formatShortNum(num){var val,absNum=Math.abs(num);return absNum>=1e6?((val=absNum/1e6)%1==0?val:val.toFixed(1))+"M":absNum>=1e3?((val=absNum/1e3)%1==0?val:val.toFixed(1))+"K":absNum.toString()}
 
     fetch(CA_CSV_BI + "&t=" + Date.now(), { cache: "no-store" })
       .then(function(r) {
@@ -7065,6 +7047,11 @@ function setupGlobalInteractivePhysics() {
       .catch(function(err) {
         console.error("Error loading history:", err);
         container.innerHTML = '<div style="padding: 2vw; text-align: center; color: #ef4444;">Failed to load transaction history.</div>';
+      }).finally(function() {
+        // ALWAYS EXECUTES (on success or error)
+        if (typeof hideFilterSpinner === "function") {
+          hideFilterSpinner();
+        }
       });
   }
 
@@ -7072,6 +7059,23 @@ function setupGlobalInteractivePhysics() {
     const targetCard = cardsList.splice(selectedIndex, 1)[0];
     cardsList.push(targetCard);
     renderCards();
+  }
+  // Call this BEFORE fetch() starts
+  function showFilterSpinner() {
+    var icon = document.getElementById("filterIcon");
+    if (icon) {
+      icon.innerText = "sync"; // Material icon for a circular refresh arrow
+      icon.classList.add("filter-icon-spinner");
+    }
+  }
+
+  // Call this AFTER fetch() finishes / renders
+  function hideFilterSpinner() {
+    var icon = document.getElementById("filterIcon");
+    if (icon) {
+      icon.innerText = "filter_list"; // Revert back to original filter icon
+      icon.classList.remove("filter-icon-spinner");
+    }
   }
 
   // Biến toàn cục để lưu trữ tài khoản đang được chọn thao tác
