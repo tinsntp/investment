@@ -582,7 +582,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 .hero-caption{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-secondary)}
 .hero-main-val{text-align:center;font-size:24px;font-family:"JetBrains Mono";font-weight:800;color:#fff;margin:2px 0 0px 0}
 .hero-grid{display:grid;grid-template-columns:0.9fr 1.1fr;gap:8px}
-.hero-stat-box{background:rgba(15,23,42,0.6);border-radius:8px;padding:6px 8px}
+.hero-stat-box{border-radius:8px;padding:6px 8px}
 .hero-stat-label{font-size:9px;color:var(--text-muted)}
 .hero-stat-num{font-family:DM Sans;font-size:14px;font-weight:700}
 .chart-card{background:var(--surface-card);border-radius:12px;padding:10px 12px;margin-bottom:12px}
@@ -3808,12 +3808,9 @@ function deleteSubscription(itemId) {
       var rawText = cashInput.value.trim();
       if (rawText) {
           cashSubmit.disabled = !0;
-
-          // Local UTC+7 Date Formatting (Fixes UTC offset issue)
-          var d = new Date(),
-              pad = function(n) { return String(n).padStart(2, "0"); },
-              todayStr = d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) + " " + 
-                        pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds());
+          var d = new Date();
+          var formatter=new Intl.DateTimeFormat("sv-SE",{timeZone:"Asia/Ho_Chi_Minh",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:!1});
+          var todayStr = formatter.format(d).replace(' ', ' ');
 
           for (var items = rawText.split(";"), payloadBatch = [], i = 0; i < items.length; i++) {
               var item = items[i].trim();
@@ -3829,6 +3826,7 @@ function deleteSubscription(itemId) {
                               detail: detail,
                               amount: 1e3 * rawAmount
                           });
+                          console.log(payloadBatch);
                       }
                   }
               }
