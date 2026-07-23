@@ -48,8 +48,9 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .sub-slides-wrap{display:flex;width:200%;transition:transform 0.3s cubic-bezier(0.4,0,0.2,1)}
 .sub-slide{width:50%;flex-shrink:0}
 .sub-tab-bar{display:flex !important;justify-content:space-around;width:100%;box-sizing:border-box}
-.sub-tab-btn{display:flex !important;align-items:center;justify-content:center;gap:6px !important;flex-shrink:0 !important;white-space:nowrap !important}
+.sub-tab-btn{font-size:12px !important;display:flex !important;align-items:center;justify-content:center;gap:6px !important;flex-shrink:0 !important;white-space:nowrap !important}
 .sub-tab-btn i,.sub-tab-btn span{display:inline-block !important;flex-shrink:0 !important}
+.tab-btn span{font-size:12px !important;}
 @media (max-width:400px){.sub-tab-btn{font-size:11.5px !important;padding:3px 3px !important;gap:4px !important}}
 .tradingview-widget-container{width:100% !important;position:relative !important;overflow:hidden !important;border:none !important;background-color:rgb(25,25,25) !important}
 .tradingview-widget-container__widget{width:100% !important;position:relative !important;overflow:hidden !important}
@@ -149,7 +150,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .ttl { font-size:2.4vw; font-weight:500; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:0.6vw; }
 .dtl { font-size:2vw; color:rgba(255,255,255,0.5); line-height:1.4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .rgt { display:flex; flex-direction:column; align-items:flex-end; flex-shrink:0; gap:0.8vw; }
-.amt { font-size:2.9vw; font-weight:700; color:#fff; white-space:nowrap; }
+.amt { font-family:DM Sans;font-weight:700; color:#fff; white-space:nowrap; }
 .dte { font-size:1.9vw; color:rgba(255,255,255,0.4); white-space:nowrap; }
 
 .ttl{display:flex;align-items:center;gap:1.5vw}
@@ -380,7 +381,7 @@ to{transform:rotate(360deg)}
 .sub-swipe-container{border-bottom: none;position:relative;width:100%;overflow:hidden;margin-bottom:0;border-radius:0px;background:#191919;}
 .subs-row{position:relative;z-index:2;width:100%;padding:2vw 0 2vw 0!important;margin-bottom:0 !important;will-change:transform;cursor:grab}
 .subs-row:active{cursor:grabbing}
-@media (max-width:400px){.subs-row{padding:2.5vw 0 2.5vw 0!important;}}
+@media (max-width:400px){.subs-row{padding:3vw 0 3vw 0!important;}}
 .sub-delete-action{cursor: pointer;position:absolute;margin-right:2px;margin-bottom:0px;top:0;right:0;bottom:0;width:70px;z-index:3;background-color:#ef4444;color:#ffffff;display:flex;align-items:center;justify-content:center;border-top-right-radius:12px;border-bottom-right-radius:12px;}
 .sub-delete-action svg{pointer-events:none}
 .sub-delete-action:hover{background-color:#dc2626}
@@ -535,8 +536,8 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 .phase-pre{background:linear-gradient(180deg,#0f3642 0%,#5bc0be 100%)}
 .progress-indicator{position:absolute;top:0;bottom:0;width:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;z-index:10}
 .indicator-line{position:absolute;top:0;bottom:0;width:0;border-left:2px dashed #f1f5f9;opacity:0.85;pointer-events:none}
-.indicator-dot{position:absolute;top:100%;transform:translateY(-50%);width:14px;height:14px;border-radius:50%;background-color:#ff007f;border:2px solid #ffffff;box-shadow:0 0 12px #ff007f,0 0 4px #ff007f;z-index:2}
-.indicator-text{position:absolute;top:calc(100% + 8px);font-size:10px;font-weight:800;margin-top:2px;color:#0e2e2b;white-space:nowrap;letter-spacing:0.5px;background-color:#f1f5f9;padding:2px 4px;border-radius:20px;box-shadow:0px 4px 10px rgba(0,0,0,0.4);z-index:3}
+.indicator-dot{position:absolute;top:90%;transform:translateY(-50%);width:14px;height:14px;border-radius:50%;background-color:#ff007f;border:2px solid #ffffff;box-shadow:0 0 12px #ff007f,0 0 4px #ff007f;z-index:2;animation:pulse 4s infinite}
+.indicator-text{position:absolute;top:calc(100% + 8px);font-size:10px;font-weight:800;margin-top:4px;color:#0e2e2b;white-space:nowrap;letter-spacing:0.5px;background-color:#f1f5f9;padding:2px 4px;border-radius:20px;box-shadow:0px 4px 10px rgba(0,0,0,0.4);z-index:3}
 .timeline-axis{display:flex;margin-top:8px;padding:0 2px}
 .timeline-axis span{font-size:11px;font-family:monospace;color:#475569;font-weight:400}
 .percent-axis{justify-content:space-between}
@@ -592,9 +593,9 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 .cat-icon-fallback{font-size:12px;font-weight:800;color:var(--accent-purple)}
 .cat-info{flex:1;min-width:0;display:flex;flex-direction:column}
 .title-with-badge{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
-.cat-title{font-size:12.5px;font-weight:700;color:#fff;line-height:1.2}
+.cat-title{font-size:12.5px;font-weight:700;color:#fff;line-height:1.2;}
 .cat-desc{font-size:11px;color:var(--text-muted);font-weight:500;margin-top:1px;line-height:1.1}
-.risk-badge{font-size:10px;font-weight:700;text-transform:uppercase;padding:1px 5px;border-radius:8px}
+.risk-badge{display: inline-block;font-size:10px;font-weight:700;text-transform:uppercase;padding:1px 5px;border-radius:8px}
 .risk-badge.badge-core{background:rgba(236,72,153,0.15);color:#f472b6}
 .risk-badge.badge-growth{background:rgba(20,184,166,0.15);color:#2dd4bf}
 .risk-badge.badge-highrisk{background:rgba(244,63,94,0.15);color:#f87171}
@@ -619,6 +620,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 .neg{color:var(--accent-rose);font-weight:600}
 .neutral{color:var(--text-muted)}
 #loading-msg{text-align:center;padding:30px;color:var(--text-muted);font-size:11px}
+
 </style>
 </head>
 <body>
@@ -664,7 +666,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
     <span>BTC</span>
   </div>
   <div class="tab-btn" data-idx="2" id="tab-btn-2">
-    <i class="bi bi-pie-chart-fill"></i>
+    <i class="bi bi-rocket-takeoff-fill"></i>
     <span>Portfolio</span>
   </div>
   <div class="tab-btn" data-idx="6" id="tab-btn-6">
@@ -709,7 +711,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
     </div>
     <!-- RECENT SLIDE -->
     <div class="slide" id="slide-1" data-idx="1">
-      <div id="rec-msg">Loading...</div>
+      <div id="rec-msg"></div>
       <div class="tab-header">
         <button id="add-cash" class="action-btn">+</button></div>
       <div id="tx-list"></div>
@@ -1008,7 +1010,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
             <!-- Main Progress Track -->
             <div class="timeline-track" id="timeline-track-element">
               <!-- Clean Structured Color Phases -->
-              <div class="phase phase-bull" style="flex: 25;"><span class="phase-name"><i class="bi bi-airplane-fill"></i>Bull Run</span></div>
+              <div class="phase phase-bull" style="flex: 25;"><span class="phase-name"><i class="bi bi-rocket-takeoff-fill"></i>Bull Run</span></div>
               <div class="phase phase-bear" style="flex: 25;"><span class="phase-name"><i class="bi bi-arrow-down-circle-fill"></i>Bear Market</span></div>
               <div class="phase phase-accum" style="flex: 25;"><span class="phase-name"><i class="bi bi-droplet-half"></i>Accumulation</span></div>
               <div class="phase phase-pre" style="flex: 25;"><span class="phase-name"><i class="bi bi-airplane-engines"></i>Pre-Halving</span></div>
@@ -1052,7 +1054,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
       <div class="app-container">
         <header class="header">
           <div class="title-group">
-            <p>Tentative F. I. R. E. by Oct 2030</p>
+            <p>Tentative by Oct 2030</p>
           </div>
         </header>
 
@@ -2548,8 +2550,7 @@ function loadExpense() {
     var prefix = amount < 0 ? "-\u20ab" : "\u20ab";
     return prefix + Math.abs(amount).toLocaleString("en-US");
 }
-  function fmtDate(raw){if(!raw)return"";var d=new Date(raw);if(!isNaN(d.getTime()))return d.toLocaleDateString("en-US",{day:"numeric",month:"long",year:"numeric"});return raw;}
-
+  function fmtDate(raw){if(!raw)return"";var d=new Date(raw);return isNaN(d.getTime())?raw:d.toLocaleDateString("en-US",{timeZone: "Asia/Bangkok",month:"short",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false}).replace(",","")}
   function startOfDay(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate());}
 
   function relativeGroupLabel(raw){
@@ -2780,6 +2781,12 @@ function loadExpense() {
   window.lastRenderedGroup = null;
 
   function loadRecent() {
+    const addCashBtn = document.getElementById("add-cash");
+    if (addCashBtn) {
+      addCashBtn.classList.add("loading");
+      addCashBtn.innerHTML = '<span class="btn-spinner"></span>';
+    }
+
     fetch(CSV_RECENT + "&t=" + Date.now(), { cache: "no-store" })
       .then(function(r) {
         if (!r.ok) throw new Error("HTTP " + r.status);
@@ -2815,7 +2822,20 @@ function loadExpense() {
         // 2. Render initial 20 items
         renderNextChunk();
 
-        document.getElementById("rec-msg").style.display = "none";
+        //document.getElementById("rec-msg").style.display = "none";
+        if (addCashBtn) {
+          addCashBtn.classList.remove("loading");
+          addCashBtn.classList.add("success-confirm");
+        }
+
+        // 🎯 3. RESET BUTTON BACK TO "+" AFTER DISPLAYING CHECKMARK
+        setTimeout(function () {
+          if (addCashBtn) {
+            addCashBtn.classList.remove("success-confirm");
+            addCashBtn.innerHTML = "+";
+          }
+        }, 500);
+        
         applyLayout();
 
         // 3. Setup Sentinel Observer for Infinite Scroll
@@ -2823,6 +2843,11 @@ function loadExpense() {
 
       }).catch(function(err) {
         document.getElementById("rec-msg").textContent = "Error: " + err.message;
+        //console.error("Error loading expenses:", err);
+        if (addCashBtn) {
+          addCashBtn.classList.remove("loading", "success-confirm");
+          addCashBtn.innerHTML = "+";
+        }
       });
   }
 
@@ -3024,7 +3049,7 @@ function applyLayout(){
   document.querySelectorAll(".td-detail").forEach(function(el){el.style.fontSize=isMobile?"4.2vw":"2.6vw";});
   document.querySelectorAll(".ttl").forEach(function(el){el.style.fontSize=isMobile?"4.2vw":"2.8vw";});
   document.querySelectorAll(".dtl").forEach(function(el){el.style.fontSize=isMobile?"3.9vw":"2.6vw";});
-  document.querySelectorAll(".amt").forEach(function(el){el.style.fontSize=isMobile?"4.6vw":"2.9vw";});
+  document.querySelectorAll(".amt").forEach(function(el){el.style.fontSize=isMobile?"4.7vw":"3.3vw";});
   document.querySelectorAll(".dte").forEach(function(el){el.style.fontSize=isMobile?"3.9vw":"2.4vw";});
   document.querySelectorAll(".tx-group-hdr").forEach(function(el){el.style.fontSize=isMobile?"4vw":"2.3vw";});
   document.querySelectorAll(".ico").forEach(function(el){el.style.width=txIcoSz;el.style.height=txIcoSz;});
@@ -3680,7 +3705,7 @@ function deleteSubscription(itemId) {
 }
 
   function initCashModal() {
-    var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzhzqJ1weEPxJBpjDuUdyNCwcoY9cuWOTjuhrePUKVWy71J-nExGjOPpe4S9Tpo9KA/exec";
+    var CASH_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbybMjy9UV5AeEgMULGe-RhBeqV2-vW6snqQcHWAZY_rxpI3aUretpPOP5y_kV4sbIw4/exec";
 
     var addCashBtn = document.getElementById("add-cash");
     var cashOverlay = document.getElementById("cash-modal-overlay");
@@ -3769,81 +3794,69 @@ function deleteSubscription(itemId) {
       });
     }
 
-    // Submit Handler
     cashSubmit.addEventListener("click", function() {
       var rawText = cashInput.value.trim();
-      if (!rawText) return;
+      if (rawText) {
+          cashSubmit.disabled = !0;
 
-      cashSubmit.disabled = true;
-      
-      var items = rawText.split(";");
-      var todayStr = new Date().toISOString().split('T')[0];
-      var validRequestsCount = 0;
+          // Local UTC+7 Date Formatting (Fixes UTC offset issue)
+          var d = new Date(),
+              pad = function(n) { return String(n).padStart(2, "0"); },
+              todayStr = d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) + " " + 
+                        pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds());
 
-      for (var i = 0; i < items.length; i++) {
-        var item = items[i].trim();
-        if (!item) continue;
-
-        var parts = item.split("-");
-        if (parts.length < 2) continue;
-
-        var detail = parts[0].trim();
-        var rawAmount = parseFloat(parts[1].trim());
-        if (isNaN(rawAmount)) continue;
-
-        validRequestsCount++;
-
-        var payload = {
-          type: "Cash",
-          date: todayStr,
-          detail: detail,
-          amount: rawAmount * 1000
-        };
-
-        fetch(APPS_SCRIPT_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain" }, 
-          body: JSON.stringify(payload)
-        }).catch(function(err) {
-          console.error("Background transmission failed:", err);
-        });
-      }
-
-      if (validRequestsCount > 0) {
-        cashOverlay.style.display = "none";
-        cashSubmit.disabled = false;
-        
-        if (addCashBtn) {
-          addCashBtn.classList.add("loading");
-          addCashBtn.innerHTML = '<span class="btn-spinner"></span>';
-        }
-        
-        setTimeout(function() {
-          if (typeof loadRecent === "function") {
-            loadRecent();
+          for (var items = rawText.split(";"), payloadBatch = [], i = 0; i < items.length; i++) {
+              var item = items[i].trim();
+              if (item) {
+                  var parts = item.split("-");
+                  if (!(parts.length < 2)) {
+                      var detail = parts[0].trim(),
+                          rawAmount = parseFloat(parts[1].trim());
+                      if (!isNaN(rawAmount)) {
+                          payloadBatch.push({
+                              type: "Cash",
+                              date: todayStr,
+                              detail: detail,
+                              amount: 1e3 * rawAmount
+                          });
+                      }
+                  }
+              }
           }
-          if (addCashBtn) {
-            addCashBtn.classList.remove("loading");
-            addCashBtn.classList.add("success-confirm");
-            addCashBtn.innerHTML = "&#10003;";
+
+          if (payloadBatch.length > 0) {
+              // Send single batch array request to avoid race conditions
+              fetch(CASH_APPS_SCRIPT_URL, {
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "text/plain"
+                  },
+                  body: JSON.stringify(payloadBatch)
+              }).catch(function(err) {
+                  console.error("Background transmission failed:", err);
+              });
+
+              // UI Feedback preserving your exact timing and flow
+              cashOverlay.style.display = "none";
+              cashSubmit.disabled = !1;
+              cashStatus && (cashStatus.className = "add-status", cashStatus.innerText = "Processing...");
+              addCashBtn && (addCashBtn.classList.add("loading"), addCashBtn.innerHTML = '<span class="btn-spinner"></span>');
+              
+              setTimeout(function() {
+                  "function" == typeof loadRecent && loadRecent();
+                  cashStatus && (cashStatus.innerText = "Successfully added!");
+                  addCashBtn && (addCashBtn.classList.remove("loading"), addCashBtn.classList.add("success-confirm"), addCashBtn.innerHTML = "&#10003;");
+                  
+                  setTimeout(function() {
+                      addCashBtn && (addCashBtn.classList.remove("success-confirm"), addCashBtn.innerHTML = "+");
+                  }, 1500);
+              }, 11e3);
+          } else {
+              cashStatus && (cashStatus.className = "add-status error", cashStatus.innerText = "Error: Input formatting issue.");
+              cashSubmit.disabled = !1;
           }
-          
-          setTimeout(function() {
-            if (addCashBtn) {
-              addCashBtn.classList.remove("success-confirm");
-              addCashBtn.innerHTML = "+";
-            }
-          }, 1500);
-        }, 11000);
-        
-      } else {
-        if (cashStatus) {
-          cashStatus.className = "add-status error";
-          cashStatus.innerText = "Error: Input formatting issue.";
-        }
-        cashSubmit.disabled = false;
       }
-    });
+  });
   }
 
   function deleteTx(elementOrItem) {
@@ -3971,26 +3984,21 @@ function deleteSubscription(itemId) {
     // CƯỠNG CHẾ RESET TOÀN BỘ GIAO DIỆN DÒNG
     // 1. Quét tất cả các phần tử có khả năng là dòng hoặc container chứa dòng
     const selectors = [
-      '.sub-swipe-container', 
-      '.subs-row', 
-      '.sub-swipe-row', 
+      '#tx-list .sub-swipe-container', 
+      '#tx-list .subs-row', 
+      '#tx-list .sub-swipe-row', 
       '[class*="swipe"]', 
       '[class*="row"]'
     ];
     
     selectors.forEach(selector => {
       document.querySelectorAll(selector).forEach(el => {
-        // Đưa độ mờ và tương tác về bình thường
         el.style.opacity = "1";
         el.style.display = ""; 
         el.style.visibility = "visible";
         el.style.pointerEvents = "auto";
         el.style.transition = "transform 0.2s ease, opacity 0.2s ease";
-        
-        // Đưa vị trí quẹt về 0 (trung tâm)
         el.style.transform = "translateX(0px)";
-        
-        // Loại bỏ các class trạng thái quẹt nếu thư viện của bạn tự thêm vào
         el.classList.remove("swiped", "active", "open", "deleting");
       });
     });
@@ -4012,6 +4020,7 @@ function deleteSubscription(itemId) {
       }
 
       cleanupModal();
+      var addCashBtn = document.getElementById("add-cash");
 
       var deletePayload = {
         action: "delete",
@@ -4027,12 +4036,57 @@ function deleteSubscription(itemId) {
         body: JSON.stringify(deletePayload)
       })
       .then(function() {
+        if (addCashBtn) {
+          addCashBtn.classList.add("loading");
+          addCashBtn.innerHTML = '<span class="btn-spinner"></span>';
+        }
+
         setTimeout(function() { 
           if (typeof loadExpenses === "function") {
             loadExpenses(); 
           } else if (typeof loadTransactions === "function") {
             loadTransactions();
           }
+            
+          setTimeout(function() {
+            if (addCashBtn) {
+                addCashBtn.classList.remove("loading");
+                addCashBtn.classList.add("success-confirm");
+                addCashBtn.innerHTML = "&#10003;";
+            }
+
+            // 🎯 4. RESET BACK TO "+" AFTER DISPLAYING CHECKMARK
+            setTimeout(function() {
+                if (addCashBtn) {
+                    addCashBtn.classList.remove("success-confirm");
+                    addCashBtn.innerHTML = "+";
+                }
+
+                // 🎯 Target your main list/history container
+                var listContainer = document.getElementById("tx-list");
+
+                if (listContainer) {
+                    listContainer.classList.add("data-refreshing");
+                }
+
+                // Run data reload
+                if (typeof loadRecent === "function") {
+                    loadRecent();
+                }
+
+                // Remove transition effect once render completes
+                setTimeout(function() {
+                  if (listContainer) {
+                    listContainer.classList.remove("data-refreshing");
+                    listContainer.classList.add("data-refreshed");
+
+                    setTimeout(function() {
+                        listContainer.classList.remove("data-refreshed");
+                    }, 600);
+                  }
+                }, 400); // Small buffer to match network request/DOM update
+            }, 500);
+          }, 500);
         }, 300);
       })
       .catch(function(err) {
@@ -4791,7 +4845,7 @@ function deleteSubscription(itemId) {
             <input type="text" 
                    id="history-edit-detail" 
                    value="${targetItem.detail || ''}" 
-                   style="font-family: 'Lexend', sans-serif !important; height:11vw!important;width: 100%; background: rgba(255,255,255,0.05); border: 0px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; color: #fff; font-size: 14px; box-sizing: border-box; outline: none; transition: border-color 0.2s;" 
+                   style="font-family: 'Lexend', sans-serif !important; height:10vw!important;width: 100%; background: rgba(255,255,255,0.05); border: 0px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; color: #fff; font-size: 14px; box-sizing: border-box; outline: none; transition: border-color 0.2s;" 
                    onfocus="this.style.borderColor='rgba(255,255,255,0.25)'" 
                    onblur="this.style.borderColor='rgba(255,255,255,0.1)'"/>
           </div>
@@ -4800,7 +4854,7 @@ function deleteSubscription(itemId) {
             <input type="date" 
                    id="history-edit-date" 
                    value="${inputFormattedDate}" 
-                   style="font-family: 'Lexend', sans-serif !important; height:11vw!important;width: 100%; background: rgba(255,255,255,0.05); border: 0px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 8px; color: #fff; font-size: 13px; box-sizing: border-box; outline: none; transition: border-color 0.2s; color-scheme: dark;" 
+                   style="font-family: 'Lexend', sans-serif !important; -webkit-appearance:none;-moz-appearance:none;appearance:none;width:100% !important;height:10vw !important;width: 100%; background: rgba(255,255,255,0.05); border: 0px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 8px; color: #fff; font-size: 13px; box-sizing: border-box; outline: none; transition: border-color 0.2s; color-scheme: dark;" 
                    onfocus="this.style.borderColor='rgba(255,255,255,0.25)'" 
                    onblur="this.style.borderColor='rgba(255,255,255,0.1)'"/>
           </div>
@@ -5714,7 +5768,7 @@ function setupGlobalInteractivePhysics() {
     return { cleanTitle: clean || titleText, badgeType: badgeType, badgeLabel: badgeLabel };
   }
 
-  function loadPortfolio() {
+  function loadFIRE() {
     fetch(FIRE_CSV_URL + "&t=" + Date.now(), { cache: "no-store" })
       .then(function(r) { return r.text(); })
       .then(function(text) {
@@ -6737,7 +6791,7 @@ function setupGlobalInteractivePhysics() {
           .ca-history-dte, .tx-group-hdr { font-size: 3.5vw !important; }
           
           .ca-history-rgt-wrap { display: flex; flex-direction: row; align-items: center; gap: 2.5vw; flex-shrink: 0; }
-          .ca-history-amt { font-size: 3.6vw !important; min-width: 50px; padding-right: 2vw !important; text-align: right; font-weight: 600; white-space: nowrap; }
+          .ca-history-amt { font-family:DM Sans;font-size: 3.6vw !important; min-width: 50px; padding-right: 2vw !important; text-align: right; font-weight: 600; white-space: nowrap; }
           
           .ca-display-desktop { display: none !important; }
           .ca-display-mobile { display: inline !important; }
@@ -6755,7 +6809,7 @@ function setupGlobalInteractivePhysics() {
           .ca-history-dte, .tx-group-hdr { font-size: 2.5vw !important; }
           
           .ca-history-rgt-wrap { display: flex; flex-direction: row; align-items: center; gap: 2vw; flex-shrink: 0; min-width: max-content; }
-          .ca-history-amt { font-size: 2.6vw !important; min-width: 100px; padding-right: 0px !important; text-align: right; font-weight: 600; white-space: nowrap; }
+          .ca-history-amt { font-family:DM Sans;font-size: 2.6vw !important; min-width: 100px; padding-right: 0px !important; text-align: right; font-weight: 600; white-space: nowrap; }
           
           .ca-display-desktop { display: inline !important; }
           .ca-display-mobile { display: none !important; }
@@ -8358,7 +8412,7 @@ function setupGlobalInteractivePhysics() {
   loadExpense();
   loadRecent();
   loadCycles();
-  loadPortfolio();
+  loadFIRE();
   setInterval(loadRecent,60000);
 
 </script>
