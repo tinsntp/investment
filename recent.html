@@ -17,7 +17,7 @@
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-family: "Lexend", Roboto, sans-serif;font-weight:300!important;color:#fff;overflow:hidden;margin-top:15px;display:flex;flex-direction:column;padding-bottom:5px}
 .tab-bar{display:flex;align-items:stretch;border-bottom:1px solid rgba(255,255,255,0.1);position:relative;flex-shrink:0;padding:0 0vw}
-.tab-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:0vw;cursor:pointer;user-select:none;font-size:2.8vw!important;font-weight:600;color:rgba(255,255,255,0.4);transition:color 0.2s}
+.tab-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:0vw;cursor:pointer;user-select:none;font-size:2.8vw!important;font-weight:400;color:rgba(255,255,255,0.4);transition:color 0.2s}
 .tab-btn.active { color:#fff; }
 .tab-btn img { width:3.5vw; height:3.5vw; object-fit:contain; opacity:0.4; transition:opacity 0.2s; }
 .tab-btn.active img { opacity:1; }
@@ -321,7 +321,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 @keyframes subSpin{from{transform:rotate(0deg)}
 to{transform:rotate(360deg)}
 }.sub-stats-row{display:flex;gap:28px;margin-bottom:30px}
-.sub-stat-val{font-size:24px;font-weight:500;color:rgba(255,255,255,0.95);letter-spacing:-0.02em;line-height:1;margin-bottom:4px;font-family:DM Sans;}
+.sub-stat-val{font-size:28px;font-weight:500;color:rgba(255,255,255,0.95);letter-spacing:-0.02em;line-height:1;margin-bottom:4px;font-family:DM Sans;}
 .sub-stat-label{font-size:12.5px;color:rgba(255,255,255,0.45)}
 .sub-stat-label .hl-teal{color:#2dd4bf;font-weight:600}
 .sub-list-title{display:flex;align-items:center;justify-content:left;gap:2vw;width:100%;font-size:14.5px;font-weight:300;color:rgba(255,255,255,0.75);margin-bottom:12px}
@@ -499,7 +499,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 }
 
 /*F. I. R. E.*/
-.app-container{width:100%;max-width:520px;margin:0 auto;padding:16px 12px 32px 12px}
+.app-container{width:100%;margin:0 auto;padding:16px 6px 32px 6px}
 .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .title-group h1{font-size:16px;font-weight:800;letter-spacing:-0.02em;background:linear-gradient(135deg,#ffffff 0%,#cbd5e1 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .title-group p{font-size:10px;color:var(--text-muted);font-weight:500}
@@ -706,14 +706,14 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
               <div class="filter-dropdown-trigger" 
                   id="transactionFilterTrigger" 
                   onclick="window.toggleFilterDropdown(event)" 
-                  style="padding: 6px 12px; background: #21242c; border: 0px solid #2d313c; border-radius: 10px; color: #f8f9fa; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: space-between; gap: 6px; cursor: pointer; user-select: none;">
+                  style="padding: 6px 12px; background: #202020; border: 0px solid #2d313c; border-radius: 10px; color: #f8f9fa; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: space-between; gap: 6px; cursor: pointer; user-select: none;">
                 <span id="currentFilterLabel" style="display: flex; align-items: center; gap: 6px;">
                   <span class="material-icons-round" id="filterIcon" style="font-size: 15px; color: #6c757d;">filter_list</span>All</span>
                 <span class="material-icons-round" id="filterDropdownArrow" style="font-size: 15px; color: #6c757d; transition: transform 0.2s;">expand_more</span>
               </div>
               <div class="filter-dropdown-options" 
                   id="transactionFilterOptions" 
-                  style="z-index:1;display: none; position: absolute; right: 0; top: calc(100% + 4px); background: #1e222b; border: 1px solid #2d313c; border-radius: 10px; overflow: hidden; min-width: 155px; box-shadow: 0 8px 24px rgba(0,0,0,0.6);">
+                  style="z-index:1;opacity:1;display: none; position: absolute; right: 0; top: calc(100% + 4px); background: #181818; border: 1px solid #2d313c; border-radius: 10px; overflow: hidden; min-width: 155px; box-shadow: 0 8px 24px rgba(0,0,0,0.6);">
               </div>
             </div>
           </div>
@@ -2433,7 +2433,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 
   /*F.I.R.E.*/
   var FIRE_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1815442176";
-  var CHART_COLORS = ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b', '#ec4899', '#06b6d4'];
+  var CHART_COLORS = ['#ec4899','#06b6d4', '#f59e0b','#8b5cf6', '#3b82f6', '#10b981'];
 
   function parseCSVLine(line){for(var cols=[],cur="",inQ=!1,i=0;i<line.length;i++){var c=line[i];'"'===c?inQ=!inQ:","!==c||inQ?cur+=c:(cols.push(cur),cur="")}return cols.push(cur),cols.map(function(s){return s.replace(/^"|"$/g,"")})}function parseMAmt(raw){if(!raw)return null;var m=raw.trim().match(/([+\-]?[\d,]+(?:\.\d+)?)\s*M/i);return m?parseFloat(m[1].replace(/,/g,"")):null}function parsePct(raw){if(!raw)return null;var m=raw.trim().match(/([+\-]?[\d.]+)\s*%/);return m?parseFloat(m[1]):null}function fmtM(v,forcePlus){if(null==v)return null;var sign=v>0&&forcePlus?"+":v<0?"−":"",a=Math.abs(v);return sign+(a%1==0?a.toLocaleString("en-US"):a.toLocaleString("en-US",{minimumFractionDigits:1,maximumFractionDigits:1}))+"M đ"}function fmtPct(v){return null==v?null:(v>0?"+":v<0?"−":"")+Math.abs(v).toFixed(v%1==0?0:1)+"%"}function parseTitleDesc(rawStr){if(!rawStr)return{title:"",desc:""};var str=rawStr.trim(),parts=[];return{title:(parts=-1!==str.indexOf("+")?str.split("+"):-1!==str.indexOf(":")?str.split(":"):-1!==str.indexOf(" - ")?str.split(" - "):[str])[0].trim(),desc:parts.length>1?parts.slice(1).join(" ").trim():""}}
   function extractAndCleanBadge(titleText){var badgeType=null,badgeLabel="",clean=titleText;return/core/i.test(clean)?(badgeType="badge-core",badgeLabel="Core",clean=clean.replace(/\s*\(?\s*Core\s*\)?/gi,"")):/growth/i.test(clean)?(badgeType="badge-growth",badgeLabel="Growth",clean=clean.replace(/\s*\(?\s*Growth\s*\)?/gi,"")):/high\s*risk/i.test(clean)?(badgeType="badge-highrisk",badgeLabel="High Risk",clean=clean.replace(/\s*\(?\s*High\s*Risk\s*\)?/gi,"")):/medium\s*risk|med\s*risk/i.test(clean)&&(badgeType="badge-medrisk",badgeLabel="Medium Risk",clean=clean.replace(/\s*\(?\s*(Medium|Med)\s*Risk\s*\)?/gi,"")),{cleanTitle:(clean=clean.replace(/^[\s\-–—:]+|[\s\-–—:]+$/g,"").trim())||titleText,badgeType,badgeLabel}}
