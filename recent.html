@@ -144,8 +144,59 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .chart-container {
   position: relative;
   width: 100%;
-  height: 250px; /* Or your preferred fixed height */
-  min-height: 220px;
+  height: 220px;
+  display: flex;
+  align-items: flex-end;
+  padding: 20px 10px 10px 10px;
+  box-sizing: border-box;
+}
+
+.glass-chart-bars {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.chart-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+  position: relative;
+}
+
+/* Glassmorphic Bar */
+.bar-fill {
+  width: 100%;
+  max-width: 28px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.2) 100%);
+  border-radius: 6px 6px 2px 2px;
+  transition: height 0.4s ease;
+  min-height: 4px; /* Ensure tiny values are still visible */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Baseline (2025) comparison bar/marker */
+.bar-baseline {
+  position: absolute;
+  width: 100%;
+  max-width: 28px;
+  border-top: 2px dashed #8e90a6;
+  z-index: 2;
+  transition: bottom 0.4s ease;
+}
+
+/* Month Label */
+.col-label {
+  margin-top: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  color: #8e90a6;
 }
 
 canvas#myChart {
@@ -184,7 +235,145 @@ canvas#myChart {
 .tx-date-badge{display:inline-flex;margin-right:1vw;align-items:center;justify-content:center;width:4vw;height:4vw;border-radius:50%;background-color:rgba(255,255,255,0.08);color:rgba(255,255,255,0.6);font-size:2.6vw;font-weight:500;text-align:center;box-sizing:border-box}
 @media (max-width:400px){.td-date{margin-right:1vw;}.tx-date-badge{width:6vw;height:6vw;font-size:3.4vw;background-color:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7)}}
 
-.expense-widget-card{width:100%;max-width:440px;background:var(--bg-card);border-radius:28px;padding:24px 20px;font-family:"DM Sans",sans-serif;color:var(--text-white);box-sizing:border-box;box-shadow:0 20px 40px rgba(0,0,0,.4);margin:0 auto}@media (min-width:401px){.expense-widget-card{max-width:520px}}.filter-controls{display:flex;flex-direction:column;gap:12px;margin-bottom:20px}.segment-pill-wrap{display:flex;background:var(--pill-bg);border-radius:40px;padding:4px;justify-content:space-between}.category-select,.segment-btn{font-size:13px;font-weight:500;cursor:pointer}.segment-btn{flex:1;background:0 0;border:0;color:var(--pill-text-muted);padding:8px 12px;border-radius:30px;transition:all .2s ease}.segment-btn.active{background:var(--pill-active);color:var(--pill-text-active);font-weight:700}.category-select{width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:14px;color:var(--text-white);padding:10px 14px;outline:0;font-family:inherit;appearance:none;background-image:url(data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E);background-repeat:no-repeat;background-position:right 14px top 50%;background-size:10px auto}.category-select option{background:#181928;color:#fff;padding:8px}.category-select optgroup{background:#212338;color:var(--accent-pink);font-weight:700}.stats-header{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;min-height:68px}.stat-col .stat-label{font-size:13px;color:var(--text-sub);margin-bottom:4px}.stat-col.primary .stat-label,.stat-col.primary .stat-value{color:var(--accent-pink)}.stat-col .stat-value{font-size:22px;font-weight:700;letter-spacing:-.5px;line-height:1.1;white-space:nowrap}@media (min-width:401px){.stat-col .stat-value{font-size:26px}}.stat-col.secondary .stat-value{color:var(--text-white)}.stat-col .stat-date{font-size:11px;color:var(--text-sub);margin-top:4px}.chart-wrapper{height:180px}.category-select-wrap,.chart-wrapper{position:relative;width:100%}.custom-dropdown{width:100%;background:rgba(255,255,255,.08);border-radius:14px;color:var(--text-white);padding:10px 14px;font-size:13px;font-weight:500;cursor:pointer;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;transition:all .2s ease}.custom-dropdown:hover{background:rgba(255,255,255,.12);border-color:rgba(255,82,142,.4)}.selected-option{display:flex;align-items:center;gap:10px;overflow:hidden}.cat-icon{width:18px;height:18px;object-fit:contain;flex-shrink:0;border-radius:4px}.dropdown-arrow{width:8px;height:8px;border-right:2px solid var(--text-white);border-bottom:2px solid var(--text-white);transform:rotate(45deg);transition:transform .2s ease;margin-right:4px;flex-shrink:0}.custom-dropdown.open .dropdown-arrow{transform:rotate(-135deg)}.dropdown-menu{display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;background:#1e2035;border:1px solid rgba(255,255,255,.15);border-radius:16px;max-height:280px;overflow-y:auto;z-index:100;box-shadow:0 12px 30px rgba(0,0,0,.6);padding:6px}.dropdown-menu.show{display:block}.dropdown-group-header{font-size:11px;font-weight:700;color:var(--accent-pink);letter-spacing:.5px;padding:10px 12px 4px;text-transform:uppercase}.dropdown-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;font-size:13px;color:var(--text-white);transition:background .15s ease}.dropdown-item.selected,.dropdown-item:hover{background:rgba(255,255,255,.08);color:#e0e0e0}.dropdown-menu::-webkit-scrollbar{width:5px}.dropdown-menu::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:10px}.dropdown-divider{height:1px;background:rgba(255,255,255,.12);margin:6px 4px;border:0}
+.expense-widget-card{width:100%;font-family:"DM Sans",sans-serif;color:var(--text-white);}
+.filter-controls {
+  display: flex;font-family:Lexend;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 5px 16px 5px!important;
+}
+
+/* 2. Segmented Pill Wrap: Fixed/Flexible width for controls */
+.segment-pill-wrap {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 30px;
+  flex-shrink: 0; /* Prevents segment buttons from squishing on mobile */
+}
+.category-select,.segment-btn{font-size:12px;font-weight:500;cursor:pointer}
+.controls-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px; /* Space between dropdown and segmented control */
+  width: 100%;
+  margin-bottom: 16px;
+}
+.segment-container {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 30px;
+  padding: 3px;
+  shrink: 0; /* Prevents segmented control from shrinking on mobile */
+}
+.segment-btn {
+  background: transparent;
+  border: 0;font-family:Lexend;
+  color: var(--pill-text-muted, #8e90a6);
+  padding: 4px 8px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.segment-btn.active {
+  background: var(--pill-active, rgba(255, 255, 255, 0.15));
+  color: var(--pill-text-active, #ffffff);
+  font-weight: 700;
+}
+.category-select{width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:14px;color:var(--text-white);padding:10px 14px;outline:0;font-family:inherit;appearance:none;background-image:url(data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E);background-repeat:no-repeat;background-position:right 14px top 50%;background-size:10px auto}
+.category-select option{background:#181928;color:#fff;padding:8px}.category-select optgroup{background:#212338;color:var(--accent-pink);font-weight:700}
+.stats-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  
+  /* Vertical alignment */
+  align-items: center; 
+  
+  /* Optional: Horizontal alignment inside cells */
+  justify-items: center; 
+}
+.stat-col .stat-label{font-size:11.5px;color:var(--text-sub);margin-bottom:4px}.stat-col.primary .stat-label,.stat-col.primary 
+.stat-value{color:var(--accent-pink)}.stat-col .stat-value{font-size:15px;font-weight:700;letter-spacing:-.5px;line-height:1.1;white-space:nowrap}
+@media (min-width:401px){.stat-col .stat-value{font-size:16px}}
+.stat-col.secondary .stat-value{color:var(--text-white)}
+.stat-col .stat-date{font-size:11px;color:var(--text-sub);margin-top:4px}
+.chart-wrapper{height:160px}
+.category-select-wrap,.chart-wrapper{position:relative;width:100%}
+.category-select-wrap {margin-right:5px;
+  position: relative; /* Essential for absolute positioning of .dropdown-menu */
+  flex: 1; /* Takes up all remaining space on the row */
+  min-width: 0; /* Prevents overflow bug in flex containers */
+}
+/* 4. Custom Dropdown Trigger */
+.custom-dropdown {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  color: var(--text-white, #ffffff);
+  padding: 5px 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+}
+.custom-dropdown:hover{background:rgba(255,255,255,.12);border-color:rgba(255,82,142,.4)}
+.selected-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+}
+.cat-icon{width:18px;height:18px;object-fit:contain;flex-shrink:0;border-radius:4px}
+.dropdown-arrow {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid var(--text-white, #ffffff);
+  transition: transform 0.2s ease;
+}
+
+/* REQUIRED: Rotate arrow when open */
+.custom-dropdown.open .dropdown-arrow {
+  transform: rotate(180deg);
+}
+#selectedLabel {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dropdown-menu {
+  display: none; /* Hidden */
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 100%;
+  background: rgba(28, 29, 45, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 100;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+.dropdown-menu.show{display:block!important}.dropdown-group-header{font-size:11px;font-weight:700;color:var(--accent-pink);letter-spacing:.5px;padding:10px 12px 4px;text-transform:uppercase}.dropdown-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;font-size:13px;color:var(--text-white);transition:background .15s ease}.dropdown-item.selected,.dropdown-item:hover{background:rgba(255,255,255,.08);color:#e0e0e0}
+.dropdown-menu::-webkit-scrollbar{width:5px}.dropdown-menu::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:10px}.dropdown-divider{height:1px;background:rgba(255,255,255,.12);margin:6px 4px;border:0}
 
 /*RECENT */
 #tx-list{display:flex;flex-direction:column;margin-top:5px;}
@@ -690,14 +879,14 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
               <!-- Top Segment Filter & Category Dropdown -->
               <div class="filter-controls">
                 <div class="segment-pill-wrap">
-                  <button class="segment-btn" onclick="updateView('6M', this)">6 Months</button>
+                  <button class="segment-btn" onclick="updateView('6M', this)">6m</button>
                   <button class="segment-btn active" onclick="updateView('Year', this)">Year</button>
                   <button class="segment-btn" onclick="updateView('All', this)">All</button>
                 </div>
 
                 <div class="category-select-wrap">
-                  <!-- Custom Dropdown Trigger -->
-                  <div class="custom-dropdown" id="customDropdown" onclick="toggleDropdown()">
+                  <!-- Pass event here -->
+                  <div class="custom-dropdown" id="customDropdown" onclick="toggleDropdown(event)">
                     <div class="selected-option" id="selectedOption">
                       <img id="selectedIcon" src="" class="cat-icon" style="display: none;" />
                       <span id="selectedLabel">Loading categories...</span>
@@ -705,7 +894,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
                     <div class="dropdown-arrow"></div>
                   </div>
 
-                  <!-- Custom Dropdown Menu Options -->
+                  <!-- Dropdown menu -->
                   <div class="dropdown-menu" id="dropdownMenu"></div>
                 </div>
               </div>
@@ -726,7 +915,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 
               <!-- Line Chart -->
               <div class="chart-wrapper">
-                <canvas id="expenseChart"></canvas>
+                <canvas id="expenseChart" class="glass-chart-bars"></canvas>
               </div>
             </div>
           </div>
@@ -1556,19 +1745,56 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  function toggleDropdown() {
-    const menu = document.getElementById('dropdownMenu');
-    const dropdown = document.getElementById('customDropdown');
+  function toggleDropdown(event) {
+  // Prevent document click handler from firing immediately
+  if (event) {
+    event.stopPropagation();
+  }
+
+  const menu = document.getElementById('dropdownMenu');
+  const dropdown = document.getElementById('customDropdown');
+
+  if (menu && dropdown) {
     menu.classList.toggle('show');
     dropdown.classList.toggle('open');
   }
+}
 
-  function closeDropdown() {
-    const menu = document.getElementById('dropdownMenu');
-    const dropdown = document.getElementById('customDropdown');
-    menu.classList.remove('show');
-    dropdown.classList.remove('open');
+function closeDropdown() {
+  const menu = document.getElementById('dropdownMenu');
+  const dropdown = document.getElementById('customDropdown');
+
+  if (menu) menu.classList.remove('show');
+  if (dropdown) dropdown.classList.remove('open');
+}
+
+// Close when clicking anywhere outside
+document.addEventListener('click', function (e) {
+  const wrap = document.querySelector('.category-select-wrap');
+  if (wrap && !wrap.contains(e.target)) {
+    closeDropdown();
   }
+});
+
+// Optional: When generating items inside #dropdownMenu dynamically,
+// make sure each item's click handler calls closeDropdown()
+// Example:
+// item.onclick = function() { selectCategory(...); closeDropdown(); };
+
+// Close when clicking anywhere outside the dropdown
+document.addEventListener('click', function (e) {
+  const selectWrap = document.querySelector('.category-select-wrap');
+  if (selectWrap && !selectWrap.contains(e.target)) {
+    closeDropdown();
+  }
+});
+
+// Close when pressing the Escape key
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') {
+    closeDropdown();
+  }
+});
 
   // Close dropdown if user clicks outside
   document.addEventListener('click', (e) => {
@@ -1602,273 +1828,293 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function renderWidget() {
-    if (!sheetData || sheetData.length === 0) return;
+  if (!sheetData || sheetData.length === 0) return;
 
-    // 1. Safe array slice (no spread operator)
-    var activeData = sheetData.slice();
+  // 1. Safe array slice
+  var activeData = sheetData.slice();
 
-    if (currentRange === '6M') {
-      activeData = activeData.slice(-6);
-    } else if (currentRange === 'Year') {
-      activeData = activeData.slice(-12);
-    }
-
-    // 2. Safe mapping for labels and values
-    var rawLabels = [];
-    var currentValues = [];
-
-    for (var i = 0; i < activeData.length; i++) {
-      var d = activeData[i];
-      rawLabels.push(d[0] ? String(d[0]).trim() : '');
-      
-      var val = Number(d[selectedColIdx]);
-      currentValues.push(isNaN(val) ? 0 : Math.abs(val));
-    }
-
-    // 3. Match 2025 baseline values with strict fallback
-    var baselineValues = [];
-    for (var j = 0; j < rawLabels.length; j++) {
-      var label = rawLabels[j];
-      var val2025 = 0;
-
-      if (label && label.indexOf('/') !== -1) {
-        var monthStr = label.split('/')[0].trim();
-        var target2025Label = monthStr + '/25';
-
-        for (var k = 0; k < sheetData.length; k++) {
-          var rowLabel = sheetData[k][0] ? String(sheetData[k][0]).trim() : '';
-          if (rowLabel === target2025Label) {
-            var raw2025Val = Number(sheetData[k][selectedColIdx]);
-            val2025 = isNaN(raw2025Val) ? 0 : Math.abs(raw2025Val);
-            break;
-          }
-        }
-      }
-      baselineValues.push(val2025);
-    }
-
-    // 4. Format display labels (MM/YY -> MM)
-    var formattedChartLabels = [];
-    for (var l = 0; l < rawLabels.length; l++) {
-      var lbl = rawLabels[l];
-      if (lbl.indexOf('/') !== -1) {
-        var m = lbl.split('/')[0].trim();
-        formattedChartLabels.push(m.length === 1 ? '0' + m : m);
-      } else {
-        formattedChartLabels.push(lbl);
-      }
-    }
-
-    // 5. Calculate totals safely
-    var totalCurr = 0;
-    for (var c = 0; c < currentValues.length; c++) totalCurr += currentValues[c];
-
-    var totalBaseline = 0;
-    for (var b = 0; b < baselineValues.length; b++) totalBaseline += baselineValues[b];
-
-    // Update UI Elements
-    var currEl = document.getElementById('currPeriodVal');
-    var prevEl = document.getElementById('prevPeriodVal');
-    if (currEl) currEl.innerHTML = formatCurrencyResponsive(totalCurr);
-    if (prevEl) prevEl.innerHTML = formatCurrencyResponsive(totalBaseline);
-
-    if (rawLabels.length > 0) {
-      var currSub = document.getElementById('currPeriodSub');
-      var prevSub = document.getElementById('prevPeriodSub');
-      if (currSub) currSub.innerText = rawLabels[rawLabels.length - 1] || 'For Now';
-      if (prevSub) prevSub.innerText = 'Same Period 2025';
-    }
-
-    // Draw chart in next animation frame to let DOM/CSS layout settle
-    requestAnimationFrame(function() {
-      drawChart(formattedChartLabels, rawLabels, currentValues, baselineValues);
-    });
+  if (currentRange === '6M') {
+    activeData = activeData.slice(-6);
+  } else if (currentRange === 'Year') {
+    activeData = activeData.slice(-12);
   }
 
+  // 2. Safe mapping for labels and values
+  var rawLabels = [];
+  var currentValues = [];
+
+  for (var i = 0; i < activeData.length; i++) {
+    var d = activeData[i];
+    rawLabels.push(d[0] ? String(d[0]).trim() : '');
+    
+    var val = Number(d[selectedColIdx]);
+    currentValues.push(isNaN(val) ? 0 : Math.abs(val));
+  }
+
+  // 3. Match 2025 baseline values with strict fallback
+  var baselineValues = [];
+  for (var j = 0; j < rawLabels.length; j++) {
+    var label = rawLabels[j];
+    var val2025 = 0;
+
+    if (label && label.indexOf('/') !== -1) {
+      var monthStr = label.split('/')[0].trim();
+      var target2025Label = monthStr + '/25';
+
+      for (var k = 0; k < sheetData.length; k++) {
+        var rowLabel = sheetData[k][0] ? String(sheetData[k][0]).trim() : '';
+        if (rowLabel === target2025Label) {
+          var raw2025Val = Number(sheetData[k][selectedColIdx]);
+          val2025 = isNaN(raw2025Val) ? 0 : Math.abs(raw2025Val);
+          break;
+        }
+      }
+    }
+    baselineValues.push(val2025);
+  }
+
+  // 4. Dynamic display labels (MM by default; MM/YY for January or timeline start)
+  var formattedChartLabels = [];
+  for (var l = 0; l < rawLabels.length; l++) {
+    var lbl = rawLabels[l];
+    if (lbl.indexOf('/') !== -1) {
+      var parts = lbl.split('/');
+      var monthNum = parseInt(parts[0].trim(), 10);
+      
+      if (monthNum === 1 || l === 0) {
+        formattedChartLabels.push(lbl);
+      } else {
+        var mStr = String(monthNum);
+        formattedChartLabels.push(mStr.length === 1 ? '0' + mStr : mStr);
+      }
+    } else {
+      formattedChartLabels.push(lbl);
+    }
+  }
+
+  // 5. Calculate totals safely
+  var totalCurr = 0;
+  for (var c = 0; c < currentValues.length; c++) totalCurr += currentValues[c];
+
+  var totalBaseline = 0;
+  for (var b = 0; b < baselineValues.length; b++) totalBaseline += baselineValues[b];
+
+  // Update UI Elements
+  var currEl = document.getElementById('currPeriodVal');
+  var prevEl = document.getElementById('prevPeriodVal');
+  if (currEl) currEl.innerHTML = formatCurrencyResponsive(totalCurr);
+  if (prevEl) prevEl.innerHTML = formatCurrencyResponsive(totalBaseline);
+
+  if (rawLabels.length > 0) {
+    var currSub = document.getElementById('currPeriodSub');
+    var prevSub = document.getElementById('prevPeriodSub');
+    if (currSub) currSub.innerText = rawLabels[rawLabels.length - 1] || 'For Now';
+    if (prevSub) prevSub.innerText = 'Same Period 2025';
+  }
+
+  // Trigger drawChart safely on next frame
+  requestAnimationFrame(function() {
+    drawChart(formattedChartLabels, rawLabels, currentValues, baselineValues);
+  });
+}
+
   function drawChart(chartLabels, rawLabels, currentValues, baselineValues) {
-    const ctx = document.getElementById('expenseChart').getContext('2d');
+  // 1. Target the canvas element directly for layout checks
+  const canvas = document.getElementById('expenseChart');
+  if (!canvas) return;
 
-    if (myChart) {
-      myChart.destroy();
-    }
+  // 2. Safely grab parent container and enforce explicit height for Notion/iPad
+  const parent = canvas.parentElement;
+  if (parent && (canvas.clientHeight === 0 || parent.clientHeight === 0)) {
+    parent.style.height = '250px';
+    parent.style.position = 'relative';
+  }
 
-    if (ctx.clientHeight === 0) {
-      ctx.parentElement.style.height = '250px';
-    }
+  const ctx = canvas.getContext('2d');
 
-    // Pink Theme Gradients
-    const pinkGradient = ctx.createLinearGradient(0, 0, 300, 0);
+  // 3. Clean up previous instance safely
+  if (window.myChart && typeof window.myChart.destroy === 'function') {
+    window.myChart.destroy();
+  }
+
+  // 4. Safe Gradients (Fallback colors if canvas dimensions aren't calculated yet)
+  let pinkGradient = '#ff528e';
+  let fillGradient = 'rgba(255, 82, 142, 0.15)';
+  
+  try {
+    pinkGradient = ctx.createLinearGradient(0, 0, 300, 0);
     pinkGradient.addColorStop(0, '#ff528e');
     pinkGradient.addColorStop(1, '#e0407b');
 
-    const fillGradient = ctx.createLinearGradient(0, 0, 0, 220);
+    fillGradient = ctx.createLinearGradient(0, 0, 0, 220);
     fillGradient.addColorStop(0, 'rgba(255, 82, 142, 0.3)');
     fillGradient.addColorStop(1, 'rgba(24, 25, 40, 0.0)');
+  } catch (e) {
+    console.warn('Canvas gradient creation deferred:', e);
+  }
 
-    // Vertical Line Plugin on Hover
-    const verticalHoverLinePlugin = {
-      id: 'verticalHoverLine',
-      afterDraw: (chart) => {
-        if (chart.tooltip?._active?.length) {
-          const activePoint = chart.tooltip._active[0];
-          const x = activePoint.element.x;
-          const yAxis = chart.scales.y;
-          const ctx = chart.ctx;
+  // Vertical Hover Line Plugin
+  const verticalHoverLinePlugin = {
+    id: 'verticalHoverLine',
+    afterDraw: (chart) => {
+      if (chart.tooltip?._active?.length) {
+        const activePoint = chart.tooltip._active[0];
+        const x = activePoint.element.x;
+        const yAxis = chart.scales.y;
+        const cCtx = chart.ctx;
 
-          ctx.save();
-          ctx.beginPath();
-          ctx.moveTo(x, yAxis.top);
-          ctx.lineTo(x, yAxis.bottom);
-          ctx.lineWidth = 1;
-          ctx.setLineDash([4, 4]);
-          ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
-          ctx.stroke();
-          ctx.restore();
-        }
+        cCtx.save();
+        cCtx.beginPath();
+        cCtx.moveTo(x, yAxis.top);
+        cCtx.lineTo(x, yAxis.bottom);
+        cCtx.lineWidth = 1;
+        cCtx.setLineDash([4, 4]);
+        cCtx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+        cCtx.stroke();
+        cCtx.restore();
       }
-    };
+    }
+  };
 
-    // Index of latest month to show number on point
-    const lastIndex = currentValues.length - 1;
+  const lastIndex = currentValues.length - 1;
 
-    myChart = new Chart(ctx, {
-      type: 'line',
-      plugins: [verticalHoverLinePlugin, ChartDataLabels],
-      data: {
-        labels: chartLabels,
-        datasets: [
-          {
-            label: 'Current',
-            data: currentValues,
-            borderColor: pinkGradient,
-            borderWidth: 3.5,
-            backgroundColor: fillGradient,
-            fill: true,
-            tension: 0.35,
-            pointRadius: (ctx) => (ctx.dataIndex === lastIndex ? 5 : 2),
-            pointBackgroundColor: (ctx) => (ctx.dataIndex === lastIndex ? '#ff528e' : 'transparent'),
-            pointBorderColor: (ctx) => (ctx.dataIndex === lastIndex ? '#ffffff' : 'transparent'),
-            pointBorderWidth: 2,
-            pointHoverRadius: 7,
-            pointHoverBackgroundColor: '#ff528e',
-            pointHoverBorderColor: '#ffffff',
-            pointHoverBorderWidth: 3,
-            order: 1,
-            // Point DataLabel configuration
-            datalabels: {
-              display: (ctx) => ctx.dataIndex === lastIndex, // Only show on current/last month
-              align: 'top',
-              anchor: 'end',
-              offset: 6,
-              backgroundColor: '#ff528e',
-              borderRadius: 6,
-              color: '#ffffff',
-              font: { family: 'DM Sans', size: 11, weight: 'bold' },
-              padding: { top: 3, bottom: 3, left: 6, right: 6 },
-              formatter: (val) => {
-                if (val >= 1000000) return (val / 1000000).toFixed(1) + 'M đ';
-                if (val >= 1000) return (val / 1000).toFixed(0) + 'K đ';
-                return val.toLocaleString('vi-VN') + ' đ';
-              }
+  // 5. Safe DataLabels plugin inclusion
+  const activePlugins = [verticalHoverLinePlugin];
+  if (typeof ChartDataLabels !== 'undefined') {
+    activePlugins.push(ChartDataLabels);
+  }
+
+  window.myChart = new Chart(ctx, {
+    type: 'line',
+    plugins: activePlugins,
+    data: {
+      labels: chartLabels,
+      datasets: [
+        {
+          label: 'Current',
+          data: currentValues,
+          borderColor: pinkGradient,
+          borderWidth: 3.5,
+          backgroundColor: fillGradient,
+          fill: true,
+          tension: 0.35,
+          pointRadius: (ctx) => (ctx.dataIndex === lastIndex ? 5 : 2),
+          pointBackgroundColor: (ctx) => (ctx.dataIndex === lastIndex ? '#ff528e' : 'transparent'),
+          pointBorderColor: (ctx) => (ctx.dataIndex === lastIndex ? '#ffffff' : 'transparent'),
+          pointBorderWidth: 2,
+          pointHoverRadius: 7,
+          pointHoverBackgroundColor: '#ff528e',
+          pointHoverBorderColor: '#ffffff',
+          pointHoverBorderWidth: 3,
+          order: 1,
+          datalabels: {
+            display: (ctx) => ctx.dataIndex === lastIndex,
+            align: 'top',
+            anchor: 'end',
+            offset: 6,
+            backgroundColor: '#ff528e',
+            borderRadius: 6,
+            color: '#ffffff',
+            font: { family: 'DM Sans', size: 11, weight: 'bold' },
+            padding: { top: 3, bottom: 3, left: 6, right: 6 },
+            formatter: (val) => {
+              if (val >= 1000000) return (val / 1000000).toFixed(1) + 'M đ';
+              if (val >= 1000) return (val / 1000).toFixed(0) + 'K đ';
+              return val.toLocaleString('vi-VN') + ' đ';
             }
-          },
-          {
-            label: 'Baseline',
-            data: baselineValues,
-            borderColor: 'rgba(142, 144, 166, 0.55)',
-            borderWidth: 2,
-            fill: false,
-            tension: 0.35,
-            pointRadius: 0,
-            pointHoverRadius: 5,
-            pointHoverBackgroundColor: '#8e90a6',
-            pointHoverBorderColor: '#ffffff',
-            pointHoverBorderWidth: 2,
-            order: 2,
-            datalabels: { display: false } // Hide datalabels for baseline
           }
-        ]
-      },
-      options: {
-  responsive: true,
-  maintainAspectRatio: false,
-  interaction: {
-    mode: 'index',
-    intersect: false
-  },
-  plugins: {
-    legend: { display: false },
-    tooltip: {
-      enabled: true,
-      backgroundColor: '#ffffff',
-      titleColor: '#181928',
-      bodyColor: '#181928',
-      titleAlign: 'center',
-      titleFont: { size: 11, family: 'DM Sans', weight: 'normal' },
-      bodyFont: { size: 13, family: 'DM Sans', weight: 'bold' },
-      displayColors: true,
-      boxWidth: 8,
-      boxHeight: 8,
-      usePointStyle: true,
-      cornerRadius: 12,
-      padding: 10,
-      caretSize: 6,
-      callbacks: {
-        title: function(items) {
-          const idx = items[0].dataIndex;
-          return '' + rawLabels[idx];
         },
-        label: function(context) {
-          let labelName = context.dataset.label || '';
-          let val = context.raw || 0;
-          
-          // Check for iPhone / Mobile viewport
-          const isMobile = window.innerWidth <= 480;
-          let formattedVal = '';
+        {
+          label: 'Baseline',
+          data: baselineValues,
+          borderColor: 'rgba(142, 144, 166, 0.55)',
+          borderWidth: 2,
+          fill: false,
+          tension: 0.35,
+          pointRadius: 0,
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: '#8e90a6',
+          pointHoverBorderColor: '#ffffff',
+          pointHoverBorderWidth: 2,
+          order: 2,
+          datalabels: { display: false }
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          enabled: true,
+          backgroundColor: '#ffffff',
+          titleColor: '#181928',
+          bodyColor: '#181928',
+          titleAlign: 'center',
+          titleFont: { size: 11, family: 'DM Sans', weight: 'normal' },
+          bodyFont: { size: 13, family: 'DM Sans', weight: 'bold' },
+          displayColors: true,
+          boxWidth: 8,
+          boxHeight: 8,
+          usePointStyle: true,
+          cornerRadius: 12,
+          padding: 10,
+          caretSize: 6,
+          callbacks: {
+            title: function(items) {
+              const idx = items[0].dataIndex;
+              return '' + rawLabels[idx];
+            },
+            label: function(context) {
+              let labelName = context.dataset.label || '';
+              let val = context.raw || 0;
+              const isMobile = window.innerWidth <= 480;
+              let formattedVal = '';
 
-          if (isMobile) {
-            const absVal = Math.abs(val);
-            const sign = val < 0 ? '-' : '';
-            
-            if (absVal >= 1e9) {
-              formattedVal = sign + (absVal / 1e9).toFixed(1) + ' tỷ đ';
-            } else if (absVal >= 1e6) {
-              // 12.500.000 -> 12.5 tr đ
-              const formatted = (absVal / 1e6).toFixed(1).replace('.0', '');
-              formattedVal = sign + formatted + 'M đ';
-            } else if (absVal >= 1e3) {
-              // 500.000 -> 500k đ
-              const formatted = (absVal / 1e3).toFixed(0);
-              formattedVal = sign + formatted + 'K đ';
-            } else {
-              formattedVal = sign + Math.round(absVal) + ' đ';
+              if (isMobile) {
+                const absVal = Math.abs(val);
+                const sign = val < 0 ? '-' : '';
+                if (absVal >= 1e9) {
+                  formattedVal = sign + (absVal / 1e9).toFixed(1) + ' tỷ đ';
+                } else if (absVal >= 1e6) {
+                  const formatted = (absVal / 1e6).toFixed(1).replace('.0', '');
+                  formattedVal = sign + formatted + 'M đ';
+                } else if (absVal >= 1e3) {
+                  const formatted = (absVal / 1e3).toFixed(0);
+                  formattedVal = sign + formatted + 'K đ';
+                } else {
+                  formattedVal = sign + Math.round(absVal) + ' đ';
+                }
+              } else {
+                formattedVal = Math.round(val).toLocaleString('vi-VN') + ' đ';
+              }
+
+              return `${labelName}: ${formattedVal}`;
             }
-          } else {
-            // Full precision for Desktop / Tablet
-            formattedVal = Math.round(val).toLocaleString('vi-VN') + ' đ';
           }
-
-          return `${labelName}: ${formattedVal}`;
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: {
+            color: '#8e90a6',
+            font: { size: 11, family: 'DM Sans' }
+          }
+        },
+        y: {
+          display: false,
+          grace: '15%'
         }
       }
     }
-  },
-  scales: {
-    x: {
-      grid: { display: false },
-      ticks: {
-        color: '#8e90a6',
-        font: { size: 11, family: 'DM Sans' }
-      }
-    },
-    y: {
-      display: false,
-      grace: '15%' // Extra top spacing for point label badge
-    }
-  }
+  });
 }
-    });
-  }
 
   function updateHeaderDisplay(currVal, prevVal, currSub, prevSub) {
     document.getElementById('currPeriodVal').innerHTML = formatCurrencyResponsive(currVal);
