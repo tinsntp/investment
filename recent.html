@@ -149,13 +149,13 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 
 #slide-1{position:relative}
 .tab-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
-#add-cash{position:absolute;top:10px;right:10px;z-index:10;width:6vw;height:6vw;font-family:monospace!important;font-size:5vw;font-weight:500;border-radius:50%;background-color:#14b8a6;color:#ffffff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
+#add-cash{position:absolute;top:10px;right:10px;z-index:10;width:8vw;height:8vw;font-family:monospace!important;font-size:5vw;font-weight:500;border-radius:50%;background-color:#14b8a6;color:#ffffff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
 #add-cash.loading{pointer-events:none;display:flex;align-items:center;justify-content:center}
 .cash-modal-overlay{display:none;position:fixed;inset:0; z-index:600;align-items:flex-start;justify-content:center;padding-top:20vh;overflow-y:auto}
 .cash-modal-overlay.open{display:flex!important}.btn-spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,0.3);border-top-color:#ffffff;border-radius:50%;animation:spinCircle 0.8s linear infinite;display:inline-block}
 #add-cash.success-confirm{background-color:#10b981 !important;color:#ffffff !important;font-size:15px;font-weight:500;display:flex;align-items:center;justify-content:center;transition:background-color 0.3s ease}
 @keyframes spinCircle{to{transform:rotate(360deg)}}
-@media screen and (min-width:401px){#add-cash.success-confirm{font-size:3.4vw;} .btn-spinner{width:20px;height:20px;}}
+@media screen and (min-width:401px){#add-cash{width:6vw;height:6vw;} #add-cash.success-confirm{font-size:3.4vw;} .btn-spinner{width:20px;height:20px;}}
 
 /* ══ WALLET SLIDE ══ */
 .wallet-widget{width:100%;padding:0px;overflow:hidden;display:flex;flex-direction:column;gap:16px}
@@ -327,7 +327,7 @@ to{transform:rotate(360deg)}
 .sub-list-title{display:flex;align-items:center;justify-content:left;gap:2vw;width:100%;font-size:14.5px;font-weight:300;color:rgba(255,255,255,0.75);margin-bottom:12px;margin-left:2vw;}
 .add-inline-btn{width:6vw;height:6vw;padding-bottom:px;max-width:6vw;max-height:6vw;font-family:monospace!important;font-size:5vw;font-weight:500;border-radius:50%;background:#14b8a6;border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:opacity 0.2s}
 .add-inline-btn:active{opacity:0.8}
-
+@media (max-width:400px){.add-inline-btn{width:8vw;height:8vw;}}
 #sub-list{display:flex;flex-direction:column}
 #sub-loading,#sub-empty{font-size:13px;color:rgba(255,255,255,0.4);padding:24px 0;text-align:center}
 .subs-row{display:flex;align-items:center;border-bottom:0px solid rgba(255,255,255,0.08);cursor:pointer;transition:background 0.2s ease}
@@ -372,7 +372,7 @@ to{transform:rotate(360deg)}
 .add-field input[type="text"],.add-field input[type="number"],.add-field input[type="date"]{height:44px !important;font-size:15px !important;padding:0 12px !important;border-radius:8px !important}
 }
 .sub-swipe-container{border-bottom: none;position:relative;width:100%;overflow:hidden;margin-bottom:0;border-radius:0px;background:#191919;}
-.subs-row{position:relative;z-index:2;width:100%;padding:2vw 0 2vw 0!important;margin-bottom:0 !important;will-change:transform;cursor:grab}
+.subs-row{position:relative;z-index:2;width:100%;padding:1.5vw 0 1.5vw 0!important;margin-bottom:0 !important;will-change:transform;cursor:grab}
 .subs-row:active{cursor:grabbing}
 @media (max-width:400px){.subs-row{padding:3vw 0 3vw 0!important;}}
 .sub-delete-action{cursor: pointer;position:absolute;margin-right:2px;margin-bottom:0px;top:0;right:0;bottom:0;width:70px;z-index:3;background-color:#ef4444;color:#ffffff;display:flex;align-items:center;justify-content:center;border-top-right-radius:12px;border-bottom-right-radius:12px;}
@@ -1490,9 +1490,9 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
     //RECENT
     var txIcoSz=isMobile?"12vw":"9vw";
     document.querySelectorAll(".td-detail").forEach(function(el){el.style.fontSize=isMobile?"4.2vw":"2.6vw";});
-    document.querySelectorAll(".ttl").forEach(function(el){el.style.fontSize=isMobile?"4.3vw":"2.8vw";});
-    document.querySelectorAll(".dtl").forEach(function(el){el.style.fontSize=isMobile?"3.9vw":"2.5vw";});
-    document.querySelectorAll(".amt").forEach(function(el){el.style.fontSize=isMobile?"4.7vw":"2.9vw";});
+    document.querySelectorAll(".ttl").forEach(function(el){el.style.fontSize=isMobile?"4.3vw":"2.7vw";});
+    document.querySelectorAll(".dtl").forEach(function(el){el.style.fontSize=isMobile?"3.9vw":"2.4vw";});
+    document.querySelectorAll(".amt").forEach(function(el){el.style.fontSize=isMobile?"4.7vw":"2.8vw";});
     document.querySelectorAll(".dte").forEach(function(el){el.style.fontSize=isMobile?"3.9vw":"2.4vw";});
     document.querySelectorAll(".tx-group-hdr").forEach(function(el){el.style.fontSize=isMobile?"4vw":"2.3vw";});
     document.querySelectorAll(".ico").forEach(function(el){el.style.width=txIcoSz;el.style.height=txIcoSz;});
