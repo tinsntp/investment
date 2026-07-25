@@ -344,62 +344,12 @@ to{transform:rotate(360deg)}
 .sub-price-unit{font-size:11px;font-weight:500;color:rgba(255,255,255,0.4);margin-left:2px}
 @media (min-width:401px){.sub-badge::after{content:" subscription"}}
 
-.add-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:600;align-items:flex-start;justify-content:center;padding-top:26vh;overflow-y:auto}
+.add-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:600;align-items:flex-start;justify-content:center;padding-top:200px;overflow-y:auto}
 .add-modal-overlay.open{display:flex!important;}
-@media (min-width:401px){.add-modal{border-radius:5vw 5vw 0 0!important;}.add-modal-overlay{align-items:flex-end;}}
-.add-3modal{background:#232323;width:90%;max-width:480px;border-radius:5vw;padding:5vw 5vw 8vw;max-height:85vh;overflow-y:auto}
 .add-modal h3{font-size:3.4vw;margin-bottom:4vw;text-align:center;}
-.add-modal,.expense-edit-modal {
-  position: relative;
-  background: #232323; /* Keeps your dark theme */
-  color: #ffffff;      /* White text for dark mode */
-  width: 90%;
-  max-width: 440px;
-  padding: 30px 24px 45px;
-  max-height: 85vh;
-  overflow-y: auto;
-  border-radius: 24px;
-  
-  /* Ticket shape cutout: side notches + scalloped bottom */
-  -webkit-mask-image: 
-    radial-gradient(circle at left 35%, transparent 12px, #000 13px),
-    radial-gradient(circle at right 35%, transparent 12px, #000 13px),
-    radial-gradient(circle 8px at 12px bottom, transparent 7px, #000 8px);
-  -webkit-mask-composite: source-in, source-in, destination-over;
-  mask-composite: intersect;
-  mask-image: 
-    radial-gradient(circle at left 35%, transparent 12px, #000 13px),
-    radial-gradient(circle at right 35%, transparent 12px, #000 13px),
-    radial-gradient(circle 8px at 12px bottom, transparent 7px, #000 8px);
-  -webkit-mask-size: 100% 100%, 100% 100%, 24px 100%;
-  mask-size: 100% 100%, 100% 100%, 24px 100%;
-  -webkit-mask-repeat: no-repeat, no-repeat, repeat-x;
-  mask-repeat: no-repeat, no-repeat, repeat-x;
-  
-  /* Subtle drop shadow around the ticket cutouts */
-  filter: drop-shadow(0px 10px 20px rgba(0, 0, 0, 0.6));
-}
-.circular-img-container {
-  width: 8vw;
-  height: 8vw;
-  border-radius: 0%;
-  overflow: hidden; /* Clips the image inside the circle */
-  
-  /* Centers the div itself inside parent container */
-  margin: 0 auto; margin-bottom:10px;
-  
-  /* Centers image inside the div */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.circular-img-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Ensures image fills circle without distortion */
-  display: block;
-}
+.add-modal,.expense-edit-modal{position:relative;background:#232323;color:#fff;width:90%;max-width:440px;padding:30px 24px 45px;max-height:85vh;overflow-y:auto;border-radius:24px;-webkit-mask-image:radial-gradient(circle at left 35%,transparent 12px,#000 13px),radial-gradient(circle at right 35%,transparent 12px,#000 13px),radial-gradient(circle 8px at 12px bottom,transparent 7px,#000 8px);-webkit-mask-composite:source-in,source-in,destination-over;mask-composite:intersect;mask-image:radial-gradient(circle at left 35%, transparent 12px, #000 13px),
+    radial-gradient(circle at right 35%, transparid="expense-edit-modal"ent 12px, #000 13px),
+    radial-gradient(circle 8px at 12px bottom, transparent 7px, #000 8px);-webkit-mask-size:100% 100%,100% 100%,24px 100%;mask-size:100% 100%,100% 100%,24px 100%;-webkit-mask-repeat:no-repeat,no-repeat,repeat-x;mask-repeat:no-repeat,no-repeat,repeat-x;filter:drop-shadow(0 10px 20px rgba(0,0,0,.6))}
 .add-field{margin-bottom:3.5vw}
 .add-field label{display:block;font-size:2.6vw!important;font-weight:300!important;color:rgba(255,255,255,0.5);margin-bottom:1.2vw}
 .add-field input[type="text"]{width: 100% !important;height: 11vw;padding:2.5vw 2.5vw;border-radius:2.5vw;border:0px solid rgba(255,255,255,0.15)!important;background:rgba(255,255,255,0.06);color:#fff;font-size:2.8vw;font-weight:300!important;font-family:"Lexend";}
@@ -1019,8 +969,10 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 </div>
 <!-- CASH TRANSACTION MODAL POPUP -->
 <div id="cash-modal-overlay" class="cash-modal-overlay">
-  <div class="add-modal" style="border-radius:5vw!important;">
-    <div class="circular-img-container"><img src="https://github.com/tinsntp/investment/blob/main/sub/marketbag.png?raw=true"/></div>
+  <div class="add-modal">
+    <div style="display: flex; align-items: center; justify-content: center;">
+      <img class="ico" style="width: 10vw; height: 10vw; max-width: 36px; max-height: 36px; object-fit: contain; flex-shrink: 0; border-radius: 50%; display: block;" src="https://github.com/tinsntp/investment/blob/main/sub/marketbag.png?raw=true" alt="Category Icon" onerror="this.outerHTML='<div class=\'ico-fb\' style=\'width: 9vw; height: 9vw; max-width: 36px; max-height: 36px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 13px; font-weight: 600; text-transform: uppercase;\'>?</div>'"/>
+    </div>
     <h3>Add Cash Transaction</h3>
     <div class="add-field">
       <input type="text" id="cash-modal-input" autocomplete="off">
@@ -1735,17 +1687,28 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
     var modalOverlay = document.createElement("div");
     modalOverlay.id = modalId;
     
-    Object.assign(modalOverlay.style,{position:"fixed",top:"0",left:"0",width:"100%",height:"100%",backgroundColor:"rgba(0, 0, 0, 0.6)",backdropFilter:"blur(4px)",webkitBackdropFilter:"blur(4px)",zIndex:"999999",display:"flex",alignItems:"center",justifyContent:"center",opacity:"0",transition:"opacity 0.2s ease"});
-    var shortName = getDisplayName(targetItem.name, true);
+    Object.assign(modalOverlay.style,{position:"fixed",top:"0",left:"0",width:"100%",height:"100%",backgroundColor:"rgba(0, 0, 0, 0.6)",backdropFilter:"blur(4px)",webkitBackdropFilter:"blur(4px)",zIndex:"999999",display:"flex",alignItems:"flex-start",justifyContent:"center",paddingTop:"200px",justifyContent:"center",opacity:"0",transition:"opacity 0.2s ease"});
+    var iconStr = (targetItem.iconUrl || "").trim();
+    var iconHtml = "";
+    var fallbackChar = targetItem.name ? targetItem.name.charAt(0) : "?";
+    var fallbackDivString = `<div class=\\'ico-fb\\' style=\\'width: 9vw; height: 9vw; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 13px; font-weight: 600; text-transform: uppercase;\\'>${fallbackChar}</div>`;
+
+    if (iconStr.indexOf("http") === 0) {
+      iconHtml = `<img src="${iconStr}" class="ico" style="width: 9vw; height: 9vw; object-fit: contain; flex-shrink: 0; border-radius: 50%;" onerror="this.outerHTML='${fallbackDivString}'"/>`;
+      } else {
+        iconHtml = `<div class="ico-fb" style="width: 9vw; height: 9vw; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 13px; font-weight: 600; text-transform: uppercase;">${iconStr || fallbackChar}</div>`;
+      }
+
     modalOverlay.innerHTML = `
-      <div style="background: #1e1e1e; border: 1px solid rgba(255,255,255,0.1); width: 85%; max-width: 320px; border-radius: 16px; padding: 24px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
-        <h3 style="color: #fff; margin: 0 0 12px 0; font-size: 16px!important; font-weight: 600;">Delete Subscription?</h3>
-        <p style="color: rgba(255,255,255,0.6); margin: 0 0 24px 0; font-size: 14px; line-height: 1.4;">Are you sure you want to permanently remove <strong style="color: #ffffff; font-weight: 500;">${shortName}</strong>?</p>
+      <div class="expense-edit-modal"><div style="width: 100%;">
+        <div style="display: flex; align-items: center; justify-content: center;">${iconHtml}</div>
+        <h3 style="color: #fff; margin: 0 0 12px 0; text-align: center; font-size: 16px!important; font-weight: 600;">Delete Subscription?</h3>
+        <p style="color: rgba(255,255,255,0.6); text-align: center;margin: 0 0 24px 0; font-size: 14px; line-height: 1.4;">Are you sure you want to permanently remove <strong style="color: #ffffff; font-weight: 500;">${targetItem.name}</strong>?</p>
         <div style="display: flex; gap: 12px;">
           <button id="custom-del-cancel" style="flex: 1; background: rgba(255,255,255,0.08); border: none; color: #fff; padding: 12px; border-radius: 8px; font-size: 14px!important;font-weight: 500; cursor: pointer;">Cancel</button>
           <button id="custom-del-confirm" style="flex: 1; background: #ff4d4d; border: none; color: #fff; padding: 12px; border-radius: 8px; font-size: 14px!important;font-weight: 600; cursor: pointer;">Delete</button>
         </div>
-      </div>
+      </div></div>
     `;
 
     document.body.insertAdjacentElement('beforeend', modalOverlay);
@@ -1875,7 +1838,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 
       var modalOverlay = document.createElement("div");
       modalOverlay.id = modalId;
-      Object.assign(modalOverlay.style,{position:"fixed",top:"0",left:"0",width:"100%",height:"100%",backgroundColor:"rgba(0, 0, 0, 0.75)",backdropFilter:"blur(4px)",webkitBackdropFilter:"blur(4px)",zIndex:"2147483647",display:"flex",alignItems:"center",justifyContent:"center",opacity:"1"});
+      Object.assign(modalOverlay.style,{position:"fixed",top:"0",left:"0",width:"100%",height:"100%",backgroundColor:"rgba(0, 0, 0, 0.75)",backdropFilter:"blur(4px)",webkitBackdropFilter:"blur(4px)",zIndex:"2147483647",display:"flex",alignItems:"flex-start",justifyContent:"center",paddingTop:"200px",justifyContent:"center",opacity:"1"});
       var displayName = targetItem.title || targetItem.detail;
       var displayIcon = targetItem.icon;
       var displayAmount = typeof fmtMoney === "function" ? fmtMoney(targetItem.amount) : targetItem.amount;
@@ -1923,7 +1886,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
     var iconHtml = '';var fallbackChar = targetItem.title ? targetItem.title.charAt(0) : "?";
     var fallbackDivString = `<div class=\\'ico-fb\\' style=\\'width: 9vw; height: 9vw; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 13px; font-weight: 600; text-transform: uppercase;\\'>${fallbackChar}</div>`;
     var iconStr = targetItem.icon.trim();
-    if (iconStr.indexOf("http") === 0) {iconHtml = `<img src="${iconStr}" class="ico" style="width: 9vw; height: 9vw; object-fit: contain; flex-shrink: 0; border-radius: 50%;" onerror="this.outerHTML='${fallbackDivString}'"/>`;} 
+    if (iconStr.indexOf("http") === 0) {iconHtml = `<img src="${iconStr}" class="ico" style="margin-left:0!important;width: 9vw; height: 9vw; object-fit: contain; flex-shrink: 0; border-radius: 50%;" onerror="this.outerHTML='${fallbackDivString}'"/>`;} 
     var formattedAmount = new Intl.NumberFormat('en-US').format(targetItem.amount || 0);
     modalOverlay.innerHTML = `
       <div class="expense-edit-modal"><div style="width: 100%;">
@@ -2068,6 +2031,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
       var detailVal = elementOrItem.detail || elementOrItem.rawDetail || elementOrItem.MoTa || "";
       var amountVal = elementOrItem.amount || elementOrItem.SoTien || 0;
       var titleVal = elementOrItem.title || elementOrItem.Ten || "History Transaction";
+      var iconVal = elementOrItem.icon || "";
       var idVal = elementOrItem.id || "";
 
       targetItem = {
@@ -2075,6 +2039,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
         date: dateVal,
         detail: detailVal,
         amount: Number(amountVal),
+        icon: iconVal,
         title: titleVal
       };
     }
@@ -2091,15 +2056,23 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
       }
     }
 
-    // 3. EXTRACT FROM ROW CONTAINER
     if (rowContainer && !targetItem) {
-      targetItem = {
-        id: rowContainer.getAttribute("data-id") || "",
-        date: rowContainer.getAttribute("data-date"),
-        detail: rowContainer.getAttribute("data-detail"),
-        amount: Number(rowContainer.getAttribute("data-amount")),
-        title: rowContainer.getAttribute("data-title") || "History Transaction"
-      };
+        var domIcon = rowContainer.getAttribute("data-icon") || "";
+        if (!domIcon) {
+            var imgIconEl = rowContainer.querySelector(".ico");
+            var divIconEl = rowContainer.querySelector(".ico-fb");
+            if (imgIconEl) domIcon = imgIconEl.getAttribute("src");
+            else if (divIconEl) domIcon = divIconEl.innerHTML || divIconEl.textContent;
+        }
+
+        targetItem = {
+            id: rowContainer.getAttribute("data-id") || "",
+            date: rowContainer.getAttribute("data-date"),
+            detail: rowContainer.getAttribute("data-detail") || rowContainer.getAttribute("data-raw-detail"), 
+            amount: Number(rowContainer.getAttribute("data-amount")),
+            title: rowContainer.getAttribute("data-title") || "History Transaction",
+            icon: domIcon
+        };
     }
 
     // 4. Fallback validation
@@ -2118,31 +2091,22 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
     var modalId = "history-delete-modal";
     var existingModal = document.getElementById(modalId);
     if (existingModal) existingModal.remove();
-
     var modalOverlay = document.createElement("div");
     modalOverlay.id = modalId;
-    
-    Object.assign(modalOverlay.style, {
-      position: "fixed",
-      top: "0",
-      left: "0",
-      width: "100%",
-      height: "100%",
-      backgroundColor: "rgba(0, 0, 0, 0.75)",
-      backdropFilter: "blur(4px)",
-      webkitBackdropFilter: "blur(4px)",
-      zIndex: "2147483647",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      opacity: "1"
-    });
-
-    var displayName = targetItem.title || targetItem.detail || "Transaction";
+    Object.assign(modalOverlay.style,{position:"fixed",top:"0",left:"0",width:"100%",height:"100%",backgroundColor:"rgba(0, 0, 0, 0.75)",backdropFilter:"blur(4px)",webkitBackdropFilter:"blur(4px)",zIndex:"2147483647",display:"flex",alignItems:"flex-start",justifyContent:"center",paddingTop:"200px",opacity:"1"});    var displayName = targetItem.title || targetItem.detail || "Transaction";
     var displayAmount = typeof fmtMoney === "function" ? fmtMoney(targetItem.amount) : targetItem.amount;
 
+    var iconHtml = '';
+    var fallbackChar = targetItem.title ? targetItem.title.charAt(0) : "?";
+    var fallbackDivString = `<div class=\\'ico-fb\\' style=\\'width: 9vw; height: 9vw; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 13px; font-weight: 600; text-transform: uppercase;\\'>${fallbackChar}</div>`;
+    var iconStr = (targetItem.icon || "").trim();
+    if (iconStr.indexOf("http") === 0) {
+        iconHtml = `<img src="${iconStr}" class="ico" style="margin-left:0!important;width: 9vw; height: 9vw; object-fit: contain; flex-shrink: 0; border-radius: 50%;" onerror="this.outerHTML='${fallbackDivString}'"/>`;
+    } 
+
     modalOverlay.innerHTML = `
-      <div class="expense-edit-modal"><div style="width: 100%;>
+      <div class="expense-edit-modal"><div style="width: 100%; text-align: center;">
+        <div> ${iconHtml}</div>
         <h3 style="color: #fff; margin: 0 0 12px 0; font-size: 16px!important; font-weight: 600; letter-spacing: -0.2px;">Delete history transaction?</h3>
         <p style="color: rgba(255,255,255,0.6); margin: 0 0 24px 0; font-size: 14px; line-height: 1.5;">
           Are you sure you want to permanently delete <strong style="color: #ffffff; font-weight: 500;">${displayName}</strong> <strong style="color: #ffffff; font-weight: 500;">${displayAmount}</strong>?
@@ -2331,30 +2295,14 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
     var modalOverlay = document.createElement("div");
     modalOverlay.id = modalId;
     
-    Object.assign(modalOverlay.style, {
-        position: "fixed",
-        top: "0",
-        left: "0",
-        width: "100%",
-        height: "100%",
-        backgroundColor: "rgba(0, 0, 0, 0.75)",
-        backdropFilter: "blur(4px)",
-        webkitBackdropFilter: "blur(4px)",
-        zIndex: "2147483647",
-        display: "flex",
-        alignItems: "flex-start",
-        justifyContent: "center",
-        paddingTop: "200px",
-        opacity: "1"
-    });
+    Object.assign(modalOverlay.style,{position:"fixed",top:"0",left:"0",width:"100%",height:"100%",backgroundColor:"rgba(0, 0, 0, 0.75)",backdropFilter:"blur(4px)",webkitBackdropFilter:"blur(4px)",zIndex:"2147483647",display:"flex",alignItems:"flex-start",justifyContent:"center",paddingTop:"200px",opacity:"1"});
 
-    // --- HTML GENERATION FOR ICON ---
     var iconHtml = '';
     var fallbackChar = targetItem.title ? targetItem.title.charAt(0) : "?";
     var fallbackDivString = `<div class=\\'ico-fb\\' style=\\'width: 9vw; height: 9vw; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 13px; font-weight: 600; text-transform: uppercase;\\'>${fallbackChar}</div>`;
     var iconStr = (targetItem.icon || "").trim();
     if (iconStr.indexOf("http") === 0) {
-        iconHtml = `<img src="${iconStr}" class="ico" style="width: 9vw; height: 9vw; object-fit: contain; flex-shrink: 0; border-radius: 50%;" onerror="this.outerHTML='${fallbackDivString}'"/>`;
+        iconHtml = `<img src="${iconStr}" class="ico" style="margin-left:0!important;width: 9vw; height: 9vw; object-fit: contain; flex-shrink: 0; border-radius: 50%;" onerror="this.outerHTML='${fallbackDivString}'"/>`;
     } 
 
     var formattedAmount = new Intl.NumberFormat('en-US').format(targetItem.amount || 0);
