@@ -1356,13 +1356,14 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function parseCSVLine(line) {
-    const values = [];
-    let currentVal = '';
-    let inQuotes = false;
+    var values = [];
+    var currentVal = '';
+    var inQuotes = false;
 
-    for (let i = 0; i < line.length; i++) {
-      const char = line[i];
-      if (char === '"' && line[i + 1] === '"') {
+    for (var i = 0; i < line.length; i++) {
+      var char = line.charAt(i); // safer character indexing for WebKit
+      
+      if (char === '"' && line.charAt(i + 1) === '"') {
         currentVal += '"';
         i++;
       } else if (char === '"') {
@@ -1374,6 +1375,7 @@ document.addEventListener('DOMContentLoaded', function() {
         currentVal += char;
       }
     }
+    
     values.push(currentVal.trim());
     return values;
   }
