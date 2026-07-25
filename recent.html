@@ -1329,19 +1329,29 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   function fetchSheetCSV() {
-    const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1608160084";
+    const CSV_EXPENSE_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1608160084";
 
-    fetch(url)
-      .then(res => {
-        if (!res.ok) throw new Error('Network response error');
-        return res.text();
+    var csvUrl = CSV_EXPENSE_URL + "&t=" + Date.now();
+
+    fetch(csvUrl, { cache: "no-store" })
+      .then(function(response) {
+        if (!response.ok) {
+          throw new Error("HTTP " + response.status);
+        }
+        return response.text();
       })
-      .then(csvText => {
-        parseCSVData(csvText);
+      .then(function(text) {
+        // 2. Parse CSV and render chart
+        parseCSVData(text);
       })
-      .catch(err => {
-        console.error("CSV fetch failed, loading fallback:", err);
-        loadFallbackData();
+      .catch(function(err) {
+        console.error("Widget load error:", err);
+        // Optional: Display error message on screen for debugging
+        var msgEl = document.getElementById("det-msg");
+        if (msgEl) {
+          msgEl.style.display = "block";
+          msgEl.textContent = "Chart Error: " + err.message;
+        }
       });
   }
 
