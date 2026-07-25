@@ -149,7 +149,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 
 #slide-1{position:relative}
 .tab-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
-#add-cash{position:absolute;top:10px;right:10px;z-index:10;width:8vw;height:8vw;padding-bottom:1px;font-family:monospace!important;font-size:6.5vw;font-weight:400;border-radius:50%;background-color:#14b8a6;color:#ffffff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
+#add-cash{position:absolute;top:10px;right:10px;z-index:10;width:6vw;height:6vw;font-family:monospace!important;font-size:5vw;font-weight:500;border-radius:50%;background-color:#14b8a6;color:#ffffff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
 #add-cash.loading{pointer-events:none;display:flex;align-items:center;justify-content:center}
 .cash-modal-overlay{display:none;position:fixed;inset:0; z-index:600;align-items:flex-start;justify-content:center;padding-top:20vh;overflow-y:auto}
 .cash-modal-overlay.open{display:flex!important}.btn-spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,0.3);border-top-color:#ffffff;border-radius:50%;animation:spinCircle 0.8s linear infinite;display:inline-block}
@@ -346,7 +346,7 @@ to{transform:rotate(360deg)}
 
 .add-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:600;align-items:flex-start;justify-content:center;padding-top:200px;overflow-y:auto}
 .add-modal-overlay.open{display:flex!important;}
-.add-modal h3{font-size:3.4vw;margin-bottom:4vw;text-align:center;}
+.add-modal h3{font-size: 16px;margin-bottom:4vw;text-align:center;}
 .add-modal,.expense-edit-modal{position:relative;background:#232323;color:#fff;width:90%;max-width:440px;padding:30px 24px 45px;max-height:85vh;overflow-y:auto;border-radius:24px;-webkit-mask-image:radial-gradient(circle at left 35%,transparent 12px,#000 13px),radial-gradient(circle at right 35%,transparent 12px,#000 13px),radial-gradient(circle 8px at 12px bottom,transparent 7px,#000 8px);-webkit-mask-composite:source-in,source-in,destination-over;mask-composite:intersect;mask-image:radial-gradient(circle at left 35%, transparent 12px, #000 13px),
     radial-gradient(circle at right 35%, transparid="expense-edit-modal"ent 12px, #000 13px),
     radial-gradient(circle 8px at 12px bottom, transparent 7px, #000 8px);-webkit-mask-size:100% 100%,100% 100%,24px 100%;mask-size:100% 100%,100% 100%,24px 100%;-webkit-mask-repeat:no-repeat,no-repeat,repeat-x;mask-repeat:no-repeat,no-repeat,repeat-x;filter:drop-shadow(0 10px 20px rgba(0,0,0,.6))}
@@ -361,8 +361,7 @@ to{transform:rotate(360deg)}
 .add-status{font-size:2.8vw;margin-top:2vw;text-align:center}
 .add-status.error{color:#FF69B4}
 .add-status.success{color:#14b8a6}
-@media (max-width:400px){.add-cancel-btn,.add-submit-btn,.add-field label,.add-field input{font-size:4.1vw!important;font-weight:300!important;}
-.add-modal h3{font-size:4vw}}
+@media (max-width:400px){.add-cancel-btn,.add-submit-btn,.add-field label,.add-field input{font-size:4.1vw!important;font-weight:300!important;}}
 .data-refreshing{opacity:.35!important;filter:blur(1px);pointer-events:none;transition:opacity .3s ease,filter .3s ease}.data-refreshed{animation:flashHighlight .6s ease-out}@keyframes flashHighlight{0%{opacity:.4}to{opacity:1;filter:blur(0)}}@keyframes filterSpinner{0%{transform:rotate(0deg)}to{transform:rotate(360deg)}}.filter-icon-spinner{display:inline-block;animation:filterSpinner .8s linear infinite;color:#3b82f6!important}
 .form-row-2col{display:flex !important;flex-direction:row !important;gap:3vw !important;width:100%;margin-bottom:4vw}
 .form-row-2col .add-field{flex:1 1 0% !important;min-width:0;display:flex;flex-direction:column}
@@ -503,7 +502,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 .app-container{width:100%;margin:0 auto;padding:16px 1vw 32px 1vw}
 .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .title-group h1{font-size:16px;font-weight:800;letter-spacing:-0.02em;background:linear-gradient(135deg,#ffffff 0%,#cbd5e1 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.title-group p{font-size:10px;color:var(--text-muted);font-weight:500}
+.title-group p{font-size:10px;color:var(--text-muted);font-weight:300}
 .live-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:20px;background:rgba(16,185,129,0.1);font-size:11px;font-weight:700;color:var(--accent-teal);text-transform:uppercase}
 .live-dot{width:4px;height:4px;border-radius:50%;background:var(--accent-teal);box-shadow:0 0 6px var(--accent-teal);animation:pulse 2s infinite}
 @keyframes pulse{0%{opacity:0.4;transform:scale(0.9)}50%{opacity:1;transform:scale(1.2)}100%{opacity:0.4;transform:scale(0.9)}}
@@ -511,6 +510,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
     linear-gradient(135deg, rgba(30, 41, 59, 0.1) 0%, rgba(15, 23, 42, 0.3) 100%),
     url('https://i.pinimg.com/control1/1200x/08/20/32/08203244b9d676ab74667acb3e25f78c.jpg');background-size: cover;
   background-position: center 62%;background-repeat: no-repeat;}
+ @media (min-width:401px){.hero-card{padding:22px 14px;background-position: center 61%;}}
 .hero-caption-row{display:flex;align-items:center;justify-content: center;gap:2px;}
 .hero-caption{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-secondary)}
 .hero-main-val{text-align:center;font-size:25px;font-family:"JetBrains Mono";font-weight:500;color:#fff;margin:2px 0 0px 0}
@@ -518,7 +518,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 .hero-stat-box{background:rgba(15, 23, 42, 0.2);border-radius:8px;padding:6px 8px}
 .hero-stat-label{font-size:9px;color:var(--text-muted)}
 .hero-stat-num{font-family:DM Sans;font-size:15px;font-weight:700}
-.chart-card{background:var(--surface-card);border-radius:12px;padding:10px 12px;margin-bottom:12px}
+.chart-card{border-radius:12px;padding:10px 12px;margin-bottom:12px}
 .chart-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-secondary);margin-bottom:8px}
 .stacked-bar-container{height:10px;width:100%;border-radius:5px;overflow:hidden;display:flex;background:rgba(255,255,255,0.05);margin-bottom:8px}
 .stacked-bar-segment{height:100%;transition:width 0.5s ease}
@@ -2746,7 +2746,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
           if (lowerType.indexOf('salary') !== -1 || lowerType.indexOf('social') !== -1) {
             return;
           }
-          if (accountVal && window.innerWidth <= 400 && accountVal.toUpperCase().includes("BANK")) {accountVal = accountVal.slice(-6);}
+          if (accountVal && accountVal.toUpperCase().includes("BANK")) {accountVal = accountVal.slice(-6);}
           var cleanAmt = caNum(amountRaw);
           
           if (dateVal && typeVal) {
