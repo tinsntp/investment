@@ -344,6 +344,78 @@ canvas#myChart {
   border-top: 5px solid var(--text-white, #ffffff);
   transition: transform 0.2s ease;
 }
+.chart-wrapper {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  min-height: 220px;
+  box-sizing: border-box;
+}
+
+.glass-chart-line {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.chart-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Gradient fill under the line */
+.line-area {
+  fill: url(#chartGradient);
+  opacity: 0.25;
+}
+
+/* Main chart line */
+.line-path {
+  fill: none;
+  stroke: #6366f1;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Optional target baseline line (e.g., 2025 comparison) */
+.baseline-path {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.2);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+}
+
+/* Data points */
+.chart-point {
+  fill: #6366f1;
+  stroke: #ffffff;
+  stroke-width: 2;
+  cursor: pointer;
+  transition: r 0.2s ease;
+}
+
+.chart-point:hover {
+  r: 6;
+}
+
+/* X-Axis labels container */
+.x-axis-labels {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0 10px;
+}
+
+.x-label {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 500;
+}
 
 /* REQUIRED: Rotate arrow when open */
 .custom-dropdown.open .dropdown-arrow {
@@ -916,8 +988,8 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 
               <!-- Line Chart -->
               <div class="chart-wrapper">
-                <canvas id="expenseChart" class="glass-chart-bars"></canvas>
-              </div>
+<div id="expenseChart" class="glass-chart-bars"></div>
+</div>
             </div>
           </div>
         </div>
@@ -1828,6 +1900,128 @@ document.addEventListener('keydown', function (e) {
     return sign + '$' + absVal.toFixed(0);
   }
 
+  function renderSVGLineChart(chartLabels, rawLabels, currentValues, baselineValues) {
+  const container = document.getElementById('expenseChart') ? 
+                    document.getElementById('expenseChart').parentElement : 
+                    document.querySelector('.chart-wrapper');
+
+  if (!container) return;
+
+  // Enforce explicit dimensions for iframe sandboxes
+  const width = container.clientWidth || 320;
+  const height = 220;
+  const paddingX = 25;
+  const paddingTop = 35;
+  const paddingBottom = 35;
+
+  // Max value scaling
+  const maxVal = Math.max(...currentValues, ...baselineValues, 1);
+
+  // Helper: Get SVG X/Y coordinates
+  function getX(i, total) {
+    if (total <= 1) return width / 2;
+    return paddingX + (i / (total - 1)) * (width - paddingX * 2);
+  }
+
+  function getY(val) {
+    const usableHeight = height - paddingTop - paddingBottom;
+    return height - paddingBottom - (val / maxVal) * usableHeight;
+  }
+
+  // Smooth Bezier Curve Path Generator
+  function createSmoothPath(values) {
+    if (values.length === 0) return '';
+    let d = `M ${getX(0, values.length)},${getY(values[0])}`;
+    for (let i = 0; i < values.length - 1; i++) {
+      const x0 = getX(i, values.length);
+      const y0 = getY(values[i]);
+      const x1 = getX(i + 1, values.length);
+      const y1 = getY(values[i + 1]);
+      const cpX1 = x0 + (x1 - x0) * 0.4;
+      const cpX2 = x1 - (x1 - x0) * 0.4;
+      d += ` C ${cpX1},${y0} ${cpX2},${y1} ${x1},${y1}`;
+    }
+    return d;
+  }
+
+  // Currency Formatter
+  function formatValue(val) {
+    if (val >= 1000000) return (val / 1000000).toFixed(1) + 'M đ';
+    if (val >= 1000) return (val / 1000).toFixed(0) + 'K đ';
+    return val.toLocaleString('vi-VN') + ' đ';
+  }
+
+  const currentPathD = createSmoothPath(currentValues);
+  const baselinePathD = createSmoothPath(baselineValues);
+
+  const lastIdx = currentValues.length - 1;
+  const lastX = getX(lastIdx, currentValues.length);
+  const lastY = getY(currentValues[lastIdx]);
+  const lastValFormatted = formatValue(currentValues[lastIdx]);
+
+  // Gradient area path closure
+  const firstX = getX(0, currentValues.length);
+  const areaPathD = `${currentPathD} L ${lastX},${height - paddingBottom} L ${firstX},${height - paddingBottom} Z`;
+
+  // Build SVG Markup
+  let svgHTML = `
+    <div style="position: relative; width: 100%; height: ${height}px;">
+      <svg width="100%" height="${height}" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" style="overflow: visible;">
+        <defs>
+          <linearGradient id="pinkStroke" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#ff528e" />
+            <stop offset="100%" stop-color="#e0407b" />
+          </linearGradient>
+
+          <linearGradient id="pinkArea" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="rgba(255, 82, 142, 0.35)" />
+            <stop offset="100%" stop-color="rgba(24, 25, 40, 0.0)" />
+          </linearGradient>
+        </defs>
+
+        <!-- Area Gradient -->
+        <path d="${areaPathD}" fill="url(#pinkArea)" />
+
+        <!-- Baseline Path (2025) -->
+        <path d="${baselinePathD}" fill="none" stroke="rgba(142, 144, 166, 0.55)" stroke-width="2" stroke-dasharray="4 4" />
+
+        <!-- Current Path -->
+        <path d="${currentPathD}" fill="none" stroke="url(#pinkStroke)" stroke-width="3.5" stroke-linecap="round" />
+
+        <!-- Data Point Circles -->
+        ${currentValues.map((val, i) => {
+          const cx = getX(i, currentValues.length);
+          const cy = getY(val);
+          const isLast = i === lastIdx;
+          return `
+            <circle cx="${cx}" cy="${cy}" r="${isLast ? 6 : 3}" 
+                    fill="${isLast ? '#ff528e' : 'rgba(255,255,255,0.4)'}" 
+                    stroke="${isLast ? '#ffffff' : 'transparent'}" 
+                    stroke-width="2">
+              <title>${rawLabels[i]}: ${formatValue(val)}</title>
+            </circle>
+          `;
+        }).join('')}
+
+        <!-- Active Last-Point Data Badge -->
+        <g transform="translate(${Math.min(lastX - 25, width - 65)}, ${Math.max(lastY - 32, 5)})">
+          <rect width="55" height="20" rx="6" fill="#ff528e" />
+          <text x="27.5" y="13" fill="#ffffff" font-family="DM Sans, sans-serif" font-size="10" font-weight="bold" text-anchor="middle">
+            ${lastValFormatted}
+          </text>
+        </g>
+      </svg>
+
+      <!-- X-Axis Labels -->
+      <div style="display: flex; justify-content: space-between; position: absolute; bottom: 5px; left: ${paddingX}px; right: ${paddingX}px;">
+        ${chartLabels.map(lbl => `<span style="font-size: 11px; color: #8e90a6; font-family: 'DM Sans', sans-serif;">${lbl}</span>`).join('')}
+      </div>
+    </div>
+  `;
+
+  container.innerHTML = svgHTML;
+}
+
   function renderWidget() {
   if (!sheetData || sheetData.length === 0) return;
 
@@ -1915,7 +2109,7 @@ document.addEventListener('keydown', function (e) {
 
   // Trigger drawChart safely on next frame
   requestAnimationFrame(function() {
-    drawChart(formattedChartLabels, rawLabels, currentValues, baselineValues);
+    renderSVGLineChart(formattedChartLabels, rawLabels, currentValues, baselineValues);
   });
 }
 
@@ -1931,6 +2125,10 @@ document.addEventListener('keydown', function (e) {
     parent.style.position = 'relative';
   }
 
+  if (!canvas || typeof canvas.getContext !== 'function') {
+    console.warn('Target element is not a valid canvas element.');
+    return;
+  }
   const ctx = canvas.getContext('2d');
 
   // 3. Clean up previous instance safely
