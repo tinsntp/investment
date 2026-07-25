@@ -6,6 +6,7 @@
 <title>Finance</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -139,6 +140,17 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 
 .budget-subtab .material-icons-round {
   vertical-align: middle;
+}
+.chart-container {
+  position: relative;
+  width: 100%;
+  height: 250px; /* Or your preferred fixed height */
+  min-height: 220px;
+}
+
+canvas#myChart {
+  width: 100% !important;
+  height: 100% !important;
 }
 .budget-total,#budget-spent,.marker-value,#budget-remaining{font-family:"JetBrains Mono";}
 .budget-total{font-size:18px;font-weight:500;color:rgba(255,255,255,.85);margin-bottom:16px}
@@ -1154,7 +1166,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
   let sheetData = [];
   let headers = [];
   let iconURLs = []; // Row 1 URLs
-  let myChart = null;
+  var myChart = null;
   let currentRange = 'Year';
   let selectedColIdx = 2;
   
@@ -1678,6 +1690,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (myChart) {
       myChart.destroy();
+    }
+
+    if (ctx.clientHeight === 0) {
+      ctx.parentElement.style.height = '250px';
     }
 
     // Pink Theme Gradients
