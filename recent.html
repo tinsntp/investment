@@ -512,18 +512,18 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
   background-position: center 62%;background-repeat: no-repeat;}
  @media (min-width:401px){.hero-card{padding:22px 14px;background-position: center 61%;}}
 .hero-caption-row{display:flex;align-items:center;justify-content: center;gap:2px;}
-.hero-caption{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-secondary)}
+.hero-caption{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#fff;opacity:0.7;}
 .hero-main-val{text-align:center;font-size:25px;font-family:"JetBrains Mono";font-weight:500;color:#fff;margin:2px 0 0px 0}
 .hero-grid{display:grid;grid-template-columns:0.9fr 1.1fr;gap:8px}
 .hero-stat-box{background:rgba(15, 23, 42, 0.2);border-radius:8px;padding:6px 8px}
-.hero-stat-label{font-size:9px;color:var(--text-muted)}
-.hero-stat-num{font-family:DM Sans;font-size:15px;font-weight:700}
+.hero-stat-label{font-size:9px;color:#fff;opacity:0.7;}
+.hero-stat-num{font-family:DM Sans;font-size:16px;font-weight:700}
 .chart-card{border-radius:12px;padding:10px 12px;margin-bottom:12px}
 .chart-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-secondary);margin-bottom:8px}
 .stacked-bar-container{height:10px;width:100%;border-radius:5px;overflow:hidden;display:flex;background:rgba(255,255,255,0.05);margin-bottom:8px}
 .stacked-bar-segment{height:100%;transition:width 0.5s ease}
 .chart-legend{display:flex;flex-wrap:wrap;gap:8px}
-.legend-item{display:flex;align-items:center;gap:5px;font-size:9.5px;color:var(--text-secondary)}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--text-secondary)}
 .legend-color-dot{width:6px;height:6px;border-radius:50%}
 .section-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .section-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted)}
@@ -538,7 +538,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 .cat-info{flex:1;min-width:0;display:flex;flex-direction:column}
 .title-with-badge{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
 .cat-title{font-size:12.5px;font-weight:700;color:#fff;line-height:1.2;}
-.cat-desc{font-size:11px;color:var(--text-muted);font-weight:500;margin-top:1px;line-height:1.1}
+.cat-desc{font-size:11.5px;color:var(--text-muted);font-weight:500;margin-top:3px;line-height:1.1}
 .risk-badge{display: inline-block;font-size:10px;font-weight:700;text-transform:uppercase;padding:1px 5px;border-radius:8px}
 .risk-badge.badge-core{background:rgba(236,72,153,0.15);color:#f472b6}
 .risk-badge.badge-growth{background:rgba(20,184,166,0.15);color:#2dd4bf}
@@ -556,7 +556,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 .child-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;margin-left:6px}
 .child-info-block{display:flex;flex-direction:column;min-width:0;padding-right:6px}
 .child-title{font-size:12.5px;font-weight:600;color:var(--text-primary)}
-.child-desc{font-size:11px;color:var(--text-muted);margin-top:1px}
+.child-desc{font-size:11.5px;color:var(--text-muted);margin-top:1px}
 .child-metrics{display:flex;flex-direction:column;align-items:flex-end;gap:1px;flex-shrink:0}
 .child-val-main{font-family:DM Sans;font-size:14px;font-weight:600}
 .child-val-sub{font-family:DM Sans;display:flex;align-items:center;gap:3px;font-size:12px}
@@ -971,7 +971,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 <div id="cash-modal-overlay" class="cash-modal-overlay">
   <div class="add-modal">
     <div style="display: flex; align-items: center; justify-content: center;">
-      <img class="ico" style="width: 10vw; height: 10vw; max-width: 36px; max-height: 36px; object-fit: contain; flex-shrink: 0; border-radius: 50%; display: block;" src="https://github.com/tinsntp/investment/blob/main/sub/marketbag.png?raw=true" alt="Category Icon" onerror="this.outerHTML='<div class=\'ico-fb\' style=\'width: 9vw; height: 9vw; max-width: 36px; max-height: 36px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 13px; font-weight: 600; text-transform: uppercase;\'>?</div>'"/>
+      <img class="ico" style="width: 10vw!important; height: 10vw!important; object-fit: contain; flex-shrink: 0; border-radius: 50%; display: block;" src="https://github.com/tinsntp/investment/blob/main/sub/marketbag.png?raw=true" alt="Category Icon" onerror="this.outerHTML='<div class=\'ico-fb\' style=\'width: 10vw; height: 10vw; max-width: 36px; max-height: 36px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 13px; font-weight: 600; text-transform: uppercase;\'>?</div>'"/>
     </div>
     <h3>Add Cash Transaction</h3>
     <div class="add-field">
@@ -1492,7 +1492,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
     document.querySelectorAll(".td-detail").forEach(function(el){el.style.fontSize=isMobile?"4.2vw":"2.6vw";});
     document.querySelectorAll(".ttl").forEach(function(el){el.style.fontSize=isMobile?"4.3vw":"2.9vw";});
     document.querySelectorAll(".dtl").forEach(function(el){el.style.fontSize=isMobile?"3.9vw":"2.6vw";});
-    document.querySelectorAll(".amt").forEach(function(el){el.style.fontSize=isMobile?"4.7vw":"3.3vw";});
+    document.querySelectorAll(".amt").forEach(function(el){el.style.fontSize=isMobile?"4.7vw":"3.1vw";});
     document.querySelectorAll(".dte").forEach(function(el){el.style.fontSize=isMobile?"3.9vw":"2.4vw";});
     document.querySelectorAll(".tx-group-hdr").forEach(function(el){el.style.fontSize=isMobile?"4vw":"2.3vw";});
     document.querySelectorAll(".ico").forEach(function(el){el.style.width=txIcoSz;el.style.height=txIcoSz;});
@@ -2442,7 +2442,8 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
   var FIRE_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1815442176";
   var CHART_COLORS = ['#ec4899','#06b6d4', '#f59e0b','#8b5cf6', '#3b82f6', '#10b981'];
 
-  function parseCSVLine(line){for(var cols=[],cur="",inQ=!1,i=0;i<line.length;i++){var c=line[i];'"'===c?inQ=!inQ:","!==c||inQ?cur+=c:(cols.push(cur),cur="")}return cols.push(cur),cols.map(function(s){return s.replace(/^"|"$/g,"")})}function parseMAmt(raw){if(!raw)return null;var m=raw.trim().match(/([+\-]?[\d,]+(?:\.\d+)?)\s*M/i);return m?parseFloat(m[1].replace(/,/g,"")):null}function parsePct(raw){if(!raw)return null;var m=raw.trim().match(/([+\-]?[\d.]+)\s*%/);return m?parseFloat(m[1]):null}function fmtM(v,forcePlus){if(null==v)return null;var sign=v>0&&forcePlus?"+":v<0?"−":"",a=Math.abs(v);return sign+(a%1==0?a.toLocaleString("en-US"):a.toLocaleString("en-US",{minimumFractionDigits:1,maximumFractionDigits:1}))+"M đ"}function fmtPct(v){return null==v?null:(v>0?"+":v<0?"−":"")+Math.abs(v).toFixed(v%1==0?0:1)+"%"}function parseTitleDesc(rawStr){if(!rawStr)return{title:"",desc:""};var str=rawStr.trim(),parts=[];return{title:(parts=-1!==str.indexOf("+")?str.split("+"):-1!==str.indexOf(":")?str.split(":"):-1!==str.indexOf(" - ")?str.split(" - "):[str])[0].trim(),desc:parts.length>1?parts.slice(1).join(" ").trim():""}}
+  function parseCSVLine(line){for(var cols=[],cur="",inQ=!1,i=0;i<line.length;i++){var c=line[i];'"'===c?inQ=!inQ:","!==c||inQ?cur+=c:(cols.push(cur),cur="")}return cols.push(cur),cols.map(function(s){return s.replace(/^"|"$/g,"")})}function parseMAmt(raw){if(!raw)return null;var m=raw.trim().match(/([+\-]?[\d,]+(?:\.\d+)?)\s*M/i);return m?parseFloat(m[1].replace(/,/g,"")):null}function parsePct(raw){if(!raw)return null;var m=raw.trim().match(/([+\-]?[\d.]+)\s*%/);return m?parseFloat(m[1]):null}
+  function fmtM(v,forcePlus){if(null==v)return null;var sign=v>0&&forcePlus?"+":v<0?"−":"",absoluteVal=Math.abs(v);if(!(window.innerWidth<=400))return sign+(1e6*absoluteVal).toLocaleString("en-US",{maximumFractionDigits:0})+" đ";if(absoluteVal<1&&absoluteVal>0){var kVal=1e3*absoluteVal;return sign+(kVal%1==0?kVal.toLocaleString("en-US"):kVal.toLocaleString("en-US",{minimumFractionDigits:1,maximumFractionDigits:1}))+"K đ"}return sign+(absoluteVal%1==0?absoluteVal.toLocaleString("en-US"):absoluteVal.toLocaleString("en-US",{minimumFractionDigits:1,maximumFractionDigits:1}))+"M đ"}function fmtPct(v){return null==v?null:(v>0?"+":v<0?"−":"")+Math.abs(v).toFixed(v%1==0?0:1)+"%"}function parseTitleDesc(rawStr){if(!rawStr)return{title:"",desc:""};var str=rawStr.trim(),parts=[];return{title:(parts=-1!==str.indexOf("+")?str.split("+"):-1!==str.indexOf(":")?str.split(":"):-1!==str.indexOf(" - ")?str.split(" - "):[str])[0].trim(),desc:parts.length>1?parts.slice(1).join(" ").trim():""}}
   function extractAndCleanBadge(titleText){var badgeType=null,badgeLabel="",clean=titleText;return/core/i.test(clean)?(badgeType="badge-core",badgeLabel="Core",clean=clean.replace(/\s*\(?\s*Core\s*\)?/gi,"")):/growth/i.test(clean)?(badgeType="badge-growth",badgeLabel="Growth",clean=clean.replace(/\s*\(?\s*Growth\s*\)?/gi,"")):/high\s*risk/i.test(clean)?(badgeType="badge-highrisk",badgeLabel="High Risk",clean=clean.replace(/\s*\(?\s*High\s*Risk\s*\)?/gi,"")):/medium\s*risk|med\s*risk/i.test(clean)&&(badgeType="badge-medrisk",badgeLabel="Medium Risk",clean=clean.replace(/\s*\(?\s*(Medium|Med)\s*Risk\s*\)?/gi,"")),{cleanTitle:(clean=clean.replace(/^[\s\-–—:]+|[\s\-–—:]+$/g,"").trim())||titleText,badgeType,badgeLabel}}
   function loadFIRE() {
     fetch(FIRE_CSV_URL + "&t=" + Date.now(), { cache: "no-store" })
