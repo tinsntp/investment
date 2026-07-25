@@ -100,7 +100,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 #budget-fill{position:absolute;left:0;top:0;height:100%;border-radius:999px;background:linear-gradient( 90deg,#4f21ff 0%,#6b4dff 35%,#9a88ff 65%,#ffffff 100% );transition:width .4s ease}
 .budget-bottom{display:flex;justify-content:space-between;align-items:flex-start}
 .marker-label{font-size:10px;color:rgba(255,255,255,.45);line-height:1;margin-bottom:2px;white-space:nowrap}
-#budget-spent,#budget-remaining{font-family:"DM Sans";font-size:12px;font-weight:300;color:rgba(255,255,255,.85)}
+#budget-spent,#budget-remaining{font-size:12px;font-weight:300;color:rgba(255,255,255,.85)}
 .budget-spent-row{display:flex;align-items:center;gap:8px}
 .budget-percent{display:inline-flex;align-items:center;justify-content:center;min-width:10px;height:20px;padding:0 10px;border-radius:999px;background:rgba(255,255,255,.10);color:rgba(255,255,255,.85);font-size:11.5px;line-height:1}
 #last-month-marker{position:absolute;top:-40px;transform:translateX(-50%);text-align:center;pointer-events:none}
@@ -710,7 +710,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
                   onclick="window.toggleFilterDropdown(event)" 
                   style="padding: 6px 12px; background: #202020; border: 0px solid #2d313c; border-radius: 10px; color: #f8f9fa; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: space-between; gap: 6px; cursor: pointer; user-select: none;">
                 <span id="currentFilterLabel" style="display: flex; align-items: center; gap: 6px;">
-                  <span class="material-icons-round" id="filterIcon" style="font-size: 15px; color: #6c757d;">filter_list</span>All</span>
+                  <span class="material-icons-round" id="filterIcon" style="font-size: 15px; color: #fff!important;">filter_list</span>All</span>
                 <span class="material-icons-round" id="filterDropdownArrow" style="font-size: 15px; color: #6c757d; transition: transform 0.2s;">expand_more</span>
               </div>
               <div class="filter-dropdown-options" 
@@ -1902,7 +1902,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
           <div style="text-align: right; width: 42%; flex-shrink: 0;">
             <label style="color: rgba(255,255,255,0.4); font-size: 11px; display: block; margin-bottom: 2px;">Amount</label>
             <input type="text" 
-                   id="expense-edit-amount" 
+                   id="expense-edit-amount" inputmode="numeric"
                    value="${formattedAmount}" 
                    style="width: 100%; background: transparent; border: none; padding: 0; color: #fff; font-size: 16px; font-weight: 700; font-family: 'Lexend', sans-serif; text-align: right; outline: none; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 2px;"
                    onfocus="this.style.borderBottomColor='rgba(255,255,255,0.6)'"
@@ -2327,7 +2327,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
           <div style="text-align: right; width: 40%; flex-shrink: 0;">
             <label style="color: rgba(255,255,255,0.4); font-size: 11px; display: block; margin-bottom: 2px;">Amount</label>
             <input type="text" 
-                   id="history-edit-amount" 
+                   id="history-edit-amount" inputmode="numeric"
                    value="${formattedAmount}" 
                    style="width: 100%; background: transparent; border: none; padding: 0; color: #fff; font-size: 16px; font-weight: 700; font-family: 'Lexend', sans-serif; text-align: right; outline: none; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 2px;"
                    onfocus="this.style.borderBottomColor='rgba(255,255,255,0.6)'"
