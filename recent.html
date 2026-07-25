@@ -126,13 +126,13 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 @media (max-width:400px){.td-date{margin-right:1vw;}.tx-date-badge{width:6vw;height:6vw;font-size:3.4vw;background-color:rgba(255,255,255,0.1);color:rgba(255,255,255,0.7)}}
 
 /*RECENT */
-#tx-list{display:flex;flex-direction:column;margin-top:5px;margin:2vw;}
-.tx-group-hdr{font-size:2.3vw;font-weight:300;color:rgba(255,255,255,0.45);letter-spacing:0.05em;padding:2.5vw 0 1vw;margin-top:0.5vw}
+#tx-list{display:flex;flex-direction:column;margin-top:5px;}
+.tx-group-hdr{font-size:2.3vw;font-weight:300;color:rgba(255,255,255,0.45);letter-spacing:0.05em;padding:2.5vw 0 1vw 2vw;margin-top:0.5vw}
 .tx-group-hdr:first-child{padding-top:0.5vw}
 .row{display:flex;align-items:center;padding:2vw 0;border-bottom:1px solid rgba(255,255,255,0.08);gap:3vw;cursor:pointer;transition:background 0.2s ease,border-radius 0.2s ease,padding 0.2s ease}
 .row:last-child { border-bottom:none; }
 .row:hover { background:rgba(255,255,255,0.04);}
-.ico { width:10vw; height:10vw; border-radius:50%; object-fit:contain; flex-shrink:0; background:rgba(255,255,255,0.08); padding:1.0vw; }
+.ico { width:10vw; height:10vw; border-radius:50%; object-fit:contain; flex-shrink:0; background:rgba(255,255,255,0.08); padding:1.0vw; margin-left:2vw;}
 .ico-fb { width:10vw; height:10vw; border-radius:50%; flex-shrink:0; background:rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; font-size:4.5vw; font-weight:700; color:rgba(255,255,255,0.6); }
 .mid { flex:1; min-width:0; }
 .ttl { font-size:2.4vw; opacity:0.95;font-weight:400; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:0.6vw; }
@@ -149,7 +149,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 
 #slide-1{position:relative}
 .tab-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
-#add-cash{position:absolute;top:10px;right:10px;z-index:10;width:10vw;height:10vw;padding-bottom:1px;max-width:7vw;max-height:7vw;font-family:monospace!important;font-size:5vw;font-weight:500;border-radius:50%;background-color:#14b8a6;color:#ffffff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
+#add-cash{position:absolute;top:10px;right:10px;z-index:10;width:8vw;height:8vw;padding-bottom:1px;font-family:monospace!important;font-size:6.5vw;font-weight:400;border-radius:50%;background-color:#14b8a6;color:#ffffff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
 #add-cash.loading{pointer-events:none;display:flex;align-items:center;justify-content:center}
 .cash-modal-overlay{display:none;position:fixed;inset:0; z-index:600;align-items:flex-start;justify-content:center;padding-top:20vh;overflow-y:auto}
 .cash-modal-overlay.open{display:flex!important}.btn-spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,0.3);border-top-color:#ffffff;border-radius:50%;animation:spinCircle 0.8s linear infinite;display:inline-block}
@@ -310,9 +310,9 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .ca-list-val,.ca-list-pct{font-family:DM Sans; color:rgba(255,255,255,0.85);}
 
 /* ══ SUBSCRIPTION SLIDE ══ */
-.card{max-width:100%;margin: 2vw;}
+.card{max-width:100%;}
 .sub-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
-.sub-title{font-size:13px;font-weight:300;color:rgba(255,255,255,0.55)}
+.sub-title{font-size:13px;font-weight:300;color:rgba(255,255,255,0.55);margin-left:2vw;}
 .sub-refresh-row{display:flex;align-items:center;gap:8px}
 .sub-last-updated{font-size:11px;color:rgba(255,255,255,0.35);white-space:nowrap}
 .sub-refresh-btn{border:none;background:transparent;color:rgba(255,255,255,0.5);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:4px;border-radius:50%;transition:color 0.15s,background 0.15s}
@@ -320,11 +320,11 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .sub-refresh-btn.spinning svg{animation:subSpin 0.6s linear}
 @keyframes subSpin{from{transform:rotate(0deg)}
 to{transform:rotate(360deg)}
-}.sub-stats-row{display:flex;gap:28px;margin-bottom:30px}
+}.sub-stats-row{display:flex;gap:28px;margin-left:2vw;margin-bottom:30px}
 .sub-stat-val{font-size:28px;font-weight:500;color:rgba(255,255,255,0.95);letter-spacing:-0.02em;line-height:1;margin-bottom:4px;font-family:DM Sans;}
 .sub-stat-label{font-size:12.5px;color:rgba(255,255,255,0.45)}
 .sub-stat-label .hl-teal{color:#2dd4bf;font-weight:600}
-.sub-list-title{display:flex;align-items:center;justify-content:left;gap:2vw;width:100%;font-size:14.5px;font-weight:300;color:rgba(255,255,255,0.75);margin-bottom:12px}
+.sub-list-title{display:flex;align-items:center;justify-content:left;gap:2vw;width:100%;font-size:14.5px;font-weight:300;color:rgba(255,255,255,0.75);margin-bottom:12px;margin-left:2vw;}
 .add-inline-btn{width:6vw;height:6vw;padding-bottom:px;max-width:6vw;max-height:6vw;font-family:monospace!important;font-size:5vw;font-weight:500;border-radius:50%;background:#14b8a6;border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:opacity 0.2s}
 .add-inline-btn:active{opacity:0.8}
 
@@ -332,7 +332,7 @@ to{transform:rotate(360deg)}
 #sub-loading,#sub-empty{font-size:13px;color:rgba(255,255,255,0.4);padding:24px 0;text-align:center}
 .subs-row{display:flex;align-items:center;border-bottom:0px solid rgba(255,255,255,0.08);cursor:pointer;transition:background 0.2s ease}
 .subs-row:hover{background:rgba(255,255,255,0.04)!important;}
-.sub-icon{width:42px;height:42px;margin-right:1vw;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff}
+.sub-icon{width:42px;height:42px;margin-right:1vw;margin-left:2vw;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff}
 .sub-mid{flex:1;min-width:0;margin:2vw}
 .sub-name-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;flex-wrap:wrap}
 .sub-name-left{display:flex;align-items:center;gap:8px;min-width:0;flex-wrap:wrap}
@@ -347,8 +347,59 @@ to{transform:rotate(360deg)}
 .add-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:600;align-items:flex-start;justify-content:center;padding-top:26vh;overflow-y:auto}
 .add-modal-overlay.open{display:flex!important;}
 @media (min-width:401px){.add-modal{border-radius:5vw 5vw 0 0!important;}.add-modal-overlay{align-items:flex-end;}}
-.add-modal{background:#232323;width:90%;max-width:480px;border-radius:5vw;padding:5vw 5vw 8vw;max-height:85vh;overflow-y:auto}
-.add-modal h3{font-size:3.4vw;margin-bottom:4vw}
+.add-3modal{background:#232323;width:90%;max-width:480px;border-radius:5vw;padding:5vw 5vw 8vw;max-height:85vh;overflow-y:auto}
+.add-modal h3{font-size:3.4vw;margin-bottom:4vw;text-align:center;}
+.add-modal,.expense-edit-modal {
+  position: relative;
+  background: #232323; /* Keeps your dark theme */
+  color: #ffffff;      /* White text for dark mode */
+  width: 90%;
+  max-width: 440px;
+  padding: 30px 24px 45px;
+  max-height: 85vh;
+  overflow-y: auto;
+  border-radius: 24px;
+  
+  /* Ticket shape cutout: side notches + scalloped bottom */
+  -webkit-mask-image: 
+    radial-gradient(circle at left 35%, transparent 12px, #000 13px),
+    radial-gradient(circle at right 35%, transparent 12px, #000 13px),
+    radial-gradient(circle 8px at 12px bottom, transparent 7px, #000 8px);
+  -webkit-mask-composite: source-in, source-in, destination-over;
+  mask-composite: intersect;
+  mask-image: 
+    radial-gradient(circle at left 35%, transparent 12px, #000 13px),
+    radial-gradient(circle at right 35%, transparent 12px, #000 13px),
+    radial-gradient(circle 8px at 12px bottom, transparent 7px, #000 8px);
+  -webkit-mask-size: 100% 100%, 100% 100%, 24px 100%;
+  mask-size: 100% 100%, 100% 100%, 24px 100%;
+  -webkit-mask-repeat: no-repeat, no-repeat, repeat-x;
+  mask-repeat: no-repeat, no-repeat, repeat-x;
+  
+  /* Subtle drop shadow around the ticket cutouts */
+  filter: drop-shadow(0px 10px 20px rgba(0, 0, 0, 0.6));
+}
+.circular-img-container {
+  width: 8vw;
+  height: 8vw;
+  border-radius: 0%;
+  overflow: hidden; /* Clips the image inside the circle */
+  
+  /* Centers the div itself inside parent container */
+  margin: 0 auto; margin-bottom:10px;
+  
+  /* Centers image inside the div */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circular-img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures image fills circle without distortion */
+  display: block;
+}
 .add-field{margin-bottom:3.5vw}
 .add-field label{display:block;font-size:2.6vw!important;font-weight:300!important;color:rgba(255,255,255,0.5);margin-bottom:1.2vw}
 .add-field input[type="text"]{width: 100% !important;height: 11vw;padding:2.5vw 2.5vw;border-radius:2.5vw;border:0px solid rgba(255,255,255,0.15)!important;background:rgba(255,255,255,0.06);color:#fff;font-size:2.8vw;font-weight:300!important;font-family:"Lexend";}
@@ -361,7 +412,7 @@ to{transform:rotate(360deg)}
 .add-status.error{color:#FF69B4}
 .add-status.success{color:#14b8a6}
 @media (max-width:400px){.add-cancel-btn,.add-submit-btn,.add-field label,.add-field input{font-size:4.1vw!important;font-weight:300!important;}
-.add-modal h3{font-size:4.5vw}}
+.add-modal h3{font-size:4vw}}
 .data-refreshing{opacity:.35!important;filter:blur(1px);pointer-events:none;transition:opacity .3s ease,filter .3s ease}.data-refreshed{animation:flashHighlight .6s ease-out}@keyframes flashHighlight{0%{opacity:.4}to{opacity:1;filter:blur(0)}}@keyframes filterSpinner{0%{transform:rotate(0deg)}to{transform:rotate(360deg)}}.filter-icon-spinner{display:inline-block;animation:filterSpinner .8s linear infinite;color:#3b82f6!important}
 .form-row-2col{display:flex !important;flex-direction:row !important;gap:3vw !important;width:100%;margin-bottom:4vw}
 .form-row-2col .add-field{flex:1 1 0% !important;min-width:0;display:flex;flex-direction:column}
@@ -499,7 +550,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 }
 
 /*F. I. R. E.*/
-.app-container{width:100%;margin:0 auto;padding:16px 6px 32px 6px}
+.app-container{width:100%;margin:0 auto;padding:16px 1vw 32px 1vw}
 .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .title-group h1{font-size:16px;font-weight:800;letter-spacing:-0.02em;background:linear-gradient(135deg,#ffffff 0%,#cbd5e1 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .title-group p{font-size:10px;color:var(--text-muted);font-weight:500}
@@ -531,8 +582,8 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 #category-list{display:flex;flex-direction:column;gap:8px}
 .cat-card{background:var(--surface-card);border-radius:12px;overflow:hidden;backdrop-filter:blur(12px)}
 .cat-head{display:flex;align-items:center;gap:8px;padding:8px 2px;user-select:none}
-.cat-icon-container{width:28px;height:28px;border-radius:8px;flex-shrink:0;background:linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02));display:flex;align-items:center;justify-content:center;overflow:hidden}
-.cat-icon-img{width:100%;height:100%;object-fit:cover}
+.cat-icon-container{margin-left:1vw;width:28px;height:28px;border-radius:8px;flex-shrink:0;background:linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02));display:flex;align-items:center;justify-content:center;overflow:hidden}
+.cat-icon-img{width:100%;height:100%;object-fit:cover;}
 .cat-icon-fallback{font-size:12px;font-weight:800;color:var(--accent-purple)}
 .cat-info{flex:1;min-width:0;display:flex;flex-direction:column}
 .title-with-badge{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
@@ -969,6 +1020,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 <!-- CASH TRANSACTION MODAL POPUP -->
 <div id="cash-modal-overlay" class="cash-modal-overlay">
   <div class="add-modal" style="border-radius:5vw!important;">
+    <div class="circular-img-container"><img src="https://github.com/tinsntp/investment/blob/main/sub/marketbag.png?raw=true"/></div>
     <h3>Add Cash Transaction</h3>
     <div class="add-field">
       <input type="text" id="cash-modal-input" autocomplete="off">
@@ -1793,37 +1845,44 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
   function deleteTx(elementOrItem) {
     var targetItem = null;
     var rowContainer = null;
-    if(elementOrItem&&"function"==typeof elementOrItem.closest)rowContainer=elementOrItem.closest(".sub-swipe-container");else if(elementOrItem&&"object"==typeof elementOrItem&&(elementOrItem.date||elementOrItem.detail)){var dateVal=elementOrItem.date||elementOrItem.Ngay||elementOrItem.time||"",detailVal=elementOrItem.detail||elementOrItem.rawDetail||elementOrItem.MoTa||"",amountVal=elementOrItem.amount||elementOrItem.SoTien||0,titleVal=elementOrItem.title||elementOrItem.Ten||"Transaction";targetItem={date:dateVal,detail:detailVal,amount:Number(amountVal),title:titleVal}}
-    targetItem||rowContainer||(rowContainer=document.querySelector(".sub-swipe-container.swiped")||document.querySelector(".sub-swipe-container:hover")||document.querySelector(".sub-swipe-container"));
-    rowContainer&&!targetItem&&(targetItem={date:rowContainer.getAttribute("data-date"),detail:rowContainer.getAttribute("data-detail"),amount:Number(rowContainer.getAttribute("data-amount")),title:rowContainer.getAttribute("data-title")||"Transaction"});
-    if (!targetItem) {
-      console.error("FAIL: Target item is completely null.");
-      alert("Unable to validate transaction details: No data received.");
-      return;
-    }
-    if (!targetItem.date) {
-      console.error("FAIL: Missing 'date' property.");
-      alert("Unable to validate transaction: Missing Date.");
-      return;
-    }
-    if (!targetItem.detail) {
-      console.error("FAIL: Missing 'detail' property.");
-      alert("Unable to validate transaction: Missing Details.");
-      return;
-    }
 
-    var modalId = "expense-delete-modal";
-    var existingModal = document.getElementById(modalId);
-    if (existingModal) existingModal.remove();
+    if(elementOrItem&&"function"==typeof elementOrItem.closest)rowContainer=elementOrItem.closest("[data-raw-detail]")||elementOrItem.closest(".sub-swipe-container")||elementOrItem.closest(".subs-row");else if(elementOrItem&&"object"==typeof elementOrItem&&(elementOrItem.date||elementOrItem.detail)){var dateVal=elementOrItem.date||elementOrItem.Ngay||elementOrItem.time||"",detailVal=elementOrItem.detail||elementOrItem.rawDetail||elementOrItem.MoTa||"",amountVal=elementOrItem.amount||elementOrItem.SoTien||0,titleVal=elementOrItem.title||elementOrItem.Ten||"Transaction",iconVal=elementOrItem.icon||"";targetItem={date:dateVal,detail:detailVal,amount:Number(amountVal),title:titleVal,icon:iconVal}}if(targetItem||rowContainer||(rowContainer=document.querySelector(".sub-swipe-container.swiped")||document.querySelector("[data-raw-detail]")||document.querySelector(".sub-swipe-container:hover")||document.querySelector(".sub-swipe-container")),rowContainer&&!targetItem){var domIcon=rowContainer.getAttribute("data-icon")||"";if(!domIcon){var imgIconEl=rowContainer.querySelector(".ico"),divIconEl=rowContainer.querySelector(".ico-fb");imgIconEl?domIcon=imgIconEl.getAttribute("src"):divIconEl&&(domIcon=divIconEl.innerHTML||divIconEl.textContent)}targetItem={date:rowContainer.getAttribute("data-date"),detail:rowContainer.getAttribute("data-detail")||rowContainer.getAttribute("data-raw-detail"),amount:Number(rowContainer.getAttribute("data-amount")),title:rowContainer.getAttribute("data-title")||"Transaction",icon:domIcon}}
+    var iconStr = (targetItem.icon || "").trim();var iconHtml = "";var fallbackChar = targetItem.title ? targetItem.title.charAt(0) : "?";var fallbackDivString = `<div class=\\'ico-fb\\' style=\\'width: 9vw; height: 9vw; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 13px; font-weight: 600; text-transform: uppercase;\\'>${fallbackChar}</div>`;
+    if (iconStr.indexOf("http") === 0) {
+      iconHtml = `<img src="${iconStr}" class="ico" style="width: 9vw; height: 9vw; object-fit: contain; flex-shrink: 0; border-radius: 50%;" onerror="this.outerHTML='${fallbackDivString}'"/>`;
+    } else {
+      iconHtml = `<div class="ico-fb" style="width: 9vw; height: 9vw; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 13px; font-weight: 600; text-transform: uppercase;">${iconStr || fallbackChar}</div>`;
+    }
+      if (!targetItem) {
+        console.error("FAIL: Target item is completely null.");
+        alert("Unable to validate transaction details: No data received.");
+        return;
+      }
+      if (!targetItem.date) {
+        console.error("FAIL: Missing 'date' property.");
+        alert("Unable to validate transaction: Missing Date.");
+        return;
+      }
+      if (!targetItem.detail) {
+        console.error("FAIL: Missing 'detail' property.");
+        alert("Unable to validate transaction: Missing Details.");
+        return;
+      }
 
-    var modalOverlay = document.createElement("div");
-    modalOverlay.id = modalId;
-    Object.assign(modalOverlay.style,{position:"fixed",top:"0",left:"0",width:"100%",height:"100%",backgroundColor:"rgba(0, 0, 0, 0.75)",backdropFilter:"blur(4px)",webkitBackdropFilter:"blur(4px)",zIndex:"2147483647",display:"flex",alignItems:"center",justifyContent:"center",opacity:"1"});
-    var displayName = targetItem.title || targetItem.detail;
-    var displayAmount = typeof fmtMoney === "function" ? fmtMoney(targetItem.amount) : targetItem.amount;
+      var modalId = "expense-delete-modal";
+      var existingModal = document.getElementById(modalId);
+      if (existingModal) existingModal.remove();
+
+      var modalOverlay = document.createElement("div");
+      modalOverlay.id = modalId;
+      Object.assign(modalOverlay.style,{position:"fixed",top:"0",left:"0",width:"100%",height:"100%",backgroundColor:"rgba(0, 0, 0, 0.75)",backdropFilter:"blur(4px)",webkitBackdropFilter:"blur(4px)",zIndex:"2147483647",display:"flex",alignItems:"center",justifyContent:"center",opacity:"1"});
+      var displayName = targetItem.title || targetItem.detail;
+      var displayIcon = targetItem.icon;
+      var displayAmount = typeof fmtMoney === "function" ? fmtMoney(targetItem.amount) : targetItem.amount;
 
     modalOverlay.innerHTML = `
-      <div style="background: #1e1e1e; border: 1px solid rgba(255,255,255,0.1); width: 85%; max-width: 320px; border-radius: 16px; padding: 24px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+      <div class="expense-edit-modal"><div style="width: 100%; text-align: center;">
+        <div>${iconHtml} </div>
         <h3 style="color: #fff; margin: 0 0 12px 0; font-size: 16px!important; font-weight: 600; letter-spacing: -0.2px;">Delete expense transaction?</h3>
         <p style="color: rgba(255,255,255,0.6); margin: 0 0 24px 0; font-size: 14px; line-height: 1.5;">
           Are you sure you want to permanently delete <strong style="color: #ffffff; font-weight: 500;">${displayName}</strong> <strong style="color: #ffffff; font-weight: 500;">${displayAmount}</strong>?
@@ -1832,7 +1891,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
           <button id="expense-del-cancel" style="flex: 1; background: rgba(255,255,255,0.08); border: none; color: #fff; padding: 12px; border-radius: 8px; font-size: 14px!important; font-weight: 500; cursor: pointer; transition: background 0.2s;">Cancel</button>
           <button id="expense-del-confirm" style="flex: 1; background: #ff4d4d; border: none; color: #fff; padding: 12px; border-radius: 8px; font-size: 14px!important; font-weight: 600; cursor: pointer; transition: background 0.2s;">Delete</button>
         </div>
-      </div>
+      </div></div>
     `;
     document.body.insertAdjacentElement("beforeend",modalOverlay);var cleanupModal=function(){modalOverlay.remove(),document.querySelectorAll(".sub-swipe-container.swiped").forEach(function(item){item.classList.remove("swiped")})};
     document.getElementById("expense-del-cancel").addEventListener("click",function(e){e.preventDefault(),cleanupModal();["#tx-list .sub-swipe-container","#tx-list .subs-row","#tx-list .sub-swipe-row",'[class*="swipe"]','[class*="row"]'].forEach(selector=>{document.querySelectorAll(selector).forEach(el=>{el.style.opacity="1",el.style.display="",el.style.visibility="visible",el.style.pointerEvents="auto",el.style.transition="transform 0.2s ease, opacity 0.2s ease",el.style.transform="translateX(0px)",el.classList.remove("swiped","active","open","deleting")})}),document.querySelectorAll('.delete-btn, .swipe-delete-btn, [class*="del-btn"]').forEach(btn=>{btn.style.opacity="0",btn.style.pointerEvents="none"})});
@@ -1867,7 +1926,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
     if (iconStr.indexOf("http") === 0) {iconHtml = `<img src="${iconStr}" class="ico" style="width: 9vw; height: 9vw; object-fit: contain; flex-shrink: 0; border-radius: 50%;" onerror="this.outerHTML='${fallbackDivString}'"/>`;} 
     var formattedAmount = new Intl.NumberFormat('en-US').format(targetItem.amount || 0);
     modalOverlay.innerHTML = `
-      <div style="background: #1e1e1e; border: 0px solid rgba(255,255,255,0.1); width: 85%; max-width: 90%; border-radius: 16px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); box-sizing: border-box;">
+      <div class="expense-edit-modal"><div style="width: 100%;">
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-bottom: 16px; border-bottom: 0px solid rgba(255,255,255,0.05);">
                   <div style="display: flex; align-items: center; gap: 10px; text-align: left; max-width: 55%;">
             ${iconHtml} 
@@ -1909,7 +1968,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
             <button id="expense-edit-save" style="flex: 2; font-family:Lexend!important; font-size:14px!important; padding: 14px; background: #2d3748; border: none; color: #ffffff; border-radius: 12px; font-weight: 600; cursor: pointer;">Update</button>
           </div>
         </div>
-      </div>
+      </div></div>
     `;
 
     modalOverlay.addEventListener("input",function(e){if(e.target&&"expense-edit-amount"===e.target.id){var inputEl=e.target,value=inputEl.value.replace(/[^0-9]/g,"");if(""===value)return void(inputEl.value="");inputEl.value=new Intl.NumberFormat("en-US").format(parseInt(value,10))}}),document.body.insertAdjacentElement("beforeend",modalOverlay);var cleanupModal=function(){modalOverlay.remove(),document.querySelectorAll(".sub-swipe-container.swiped").forEach(function(item){item.classList.remove("swiped")})};
@@ -2083,7 +2142,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
     var displayAmount = typeof fmtMoney === "function" ? fmtMoney(targetItem.amount) : targetItem.amount;
 
     modalOverlay.innerHTML = `
-      <div style="background: #1e1e1e; border: 1px solid rgba(255,255,255,0.1); width: 85%; max-width: 320px; border-radius: 16px; padding: 24px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+      <div class="expense-edit-modal"><div style="width: 100%;>
         <h3 style="color: #fff; margin: 0 0 12px 0; font-size: 16px!important; font-weight: 600; letter-spacing: -0.2px;">Delete history transaction?</h3>
         <p style="color: rgba(255,255,255,0.6); margin: 0 0 24px 0; font-size: 14px; line-height: 1.5;">
           Are you sure you want to permanently delete <strong style="color: #ffffff; font-weight: 500;">${displayName}</strong> <strong style="color: #ffffff; font-weight: 500;">${displayAmount}</strong>?
@@ -2092,7 +2151,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
           <button id="history-del-cancel" style="flex: 1; background: rgba(255,255,255,0.08); border: none; color: #fff; padding: 12px; border-radius: 8px; font-size: 14px!important; font-weight: 500; cursor: pointer; transition: background 0.2s;">Cancel</button>
           <button id="history-del-confirm" style="flex: 1; background: #ff4d4d; border: none; color: #fff; padding: 12px; border-radius: 8px; font-size: 14px!important; font-weight: 600; cursor: pointer; transition: background 0.2s;">Delete</button>
         </div>
-      </div>
+      </div></div>
     `;
 
     document.body.insertAdjacentElement('beforeend', modalOverlay);
@@ -2301,8 +2360,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
     var formattedAmount = new Intl.NumberFormat('en-US').format(targetItem.amount || 0);
 
     modalOverlay.innerHTML = `
-      <div style="background: #1e1e1e; border: 0px solid rgba(255,255,255,0.1); width: 85%; max-width: 90%; border-radius: 16px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); box-sizing: border-box;">
-        
+      <div class="expense-edit-modal"><div style="width: 100%;">
         <!-- HEADER ROW: TYPE & AMOUNT -->
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-bottom: 16px; margin-bottom: 16px; border-bottom: 0px solid rgba(255,255,255,0.05);">
           <div style="display: flex; align-items: center; gap: 10px; text-align: left; max-width: 55%; flex: 1;">
@@ -2369,8 +2427,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
             <button id="history-edit-save" style="flex: 2; font-family:Lexend!important; font-size:14px!important; padding: 14px; background: #2d3748; border: none; color: #ffffff; border-radius: 12px; font-weight: 600; cursor: pointer;">Update</button>
           </div>
         </div>
-
-      </div>
+      </div></div>
     `;
     modalOverlay.addEventListener("input", function(e) {
         if (e.target && e.target.id === "history-edit-amount") {
@@ -2741,7 +2798,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
           if (lowerType.indexOf('salary') !== -1 || lowerType.indexOf('social') !== -1) {
             return;
           }
-
+          if (accountVal && window.innerWidth <= 400 && accountVal.toUpperCase().includes("BANK")) {accountVal = accountVal.slice(-6);}
           var cleanAmt = caNum(amountRaw);
           
           if (dateVal && typeVal) {
