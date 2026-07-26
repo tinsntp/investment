@@ -245,7 +245,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .status-success{background:rgba(224,36,94,.1);color:#e0245e}
 .status-pending{background:rgba(255,255,255,.05);color:rgba(255,255,255,.5)}
 @media (max-width:400px){.history-panel{display:block!important;max-height:0;opacity:0;overflow:hidden;margin-top:0;transform:translateY(-8px);will-change:max-height,opacity,transform;transition:max-height .35s cubic-bezier(.4,0,.2,1),opacity .25s ease-out,transform .3s cubic-bezier(.4,0,.2,1),margin-top .3s ease}
-.history-panel.is-expanded{max-height:1000px;opacity:1;transform:translateY(0);margin-top:16px;border:0px solid rgba(255,255,255,.05)}}
+.history-panel.is-expanded{max-height:1000px;opacity:1;transform:translateY(-12px);margin-top:16px;border:0px solid rgba(255,255,255,.05)}}
 @media (min-width:401px){.main-dashboard-container,.ca-col-left{display:block}.history-panel{height:100%;opacity:1!important;margin-top:20px;order:initial}}
 @media (min-width:401px){#walletHistorySection{transition:max-height .35s cubic-bezier(.4,0,.2,1),opacity .25s ease,margin-top .3s ease,padding .3s ease;overflow:hidden}
 #walletHistorySection.is-hidden-ipad{display:block!important;max-height:0!important;opacity:0!important;margin-top:0!important;padding-top:0!important;padding-bottom:0!important;border:0!important;pointer-events:none!important}}
@@ -1636,7 +1636,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
   document.getElementById("tx-list").addEventListener("click",function(e){var target=e.target;if(!(target.closest(".sub-edit-action")||target.closest(".sub-delete-action")||target.closest(".edit-tx-btn")||target.closest(".edit-btn")||target.closest(".delete-btn")||target.closest(".swipe-delete-btn")||target.closest("[onclick*='deleteTx']")||target.closest("[onclick*='editTx']"))){var row=target.closest(".row");if(row){var container=row.closest(".sub-swipe-container");if(container&&container.classList.contains("swiped"))return container.classList.remove("swiped"),void(row.style.transform="translateX(0px)");var isExp=row.classList.contains("expanded");document.querySelectorAll(".row.expanded").forEach(function(el){el.classList.remove("expanded")}),isExp||row.classList.add("expanded"),"function"==typeof applyLayout&&applyLayout()}}});
   function updateDetailInSheets(date,oldDetail,newDetail){var payload={date,oldDetail,newDetail};fetch("https://script.google.com/macros/s/AKfycbz45guEvRxnEpsrP3G553lYI-UCp78JMrCfK7aS5RX3K-Jd0C9-yhNkqW9Du2O-dkAjeA/exec",{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)}).then(function(){alert("Đang yêu cầu cập nhật lên Sheets! CSV sẽ đồng bộ sau vài giây.")}).catch(function(err){console.error("Lỗi gửi update:",err)})}
   function applyLayout(){
-    var isMobile = window.innerWidth < 400;
+    var isMobile = window.innerWidth < 401;
     if (!caDataLoaded) { caDataLoaded=true; }
 
     document.querySelectorAll(".tab-btn").forEach(function(el){el.style.fontSize=isMobile?"4vw":"2.8vw";});
@@ -1652,7 +1652,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
     document.getElementById("expand-btn").style.fontSize=isMobile?"4.1vw":"2.7vw";
 
     var gridCols=isMobile?"5.8fr 1.6fr 1.6fr":"5.8fr 1.6fr 1.6fr 1.6fr";
-    var mainNmFs=isMobile?"4.0vw":"2.7vw",subNmFs=isMobile?"4.2vw":"2.6vw";
+    var mainNmFs=isMobile?"4.2vw":"2.7vw",subNmFs=isMobile?"4vw":"2.6vw";
     var amtFs=isMobile?"4.2vw":"2.7vw",subAmtFs=isMobile?"4.2vw":"2.6vw";
     var lastFs=isMobile?"4.2vw":"2.7vw",pctFs=isMobile?"4.1vw":"2.6vw";
     var catIcoSz=isMobile?"8vw":"7vw",subIcoSz=isMobile?"7vw":"5.5vw";
