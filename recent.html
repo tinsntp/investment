@@ -102,9 +102,8 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .pct-val.flat { color:rgba(255,255,255,0.3); }
 #det-msg { font-size:3vw; color:rgba(255,255,255,0.4); text-align:center; padding:5vw; }
 
-.budget-card{margin-top:15px;padding:0 15px 0 15px;}
+.budget-card{margin-top:15px;padding:0 10px 0 10px;}
 .budget-title,.budget-label{font-size:12px;color:rgba(255,255,255,.55);margin-bottom:5px}
-/* Sub-tab container styling */
 .budget-subtabs {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 13px;
@@ -122,7 +121,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
   background: transparent;
   border: none;
   color: rgba(255, 255, 255, 0.5);
-  padding: 6px 10px;
+  padding: 4px 10px;
   font-size: 12px;
   font-weight: 400;
   border-radius: 10px;
@@ -240,7 +239,7 @@ canvas#myChart {
   gap: 10px;
   width: 100%;
   box-sizing: border-box;
-  margin: 0 5px 16px 5px!important;
+  margin-bottom: 16px;
 }
 
 /* 2. Segmented Pill Wrap: Fixed/Flexible width for controls */
@@ -272,7 +271,7 @@ canvas#myChart {
   background: transparent;
   border: 0;font-family:Lexend;
   color: var(--pill-text-muted, #8e90a6);
-  padding: 4px 12px;
+  padding: 4px 8px;
   border-radius: 30px;
   font-size: 11.5px;
   font-weight: 500;
@@ -289,7 +288,7 @@ canvas#myChart {
 .category-select{width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:14px;color:var(--text-white);padding:10px 14px;outline:0;font-family:inherit;appearance:none;background-image:url(data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E);background-repeat:no-repeat;background-position:right 14px top 50%;background-size:10px auto}
 .category-select option{background:#181928;color:#fff;padding:8px}.category-select optgroup{background:#212338;color:var(--accent-pink);font-weight:700}
 .stats-header {
-  display: grid;margin-left:25px;
+  display: grid;margin-left:5px;
   grid-template-columns: 0.7fr 1.3fr;
   gap: 15px;
   
@@ -306,7 +305,7 @@ canvas#myChart {
 .stat-col .stat-date{font-size:11px;color:var(--text-sub);margin-top:4px}
 .chart-wrapper{position: relative;width: 100%;}
 .category-select-wrap,.chart-wrapper{position:relative;width:100%}
-.category-select-wrap {margin-right:10px;
+.category-select-wrap {
   position: relative; /* Essential for absolute positioning of .dropdown-menu */
   flex: 1; /* Takes up all remaining space on the row */
   min-width: 0; /* Prevents overflow bug in flex containers */
@@ -1903,7 +1902,7 @@ document.addEventListener('keydown', function (e) {
 
     const width = container.clientWidth || 320;
     const height = 90;
-    const paddingX = 25;
+    const paddingX = 0;
     const paddingTop = 0;
     const paddingBottom = 0;
 
@@ -1993,9 +1992,13 @@ document.addEventListener('keydown', function (e) {
           <circle id="svgActiveCircle" cx="0" cy="0" r="6" fill="#ff528e" stroke="#ffffff" stroke-width="2.5" style="display: none;" />
           <circle cx="${lastX}" cy="${lastY}" r="5" fill="#ff528e" stroke="#ffffff" stroke-width="2" />
 
-  <g id="svgLastBadge" transform="translate(${lastX}, ${lastY - 32})">
-    <rect x="-26" y="0" width="50" height="18" rx="6" fill="#ff528e" />
-    <text x="0" 
+  <!-- Badge Shifted Left with 10px Margin-Right from Dot -->
+  <g id="svgLastBadge" transform="translate(${lastX - 50}, ${lastY - 25})">
+    <!-- 50px wide pill -->
+    <rect x="0" y="0" width="50" height="18" rx="6" fill="#ff528e" fill-opacity="0.75"/>
+    
+    <!-- Text centered inside the 50px pill (x = 25) -->
+    <text x="25" 
           y="13" 
           fill="#ffffff" 
           font-family="'DM Sans', sans-serif" 
