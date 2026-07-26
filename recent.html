@@ -246,7 +246,7 @@ canvas#myChart {
   display: flex;padding: 2px 8px;
   align-items: right;justify-content: center;gap:5px;
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 30px;margin-left:17vw;
+  border-radius: 30px;
   flex-shrink: 0; 
 }
 .category-select-wrap {
@@ -304,7 +304,7 @@ canvas#myChart {
 }
 .stat-col .stat-label{font-size:11.5px;color:var(--text-sub);margin-bottom:4px}.stat-col.primary .stat-label,.stat-col.primary 
 .stat-value{color:var(--accent-pink)}.stat-col .stat-value{font-size:15px;font-weight:700;letter-spacing:-.5px;line-height:1.1;white-space:nowrap}
-@media (min-width:401px){.stat-col .stat-value{font-size:16px}}
+@media (min-width:401px){.stat-col .stat-value{font-size:16px} .segment-pill-wrap{margin-left:17vw!important;}}
 .stat-col.secondary .stat-value{color:var(--text-white)}
 .stat-col .stat-date{font-size:11px;color:var(--text-sub);margin-top:4px}
 .chart-wrapper{position: relative;width: 100%;}
@@ -1096,7 +1096,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
               </div>
               <div class="filter-dropdown-options" 
                   id="transactionFilterOptions" 
-                  style="z-index:100;opacity:1;display:block!important; position: absolute; right: 0; top: calc(100% + 4px); background: rgba(28, 29, 45, 0.95); border: 0px solid #2d313c; border-radius: 10px; overflow: hidden; min-width: 155px; box-shadow: 0 8px 24px rgba(0,0,0,0.6);">
+                  style="z-index:100;display:none;overflow-y: auto; position: absolute; right: 0; top: calc(100% + 4px); background: rgba(28, 29, 45, 0.95); border: 0px solid #2d313c; border-radius: 10px; overflow: hidden; min-width: 155px; box-shadow: 0 8px 24px rgba(0,0,0,0.6);">
               </div>
             </div>
           </div>
