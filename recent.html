@@ -256,7 +256,7 @@ canvas#myChart {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px; /* Space between dropdown and segmented control */
+  gap: 11.5px; /* Space between dropdown and segmented control */
   width: 100%;
   margin-bottom: 16px;
 }
@@ -272,9 +272,9 @@ canvas#myChart {
   background: transparent;
   border: 0;font-family:Lexend;
   color: var(--pill-text-muted, #8e90a6);
-  padding: 4px 8px;
+  padding: 4px 12px;
   border-radius: 30px;
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
@@ -289,23 +289,22 @@ canvas#myChart {
 .category-select{width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:14px;color:var(--text-white);padding:10px 14px;outline:0;font-family:inherit;appearance:none;background-image:url(data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E);background-repeat:no-repeat;background-position:right 14px top 50%;background-size:10px auto}
 .category-select option{background:#181928;color:#fff;padding:8px}.category-select optgroup{background:#212338;color:var(--accent-pink);font-weight:700}
 .stats-header {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  display: grid;margin-left:25px;
+  grid-template-columns: 0.7fr 1.3fr;
+  gap: 15px;
   
   /* Vertical alignment */
   align-items: center; 
   
   /* Optional: Horizontal alignment inside cells */
-  justify-items: center; 
+  
 }
 .stat-col .stat-label{font-size:11.5px;color:var(--text-sub);margin-bottom:4px}.stat-col.primary .stat-label,.stat-col.primary 
 .stat-value{color:var(--accent-pink)}.stat-col .stat-value{font-size:15px;font-weight:700;letter-spacing:-.5px;line-height:1.1;white-space:nowrap}
 @media (min-width:401px){.stat-col .stat-value{font-size:16px}}
 .stat-col.secondary .stat-value{color:var(--text-white)}
 .stat-col .stat-date{font-size:11px;color:var(--text-sub);margin-top:4px}
-.chart-wrapper{position: relative;
-  width: 100%;height:260px;min-height: 260px;}
+.chart-wrapper{position: relative;width: 100%;}
 .category-select-wrap,.chart-wrapper{position:relative;width:100%}
 .category-select-wrap {margin-right:10px;
   position: relative; /* Essential for absolute positioning of .dropdown-menu */
@@ -343,13 +342,6 @@ canvas#myChart {
   border-right: 5px solid transparent;
   border-top: 5px solid var(--text-white, #ffffff);
   transition: transform 0.2s ease;
-}
-.chart-wrapper {
-  position: relative;
-  width: 100%;
-  height: 220px;
-  min-height: 220px;
-  box-sizing: border-box;
 }
 
 .glass-chart-line {
@@ -1901,419 +1893,316 @@ document.addEventListener('keydown', function (e) {
   }
 
   function renderSVGLineChart(chartLabels, rawLabels, currentValues, baselineValues) {
-  const container = document.getElementById('expenseChart') ? 
-                    document.getElementById('expenseChart').parentElement : 
-                    document.querySelector('.chart-wrapper');
-
-  if (!container) return;
-
-  // Enforce explicit dimensions for iframe sandboxes
-  const width = container.clientWidth || 320;
-  const height = 220;
-  const paddingX = 25;
-  const paddingTop = 35;
-  const paddingBottom = 35;
-
-  // Max value scaling
-  const maxVal = Math.max(...currentValues, ...baselineValues, 1);
-
-  // Helper: Get SVG X/Y coordinates
-  function getX(i, total) {
-    if (total <= 1) return width / 2;
-    return paddingX + (i / (total - 1)) * (width - paddingX * 2);
-  }
-
-  function getY(val) {
-    const usableHeight = height - paddingTop - paddingBottom;
-    return height - paddingBottom - (val / maxVal) * usableHeight;
-  }
-
-  // Smooth Bezier Curve Path Generator
-  function createSmoothPath(values) {
-    if (values.length === 0) return '';
-    let d = `M ${getX(0, values.length)},${getY(values[0])}`;
-    for (let i = 0; i < values.length - 1; i++) {
-      const x0 = getX(i, values.length);
-      const y0 = getY(values[i]);
-      const x1 = getX(i + 1, values.length);
-      const y1 = getY(values[i + 1]);
-      const cpX1 = x0 + (x1 - x0) * 0.4;
-      const cpX2 = x1 - (x1 - x0) * 0.4;
-      d += ` C ${cpX1},${y0} ${cpX2},${y1} ${x1},${y1}`;
+    const chartWrapper = document.querySelector('.chart-wrapper');
+    let container = document.getElementById('expenseChart');
+    
+    if (!container && chartWrapper) {
+      container = chartWrapper;
     }
-    return d;
-  }
+    if (!container) return;
 
-  // Currency Formatter
-  function formatValue(val) {
-    if (val >= 1000000) return (val / 1000000).toFixed(1) + 'M đ';
-    if (val >= 1000) return (val / 1000).toFixed(0) + 'K đ';
-    return val.toLocaleString('vi-VN') + ' đ';
-  }
+    const width = container.clientWidth || 320;
+    const height = 90;
+    const paddingX = 25;
+    const paddingTop = 0;
+    const paddingBottom = 0;
 
-  const currentPathD = createSmoothPath(currentValues);
-  const baselinePathD = createSmoothPath(baselineValues);
+    const maxVal = Math.max(...currentValues, ...baselineValues, 1);
 
-  const lastIdx = currentValues.length - 1;
-  const lastX = getX(lastIdx, currentValues.length);
-  const lastY = getY(currentValues[lastIdx]);
-  const lastValFormatted = formatValue(currentValues[lastIdx]);
+    function getX(i, total) {
+      if (total <= 1) return width / 2;
+      return paddingX + (i / (total - 1)) * (width - paddingX * 2);
+    }
 
-  // Gradient area path closure
-  const firstX = getX(0, currentValues.length);
-  const areaPathD = `${currentPathD} L ${lastX},${height - paddingBottom} L ${firstX},${height - paddingBottom} Z`;
+    function getY(val) {
+      const usableHeight = height - paddingTop - paddingBottom;
+      return height - paddingBottom - (val / maxVal) * usableHeight;
+    }
 
-  // Build SVG Markup
-  let svgHTML = `
-    <div style="position: relative; width: 100%; height: ${height}px;">
-      <svg width="100%" height="${height}" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" style="overflow: visible;">
-        <defs>
-          <linearGradient id="pinkStroke" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#ff528e" />
-            <stop offset="100%" stop-color="#e0407b" />
-          </linearGradient>
+    function createSmoothPath(values) {
+      if (!values || values.length === 0) return '';
+      let d = `M ${getX(0, values.length)},${getY(values[0])}`;
+      for (let i = 0; i < values.length - 1; i++) {
+        const x0 = getX(i, values.length);
+        const y0 = getY(values[i]);
+        const x1 = getX(i + 1, values.length);
+        const y1 = getY(values[i + 1]);
+        const cpX1 = x0 + (x1 - x0) * 0.4;
+        const cpX2 = x1 - (x1 - x0) * 0.4;
+        d += ` C ${cpX1},${y0} ${cpX2},${y1} ${x1},${y1}`;
+      }
+      return d;
+    }
 
-          <linearGradient id="pinkArea" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="rgba(255, 82, 142, 0.35)" />
-            <stop offset="100%" stop-color="rgba(24, 25, 40, 0.0)" />
-          </linearGradient>
-        </defs>
+    function formatValue(val) {
+      const isMobile = window.innerWidth <= 480;
+      if (isMobile) {
+        if (val >= 1000000) return (val / 1000000).toFixed(1) + 'M đ';
+        if (val >= 1000) return (val / 1000).toFixed(0) + 'K đ';
+        return Math.round(val) + ' đ';
+      }
+      return Math.round(val).toLocaleString('vi-VN') + ' đ';
+    }
 
-        <!-- Area Gradient -->
-        <path d="${areaPathD}" fill="url(#pinkArea)" />
+    const currentPathD = createSmoothPath(currentValues);
+    const baselinePathD = createSmoothPath(baselineValues);
 
-        <!-- Baseline Path (2025) -->
-        <path d="${baselinePathD}" fill="none" stroke="rgba(142, 144, 166, 0.55)" stroke-width="2" stroke-dasharray="4 4" />
+    const lastIdx = currentValues.length - 1;
+    const lastX = getX(lastIdx, currentValues.length);
+    const lastY = getY(currentValues[lastIdx]);
+    const lastValFormatted = formatValue(currentValues[lastIdx]);
 
-        <!-- Current Path -->
-        <path d="${currentPathD}" fill="none" stroke="url(#pinkStroke)" stroke-width="3.5" stroke-linecap="round" />
+    const firstX = getX(0, currentValues.length);
+    const areaPathD = `${currentPathD} L ${lastX},${height - paddingBottom} L ${firstX},${height - paddingBottom} Z`;
 
-        <!-- Data Point Circles -->
-        ${currentValues.map((val, i) => {
-          const cx = getX(i, currentValues.length);
-          const cy = getY(val);
-          const isLast = i === lastIdx;
-          return `
-            <circle cx="${cx}" cy="${cy}" r="${isLast ? 6 : 3}" 
-                    fill="${isLast ? '#ff528e' : 'rgba(255,255,255,0.4)'}" 
-                    stroke="${isLast ? '#ffffff' : 'transparent'}" 
-                    stroke-width="2">
-              <title>${rawLabels[i]}: ${formatValue(val)}</title>
-            </circle>
-          `;
-        }).join('')}
+    const xCoords = currentValues.map((_, i) => getX(i, currentValues.length));
 
-        <!-- Active Last-Point Data Badge -->
-        <g transform="translate(${Math.min(lastX - 25, width - 65)}, ${Math.max(lastY - 32, 5)})">
-          <rect width="55" height="20" rx="6" fill="#ff528e" />
-          <text x="27.5" y="13" fill="#ffffff" font-family="DM Sans, sans-serif" font-size="10" font-weight="bold" text-anchor="middle">
-            ${lastValFormatted}
-          </text>
-        </g>
-      </svg>
+    // Build SVG Layout
+    let html = `
+      <div id="svgChartWrap" style="position: relative; width: 100%; height: ${height}px; user-select: none; touch-action: none;">
+        <svg width="100%" height="${height}" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" style="overflow: visible;">
+          <defs>
+            <linearGradient id="pinkStroke" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#ff528e" />
+              <stop offset="100%" stop-color="#e0407b" />
+            </linearGradient>
 
-      <!-- X-Axis Labels -->
-      <div style="display: flex; justify-content: space-between; position: absolute; bottom: 5px; left: ${paddingX}px; right: ${paddingX}px;">
-        ${chartLabels.map(lbl => `<span style="font-size: 11px; color: #8e90a6; font-family: 'DM Sans', sans-serif;">${lbl}</span>`).join('')}
+            <linearGradient id="pinkArea" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="rgba(255, 82, 142, 0.35)" />
+              <stop offset="100%" stop-color="rgba(24, 25, 40, 0.0)" />
+            </linearGradient>
+          </defs>
+
+          <!-- Area Gradient Fill -->
+          <path d="${areaPathD}" fill="url(#pinkArea)" />
+
+          <!-- Baseline Path (2025) -->
+          <path d="${baselinePathD}" fill="none" stroke="rgba(142, 144, 166, 0.55)" stroke-width="2" stroke-dasharray="4 4" />
+
+          <!-- Current Path -->
+          <path d="${currentPathD}" fill="none" stroke="url(#pinkStroke)" stroke-width="2.5" stroke-linecap="round" />
+
+          <!-- Interactive Vertical Hover Line -->
+          <line id="svgHoverLine" x1="0" y1="${paddingTop - 10}" x2="0" y2="${height - paddingBottom}" 
+                stroke="rgba(255, 255, 255, 0.4)" stroke-width="1.5" stroke-dasharray="4 4" style="display: none;" />
+
+          <!-- Active Hover Circle for Baseline (Grey dot) -->
+          <circle id="svgActiveBaseCircle" cx="0" cy="0" r="4.5" fill="#8e90a6" stroke="#ffffff" stroke-width="2" style="display: none;" />
+
+          <!-- Active Hover Circle for Current Series (Pink dot) -->
+          <circle id="svgActiveCircle" cx="0" cy="0" r="6" fill="#ff528e" stroke="#ffffff" stroke-width="2.5" style="display: none;" />
+          <circle cx="${lastX}" cy="${lastY}" r="5" fill="#ff528e" stroke="#ffffff" stroke-width="2" />
+
+  <g id="svgLastBadge" transform="translate(${lastX}, ${lastY - 32})">
+    <rect x="-26" y="0" width="50" height="18" rx="6" fill="#ff528e" />
+    <text x="0" 
+          y="13" 
+          fill="#ffffff" 
+          font-family="'DM Sans', sans-serif" 
+          font-size="10" 
+          font-weight="bold" 
+          text-anchor="middle">
+      ${lastValFormatted}
+    </text>
+  </g>
+        </svg>
+
+        <!-- Hover Tooltip Card -->
+        <div id="svgTooltip" style="display: none; position: absolute; top: 0; left: 0; pointer-events: none;
+                    background: #ffffff; color: #181928; padding: 6px 10px; border-radius: 10px;
+                    box-shadow: 0 6px 18px rgba(0,0,0,0.35); font-family: 'DM Sans', sans-serif; font-size: 11px;
+                    z-index: 50; transform: translate(-50%, -110%); white-space: nowrap;">
+          <div id="svgTooltipTitle" style="font-weight: normal; font-size: 10px; color: #666; text-align: center; margin-bottom: 2px;"></div>
+          <div style="display: flex; align-items: center; gap: 6px; font-weight: bold;">
+            <span style="width: 6px; height: 6px; border-radius: 50%; background: #ff528e; display: inline-block;"></span>
+            <span id="svgTooltipCurr"></span>
+          </div>
+          <div id="svgTooltipBaseRow" style="display: flex; align-items: center; gap: 6px; font-size: 10px; color: #777; margin-top: 1px;">
+            <span style="width: 6px; height: 6px; border-radius: 50%; background: #8e90a6; display: inline-block;"></span>
+            <span id="svgTooltipBase"></span>
+          </div>
+        </div>
+
+        <!-- X-Axis Labels -->
+        <div style="display: flex; justify-content: space-between; position: absolute; bottom: 5px; left: ${paddingX}px; right: ${paddingX}px; pointer-events: none;">
+          ${chartLabels.map(lbl => `<span style="font-size: 11px; color: #8e90a6; font-family: 'DM Sans', sans-serif;">${lbl}</span>`).join('')}
+        </div>
       </div>
-    </div>
-  `;
+    `;
 
-  container.innerHTML = svgHTML;
-}
+    container.innerHTML = html;
+
+    // Setup Event Handlers
+    const wrap = document.getElementById('svgChartWrap');
+    const hoverLine = document.getElementById('svgHoverLine');
+    const activeCircle = document.getElementById('svgActiveCircle');
+    const activeBaseCircle = document.getElementById('svgActiveBaseCircle');
+    const tooltip = document.getElementById('svgTooltip');
+    const tooltipTitle = document.getElementById('svgTooltipTitle');
+    const tooltipCurr = document.getElementById('svgTooltipCurr');
+    const tooltipBase = document.getElementById('svgTooltipBase');
+    const lastBadge = document.getElementById('svgLastBadge');
+
+    function handleMove(e) {
+      const rect = wrap.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const mouseX = clientX - rect.left;
+
+      let nearestIdx = 0;
+      let minDistance = Math.abs(mouseX - xCoords[0]);
+
+      for (let i = 1; i < xCoords.length; i++) {
+        const dist = Math.abs(mouseX - xCoords[i]);
+        if (dist < minDistance) {
+          minDistance = dist;
+          nearestIdx = i;
+        }
+      }
+
+      const targetX = xCoords[nearestIdx];
+      const targetYCurr = getY(currentValues[nearestIdx]);
+      const targetYBase = getY(baselineValues[nearestIdx]);
+
+      const currVal = currentValues[nearestIdx];
+      const baseVal = baselineValues[nearestIdx];
+
+      // 1. Move Hover Line
+      hoverLine.setAttribute('x1', targetX);
+      hoverLine.setAttribute('x2', targetX);
+      hoverLine.style.display = 'block';
+
+      // 2. Position Current Dot (Pink)
+      activeCircle.setAttribute('cx', targetX);
+      activeCircle.setAttribute('cy', targetYCurr);
+      activeCircle.style.display = 'block';
+
+      // 3. Position Baseline Dot (Grey)
+      activeBaseCircle.setAttribute('cx', targetX);
+      activeBaseCircle.setAttribute('cy', targetYBase);
+      activeBaseCircle.style.display = 'block';
+
+      // 4. Update Tooltip Text and Position
+      tooltipTitle.innerText = rawLabels[nearestIdx] || chartLabels[nearestIdx] || '';
+      tooltipCurr.innerText = `Current: ${formatValue(currVal)}`;
+      tooltipBase.innerText = `Baseline: ${formatValue(baseVal)}`;
+
+      tooltip.style.display = 'block';
+      
+      let clampX = Math.max(45, Math.min(targetX, rect.width - 45));
+      const highestPointY = Math.min(targetYCurr, targetYBase);
+      
+      tooltip.style.left = clampX + 'px';
+      tooltip.style.top = Math.max(highestPointY - 8, 35) + 'px';
+
+      if (lastBadge) lastBadge.style.opacity = nearestIdx === lastIdx ? '1' : '0.2';
+    }
+
+    function handleLeave() {
+      if (hoverLine) hoverLine.style.display = 'none';
+      if (activeCircle) activeCircle.style.display = 'none';
+      if (activeBaseCircle) activeBaseCircle.style.display = 'none';
+      if (tooltip) tooltip.style.display = 'none';
+      if (lastBadge) lastBadge.style.opacity = '1';
+    }
+
+    wrap.addEventListener('mousemove', handleMove);
+    wrap.addEventListener('mouseleave', handleLeave);
+    wrap.addEventListener('touchmove', handleMove, { passive: true });
+    wrap.addEventListener('touchend', handleLeave);
+  }
 
   function renderWidget() {
-  if (!sheetData || sheetData.length === 0) return;
+    if (!sheetData || sheetData.length === 0) return;
 
-  // 1. Safe array slice
-  var activeData = sheetData.slice();
+    // 1. Safe array slice
+    var activeData = sheetData.slice();
 
-  if (currentRange === '6M') {
-    activeData = activeData.slice(-6);
-  } else if (currentRange === 'Year') {
-    activeData = activeData.slice(-12);
-  }
-
-  // 2. Safe mapping for labels and values
-  var rawLabels = [];
-  var currentValues = [];
-
-  for (var i = 0; i < activeData.length; i++) {
-    var d = activeData[i];
-    rawLabels.push(d[0] ? String(d[0]).trim() : '');
-    
-    var val = Number(d[selectedColIdx]);
-    currentValues.push(isNaN(val) ? 0 : Math.abs(val));
-  }
-
-  // 3. Match 2025 baseline values with strict fallback
-  var baselineValues = [];
-  for (var j = 0; j < rawLabels.length; j++) {
-    var label = rawLabels[j];
-    var val2025 = 0;
-
-    if (label && label.indexOf('/') !== -1) {
-      var monthStr = label.split('/')[0].trim();
-      var target2025Label = monthStr + '/25';
-
-      for (var k = 0; k < sheetData.length; k++) {
-        var rowLabel = sheetData[k][0] ? String(sheetData[k][0]).trim() : '';
-        if (rowLabel === target2025Label) {
-          var raw2025Val = Number(sheetData[k][selectedColIdx]);
-          val2025 = isNaN(raw2025Val) ? 0 : Math.abs(raw2025Val);
-          break;
-        }
-      }
+    if (currentRange === '6M') {
+      activeData = activeData.slice(-6);
+    } else if (currentRange === 'Year') {
+      activeData = activeData.slice(-12);
     }
-    baselineValues.push(val2025);
-  }
 
-  // 4. Dynamic display labels (MM by default; MM/YY for January or timeline start)
-  var formattedChartLabels = [];
-  for (var l = 0; l < rawLabels.length; l++) {
-    var lbl = rawLabels[l];
-    if (lbl.indexOf('/') !== -1) {
-      var parts = lbl.split('/');
-      var monthNum = parseInt(parts[0].trim(), 10);
+    // 2. Safe mapping for labels and values
+    var rawLabels = [];
+    var currentValues = [];
+
+    for (var i = 0; i < activeData.length; i++) {
+      var d = activeData[i];
+      rawLabels.push(d[0] ? String(d[0]).trim() : '');
       
-      if (monthNum === 1 || l === 0) {
-        formattedChartLabels.push(lbl);
+      var val = Number(d[selectedColIdx]);
+      currentValues.push(isNaN(val) ? 0 : Math.abs(val));
+    }
+
+    // 3. Match 2025 baseline values with strict fallback
+    var baselineValues = [];
+    for (var j = 0; j < rawLabels.length; j++) {
+      var label = rawLabels[j];
+      var val2025 = 0;
+
+      if (label && label.indexOf('/') !== -1) {
+        var monthStr = label.split('/')[0].trim();
+        var target2025Label = monthStr + '/25';
+
+        for (var k = 0; k < sheetData.length; k++) {
+          var rowLabel = sheetData[k][0] ? String(sheetData[k][0]).trim() : '';
+          if (rowLabel === target2025Label) {
+            var raw2025Val = Number(sheetData[k][selectedColIdx]);
+            val2025 = isNaN(raw2025Val) ? 0 : Math.abs(raw2025Val);
+            break;
+          }
+        }
+      }
+      baselineValues.push(val2025);
+    }
+
+    // 4. Dynamic display labels (MM by default; MM/YY for January or timeline start)
+    var formattedChartLabels = [];
+    for (var l = 0; l < rawLabels.length; l++) {
+      var lbl = rawLabels[l];
+      if (lbl.indexOf('/') !== -1) {
+        var parts = lbl.split('/');
+        var monthNum = parseInt(parts[0].trim(), 10);
+        
+        if (monthNum === 1 || l === 0) {
+          formattedChartLabels.push(lbl);
+        } else {
+          var mStr = String(monthNum);
+          formattedChartLabels.push(mStr.length === 1 ? '0' + mStr : mStr);
+        }
       } else {
-        var mStr = String(monthNum);
-        formattedChartLabels.push(mStr.length === 1 ? '0' + mStr : mStr);
+        formattedChartLabels.push(lbl);
       }
-    } else {
-      formattedChartLabels.push(lbl);
     }
+
+    // 5. Calculate totals safely
+    var totalCurr = 0;
+    for (var c = 0; c < currentValues.length; c++) totalCurr += currentValues[c];
+
+    var totalBaseline = 0;
+    for (var b = 0; b < baselineValues.length; b++) totalBaseline += baselineValues[b];
+
+    // Update UI Elements
+    var currEl = document.getElementById('currPeriodVal');
+    var prevEl = document.getElementById('prevPeriodVal');
+    if (currEl) currEl.innerHTML = formatCurrencyResponsive(totalCurr);
+    if (prevEl) prevEl.innerHTML = formatCurrencyResponsive(totalBaseline);
+
+    if (rawLabels.length > 0) {
+      var currSub = document.getElementById('currPeriodSub');
+      var prevSub = document.getElementById('prevPeriodSub');
+      if (currSub) currSub.innerText = rawLabels[rawLabels.length - 1] || 'For Now';
+      if (prevSub) prevSub.innerText = 'Same Period 2025';
+    }
+
+    // Trigger drawChart safely on next frame
+    requestAnimationFrame(function() {
+      renderSVGLineChart(formattedChartLabels, rawLabels, currentValues, baselineValues);
+    });
   }
 
-  // 5. Calculate totals safely
-  var totalCurr = 0;
-  for (var c = 0; c < currentValues.length; c++) totalCurr += currentValues[c];
-
-  var totalBaseline = 0;
-  for (var b = 0; b < baselineValues.length; b++) totalBaseline += baselineValues[b];
-
-  // Update UI Elements
-  var currEl = document.getElementById('currPeriodVal');
-  var prevEl = document.getElementById('prevPeriodVal');
-  if (currEl) currEl.innerHTML = formatCurrencyResponsive(totalCurr);
-  if (prevEl) prevEl.innerHTML = formatCurrencyResponsive(totalBaseline);
-
-  if (rawLabels.length > 0) {
-    var currSub = document.getElementById('currPeriodSub');
-    var prevSub = document.getElementById('prevPeriodSub');
-    if (currSub) currSub.innerText = rawLabels[rawLabels.length - 1] || 'For Now';
-    if (prevSub) prevSub.innerText = 'Same Period 2025';
-  }
-
-  // Trigger drawChart safely on next frame
-  requestAnimationFrame(function() {
-    renderSVGLineChart(formattedChartLabels, rawLabels, currentValues, baselineValues);
-  });
-}
-
-  function drawChart(chartLabels, rawLabels, currentValues, baselineValues) {
-  // 1. Target the canvas element directly for layout checks
-  const canvas = document.getElementById('expenseChart');
-  if (!canvas) return;
-
-  // 2. Safely grab parent container and enforce explicit height for Notion/iPad
-  const parent = canvas.parentElement;
-  if (parent && (canvas.clientHeight === 0 || parent.clientHeight === 0)) {
-    parent.style.height = '250px';
-    parent.style.position = 'relative';
-  }
-
-  if (!canvas || typeof canvas.getContext !== 'function') {
-    console.warn('Target element is not a valid canvas element.');
-    return;
-  }
-  const ctx = canvas.getContext('2d');
-
-  // 3. Clean up previous instance safely
-  if (window.myChart && typeof window.myChart.destroy === 'function') {
-    window.myChart.destroy();
-  }
-
-  // 4. Safe Gradients (Fallback colors if canvas dimensions aren't calculated yet)
-  let pinkGradient = '#ff528e';
-  let fillGradient = 'rgba(255, 82, 142, 0.15)';
   
-  try {
-    pinkGradient = ctx.createLinearGradient(0, 0, 300, 0);
-    pinkGradient.addColorStop(0, '#ff528e');
-    pinkGradient.addColorStop(1, '#e0407b');
-
-    fillGradient = ctx.createLinearGradient(0, 0, 0, 220);
-    fillGradient.addColorStop(0, 'rgba(255, 82, 142, 0.3)');
-    fillGradient.addColorStop(1, 'rgba(24, 25, 40, 0.0)');
-  } catch (e) {
-    console.warn('Canvas gradient creation deferred:', e);
-  }
-
-  // Vertical Hover Line Plugin
-  const verticalHoverLinePlugin = {
-    id: 'verticalHoverLine',
-    afterDraw: (chart) => {
-      if (chart.tooltip?._active?.length) {
-        const activePoint = chart.tooltip._active[0];
-        const x = activePoint.element.x;
-        const yAxis = chart.scales.y;
-        const cCtx = chart.ctx;
-
-        cCtx.save();
-        cCtx.beginPath();
-        cCtx.moveTo(x, yAxis.top);
-        cCtx.lineTo(x, yAxis.bottom);
-        cCtx.lineWidth = 1;
-        cCtx.setLineDash([4, 4]);
-        cCtx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
-        cCtx.stroke();
-        cCtx.restore();
-      }
-    }
-  };
-
-  const lastIndex = currentValues.length - 1;
-
-  // 5. Safe DataLabels plugin inclusion
-  const activePlugins = [verticalHoverLinePlugin];
-  if (typeof ChartDataLabels !== 'undefined') {
-    activePlugins.push(ChartDataLabels);
-  }
-
-  window.myChart = new Chart(ctx, {
-    type: 'line',
-    plugins: activePlugins,
-    data: {
-      labels: chartLabels,
-      datasets: [
-        {
-          label: 'Current',
-          data: currentValues,
-          borderColor: pinkGradient,
-          borderWidth: 3.5,
-          backgroundColor: fillGradient,
-          fill: true,
-          tension: 0.35,
-          pointRadius: (ctx) => (ctx.dataIndex === lastIndex ? 5 : 2),
-          pointBackgroundColor: (ctx) => (ctx.dataIndex === lastIndex ? '#ff528e' : 'transparent'),
-          pointBorderColor: (ctx) => (ctx.dataIndex === lastIndex ? '#ffffff' : 'transparent'),
-          pointBorderWidth: 2,
-          pointHoverRadius: 7,
-          pointHoverBackgroundColor: '#ff528e',
-          pointHoverBorderColor: '#ffffff',
-          pointHoverBorderWidth: 3,
-          order: 1,
-          datalabels: {
-            display: (ctx) => ctx.dataIndex === lastIndex,
-            align: 'top',
-            anchor: 'end',
-            offset: 6,
-            backgroundColor: '#ff528e',
-            borderRadius: 6,
-            color: '#ffffff',
-            font: { family: 'DM Sans', size: 11, weight: 'bold' },
-            padding: { top: 3, bottom: 3, left: 6, right: 6 },
-            formatter: (val) => {
-              if (val >= 1000000) return (val / 1000000).toFixed(1) + 'M đ';
-              if (val >= 1000) return (val / 1000).toFixed(0) + 'K đ';
-              return val.toLocaleString('vi-VN') + ' đ';
-            }
-          }
-        },
-        {
-          label: 'Baseline',
-          data: baselineValues,
-          borderColor: 'rgba(142, 144, 166, 0.55)',
-          borderWidth: 2,
-          fill: false,
-          tension: 0.35,
-          pointRadius: 0,
-          pointHoverRadius: 5,
-          pointHoverBackgroundColor: '#8e90a6',
-          pointHoverBorderColor: '#ffffff',
-          pointHoverBorderWidth: 2,
-          order: 2,
-          datalabels: { display: false }
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,animation: false,
-      interaction: {
-        mode: 'index',
-        intersect: false
-      },
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          enabled: true,
-          backgroundColor: '#ffffff',
-          titleColor: '#181928',
-          bodyColor: '#181928',
-          titleAlign: 'center',
-          titleFont: { size: 11, family: 'DM Sans', weight: 'normal' },
-          bodyFont: { size: 13, family: 'DM Sans', weight: 'bold' },
-          displayColors: true,
-          boxWidth: 8,
-          boxHeight: 8,
-          usePointStyle: true,
-          cornerRadius: 12,
-          padding: 10,
-          caretSize: 6,
-          callbacks: {
-            title: function(items) {
-              const idx = items[0].dataIndex;
-              return '' + rawLabels[idx];
-            },
-            label: function(context) {
-              let labelName = context.dataset.label || '';
-              let val = context.raw || 0;
-              const isMobile = window.innerWidth <= 480;
-              let formattedVal = '';
-
-              if (isMobile) {
-                const absVal = Math.abs(val);
-                const sign = val < 0 ? '-' : '';
-                if (absVal >= 1e9) {
-                  formattedVal = sign + (absVal / 1e9).toFixed(1) + ' tỷ đ';
-                } else if (absVal >= 1e6) {
-                  const formatted = (absVal / 1e6).toFixed(1).replace('.0', '');
-                  formattedVal = sign + formatted + 'M đ';
-                } else if (absVal >= 1e3) {
-                  const formatted = (absVal / 1e3).toFixed(0);
-                  formattedVal = sign + formatted + 'K đ';
-                } else {
-                  formattedVal = sign + Math.round(absVal) + ' đ';
-                }
-              } else {
-                formattedVal = Math.round(val).toLocaleString('vi-VN') + ' đ';
-              }
-
-              return `${labelName}: ${formattedVal}`;
-            }
-          }
-        }
-      },
-      scales: {
-        x: {
-          grid: { display: false },
-          ticks: {
-            color: '#8e90a6',
-            font: { size: 11, family: 'DM Sans' }
-          }
-        },
-        y: {
-          display: false,
-          grace: '15%'
-        }
-      }
-    }
-  });
-}
 
   function updateHeaderDisplay(currVal, prevVal, currSub, prevSub) {
     document.getElementById('currPeriodVal').innerHTML = formatCurrencyResponsive(currVal);
