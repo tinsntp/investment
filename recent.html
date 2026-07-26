@@ -1095,9 +1095,26 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
                 <span class="material-icons-round" id="filterDropdownArrow" style="font-size: 15px; color: #6c757d; transition: transform 0.2s;">expand_more</span>
               </div>
               <div class="filter-dropdown-options" 
-                  id="transactionFilterOptions" 
-                  style="z-index:100;display:none;overflow-y: auto; position: absolute; right: 0; top: calc(100% + 4px); background: rgba(28, 29, 45, 0.95)!important; border: 0px solid #2d313c; border-radius: 10px; overflow: hidden; min-width: 155px; box-shadow: 0 8px 24px rgba(0,0,0,0.6);">
-              </div>
+     id="transactionFilterOptions" 
+     style="z-index: 9999;
+            display: none;
+            position: absolute; 
+            right: 0; 
+            top: calc(100% + 4px); 
+            background: #1c1d2d; /* Solid fallback for iOS */
+            background: rgba(28, 29, 45, 0.98); 
+            -webkit-backdrop-filter: blur(12px); /* Smooth iOS glass effect */
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            border-radius: 10px; 
+            overflow-y: auto; /* Removed duplicate overflow: hidden */
+            max-height: 280px; 
+            min-width: 155px; 
+            box-shadow: 0 8px 24px rgba(0,0,0,0.8);
+            -webkit-transform: translateZ(0); /* Forces GPU layer in WebKit */
+            transform: translateZ(0);
+            isolation: isolate;">
+</div>
             </div>
           </div>
           <div class="history-list" id="historyListContainer">
