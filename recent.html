@@ -35,7 +35,23 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
     --accent-pink-gradient: #e0407b;
     --accent-muted: #8172d8;
     --text-white: #ffffff;
-    --text-sub: #8e90a6;}
+    --text-sub: #8e90a6;
+    --bg-main: #0D1117;
+    --bg-card: #161B22;
+    --bg-card-hover: #21262D;
+    --bg-subrow: #0F141C;
+    --border-color: rgba(255, 255, 255, 0.08);
+    --text-primary: #F0F6FC;
+    --text-secondary: #8B949E;
+    --text-muted: #484F58;
+    
+    --teal-primary: rgb(20, 184, 166);
+    --teal-bg: rgba(20, 184, 166, 0.12);
+    --pink-primary: rgb(255, 105, 180);
+    --pink-bg: rgba(255, 105, 180, 0.15);
+
+    --status-ongoing: rgb(20, 184, 166);
+    --status-close: #6E7681;}
 @media (max-width: 401px) {.tab-btn span {display: none;}.tab-btn.active span {display: inline-block; margin-left: 6px; font-size: 15px; }.tab-btn i{font-size:5.3vw!important;}}
 @media (min-width: 400px) {.tab-btn span {display: none;}.tab-btn.active span {display: inline-block; margin-left: 6px; font-size: 15px; }}
 
@@ -591,6 +607,366 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 .neutral{color:var(--text-muted)}
 #loading-msg{text-align:center;padding:30px;color:var(--text-muted);font-size:11px}
 
+/*Portfolio*/
+.dashboard-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Hero Card */
+        .hero-card {
+            background: linear-gradient(135deg, rgba(22, 27, 34, 0.95) 0%, rgba(15, 20, 28, 0.98) 100%);
+            border-radius: 24px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(20, 184, 166, 0.15) 0%, rgba(255, 105, 180, 0.05) 70%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .hero-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .hero-title-group h2 {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--teal-primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero-title-group .date-range {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .hero-main-stat {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .hero-amount {
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            background: linear-gradient(90deg, #FFFFFF 0%, rgb(20, 184, 166) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .badge-teal {
+            background: var(--teal-bg);
+            color: var(--teal-primary);
+        }
+
+        .badge-pink {
+            background: var(--pink-bg);
+            color: var(--pink-primary);
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 80px;
+            margin-top: 10px;
+        }
+
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            padding: 12px;
+
+        }
+
+        .metric-label {
+            font-size: 10px;
+            color: var(--text-secondary);
+            font-weight: 700;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Portfolio Table Container */
+        .portfolio-card {
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .portfolio-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .portfolio-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .interactive-hint {
+            font-size: 12px;
+            color: var(--teal-primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--teal-bg);
+            padding: 6px 12px;
+            border-radius: 12px;
+
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 0 -24px -24px -24px;
+            padding: 0 12px 12px 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            table-layout: fixed;
+        }
+
+        col.col-asset { width: 28%; }
+        col.col-duration { width: 17%; }
+        col.col-volprice { width: 22%; }
+        col.col-pnl { width: 18%; }
+        col.col-costmarket { width: 15%; }
+
+        th {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-secondary);
+            padding: 12px 10px;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        td {
+            padding: 14px 10px;
+            font-size: 13px;
+            vertical-align: middle;
+            overflow: hidden;
+        }
+
+        tr.main-row {
+            background: rgba(255, 255, 255, 0.02);
+            cursor: pointer;
+            transition: background 0.2s ease;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        tr.main-row:hover {
+            background: var(--bg-card-hover);
+        }
+
+        tr.main-row.expanded {
+            background: rgba(20, 184, 166, 0.04);
+            border-bottom: none;
+        }
+
+        /* Compact Sub-Rows */
+        tr.log-row {
+            display: none;
+            background: var(--bg-subrow);
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
+            font-size: 11px;
+        }
+
+        tr.log-row td {
+            padding: 6px 10px;
+        }
+
+        tr.log-row.visible {
+            display: table-row;
+        }
+
+        tr.log-row:last-child {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .chevron-icon {
+            display: inline-block;
+            transition: transform 0.25s ease;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-right: 4px;
+            flex-shrink: 0;
+        }
+
+        .expanded .chevron-icon {
+            transform: rotate(90deg);
+        }
+
+        .asset-cell {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow: hidden;
+        }
+
+        .asset-icon-wrapper {
+            position: relative;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .asset-icon {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 9px;
+            color: white;
+            flex-shrink: 0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            object-fit: cover;
+            background-color: #21262D;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .status-dot {
+            position: absolute;
+            bottom: -1px;
+            right: -1px;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            border: 1.5px solid var(--bg-card);
+        }
+
+        .status-dot.ongoing {
+            background-color: var(--status-ongoing);
+            box-shadow: 0 0 4px var(--status-ongoing);
+        }
+
+        .status-dot.close {
+            background-color: var(--status-close);
+        }
+
+        .val-primary {
+            font-weight: 700;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .val-secondary {
+            font-size: 11px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .full-log-text { display: inline; }
+        .short-log-text { display: none; }
+
+        #det-msg {
+            display: none;
+            padding: 12px;
+            margin-bottom: 16px;
+            background: rgba(255, 105, 180, 0.15);
+            border-radius: 12px;
+            color: var(--pink-primary);
+            font-size: 13px;
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 400px) {
+            body { padding: 8px; }
+            .portfolio-card, .hero-card { padding: 12px; border-radius: 16px; }
+            .table-wrapper { margin: 0 -12px -12px -12px; padding: 0 12px 12px 12px; }
+            col.col-asset { width: 28%; }
+            col.col-duration { width: 17%; }
+            col.col-volprice { width: 22%; }
+            col.col-pnl { width: 18%; }
+            col.col-costmarket { width: 15%; }
+
+            th { font-size: 9px; padding: 8px 3px; letter-spacing: 0px; }
+            td { padding: 10px 3px; font-size: 11px; }
+            tr.log-row td { padding: 4px 2px; }
+            .sub-indent { padding-left: 8px !important; }
+            .asset-cell { gap: 3px; }
+            .asset-icon { width: 20px; height: 20px; font-size: 7px; }
+            .asset-account-title { display: none !important; }
+            .hero-amount { font-size: 26px; }
+            .metrics-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .metric-card { padding: 8px; }
+            .metric-value { font-size: 14px; }
+            .interactive-hint { font-size: 10px; padding: 4px 8px; }
+
+            .full-log-text { display: none; }
+            .short-log-text { display: inline; }
+        }
+
+        @media (min-width: 401px) and (max-width: 768px) {
+            body { padding: 12px; }
+            .hero-card, .portfolio-card { padding: 16px; border-radius: 18px; }
+            .hero-amount { font-size: 30px; }
+            td, th { padding: 10px 6px; }
+            .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
 </style>
 </head>
 <body>
@@ -1000,7 +1376,84 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 
     <!-- TRANSACTION SLIDE -->
     <div class="slide" id="slide-2" data-idx="2">
-      
+        <div class="dashboard-grid">
+            <div id="det-msg"></div>
+
+            <!-- HERO STAT CARD -->
+            <div class="hero-card">
+                <div class="hero-header">
+                    <div class="hero-title-group">
+                        <h2>Portfolio Profit / Loss</h2>
+                        <div class="date-range">Live Dashboard</div>
+                    </div>
+                </div>
+
+                <div class="hero-main-stat">
+                    <div class="hero-amount" id="total-profit-val">0</div>
+                    <div class="badge-pill badge-teal" id="total-profit-badge">▲ +0.00%</div>
+                </div>
+
+                <div class="chart-container">
+                    <svg width="100%" height="100%" viewBox="0 0 500 80" preserveAspectRatio="none">
+                        <defs>
+                            <linearGradient id="tealPinkGrad" x1="0" y1="0" x2="1" y2="0">
+                                <stop offset="0%" stop-color="rgb(20, 184, 166)"/>
+                                <stop offset="100%" stop-color="rgb(255, 105, 180)"/>
+                            </linearGradient>
+                            <linearGradient id="tealPinkFill" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="rgb(20, 184, 166)" stop-opacity="0.25"/>
+                                <stop offset="100%" stop-color="rgb(255, 105, 180)" stop-opacity="0.0"/>
+                            </linearGradient>
+                        </defs>
+                        <path d="M 0 65 Q 70 45, 140 55 T 280 20 T 400 30 T 500 10 L 500 80 L 0 80 Z" fill="url(#tealPinkFill)" />
+                        <path d="M 0 65 Q 70 45, 140 55 T 280 20 T 400 30 T 500 10" fill="none" stroke="url(#tealPinkGrad)" stroke-width="3" stroke-linecap="round"/>
+                        <circle cx="500" cy="10" r="4" fill="rgb(255, 105, 180)" />
+                    </svg>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Cost Basis</div>
+                        <div class="metric-value" id="stat-cost">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Market Value</div>
+                        <div class="metric-value" id="stat-mvalue">0</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Active Positions</div>
+                        <div class="metric-value" id="stat-cycles">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PORTFOLIO TABLE CARD -->
+            <div class="portfolio-card">
+                <div class="table-wrapper">
+                    <table>
+                        <colgroup>
+                            <col class="col-asset">
+                            <col class="col-duration">
+                            <col class="col-volprice">
+                            <col class="col-pnl">
+                            <col class="col-costmarket">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>Asset</th>
+                                <th>Date</th>
+                                <th>Vol/Price</th>
+                                <th>PnL</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody id="portfolio-tbody">
+                            <!-- Dynamic Insertion -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
     <!-- F.I.R.E. SLIDE -->
     <div class="slide" id="slide-6" data-idx="6">
@@ -3403,6 +3856,324 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
     });
   }
 
+    function cleanNum(val){if(!val)return 0;let c=val.toString().replace(/[\$,%\s]/g,"");c.startsWith("(")&&c.endsWith(")")&&(c="-"+c.slice(1,-1));const n=parseFloat(c);return isNaN(n)?0:n}function formatShortNumber(val){if(null==val||isNaN(val))return"-";if(0===val)return"0";const absNum=Math.abs(val),sign=val<0?"-":"",decimals=window.innerWidth>400?3:1;let formatted="";return formatted=absNum>=1e9?(absNum/1e9).toFixed(decimals)+"B":absNum>=1e6?(absNum/1e6).toFixed(decimals)+"M":absNum>=1e3?(absNum/1e3).toFixed(decimals)+"K":absNum.toLocaleString(void 0,{minimumFractionDigits:0,maximumFractionDigits:decimals}),`${sign}${formatted}`}function formatStockPrice(price){if(!price||isNaN(price))return"0.0";let formatted=(price>1e3?price/1e3:price).toFixed(2);return(formatted.endsWith("0")&&!formatted.endsWith(".00")||formatted.endsWith(".00"))&&(formatted=formatted.slice(0,-1)),formatted}function formatCryptoPrice(price){return!price||isNaN(price)?"0.000":price.toLocaleString(void 0,{minimumFractionDigits:0,maximumFractionDigits:0})}function formatPnlValue(num){if(0===num||null==num)return"-";return(num>0?"+":"")+formatShortNumber(num)}function formatPnlPct(pctVal){if(0===pctVal||null==pctVal||isNaN(pctVal))return"-";return`${pctVal>0?"+":""}${pctVal.toFixed(2)}%`}function parseDate(dateStr){if(!dateStr)return null;if(dateStr.includes("-")){const parts=dateStr.split("-");return new Date(parseInt(parts[0],10),parseInt(parts[1],10)-1,parseInt(parts[2],10))}if(dateStr.includes("/")){const parts=dateStr.split("/");return new Date(parseInt(parts[2],10),parseInt(parts[1],10)-1,parseInt(parts[0],10))}return new Date(dateStr)}function formatNoYearDate(dateObj){if(!dateObj)return"-";return`${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][dateObj.getMonth()]} ${String(dateObj.getDate()).padStart(2,"0")}`}function formatDateRangeTwoLinesNoYear(startDateStr,exitDateStr,isSaving=!1,volumeMonths=0){const sDate=parseDate(startDateStr);let eDate=null;isSaving&&volumeMonths>0&&sDate?(eDate=new Date(sDate),eDate.setMonth(eDate.getMonth()+parseInt(volumeMonths,10))):exitDateStr&&""!==exitDateStr.trim()&&(eDate=parseDate(exitDateStr));return`<div class="val-primary">${sDate?formatNoYearDate(sDate):"-"}</div><div class="val-secondary">${eDate?formatNoYearDate(eDate):"Present"}</div>`}function cleanNoteText(noteStr,statusStr){if(!noteStr||""===noteStr.trim())return statusStr||"";let cleaned=noteStr.replace(/MAIN\b/gi,"").replace(/LOG\b/gi,"").replace(/\bC\d+\b/gi,"").replace(/[\+\-]/g,"").trim();return""===cleaned?statusStr:cleaned}function getShortLogKeyword(text){if(!text)return"Log";const lower=text.toLowerCase();return lower.includes("dca")?"DCA":lower.includes("buy")?"Buy":lower.includes("sell")?"Sell":lower.includes("close")?"Close":lower.includes("deposit")||lower.includes("saving")?"Deposit":text.split(" ")[0].slice(0,5)}function parseCSVLine(line){for(var values=[],currentVal="",inQuotes=!1,i=0;i<line.length;i++){var char=line.charAt(i);'"'===char&&'"'===line.charAt(i+1)?(currentVal+='"',i++):'"'===char?inQuotes=!inQuotes:","!==char||inQuotes?currentVal+=char:(values.push(currentVal.trim()),currentVal="")}return values.push(currentVal.trim()),values}
+    function fetchOrderSheetCSV(){fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=488369714",{cache:"no-store"}).then(res=>{if(!res.ok)throw new Error("HTTP "+res.status);return res.text()}).then(csvText=>processAndRenderData(csvText)).catch(err=>{console.error("Widget load error:",err);var msgEl=document.getElementById("det-msg");msgEl&&(msgEl.style.display="block",msgEl.textContent="CSV Fetch Error: "+err.message)})}
+
+    function processAndRenderData(csvText) {
+        const lines = csvText.trim().split(/\r?\n/);
+        if (lines.length < 2) return;
+
+        const rows = lines.slice(1).map(line => parseCSVLine(line));
+        const groupsMap = {};
+
+        rows.forEach(row => {
+            if (!row || row.length < 4) return;
+
+            const symbol = (row[1] || "").trim().toUpperCase();
+            if (!symbol) return;
+
+            const colCPnlPct = cleanNum(row[2]);
+            const actualPnl = cleanNum(row[3]);
+            const livePrice = cleanNum(row[4]); // Column E / Live Market Price
+            const execPrice = cleanNum(row[5]);
+            const entryPrice = cleanNum(row[6]);
+            const volume = cleanNum(row[7]);
+            const entryDate = row[8] || "";
+            const exitDate = row[9] || "";
+            const accountType = (row[10] || "Stock").trim();
+            const status = (row[11] || "On-going").trim();
+            const note = (row[12] || "").trim();
+            const costValue = cleanNum(row[14]);
+            const marketValue = cleanNum(row[15]);
+            const totalFee = cleanNum(row[17]);
+            const iconUrl = row[22] || "";
+
+            if (!groupsMap[symbol]) {
+                groupsMap[symbol] = {
+                    symbol: symbol,
+                    accountType: accountType,
+                    status: status,
+                    iconUrl: iconUrl,
+                    livePrice: livePrice,
+                    records: [],
+                    mainRecord: null
+                };
+            }
+
+            const recordObj = {
+                symbol,
+                colCPnlPct,
+                entryDate,
+                exitDate,
+                volume,
+                costValue,
+                marketValue,
+                actualPnl,
+                execPrice,
+                entryPrice,
+                livePrice,
+                totalFee,
+                status,
+                note,
+                accountType
+            };
+
+            if (note.toUpperCase() === "MAIN") {
+                groupsMap[symbol].mainRecord = recordObj;
+            } else {
+                groupsMap[symbol].records.push(recordObj);
+            }
+        });
+
+        renderAccordion(Object.values(groupsMap));
+    }
+
+    function renderAccordion(portfolioGroups) {
+        const tbody = document.getElementById('portfolio-tbody');
+        tbody.innerHTML = '';
+
+        let totalPnlVnd = 0;
+        let totalMarketValVnd = 0;
+        let totalCostVnd = 0;
+        let activePositions = 0;
+        const now = new Date();
+
+        portfolioGroups.forEach((group, index) => {
+            const groupGroupId = `group-${index}`;
+            const records = group.records || [];
+            const isSaving = group.accountType.toLowerCase() === "saving";
+            const isStock = group.accountType.toLowerCase() === "stock";
+            const isCrypto = group.accountType.toLowerCase() === "crypto";
+
+            const mainRec = ( (isStock || isCrypto) && group.mainRecord ) ? group.mainRecord : null;
+
+            const sumMarketValue = mainRec ? mainRec.marketValue : (records.reduce((acc, r) => acc + r.marketValue, 0) + (group.mainRecord ? group.mainRecord.marketValue : 0));
+            const sumCost = mainRec ? mainRec.costValue : (records.reduce((acc, r) => acc + r.costValue, 0) + (group.mainRecord ? group.mainRecord.costValue : 0));
+            const sumPnl = mainRec ? mainRec.actualPnl : (records.reduce((acc, r) => acc + r.actualPnl, 0) + (group.mainRecord ? group.mainRecord.actualPnl : 0));
+
+            let overallPnlPct = 0;
+            if (mainRec) {
+                overallPnlPct = mainRec.colCPnlPct;
+            } else if (isSaving && records.length > 0) {
+                overallPnlPct = records[0].colCPnlPct;
+            } else {
+                overallPnlPct = sumCost > 0 ? (sumPnl / sumCost) * 100 : 0;
+            }
+
+            totalPnlVnd += sumPnl;
+            totalMarketValVnd += sumMarketValue;
+            totalCostVnd += sumCost;
+
+            if (group.status.toLowerCase().includes('on-going')) {
+                activePositions++;
+            }
+
+            const isPositive = sumPnl > 0;
+            const isZero = sumPnl === 0;
+            const isOngoing = group.status.toLowerCase().includes('on-going');
+            const dotClass = isOngoing ? 'ongoing' : 'close';
+
+            // Dynamic PnL color style string for matching live price color
+            const pnlColorStyle = isZero ? 'var(--text-secondary)' : (isPositive ? 'var(--teal-primary)' : 'var(--pink-primary)');
+
+            const hasIconUrl = group.iconUrl && group.iconUrl.trim().startsWith("http");
+            const iconStyle = hasIconUrl ? `background-image: url('${group.iconUrl}');` : `background-color: #21262D;`;
+            const iconText = hasIconUrl ? '' : group.symbol.slice(0, 4);
+
+            let displayAccountTitle = group.accountType;
+            if (isSaving && records.length > 0) {
+                const maxRec = records.reduce((max, r) => r.costValue > max.costValue ? r : max, records[0]);
+                if (maxRec && maxRec.accountType) {
+                    displayAccountTitle = maxRec.accountType;
+                }
+            }
+
+            let activeSavingSubrowsCount = 0;
+            if (isSaving) {
+                records.forEach(r => {
+                    const sDate = parseDate(r.entryDate);
+                    let eDate = null;
+                    if (sDate && r.volume > 0) {
+                        eDate = new Date(sDate);
+                        eDate.setMonth(eDate.getMonth() + parseInt(r.volume, 10));
+                    } else if (r.exitDate) {
+                        eDate = parseDate(r.exitDate);
+                    }
+                    if (!eDate || eDate >= now) {
+                        activeSavingSubrowsCount++;
+                    }
+                });
+            }
+
+            // Raw live market price
+            const rawLive = mainRec ? mainRec.livePrice : group.livePrice;
+
+            let volumePriceHTML = "";
+            if (isSaving) {
+                volumePriceHTML = `
+                    <div class="val-primary">${activeSavingSubrowsCount}/${records.length}</div>
+                    <div class="val-secondary" style="text-transform: lowercase;">${group.status}</div>`;
+            } else if (isCrypto) {
+                // CRYPTO MAIN ROW SPECIFIC: Entry Price (line 1) & Live Market Price matching PnL color (line 2)
+                const rawEntry = mainRec ? (mainRec.entryPrice || mainRec.execPrice) : (records[0]?.entryPrice || records[0]?.execPrice || 0);
+                const strEntry = "$" + formatCryptoPrice(rawEntry);
+                const strLive = isOngoing ? ("$" + formatCryptoPrice(rawLive)) : "-";
+
+                volumePriceHTML = `
+                    <div class="val-primary">${strEntry}</div>
+                    <div class="val-secondary" style="color: ${pnlColorStyle}; font-weight: 600;">${strLive}</div>`;
+            } else if (isStock) {
+                // STOCK MAIN ROW: Vol (line 1), Entry Price / Live Price matching PnL color (line 2)
+                const displayVol = mainRec ? mainRec.volume : records.reduce((acc, r) => acc + r.volume, 0);
+                const rawEntry = mainRec ? (mainRec.entryPrice || mainRec.execPrice) : (group.mainRecord?.entryPrice || records[0]?.entryPrice || 0);
+                
+                const strEntry = formatStockPrice(rawEntry);
+                const strLive = isOngoing ? formatStockPrice(rawLive) : "";
+                
+                const displayPriceCombined = isOngoing 
+                    ? `${strEntry}/<span style="color: ${pnlColorStyle}; font-weight: 600;">${strLive}</span>` 
+                    : strEntry;
+
+                volumePriceHTML = `
+                    <div class="val-primary">${displayVol.toLocaleString()}</div>
+                    <div class="val-secondary">${displayPriceCombined}</div>`;
+            } else {
+                const totalVol = records.reduce((acc, r) => acc + r.volume, 0);
+                const avgPrice = records[0]?.entryPrice || records[0]?.execPrice || 0;
+
+                volumePriceHTML = `
+                    <div class="val-primary">${totalVol.toLocaleString()}</div>
+                    <div class="val-secondary">${avgPrice.toLocaleString()}</div>`;
+            }
+
+            // MAIN ROW
+            const mainTr = document.createElement('tr');
+            mainTr.className = 'main-row';
+            mainTr.setAttribute('onclick', `toggleGroup('${groupGroupId}', this)`);
+
+            const refDateRecord = mainRec || group.mainRecord || records[0];
+            const durationHTML = formatDateRangeTwoLinesNoYear(
+                refDateRecord?.entryDate, 
+                refDateRecord?.exitDate, 
+                isSaving, 
+                refDateRecord?.volume
+            );
+
+            mainTr.innerHTML = `
+                <td>
+                    <div class="asset-cell">
+                        <span class="chevron-icon">
+                            ${records.length > 0 ? '<i class="bi bi-chevron-right"></i>' : '<i class="bi bi-dot"></i>'}
+                        </span>
+                        <div class="asset-icon-wrapper">
+                            <div class="asset-icon" style="${iconStyle}">${iconText}</div>
+                            <span class="status-dot ${dotClass}" title="${group.status}"></span>
+                        </div>
+                        <div style="overflow: hidden;">
+                            <div class="val-primary">${group.symbol}</div>
+                            <div class="val-secondary asset-account-title">${displayAccountTitle}</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    ${durationHTML}
+                </td>
+                <td>
+                    ${volumePriceHTML}
+                </td>
+                <td>
+                    <div class="val-primary" style="color: ${pnlColorStyle};">
+                        ${formatPnlValue(sumPnl)}
+                    </div>
+                    <div class="val-secondary" style="color: ${pnlColorStyle};">
+                        ${formatPnlPct(overallPnlPct)}
+                    </div>
+                </td>
+                <td>
+                    <div class="val-primary">${formatShortNumber(sumCost)}</div>
+                    <div class="val-secondary">${formatShortNumber(sumMarketValue)}</div>
+                </td>
+            `;
+            tbody.appendChild(mainTr);
+
+            // SUB-ROWS
+            if (records.length > 0) {
+                records.forEach(r => {
+                    const logTr = document.createElement('tr');
+                    logTr.className = `log-row ${groupGroupId}`;
+                    
+                    const subPnlPct = (isSaving || isStock || isCrypto) ? r.colCPnlPct : (r.costValue > 0 ? (r.actualPnl / r.costValue) * 100 : 0);
+                    const isSubPositive = r.actualPnl > 0;
+                    const isSubZero = r.actualPnl === 0;
+
+                    const execDateObj = parseDate(r.entryDate);
+                    const subExecDateStr = execDateObj ? formatNoYearDate(execDateObj) : "-";
+
+                    const cleanedDetailNote = cleanNoteText(r.note, r.status);
+                    const shortKeyword = getShortLogKeyword(cleanedDetailNote);
+                    const subAssetLabel = isSaving ? r.symbol : cleanedDetailNote;
+
+                    let subVolumePriceHTML = "";
+                    if (isSaving) {
+                        subVolumePriceHTML = `
+                            <div class="val-primary">${r.volume} Mos</div>`;
+                    } else {
+                        const rawPrice = r.execPrice || r.entryPrice || 0;
+                        const subPriceDisplay = isCrypto ? ("$" + formatCryptoPrice(rawPrice)) : (isStock ? formatStockPrice(rawPrice) : rawPrice.toLocaleString());
+
+                        subVolumePriceHTML = `
+                            <div class="val-primary">${r.volume.toLocaleString()}</div>
+                            <div class="val-secondary">${subPriceDisplay}</div>`;
+                    }
+
+                    logTr.innerHTML = `
+                        <td class="sub-indent" style="padding-left: 28px;">
+                            <div class="asset-cell">
+                                <span style="color: var(--text-muted); flex-shrink: 0;"><i class="bi bi-arrow-return-right"></i></span>
+                                <span class="val-primary" style="font-size: 11px;">
+                                    <span class="full-log-text">${subAssetLabel}</span>
+                                    <span class="short-log-text">${isSaving ? r.symbol : shortKeyword}</span>
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="val-primary">${subExecDateStr}</div>
+                        </td>
+                        <td>
+                            ${subVolumePriceHTML}
+                        </td>
+                        <td>
+                            <div class="val-secondary" style="color: ${isSubZero ? 'var(--text-secondary)' : (isSubPositive ? 'var(--teal-primary)' : 'var(--pink-primary)')}; font-weight: 700;">
+                                ${formatPnlValue(r.actualPnl)}
+                            </div>
+                            <div class="val-secondary" style="color: ${isSubZero ? 'var(--text-secondary)' : (isSubPositive ? 'var(--teal-primary)' : 'var(--pink-primary)')};">
+                                ${formatPnlPct(subPnlPct)}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="val-secondary" style="font-weight: 700; color: var(--text-primary);">${formatShortNumber(r.costValue)}</div>
+                            <div class="val-secondary">${formatShortNumber(r.marketValue)}</div>
+                        </td>
+                    `;
+                    tbody.appendChild(logTr);
+                });
+            }
+        });
+
+        // Update Hero Summary
+        document.getElementById('total-profit-val').textContent = (totalPnlVnd > 0 ? '+' : '') + totalPnlVnd.toLocaleString()+"₫";
+        const overallPct = totalCostVnd > 0 ? (totalPnlVnd / totalCostVnd) * 100 : 0;
+        const badgeEl = document.getElementById('total-profit-badge');
+        badgeEl.textContent = formatPnlPct(overallPct);
+        badgeEl.className = `badge-pill ${totalPnlVnd >= 0 ? 'badge-teal' : 'badge-pink'}`;
+
+        document.getElementById('stat-mvalue').textContent = formatShortNumber(totalMarketValVnd);
+        document.getElementById('stat-cost').textContent = formatShortNumber(totalCostVnd);
+        document.getElementById('stat-cycles').textContent = activePositions;
+    }
+
+  function toggleGroup(groupId,mainRowEl){const logRows=document.querySelectorAll(`.${groupId}`);if(0===logRows.length)return;mainRowEl.classList.contains("expanded")?(mainRowEl.classList.remove("expanded"),logRows.forEach(row=>row.classList.remove("visible"))):(mainRowEl.classList.add("expanded"),logRows.forEach(row=>row.classList.add("visible")))}
+
   function closeModal(){const backdrop=document.getElementById("modalBackdrop");backdrop.style.pointerEvents="none",backdrop.classList.remove("active")}
   function createChipElement(container,totalAmount){let displayLabel="";if(totalAmount>=1e6){const clearMillions=totalAmount/1e6;displayLabel=`+${clearMillions%1==0?clearMillions:clearMillions.toFixed(1)}M`}else if(totalAmount>=1e3){const clearThousands=totalAmount/1e3;displayLabel=`+${clearThousands%1==0?clearThousands:clearThousands.toFixed(0)}K`}else displayLabel=`+${totalAmount}`;const chip=document.createElement("div");chip.className="quick-amt-chip",chip.innerText=displayLabel,chip.onclick=()=>{const inputField=document.getElementById("transactionAmount"),clearBtn=document.getElementById("clearAmountBtn");inputField&&(inputField.value=parseInt(totalAmount,10).toLocaleString("en-US"),clearBtn&&(clearBtn.style.display="block"),window.generateDynamicChips(totalAmount))},container.appendChild(chip)}
   function updateDropdownOptions(uniqueTypesMap){const dropdown=document.getElementById("transactionFilterOptions");if(!dropdown)return;var depositIcon=uniqueTypesMap.get("Deposit")||uniqueTypesMap.get("deposit")||uniqueTypesMap.get("Deposits")||uniqueTypesMap.get("deposits"),withdrawIcon=uniqueTypesMap.get("Withdrawal")||uniqueTypesMap.get("withdrawal")||uniqueTypesMap.get("Withdrawals")||uniqueTypesMap.get("withdrawals")||uniqueTypesMap.get("Withdraw")||uniqueTypesMap.get("withdraw");function getVisualIcon(iconUrl,defaultMaterialIcon,iconColor){return iconUrl&&"n/a"!==iconUrl.toLowerCase()?`\n          <img src="${iconUrl}" style="width: 18px; height: 18px; object-fit: contain; border-radius: 4px;" alt="" \n              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">\n          <span class="material-icons-round" style="display: none; font-size: 15px; color: ${iconColor}; width: 18px; height: 18px; align-items: center; justify-content: center;">${defaultMaterialIcon}</span>\n        `:`<span class="material-icons-round" style="font-size: 15px; color: ${iconColor}; display: flex; align-items: center; justify-content: center; width: 18px; height: 18px;">${defaultMaterialIcon}</span>`}let optionsHtml=`\n      <div class="filter-opt-item" onclick="window.selectTransactionFilter('all', 'All')" \n          style="padding: 8px 12px; color: #f8f9fa; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;"\n          onmouseover="this.style.background='#22252d'" onmouseout="this.style.background='transparent'">\n        <span class="material-icons-round" style="font-size: 15px; color: #6c757d; display: flex; align-items: center; justify-content: center; width: 18px; height: 18px;">filter_list</span>\n        All\n      </div>\n      \n      <div class="filter-opt-item" onclick="window.selectTransactionFilter('deposit', 'Deposits')" \n          style="padding: 8px 12px; color: #f8f9fa; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;"\n          onmouseover="this.style.background='#22252d'" onmouseout="this.style.background='transparent'">\n        <div style="display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0;">\n          ${getVisualIcon(depositIcon,"arrow_downward","#14b8a6")}\n        </div>\n        Deposits\n      </div>\n      \n      <div class="filter-opt-item" onclick="window.selectTransactionFilter('withdrawal', 'Withdrawals')" \n          style="padding: 8px 12px; color: #f8f9fa; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;"\n          onmouseover="this.style.background='#22252d'" onmouseout="this.style.background='transparent'">\n        <div style="display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0;">\n          ${getVisualIcon(withdrawIcon,"arrow_upward","rgb(255, 105, 180)")}\n        </div>\n        Withdrawals\n      </div>\n    `;uniqueTypesMap.forEach(function(iconUrl,type){var lowerT=(type||"").toLowerCase().trim();if(lowerT.startsWith("withdraw")||lowerT.startsWith("deposit"))return;let visualIconHtml="";iconUrl&&"n/a"!==iconUrl.toLowerCase()&&(visualIconHtml=`<img src="${iconUrl}" style="width: 18px; height: 18px; object-fit: contain; border-radius: 4px;" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`),visualIconHtml+=`\n        <div style="display: ${iconUrl?"none":"flex"}; width: 18px; height: 18px; background: rgba(255,255,255,0.1); border-radius: 4px; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: #3b82f6;">\n          ${(type||"?").charAt(0).toUpperCase()}\n        </div>\n      `,optionsHtml+=`\n        <div class="filter-opt-item" onclick="window.selectTransactionFilter('${type}', '${type}')" \n            style="padding: 8px 12px; color: #f8f9fa; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;"\n            onmouseover="this.style.background='#22252d'" onmouseout="this.style.background='transparent'">\n          <div style="display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0;">\n            ${visualIconHtml}\n          </div>\n          ${type}\n        </div>\n      `}),dropdown.innerHTML=optionsHtml}
@@ -3432,7 +4203,9 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
   window.selectTransactionFilter=function(filterVal,displayLabel,iconUrlOrName){const labelElement=document.getElementById("currentFilterLabel");if(labelElement){const visualIconHtml=iconUrlOrName&&(iconUrlOrName.includes("/")||iconUrlOrName.includes("."))?`<img src="${iconUrlOrName}" style="width: 15px; height: 15px; object-fit: contain; border-radius: 2px;" alt="">`:`<span class="material-icons-round" style="font-size: 15px;">${iconUrlOrName||"filter_list"}</span>`;labelElement.innerHTML=`${visualIconHtml} ${displayLabel}`}const container=document.getElementById("historyListContainer");if(!container)return;const rows=container.querySelectorAll("#historyListContainer > .sub-swipe-container"),query=filterVal.toLowerCase();for(let row of rows){const typeAttr=(row.getAttribute("data-tx-type")||"").toLowerCase(),amtSpan=row.querySelector(".ca-history-amt"),isNegativeRow=!!amtSpan&&-1!==amtSpan.innerText.indexOf("-");let isMatch=!1;isMatch="all"===query||("deposit"===query?!isNegativeRow&&-1!==typeAttr.indexOf("deposit"):"withdrawal"===query||"expense"===query?isNegativeRow&&(-1!==typeAttr.indexOf("withdrawal")||-1!==typeAttr.indexOf("expense")||typeAttr===query):-1!==typeAttr.indexOf(query)),row.style.setProperty("display",isMatch?"block":"none","important")}const headers=container.getElementsByClassName("tx-group-hdr");for(let hdr of headers){let next=hdr.nextElementSibling,hasVisibleRows=!1;for(;next&&!next.classList.contains("tx-group-hdr");){if(next.classList.contains("sub-swipe-container")&&"none"!==next.style.display){hasVisibleRows=!0;break}next=next.nextElementSibling}hdr.style.display=hasVisibleRows?"block":"none"}window.closeAllFilterDropdowns()};
   window.closeAllFilterDropdowns=function(){const optionsPanel=document.getElementById("transactionFilterOptions"),arrowIcon=document.getElementById("filterDropdownArrow");optionsPanel&&(optionsPanel.style.display="none"),arrowIcon&&(arrowIcon.style.transform="rotate(0deg)")};
   window.handleRefreshCards=function(event){event&&event.stopPropagation();const refreshBtn=document.getElementById("refreshCardsBtn");refreshBtn&&(refreshBtn.style.transition="transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)",refreshBtn.style.transform="rotate(360deg)",setTimeout(()=>{refreshBtn.style.transform="rotate(0deg)"},500)),"function"==typeof renderCards?renderCards():"function"==typeof window.renderCards&&window.renderCards(),"function"==typeof caLoadAccounts&&caLoadAccounts(),"function"==typeof loadTransactionHistory&&loadTransactionHistory()};
-  
+  window.addEventListener('resize', () => {fetchOrderSheetCSV();});
+
+  fetchOrderSheetCSV();
   caLoadAccounts();loadTransactionHistory();
   loadSubscriptions();
   loadExpense();fetchSheetCSV();
