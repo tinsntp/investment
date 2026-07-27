@@ -616,8 +616,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
         /* Hero Card */
         .hero-card-port {
             background: none;
-            border-radius: 24px;
-            padding: 24px;
+            padding: 24px;margin:10px;
             position: relative;
             overflow: hidden;
 
@@ -899,7 +898,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
         }
 
         .val-secondary {
-            font-size: 11px;
+            font-size: 12px;padding-top:2px;
             color: var(--text-secondary);
             white-space: nowrap;
             overflow: hidden;
@@ -921,20 +920,20 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 
         /* Mobile Optimization */
         @media (max-width: 400px) {
-            .portfolio-card, .hero-card-port { padding: 12px; border-radius: 16px; }
+            .portfolio-card, .hero-card-port { padding: 0px; }
             .table-wrapper { margin: 0 -12px -12px -12px; padding-right: 5px; }
-            col.col-asset { width: 28%; }
+            col.col-asset { width: 25%; }
             col.col-duration { width: 17%; }
             col.col-volprice { width: 22%; }
             col.col-pnl { width: 18%; }
-            col.col-costmarket { width: 15%; }
+            col.col-costmarket { width: 17%; }
 
-            th { font-size: 11px; padding: 8px 3px; letter-spacing: 0px; }
-            td { padding: 10px 3px; font-size: 11px; }
+            th { font-size: 12px; padding: 8px 3px; letter-spacing: 0px; }
+            td { padding: 10px 3px; font-size: 13px; }
             tr.log-row td { padding: 4px 2px; }
             .sub-indent { padding-left: 8px !important; }
             .asset-cell { gap: 3px; }
-            .asset-icon { width: 20px; height: 20px; font-size: 7px; }
+            .asset-icon { width: 20px; height: 20px; font-size: 8px; }
             .asset-account-title { display: none !important; }
             .hero-amount { font-size: 26px; }
             .metrics-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
@@ -947,7 +946,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
         }
 
         @media (min-width: 401px) and (max-width: 768px) {
-            .hero-card-port, .portfolio-card { padding: 16px; border-radius: 18px; }
+            .hero-card-port, .portfolio-card { padding: 16px;}
             .hero-amount { font-size: 30px; }
             td, th { padding: 10px 6px; }
             .metrics-grid { grid-template-columns: repeat(2, 1fr); }
