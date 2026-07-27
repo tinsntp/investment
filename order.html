@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Portfolio Dashboard</title>
+    <!-- Plus Jakarta Sans Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        :root {
+            --bg-main: #0D1117;
+            --bg-card: #161B22;
+            --bg-card-hover: #21262D;
+            --bg-subrow: #0F141C;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-primary: #F0F6FC;
+            --text-secondary: #8B949E;
+            --text-muted: #484F58;
+            
+            --teal-primary: rgb(20, 184, 166);
+            --teal-bg: rgba(20, 184, 166, 0.12);
+            --pink-primary: rgb(255, 105, 180);
+            --pink-bg: rgba(255, 105, 180, 0.15);
+
+            --status-ongoing: rgb(20, 184, 166);
+            --status-close: #6E7681;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            max-width: 1050px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        .dashboard-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Hero Card */
+        .hero-card {
+            background: linear-gradient(135deg, rgba(22, 27, 34, 0.95) 0%, rgba(15, 20, 28, 0.98) 100%);
+            border-radius: 24px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(20, 184, 166, 0.15) 0%, rgba(255, 105, 180, 0.05) 70%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .hero-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .hero-title-group h2 {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--teal-primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero-title-group .date-range {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .hero-main-stat {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .hero-amount {
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            background: linear-gradient(90deg, #FFFFFF 0%, rgb(20, 184, 166) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .badge-teal {
+            background: var(--teal-bg);
+            color: var(--teal-primary);
+        }
+
+        .badge-pink {
+            background: var(--pink-bg);
+            color: var(--pink-primary);
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 80px;
+            margin-top: 10px;
+        }
+
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            padding: 12px;
+
+        }
+
+        .metric-label {
+            font-size: 10px;
+            color: var(--text-secondary);
+            font-weight: 700;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Portfolio Table Container */
+        .portfolio-card {
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .portfolio-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .portfolio-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .interactive-hint {
+            font-size: 12px;
+            color: var(--teal-primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--teal-bg);
+            padding: 6px 12px;
+            border-radius: 12px;
+
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 0 -24px -24px -24px;
+            padding: 0 12px 12px 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            table-layout: fixed;
+        }
+
+        col.col-asset { width: 28%; }
+        col.col-duration { width: 17%; }
+        col.col-volprice { width: 22%; }
+        col.col-pnl { width: 18%; }
+        col.col-costmarket { width: 15%; }
+
+        th {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-secondary);
+            padding: 12px 10px;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        td {
+            padding: 14px 10px;
+            font-size: 13px;
+            vertical-align: middle;
+            overflow: hidden;
+        }
+
+        tr.main-row {
+            background: rgba(255, 255, 255, 0.02);
+            cursor: pointer;
+            transition: background 0.2s ease;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        tr.main-row:hover {
+            background: var(--bg-card-hover);
+        }
+
+        tr.main-row.expanded {
+            background: rgba(20, 184, 166, 0.04);
+            border-bottom: none;
+        }
+
+        /* Compact Sub-Rows */
+        tr.log-row {
+            display: none;
+            background: var(--bg-subrow);
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
+            font-size: 11px;
+        }
+
+        tr.log-row td {
+            padding: 6px 10px;
+        }
+
+        tr.log-row.visible {
+            display: table-row;
+        }
+
+        tr.log-row:last-child {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .chevron-icon {
+            display: inline-block;
+            transition: transform 0.25s ease;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-right: 4px;
+            flex-shrink: 0;
+        }
+
+        .expanded .chevron-icon {
+            transform: rotate(90deg);
+        }
+
+        .asset-cell {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow: hidden;
+        }
+
+        .asset-icon-wrapper {
+            position: relative;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .asset-icon {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 9px;
+            color: white;
+            flex-shrink: 0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            object-fit: cover;
+            background-color: #21262D;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .status-dot {
+            position: absolute;
+            bottom: -1px;
+            right: -1px;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            border: 1.5px solid var(--bg-card);
+        }
+
+        .status-dot.ongoing {
+            background-color: var(--status-ongoing);
+            box-shadow: 0 0 4px var(--status-ongoing);
+        }
+
+        .status-dot.close {
+            background-color: var(--status-close);
+        }
+
+        .val-primary {
+            font-weight: 700;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .val-secondary {
+            font-size: 11px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .full-log-text { display: inline; }
+        .short-log-text { display: none; }
+
+        #det-msg {
+            display: none;
+            padding: 12px;
+            margin-bottom: 16px;
+            background: rgba(255, 105, 180, 0.15);
+            border-radius: 12px;
+            color: var(--pink-primary);
+            font-size: 13px;
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 400px) {
+            body { padding: 8px; }
+            .portfolio-card, .hero-card { padding: 12px; border-radius: 16px; }
+            .table-wrapper { margin: 0 -12px -12px -12px; padding: 0 12px 12px 12px; }
+            col.col-asset { width: 28%; }
+            col.col-duration { width: 17%; }
+            col.col-volprice { width: 22%; }
+            col.col-pnl { width: 18%; }
+            col.col-costmarket { width: 15%; }
+
+            th { font-size: 9px; padding: 8px 3px; letter-spacing: 0px; }
+            td { padding: 10px 3px; font-size: 11px; }
+            tr.log-row td { padding: 4px 2px; }
+            .sub-indent { padding-left: 8px !important; }
+            .asset-cell { gap: 3px; }
+            .asset-icon { width: 20px; height: 20px; font-size: 7px; }
+            .asset-account-title { display: none !important; }
+            .hero-amount { font-size: 26px; }
+            .metrics-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .metric-card { padding: 8px; }
+            .metric-value { font-size: 14px; }
+            .interactive-hint { font-size: 10px; padding: 4px 8px; }
+
+            .full-log-text { display: none; }
+            .short-log-text { display: inline; }
+        }
+
+        @media (min-width: 401px) and (max-width: 768px) {
+            body { padding: 12px; }
+            .hero-card, .portfolio-card { padding: 16px; border-radius: 18px; }
+            .hero-amount { font-size: 30px; }
+            td, th { padding: 10px 6px; }
+            .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-grid">
+    <div id="det-msg"></div>
+
+    <!-- HERO STAT CARD -->
+    <div class="hero-card">
+        <div class="hero-header">
+            <div class="hero-title-group">
+                <h2>Portfolio Profit / Loss</h2>
+                <div class="date-range">Live Dashboard</div>
+            </div>
+        </div>
+
+        <div class="hero-main-stat">
+            <div class="hero-amount" id="total-profit-val">0</div>
+            <div class="badge-pill badge-teal" id="total-profit-badge">▲ +0.00%</div>
+        </div>
+
+        <div class="chart-container">
+            <svg width="100%" height="100%" viewBox="0 0 500 80" preserveAspectRatio="none">
+                <defs>
+                    <linearGradient id="tealPinkGrad" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stop-color="rgb(20, 184, 166)"/>
+                        <stop offset="100%" stop-color="rgb(255, 105, 180)"/>
+                    </linearGradient>
+                    <linearGradient id="tealPinkFill" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="rgb(20, 184, 166)" stop-opacity="0.25"/>
+                        <stop offset="100%" stop-color="rgb(255, 105, 180)" stop-opacity="0.0"/>
+                    </linearGradient>
+                </defs>
+                <path d="M 0 65 Q 70 45, 140 55 T 280 20 T 400 30 T 500 10 L 500 80 L 0 80 Z" fill="url(#tealPinkFill)" />
+                <path d="M 0 65 Q 70 45, 140 55 T 280 20 T 400 30 T 500 10" fill="none" stroke="url(#tealPinkGrad)" stroke-width="3" stroke-linecap="round"/>
+                <circle cx="500" cy="10" r="4" fill="rgb(255, 105, 180)" />
+            </svg>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Cost Basis</div>
+                <div class="metric-value" id="stat-cost">0</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Market Value</div>
+                <div class="metric-value" id="stat-mvalue">0</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Active Positions</div>
+                <div class="metric-value" id="stat-cycles">0</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PORTFOLIO TABLE CARD -->
+    <div class="portfolio-card">
+        <div class="table-wrapper">
+            <table>
+                <colgroup>
+                    <col class="col-asset">
+                    <col class="col-duration">
+                    <col class="col-volprice">
+                    <col class="col-pnl">
+                    <col class="col-costmarket">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>Asset</th>
+                        <th>Date</th>
+                        <th>Vol/Price</th>
+                        <th>PnL</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody id="portfolio-tbody">
+                    <!-- Dynamic Insertion -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    function cleanNum(val) {
+        if (!val) return 0;
+        let c = val.toString().replace(/[\$,%\s]/g, "");
+        if (c.startsWith("(") && c.endsWith(")")) c = "-" + c.slice(1, -1);
+        const n = parseFloat(c);
+        return isNaN(n) ? 0 : n;
+    }
+
+    function formatShortNumber(val) {
+        if (val === null || val === undefined || isNaN(val)) return "-";
+        if (val === 0) return "0";
+
+        const absNum = Math.abs(val);
+        const sign = val < 0 ? "-" : "";
+        const decimals = window.innerWidth > 400 ? 3 : 1;
+
+        let formatted = "";
+        if (absNum >= 1e9) {
+            formatted = (absNum / 1e9).toFixed(decimals) + "B";
+        } else if (absNum >= 1e6) {
+            formatted = (absNum / 1e6).toFixed(decimals) + "M";
+        } else if (absNum >= 1e3) {
+            formatted = (absNum / 1e3).toFixed(decimals) + "K";
+        } else {
+            formatted = absNum.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: decimals });
+        }
+
+        return `${sign}${formatted}`;
+    }
+
+    function formatStockPrice(price) {
+        if (!price || isNaN(price)) return "0.0";
+        let val = price > 1000 ? price / 1000 : price;
+        // Keep at least 1 decimal place (e.g., 85.00 -> 85.0, 52.45 -> 52.45)
+        let formatted = val.toFixed(2);
+        if (formatted.endsWith('0') && !formatted.endsWith('.00')) {
+            formatted = formatted.slice(0, -1);
+        } else if (formatted.endsWith('.00')) {
+            formatted = formatted.slice(0, -1);
+        }
+        return formatted;
+    }
+
+    function formatCryptoPrice(price) {
+        if (!price || isNaN(price)) return "0.000";
+        return price.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    }
+
+    function formatPnlValue(num) {
+        if (num === 0 || num === null || num === undefined) return '-';
+        const prefix = num > 0 ? '+' : '';
+        return prefix + formatShortNumber(num);
+    }
+
+    function formatPnlPct(pctVal) {
+        if (pctVal === 0 || pctVal === null || pctVal === undefined || isNaN(pctVal)) return '-';
+        const prefix = pctVal > 0 ? '+' : '';
+        return `${prefix}${pctVal.toFixed(2)}%`;
+    }
+
+    function parseDate(dateStr) {
+        if (!dateStr) return null;
+        if (dateStr.includes('-')) {
+            const parts = dateStr.split('-');
+            return new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+        }
+        if (dateStr.includes('/')) {
+            const parts = dateStr.split('/');
+            return new Date(parseInt(parts[2], 10), parseInt(parts[1], 10) - 1, parseInt(parts[0], 10));
+        }
+        return new Date(dateStr);
+    }
+
+    function formatNoYearDate(dateObj) {
+        if (!dateObj) return "-";
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        return `${months[dateObj.getMonth()]} ${String(dateObj.getDate()).padStart(2, '0')}`;
+    }
+
+    function formatDateRangeTwoLinesNoYear(startDateStr, exitDateStr, isSaving = false, volumeMonths = 0) {
+        const sDate = parseDate(startDateStr);
+        let eDate = null;
+
+        if (isSaving && volumeMonths > 0 && sDate) {
+            eDate = new Date(sDate);
+            eDate.setMonth(eDate.getMonth() + parseInt(volumeMonths, 10));
+        } else if (exitDateStr && exitDateStr.trim() !== "") {
+            eDate = parseDate(exitDateStr);
+        }
+
+        const startStr = sDate ? formatNoYearDate(sDate) : "-";
+        const endStr = eDate ? formatNoYearDate(eDate) : "Present";
+
+        return `<div class="val-primary">${startStr}</div><div class="val-secondary">${endStr}</div>`;
+    }
+
+    function cleanNoteText(noteStr, statusStr) {
+        if (!noteStr || noteStr.trim() === "") return statusStr || "";
+        let cleaned = noteStr
+            .replace(/MAIN\b/gi, "")
+            .replace(/LOG\b/gi, "")
+            .replace(/\bC\d+\b/gi, "")
+            .replace(/[\+\-]/g, "")
+            .trim();
+        return cleaned === "" ? statusStr : cleaned;
+    }
+
+    function getShortLogKeyword(text) {
+        if (!text) return "Log";
+        const lower = text.toLowerCase();
+        if (lower.includes("dca")) return "DCA";
+        if (lower.includes("buy")) return "Buy";
+        if (lower.includes("sell")) return "Sell";
+        if (lower.includes("close")) return "Close";
+        if (lower.includes("deposit") || lower.includes("saving")) return "Deposit";
+        return text.split(" ")[0].slice(0, 5);
+    }
+
+    function parseCSVLine(line) {
+        var values = [], currentVal = "", inQuotes = !1;
+        for (var i = 0; i < line.length; i++) {
+            var char = line.charAt(i);
+            '"' === char && '"' === line.charAt(i + 1) ? (currentVal += '"', i++) :
+            '"' === char ? inQuotes = !inQuotes :
+            "," !== char || inQuotes ? currentVal += char : (values.push(currentVal.trim()), currentVal = "");
+        }
+        values.push(currentVal.trim());
+        return values;
+    }
+
+    function fetchSheetCSV() {
+        const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=488369714";
+
+        fetch(csvUrl, { cache: "no-store" })
+            .then(res => {
+                if (!res.ok) throw new Error("HTTP " + res.status);
+                return res.text();
+            })
+            .then(csvText => processAndRenderData(csvText))
+            .catch(err => {
+                console.error("Widget load error:", err);
+                var msgEl = document.getElementById("det-msg");
+                if (msgEl) {
+                    msgEl.style.display = "block";
+                    msgEl.textContent = "CSV Fetch Error: " + err.message;
+                }
+            });
+    }
+
+    function processAndRenderData(csvText) {
+        const lines = csvText.trim().split(/\r?\n/);
+        if (lines.length < 2) return;
+
+        const rows = lines.slice(1).map(line => parseCSVLine(line));
+        const groupsMap = {};
+
+        rows.forEach(row => {
+            if (!row || row.length < 4) return;
+
+            const symbol = (row[1] || "").trim().toUpperCase();
+            if (!symbol) return;
+
+            const colCPnlPct = cleanNum(row[2]);
+            const actualPnl = cleanNum(row[3]);
+            const livePrice = cleanNum(row[4]); // Column E / Live Market Price
+            const execPrice = cleanNum(row[5]);
+            const entryPrice = cleanNum(row[6]);
+            const volume = cleanNum(row[7]);
+            const entryDate = row[8] || "";
+            const exitDate = row[9] || "";
+            const accountType = (row[10] || "Stock").trim();
+            const status = (row[11] || "On-going").trim();
+            const note = (row[12] || "").trim();
+            const costValue = cleanNum(row[14]);
+            const marketValue = cleanNum(row[15]);
+            const totalFee = cleanNum(row[17]);
+            const iconUrl = row[22] || "";
+
+            if (!groupsMap[symbol]) {
+                groupsMap[symbol] = {
+                    symbol: symbol,
+                    accountType: accountType,
+                    status: status,
+                    iconUrl: iconUrl,
+                    livePrice: livePrice,
+                    records: [],
+                    mainRecord: null
+                };
+            }
+
+            const recordObj = {
+                symbol,
+                colCPnlPct,
+                entryDate,
+                exitDate,
+                volume,
+                costValue,
+                marketValue,
+                actualPnl,
+                execPrice,
+                entryPrice,
+                livePrice,
+                totalFee,
+                status,
+                note,
+                accountType
+            };
+
+            if (note.toUpperCase() === "MAIN") {
+                groupsMap[symbol].mainRecord = recordObj;
+            } else {
+                groupsMap[symbol].records.push(recordObj);
+            }
+        });
+
+        renderAccordion(Object.values(groupsMap));
+    }
+
+    function renderAccordion(portfolioGroups) {
+        const tbody = document.getElementById('portfolio-tbody');
+        tbody.innerHTML = '';
+
+        let totalPnlVnd = 0;
+        let totalMarketValVnd = 0;
+        let totalCostVnd = 0;
+        let activePositions = 0;
+        const now = new Date();
+
+        portfolioGroups.forEach((group, index) => {
+            const groupGroupId = `group-${index}`;
+            const records = group.records || [];
+            const isSaving = group.accountType.toLowerCase() === "saving";
+            const isStock = group.accountType.toLowerCase() === "stock";
+            const isCrypto = group.accountType.toLowerCase() === "crypto";
+
+            const mainRec = ( (isStock || isCrypto) && group.mainRecord ) ? group.mainRecord : null;
+
+            const sumMarketValue = mainRec ? mainRec.marketValue : (records.reduce((acc, r) => acc + r.marketValue, 0) + (group.mainRecord ? group.mainRecord.marketValue : 0));
+            const sumCost = mainRec ? mainRec.costValue : (records.reduce((acc, r) => acc + r.costValue, 0) + (group.mainRecord ? group.mainRecord.costValue : 0));
+            const sumPnl = mainRec ? mainRec.actualPnl : (records.reduce((acc, r) => acc + r.actualPnl, 0) + (group.mainRecord ? group.mainRecord.actualPnl : 0));
+
+            let overallPnlPct = 0;
+            if (mainRec) {
+                overallPnlPct = mainRec.colCPnlPct;
+            } else if (isSaving && records.length > 0) {
+                overallPnlPct = records[0].colCPnlPct;
+            } else {
+                overallPnlPct = sumCost > 0 ? (sumPnl / sumCost) * 100 : 0;
+            }
+
+            totalPnlVnd += sumPnl;
+            totalMarketValVnd += sumMarketValue;
+            totalCostVnd += sumCost;
+
+            if (group.status.toLowerCase().includes('on-going')) {
+                activePositions++;
+            }
+
+            const isPositive = sumPnl > 0;
+            const isZero = sumPnl === 0;
+            const isOngoing = group.status.toLowerCase().includes('on-going');
+            const dotClass = isOngoing ? 'ongoing' : 'close';
+
+            // Dynamic PnL color style string for matching live price color
+            const pnlColorStyle = isZero ? 'var(--text-secondary)' : (isPositive ? 'var(--teal-primary)' : 'var(--pink-primary)');
+
+            const hasIconUrl = group.iconUrl && group.iconUrl.trim().startsWith("http");
+            const iconStyle = hasIconUrl ? `background-image: url('${group.iconUrl}');` : `background-color: #21262D;`;
+            const iconText = hasIconUrl ? '' : group.symbol.slice(0, 4);
+
+            let displayAccountTitle = group.accountType;
+            if (isSaving && records.length > 0) {
+                const maxRec = records.reduce((max, r) => r.costValue > max.costValue ? r : max, records[0]);
+                if (maxRec && maxRec.accountType) {
+                    displayAccountTitle = maxRec.accountType;
+                }
+            }
+
+            let activeSavingSubrowsCount = 0;
+            if (isSaving) {
+                records.forEach(r => {
+                    const sDate = parseDate(r.entryDate);
+                    let eDate = null;
+                    if (sDate && r.volume > 0) {
+                        eDate = new Date(sDate);
+                        eDate.setMonth(eDate.getMonth() + parseInt(r.volume, 10));
+                    } else if (r.exitDate) {
+                        eDate = parseDate(r.exitDate);
+                    }
+                    if (!eDate || eDate >= now) {
+                        activeSavingSubrowsCount++;
+                    }
+                });
+            }
+
+            // Raw live market price
+            const rawLive = mainRec ? mainRec.livePrice : group.livePrice;
+
+            let volumePriceHTML = "";
+            if (isSaving) {
+                volumePriceHTML = `
+                    <div class="val-primary">${activeSavingSubrowsCount}/${records.length}</div>
+                    <div class="val-secondary" style="text-transform: lowercase;">${group.status}</div>`;
+            } else if (isCrypto) {
+                // CRYPTO MAIN ROW SPECIFIC: Entry Price (line 1) & Live Market Price matching PnL color (line 2)
+                const rawEntry = mainRec ? (mainRec.entryPrice || mainRec.execPrice) : (records[0]?.entryPrice || records[0]?.execPrice || 0);
+                const strEntry = "$" + formatCryptoPrice(rawEntry);
+                const strLive = isOngoing ? ("$" + formatCryptoPrice(rawLive)) : "-";
+
+                volumePriceHTML = `
+                    <div class="val-primary">${strEntry}</div>
+                    <div class="val-secondary" style="color: ${pnlColorStyle}; font-weight: 600;">${strLive}</div>`;
+            } else if (isStock) {
+                // STOCK MAIN ROW: Vol (line 1), Entry Price / Live Price matching PnL color (line 2)
+                const displayVol = mainRec ? mainRec.volume : records.reduce((acc, r) => acc + r.volume, 0);
+                const rawEntry = mainRec ? (mainRec.entryPrice || mainRec.execPrice) : (group.mainRecord?.entryPrice || records[0]?.entryPrice || 0);
+                
+                const strEntry = formatStockPrice(rawEntry);
+                const strLive = isOngoing ? formatStockPrice(rawLive) : "";
+                
+                const displayPriceCombined = isOngoing 
+                    ? `${strEntry}/<span style="color: ${pnlColorStyle}; font-weight: 600;">${strLive}</span>` 
+                    : strEntry;
+
+                volumePriceHTML = `
+                    <div class="val-primary">${displayVol.toLocaleString()}</div>
+                    <div class="val-secondary">${displayPriceCombined}</div>`;
+            } else {
+                const totalVol = records.reduce((acc, r) => acc + r.volume, 0);
+                const avgPrice = records[0]?.entryPrice || records[0]?.execPrice || 0;
+
+                volumePriceHTML = `
+                    <div class="val-primary">${totalVol.toLocaleString()}</div>
+                    <div class="val-secondary">${avgPrice.toLocaleString()}</div>`;
+            }
+
+            // MAIN ROW
+            const mainTr = document.createElement('tr');
+            mainTr.className = 'main-row';
+            mainTr.setAttribute('onclick', `toggleGroup('${groupGroupId}', this)`);
+
+            const refDateRecord = mainRec || group.mainRecord || records[0];
+            const durationHTML = formatDateRangeTwoLinesNoYear(
+                refDateRecord?.entryDate, 
+                refDateRecord?.exitDate, 
+                isSaving, 
+                refDateRecord?.volume
+            );
+
+            mainTr.innerHTML = `
+                <td>
+                    <div class="asset-cell">
+                        <span class="chevron-icon">
+                            ${records.length > 0 ? '<i class="bi bi-chevron-right"></i>' : '<i class="bi bi-dot"></i>'}
+                        </span>
+                        <div class="asset-icon-wrapper">
+                            <div class="asset-icon" style="${iconStyle}">${iconText}</div>
+                            <span class="status-dot ${dotClass}" title="${group.status}"></span>
+                        </div>
+                        <div style="overflow: hidden;">
+                            <div class="val-primary">${group.symbol}</div>
+                            <div class="val-secondary asset-account-title">${displayAccountTitle}</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    ${durationHTML}
+                </td>
+                <td>
+                    ${volumePriceHTML}
+                </td>
+                <td>
+                    <div class="val-primary" style="color: ${pnlColorStyle};">
+                        ${formatPnlValue(sumPnl)}
+                    </div>
+                    <div class="val-secondary" style="color: ${pnlColorStyle};">
+                        ${formatPnlPct(overallPnlPct)}
+                    </div>
+                </td>
+                <td>
+                    <div class="val-primary">${formatShortNumber(sumCost)}</div>
+                    <div class="val-secondary">${formatShortNumber(sumMarketValue)}</div>
+                </td>
+            `;
+            tbody.appendChild(mainTr);
+
+            // SUB-ROWS
+            if (records.length > 0) {
+                records.forEach(r => {
+                    const logTr = document.createElement('tr');
+                    logTr.className = `log-row ${groupGroupId}`;
+                    
+                    const subPnlPct = (isSaving || isStock || isCrypto) ? r.colCPnlPct : (r.costValue > 0 ? (r.actualPnl / r.costValue) * 100 : 0);
+                    const isSubPositive = r.actualPnl > 0;
+                    const isSubZero = r.actualPnl === 0;
+
+                    const execDateObj = parseDate(r.entryDate);
+                    const subExecDateStr = execDateObj ? formatNoYearDate(execDateObj) : "-";
+
+                    const cleanedDetailNote = cleanNoteText(r.note, r.status);
+                    const shortKeyword = getShortLogKeyword(cleanedDetailNote);
+                    const subAssetLabel = isSaving ? r.symbol : cleanedDetailNote;
+
+                    let subVolumePriceHTML = "";
+                    if (isSaving) {
+                        subVolumePriceHTML = `
+                            <div class="val-primary">${r.volume} Mos</div>`;
+                    } else {
+                        const rawPrice = r.execPrice || r.entryPrice || 0;
+                        const subPriceDisplay = isCrypto ? ("$" + formatCryptoPrice(rawPrice)) : (isStock ? formatStockPrice(rawPrice) : rawPrice.toLocaleString());
+
+                        subVolumePriceHTML = `
+                            <div class="val-primary">${r.volume.toLocaleString()}</div>
+                            <div class="val-secondary">${subPriceDisplay}</div>`;
+                    }
+
+                    logTr.innerHTML = `
+                        <td class="sub-indent" style="padding-left: 28px;">
+                            <div class="asset-cell">
+                                <span style="color: var(--text-muted); flex-shrink: 0;"><i class="bi bi-arrow-return-right"></i></span>
+                                <span class="val-primary" style="font-size: 11px;">
+                                    <span class="full-log-text">${subAssetLabel}</span>
+                                    <span class="short-log-text">${isSaving ? r.symbol : shortKeyword}</span>
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="val-primary">${subExecDateStr}</div>
+                        </td>
+                        <td>
+                            ${subVolumePriceHTML}
+                        </td>
+                        <td>
+                            <div class="val-secondary" style="color: ${isSubZero ? 'var(--text-secondary)' : (isSubPositive ? 'var(--teal-primary)' : 'var(--pink-primary)')}; font-weight: 700;">
+                                ${formatPnlValue(r.actualPnl)}
+                            </div>
+                            <div class="val-secondary" style="color: ${isSubZero ? 'var(--text-secondary)' : (isSubPositive ? 'var(--teal-primary)' : 'var(--pink-primary)')};">
+                                ${formatPnlPct(subPnlPct)}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="val-secondary" style="font-weight: 700; color: var(--text-primary);">${formatShortNumber(r.costValue)}</div>
+                            <div class="val-secondary">${formatShortNumber(r.marketValue)}</div>
+                        </td>
+                    `;
+                    tbody.appendChild(logTr);
+                });
+            }
+        });
+
+        // Update Hero Summary
+        document.getElementById('total-profit-val').textContent = (totalPnlVnd > 0 ? '+' : '') + totalPnlVnd.toLocaleString()+"₫";
+        const overallPct = totalCostVnd > 0 ? (totalPnlVnd / totalCostVnd) * 100 : 0;
+        const badgeEl = document.getElementById('total-profit-badge');
+        badgeEl.textContent = formatPnlPct(overallPct);
+        badgeEl.className = `badge-pill ${totalPnlVnd >= 0 ? 'badge-teal' : 'badge-pink'}`;
+
+        document.getElementById('stat-mvalue').textContent = formatShortNumber(totalMarketValVnd);
+        document.getElementById('stat-cost').textContent = formatShortNumber(totalCostVnd);
+        document.getElementById('stat-cycles').textContent = activePositions;
+    }
+
+    function toggleGroup(groupId, mainRowEl) {
+        const logRows = document.querySelectorAll(`.${groupId}`);
+        if (logRows.length === 0) return;
+
+        const isExpanded = mainRowEl.classList.contains('expanded');
+
+        if (isExpanded) {
+            mainRowEl.classList.remove('expanded');
+            logRows.forEach(row => row.classList.remove('visible'));
+        } else {
+            mainRowEl.classList.add('expanded');
+            logRows.forEach(row => row.classList.add('visible'));
+        }
+    }
+
+    window.addEventListener('resize', () => {
+        fetchSheetCSV();
+    });
+
+    fetchSheetCSV();
+</script>
+</body>
+</html>
