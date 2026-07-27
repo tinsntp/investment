@@ -611,28 +611,16 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 .dashboard-grid {
             display: flex;
             flex-direction: column;
-            gap: 20px;
         }
 
         /* Hero Card */
-        .hero-card {
-            background: linear-gradient(135deg, rgba(22, 27, 34, 0.95) 0%, rgba(15, 20, 28, 0.98) 100%);
+        .hero-card-port {
+            background: none;
             border-radius: 24px;
             padding: 24px;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-        }
 
-        .hero-card::before {
-            content: '';
-            position: absolute;
-            top: -50px;
-            right: -50px;
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, rgba(20, 184, 166, 0.15) 0%, rgba(255, 105, 180, 0.05) 70%, transparent 100%);
-            pointer-events: none;
         }
 
         .hero-header {
@@ -733,10 +721,10 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 
         /* Portfolio Table Container */
         .portfolio-card {
-            background: var(--bg-card);
+
             border-radius: 24px;
             padding: 24px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+
         }
 
         .portfolio-header {
@@ -784,7 +772,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
         col.col-costmarket { width: 15%; }
 
         th {
-            font-size: 11px;
+            font-size: 13px;
             text-transform: uppercase;
             letter-spacing: 0.8px;
             color: var(--text-secondary);
@@ -804,7 +792,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
         }
 
         tr.main-row {
-            background: rgba(255, 255, 255, 0.02);
+
             cursor: pointer;
             transition: background 0.2s ease;
             border-bottom: 1px solid var(--border-color);
@@ -934,7 +922,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
         /* Mobile Optimization */
         @media (max-width: 400px) {
             body { padding: 8px; }
-            .portfolio-card, .hero-card { padding: 12px; border-radius: 16px; }
+            .portfolio-card, .hero-card-port { padding: 12px; border-radius: 16px; }
             .table-wrapper { margin: 0 -12px -12px -12px; padding: 0 12px 12px 12px; }
             col.col-asset { width: 28%; }
             col.col-duration { width: 17%; }
@@ -942,7 +930,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
             col.col-pnl { width: 18%; }
             col.col-costmarket { width: 15%; }
 
-            th { font-size: 9px; padding: 8px 3px; letter-spacing: 0px; }
+            th { font-size: 11px; padding: 8px 3px; letter-spacing: 0px; }
             td { padding: 10px 3px; font-size: 11px; }
             tr.log-row td { padding: 4px 2px; }
             .sub-indent { padding-left: 8px !important; }
@@ -961,7 +949,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 
         @media (min-width: 401px) and (max-width: 768px) {
             body { padding: 12px; }
-            .hero-card, .portfolio-card { padding: 16px; border-radius: 18px; }
+            .hero-card-port, .portfolio-card { padding: 16px; border-radius: 18px; }
             .hero-amount { font-size: 30px; }
             td, th { padding: 10px 6px; }
             .metrics-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1380,7 +1368,7 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
             <div id="det-msg"></div>
 
             <!-- HERO STAT CARD -->
-            <div class="hero-card">
+            <div class="hero-card-port">
                 <div class="hero-header">
                     <div class="hero-title-group">
                         <h2>Portfolio Profit / Loss</h2>
