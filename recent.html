@@ -31,7 +31,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
     --pill-active: #ffffff;
     --pill-text-active: #181928;
     --pill-text-muted: rgba(255, 255, 255, 0.6);
-    --accent-pink: #ff528e;        /* Primary expense accent */
+    --accent-pink: #ff528e; 
     --accent-pink-gradient: #e0407b;
     --accent-muted: #8172d8;
     --text-white: #ffffff;
@@ -921,9 +921,8 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
 
         /* Mobile Optimization */
         @media (max-width: 400px) {
-            body { padding: 8px; }
             .portfolio-card, .hero-card-port { padding: 12px; border-radius: 16px; }
-            .table-wrapper { margin: 0 -12px -12px -12px; padding: 0 12px 12px 12px; }
+            .table-wrapper { margin: 0 -12px -12px -12px; padding-right: 5px; }
             col.col-asset { width: 28%; }
             col.col-duration { width: 17%; }
             col.col-volprice { width: 22%; }
@@ -948,7 +947,6 @@ tbody tr.current-row .cycle-num-badge{background:#f7931a;}
         }
 
         @media (min-width: 401px) and (max-width: 768px) {
-            body { padding: 12px; }
             .hero-card-port, .portfolio-card { padding: 16px; border-radius: 18px; }
             .hero-amount { font-size: 30px; }
             td, th { padding: 10px 6px; }
