@@ -984,11 +984,11 @@ tbody tr.current-row .cycle-num-badge {
         }
 /*TOP CHART*/
 .card-top{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
-.today-jp{font-size:12px;font-weight:500;color:rgba(255,255,255,.45);text-align:right;margin:0 50px -5px}
-@media (min-width:401px){.card-top{flex-direction:row;align-items:center;justify-content:space-between}
-.today-jp{flex:0 0 auto;margin-right:12px;white-space:nowrap;margin:-3px 0 5px}
+.today-jp{font-size:12px;font-weight:500;color:rgba(255,255,255,.45);text-align:right}
+.card-top{flex-direction:row;align-items:center;justify-content:space-between}
+.today-jp{flex:0 0 auto;margin-right:12px;white-space:nowrap;margin:0px 0px 5px 5px}
 .range-selector{margin-left:auto}
-}.card{border:0px solid rgba(255,255,255,0.08);border-radius:20px;max-width:100%;margin:0 auto}
+.card{border:0px solid rgba(255,255,255,0.08);border-radius:20px;max-width:100%;margin:0 auto}
 .card-title{font-size:14px;font-weight:600;color:rgba(255,255,255,0.5)}
 .range-selector{display:flex;gap:2px;width:250px;margin-bottom:10px;border:0px solid rgba(255,255,255,0.06);overflow-x:auto;overflow-y:hidden;border-radius:10px;padding:3px 12px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .range-selector::-webkit-scrollbar{display:none}
@@ -1100,7 +1100,7 @@ to{transform:rotate(360deg)}
   </div>
   <div id="loading-msg-tc">Loading chart&hellip;</div>
   <div class="chart-wrap" id="chart-wrap" style="display:none;">
-    <svg id="chart-svg" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+    <svg id="chart-svg" viewBox="0 0 640 240" preserveAspectRatio="none"></svg>
     <div class="tooltip" id="tooltip" style="display:none;"></div>
   </div>
   <div class="refresh-row">
@@ -1534,25 +1534,6 @@ to{transform:rotate(360deg)}
                     <div class="hero-amount" id="total-profit-val">0</div>
                     <div class="badge-pill badge-teal" id="total-profit-badge">▲ +0.00%</div>
                 </div>
-
-                <div class="chart-container">
-                    <svg width="100%" height="100%" viewBox="0 0 500 80" preserveAspectRatio="none">
-                        <defs>
-                            <linearGradient id="tealPinkGrad" x1="0" y1="0" x2="1" y2="0">
-                                <stop offset="0%" stop-color="rgb(20, 184, 166)"/>
-                                <stop offset="100%" stop-color="rgb(255, 105, 180)"/>
-                            </linearGradient>
-                            <linearGradient id="tealPinkFill" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stop-color="rgb(20, 184, 166)" stop-opacity="0.25"/>
-                                <stop offset="100%" stop-color="rgb(255, 105, 180)" stop-opacity="0.0"/>
-                            </linearGradient>
-                        </defs>
-                        <path d="M 0 65 Q 70 45, 140 55 T 280 20 T 400 30 T 500 10 L 500 80 L 0 80 Z" fill="url(#tealPinkFill)" />
-                        <path d="M 0 65 Q 70 45, 140 55 T 280 20 T 400 30 T 500 10" fill="none" stroke="url(#tealPinkGrad)" stroke-width="3" stroke-linecap="round"/>
-                        <circle cx="500" cy="10" r="4" fill="rgb(255, 105, 180)" />
-                    </svg>
-                </div>
-
                 <div class="metrics-grid">
                     <div class="metric-card">
                         <div class="metric-label">Cost Basis</div>
@@ -1793,7 +1774,7 @@ var PAD_LEFT = 52, PAD_RIGHT = 8, PAD_TOP = 10, PAD_BOTTOM = 24;
 var VB_W = 640, VB_H = 300;
 
 if (window.innerWidth <= 400) {   // iPhone
-    VB_H = 420;
+    VB_H = 320;
 
     document
         .getElementById("chart-svg")
@@ -1807,7 +1788,7 @@ var lineVisibility = { balance: true, expense: false, debt: false };
 var lastExpenseIndex = -1;
 var debtSeries = [];
 
-function fmtUSD(v){
+function fmtUSDTC(v){
     return "$" + (v / USD_RATE).toLocaleString("en-US", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
@@ -1817,7 +1798,6 @@ function fmtUSD(v){
 const today = new Date();
 
 const date = today.toLocaleDateString("ja-JP", {
-    year: "numeric",
     month: "long",
     day: "numeric"
 });
@@ -2641,7 +2621,7 @@ currentDebtSCXY = pts.map(function(p, i){
 
   if (range === "today" || range.startsWith("-")) { diff = current.balance - targetTC.balance; } else {
   diff = targetTC.balance - current.balance; } var pct = current.balance !== 0 ? (diff / Math.abs(current.balance)) * 100 : 0; var isPos = diff >= 0; document.getElementById("balance-val").textContent = balanceVisible ? fmtFullTC(current.balance) : "*********"; document.getElementById("balance-usd").textContent =
-    fmtUSD(current.balance);
+    fmtUSDTC(current.balance);
 
   updateGoalRing(current.balance);
   updateCountdown();
@@ -3169,9 +3149,9 @@ document.querySelectorAll(".line-toggle-btn").forEach(function(btn){
     function caMiniRingMarkup(pct,color){var circ=2*Math.PI*14,dash=pct/100*circ,gap=circ-dash;return'<svg class="ca-list-ring" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="2.5"/><circle cx="16" cy="16" r="14" fill="none" stroke="'+color+'" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="'+dash.toFixed(2)+" "+gap.toFixed(2)+'" stroke-dashoffset="0"/></svg>'}
     function caGetPalette() {return caActiveTab === "income" ? CA_PALETTE_INCOME : CA_PALETTE_EXPENSE;}
     function caRenderDonut(data,tabType){var svg=document.getElementById("ca-donut-svg");if(svg){svg.innerHTML="",caActiveDataset=data,tabType&&(caActiveTab=tabType);var total=data.reduce(function(s,d){return s+Math.abs(d.val||0)},0),ns="http://www.w3.org/2000/svg",palette=caGetPalette(),defs=document.createElementNS(ns,"defs");palette.forEach(function(p){var g=document.createElementNS(ns,"linearGradient");g.setAttribute("id",p.id),g.setAttribute("x1","0%"),g.setAttribute("y1","0%"),g.setAttribute("x2","100%"),g.setAttribute("y2","100%"),[["0%",p.from],["100%",p.to]].forEach(function(pair){var s=document.createElementNS(ns,"stop");s.setAttribute("offset",pair[0]),s.setAttribute("stop-color",pair[1]),g.appendChild(s)}),defs.appendChild(g)}),svg.appendChild(defs);var tr=document.createElementNS(ns,"circle");tr.setAttribute("cx",100),tr.setAttribute("cy",100),tr.setAttribute("r",78),tr.setAttribute("fill","none"),tr.setAttribute("stroke","rgba(255,255,255,0.06)"),tr.setAttribute("stroke-width",28),svg.appendChild(tr);var angle=0;data.forEach(function(item,i){var val=Math.abs(item.val||0),pct=total>0?val/total:0,sweep=360*pct-4;if(sweep<=0)angle+=360*pct;else{var ii,path=document.createElementNS(ns,"path");path.setAttribute("d",caArc(100,100,78,angle,angle+sweep)),path.setAttribute("fill","none"),path.setAttribute("stroke","url(#"+palette[i%palette.length].id+")"),path.setAttribute("stroke-width",28),path.setAttribute("stroke-linecap","round"),path.setAttribute("class","ca-seg"),path.setAttribute("data-index",i),path.style.cursor="pointer",path.style.transition="opacity 0.25s, stroke-width 0.2s",ii=i,path.addEventListener("click",function(e){e.stopPropagation(),caHighlight(caActiveIdx===ii?null:ii)}),svg.appendChild(path),angle+=360*pct}}),svg.addEventListener("click",function(){caHighlight(null)}),caHighlight(null)}}
-    function caRenderList(data){var list=document.getElementById("ca-list");if(list){list.innerHTML="";var total=data.reduce(function(s,d){return s+Math.abs(d.val)},0),palette=caGetPalette(),defaultIcons=["https://raw.githubusercontent.com/tinsntp/investment/main/cash.png","https://raw.githubusercontent.com/tinsntp/investment/main/expense.png","https://raw.githubusercontent.com/tinsntp/investment/main/bank%20loan.png"];data.forEach(function(item,i){var p=palette[i%palette.length],pct=total>0?Math.abs(item.val)/total*100:0,row=document.createElement("div");row.className="ca-list-row";window.innerWidth;var ii,pcMw=window.innerWidth<401?"100px":"45px",amtNumber=window.innerWidth<401?caFmtFull(item.val):caFmt(item.val),maxVal=Math.max.apply(Math,data.map(function(item){return Math.abs(item.val)})),isMax=Math.abs(item.val)>=maxVal-.01,iconUrl=item.icon||defaultIcons[i%defaultIcons.length],cleanName=item.name.replace(/[^\x00-\x7F]/g,"").replace(/\bPNL\b/gi,"").replace(/\s+/g," ").trim(),valColor=item.val<0?"#ff5252":"#e0e0e0",pctBg="rgba(255, 255, 255, 0.06)",pctText="#a0a0a5";"income"===caActiveTab?isMax?pctBg="rgba(46, 229, 157, 0.15)":item.val<0&&(pctBg="rgba(255, 82, 82, 0.15)",pctText="#ff69b4",valColor="#ff69b4"):"expense"===caActiveTab&&isMax&&(pctBg="rgba(255, 82, 82, 0.15)",pctText="#ff69b4",valColor="#ff69b4"),row.innerHTML=`\n        <div class="ca-list-left" style="margin-right: 1px; display: flex; align-items: center; position: relative; flex-shrink: 0;">\n          ${caMiniRingMarkup(pct,p.solid)}\n          <img class="ca-list-img" src="${iconUrl}" onerror="this.style.opacity='0';" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);" />\n        </div>\n        <div class="ca-list-name" style="flex-grow: 1; min-width: 0; padding-right: 0px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #efeff4; font-weight: 300; font-size: 12px; letter-spacing: -0.1px;">\n          ${cleanName}\n        </div>\n        <div class="ca-list-pct-container" style="display: flex; align-items: center; padding-right: 0px; flex-shrink: 0;">\n          <span class="ca-list-pct" style="font-weight: 400; font-size: 11.5px!important; color: ${pctText}; background: ${pctBg}; padding: 2px 6px; border-radius: 10px;">\n            ${pct.toFixed(0)}%\n          </span>\n        </div>\n        <div class="ca-list-val" style="text-align: right; flex-shrink: 0; min-width: ${pcMw}; font-weight: 400; font-size: 12.5px; color: ${valColor}; font-variant-numeric: tabular-nums; letter-spacing: -0.3px;">\n          ${amtNumber}\n        </div>\n      `,ii=i,row.addEventListener("click",function(){"expense"===caActiveTab?1===ii?(caHighlight(1),caFetchExpense(function(t1){var ei=["https://github.com/tinsntp/investment/blob/main/shop.png?raw=true","https://github.com/tinsntp/investment/blob/main/heart.png?raw=true","https://github.com/tinsntp/investment/blob/main/transaction.png?raw=true","https://github.com/tinsntp/investment/blob/main/shield.png?raw=true"];caRenderDrill(t1.slice(0,4).map(function(d,idx){return{name:d.name,val:d.val,icon:ei[idx]}}),"Average Expenses",p.solid)})):2===ii?(caHighlight(2),caFetchExpense(function(t1){var di=["https://github.com/tinsntp/investment/blob/main/sc.png?raw=true","https://github.com/tinsntp/investment/blob/main/shinhan.png?raw=true"];caRenderDrill(t1.slice(6,8).filter(function(d){return d.name&&!isNaN(d.val)}).map(function(d,idx){return{name:d.name,val:d.val,icon:di[idx]}}),"With Debts",p.solid)})):caHighlight(caActiveIdx===ii?null:ii,cleanName,item.val):caHighlight(caActiveIdx===ii?null:ii,cleanName,item.val)}),list.appendChild(row)}),caApplyLayout()}}
+    function caRenderList(data){var list=document.getElementById("ca-list");if(list){list.innerHTML="";var total=data.reduce(function(s,d){return s+Math.abs(d.val)},0),palette=caGetPalette(),defaultIcons=["https://raw.githubusercontent.com/tinsntp/investment/main/cash.png","https://raw.githubusercontent.com/tinsntp/investment/main/expense.png","https://raw.githubusercontent.com/tinsntp/investment/main/bank%20loan.png"];data.forEach(function(item,i){var p=palette[i%palette.length],pct=total>0?Math.abs(item.val)/total*100:0,row=document.createElement("div");row.className="ca-list-row",window.innerWidth;var ii,pcMw=window.innerWidth<400?"80px":"45px",amtNumber=window.innerWidth<401?caFmtFull(item.val):caFmt(item.val),maxVal=Math.max.apply(Math,data.map(function(item){return Math.abs(item.val)})),isMax=Math.abs(item.val)>=maxVal-.01,iconUrl=item.icon||defaultIcons[i%defaultIcons.length],cleanName=item.name.replace(/[^\x00-\x7F]/g,"").replace(/\bPNL\b/gi,"").replace(/\s+/g," ").trim(),valColor=item.val<0?"#ff5252":"#e0e0e0",pctBg="rgba(255, 255, 255, 0.06)",pctText="#a0a0a5";"income"===caActiveTab?isMax?pctBg="rgba(46, 229, 157, 0.15)":item.val<0&&(pctBg="rgba(255, 82, 82, 0.15)",pctText="#ff69b4",valColor="#ff69b4"):"expense"===caActiveTab&&isMax&&(pctBg="rgba(255, 82, 82, 0.15)",pctText="#ff69b4",valColor="#ff69b4"),row.innerHTML=`\n        <div class="ca-list-left" style="margin-right: 1px; display: flex; align-items: center; position: relative; flex-shrink: 0;">\n          ${caMiniRingMarkup(pct,p.solid)}\n          <img class="ca-list-img" src="${iconUrl}" onerror="this.style.opacity='0';" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);" />\n        </div>\n        <div class="ca-list-name" style="flex-grow: 1; min-width: 0; padding-right: 0px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #efeff4; font-weight: 300; font-size: 12px; letter-spacing: -0.1px;">\n          ${cleanName}\n        </div>\n        <div class="ca-list-pct-container" style="display: flex; align-items: center; padding-right: 0px; flex-shrink: 0;">\n          <span class="ca-list-pct" style="font-weight: 400; font-size: 11.5px!important; color: ${pctText}; background: ${pctBg}; padding: 2px 6px; border-radius: 10px;">\n            ${pct.toFixed(0)}%\n          </span>\n        </div>\n        <div class="ca-list-val" style="text-align: right; flex-shrink: 0; min-width: ${pcMw}; font-weight: 400; font-size: 12.5px; color: ${valColor}; font-variant-numeric: tabular-nums; letter-spacing: -0.3px;">\n          ${amtNumber}\n        </div>\n      `,ii=i,row.addEventListener("click",function(){"expense"===caActiveTab?1===ii?(caHighlight(1),caFetchExpense(function(t1){var ei=["https://github.com/tinsntp/investment/blob/main/shop.png?raw=true","https://github.com/tinsntp/investment/blob/main/heart.png?raw=true","https://github.com/tinsntp/investment/blob/main/transaction.png?raw=true","https://github.com/tinsntp/investment/blob/main/shield.png?raw=true"];caRenderDrill(t1.slice(0,4).map(function(d,idx){return{name:d.name,val:d.val,icon:ei[idx]}}),"Average Expenses",p.solid)})):2===ii?(caHighlight(2),caFetchExpense(function(t1){var di=["https://github.com/tinsntp/investment/blob/main/sc.png?raw=true","https://github.com/tinsntp/investment/blob/main/shinhan.png?raw=true"];caRenderDrill(t1.slice(6,8).filter(function(d){return d.name&&!isNaN(d.val)}).map(function(d,idx){return{name:d.name,val:d.val,icon:di[idx]}}),"With Debts",p.solid)})):caHighlight(caActiveIdx===ii?null:ii,cleanName,item.val):caHighlight(caActiveIdx===ii?null:ii,cleanName,item.val)}),list.appendChild(row)}),caApplyLayout()}}
     function caFetchExpense(cb){caTab1Cache.length?cb(caTab1Cache):fetch(CA_CSV_DRILL+"&t="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(text){caTab1Cache=text.trim().split("\n").filter(function(r){return r.trim()}).map(function(row){var cols=caCSV(row);return{name:cols[0].replace(/^"|"$/g,"").trim(),val:caNum(cols[1])}}).filter(function(d){return d.name&&!isNaN(d.val)}),cb(caTab1Cache)})}
-    function caRenderDrill(items,title,color){var list=document.getElementById("ca-list");list.innerHTML="";var header=document.createElement("div"),drPcFs=window.innerWidth<400?"4.2vw":"2.4vw",drIS=window.innerWidth<400?"4vw":"2.4vw";header.style.cssText="display:flex;align-items:center;gap:2vw;padding:2vw 0 3vw;cursor:pointer;",header.innerHTML='<span style="font-size:'+drPcFs+";color:"+color+';"><i class="bi bi-chevron-left"></i></span><span style="font-size:'+drPcFs+";font-weight:500;color:"+color+';">'+title+"</span>",header.addEventListener("click",function(){caHighlight(null),caRenderList(caGlobalData)}),list.appendChild(header);var total=items.reduce(function(s,d){return s+Math.abs(d.val)},0),pcSMw=window.innerWidth<401?"110px":"45px",maxPct=Math.max.apply(Math,items.map(function(item){return Math.abs(item.val)/total*100}));items.forEach(function(item){var pct=Math.abs(item.val)/total*100,row=(Math.PI,document.createElement("div"));row.className="ca-list-row",row.style.cursor="default";var cleanName=item.name.replace(/[^\x00-\x7F]/g,"").replace(/\s+/g," ").trim(),displayName=window.innerWidth>400?cleanName.split(" ")[0]:cleanName,amtNumber=window.innerWidth<401?caFmtFull(item.val):caFmt(item.val),pctBg="rgba(255, 255, 255, 0.06)",pctText="#a0a0a5";pct>=maxPct-.01&&(pctBg="rgba(255, 82, 82, 0.15)",pctText="#ff69b4"),row.innerHTML='<img src="'+item.icon+'" style="width:'+drIS+";height:"+drIS+';object-fit:contain;flex-shrink:0;" /><div class="ca-list-name" style="font-size:'+drPcFs+'; flex-grow: 1;">'+displayName+'</div><div class="ca-list-pct-container" style="display: flex; align-items: center; padding-right: 0px; flex-shrink: 0;"><span class="ca-list-pct" style="font-weight: 400;font-size:11.5px;background: '+pctBg+";color: "+pctText+'; padding: 2px 6px; border-radius: 10px;flex-shrink:0;">'+pct.toFixed(0)+'%</span></div><div class="ca-list-val" style="min-width: '+pcSMw+"; font-weight: 500; font-size:"+drPcFs+";color: "+pctText+'; text-align: right;">'+amtNumber+"</div>",list.appendChild(row)}),caApplyLayout()}
+    function caRenderDrill(items,title,color){var list=document.getElementById("ca-list");list.innerHTML="";var header=document.createElement("div"),drPcFs=window.innerWidth<400?"3.9vw":"2.4vw",drIS=window.innerWidth<400?"4vw":"2.4vw";header.style.cssText="display:flex;align-items:center;gap:2vw;padding:2vw 0 3vw;cursor:pointer;",header.innerHTML='<span style="font-size:'+drPcFs+";color:"+color+';"><i class="bi bi-chevron-left"></i></span><span style="font-size:'+drPcFs+";font-weight:500;color:"+color+';">'+title+"</span>",header.addEventListener("click",function(){caHighlight(null),caRenderList(caGlobalData)}),list.appendChild(header);var total=items.reduce(function(s,d){return s+Math.abs(d.val)},0),pcSMw=window.innerWidth<401?"110px":"45px",maxPct=Math.max.apply(Math,items.map(function(item){return Math.abs(item.val)/total*100}));items.forEach(function(item){var pct=Math.abs(item.val)/total*100,row=(Math.PI,document.createElement("div"));row.className="ca-list-row",row.style.cursor="default";var cleanName=item.name.replace(/[^\x00-\x7F]/g,"").replace(/\s+/g," ").trim(),displayName=window.innerWidth>400?cleanName.split(" ")[0]:cleanName,amtNumber=window.innerWidth<401?caFmtFull(item.val):caFmt(item.val),pctBg="rgba(255, 255, 255, 0.06)",pctText="#a0a0a5";pct>=maxPct-.01&&(pctBg="rgba(255, 82, 82, 0.15)",pctText="#ff69b4"),row.innerHTML='<img src="'+item.icon+'" style="width:'+drIS+";height:"+drIS+';object-fit:contain;flex-shrink:0;" /><div class="ca-list-name" style="font-size:'+drPcFs+'; flex-grow: 1;">'+displayName+'</div><div class="ca-list-pct-container" style="display: flex; align-items: center; padding-right: 0px; flex-shrink: 0;"><span class="ca-list-pct" style="font-weight: 400;font-size:11.5px;background: '+pctBg+";color: "+pctText+'; padding: 2px 6px; border-radius: 10px;flex-shrink:0;">'+pct.toFixed(0)+'%</span></div><div class="ca-list-val" style="min-width: '+pcSMw+"; font-weight: 500; font-size:"+drPcFs+";color: "+pctText+'; text-align: right;">'+amtNumber+"</div>",list.appendChild(row)}),caApplyLayout()}
     function caSwitchTab(tabName){caActiveTab=tabName,caActiveIdx=null,document.querySelectorAll(".ca-filter-btn").forEach(function(btn){btn.classList.remove("active")}),"expense"===tabName?(document.getElementById("ca-btn-expense").classList.add("active"),caGlobalData.length>0?(caRenderDonut(caGlobalData),caRenderList(caGlobalData)):fetch(CA_CSV_DNUT+"&t="+Date.now(),{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.text()}).then(function(text){var data=text.trim().split("\n").filter(function(r){return r.trim()}).map(function(row){var cols=caCSV(row);return{name:cols[0].replace(/^"|"$/g,"").trim(),val:caNum(cols[1])}}).filter(function(d){return d.name&&!isNaN(d.val)});data.length&&(caGlobalData=data,caRenderDonut(data),caRenderList(data))}).catch(function(err){console.warn("ca-donut fetch error:",err.message)})):(document.getElementById("ca-btn-income").classList.add("active"),caIncomeData.length>0?(caRenderDonut(caIncomeData),caRenderList(caIncomeData)):fetch(CA_CSV_BI+"&t="+Date.now(),{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.text()}).then(function(text){var rows=text.trim().split("\n").filter(function(r){return r.trim()}),parsedIncome=[];rows.forEach(function(row,index){if(0!==index){var cols=caCSV(row),colE=(cols[4]||"").replace(/^"|"$/g,"").trim(),colF=(cols[5]||"").replace(/^"|"$/g,"").trim(),colG=caNum(cols[6]);colF&&!isNaN(colG)&&parsedIncome.push({icon:colE,name:colF,val:colG})}}),parsedIncome.length&&(caIncomeData=parsedIncome,caRenderDonut(parsedIncome),caRenderList(parsedIncome))}).catch(function(err){console.warn("ca-bi fetch error:",err.message)}))}
     document.getElementById("ca-btn-expense").addEventListener("click", function() {caSwitchTab("expense");});
     document.getElementById("ca-btn-income").addEventListener("click", function() {caSwitchTab("income");});
@@ -3201,10 +3181,10 @@ document.querySelectorAll(".line-toggle-btn").forEach(function(btn){
         document.querySelectorAll(".ca-bi-val").forEach(function(el){el.style.fontSize="4.5vw";});
         document.querySelectorAll(".ca-mini-ring").forEach(function(el){el.style.width="9vw";el.style.height="9vw";});
 
-        document.querySelectorAll(".ca-list-name").forEach(function(el){el.style.fontSize="4vw";});
-        document.querySelectorAll(".ca-list-val").forEach(function(el){el.style.fontSize="4.2vw";});
-        document.querySelectorAll(".ca-donut-center-label").forEach(function(el){el.style.fontSize="3.3vw";});
-        document.querySelectorAll(".ca-donut-center-val").forEach(function(el){el.style.fontSize="4.8vw";});
+        document.querySelectorAll(".ca-list-name").forEach(function(el){el.style.fontSize="3.8vw";});
+        document.querySelectorAll(".ca-list-val").forEach(function(el){el.style.fontSize="4vw";});
+        document.querySelectorAll(".ca-donut-center-label").forEach(function(el){el.style.fontSize="3.1vw";});
+        document.querySelectorAll(".ca-donut-center-val").forEach(function(el){el.style.fontSize="4.5vw";});
         document.querySelectorAll("#ca-list img").forEach(function(el){el.style.width="4.8vw";el.style.height="4.8vw";});
         
         } else {
