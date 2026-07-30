@@ -138,9 +138,9 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 
 .budget-subtab-v2 {
   position: static !important;
-  width: 5px;
-  height: 5px;
-  min-width: 5px;
+  width: 7px;
+  height: 7px;
+  min-width: 7px;
   padding: 0;
   margin: 0;
   border-radius: 50%;
@@ -1192,15 +1192,14 @@ to{transform:rotate(360deg)}
 </div>
 <div class="tab-bar" id="tab-bar">
   <div class="tab-btn active" data-idx="0" id="tab-btn-0"><i class="bi bi-basket-fill"></i><span>Expense</span>  </div>
-  <div class="tab-btn" data-idx="5" id="tab-btn-1"><i class="bi bi-activity"></i><span>Overview</span>  </div>
+  <div class="tab-btn" data-idx="1" id="tab-btn-1"><i class="bi bi-activity"></i><span>Overview</span>  </div>
   <div class="tab-btn" data-idx="2" id="tab-btn-2"><i class="bi bi-rocket-takeoff-fill"></i><span>Portfolio</span>  </div>
-  <div class="tab-btn" data-idx="4" id="tab-btn-3"><i class="bi bi-currency-bitcoin"></i><span>BTC</span>  </div>
-  <div class="tab-btn" data-idx="6" id="tab-btn-4"><img src="https://github.com/tinsntp/investment/blob/main/icon/incomes.png?raw=true" /><span>F.I.R.E.</span></div>
+  <div class="tab-btn" data-idx="3" id="tab-btn-3"><i class="bi bi-currency-bitcoin"></i><span>BTC</span>  </div>
   <div class="tab-line" id="tab-line"></div>
 </div>
 <div class="slides-outer" id="slides-outer">
   <div class="slides-wrap" id="slides-wrap">
-    <!-- DETAIL SLIDE -->
+    <!-- EXPENSE SLIDE -->
     <div class="slide" id="slide-0" data-idx="0">
       <div id="rings-wrap"></div>
       <div class="budget-card">
@@ -1334,19 +1333,16 @@ to{transform:rotate(360deg)}
       </div>
       
     </div>
-    <!-- RECENT SLIDE -->
-    <div class="slide" id="slide-1" data-idx="1">
-      
-    </div>
+
     <!-- OVERVIEW SLIDE -->
-    <div class="slide" id="slide-5" data-idx="5">
+    <div class="slide" id="slide-1" data-idx="1">
       <div id="ca-wrap"><div class="budget-card" >
         <div class="budget-subtabs-v2" style="display: flex !important;align-items: center; justify-content: center; gap: 8px; position: relative; width: 100%;">
           <button type="button" class="budget-subtab-v2 active" onclick="switchBudgetTab(this, 'wallet')" style="position: static;">
-            <span class="material-icons-round" style="font-size:5px;">circle</span>
+            <span class="material-icons-round" style="font-size:6px;">circle</span>
           </button>
           <button type="button" class="budget-subtab-v2" onclick="switchBudgetTab(this, 'fire')" style="position: static;">
-            <span class="material-icons-round" style="font-size: 5px;">circle</span>
+            <span class="material-icons-round" style="font-size: 6px;">circle</span>
           </button>
         </div>
    
@@ -1504,12 +1500,9 @@ to{transform:rotate(360deg)}
         
       </div></div>
     </div>
-    <!-- SUBSCRIPTION SLIDE -->
-    <div class="slide" id="slide-3" data-idx="3">
-      
-    </div>
+
     <!-- BTC SLIDE -->
-    <div class="slide" id="slide-4" data-idx="4">
+    <div class="slide" id="slide-3" data-idx="3">
       <!-- TradingView Widget BEGIN -->
       <div class="tradingview-widget-container" id="chart-micro" style="width: 100%; background: transparent; overflow: hidden;">
         <iframe 
@@ -1664,7 +1657,7 @@ to{transform:rotate(360deg)}
     </div>
 
 
-    <!-- TRANSACTION SLIDE -->
+    <!-- PORTFOLIO SLIDE -->
     <div class="slide" id="slide-2" data-idx="2">
         <div class="dashboard-grid">
             <div id="det-msg"></div>
@@ -1725,10 +1718,6 @@ to{transform:rotate(360deg)}
                 </div>
             </div>
         </div>
-    </div>
-    <!-- F.I.R.E. SLIDE -->
-    <div class="slide" id="slide-6" data-idx="6">
-      
     </div>
   </div>
 </div>
@@ -1801,9 +1790,9 @@ to{transform:rotate(360deg)}
 </div>
 <script>
     var currentTab = 0;var numTabs = 7;var caDataLoaded = false;
-    //  0 Detail 1 Recent 5 Overview 3 Subs 4 BTC 2 Transaction 6 F.I.R.E.
-    var DEFAULT_TAB_ORDER = [4,0,1,5,2,3,6];
-    var DEFAULT_ACTIVE_TAB = 1;
+    //  0 Expense 1 Overview 2 Portfolio 3 BTC
+    var DEFAULT_TAB_ORDER = [3,0,1,2];
+    var DEFAULT_ACTIVE_TAB = 0;
     var LS_TAB_ORDER_KEY = 'finance-tab-order';
     var LS_ACTIVE_TAB_KEY = 'finance-active-tab';
 
@@ -1838,19 +1827,22 @@ to{transform:rotate(360deg)}
         //  0 Detail 1 Recent 5 Overview 3 Subs 4 BTC 2 Transaction 6 F.I.R.E.
         // =========================================================================
         switch (parseInt(idx)) {
-        case 0:if (typeof loadExpense === "function") loadExpense();break;
-        case 1:if (typeof loadRecent === "function") loadRecent();break;     
-        case 3:if (typeof loadSubscriptions === "function") loadSubscriptions();break;
-        case 4:if (typeof loadCycles === "function") loadCycles();break;
-        case 5:
+        case 0:
+          if (typeof loadExpense === "function") {loadExpense();}
+          if (typeof loadRecent === "function") {loadRecent();}
+          if (typeof loadSubscriptions === "function") {loadSubscriptions();}break;
+
+        case 3:if (typeof loadCycles === "function") loadCycles();break;
+        case 1:
             if (typeof renderCards === "function") {renderCards();}
             if (typeof caLoadAccounts === "function") {caLoadAccounts(); }
+            if (typeof loadFIRE === "function") {loadFIRE(); }
             if (typeof loadTransactionHistory === "function") {
             try {loadTransactionHistory();} catch (error) {
                 console.warn("Transaction history waiting on metrics data initialization:", error.message);
             }
             } break;
-        case 6:if (typeof loadFIRE === "function") loadFIRE();break;
+
         default:break;
         }
     }
@@ -3140,21 +3132,22 @@ document.querySelectorAll(".line-toggle-btn").forEach(function(btn){
 
     function goToTab(card, tabName) {
         var btn = card.querySelector(".budget-subtab-v2[onclick*=\"'" + tabName + "'\"]");
-        console.log("goToTab ->", tabName, "found button:", !!btn);
         if (btn) switchBudgetTab(btn, tabName);
     }
 
     function handleSwipeEnd(card, dx) {
-        console.log("handleSwipeEnd dx:", dx);
         var currentTab = getCurrentTab(card);
         var currentIndex = tabOrder.indexOf(currentTab);
-        console.log("currentTab:", currentTab, "index:", currentIndex);
+        var len = tabOrder.length;
+
         if (dx < -threshold) {
-            var next = tabOrder[currentIndex + 1];
-            if (next) goToTab(card, next);
+            // swipe left -> next tab, wraps to first if at last
+            var nextIndex = (currentIndex + 1) % len;
+            goToTab(card, tabOrder[nextIndex]);
         } else if (dx > threshold) {
-            var prev = tabOrder[currentIndex - 1];
-            if (prev) goToTab(card, prev);
+            // swipe right -> previous tab, wraps to last if at first
+            var prevIndex = (currentIndex - 1 + len) % len;
+            goToTab(card, tabOrder[prevIndex]);
         }
     }
 
@@ -3165,7 +3158,6 @@ document.querySelectorAll(".line-toggle-btn").forEach(function(btn){
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
         isSwiping = true;
-        console.log("touchstart on card");
     }, { passive: true });
 
     document.addEventListener("touchmove", function(e) {
@@ -3191,7 +3183,6 @@ document.querySelectorAll(".line-toggle-btn").forEach(function(btn){
         startY = e.clientY;
         mouseDown = true;
         isSwiping = true;
-        console.log("mousedown on card");
     });
 
     document.addEventListener("mousemove", function(e) {
@@ -3203,7 +3194,6 @@ document.querySelectorAll(".line-toggle-btn").forEach(function(btn){
 
     document.addEventListener("mouseup", function(e) {
         if (!mouseDown) return;
-        console.log("mouseup, isSwiping:", isSwiping, "activeCard:", !!activeCard);
         if (isSwiping && activeCard) {
             var dx = e.clientX - startX;
             handleSwipeEnd(activeCard, dx);
