@@ -3126,93 +3126,93 @@ document.querySelectorAll(".line-toggle-btn").forEach(function(btn){
 
     function switchBudgetTab(e,t){var a=e.closest(".budget-card");a.querySelectorAll(".budget-subtab, .budget-subtab-v2").forEach(function(e){e.classList.remove("active")}),e.classList.add("active"),a.querySelectorAll(".budget-tab-content").forEach(function(e){e.style.display="none"});var c=a.querySelector("#budget-view-"+t);c&&(c.style.display="block"),localStorage.setItem("active_budget_subtab",t),"subcategory"===t&&"function"==typeof renderSubcategoryBreakdown&&renderSubcategoryBreakdown()}
     document.addEventListener("DOMContentLoaded",function(){var savedSubtab=localStorage.getItem("active_budget_subtab")||"spending",targetBtn=document.querySelector(`.budget-subtab[onclick*="'${savedSubtab}'"], .budget-subtab-v2[onclick*="'${savedSubtab}'"]`);targetBtn&&switchBudgetTab(targetBtn,savedSubtab)});
-    document.addEventListener("DOMContentLoaded", function() {
-    var card = document.querySelector(".budget-card");
-    console.log("Swipe init — card found:", card);
-    if (!card) {
-        console.warn("No .budget-card found — swipe not attached.");
-        return;
-    }
-
+    (function() {
     var tabOrder = ["wallet", "fire"];
-    var startX = 0, startY = 0, isSwiping = false, mouseDown = false;
+    var startX = 0, startY = 0, isSwiping = false, mouseDown = false, activeCard = null;
     var threshold = 50;
 
-    function getCurrentTab() {
+    function getCurrentTab(card) {
         var activeBtn = card.querySelector(".budget-subtab-v2.active");
         if (!activeBtn) return "wallet";
         var match = activeBtn.getAttribute("onclick").match(/'([^']+)'/);
         return match ? match[1] : "wallet";
     }
 
-    function goToTab(tabName) {
+    function goToTab(card, tabName) {
         var btn = card.querySelector(".budget-subtab-v2[onclick*=\"'" + tabName + "'\"]");
-        console.log("goToTab", tabName, btn);
+        console.log("goToTab ->", tabName, "found button:", !!btn);
         if (btn) switchBudgetTab(btn, tabName);
     }
 
-    function handleSwipeEnd(dx) {
-        console.log("swipe end dx:", dx);
-        var currentTab = getCurrentTab();
+    function handleSwipeEnd(card, dx) {
+        console.log("handleSwipeEnd dx:", dx);
+        var currentTab = getCurrentTab(card);
         var currentIndex = tabOrder.indexOf(currentTab);
+        console.log("currentTab:", currentTab, "index:", currentIndex);
         if (dx < -threshold) {
             var next = tabOrder[currentIndex + 1];
-            if (next) goToTab(next);
+            if (next) goToTab(card, next);
         } else if (dx > threshold) {
             var prev = tabOrder[currentIndex - 1];
-            if (prev) goToTab(prev);
+            if (prev) goToTab(card, prev);
         }
     }
 
-    card.addEventListener("touchstart", function(e) {
+    document.addEventListener("touchstart", function(e) {
+        var card = e.target.closest(".budget-card");
+        if (!card) return;
+        activeCard = card;
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
         isSwiping = true;
-        console.log("touchstart", startX, startY);
+        console.log("touchstart on card");
     }, { passive: true });
 
-    card.addEventListener("touchmove", function(e) {
-        if (!isSwiping) return;
+    document.addEventListener("touchmove", function(e) {
+        if (!isSwiping || !activeCard) return;
         var dx = e.touches[0].clientX - startX;
         var dy = e.touches[0].clientY - startY;
         if (Math.abs(dy) > Math.abs(dx)) isSwiping = false;
     }, { passive: true });
 
-    card.addEventListener("touchend", function(e) {
-        console.log("touchend, isSwiping:", isSwiping);
-        if (!isSwiping) return;
+    document.addEventListener("touchend", function(e) {
+        if (!isSwiping || !activeCard) return;
         var dx = e.changedTouches[0].clientX - startX;
-        handleSwipeEnd(dx);
+        handleSwipeEnd(activeCard, dx);
         isSwiping = false;
+        activeCard = null;
     });
 
-    card.addEventListener("mousedown", function(e) {
+    document.addEventListener("mousedown", function(e) {
+        var card = e.target.closest(".budget-card");
+        if (!card) return;
+        activeCard = card;
         startX = e.clientX;
         startY = e.clientY;
         mouseDown = true;
         isSwiping = true;
-        console.log("mousedown", startX, startY);
+        console.log("mousedown on card");
     });
 
     document.addEventListener("mousemove", function(e) {
-        if (!mouseDown || !isSwiping) return;
-        var dy = e.clientY - startY;
+        if (!mouseDown || !isSwiping || !activeCard) return;
         var dx = e.clientX - startX;
+        var dy = e.clientY - startY;
         if (Math.abs(dy) > Math.abs(dx)) isSwiping = false;
     });
 
     document.addEventListener("mouseup", function(e) {
         if (!mouseDown) return;
-        console.log("mouseup, isSwiping:", isSwiping);
-        if (isSwiping) {
+        console.log("mouseup, isSwiping:", isSwiping, "activeCard:", !!activeCard);
+        if (isSwiping && activeCard) {
             var dx = e.clientX - startX;
-            handleSwipeEnd(dx);
+            handleSwipeEnd(activeCard, dx);
         }
         mouseDown = false;
         isSwiping = false;
+        activeCard = null;
     });
-});
-
+})();
 
     
     function fetchSheetCSV(){var csvUrl="https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1608160084&t="+Date.now();fetch(csvUrl,{cache:"no-store"}).then(function(response){if(!response.ok)throw new Error("HTTP "+response.status);return response.text()}).then(function(text){parseCSVData(text)}).catch(function(err){console.error("Widget load error:",err);var msgEl=document.getElementById("det-msg");msgEl&&(msgEl.style.display="block",msgEl.textContent="Chart Error: "+err.message)})}function parseCSVLine(line){for(var values=[],currentVal="",inQuotes=!1,i=0;i<line.length;i++){var char=line.charAt(i);'"'===char&&'"'===line.charAt(i+1)?(currentVal+='"',i++):'"'===char?inQuotes=!inQuotes:","!==char||inQuotes?currentVal+=char:(values.push(currentVal.trim()),currentVal="")}return values.push(currentVal.trim()),values}function parseCSVData(csvText){const lines=csvText.trim().split(/\r?\n/);if(lines.length<3)return;iconURLs=parseCSVLine(lines[0]),headers=parseCSVLine(lines[1]),buildCustomCategoryDropdown(headers,iconURLs);const now=new Date,currentYear=now.getFullYear()%100,currentMonth=now.getMonth()+1;sheetData=[],lines.slice(2).forEach(line=>{const parsedRow=parseCSVLine(line),dateStr=parsedRow[0];if(!dateStr)return;let isFuture=!1;if(dateStr.includes("/")){const parts=dateStr.split("/"),m=parseInt(parts[0],10),y=parseInt(parts[1],10);isNaN(m)||isNaN(y)||(y>currentYear||y===currentYear&&m>currentMonth)&&(isFuture=!0)}if(isFuture)return;const rowObj={0:dateStr};parsedRow.forEach((cellVal,idx)=>{if(0!==idx)if(cellVal){let clean=cellVal.replace(/[\$,\s]/g,"");clean.startsWith("(")&&clean.endsWith(")")&&(clean="-"+clean.slice(1,-1));const num=parseFloat(clean);rowObj[idx]=isNaN(num)?0:num}else rowObj[idx]=0}),sheetData.push(rowObj)}),renderWidget()}
