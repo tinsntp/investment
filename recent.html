@@ -119,7 +119,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .pct-val.flat { color:rgba(255,255,255,0.3); }
 #det-msg { font-size:3vw; color:rgba(255,255,255,0.4); text-align:center; padding:5vw; }
 
-.budget-card{margin-top:15px;padding:0 5px 0 0px;}
+.budget-card{margin-top:15px;padding:0 5px 0 0px;touch-action: pan-y;}
 .budget-title,.budget-label{font-size:12px;color:rgba(255,255,255,.55);margin-bottom:5px}
 .budget-subtabs{background:rgba(255,255,255,.05);border-radius:13px;padding:3px;gap:4px}.budget-subtab{flex:1;font-family:Lexend;display:flex;align-items:center;justify-content:center;gap:5px;background:0 0;border:0;color:rgba(255,255,255,.5);padding:4px 10px;font-size:12px;font-weight:400;border-radius:10px;cursor:pointer;transition:all .2s ease-in-out;outline:0}
 .budget-subtab.active,.budget-subtab-v2.active{opacity:1;background:#2a2d37;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.25)}.budget-subtab .material-icons-round{vertical-align:middle}.chart-container{position:relative;width:100%;height:220px;display:flex;align-items:flex-end;padding:20px 10px 10px 10px;box-sizing:border-box}.glass-chart-bars{width:100%!important;height:100%!important;display:block}.chart-col{flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end;position:relative}.bar-fill{width:100%;max-width:28px;background:linear-gradient(180deg,rgba(255,255,255,.8)0,rgba(255,255,255,.2) 100%);border-radius:6px 6px 2px 2px;transition:height .4s ease;min-height:4px;box-shadow:0 4px 12px rgba(0,0,0,.15)}.bar-baseline{position:absolute;width:100%;max-width:28px;border-top:2px dashed #8e90a6;z-index:2;transition:bottom .4s ease}.col-label{margin-top:8px;font-family:"DM Sans",sans-serif;font-size:11px;color:#8e90a6}canvas#myChart{width:100%!important;height:100%!important}
@@ -3126,9 +3126,13 @@ document.querySelectorAll(".line-toggle-btn").forEach(function(btn){
 
     function switchBudgetTab(e,t){var a=e.closest(".budget-card");a.querySelectorAll(".budget-subtab, .budget-subtab-v2").forEach(function(e){e.classList.remove("active")}),e.classList.add("active"),a.querySelectorAll(".budget-tab-content").forEach(function(e){e.style.display="none"});var c=a.querySelector("#budget-view-"+t);c&&(c.style.display="block"),localStorage.setItem("active_budget_subtab",t),"subcategory"===t&&"function"==typeof renderSubcategoryBreakdown&&renderSubcategoryBreakdown()}
     document.addEventListener("DOMContentLoaded",function(){var savedSubtab=localStorage.getItem("active_budget_subtab")||"spending",targetBtn=document.querySelector(`.budget-subtab[onclick*="'${savedSubtab}'"], .budget-subtab-v2[onclick*="'${savedSubtab}'"]`);targetBtn&&switchBudgetTab(targetBtn,savedSubtab)});
-    (function() {
+    document.addEventListener("DOMContentLoaded", function() {
     var card = document.querySelector(".budget-card");
-    if (!card) return;
+    console.log("Swipe init — card found:", card);
+    if (!card) {
+        console.warn("No .budget-card found — swipe not attached.");
+        return;
+    }
 
     var tabOrder = ["wallet", "fire"];
     var startX = 0, startY = 0, isSwiping = false, mouseDown = false;
@@ -3143,13 +3147,14 @@ document.querySelectorAll(".line-toggle-btn").forEach(function(btn){
 
     function goToTab(tabName) {
         var btn = card.querySelector(".budget-subtab-v2[onclick*=\"'" + tabName + "'\"]");
+        console.log("goToTab", tabName, btn);
         if (btn) switchBudgetTab(btn, tabName);
     }
 
     function handleSwipeEnd(dx) {
+        console.log("swipe end dx:", dx);
         var currentTab = getCurrentTab();
         var currentIndex = tabOrder.indexOf(currentTab);
-
         if (dx < -threshold) {
             var next = tabOrder[currentIndex + 1];
             if (next) goToTab(next);
@@ -3159,11 +3164,11 @@ document.querySelectorAll(".line-toggle-btn").forEach(function(btn){
         }
     }
 
-    // Touch (mobile)
     card.addEventListener("touchstart", function(e) {
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
         isSwiping = true;
+        console.log("touchstart", startX, startY);
     }, { passive: true });
 
     card.addEventListener("touchmove", function(e) {
@@ -3174,19 +3179,19 @@ document.querySelectorAll(".line-toggle-btn").forEach(function(btn){
     }, { passive: true });
 
     card.addEventListener("touchend", function(e) {
+        console.log("touchend, isSwiping:", isSwiping);
         if (!isSwiping) return;
         var dx = e.changedTouches[0].clientX - startX;
         handleSwipeEnd(dx);
         isSwiping = false;
     });
 
-    // Mouse (desktop)
     card.addEventListener("mousedown", function(e) {
         startX = e.clientX;
         startY = e.clientY;
         mouseDown = true;
         isSwiping = true;
-        e.preventDefault(); // stop text/image drag-select while dragging
+        console.log("mousedown", startX, startY);
     });
 
     document.addEventListener("mousemove", function(e) {
@@ -3198,6 +3203,7 @@ document.querySelectorAll(".line-toggle-btn").forEach(function(btn){
 
     document.addEventListener("mouseup", function(e) {
         if (!mouseDown) return;
+        console.log("mouseup, isSwiping:", isSwiping);
         if (isSwiping) {
             var dx = e.clientX - startX;
             handleSwipeEnd(dx);
@@ -3205,10 +3211,9 @@ document.querySelectorAll(".line-toggle-btn").forEach(function(btn){
         mouseDown = false;
         isSwiping = false;
     });
+});
 
-    // Prevent native drag ghosting on images/cards inside
-    card.addEventListener("dragstart", function(e) { e.preventDefault(); });
-})();
+
     
     function fetchSheetCSV(){var csvUrl="https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1608160084&t="+Date.now();fetch(csvUrl,{cache:"no-store"}).then(function(response){if(!response.ok)throw new Error("HTTP "+response.status);return response.text()}).then(function(text){parseCSVData(text)}).catch(function(err){console.error("Widget load error:",err);var msgEl=document.getElementById("det-msg");msgEl&&(msgEl.style.display="block",msgEl.textContent="Chart Error: "+err.message)})}function parseCSVLine(line){for(var values=[],currentVal="",inQuotes=!1,i=0;i<line.length;i++){var char=line.charAt(i);'"'===char&&'"'===line.charAt(i+1)?(currentVal+='"',i++):'"'===char?inQuotes=!inQuotes:","!==char||inQuotes?currentVal+=char:(values.push(currentVal.trim()),currentVal="")}return values.push(currentVal.trim()),values}function parseCSVData(csvText){const lines=csvText.trim().split(/\r?\n/);if(lines.length<3)return;iconURLs=parseCSVLine(lines[0]),headers=parseCSVLine(lines[1]),buildCustomCategoryDropdown(headers,iconURLs);const now=new Date,currentYear=now.getFullYear()%100,currentMonth=now.getMonth()+1;sheetData=[],lines.slice(2).forEach(line=>{const parsedRow=parseCSVLine(line),dateStr=parsedRow[0];if(!dateStr)return;let isFuture=!1;if(dateStr.includes("/")){const parts=dateStr.split("/"),m=parseInt(parts[0],10),y=parseInt(parts[1],10);isNaN(m)||isNaN(y)||(y>currentYear||y===currentYear&&m>currentMonth)&&(isFuture=!0)}if(isFuture)return;const rowObj={0:dateStr};parsedRow.forEach((cellVal,idx)=>{if(0!==idx)if(cellVal){let clean=cellVal.replace(/[\$,\s]/g,"");clean.startsWith("(")&&clean.endsWith(")")&&(clean="-"+clean.slice(1,-1));const num=parseFloat(clean);rowObj[idx]=isNaN(num)?0:num}else rowObj[idx]=0}),sheetData.push(rowObj)}),renderWidget()}
     function buildCustomCategoryDropdown(colHeaders,urls){const menu=document.getElementById("dropdownMenu");menu.innerHTML="";const categories=[];categories.push({idx:2,label:colHeaders[2]||"Total Expense",icon:urls[2]||"",type:"total"}),colHeaders.forEach((label,idx)=>{!label||idx<3||idx>=3&&idx<=8&&categories.push({idx,label,icon:urls[idx]||"",type:"main"})}),colHeaders.forEach((label,idx)=>{!label||idx<9||categories.push({idx,label,icon:urls[idx]||"",type:"sub"})});let currentGroup="";categories.forEach(item=>{if("main"===item.type&&"main"!==currentGroup){currentGroup="main";const divider=document.createElement("hr");divider.className="dropdown-divider",menu.appendChild(divider)}else if("sub"===item.type&&"sub"!==currentGroup){currentGroup="sub";const divider=document.createElement("hr");divider.className="dropdown-divider",menu.appendChild(divider)}const itemEl=document.createElement("div");if(itemEl.className="dropdown-item "+(item.idx===selectedColIdx?"selected":""),itemEl.onclick=()=>selectCategory(item.idx,item.label,item.icon),item.icon){const img=document.createElement("img");img.src=item.icon,img.className="cat-icon",img.alt="",itemEl.appendChild(img)}const span=document.createElement("span");span.textContent=item.label,itemEl.appendChild(span),menu.appendChild(itemEl)}),selectCategory(selectedColIdx,categories[0].label,categories[0].icon,!1)}function createGroupHeader(text){const header=document.createElement("div");return header.className="dropdown-group-header",header.textContent=text,header}function selectCategory(colIdx,label,iconUrl,shouldRender=!0){selectedColIdx=colIdx;const selectedLabel=document.getElementById("selectedLabel"),selectedIcon=document.getElementById("selectedIcon");selectedLabel.textContent=label,iconUrl?(selectedIcon.src=iconUrl,selectedIcon.style.display="block"):selectedIcon.style.display="none",document.querySelectorAll(".dropdown-item").forEach(el=>{el.classList.remove("selected")}),closeDropdown(),shouldRender&&renderWidget()}function toggleDropdown(event){event&&event.stopPropagation();const menu=document.getElementById("dropdownMenu"),dropdown=document.getElementById("customDropdown");menu&&dropdown&&(menu.classList.toggle("show"),dropdown.classList.toggle("open"))}function closeDropdown(){const menu=document.getElementById("dropdownMenu"),dropdown=document.getElementById("customDropdown");menu&&menu.classList.remove("show"),dropdown&&dropdown.classList.remove("open")}
