@@ -24,7 +24,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .tab-btn.active { color:#fff;opacity:0.95; }
 .tab-btn img { width:3.5vw; height:3.5vw; object-fit:contain; opacity:0.4; transition:opacity 0.2s; }
 .tab-btn.active img { opacity:1; }
-.tab-btn i{font-size:3.8vw!important;}
+.tab-btn i{font-size:3.6vw!important;}
 .tab-line {position:absolute; bottom:0; height:2.5px; background:#fff; border-radius:2px; transition:left 0.25s ease, width 0.25s ease;}
 #tab-btn-2 { display:flex; }
 :root{--bg-dark:#0d0e12;--card-pocket-bg:#16181e;--card-pocket-lining-bg:#111217;--text-main:#ffffff;--text-muted:#8a8d97;--btn-bg:#21242c;--btn-hover:#2d313c;--accent-pink-bg:#fbcad5;--accent-pink-text:#4a1525;--accent-purple-bg:#d5d3f8;--accent-purple-text:#211c4a;--accent-deposit:#ff007f;--accent-deposit-bg:rgba(190, 24, 93, 0.12);--surface-card:rgba(22, 28, 45, 0.75);--surface-hover:rgba(30, 41, 59, 0.85);--surface-child:rgba(13, 19, 33, 0.9);--accent-teal:#10b981;--accent-teal-glow:rgba(16, 185, 129, 0.25);--accent-rose:#f43f5e;--accent-purple:#8b5cf6;--accent-blue:#3b82f6;--text-primary:#f8fafc;--text-secondary:#94a3b8;
@@ -53,10 +53,10 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 
     --status-ongoing: rgb(20, 184, 166);
     --status-close: #6E7681;}
-@media (max-width: 401px) {.tab-btn span {display: none;}.tab-btn.active span {display: inline-block; margin-left: 6px; font-size: 15px; }.tab-btn i{font-size:5.3vw!important;}}
-@media (min-width: 400px) {.tab-btn span {display: none;}.tab-btn.active span {display: inline-block; margin-left: 6px; font-size: 15px; }}
+@media (max-width: 401px) {.tab-btn span {display: none;}.tab-btn.active span {display: inline-block; margin-left: 6px; font-size: 12px; }.tab-btn i{font-size:4.5vw!important;}}
+@media (min-width: 400px) {.tab-btn span {display: none;}.tab-btn.active span {display: inline-block; margin-left: 6px; font-size: 12px; }}
 .big-wrap{overflow-y: auto;overflow-x: hidden;}
-@media (max-width: 400px) {.card,.det-col-hdr,.wallet-container,.sub-slide,#cat-list,#tx-list{padding:0 2vw 0 2vw;}}
+@media (max-width: 400px) {.card,.det-col-hdr,.wallet-container,.sub-slide,#cat-list{padding:0 2vw 0 2vw;}}
 /* ── Slides ── */
 .slides-outer{flex:1;overflow:hidden;position:relative}
 .slides-wrap{display:flex;width:700%;height:100%;transition:transform 0.3s cubic-bezier(0.4,0,0.2,1)}
@@ -67,8 +67,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .sub-tab-bar{display:flex !important;justify-content:space-around;width:100%;box-sizing:border-box}
 .sub-tab-btn{font-size:12px !important;display:flex !important;align-items:center;justify-content:center;gap:6px !important;flex-shrink:0 !important;white-space:nowrap !important}
 .sub-tab-btn i,.sub-tab-btn span{display:inline-block !important;flex-shrink:0 !important}
-.tab-btn span{font-size:14px !important;}
-@media (max-width:400px){.sub-tab-btn{font-size:11.5px !important;padding:3px 3px !important;gap:4px !important}}
+@media (max-width:400px){.sub-tab-btn{font-size:11.5px !important;padding:3px 3px !important;gap:4px !important} .tab-btn span{font-size:12px}}
 .tradingview-widget-container{width:100% !important;position:relative !important;overflow:hidden !important;border:none !important;background-color:rgb(25,25,25) !important}
 .tradingview-widget-container__widget{width:100% !important;position:relative !important;overflow:hidden !important}
 .tradingview-widget-container iframe{position:absolute !important;top:-1px !important;left:-1px !important;width:calc(100% + 2px) !important;border:none !important;outline:none !important;box-shadow:none !important}
@@ -89,7 +88,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .ring-remain.low  { color:#fbbf24; }   /* keep yellow */
 .ring-remain.over { color:#FF69B4; }   /* pink */
 
-.det-col-hdr{display:grid;grid-template-columns:5.4fr 1.6fr 1.6fr 1.6fr;padding:0.8vw 0.5vw;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:0.5vw;font-size:14px;font-weight:600;color:rgba(255,255,255,0.35)}
+.det-col-hdr{display:grid;grid-template-columns:5.4fr 1.6fr 1.6fr 1.6fr;padding:0.8vw 0.5vw;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:0.5vw;font-size:12px;font-weight:600;color:rgba(255,255,255,0.35)}
 .det-col-hdr .ch{text-align:right}
 .det-col-hdr .ch:first-child{text-align:left}
 .expand-txt{display:block;text-align:right;font-family:Lexend;font-weight:400;color:rgba(255,255,255,0.75);border-radius:4vw;cursor:pointer;margin-top:5px;margin-bottom:2.5vw;background:rgba(255,255,255,0.08);border:0px solid rgba(255,255,255,0.25);padding:1vw 2.5vw}
@@ -120,9 +119,10 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .pct-val.flat { color:rgba(255,255,255,0.3); }
 #det-msg { font-size:3vw; color:rgba(255,255,255,0.4); text-align:center; padding:5vw; }
 
-.budget-card{margin-top:15px;padding:0 10px 0 10px;}
+.budget-card{margin-top:15px;padding:0 5px 0 0px;}
 .budget-title,.budget-label{font-size:12px;color:rgba(255,255,255,.55);margin-bottom:5px}
-.budget-subtabs{background:rgba(255,255,255,.05);border-radius:13px;padding:3px;gap:4px}.budget-subtab{flex:1;font-family:Lexend;display:flex;align-items:center;justify-content:center;gap:5px;background:0 0;border:0;color:rgba(255,255,255,.5);padding:4px 10px;font-size:12px;font-weight:400;border-radius:10px;cursor:pointer;transition:all .2s ease-in-out;outline:0}.budget-subtab.active{background:#2a2d37;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.25)}.budget-subtab .material-icons-round{vertical-align:middle}.chart-container{position:relative;width:100%;height:220px;display:flex;align-items:flex-end;padding:20px 10px 10px 10px;box-sizing:border-box}.glass-chart-bars{width:100%!important;height:100%!important;display:block}.chart-col{flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end;position:relative}.bar-fill{width:100%;max-width:28px;background:linear-gradient(180deg,rgba(255,255,255,.8)0,rgba(255,255,255,.2) 100%);border-radius:6px 6px 2px 2px;transition:height .4s ease;min-height:4px;box-shadow:0 4px 12px rgba(0,0,0,.15)}.bar-baseline{position:absolute;width:100%;max-width:28px;border-top:2px dashed #8e90a6;z-index:2;transition:bottom .4s ease}.col-label{margin-top:8px;font-family:"DM Sans",sans-serif;font-size:11px;color:#8e90a6}canvas#myChart{width:100%!important;height:100%!important}
+.budget-subtabs{background:rgba(255,255,255,.05);border-radius:13px;padding:3px;gap:4px}.budget-subtab{flex:1;font-family:Lexend;display:flex;align-items:center;justify-content:center;gap:5px;background:0 0;border:0;color:rgba(255,255,255,.5);padding:4px 10px;font-size:12px;font-weight:400;border-radius:10px;cursor:pointer;transition:all .2s ease-in-out;outline:0}
+.budget-subtab.active,.budget-subtab-v2.active{opacity:1;background:#2a2d37;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.25)}.budget-subtab .material-icons-round{vertical-align:middle}.chart-container{position:relative;width:100%;height:220px;display:flex;align-items:flex-end;padding:20px 10px 10px 10px;box-sizing:border-box}.glass-chart-bars{width:100%!important;height:100%!important;display:block}.chart-col{flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end;position:relative}.bar-fill{width:100%;max-width:28px;background:linear-gradient(180deg,rgba(255,255,255,.8)0,rgba(255,255,255,.2) 100%);border-radius:6px 6px 2px 2px;transition:height .4s ease;min-height:4px;box-shadow:0 4px 12px rgba(0,0,0,.15)}.bar-baseline{position:absolute;width:100%;max-width:28px;border-top:2px dashed #8e90a6;z-index:2;transition:bottom .4s ease}.col-label{margin-top:8px;font-family:"DM Sans",sans-serif;font-size:11px;color:#8e90a6}canvas#myChart{width:100%!important;height:100%!important}
 .budget-total,#budget-spent,.marker-value,#budget-remaining{font-family:"JetBrains Mono";}
 .budget-total{font-size:18px;font-weight:500;color:rgba(255,255,255,.85);margin-bottom:16px}
 .budget-bar-wrap{position:relative;margin-bottom:10px}
@@ -135,6 +135,26 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .budget-percent{display:inline-flex;align-items:center;justify-content:center;min-width:10px;height:20px;padding:0 10px;border-radius:999px;background:rgba(255,255,255,.10);color:rgba(255,255,255,.85);font-size:11.5px;line-height:1}
 #last-month-marker{position:absolute;top:-40px;transform:translateX(-50%);text-align:center;pointer-events:none}
 #last-month-marker .marker-value{font-size:11px;color:rgba(255,255,255,.65);margin-bottom:-6px;}
+
+.budget-subtab-v2 {
+  position: static !important;
+  width: 5px;
+  height: 5px;
+  min-width: 5px;
+  padding: 0;
+  margin: 0;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.08);
+  color: #cfcfd6;opacity:0.6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-sizing: border-box;
+  line-height: 1;
+  flex-shrink: 0;
+}
 
 .tx-detail-row{display:grid !important;grid-template-columns:5fr 2fr 2fr 1.6fr;align-items:center;font-size:2.4vw;border-bottom:1px solid rgba(255,255,255,0.03);width:100%;box-sizing:border-box;cursor:pointer;transition:background 0.15s}
 .tx-detail-row:hover{background:rgba(255,255,255,0.04);}
@@ -172,7 +192,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .dropdown-menu::-webkit-scrollbar{width:5px}.dropdown-menu::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:10px}.dropdown-divider{height:1px;background:rgba(255,255,255,.12);margin:6px 4px;border:0}
 
 /*RECENT */
-#tx-list{display:flex;flex-direction:column;margin-top:5px;}
+#tx-list{display:flex;flex-direction:column;margin:0 auto;}
 .tx-group-hdr{font-size:2.3vw;font-weight:300;color:rgba(255,255,255,0.45);letter-spacing:0.05em;padding:2.5vw 0 1vw 2vw;margin-top:0.5vw}
 .tx-group-hdr:first-child{padding-top:0.5vw}
 .row{display:flex;align-items:center;padding:2vw 0;border-bottom:1px solid rgba(255,255,255,0.08);gap:3vw;cursor:pointer;transition:background 0.2s ease,border-radius 0.2s ease,padding 0.2s ease}
@@ -189,12 +209,69 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .ttl{display:flex;align-items:center;gap:1.5vw}
 .recent-badge{font-size:2.4vw;font-weight:700;color:#14b8a6;background:rgba(74,222,128,0.14);border-radius:99px;padding:0.4vw 1.2vw;white-space:nowrap}
 .recent-badge .bi,label .bi {font-size: 0.8rem!important;vertical-align: 0em;}
-
 @media screen and (max-width:400px){.recent-badge{font-size:3.8vw}.ico {width:13vw!important; height:13vw!important;}}
+.budget-bar-wrap { position: relative; }
+.budget-bar {
+  width: 100%;
+  height: 15px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.06);
+}
+#budget-fill-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  gap: 0px;
+}
+.budget-fill-seg {
+  height: 100%;
+  flex-basis: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: flex-grow 0.4s ease;
+  border-right: 0px solid rgba(0,0,0,0.35); /* marker line between segments */
+}
+.budget-fill-seg:last-child {
+  border-right: none; /* no trailing line after the last segment */
+}
+.budget-fill-seg span {
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.9);
+  white-space: nowrap;
+}
+#budget-fill-legend {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  overflow: hidden;
+  width: 100%;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-right: 10px;
+  font-size: clamp(10px, 1.3vw, 12px);
+  color: #b4b4bd;
+  white-space: nowrap;
+}
+.legend-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 4px;
+  flex-shrink: 0;
+}
 
 #slide-1{position:relative}
-.tab-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
-#add-cash{position:absolute;top:10px;right:10px;z-index:10;width:8vw;height:8vw;font-family:monospace!important;font-size:6vw;font-weight:500;border-radius:50%;background-color:#14b8a6;color:#ffffff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.tab-header{display:flex-end;justify-content:space-between;align-items:center;margin-bottom:15px}
+#add-cash{margin-left: auto;margin-right:10px;top:0px;right:10px;z-index:10;width:8vw;height:8vw;font-family:monospace!important;font-size:6vw;font-weight:500;border-radius:50%;background-color:#14b8a6;color:#ffffff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
 #add-cash.loading{pointer-events:none;display:flex;align-items:center;justify-content:center}
 .cash-modal-overlay{display:none;position:fixed;inset:0; z-index:600;align-items:flex-start;justify-content:center;padding-top:20vh;overflow-y:auto}
 .cash-modal-overlay.open{display:flex!important}.btn-spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,0.3);border-top-color:#ffffff;border-radius:50%;animation:spinCircle 0.8s linear infinite;display:inline-block}
@@ -466,7 +543,7 @@ Object.assign(modalOverlay.style{position:"fixed",top:"0",left:"0",width:"100%",
 .legend-row { display:flex; gap:14px; margin-bottom:16px; flex-wrap:wrap; padding:0 4px; }
 .legend-item { display:flex; align-items:center; gap:5px; font-size:12px; color:#787b86; }
 .legend-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
-.table-container { width:100%; overflow:hidden; border:1px solid #2a2e39; border-radius:8px;  }
+.table-container { width:100%; overflow:hidden; }
 table { width:100%; border-collapse:collapse; text-align:left; font-size:14px; color:#d1d4dc; table-layout:fixed; }
 th, td { padding:5px 5px; border-bottom:1px solid #2a2e39; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 th { background:#191919; color:#787b86; font-weight:600; font-size:10px; text-transform:uppercase; letter-spacing:0.5px; }
@@ -572,7 +649,7 @@ tbody tr.current-row .cycle-num-badge {
 }
 
 /*F. I. R. E.*/
-.app-container{width:100%;margin:0 auto;padding:16px 1vw 32px 1vw}
+.app-container{width:100%;margin:0 auto;padding:0px 1vw 10px 1vw}
 .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .title-group h1{font-size:16px;font-weight:800;letter-spacing:-0.02em;background:linear-gradient(135deg,#ffffff 0%,#cbd5e1 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .title-group p{font-size:10px;color:var(--text-muted);font-weight:300}
@@ -986,7 +1063,7 @@ tbody tr.current-row .cycle-num-badge {
 .card-top{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
 .today-jp{font-size:12px;font-weight:500;color:rgba(255,255,255,.45);text-align:right}
 .card-top{flex-direction:row;align-items:center;justify-content:space-between}
-.today-jp{flex:0 0 auto;margin-right:12px;white-space:nowrap;margin:0px 0px 5px 5px}
+.today-jp{flex:0 0 auto;white-space:nowrap;margin:-5px 0px 5px 5px}
 .range-selector{margin-left:auto}
 .card{border:0px solid rgba(255,255,255,0.08);border-radius:20px;max-width:100%;margin:0 auto}
 .card-title{font-size:14px;font-weight:600;color:rgba(255,255,255,0.5)}
@@ -1011,7 +1088,7 @@ tbody tr.current-row .cycle-num-badge {
 .card-sub-text .amt-hl.pos{color:#2dd4bf}
 .card-sub-text .amt-hl.neg{color:#f87171}
 .pill{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;font-weight:400;padding:6px 12px;border-radius:99px;white-space:nowrap;flex-shrink:0}
-.pill.pos{background:rgba(45,212,191,0.14);color:#2dd4bf}
+.pill.pos{background:var(--teal-bg);color:#2dd4bf}
 .pill.neg{background:rgba(248,113,113,0.14);color:#f87171}
 .chart-wrap{position:relative;width:100%;cursor:crosshair}
 #chart-svg{width:100%;height:auto;display:block;overflow:visible}
@@ -1114,13 +1191,11 @@ to{transform:rotate(360deg)}
   
 </div>
 <div class="tab-bar" id="tab-bar">
-  <div class="tab-btn active" data-idx="0" id="tab-btn-0"><i class="bi bi-basket-fill"></i><span>Detail</span>  </div>
-  <div class="tab-btn" data-idx="1" id="tab-btn-1"><i class="bi bi-clock-fill"></i><span>Recent</span>  </div>
-  <div class="tab-btn" data-idx="5" id="tab-btn-5"><i class="bi bi-activity"></i><span>Overview</span>  </div>
-  <div class="tab-btn" data-idx="3" id="tab-btn-3"><i class="bi bi-cloud-fill"></i><span>Subscription</span>  </div>
-  <div class="tab-btn" data-idx="4" id="tab-btn-4"><i class="bi bi-currency-bitcoin"></i><span>BTC</span>  </div>
+  <div class="tab-btn active" data-idx="0" id="tab-btn-0"><i class="bi bi-basket-fill"></i><span>Expense</span>  </div>
+  <div class="tab-btn" data-idx="5" id="tab-btn-1"><i class="bi bi-activity"></i><span>Overview</span>  </div>
   <div class="tab-btn" data-idx="2" id="tab-btn-2"><i class="bi bi-rocket-takeoff-fill"></i><span>Portfolio</span>  </div>
-  <div class="tab-btn" data-idx="6" id="tab-btn-6"><img src="https://github.com/tinsntp/investment/blob/main/icon/incomes.png?raw=true" /><span>F.I.R.E.</span></div>
+  <div class="tab-btn" data-idx="4" id="tab-btn-3"><i class="bi bi-currency-bitcoin"></i><span>BTC</span>  </div>
+  <div class="tab-btn" data-idx="6" id="tab-btn-4"><img src="https://github.com/tinsntp/investment/blob/main/icon/incomes.png?raw=true" /><span>F.I.R.E.</span></div>
   <div class="tab-line" id="tab-line"></div>
 </div>
 <div class="slides-outer" id="slides-outer">
@@ -1130,47 +1205,59 @@ to{transform:rotate(360deg)}
       <div id="rings-wrap"></div>
       <div class="budget-card">
         <!-- Sub-Tab Switcher Header (Placed at top) -->
-        <div class="budget-subtabs" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+        <div class="budget-subtabs" style="display: flex; align-items: center; justify-content: space-between; margin: 10px;">
           <button type="button" class="budget-subtab active" onclick="switchBudgetTab(this, 'spending')">
-            <span class="material-icons-round" style="font-size: 14px;">timelapse</span>
-            <span>Spending Budget</span>
+            <span class="material-icons-round" style="font-size: 14px;">history</span>
+            <span>Recent</span>
           </button>
           <button type="button" class="budget-subtab" onclick="switchBudgetTab(this, 'subcategory')">
-            <span class="material-icons-round" style="font-size: 14px;">pie_chart</span>
-            <span>Sub-category</span>
+            <span class="material-icons-round" style="font-size: 14px;">timelapse</span>
+            <span>Detail</span>
+          </button>
+          <button type="button" class="budget-subtab" onclick="switchBudgetTab(this, 'subscription')">
+            <span class="material-icons-round" style="font-size: 14px;">cloud</span>
+            <span>Subscription</span>
           </button>
         </div>
 
         <!-- Tab 1: Spending Budget View -->
         <div class="budget-tab-content" id="budget-view-spending">
-          <div class="budget-total" id="budget-average"></div>
-          <div class="budget-bar-wrap">
-            <div id="last-month-marker"></div>
-            <div class="budget-bar">
-              <div id="budget-fill"></div>
+          <div style="padding:15px">
+            <div class="budget-total" id="budget-average"></div>
+            <div class="budget-bar-wrap">
+              <div id="last-month-marker"></div>
+              <div class="budget-bar">
+                <div id="budget-fill-container"></div>
+              </div>
+              <div id="budget-fill-legend"></div>
             </div>
-          </div>
 
-          <div class="budget-bottom">
-            <div class="budget-col">
-              <div class="budget-label">Spent</div>
-              <div class="budget-spent-row">
-                <span id="budget-spent"></span>
-                <span id="budget-percent"></span>
+            <div class="budget-bottom">
+              <div class="budget-col">
+                <div class="budget-label">Spent</div>
+                <div class="budget-spent-row">
+                  <span id="budget-spent"></span>
+                  <span id="budget-percent"></span>
+                </div>
+              </div>
+              <div class="budget-col" style="text-align: right;">
+                <div class="budget-label">Remaining</div>
+                <div id="budget-remaining" style="margin-top: 2px;"></div>
               </div>
             </div>
-            <div class="budget-col" style="text-align: right;">
-              <div class="budget-label">Remaining</div>
-              <div id="budget-remaining" style="margin-top: 2px;"></div>
-            </div>
           </div>
+          <div id="rec-msg"></div>
+          <div class="tab-header">
+            <button id="add-cash" class="action-btn">+</button></div>
+          <div id="tx-list"></div>
         </div>
 
         <!-- Tab 2: Sub-category View -->
         <div class="budget-tab-content" id="budget-view-subcategory" style="display: none;">
           <div id="subcategory-list" class="subcategory-list">
-            <div class="expense-widget-card">
+            <div class="expense-widget-card" style="padding:10px">
               <!-- Top Segment Filter & Category Dropdown -->
+              
               <div class="filter-controls">
                 <div class="segment-pill-wrap">
                   <button class="segment-btn" onclick="updateView('6M', this)">6m</button>
@@ -1192,7 +1279,7 @@ to{transform:rotate(360deg)}
                   <div class="dropdown-menu" id="dropdownMenu"></div>
                 </div>
               </div>
-
+              
               <!-- Stat Comparison Header -->
               <div class="stats-header">
                 <div class="stat-col secondary">
@@ -1210,155 +1297,216 @@ to{transform:rotate(360deg)}
               <!-- Line Chart -->
               <div class="chart-wrapper">
                 <div id="expenseChart" class="glass-chart-bars"></div>
-                </div>
+              </div>
+              <div class="button-container" style="display:flex;justify-content:flex-end;margin-bottom:10px;margin-top:10px">
+                <button class="expand-txt" id="expand-btn" ><i class="bi bi-chevron-down"></i> Expand All</button>
+              </div>
+              <div id="col-hdr" class="det-col-hdr"></div>
+              <div id="det-msg">Loading...</div>
+              <div id="cat-list"></div>
             </div>
           </div>
         </div>
+        <!-- Tab 3: Subscription View -->
+        <div class="budget-tab-content" id="budget-view-subscription" style="display: none;">
+          <div class="card" id="card">
+          <div class="sub-header-row">
+            <div class="sub-title">Spending overview</div>
+          </div>
+          <div class="sub-stats-row">
+            <div class="sub-stat-block">
+              <div class="sub-stat-val" id="sub-total-val">&#x2014;</div>
+              <div class="sub-stat-label" id="sub-total-label">Active subscriptions / month</div>
+            </div>
+            <div class="sub-stat-block">
+              <div class="sub-stat-val" id="sub-total-excl-val">&#x2014;</div>
+              <div class="sub-stat-label" id="sub-total-excl-label">Excl. KungfuStocksPro</div>
+            </div>
+          </div>
+          <div class="sub-list-title">
+            <span>Active subscription</span>
+            <button class="add-inline-btn" id="add-fab">+</button>
+          </div>
+          <div id="sub-loading">Loading&hellip;</div>
+          <div id="sub-list"></div>
+        </div>
+        </div>
       </div>
-      <div class="button-container" style="display:flex;justify-content:flex-end;margin-bottom:10px;margin-top:10px">
-        <button class="expand-txt" id="expand-btn" ><i class="bi bi-chevron-down"></i> Expand All</button>
-      </div>
-      <div id="col-hdr" class="det-col-hdr"></div>
-      <div id="det-msg">Loading...</div>
-      <div id="cat-list"></div>
+      
     </div>
     <!-- RECENT SLIDE -->
     <div class="slide" id="slide-1" data-idx="1">
-      <div id="rec-msg"></div>
-      <div class="tab-header">
-        <button id="add-cash" class="action-btn">+</button></div>
-      <div id="tx-list"></div>
+      
     </div>
     <!-- OVERVIEW SLIDE -->
     <div class="slide" id="slide-5" data-idx="5">
-      <div id="ca-wrap">
-        <!-- Left column: Balance Sheet & Wallet Controls -->
-        <div id="ca-col-left">
-          <div class="wallet-widget">
-            <div class="wallet-container">
-              <div class="cards-stack" id="cardsStack"></div>
-              <div class="wallet-pocket">
-                <div>
-                  <div class="pocket-header" style="display: flex; align-items: center; gap: 8px;">
-                    <span class="material-icons-round">timelapse</span>
-                    <span>Total Balance</span>
-                    <span class="material-icons-round" id="visibilityToggle" style="cursor: pointer; font-size: 15px; color: #666;" onclick="toggleVisibility()">visibility</span>
-                    <span class="material-icons-round" id="refreshCardsBtn" style="cursor: pointer; font-size: 15px; color: #666; transition: transform 0.3s ease; display: flex; align-items: center; justify-content: center;" onclick="window.handleRefreshCards(event)" onmouseover="this.style.color='#f8f9fa'; this.style.transform='rotate(180deg)';" onmouseout="this.style.color='#666'; this.style.transform='rotate(0deg)';">refresh</span>
-                  </div>
-                  <div class="total-balance-value" id="totalBalance">0 đ</div>
-                  <div class="usd-equivalence">
-                    <span id="usdBalance">$0.00 USD</span>
-                  </div>
-                  <div class="preview-section">
-                    <div class="preview-row" id="socialAccountRow">
-                      <div class="preview-row-left">
-                        <span><i class="bi bi-asterisk"></i> Social Insurance</span>
-                      </div>
-                      <span id="socialBalance">0 đ</span>
+      <div id="ca-wrap"><div class="budget-card" >
+        <div class="budget-subtabs-v2" style="display: flex !important;align-items: center; justify-content: center; gap: 8px; position: relative; width: 100%;">
+          <button type="button" class="budget-subtab-v2 active" onclick="switchBudgetTab(this, 'wallet')" style="position: static;">
+            <span class="material-icons-round" style="font-size:5px;">circle</span>
+          </button>
+          <button type="button" class="budget-subtab-v2" onclick="switchBudgetTab(this, 'fire')" style="position: static;">
+            <span class="material-icons-round" style="font-size: 5px;">circle</span>
+          </button>
+        </div>
+   
+        <div class="budget-tab-content" id="budget-view-wallet" style="display: none;">
+          <!-- Left column: Balance Sheet & Wallet Controls -->
+          <div id="ca-col-left" style="margin-top:-10px!important">
+            <div class="wallet-widget">
+              <div class="wallet-container">
+                <div class="cards-stack" id="cardsStack"></div>
+                <div class="wallet-pocket">
+                  <div>
+                    <div class="pocket-header" style="display: flex; align-items: center; gap: 8px;">
+                      <span class="material-icons-round">timelapse</span>
+                      <span>Total Balance</span>
+                      <span class="material-icons-round" id="visibilityToggle" style="cursor: pointer; font-size: 15px; color: #666;" onclick="toggleVisibility()">visibility</span>
+                      <span class="material-icons-round" id="refreshCardsBtn" style="cursor: pointer; font-size: 15px; color: #666; transition: transform 0.3s ease; display: flex; align-items: center; justify-content: center;" onclick="window.handleRefreshCards(event)" onmouseover="this.style.color='#f8f9fa'; this.style.transform='rotate(180deg)';" onmouseout="this.style.color='#666'; this.style.transform='rotate(0deg)';">refresh</span>
                     </div>
-                    <div class="preview-row" id="salaryAccountRow">
-                      <div class="preview-row-left">
-                        <span><i class="bi bi-wallet"></i> Pending Salary</span>
+                    <div class="total-balance-value" id="totalBalance">0 đ</div>
+                    <div class="usd-equivalence">
+                      <span id="usdBalance">$0.00 USD</span>
+                    </div>
+                    <div class="preview-section">
+                      <div class="preview-row" id="socialAccountRow">
+                        <div class="preview-row-left">
+                          <span><i class="bi bi-asterisk"></i> Social Insurance</span>
+                        </div>
+                        <span id="socialBalance">0 đ</span>
                       </div>
-                      <span id="salaryBalance">0 đ</span>
+                      <div class="preview-row" id="salaryAccountRow">
+                        <div class="preview-row-left">
+                          <span><i class="bi bi-wallet"></i> Pending Salary</span>
+                        </div>
+                        <span id="salaryBalance">0 đ</span>
+                      </div>
                     </div>
                   </div>
+                  <div class="pocket-footer"></div>
                 </div>
-                <div class="pocket-footer"></div>
+              </div>
+              <div class="action-row">
+                <button class="btn btn-deposit" onclick="openModal('Deposit')">
+                  <span class="material-icons-round" style="font-size:18px;">arrow_circle_down</span>
+                  Deposit
+                </button>
+                <button class="btn btn-withdraw" onclick="openModal('Withdraw')">
+                  <span class="material-icons-round" style="font-size:18px;">arrow_circle_up</span>
+                  Withdraw
+                </button>
+                <button class="btn btn-square" onclick="openModal('Transfer')" title="Transfer">
+                  <span class="material-icons-round">swap_horiz</span>
+                </button>
+                <button class="btn btn-square" id="btn-square-history" title="History">
+                  <span class="material-icons-round">history</span>
+                </button>
               </div>
             </div>
-            <div class="action-row">
-              <button class="btn btn-deposit" onclick="openModal('Deposit')">
-                <span class="material-icons-round" style="font-size:18px;">arrow_circle_down</span>
-                Deposit
-              </button>
-              <button class="btn btn-withdraw" onclick="openModal('Withdraw')">
-                <span class="material-icons-round" style="font-size:18px;">arrow_circle_up</span>
-                Withdraw
-              </button>
-              <button class="btn btn-square" onclick="openModal('Transfer')" title="Transfer">
-                <span class="material-icons-round">swap_horiz</span>
-              </button>
-              <button class="btn btn-square" id="btn-square-history" title="History">
-                <span class="material-icons-round">history</span>
-              </button>
+
+          </div><div id="ca-col-right">
+            <!-- Right column: Chart Analysis & Dynamic Breakdown lists -->
+            <div id="ca-section-expense">
+              <div class="ca-filter-header">
+                <button class="ca-filter-btn" id="ca-btn-income" title="Incomes">
+                  <i class="bi bi-piggy-bank-fill"></i>
+                </button>
+                <button class="ca-filter-btn active" id="ca-btn-expense" title="Expenses">
+                  <i class="bi bi-basket-fill"></i>
+                </button>
+                </button>
+              </div>
+
+              <div id="ca-donut-wrap">
+                <svg id="ca-donut-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"></svg>
+                <div class="ca-donut-center">
+                  <div class="ca-donut-center-label" id="ca-center-label">Total</div>
+                  <div class="ca-donut-center-val" id="ca-center-val">&#x2014;</div>
+                </div>
+              </div>
+              <div id="ca-list"></div>
+            </div>
+          </div>
+          <!-- ✨ Expanded Layout Wrapper -->
+          <div id="walletHistorySection" class="history-panel">
+            <div class="history-header" style="display: flex; justify-content: space-between; align-items: center; position: relative;">
+              <div class="header-left" style="display: flex; align-items: center; gap: 8px;">
+                <span class="history-title-icon material-icons-round">receipt_long</span>
+                <h3>Transaction History</h3>
+              </div>
+              <!-- ENHANCED DROPDOWN SELECTOR BLOCK -->
+              <div class="filter-dropdown-wrapper" style="position: relative; font-family: 'DM Sans', sans-serif; min-width: 125px; z-index: 10;">
+                <div class="filter-dropdown-trigger" 
+                    id="transactionFilterTrigger" 
+                    onclick="window.toggleFilterDropdown(event)" 
+                    style="padding: 6px 12px; background: #202020; border: 0px solid #2d313c; border-radius: 10px; color: #f8f9fa; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: space-between; gap: 6px; cursor: pointer; user-select: none;">
+                  <span id="currentFilterLabel" style="display: flex; align-items: center; gap: 6px;">
+                    <span class="material-icons-round" id="filterIcon" style="font-size: 15px; color: #fff!important;">filter_list</span>All</span>
+                  <span class="material-icons-round" id="filterDropdownArrow" style="font-size: 15px; color: #6c757d; transition: transform 0.2s;">expand_more</span>
+                </div>
+                <div class="filter-dropdown-options" id="transactionFilterOptions" 
+                    style="z-index: 9999; display: none;position: absolute; right: 0;top: calc(100% + 4px); background: #202020; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-radius: 10px; overflow-y: auto;max-height: 280px;min-width: 155px;box-shadow: 0 8px 24px rgba(0,0,0,0.8); -webkit-transform: translateZ(0); transform: translateZ(0); isolation: isolate;">
+                </div>
+              </div>
+            </div>
+            <div class="history-list" id="historyListContainer">
+              <div class="history-card tx-deposit">...</div>
+              <div class="history-card tx-transfer">...</div>
+            </div>
+          </div>
+        </div>
+        <div class="budget-tab-content" id="budget-view-fire" style="display: none;">
+          <div class="app-container">
+          <header class="header">
+            <div class="title-group">
+            </div>
+          </header>
+
+          <!-- Hero Overview Card -->
+          <div class="hero-card" id="hero-card" style="display:none;">
+            <div class="hero-caption-row">
+              <div class="hero-caption"><span>Total </span><i class="bi bi-fire" style="font-size:25px;margin-bottom:10px!important;" aria-hidden="true"></i><span> F. I. R. E. BUDGET</span></div>
+              <div class="live-badge">
+                <span class="live-dot"></span> Live
+              </div>
+            </div>
+            <div class="hero-main-val" id="hero-invested">&#x2014;</div>
+            
+            <div class="hero-grid">
+              <div class="hero-stat-box">
+                <div class="hero-stat-label" style="text-align:right">&#x2014;</div>
+                <div class="hero-stat-num" id="hero-pct" style="text-align:right">&#x2014;</div>
+              </div>
+              <div class="hero-stat-box">
+                <div class="hero-stat-label">Total Return per month</div>
+                <div class="hero-stat-num" id="hero-amt">&#x2014;</div>
+              </div>
             </div>
           </div>
 
-        </div><div id="ca-col-right">
-          <!-- Right column: Chart Analysis & Dynamic Breakdown lists -->
-          <div id="ca-section-expense">
-            <div class="ca-filter-header">
-              <button class="ca-filter-btn" id="ca-btn-income" title="Incomes">
-                <i class="bi bi-piggy-bank-fill"></i>
-              </button>
-              <button class="ca-filter-btn active" id="ca-btn-expense" title="Expenses">
-                <i class="bi bi-basket-fill"></i>
-              </button>
-            </div>
+          <!-- Visual Asset Allocation Chart -->
+          <div class="chart-card" id="chart-card" style="display:none;">
+            <div class="chart-title">Allocation Ratio</div>
+            <div class="stacked-bar-container" id="stacked-bar"></div>
+            <div class="chart-legend" id="chart-legend"></div>
+          </div>
 
-            <div id="ca-donut-wrap">
-              <svg id="ca-donut-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"></svg>
-              <div class="ca-donut-center">
-                <div class="ca-donut-center-label" id="ca-center-label">Total</div>
-                <div class="ca-donut-center-val" id="ca-center-val">&#x2014;</div>
-              </div>
+          <!-- Category List -->
+          <div id="category-section" style="display:none;">
+            <div class="section-header-row">
+              <div class="section-label">Asset Breakdown</div>
+              <button class="toggle-mode-btn" id="toggle-all-btn">Expand All</button>
             </div>
-            <div id="ca-list"></div>
+            <div id="category-list"></div>
           </div>
         </div>
-        <!-- ✨ Expanded Layout Wrapper -->
-        <div id="walletHistorySection" class="history-panel">
-          <div class="history-header" style="display: flex; justify-content: space-between; align-items: center; position: relative;">
-            <div class="header-left" style="display: flex; align-items: center; gap: 8px;">
-              <span class="history-title-icon material-icons-round">receipt_long</span>
-              <h3>Transaction History</h3>
-            </div>
-            <!-- ENHANCED DROPDOWN SELECTOR BLOCK -->
-            <div class="filter-dropdown-wrapper" style="position: relative; font-family: 'DM Sans', sans-serif; min-width: 125px; z-index: 10;">
-              <div class="filter-dropdown-trigger" 
-                  id="transactionFilterTrigger" 
-                  onclick="window.toggleFilterDropdown(event)" 
-                  style="padding: 6px 12px; background: #202020; border: 0px solid #2d313c; border-radius: 10px; color: #f8f9fa; font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: space-between; gap: 6px; cursor: pointer; user-select: none;">
-                <span id="currentFilterLabel" style="display: flex; align-items: center; gap: 6px;">
-                  <span class="material-icons-round" id="filterIcon" style="font-size: 15px; color: #fff!important;">filter_list</span>All</span>
-                <span class="material-icons-round" id="filterDropdownArrow" style="font-size: 15px; color: #6c757d; transition: transform 0.2s;">expand_more</span>
-              </div>
-              <div class="filter-dropdown-options" id="transactionFilterOptions" 
-                  style="z-index: 9999; display: none;position: absolute; right: 0;top: calc(100% + 4px); background: #202020; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-radius: 10px; overflow-y: auto;max-height: 280px;min-width: 155px;box-shadow: 0 8px 24px rgba(0,0,0,0.8); -webkit-transform: translateZ(0); transform: translateZ(0); isolation: isolate;">
-              </div>
-            </div>
-          </div>
-          <div class="history-list" id="historyListContainer">
-            <div class="history-card tx-deposit">...</div>
-            <div class="history-card tx-transfer">...</div>
-          </div>
         </div>
-      </div>
+        
+      </div></div>
     </div>
     <!-- SUBSCRIPTION SLIDE -->
     <div class="slide" id="slide-3" data-idx="3">
-      <div class="card" id="card">
-        <div class="sub-header-row">
-          <div class="sub-title">Spending overview</div>
-        </div>
-        <div class="sub-stats-row">
-          <div class="sub-stat-block">
-            <div class="sub-stat-val" id="sub-total-val">&#x2014;</div>
-            <div class="sub-stat-label" id="sub-total-label">Active subscriptions / month</div>
-          </div>
-          <div class="sub-stat-block">
-            <div class="sub-stat-val" id="sub-total-excl-val">&#x2014;</div>
-            <div class="sub-stat-label" id="sub-total-excl-label">Excl. KungfuStocksPro</div>
-          </div>
-        </div>
-        <div class="sub-list-title">
-          <span>Active subscription</span>
-          <button class="add-inline-btn" id="add-fab">+</button>
-        </div>
-        <div id="sub-loading">Loading&hellip;</div>
-        <div id="sub-list"></div>
-      </div>
+      
     </div>
     <!-- BTC SLIDE -->
     <div class="slide" id="slide-4" data-idx="4">
@@ -1580,51 +1728,7 @@ to{transform:rotate(360deg)}
     </div>
     <!-- F.I.R.E. SLIDE -->
     <div class="slide" id="slide-6" data-idx="6">
-      <div class="app-container">
-        <header class="header">
-          <div class="title-group">
-            <p>Tentative by Oct 2030</p>
-          </div>
-        </header>
-
-        <!-- Hero Overview Card -->
-        <div class="hero-card" id="hero-card" style="display:none;">
-          <div class="hero-caption-row">
-            <div class="hero-caption"><span>Total </span><i class="bi bi-fire" style="font-size:25px;margin-bottom:10px!important;" aria-hidden="true"></i><span> F. I. R. E. BUDGET</span></div>
-            <div class="live-badge">
-              <span class="live-dot"></span> Live
-            </div>
-          </div>
-          <div class="hero-main-val" id="hero-invested">&#x2014;</div>
-          
-          <div class="hero-grid">
-            <div class="hero-stat-box">
-              <div class="hero-stat-label" style="text-align:right">&#x2014;</div>
-              <div class="hero-stat-num" id="hero-pct" style="text-align:right">&#x2014;</div>
-            </div>
-            <div class="hero-stat-box">
-              <div class="hero-stat-label">Total Return per month</div>
-              <div class="hero-stat-num" id="hero-amt">&#x2014;</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Visual Asset Allocation Chart -->
-        <div class="chart-card" id="chart-card" style="display:none;">
-          <div class="chart-title">Allocation Ratio</div>
-          <div class="stacked-bar-container" id="stacked-bar"></div>
-          <div class="chart-legend" id="chart-legend"></div>
-        </div>
-
-        <!-- Category List -->
-        <div id="category-section" style="display:none;">
-          <div class="section-header-row">
-            <div class="section-label">Asset Breakdown</div>
-            <button class="toggle-mode-btn" id="toggle-all-btn">Expand All</button>
-          </div>
-          <div id="category-list"></div>
-        </div>
-      </div>
+      
     </div>
   </div>
 </div>
@@ -3018,10 +3122,94 @@ document.querySelectorAll(".line-toggle-btn").forEach(function(btn){
     function makeIcon(iconUrl,fallback){if(iconUrl&&0===iconUrl.indexOf("http")){var img=document.createElement("img");return img.className="cat-ico",img.src=iconUrl,img.onerror=(fb=fallback,function(){var d=document.createElement("div");d.className="cat-ico-fb",d.textContent=fb||"•",this.parentNode.replaceChild(d,this)}),img}var fb,d=document.createElement("div");return d.className="cat-ico-fb",d.textContent=iconUrl||fallback||"•",d}
     function buildCatRow(item,isSub,gid){var row=document.createElement("div");row.className="cat-row"+(isSub?" sub-row":" main-row"),isSub?row.dataset.group=gid:(row.dataset.id=gid,row.dataset.open="0");var p=pctInfo(item.curr,item.last),nameCell=document.createElement("div");if(nameCell.className="name-cell",isSub){var subChev=document.createElement("span");subChev.className="chevron sub-chev bi bi-chevron-right",subChev.style.fontSize="2.5vw",nameCell.appendChild(subChev)}else{var chev=document.createElement("span");chev.className="chevron bi bi-chevron-right",nameCell.appendChild(chev)}nameCell.appendChild(makeIcon(item.icon,item.name?item.name.charAt(0):"•"));var nameSpan=document.createElement("span");nameSpan.className="cat-name",nameSpan.textContent=item.name,nameCell.appendChild(nameSpan);var amtEl=document.createElement("div");amtEl.className="amt-val",amtEl.textContent=fmtK(item.curr);var lastEl=document.createElement("div");lastEl.className="last-val",lastEl.textContent=fmtK(item.last);var pctEl=document.createElement("div");return pctEl.className="pct-val "+p.cls,pctEl.innerHTML=p.html,row.appendChild(nameCell),row.appendChild(amtEl),row.appendChild(lastEl),row.appendChild(pctEl),isSub?row.addEventListener("click",function(e){e.stopPropagation(),toggleSubCategoryTx(row,item.name)}):row.addEventListener("click",function(){var g=this.dataset.id,isOpen="1"===this.dataset.open;this.dataset.open=isOpen?"0":"1";var chev2=document.getElementById("chev-"+g);chev2&&(chev2.className=isOpen?"bi bi-chevron-right":"bi bi-chevron-down"),document.querySelectorAll(".sub-row[data-group='"+g+"']").forEach(function(s){isOpen?(s.classList.remove("visible"),s.classList.contains("visible-tx")&&toggleSubCategoryTx(s,"")):s.classList.add("visible")})}),row}
     document.getElementById("expand-btn").addEventListener("click",function(){allExpanded=!allExpanded,this.innerHTML=allExpanded?'<i class="bi bi-chevron-up"></i> Collapse All':'<i class="bi bi-chevron-down"></i> Expand All',allExpanded?document.querySelectorAll(".main-row").forEach(function(r){r.classList.add("ring-highlighted")}):(document.querySelectorAll(".main-row.ring-highlighted").forEach(function(r){r.classList.remove("ring-highlighted")}),document.querySelectorAll(".ring-item.selected").forEach(function(r){r.classList.remove("selected")})),document.querySelectorAll(".sub-row").forEach(function(s){allExpanded?s.classList.add("visible"):s.classList.remove("visible")}),document.querySelectorAll(".main-row").forEach(function(r){r.dataset.open=allExpanded?"1":"0"}),document.querySelectorAll(".chevron").forEach(function(c){c.textContent=(allExpanded,"")})});
-    function buildColHdr(){var isMobile=window.innerWidth<400,hdr=document.getElementById("col-hdr");hdr&&(hdr.innerHTML="",hdr.style.fontSize=isMobile?"3.9vw":"2.6vw",hdr.style.gridTemplateColumns=isMobile?"5.2fr 1.8fr 1.6fr":"5.6fr 1.6fr 1.8fr 1.4fr",(isMobile?["Category","Amount","Change"]:["Category","Amount","Previous","Change"]).forEach(function(t,i){var d=document.createElement("div");d.className="ch";var iconEl=document.createElement("i");iconEl.style.display="inline-block",iconEl.style.marginRight="4px",iconEl.style.marginBottom="2px",iconEl.style.setProperty("font-size","13px","important"),"Category"===t?iconEl.className="bi bi-list":"Amount"===t?iconEl.className="bi bi-cash":"Previous"===t?iconEl.className="bi bi-calendar4-event":"Change"===t&&(iconEl.className="bi bi-droplet-half",t=""),iconEl.className&&d.appendChild(iconEl),t&&d.appendChild(document.createTextNode(t)),hdr.appendChild(d)}))}
+    function buildColHdr(){var isMobile=window.innerWidth<400,hdr=document.getElementById("col-hdr");hdr&&(hdr.innerHTML="",hdr.style.fontSize=isMobile?"3.6vw":"2.6vw",hdr.style.gridTemplateColumns=isMobile?"5.2fr 1.8fr 1.6fr":"5.6fr 1.6fr 1.8fr 1.4fr",(isMobile?["Category","Amount","Change"]:["Category","Amount","Previous","Change"]).forEach(function(t,i){var d=document.createElement("div");d.className="ch";var iconEl=document.createElement("i");iconEl.style.display="inline-block",iconEl.style.marginRight="4px",iconEl.style.marginBottom="2px",iconEl.style.setProperty("font-size","13px","important"),"Category"===t?iconEl.className="bi bi-list":"Amount"===t?iconEl.className="bi bi-cash":"Previous"===t?iconEl.className="bi bi-calendar4-event":"Change"===t&&(iconEl.className="bi bi-droplet-half",t=""),iconEl.className&&d.appendChild(iconEl),t&&d.appendChild(document.createTextNode(t)),hdr.appendChild(d)}))}
 
-    function switchBudgetTab(e,t){var a=e.closest(".budget-card");a.querySelectorAll(".budget-subtab").forEach(function(e){e.classList.remove("active")}),e.classList.add("active"),a.querySelectorAll(".budget-tab-content").forEach(function(e){e.style.display="none"});var c=a.querySelector("#budget-view-"+t);c&&(c.style.display="block"),localStorage.setItem("active_budget_subtab",t),"subcategory"===t&&"function"==typeof renderSubcategoryBreakdown&&renderSubcategoryBreakdown()}
-    document.addEventListener("DOMContentLoaded",function(){var savedSubtab=localStorage.getItem("active_budget_subtab")||"spending",targetBtn=document.querySelector(`.budget-subtab[onclick*="'${savedSubtab}'"]`);targetBtn&&switchBudgetTab(targetBtn,savedSubtab)});
+    function switchBudgetTab(e,t){var a=e.closest(".budget-card");a.querySelectorAll(".budget-subtab, .budget-subtab-v2").forEach(function(e){e.classList.remove("active")}),e.classList.add("active"),a.querySelectorAll(".budget-tab-content").forEach(function(e){e.style.display="none"});var c=a.querySelector("#budget-view-"+t);c&&(c.style.display="block"),localStorage.setItem("active_budget_subtab",t),"subcategory"===t&&"function"==typeof renderSubcategoryBreakdown&&renderSubcategoryBreakdown()}
+    document.addEventListener("DOMContentLoaded",function(){var savedSubtab=localStorage.getItem("active_budget_subtab")||"spending",targetBtn=document.querySelector(`.budget-subtab[onclick*="'${savedSubtab}'"], .budget-subtab-v2[onclick*="'${savedSubtab}'"]`);targetBtn&&switchBudgetTab(targetBtn,savedSubtab)});
+    (function() {
+    var card = document.querySelector(".budget-card");
+    if (!card) return;
+
+    var tabOrder = ["wallet", "fire"];
+    var startX = 0, startY = 0, isSwiping = false, mouseDown = false;
+    var threshold = 50;
+
+    function getCurrentTab() {
+        var activeBtn = card.querySelector(".budget-subtab-v2.active");
+        if (!activeBtn) return "wallet";
+        var match = activeBtn.getAttribute("onclick").match(/'([^']+)'/);
+        return match ? match[1] : "wallet";
+    }
+
+    function goToTab(tabName) {
+        var btn = card.querySelector(".budget-subtab-v2[onclick*=\"'" + tabName + "'\"]");
+        if (btn) switchBudgetTab(btn, tabName);
+    }
+
+    function handleSwipeEnd(dx) {
+        var currentTab = getCurrentTab();
+        var currentIndex = tabOrder.indexOf(currentTab);
+
+        if (dx < -threshold) {
+            var next = tabOrder[currentIndex + 1];
+            if (next) goToTab(next);
+        } else if (dx > threshold) {
+            var prev = tabOrder[currentIndex - 1];
+            if (prev) goToTab(prev);
+        }
+    }
+
+    // Touch (mobile)
+    card.addEventListener("touchstart", function(e) {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        isSwiping = true;
+    }, { passive: true });
+
+    card.addEventListener("touchmove", function(e) {
+        if (!isSwiping) return;
+        var dx = e.touches[0].clientX - startX;
+        var dy = e.touches[0].clientY - startY;
+        if (Math.abs(dy) > Math.abs(dx)) isSwiping = false;
+    }, { passive: true });
+
+    card.addEventListener("touchend", function(e) {
+        if (!isSwiping) return;
+        var dx = e.changedTouches[0].clientX - startX;
+        handleSwipeEnd(dx);
+        isSwiping = false;
+    });
+
+    // Mouse (desktop)
+    card.addEventListener("mousedown", function(e) {
+        startX = e.clientX;
+        startY = e.clientY;
+        mouseDown = true;
+        isSwiping = true;
+        e.preventDefault(); // stop text/image drag-select while dragging
+    });
+
+    document.addEventListener("mousemove", function(e) {
+        if (!mouseDown || !isSwiping) return;
+        var dy = e.clientY - startY;
+        var dx = e.clientX - startX;
+        if (Math.abs(dy) > Math.abs(dx)) isSwiping = false;
+    });
+
+    document.addEventListener("mouseup", function(e) {
+        if (!mouseDown) return;
+        if (isSwiping) {
+            var dx = e.clientX - startX;
+            handleSwipeEnd(dx);
+        }
+        mouseDown = false;
+        isSwiping = false;
+    });
+
+    // Prevent native drag ghosting on images/cards inside
+    card.addEventListener("dragstart", function(e) { e.preventDefault(); });
+})();
+    
     function fetchSheetCSV(){var csvUrl="https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1608160084&t="+Date.now();fetch(csvUrl,{cache:"no-store"}).then(function(response){if(!response.ok)throw new Error("HTTP "+response.status);return response.text()}).then(function(text){parseCSVData(text)}).catch(function(err){console.error("Widget load error:",err);var msgEl=document.getElementById("det-msg");msgEl&&(msgEl.style.display="block",msgEl.textContent="Chart Error: "+err.message)})}function parseCSVLine(line){for(var values=[],currentVal="",inQuotes=!1,i=0;i<line.length;i++){var char=line.charAt(i);'"'===char&&'"'===line.charAt(i+1)?(currentVal+='"',i++):'"'===char?inQuotes=!inQuotes:","!==char||inQuotes?currentVal+=char:(values.push(currentVal.trim()),currentVal="")}return values.push(currentVal.trim()),values}function parseCSVData(csvText){const lines=csvText.trim().split(/\r?\n/);if(lines.length<3)return;iconURLs=parseCSVLine(lines[0]),headers=parseCSVLine(lines[1]),buildCustomCategoryDropdown(headers,iconURLs);const now=new Date,currentYear=now.getFullYear()%100,currentMonth=now.getMonth()+1;sheetData=[],lines.slice(2).forEach(line=>{const parsedRow=parseCSVLine(line),dateStr=parsedRow[0];if(!dateStr)return;let isFuture=!1;if(dateStr.includes("/")){const parts=dateStr.split("/"),m=parseInt(parts[0],10),y=parseInt(parts[1],10);isNaN(m)||isNaN(y)||(y>currentYear||y===currentYear&&m>currentMonth)&&(isFuture=!0)}if(isFuture)return;const rowObj={0:dateStr};parsedRow.forEach((cellVal,idx)=>{if(0!==idx)if(cellVal){let clean=cellVal.replace(/[\$,\s]/g,"");clean.startsWith("(")&&clean.endsWith(")")&&(clean="-"+clean.slice(1,-1));const num=parseFloat(clean);rowObj[idx]=isNaN(num)?0:num}else rowObj[idx]=0}),sheetData.push(rowObj)}),renderWidget()}
     function buildCustomCategoryDropdown(colHeaders,urls){const menu=document.getElementById("dropdownMenu");menu.innerHTML="";const categories=[];categories.push({idx:2,label:colHeaders[2]||"Total Expense",icon:urls[2]||"",type:"total"}),colHeaders.forEach((label,idx)=>{!label||idx<3||idx>=3&&idx<=8&&categories.push({idx,label,icon:urls[idx]||"",type:"main"})}),colHeaders.forEach((label,idx)=>{!label||idx<9||categories.push({idx,label,icon:urls[idx]||"",type:"sub"})});let currentGroup="";categories.forEach(item=>{if("main"===item.type&&"main"!==currentGroup){currentGroup="main";const divider=document.createElement("hr");divider.className="dropdown-divider",menu.appendChild(divider)}else if("sub"===item.type&&"sub"!==currentGroup){currentGroup="sub";const divider=document.createElement("hr");divider.className="dropdown-divider",menu.appendChild(divider)}const itemEl=document.createElement("div");if(itemEl.className="dropdown-item "+(item.idx===selectedColIdx?"selected":""),itemEl.onclick=()=>selectCategory(item.idx,item.label,item.icon),item.icon){const img=document.createElement("img");img.src=item.icon,img.className="cat-icon",img.alt="",itemEl.appendChild(img)}const span=document.createElement("span");span.textContent=item.label,itemEl.appendChild(span),menu.appendChild(itemEl)}),selectCategory(selectedColIdx,categories[0].label,categories[0].icon,!1)}function createGroupHeader(text){const header=document.createElement("div");return header.className="dropdown-group-header",header.textContent=text,header}function selectCategory(colIdx,label,iconUrl,shouldRender=!0){selectedColIdx=colIdx;const selectedLabel=document.getElementById("selectedLabel"),selectedIcon=document.getElementById("selectedIcon");selectedLabel.textContent=label,iconUrl?(selectedIcon.src=iconUrl,selectedIcon.style.display="block"):selectedIcon.style.display="none",document.querySelectorAll(".dropdown-item").forEach(el=>{el.classList.remove("selected")}),closeDropdown(),shouldRender&&renderWidget()}function toggleDropdown(event){event&&event.stopPropagation();const menu=document.getElementById("dropdownMenu"),dropdown=document.getElementById("customDropdown");menu&&dropdown&&(menu.classList.toggle("show"),dropdown.classList.toggle("open"))}function closeDropdown(){const menu=document.getElementById("dropdownMenu"),dropdown=document.getElementById("customDropdown");menu&&menu.classList.remove("show"),dropdown&&dropdown.classList.remove("open")}
     function handleCategoryChange(val){selectedColIdx=parseInt(val,10),renderWidget()}function updateView(range,btn){currentRange=range,document.querySelectorAll(".segment-btn").forEach(b=>b.classList.remove("active")),btn.classList.add("active"),renderWidget()}document.addEventListener("click",function(e){const wrap=document.querySelector(".category-select-wrap");wrap&&!wrap.contains(e.target)&&closeDropdown()}),document.addEventListener("click",function(e){const selectWrap=document.querySelector(".category-select-wrap");selectWrap&&!selectWrap.contains(e.target)&&closeDropdown()}),document.addEventListener("keydown",function(e){"Escape"===e.key&&closeDropdown()}),document.addEventListener("click",e=>{const wrap=document.querySelector(".category-select-wrap");wrap&&!wrap.contains(e.target)&&closeDropdown()});
@@ -3248,6 +3436,7 @@ document.querySelectorAll(".line-toggle-btn").forEach(function(btn){
                 document.getElementById("budget-average").textContent = fmtFull(averageExpense);
                 document.getElementById("budget-spent").innerHTML = fmtFull(currentExpense) + " <span class='budget-percent'>" + (percent * 100).toFixed(1) + "%</span>";
                 document.getElementById("budget-remaining").textContent = fmtFull(remaining);
+                /*
                 var fill = document.getElementById("budget-fill");
                 fill.style.width = (percent * 100).toFixed(1) + "%";
                 if (percent > 1) {
@@ -3256,7 +3445,63 @@ document.querySelectorAll(".line-toggle-btn").forEach(function(btn){
                 } else {
                     // Normal gradient
                     fill.style.background = "linear-gradient(90deg, #4f46e5 0%, #7c3aed 20%, #a855f7 45%, #ffffff 100%)";
-                }
+                }*/
+                // Replace the old "var fill = ...; fill.style.background = ..." block with this:
+
+              function buildAllocationBar(mains) {
+    // Matched to your ring colors: pink, amber/gold, green, plus complementary accents
+    var gradients = [
+        ["#f2545b", "#e63960"], // red-coral
+        ["#e63960", "#d6247d"], // coral-pink
+        ["#d6247d", "#b7299e"], // pink-magenta
+        ["#b7299e", "#8b3fd6"], // magenta-purple
+        ["#8b3fd6", "#6a5ce8"], // purple-indigo
+        ["#6a5ce8", "#5b8def"]  // indigo-blue
+    ];
+
+    var cats = [];
+    var total = 0;
+    for (var i = 0; i < mains.length; i++) {
+        if (mains[i].curr > 0) {
+            cats.push(mains[i]);
+            total += mains[i].curr;
+        }
+    }
+
+    var barEl = document.getElementById("budget-fill-container");
+    var legendEl = document.getElementById("budget-fill-legend");
+    if (!barEl || !legendEl) return;
+
+    barEl.innerHTML = "";
+    legendEl.innerHTML = "";
+    if (total <= 0) return;
+
+    for (var c = 0; c < cats.length; c++) {
+        var g = gradients[c % gradients.length];
+        var pct = (cats[c].curr / total) * 100;
+
+        var seg = document.createElement("div");
+        seg.className = "budget-fill-seg";
+        seg.style.flexGrow = pct;
+        seg.style.background = "linear-gradient(90deg, " + g[0] + " 0%, " + g[1] + " 100%)";
+        if (pct >= 5) {
+            var label = document.createElement("span");
+            label.textContent = pct.toFixed(0) + "%";
+            if (pct < 8) label.style.fontSize = "10px";
+            seg.appendChild(label);
+        }
+        barEl.appendChild(seg);
+
+        var item = document.createElement("span");
+        item.className = "legend-item";
+        var shortName = cats[c].name.length > 7 ? cats[c].name.slice(0, 6) + "…" : cats[c].name;
+        item.innerHTML = '<span class="legend-dot" style="background:' + g[1] + '"></span>' + shortName;
+        legendEl.appendChild(item);
+    }
+}
+
+            // Then call it wherever the old fill logic ran:
+            buildAllocationBar(mains, "budget-fill-container", "budget-fill-legend");
                 // marker position
                 var markerPercent = Math.min(lastMonthExpense / averageExpense, 1);
                 var marker = document.getElementById("last-month-marker");
@@ -3442,7 +3687,7 @@ document.querySelectorAll(".line-toggle-btn").forEach(function(btn){
         document.querySelectorAll(".dtl").forEach(function(el){el.style.fontSize=isMobile?"3.6vw":"2.4vw";});
         document.querySelectorAll(".amt").forEach(function(el){el.style.fontSize=isMobile?"4.1vw":"2.8vw";});
         document.querySelectorAll(".dte").forEach(function(el){el.style.fontSize=isMobile?"3.6vw":"2.4vw";});
-        document.querySelectorAll(".tx-group-hdr").forEach(function(el){el.style.fontSize=isMobile?"3.8vw":"2.3vw";});
+        document.querySelectorAll(".tx-group-hdr").forEach(function(el){el.style.fontSize=isMobile?"3.6vw":"2.3vw";});
         document.querySelectorAll(".ico").forEach(function(el){el.style.width=txIcoSz;el.style.height=txIcoSz;});
         document.querySelectorAll(".ico-fb").forEach(function(el){el.style.width=txIcoSz;el.style.height=txIcoSz;el.style.fontSize=isMobile?"7vw":"4vw";});
         document.querySelectorAll(".row").forEach(function(el){el.style.padding=isMobile?"3.3vw 0":"2vw 0";});
@@ -4616,7 +4861,7 @@ document.querySelectorAll(".line-toggle-btn").forEach(function(btn){
             /* Base Responsive Display Utilities */
             .ca-d-inline { display: inline !important; }
             .ca-d-none { display: none !important; }
-            .tx-group-hdr { margin-top: 10px !important; }
+            .tx-group-hdr { margin-top: 0px !important; }
             .ca-history-ttl{opacity:0.85;}
             /* Action buttons layer positioning & SWIPE TRANSFORM */
             .sub-swipe-container { position: relative; overflow: hidden; background:none!important; }
