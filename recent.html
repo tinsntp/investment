@@ -834,7 +834,7 @@ tbody tr.current-row td{font-weight:600;}
             flex-wrap: wrap;
         }
 
-        .hero-amount {
+        .hero-amount,#balance-val {
             font-size: 36px;
             font-weight: 800;
             letter-spacing: -1px;
@@ -874,9 +874,8 @@ tbody tr.current-row td{font-weight:600;}
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
             gap: 12px;
-            margin-top: 16px;
             padding-top: 16px;
-            border-top: 1px solid var(--border-color);
+            border-top: 0px solid var(--border-color);
         }
 
         .metric-card {
@@ -1118,7 +1117,7 @@ tbody tr.current-row td{font-weight:600;}
             .sub-indent { padding-left: 8px !important; }
             .asset-cell { gap: 3px;  }
             .asset-icon { width: 25px; height: 25px; font-size: 8px; }
-            .hero-amount { font-size: 26px; }
+            .hero-amount { font-size: 20px; }
             .metrics-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
             .metric-card { padding: 8px; }
             .metric-value { font-size: 14px; }
@@ -1128,12 +1127,55 @@ tbody tr.current-row td{font-weight:600;}
             .short-log-text { display: inline; }
         }
 
-        @media (min-width: 401px) and (max-width: 768px) {
+        @media (min-width: 401px) {
             .hero-card-port, .portfolio-card { padding: 16px;}
             .hero-amount { font-size: 30px; }
             td, th { padding: 10px 6px; }
             .metrics-grid { grid-template-columns: repeat(2, 1fr); }
         }
+        .stat-cycles-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.stat-icon-stack {
+    display: flex;
+    align-items: center;
+}
+
+.stat-stack-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    background-color: #21262D;
+    border: 2px solid var(--bg-primary, #0d1117); /* creates the overlap cutout ring */
+    margin-left: -8px; /* overlap amount */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.8);
+    flex-shrink: 0;
+}
+
+.stat-stack-icon:first-child {
+    margin-left: 0;
+}
+
+.stat-stack-icon-more {
+    background-color: #2a2e39;
+    color: rgba(255,255,255,0.7);
+    font-size: 8px;
+}
+
+.stat-cycles-num {
+    font-weight: 700;
+    font-size: 14px;
+}
 /*TOP CHART*/
 .card-top{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
 .today-jp{font-size:12px;font-weight:500;color:rgba(255,255,255,.45);text-align:right}
@@ -1148,7 +1190,7 @@ tbody tr.current-row td{font-weight:600;}
 .range-btn:hover{color:rgba(255,255,255,0.75)}
 .range-btn.active{background:rgba(255,255,255,0.1);color:#fff}
 .card-balance,.card-balance-usd{font-family:"JetBrains Mono";}
-.card-balance{font-size:39px;font-weight:600;color:#fff;letter-spacing:-0.02em;margin-bottom:5px;line-height:1}
+.card-balance{font-size:39px;font-weight:700;color:#fff;letter-spacing:-0.02em;margin-bottom:5px;line-height:1}
 .card-balance .cents{color:rgba(255,255,255,0.4);font-weight:700}
 .balance-group{display:inline-block}
 .card-balance-usd{width:auto;text-align:left;padding-right:45px;font-size:16px;margin-bottom:5px;color:rgba(255,255,255,.45)}
@@ -1601,25 +1643,10 @@ to{transform:rotate(360deg)}
               <div id="det-msg"></div>
               <!-- HERO STAT CARD -->
               <div class="hero-card-port">
-                  <div class="hero-header">
-                      <div class="hero-title-group">
-                          <h2>Portfolio Profit / Loss</h2>
-                          <div class="date-range">Live Dashboard</div>
-                      </div>
-                  </div>
-
-                  <div class="hero-main-stat">
-                      <div class="hero-amount" id="total-profit-val">0</div>
-                      <div class="badge-pill badge-teal" id="total-profit-badge">▲ +0.00%</div>
-                  </div>
                   <div class="metrics-grid">
                       <div class="metric-card">
-                          <div class="metric-label">Cost Basis</div>
-                          <div class="metric-value" id="stat-cost">0</div>
-                      </div>
-                      <div class="metric-card">
-                          <div class="metric-label">Market Value</div>
-                          <div class="metric-value" id="stat-mvalue">0</div>
+                          <div class="hero-amount" id="total-profit-val">0</div>
+                      <div class="badge-pill badge-teal" id="total-profit-badge">▲ +0.00%</div>
                       </div>
                       <div class="metric-card">
                           <div class="metric-label">Active Positions</div>
@@ -1989,7 +2016,7 @@ to{transform:rotate(360deg)}
   var currentDebtSCXY = []; 
 
   function getMonthIndex(monthOffset){if(!currentXY.length)return 0;for(var currentIndex=getCurrentMonthIndex(),currentDate=currentXY[currentIndex].date,targetTC=new Date(currentDate.getFullYear(),currentDate.getMonth()+monthOffset,1),targetYear=targetTC.getFullYear(),targetMonth=targetTC.getMonth(),idx=currentIndex,i=0;i<currentXY.length;i++){var d=currentXY[i].date;d.getFullYear()===targetYear&&d.getMonth()===targetMonth&&(idx=i)}return idx}
-  function renderChartTC(range){var pts;if(currentRangeTC=range,lineVisibility.expense&&!lineVisibility.balance){pts=[];for(var currentIndex=getCurrentMonthIndex(),i=0;i<fullSeries.length;i++){(expenseSeries[i].amount>0||i>currentIndex&&i<=currentIndex+3)&&pts.push({balance:fullSeries[i].balance,expense:expenseSeries[i].amount,debtTotal:debtSeries[i]?debtSeries[i].total:0,debtShinhan:debtSeries[i]?debtSeries[i].shinhan:0,debtSC:debtSeries[i]?debtSeries[i].sc:0,date:fullSeries[i].date,originalIndex:i})}}else pts=fullSeries.map(function(p,i){return{balance:p.balance,expense:expenseSeries[i].amount,debtTotal:debtSeries[i]?debtSeries[i].total:0,debtShinhan:debtSeries[i]?debtSeries[i].shinhan:0,debtSC:debtSeries[i]?debtSeries[i].sc:0,date:p.date,originalIndex:i}});if(pts.length){var svg=document.getElementById("chart-svg");svg.innerHTML="";var ns="http://www.w3.org/2000/svg",values=[];lineVisibility.balance&&(values=values.concat(pts.map(function(p){return p.balance}))),lineVisibility.expense&&(values=values.concat(expenseSeries.map(function(p){return p.amount}))),lineVisibility.debt&&(values=(values=(values=values.concat(pts.map(function(p){return p.debtTotal}))).concat(pts.map(function(p){return p.debtShinhan}))).concat(pts.map(function(p){return p.debtSC}))),values.length||(values=[0,1]);var minV=Math.min.apply(null,values),maxV=Math.max.apply(null,values),range_=maxV-minV;0===range_&&(range_=Math.abs(maxV)||1);var padV=.12*range_;minV-=padV,maxV+=padV;var plotW=VB_W-PAD_LEFT-PAD_RIGHT,plotH=VB_H-PAD_TOP-PAD_BOTTOM,xy=pts.map(function(p,i){var x=PAD_LEFT+(1===pts.length?0:i/(pts.length-1)*plotW),y=PAD_TOP+(1-(p.balance-minV)/(maxV-minV))*plotH,fullIdx=p.originalIndex,prevBalance=fullIdx>0?fullSeries[fullIdx-1].balance:p.balance;return{x,y,date:p.date,balance:p.balance,momDelta:p.balance-prevBalance}});currentXY=xy,currentExpenseXY=[];for(let i=0;i<=lastExpenseIndex;i++){const expense=expenseSeries[i],balancePoint=currentXY[i],y=PAD_TOP+(1-(expense.amount-minV)/(maxV-minV))*plotH,prevAmount=i>0?expenseSeries[i-1].amount:expense.amount;currentExpenseXY.push({x:balancePoint.x,y,date:expense.date,amount:expense.amount,momDelta:expense.amount-prevAmount})}currentDebtTotalXY=pts.map(function(p,i){return{x:PAD_LEFT+(1==pts.length?0:i/(pts.length-1)*plotW),y:PAD_TOP+(1-(p.debtTotal-minV)/(maxV-minV))*plotH,date:p.date,amount:p.debtTotal}}),currentDebtShinhanXY=pts.map(function(p,i){return{x:PAD_LEFT+(1==pts.length?0:i/(pts.length-1)*plotW),y:PAD_TOP+(1-(p.debtShinhan-minV)/(maxV-minV))*plotH,date:p.date,amount:p.debtShinhan}}),currentDebtSCXY=pts.map(function(p,i){return{x:PAD_LEFT+(1==pts.length?0:i/(pts.length-1)*plotW),y:PAD_TOP+(1-(p.debtSC-minV)/(maxV-minV))*plotH,date:p.date,amount:p.debtSC}});var now=new Date;for(currentIndex=0,i=0;i<xy.length&&xy[i].date<=now;i++)currentIndex=i;var targetIndex=currentIndex;targetIndex=currentIndex=getCurrentMonthIndex();switch(range){case"today":targetIndex=getMonthIndex(-1);break;case"-3m":targetIndex=getMonthIndex(-3);break;case"-6m":targetIndex=getMonthIndex(-6);break;case"-1y":targetIndex=getMonthIndex(-12);break;case"-2y":targetIndex=getMonthIndex(-24);break;case"+3m":targetIndex=getMonthIndex(3);break;case"+6m":targetIndex=getMonthIndex(6);break;case"+1y":targetIndex=getMonthIndex(12);break;case"+2y":targetIndex=getMonthIndex(24);break;case"max":targetIndex=currentXY.length-1}for(var hoverIndex=getDefaultHoverIndex(),g=0;g<=4;g++){var gv=minV+g/4*(maxV-minV),gy=PAD_TOP+(1-g/4)*plotH,line=document.createElementNS(ns,"line");line.setAttribute("x1",PAD_LEFT),line.setAttribute("x2",VB_W-PAD_RIGHT),line.setAttribute("y1",gy),line.setAttribute("y2",gy),line.setAttribute("stroke","rgba(255,255,255,0.06)"),line.setAttribute("stroke-width","1"),svg.appendChild(line);var txt=document.createElementNS(ns,"text");txt.setAttribute("x",PAD_LEFT-8),txt.setAttribute("y",gy+4),txt.setAttribute("text-anchor","end"),txt.setAttribute("font-size","11"),txt.setAttribute("fill","rgba(255,255,255,0.35)"),txt.textContent="₫"+fmtAxis(gv),svg.appendChild(txt)}var defsTC=document.createElementNS(ns,"defs"),grad=document.createElementNS(ns,"linearGradient");grad.setAttribute("id","tealFill"),grad.setAttribute("x1","0"),grad.setAttribute("y1","0"),grad.setAttribute("x2","0"),grad.setAttribute("y2","1");var s1=document.createElementNS(ns,"stop");s1.setAttribute("offset","0%"),s1.setAttribute("stop-color",TEAL),s1.setAttribute("stop-opacity","0.30");var s2=document.createElementNS(ns,"stop");s2.setAttribute("offset","100%"),s2.setAttribute("stop-color",TEAL),s2.setAttribute("stop-opacity","0"),grad.appendChild(s1),grad.appendChild(s2),defsTC.appendChild(grad);var gradPink=document.createElementNS(ns,"linearGradient");gradPink.setAttribute("id","pinkFill"),gradPink.setAttribute("x1","0"),gradPink.setAttribute("y1","0"),gradPink.setAttribute("x2","0"),gradPink.setAttribute("y2","1");var p1=document.createElementNS(ns,"stop");p1.setAttribute("offset","0%"),p1.setAttribute("stop-color","#f472b6"),p1.setAttribute("stop-opacity","0.28");var p2=document.createElementNS(ns,"stop");if(p2.setAttribute("offset","100%"),p2.setAttribute("stop-color","#f472b6"),p2.setAttribute("stop-opacity","0"),gradPink.appendChild(p1),gradPink.appendChild(p2),defsTC.appendChild(gradPink),svg.appendChild(defsTC),lineVisibility.balance){var paths=buildSmoothPathTC(xy),areaEl=document.createElementNS(ns,"path");areaEl.setAttribute("d",paths.area),areaEl.setAttribute("fill","url(#tealFill)"),areaEl.setAttribute("stroke","none"),svg.appendChild(areaEl);var lineEl=document.createElementNS(ns,"path");lineEl.setAttribute("d",paths.line),lineEl.setAttribute("fill","none"),lineEl.setAttribute("stroke",TEAL),lineEl.setAttribute("stroke-width","2.5"),lineEl.setAttribute("stroke-linecap","round"),lineEl.setAttribute("stroke-linejoin","round"),svg.appendChild(lineEl)}if(lineVisibility.expense){var pathsExp=buildSmoothPathTC(currentExpenseXY),areaElExp=document.createElementNS(ns,"path");areaElExp.setAttribute("d",pathsExp.area),areaElExp.setAttribute("fill","url(#pinkFill)"),areaElExp.setAttribute("stroke","none"),svg.appendChild(areaElExp);var lineElExp=document.createElementNS(ns,"path");lineElExp.setAttribute("d",pathsExp.line),lineElExp.setAttribute("fill","none"),lineElExp.setAttribute("stroke","#f472b6"),lineElExp.setAttribute("stroke-width","2.5"),lineElExp.setAttribute("stroke-linecap","round"),lineElExp.setAttribute("stroke-linejoin","round"),svg.appendChild(lineElExp)}lineVisibility.debt&&(drawDebtLine(currentDebtTotalXY,"#ffffff",3),drawDebtLine(currentDebtShinhanXY,"#60a5fa",2,"6 4"),drawDebtLine(currentDebtSCXY,"#fbbf24",2,"2 2"));var lastLabelX=-1e3,prevQuarter=null;for(i=0;i<xy.length;i++){var d=xy[i].date,x=xy[i].x,year=d.getFullYear(),month=d.getMonth(),quarter=Math.floor(month/3),text="",important=!1;if(0===month?(text=year,important=!0):quarter!==prevQuarter&&(text=monthShort(d),important=!0),important&&!(x-lastLabelX<75)){var lbl=document.createElementNS(ns,"text");lbl.setAttribute("x",x),lbl.setAttribute("y",VB_H-10),lbl.setAttribute("text-anchor","middle"),lbl.setAttribute("font-size",0===month?"12":"11"),lbl.setAttribute("font-weight",0===month?"700":"500"),lbl.setAttribute("fill",0===month?"rgba(255,255,255,0.85)":"rgba(255,255,255,0.45)"),lbl.textContent=text,svg.appendChild(lbl),lastLabelX=x,prevQuarter=quarter}}var hoverLine=document.createElementNS(ns,"line");hoverLine.setAttribute("id","hover-line"),hoverLine.setAttribute("y1",PAD_TOP),hoverLine.setAttribute("y2",VB_H-PAD_BOTTOM),hoverLine.setAttribute("stroke","rgba(255,255,255,0.35)"),hoverLine.setAttribute("stroke-width","1.3"),hoverLine.setAttribute("stroke-dasharray","4 4"),svg.appendChild(hoverLine);var hoverDot=document.createElementNS(ns,"circle");hoverDot.setAttribute("id","hover-dot"),hoverDot.setAttribute("r","5"),hoverDot.setAttribute("fill",TEAL),hoverDot.setAttribute("stroke","#191919"),hoverDot.setAttribute("stroke-width","2"),svg.appendChild(hoverDot);var hoverDotExp=document.createElementNS(ns,"circle");hoverDotExp.setAttribute("id","hover-dot-expense"),hoverDotExp.setAttribute("r","5"),hoverDotExp.setAttribute("fill","#f472b6"),hoverDotExp.setAttribute("stroke","#191919"),hoverDotExp.setAttribute("stroke-width","2"),svg.appendChild(hoverDotExp),showPointAt(hoverIndex);var diff,current=xy[currentIndex],targetTC=xy[targetIndex];diff="today"===range||range.startsWith("-")?current.balance-targetTC.balance:targetTC.balance-current.balance;var pct=0!==current.balance?diff/Math.abs(current.balance)*100:0,isPos=diff>=0;document.getElementById("balance-val").textContent=balanceVisible?fmtFullTC(current.balance):"*********",document.getElementById("balance-usd").textContent=fmtUSDTC(current.balance),updateGoalRing(current.balance),updateCountdown();var verb,subText=document.getElementById("sub-text");switch(range){case"today":0;break;case"-3m":0;break;case"-6m":0;break;case"-1y":0;break;case"-2y":0;break;case"+3m":0;break;case"+6m":0;break;case"+1y":0;break;case"+2y":0;break;default:}verb="today"===range?"You "+(isPos?"gain ":"loss "):range.startsWith("-")?isPos?"You gained ":"You lost ":"You "+(isPos?"gain ":"loss "),subText.innerHTML=verb+'<span id="amt-hl" class="amt-hl '+(isPos?"pos":"neg")+'">'+(isPos?"+":"-")+fmtFullTC(Math.abs(diff))+"</span> ";var pill=document.getElementById("change-pill");pill.style.display="inline-flex",pill.className="pill "+(isPos?"pos":"neg"),pill.innerHTML=(isPos?"&#9650;":"&#9660;")+Math.abs(pct).toFixed(1)+"%"}function drawDebtLine(points,color,width,dash){var paths=buildSmoothPathTC(points),line=document.createElementNS(ns,"path");line.setAttribute("d",paths.line),line.setAttribute("fill","none"),line.setAttribute("stroke",color),line.setAttribute("stroke-width",width),line.setAttribute("stroke-linecap","round"),line.setAttribute("stroke-linejoin","round"),dash&&line.setAttribute("stroke-dasharray",dash),svg.appendChild(line)}}
+  function renderChartTC(range){var pts;if(currentRangeTC=range,lineVisibility.expense&&!lineVisibility.balance){pts=[];for(var currentIndex=getCurrentMonthIndex(),i=0;i<fullSeries.length;i++)(expenseSeries[i].amount>0||i>currentIndex&&i<=currentIndex+3)&&pts.push({balance:fullSeries[i].balance,expense:expenseSeries[i].amount,debtTotal:debtSeries[i]?debtSeries[i].total:0,debtShinhan:debtSeries[i]?debtSeries[i].shinhan:0,debtSC:debtSeries[i]?debtSeries[i].sc:0,date:fullSeries[i].date,originalIndex:i})}else pts=fullSeries.map(function(p,i){return{balance:p.balance,expense:expenseSeries[i].amount,debtTotal:debtSeries[i]?debtSeries[i].total:0,debtShinhan:debtSeries[i]?debtSeries[i].shinhan:0,debtSC:debtSeries[i]?debtSeries[i].sc:0,date:p.date,originalIndex:i}});if(pts.length){var svg=document.getElementById("chart-svg");svg.innerHTML="";var ns="http://www.w3.org/2000/svg",values=[];lineVisibility.balance&&(values=values.concat(pts.map(function(p){return p.balance}))),lineVisibility.expense&&(values=values.concat(expenseSeries.map(function(p){return p.amount}))),lineVisibility.debt&&(values=(values=(values=values.concat(pts.map(function(p){return p.debtTotal}))).concat(pts.map(function(p){return p.debtShinhan}))).concat(pts.map(function(p){return p.debtSC}))),values.length||(values=[0,1]);var minV=Math.min.apply(null,values),maxV=Math.max.apply(null,values),range_=maxV-minV;0===range_&&(range_=Math.abs(maxV)||1);var padV=.12*range_;minV-=padV,maxV+=padV;var plotW=VB_W-PAD_LEFT-PAD_RIGHT,plotH=VB_H-PAD_TOP-PAD_BOTTOM,xy=pts.map(function(p,i){var x=PAD_LEFT+(1===pts.length?0:i/(pts.length-1)*plotW),y=PAD_TOP+(1-(p.balance-minV)/(maxV-minV))*plotH,fullIdx=p.originalIndex,prevBalance=fullIdx>0?fullSeries[fullIdx-1].balance:p.balance;return{x,y,date:p.date,balance:p.balance,momDelta:p.balance-prevBalance}});currentXY=xy,currentExpenseXY=[];for(let i=0;i<=lastExpenseIndex;i++){const expense=expenseSeries[i],balancePoint=currentXY[i],y=PAD_TOP+(1-(expense.amount-minV)/(maxV-minV))*plotH,prevAmount=i>0?expenseSeries[i-1].amount:expense.amount;currentExpenseXY.push({x:balancePoint.x,y,date:expense.date,amount:expense.amount,momDelta:expense.amount-prevAmount})}currentDebtTotalXY=pts.map(function(p,i){return{x:PAD_LEFT+(1==pts.length?0:i/(pts.length-1)*plotW),y:PAD_TOP+(1-(p.debtTotal-minV)/(maxV-minV))*plotH,date:p.date,amount:p.debtTotal}}),currentDebtShinhanXY=pts.map(function(p,i){return{x:PAD_LEFT+(1==pts.length?0:i/(pts.length-1)*plotW),y:PAD_TOP+(1-(p.debtShinhan-minV)/(maxV-minV))*plotH,date:p.date,amount:p.debtShinhan}}),currentDebtSCXY=pts.map(function(p,i){return{x:PAD_LEFT+(1==pts.length?0:i/(pts.length-1)*plotW),y:PAD_TOP+(1-(p.debtSC-minV)/(maxV-minV))*plotH,date:p.date,amount:p.debtSC}});var now=new Date;for(currentIndex=0,i=0;i<xy.length&&xy[i].date<=now;i++)currentIndex=i;var targetIndex=currentIndex;switch(targetIndex=currentIndex=getCurrentMonthIndex(),range){case"today":targetIndex=getMonthIndex(-1);break;case"-3m":targetIndex=getMonthIndex(-3);break;case"-6m":targetIndex=getMonthIndex(-6);break;case"-1y":targetIndex=getMonthIndex(-12);break;case"-2y":targetIndex=getMonthIndex(-24);break;case"+3m":targetIndex=getMonthIndex(3);break;case"+6m":targetIndex=getMonthIndex(6);break;case"+1y":targetIndex=getMonthIndex(12);break;case"+2y":targetIndex=getMonthIndex(24);break;case"max":targetIndex=currentXY.length-1}for(var hoverIndex=getDefaultHoverIndex(),g=0;g<=4;g++){var gv=minV+g/4*(maxV-minV),gy=PAD_TOP+(1-g/4)*plotH,line=document.createElementNS(ns,"line");line.setAttribute("x1",PAD_LEFT),line.setAttribute("x2",VB_W-PAD_RIGHT),line.setAttribute("y1",gy),line.setAttribute("y2",gy),line.setAttribute("stroke","rgba(255,255,255,0.06)"),line.setAttribute("stroke-width","1"),svg.appendChild(line);var txt=document.createElementNS(ns,"text");txt.setAttribute("x",PAD_LEFT-8),txt.setAttribute("y",gy+4),txt.setAttribute("text-anchor","end"),txt.setAttribute("font-size","11"),txt.setAttribute("fill","rgba(255,255,255,0.35)"),txt.textContent="₫"+fmtAxis(gv),svg.appendChild(txt)}var defsTC=document.createElementNS(ns,"defs"),grad=document.createElementNS(ns,"linearGradient");grad.setAttribute("id","tealFill"),grad.setAttribute("x1","0"),grad.setAttribute("y1","0"),grad.setAttribute("x2","0"),grad.setAttribute("y2","1");var s1=document.createElementNS(ns,"stop");s1.setAttribute("offset","0%"),s1.setAttribute("stop-color",TEAL),s1.setAttribute("stop-opacity","0.30");var s2=document.createElementNS(ns,"stop");s2.setAttribute("offset","100%"),s2.setAttribute("stop-color",TEAL),s2.setAttribute("stop-opacity","0"),grad.appendChild(s1),grad.appendChild(s2),defsTC.appendChild(grad);var gradPink=document.createElementNS(ns,"linearGradient");gradPink.setAttribute("id","pinkFill"),gradPink.setAttribute("x1","0"),gradPink.setAttribute("y1","0"),gradPink.setAttribute("x2","0"),gradPink.setAttribute("y2","1");var p1=document.createElementNS(ns,"stop");p1.setAttribute("offset","0%"),p1.setAttribute("stop-color","#f472b6"),p1.setAttribute("stop-opacity","0.28");var p2=document.createElementNS(ns,"stop");if(p2.setAttribute("offset","100%"),p2.setAttribute("stop-color","#f472b6"),p2.setAttribute("stop-opacity","0"),gradPink.appendChild(p1),gradPink.appendChild(p2),defsTC.appendChild(gradPink),svg.appendChild(defsTC),lineVisibility.balance){var paths=buildSmoothPathTC(xy),areaEl=document.createElementNS(ns,"path");areaEl.setAttribute("d",paths.area),areaEl.setAttribute("fill","url(#tealFill)"),areaEl.setAttribute("stroke","none"),svg.appendChild(areaEl);var lineEl=document.createElementNS(ns,"path");lineEl.setAttribute("d",paths.line),lineEl.setAttribute("fill","none"),lineEl.setAttribute("stroke",TEAL),lineEl.setAttribute("stroke-width","2.5"),lineEl.setAttribute("stroke-linecap","round"),lineEl.setAttribute("stroke-linejoin","round"),svg.appendChild(lineEl)}if(lineVisibility.expense){var pathsExp=buildSmoothPathTC(currentExpenseXY),areaElExp=document.createElementNS(ns,"path");areaElExp.setAttribute("d",pathsExp.area),areaElExp.setAttribute("fill","url(#pinkFill)"),areaElExp.setAttribute("stroke","none"),svg.appendChild(areaElExp);var lineElExp=document.createElementNS(ns,"path");lineElExp.setAttribute("d",pathsExp.line),lineElExp.setAttribute("fill","none"),lineElExp.setAttribute("stroke","#f472b6"),lineElExp.setAttribute("stroke-width","2.5"),lineElExp.setAttribute("stroke-linecap","round"),lineElExp.setAttribute("stroke-linejoin","round"),svg.appendChild(lineElExp)}lineVisibility.debt&&(drawDebtLine(currentDebtTotalXY,"#ffffff",3),drawDebtLine(currentDebtShinhanXY,"#60a5fa",2,"6 4"),drawDebtLine(currentDebtSCXY,"#fbbf24",2,"2 2"));var lastLabelX=-1e3,prevQuarter=null;for(i=0;i<xy.length;i++){var d=xy[i].date,x=xy[i].x,year=d.getFullYear(),month=d.getMonth(),quarter=Math.floor(month/3),text="",important=!1;if(0===month?(text=year,important=!0):quarter!==prevQuarter&&(text=monthShort(d),important=!0),important&&!(x-lastLabelX<75)){var lbl=document.createElementNS(ns,"text");lbl.setAttribute("x",x),lbl.setAttribute("y",VB_H-10),lbl.setAttribute("text-anchor","middle"),lbl.setAttribute("font-size",0===month?"12":"11"),lbl.setAttribute("font-weight",0===month?"700":"500"),lbl.setAttribute("fill",0===month?"rgba(255,255,255,0.85)":"rgba(255,255,255,0.45)"),lbl.textContent=text,svg.appendChild(lbl),lastLabelX=x,prevQuarter=quarter}}var hoverLine=document.createElementNS(ns,"line");hoverLine.setAttribute("id","hover-line"),hoverLine.setAttribute("y1",PAD_TOP),hoverLine.setAttribute("y2",VB_H-PAD_BOTTOM),hoverLine.setAttribute("stroke","rgba(255,255,255,0.35)"),hoverLine.setAttribute("stroke-width","1.3"),hoverLine.setAttribute("stroke-dasharray","4 4"),svg.appendChild(hoverLine);var hoverDot=document.createElementNS(ns,"circle");hoverDot.setAttribute("id","hover-dot"),hoverDot.setAttribute("r","5"),hoverDot.setAttribute("fill",TEAL),hoverDot.setAttribute("stroke","#191919"),hoverDot.setAttribute("stroke-width","2"),svg.appendChild(hoverDot);var hoverDotExp=document.createElementNS(ns,"circle");hoverDotExp.setAttribute("id","hover-dot-expense"),hoverDotExp.setAttribute("r","5"),hoverDotExp.setAttribute("fill","#f472b6"),hoverDotExp.setAttribute("stroke","#191919"),hoverDotExp.setAttribute("stroke-width","2"),svg.appendChild(hoverDotExp),showPointAt(hoverIndex);var diff,current=xy[currentIndex],targetTC=xy[targetIndex];diff="today"===range||range.startsWith("-")?current.balance-targetTC.balance:targetTC.balance-current.balance;var pct=0!==current.balance?diff/Math.abs(current.balance)*100:0,isPos=diff>=0;document.getElementById("balance-val").textContent=balanceVisible?fmtFullTC(current.balance):"*********",document.getElementById("balance-usd").textContent=fmtUSDTC(current.balance),updateGoalRing(current.balance),updateCountdown();var subText=document.getElementById("sub-text");range;var verb;subText=document.getElementById("sub-text");switch(range){case"today":directionText="over the last month";break;case"-3m":directionText="in the last 3 months";break;case"-6m":directionText="in the last 6 months";break;case"-1y":directionText="in the last year";break;case"-2y":directionText="in the last 2 years";break;case"+3m":directionText="over the next 3 months";break;case"+6m":directionText="over the next 6 months";break;case"+1y":directionText="over the next year";break;case"+2y":directionText="over the next 2 years";break;default:var directionText={today:"over the last month","-3m":"in the last 3 months","-6m":"in the last 6 months","-1y":"in the last year","-2y":"in the last 2 years","+3m":"over the next 3 months","+6m":"over the next 6 months","+1y":"over the next year","+2y":"over the next 2 years",max:"across all future projections"}[range]||""}verb="today"===range?"You "+(isPos?"gain ":"loss "):range.startsWith("-")?isPos?"You gained ":"You lost ":"You "+(isPos?"gain ":"loss "),subText.innerHTML=verb+'<span id="amt-hl" class="amt-hl '+(isPos?"pos":"neg")+'">'+fmtFullTC(Math.abs(diff))+"</span> ";var pill=document.getElementById("change-pill");pill.style.display="inline-flex",pill.className="pill "+(isPos?"pos":"neg"),pill.innerHTML=(isPos?"&#9650;":"&#9660;")+Math.abs(pct).toFixed(1)+"%";var existingDirSpan=document.getElementById("pill-direction-text");if(existingDirSpan&&existingDirSpan.remove(),window.matchMedia("(min-width: 401px)").matches){var dirSpan=document.createElement("span");dirSpan.id="pill-direction-text",dirSpan.textContent=directionText,dirSpan.className="card-sub-text",dirSpan.style.marginLeft="6px",pill.parentNode.insertBefore(dirSpan,pill.nextSibling)}}function drawDebtLine(points,color,width,dash){var paths=buildSmoothPathTC(points),line=document.createElementNS(ns,"path");line.setAttribute("d",paths.line),line.setAttribute("fill","none"),line.setAttribute("stroke",color),line.setAttribute("stroke-width",width),line.setAttribute("stroke-linecap","round"),line.setAttribute("stroke-linejoin","round"),dash&&line.setAttribute("stroke-dasharray",dash),svg.appendChild(line)}}
   function getCurrentMonthIndex(){if(!currentXY.length)return 0;for(var now=new Date,year=now.getFullYear(),month=now.getMonth(),idx=0,i=0;i<currentXY.length;i++){var d=currentXY[i].date;if(!(d.getFullYear()<year||d.getFullYear()===year&&d.getMonth()<=month))break;idx=i}return idx}
   function getDefaultHoverIndex(){var currentIdx=getCurrentMonthIndex();return lineVisibility.expense&&!lineVisibility.balance?Math.min(currentXY.length-1,currentIdx):Math.min(currentXY.length-1,currentIdx+6)}
   function showPointAt(idx){if(currentXY.length){idx=Math.max(0,Math.min(currentXY.length-1,idx));var pt=currentXY[idx],ptExp=idx<=lastExpenseIndex?currentExpenseXY[idx]:null,hoverLine=document.getElementById("hover-line"),hoverDot=document.getElementById("hover-dot"),hoverDotExp=document.getElementById("hover-dot-expense");hoverLine&&(hoverLine.setAttribute("x1",pt.x),hoverLine.setAttribute("x2",pt.x)),hoverDot&&(lineVisibility.balance?(hoverDot.setAttribute("cx",pt.x),hoverDot.setAttribute("cy",pt.y),hoverDot.style.display=""):hoverDot.style.display="none"),hoverDotExp&&(lineVisibility.expense&&ptExp?(hoverDotExp.setAttribute("cx",ptExp.x),hoverDotExp.setAttribute("cy",ptExp.y),hoverDotExp.style.display=""):hoverDotExp.style.display="none");var anchorY,tooltip=document.getElementById("tooltip"),wrapRect=document.getElementById("chart-wrap").getBoundingClientRect(),scaleX=wrapRect.width/VB_W,scaleY=wrapRect.height/VB_H;tooltip.style.display="block",tooltip.style.left=pt.x*scaleX+"px",!lineVisibility.expense||lineVisibility.balance||lineVisibility.debt?!lineVisibility.debt||lineVisibility.balance||lineVisibility.expense?(anchorY=pt.y,lineVisibility.expense&&ptExp&&(anchorY=Math.min(anchorY,ptExp.y)),lineVisibility.debt&&(anchorY=Math.min(anchorY,currentDebtTotalXY[idx].y,currentDebtShinhanXY[idx].y,currentDebtSCXY[idx].y))):anchorY=Math.min(currentDebtTotalXY[idx].y,currentDebtShinhanXY[idx].y,currentDebtSCXY[idx].y):anchorY=ptExp?ptExp.y:pt.y,!lineVisibility.debt||lineVisibility.balance||lineVisibility.expense||(anchorY=currentDebtTotalXY[idx].y-55);var html='<div id="tooltip-month" class="tt-month">'+monthYearLabel(pt.date)+"</div>";if(lineVisibility.balance){var deltaIsPos=pt.momDelta>=0,deltaTxt=(deltaIsPos?"+":"−")+fmtFullTC(Math.abs(pt.momDelta));html+='<div id="tooltip-balance" >'+fmtFullTC(pt.balance)+'</div><div id="tooltip-gain" class="tt-delta '+(deltaIsPos?"pos":"neg")+'">'+(deltaIsPos?"&#9650;":"&#9660;")+" "+deltaTxt+" vs last month</div>"}if(lineVisibility.expense&&ptExp){var expDeltaIsPos=ptExp.momDelta>=0,expDeltaTxt=(expDeltaIsPos?"+":"−")+fmtFullTC(Math.abs(ptExp.momDelta));html+='<div id="tooltip-expense-amt" style="margin-top:'+(lineVisibility.balance?"6px":"0")+';color:#f472b6;">'+fmtFullTC(ptExp.amount)+' expense</div><div id="tooltip-expense" class="tt-delta" style="color:'+(expDeltaIsPos?"#f87171":"#2dd4bf")+';">'+(expDeltaIsPos?"&#9650;":"&#9660;")+" "+expDeltaTxt+" vs last month</div>"}if(lineVisibility.debt){function fmtShort(v){var a=Math.abs(v),sign=v<0?"-":"";return a>=1e9?sign+(a/1e9).toFixed(1).replace(/\.0$/,"")+"B":a>=1e6?sign+Math.round(a/1e6)+"M":a>=1e3?sign+Math.round(a/1e3)+"K":sign+Math.round(a)}var partsTC=[];0!==currentDebtShinhanXY[idx].amount&&partsTC.push('<span id="tooltip-debt" style="color:#60a5fa;font-weight:600;font-size:11px">'+fmtShort(currentDebtShinhanXY[idx].amount)+"</span>"),0!==currentDebtSCXY[idx].amount&&partsTC.push('<span id="tooltip-debt" style="color:#fbbf24;font-weight:600;font-size:11px">'+fmtShort(currentDebtSCXY[idx].amount)+"</span>"),partsTC.length>1&&partsTC.push("= "+fmtShort(currentDebtTotalXY[idx].amount)),partsTC.length&&(html+='<div id="tooltip-debt" style="margin-top:6px;font-weight:700;color:#fff;font-size:11px">'+partsTC.join("  ")+"</div>")}tooltip.innerHTML=html;var anchorScreenY=anchorY*scaleY;anchorScreenY<tooltip.offsetHeight+12?(tooltip.classList.add("tt-below"),tooltip.classList.remove("tt-above"),tooltip.style.top=anchorScreenY+12+"px"):(tooltip.classList.add("tt-above"),tooltip.classList.remove("tt-below"),tooltip.style.top=anchorScreenY-12+"px")}}
@@ -4453,15 +4480,23 @@ to{transform:rotate(360deg)}
             accountType
         };
 
+        const isSavingRecord = accountType.toLowerCase() === "saving";
+        const isOnGoing = status.toLowerCase() === "on-going";
+
         if (note.toUpperCase() === "MAIN") {
             groupsMap[symbol].mainRecord = recordObj;
+        } else if (isSavingRecord) {
+            // Only keep saving sub-records that are still on-going
+            if (isOnGoing) {
+                groupsMap[symbol].records.push(recordObj);
+            }
         } else {
             groupsMap[symbol].records.push(recordObj);
         }
     });
 
     renderAccordion(Object.values(groupsMap));
-  }
+}
 
   function renderAccordion(portfolioGroups) {
     const tbody = document.getElementById('portfolio-tbody');
@@ -4471,6 +4506,7 @@ to{transform:rotate(360deg)}
     let totalMarketValVnd = 0;
     let totalCostVnd = 0;
     let activePositions = 0;
+    const activeIcons = []; // NEW: collect icon info for on-going positions
     const now = new Date();
 
     portfolioGroups.forEach((group, index) => {
@@ -4499,13 +4535,20 @@ to{transform:rotate(360deg)}
         totalMarketValVnd += sumMarketValue;
         totalCostVnd += sumCost;
 
-        if (group.status.toLowerCase().includes('on-going')) {
+        const isOngoing = group.status.toLowerCase().includes('on-going');
+        if (isOngoing) {
             activePositions++;
+
+            // NEW: collect this group's icon info for the stack
+            const hasIconUrlForStack = group.iconUrl && group.iconUrl.trim().startsWith("http");
+            activeIcons.push({
+                iconUrl: hasIconUrlForStack ? group.iconUrl : null,
+                symbol: group.symbol || "?"
+            });
         }
 
         const isPositive = sumPnl > 0;
         const isZero = sumPnl === 0;
-        const isOngoing = group.status.toLowerCase().includes('on-going');
         const dotClass = isOngoing ? 'ongoing' : 'close';
 
         // Dynamic PnL color style string for matching live price color
@@ -4549,7 +4592,6 @@ to{transform:rotate(360deg)}
                 <div class="val-primary">${activeSavingSubrowsCount}/${records.length}</div>
                 <div class="val-secondary" style="text-transform: lowercase;">${group.status}</div>`;
         } else if (isCrypto) {
-            // CRYPTO MAIN ROW SPECIFIC: Entry Price (line 1) & Live Market Price matching PnL color (line 2)
             const rawEntry = mainRec ? (mainRec.entryPrice || mainRec.execPrice) : (records[0]?.entryPrice || records[0]?.execPrice || 0);
             const strEntry = "$" + formatCryptoPrice(rawEntry);
             const strLive = isOngoing ? ("$" + formatCryptoPrice(rawLive)) : "-";
@@ -4558,7 +4600,6 @@ to{transform:rotate(360deg)}
                 <div class="val-primary">${strEntry}</div>
                 <div class="val-secondary" style="color: ${pnlColorStyle}; font-weight: 600;">${strLive}</div>`;
         } else if (isStock) {
-            // STOCK MAIN ROW: Vol (line 1), Entry Price / Live Price matching PnL color (line 2)
             const displayVol = mainRec ? mainRec.volume : records.reduce((acc, r) => acc + r.volume, 0);
             const rawEntry = mainRec ? (mainRec.entryPrice || mainRec.execPrice) : (group.mainRecord?.entryPrice || records[0]?.entryPrice || 0);
             
@@ -4702,10 +4743,38 @@ to{transform:rotate(360deg)}
     badgeEl.textContent = formatPnlPct(overallPct);
     badgeEl.className = `badge-pill ${totalPnlVnd >= 0 ? 'badge-teal' : 'badge-pink'}`;
 
-    document.getElementById('stat-mvalue').textContent = formatShortNumber(totalMarketValVnd);
-    document.getElementById('stat-cost').textContent = formatShortNumber(totalCostVnd);
-    document.getElementById('stat-cycles').textContent = activePositions;
-  }
+    // NEW: render icon stack + count together for stat-cycles
+    renderActivePositionsStat(activePositions, activeIcons);
+}
+
+// NEW helper: builds the overlapping icon stack + number
+function renderActivePositionsStat(count, icons) {
+    const statEl = document.getElementById('stat-cycles');
+    if (!statEl) return;
+
+    const maxIconsShown = 4; // cap how many icons render before collapsing into "+N"
+    const shownIcons = icons.slice(0, maxIconsShown);
+    const remaining = icons.length - shownIcons.length;
+
+    let stackHTML = '<div class="stat-icon-stack">';
+    shownIcons.forEach(function(ic) {
+        if (ic.iconUrl) {
+            stackHTML += `<div class="stat-stack-icon" style="background-image:url('${ic.iconUrl}');"></div>`;
+        } else {
+            stackHTML += `<div class="stat-stack-icon stat-stack-icon-text">${ic.symbol.slice(0, 2)}</div>`;
+        }
+    });
+    if (remaining > 0) {
+        stackHTML += `<div class="stat-stack-icon stat-stack-icon-more">+${remaining}</div>`;
+    }
+    stackHTML += '</div>';
+
+    statEl.innerHTML = `
+    <div class="stat-cycles-row">
+        <span class="stat-cycles-num">${count}</span>
+        ${stackHTML}
+    </div>`;
+}
 
   function toggleGroup(groupId,mainRowEl){const logRows=document.querySelectorAll(`.${groupId}`);if(0===logRows.length)return;mainRowEl.classList.contains("expanded")?(mainRowEl.classList.remove("expanded"),logRows.forEach(row=>row.classList.remove("visible"))):(mainRowEl.classList.add("expanded"),logRows.forEach(row=>row.classList.add("visible")))}
   function closeModal(){const backdrop=document.getElementById("modalBackdrop");backdrop.style.pointerEvents="none",backdrop.classList.remove("active")}
