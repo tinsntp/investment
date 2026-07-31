@@ -55,7 +55,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
     border-bottom: 0px solid rgba(255, 255, 255, 0.1);
     position: relative;
     flex-shrink: 0;
-    padding: 0 5vw 15px;
+    padding: 0 5vw 5px;
 }
 
 .tab-btn {
@@ -217,7 +217,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .pct-val.flat { color:rgba(255,255,255,0.3); }
 #det-msg { font-size:3vw; color:rgba(255,255,255,0.4); text-align:center; padding:5vw; }
 
-.budget-card{margin-top:15px;padding:0 5px 0 0px;touch-action: pan-y;}
+.budget-card{padding:0 5px 0 0px;touch-action: pan-y;}
 .budget-subtabs{background:rgba(255,255,255,.05);border-radius:13px;padding:3px;gap:4px}.budget-subtab{flex:1;font-family:Lexend;display:flex;align-items:center;justify-content:center;gap:5px;background:0 0;border:0;color:rgba(255,255,255,.5);padding:4px 10px;font-size:12px;font-weight:400;border-radius:10px;cursor:pointer;transition:all .2s ease-in-out;outline:0}
 .budget-subtab.active,.budget-subtab-v2.active{opacity:1;background:#2a2d37;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.25)}.budget-subtab .material-icons-round{vertical-align:middle}.chart-container{position:relative;width:100%;height:220px;display:flex;align-items:flex-end;padding:20px 10px 10px 10px;box-sizing:border-box}.glass-chart-bars{width:100%!important;height:100%!important;display:block}.chart-col{flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end;position:relative}.bar-fill{width:100%;max-width:28px;background:linear-gradient(180deg,rgba(255,255,255,.8)0,rgba(255,255,255,.2) 100%);border-radius:6px 6px 2px 2px;transition:height .4s ease;min-height:4px;box-shadow:0 4px 12px rgba(0,0,0,.15)}.bar-baseline{position:absolute;width:100%;max-width:28px;border-top:2px dashed #8e90a6;z-index:2;transition:bottom .4s ease}.col-label{margin-top:8px;font-family:"DM Sans",sans-serif;font-size:11px;color:#8e90a6}canvas#myChart{width:100%!important;height:100%!important}
 .budget-total,#budget-spent,.marker-value,#budget-remaining{font-family:"JetBrains Mono";}
@@ -292,7 +292,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .budget-bar{width:100%;height:15px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.06)}#budget-fill-container{display:flex;width:100%;height:100%;gap:0}.budget-fill-seg{height:100%;flex-basis:0;display:flex;align-items:center;justify-content:center;overflow:hidden;transition:flex-grow .4s ease;border-right:0 solid rgba(0,0,0,.35)}.budget-fill-seg:last-child{border-right:none}.budget-fill-seg span{font-size:10px;font-weight:600;color:rgba(255,255,255,.9);white-space:nowrap}#budget-fill-legend{margin-top:8px;display:flex;flex-wrap:nowrap;align-items:center;overflow:hidden;width:100%}.legend-item{display:flex;align-items:center;flex-shrink:0;margin-right:10px;font-size:clamp(10px,1.3vw,12px);color:#b4b4bd;white-space:nowrap}.legend-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:4px;flex-shrink:0}
 
 #slide-1{position:relative}
-.tab-header{display:flex-end;justify-content:space-between;align-items:center;margin-bottom:15px}
+.tab-header{display:flex-end;justify-content:space-between;align-items:center;}
 #add-cash,#add-fab,#add-order {
     margin-left: auto;
     margin-right: 10px;
@@ -664,7 +664,7 @@ tbody tr.current-row td{font-weight:600;}
   padding: 24px 0;
 }
 
-#loading-msg,#loading-msg-tc::after {
+#loading-msg::after,#loading-msg-tc::after {
   content: "";
   width: 16px;
   height: 16px;
@@ -822,7 +822,7 @@ tbody tr.current-row td{font-weight:600;}
         /* Hero Card */
         .hero-card-port {
             background: none;
-            margin:10px;margin-top:0;
+            margin:10px;
             position: relative;
             overflow: hidden;
 
@@ -1938,78 +1938,79 @@ to{transform:rotate(360deg)}
             <!-- PORTFOLIO TABLE CARD -->
             <div class="portfolio-card">
                 <div class="table-wrapper">
-                    <table>
-                        <colgroup>
-                            <col class="col-asset">
-                            <col class="col-duration">
-                            <col class="col-volprice">
-                            <col class="col-pnl">
-                            <col class="col-costmarket">
-                        </colgroup>
-                        <thead>
-                            <tr>
-                                <th>
-                                    <div class="th-filter-wrap" onclick="toggleColMenu(event, 'asset')">
-                                        <span>Asset</span>
-                                        <i class="bi bi-funnel-fill th-filter-icon" id="asset-filter-icon"></i>
-                                        <div class="col-menu" id="col-menu-asset">
-                                            <div class="col-menu-item" data-filter-type="asset" data-filter-value="all">All</div>
-                                            <div class="col-menu-item" data-filter-type="asset" data-filter-value="stock">Stock</div>
-                                            <div class="col-menu-item" data-filter-type="asset" data-filter-value="saving">Saving</div>
-                                            <div class="col-menu-item" data-filter-type="asset" data-filter-value="crypto">Crypto</div>
-                                            <div class="col-menu-item" data-filter-type="asset" data-filter-value="forex">Forex</div>
-                                        </div>
-                                    </div>
-                                </th>
-                                <th>
-                                  <div class="th-filter-wrap" onclick="toggleColMenu(event, 'date')">
-                                      <span>Date</span>
-                                      <i class="bi bi-funnel-fill th-filter-icon" id="date-filter-icon"></i>
-                                      <div class="col-menu col-menu-date-range" id="col-menu-date">
-                                          <div class="cal-header">
-                                              <button type="button" class="cal-nav-btn" onclick="calNavigate(event, -1)"><i class="bi bi-chevron-left"></i></button>
-                                              <div class="cal-month-label" id="cal-month-label">—</div>
-                                              <button type="button" class="cal-nav-btn" onclick="calNavigate(event, 1)"><i class="bi bi-chevron-right"></i></button>
-                                          </div>
-                                          <div class="cal-range-display" id="cal-range-display">Select a date range</div>
-                                          <div class="cal-weekdays">
-                                              <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
-                                          </div>
-                                          <div class="cal-grid" id="cal-grid"></div>
-                                          <div class="col-menu-divider"></div>
-                                          <div class="cal-quick-row">
-                                              <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,7)">7d</button>
-                                              <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,30)">30d</button>
-                                              <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,90)">3m</button>
-                                              <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,365)">1y</button>
-                                          </div>
-                                          <div class="date-range-actions">
-                                              <button type="button" class="date-range-btn date-range-clear" onclick="clearDateFilter(event)">Clear</button>
-                                              <button type="button" class="date-range-btn date-range-apply" onclick="applyDateFilter(event)">Apply</button>
-                                          </div>
+                  <table>
+                      <colgroup>
+                          <col class="col-asset">
+                          <col class="col-duration">
+                          <col class="col-volprice">
+                          <col class="col-pnl">
+                          <col class="col-costmarket">
+                      </colgroup>
+                      <thead>
+                          <tr>
+                              <th>
+                                  <div class="th-filter-wrap" onclick="toggleColMenu(event, 'asset')">
+                                      <span>Asset</span>
+                                      <i class="bi bi-funnel-fill th-filter-icon" id="asset-filter-icon"></i>
+                                      <div class="col-menu" id="col-menu-asset">
+                                          <div class="col-menu-item" data-filter-type="asset" data-filter-value="all">All</div>
+                                          <div class="col-menu-item" data-filter-type="asset" data-filter-value="stock">Stock</div>
+                                          <div class="col-menu-item" data-filter-type="asset" data-filter-value="saving">Saving</div>
+                                          <div class="col-menu-item" data-filter-type="asset" data-filter-value="crypto">Crypto</div>
+                                          <div class="col-menu-item" data-filter-type="asset" data-filter-value="forex">Forex</div>
                                       </div>
                                   </div>
-                                </th>
-                                <th>Vol/Price</th>
-                                <th>
-                                    <div class="th-filter-wrap" onclick="toggleColMenu(event, 'pnl')">
-                                        <span>PnL</span>
-                                        <i class="bi bi-funnel-fill th-filter-icon" id="pnl-filter-icon"></i>
-                                        <div class="col-menu" id="col-menu-pnl">
-                                            <div class="col-menu-item" data-filter-type="pnl" data-filter-value="all">All</div>
-                                            <div class="col-menu-item" data-filter-type="pnl" data-filter-value="profited">Profited</div>
-                                            <div class="col-menu-item" data-filter-type="pnl" data-filter-value="lost">Lost</div>
+                              </th>
+                              <th>
+                                <div class="th-filter-wrap" onclick="toggleColMenu(event, 'date')">
+                                    <span>Date</span>
+                                    <i class="bi bi-funnel-fill th-filter-icon" id="date-filter-icon"></i>
+                                    <div class="col-menu col-menu-date-range" id="col-menu-date">
+                                        <div class="cal-header">
+                                            <button type="button" class="cal-nav-btn" onclick="calNavigate(event, -1)"><i class="bi bi-chevron-left"></i></button>
+                                            <div class="cal-month-label" id="cal-month-label">—</div>
+                                            <button type="button" class="cal-nav-btn" onclick="calNavigate(event, 1)"><i class="bi bi-chevron-right"></i></button>
+                                        </div>
+                                        <div class="cal-range-display" id="cal-range-display">Select a date range</div>
+                                        <div class="cal-weekdays">
+                                            <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                                        </div>
+                                        <div class="cal-grid" id="cal-grid"></div>
+                                        <div class="col-menu-divider"></div>
+                                        <div class="cal-quick-row">
+                                            <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,7)">7d</button>
+                                            <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,30)">30d</button>
+                                            <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,90)">3m</button>
+                                            <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,365)">1y</button>
+                                        </div>
+                                        <div class="date-range-actions">
+                                            <button type="button" class="date-range-btn date-range-clear" onclick="clearDateFilter(event)">Clear</button>
+                                            <button type="button" class="date-range-btn date-range-apply" onclick="applyDateFilter(event)">Apply</button>
                                         </div>
                                     </div>
-                                </th>
-                                <th>Value</th>
-                            </tr>
-                        </thead>
-                        <tbody id="portfolio-tbody">
-                            <!-- Dynamic Insertion -->
-                        </tbody>
-                    </table>
+                                </div>
+                              </th>
+                              <th>Vol/Price</th>
+                              <th>
+                                  <div class="th-filter-wrap" onclick="toggleColMenu(event, 'pnl')">
+                                      <span>PnL</span>
+                                      <i class="bi bi-funnel-fill th-filter-icon" id="pnl-filter-icon"></i>
+                                      <div class="col-menu" id="col-menu-pnl">
+                                          <div class="col-menu-item" data-filter-type="pnl" data-filter-value="all">All</div>
+                                          <div class="col-menu-item" data-filter-type="pnl" data-filter-value="profited">Profited</div>
+                                          <div class="col-menu-item" data-filter-type="pnl" data-filter-value="lost">Lost</div>
+                                      </div>
+                                  </div>
+                              </th>
+                              <th>Value</th>
+                          </tr>
+                      </thead>
+                      <tbody id="portfolio-tbody">
+                          <!-- Dynamic Insertion -->
+                      </tbody>
+                  </table>
                 </div>
+              </div>
             </div>
           </div>
         </div>
@@ -2044,7 +2045,7 @@ to{transform:rotate(360deg)}
               <!-- Tab nhỏ 1 -->
               <div class="sub-slide">
                 <div class="btc-card">
-                  <div class="subtitle" id="subtitle">Loading matrix data...</div>
+                  <div class="subtitle" id="subtitle"></div>
                   <!-- Dynamic Chart Engine Layout -->
                   <div class="chart-wrap" id="chart-wrap">
                     <svg id="wave-svg" viewBox="0 0 640 200" preserveAspectRatio="none"></svg>
@@ -2054,7 +2055,7 @@ to{transform:rotate(360deg)}
                     <div class="legend-item"><span class="legend-dot" style="background:#00bfa5;"></span> ATH</div>
                     <div class="legend-item"><span class="legend-dot" style="background:#ff6097;"></span> ATL</div>
                   </div>
-                  <div id="loading-msg">Fetching spreadsheet matrices&hellip;</div>            
+                  <div id="loading-msg"></div>            
                   <div class="table-container" id="table-container" style="display:none;">
                     <table id="cycle-table">
                       <thead>
