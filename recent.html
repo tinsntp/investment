@@ -37,7 +37,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
     --border-color: rgba(255, 255, 255, 0.08);
     --text-primary: #F0F6FC;
     --text-secondary: #8B949E;
-    --text-muted: #484F58;
+    --text-muted: #798491;
     
     --teal-primary: rgb(20, 184, 166);
     --teal-bg: rgba(20, 184, 166, 0.12);
@@ -732,9 +732,9 @@ tbody tr.current-row td{font-weight:600;}
 .live-dot{width:4px;height:4px;border-radius:50%;background:var(--accent-teal);box-shadow:0 0 6px var(--accent-teal);animation:pulse 2s infinite}
 @keyframes pulse{0%{opacity:0.4;transform:scale(0.9)}50%{opacity:1;transform:scale(1.2)}100%{opacity:0.4;transform:scale(0.9)}}
 .hero-card{position:relative;border-radius:14px;padding:12px 14px;margin-bottom:12px;box-shadow:0 12px 24px -10px rgba(0,0,0,0.5);backdrop-filter:blur(16px);background: 
-    linear-gradient(135deg, rgba(30, 41, 59, 0.1) 0%, rgba(15, 23, 42, 0.3) 100%),
-    url('https://i.pinimg.com/control1/1200x/08/20/32/08203244b9d676ab74667acb3e25f78c.jpg');background-size: cover;
-  background-position: center 62%;background-repeat: no-repeat;}
+    linear-gradient(135deg, rgba(30, 41, 59, 0.01) 0%, rgba(15, 23, 42, 0.3) 100%),
+    url('https://i.pinimg.com/736x/b5/9e/d0/b59ed0f3c50e8a5155dab39ac867ef32.jpg');background-size: cover;
+  background-position: center 45%;background-repeat: no-repeat;}
  @media (min-width:401px){.hero-card{padding:22px 14px;background-position: center 61%;}}
 .hero-caption-row{display:flex;align-items:center;justify-content: center;gap:2px;}
 .hero-caption{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#fff;opacity:0.7;}
@@ -752,7 +752,7 @@ tbody tr.current-row td{font-weight:600;}
 .legend-color-dot{width:6px;height:6px;border-radius:50%}
 .section-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .section-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted)}
-.toggle-mode-btn{background:rgba(255,255,255,0.08);border:none;color:var(--text-primary);font-family:var(--font-sans);font-size:10px;font-weight:600;padding:4px 10px;border-radius:8px;cursor:pointer;transition:all 0.2s ease}
+.toggle-mode-btn{background:rgba(255,255,255,0.08);border:none;color:var(--text-primary);font-family:var(--font-sans);font-size:12px;font-weight:600;padding:4px 10px;border-radius:8px;cursor:pointer;transition:all 0.2s ease}
 .toggle-mode-btn:hover{background:rgba(255,255,255,0.16)}
 #category-list{display:flex;flex-direction:column;gap:8px;padding:2px;}
 .cat-card{background:var(--surface-card);border-radius:12px;overflow:hidden;backdrop-filter:blur(12px)}
@@ -762,9 +762,9 @@ tbody tr.current-row td{font-weight:600;}
 .cat-icon-fallback{font-size:12px;font-weight:800;color:var(--accent-purple)}
 .cat-info{flex:1;min-width:0;display:flex;flex-direction:column}
 .title-with-badge{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
-.cat-title{font-size:12.5px;font-weight:700;color:#fff;line-height:1.2;}
-.cat-desc{font-size:11.5px;color:var(--text-muted);font-weight:500;margin-top:3px;line-height:1.1}
-.risk-badge{display: inline-block;font-size:10px;font-weight:700;text-transform:uppercase;padding:1px 5px;border-radius:8px}
+.cat-title{font-size:13.5px;font-weight:700;color:#fff;line-height:1.2;}
+.cat-desc{font-size:12px;color:var(--text-muted);font-weight:500;margin-top:3px;line-height:1.1}
+.risk-badge{display: inline-block;font-size:11px;font-weight:700;text-transform:uppercase;padding:1px 5px;border-radius:8px}
 .risk-badge.badge-core{background:rgba(236,72,153,0.15);color:#f472b6}
 .risk-badge.badge-growth{background:rgba(20,184,166,0.15);color:#2dd4bf}
 .risk-badge.badge-highrisk{background:rgba(244,63,94,0.15);color:#f87171}
@@ -780,8 +780,8 @@ tbody tr.current-row td{font-weight:600;}
 .cat-card.open .cat-children-wrapper{display:block}
 .child-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;margin-left:6px}
 .child-info-block{display:flex;flex-direction:column;min-width:0;padding-right:6px}
-.child-title{font-size:12.5px;font-weight:600;color:var(--text-primary)}
-.child-desc{font-size:11.5px;color:var(--text-muted);margin-top:1px}
+.child-title{font-size:13px;font-weight:600;color:var(--text-primary)}
+.child-desc{font-size:12.5px;color:var(--text-muted);margin-top:1px}
 .child-metrics{display:flex;flex-direction:column;align-items:flex-end;gap:1px;flex-shrink:0}
 .child-val-main{font-family:DM Sans;font-size:14px;font-weight:600}
 .child-val-sub{font-family:DM Sans;display:flex;align-items:center;gap:3px;font-size:12px}
@@ -799,7 +799,7 @@ tbody tr.current-row td{font-weight:600;}
         /* Hero Card */
         .hero-card-port {
             background: none;
-            padding: 24px;margin:10px;
+            margin:10px;margin-top:0;
             position: relative;
             overflow: hidden;
 
@@ -1883,265 +1883,264 @@ to{transform:rotate(360deg)}
 
     <!-- PORTFOLIO SLIDE -->
     <div class="slide" id="slide-2" data-idx="2">
-        <div class="budget-card" >
-          <div class="budget-subtabs-v2" data-tabgroup="portfolio-btc" style="display:flex!important;align-items:center;justify-content:center;gap:8px;position:relative;width:100%;">
-            <button type="button" class="budget-subtab-v2 active" onclick="switchBudgetTab(this, 'portfolio')">
-              <span class="material-icons-round" style="font-size:6px;">circle</span>
-            </button>
-            <button type="button" class="budget-subtab-v2" onclick="switchBudgetTab(this, 'btc')">
-              <span class="material-icons-round" style="font-size:6px;">circle</span>
-            </button>
-          </div>
-    
-          <div class="budget-tab-content" id="budget-view-portfolio" style="display: none;">
-            <div class="dashboard-grid">
-              <div id="det-msg"></div>
-              <!-- HERO STAT CARD -->
-              <div class="hero-card-port">
-                  <div class="metrics-grid">
-                      <div class="metric-card">
-                          <div class="hero-amount" id="total-profit-val">0</div>
-                      <div class="badge-pill badge-teal" id="total-profit-badge">▲ +0.00%</div>
-                      </div>
-                      <div class="metric-card">
-                          <div class="metric-label">Active Positions</div>
-                          <div class="metric-value" id="stat-cycles">0</div>
-                      </div>
-                  </div>
-              </div>
+      <div class="budget-card" >
+        <div class="budget-subtabs-v2" data-tabgroup="portfolio-btc" style="display:flex!important;align-items:center;justify-content:center;gap:8px;position:relative;width:100%;">
+          <button type="button" class="budget-subtab-v2 active" onclick="switchBudgetTab(this, 'portfolio')">
+            <span class="material-icons-round" style="font-size:6px;">circle</span>
+          </button>
+          <button type="button" class="budget-subtab-v2" onclick="switchBudgetTab(this, 'btc')">
+            <span class="material-icons-round" style="font-size:6px;">circle</span>
+          </button>
+        </div>
+  
+        <div class="budget-tab-content" id="budget-view-portfolio" style="display: none;">
+          <div class="dashboard-grid">
+            <div id="det-msg"></div>
+            <!-- HERO STAT CARD -->
+            <div class="hero-card-port">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="hero-amount" id="total-profit-val">0</div>
+                    <div class="badge-pill badge-teal" id="total-profit-badge">▲ +0.00%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Active Positions</div>
+                        <div class="metric-value" id="stat-cycles">0</div>
+                    </div>
+                </div>
+            </div>
 
-              <!-- PORTFOLIO TABLE CARD -->
-              <div class="portfolio-card">
-                  <div class="table-wrapper">
-                      <table>
-                          <colgroup>
-                              <col class="col-asset">
-                              <col class="col-duration">
-                              <col class="col-volprice">
-                              <col class="col-pnl">
-                              <col class="col-costmarket">
-                          </colgroup>
-                          <thead>
-                              <tr>
-                                  <th>
-                                      <div class="th-filter-wrap" onclick="toggleColMenu(event, 'asset')">
-                                          <span>Asset</span>
-                                          <i class="bi bi-funnel-fill th-filter-icon" id="asset-filter-icon"></i>
-                                          <div class="col-menu" id="col-menu-asset">
-                                              <div class="col-menu-item" data-filter-type="asset" data-filter-value="all">All</div>
-                                              <div class="col-menu-item" data-filter-type="asset" data-filter-value="stock">Stock</div>
-                                              <div class="col-menu-item" data-filter-type="asset" data-filter-value="saving">Saving</div>
-                                              <div class="col-menu-item" data-filter-type="asset" data-filter-value="crypto">Crypto</div>
-                                              <div class="col-menu-item" data-filter-type="asset" data-filter-value="forex">Forex</div>
-                                          </div>
-                                      </div>
-                                  </th>
-                                  <th>
-                                    <div class="th-filter-wrap" onclick="toggleColMenu(event, 'date')">
-                                        <span>Date</span>
-                                        <i class="bi bi-funnel-fill th-filter-icon" id="date-filter-icon"></i>
-                                        <div class="col-menu col-menu-date-range" id="col-menu-date">
-                                            <div class="cal-header">
-                                                <button type="button" class="cal-nav-btn" onclick="calNavigate(event, -1)"><i class="bi bi-chevron-left"></i></button>
-                                                <div class="cal-month-label" id="cal-month-label">—</div>
-                                                <button type="button" class="cal-nav-btn" onclick="calNavigate(event, 1)"><i class="bi bi-chevron-right"></i></button>
-                                            </div>
-                                            <div class="cal-range-display" id="cal-range-display">Select a date range</div>
-                                            <div class="cal-weekdays">
-                                                <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
-                                            </div>
-                                            <div class="cal-grid" id="cal-grid"></div>
-                                            <div class="col-menu-divider"></div>
-                                            <div class="cal-quick-row">
-                                                <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,7)">7d</button>
-                                                <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,30)">30d</button>
-                                                <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,90)">3m</button>
-                                                <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,365)">1y</button>
-                                            </div>
-                                            <div class="date-range-actions">
-                                                <button type="button" class="date-range-btn date-range-clear" onclick="clearDateFilter(event)">Clear</button>
-                                                <button type="button" class="date-range-btn date-range-apply" onclick="applyDateFilter(event)">Apply</button>
-                                            </div>
+            <!-- PORTFOLIO TABLE CARD -->
+            <div class="portfolio-card">
+                <div class="table-wrapper">
+                    <table>
+                        <colgroup>
+                            <col class="col-asset">
+                            <col class="col-duration">
+                            <col class="col-volprice">
+                            <col class="col-pnl">
+                            <col class="col-costmarket">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>
+                                    <div class="th-filter-wrap" onclick="toggleColMenu(event, 'asset')">
+                                        <span>Asset</span>
+                                        <i class="bi bi-funnel-fill th-filter-icon" id="asset-filter-icon"></i>
+                                        <div class="col-menu" id="col-menu-asset">
+                                            <div class="col-menu-item" data-filter-type="asset" data-filter-value="all">All</div>
+                                            <div class="col-menu-item" data-filter-type="asset" data-filter-value="stock">Stock</div>
+                                            <div class="col-menu-item" data-filter-type="asset" data-filter-value="saving">Saving</div>
+                                            <div class="col-menu-item" data-filter-type="asset" data-filter-value="crypto">Crypto</div>
+                                            <div class="col-menu-item" data-filter-type="asset" data-filter-value="forex">Forex</div>
                                         </div>
                                     </div>
-                                  </th>
-                                  <th>Vol/Price</th>
-                                  <th>
-                                      <div class="th-filter-wrap" onclick="toggleColMenu(event, 'pnl')">
-                                          <span>PnL</span>
-                                          <i class="bi bi-funnel-fill th-filter-icon" id="pnl-filter-icon"></i>
-                                          <div class="col-menu" id="col-menu-pnl">
-                                              <div class="col-menu-item" data-filter-type="pnl" data-filter-value="all">All</div>
-                                              <div class="col-menu-item" data-filter-type="pnl" data-filter-value="profited">Profited</div>
-                                              <div class="col-menu-item" data-filter-type="pnl" data-filter-value="lost">Lost</div>
+                                </th>
+                                <th>
+                                  <div class="th-filter-wrap" onclick="toggleColMenu(event, 'date')">
+                                      <span>Date</span>
+                                      <i class="bi bi-funnel-fill th-filter-icon" id="date-filter-icon"></i>
+                                      <div class="col-menu col-menu-date-range" id="col-menu-date">
+                                          <div class="cal-header">
+                                              <button type="button" class="cal-nav-btn" onclick="calNavigate(event, -1)"><i class="bi bi-chevron-left"></i></button>
+                                              <div class="cal-month-label" id="cal-month-label">—</div>
+                                              <button type="button" class="cal-nav-btn" onclick="calNavigate(event, 1)"><i class="bi bi-chevron-right"></i></button>
+                                          </div>
+                                          <div class="cal-range-display" id="cal-range-display">Select a date range</div>
+                                          <div class="cal-weekdays">
+                                              <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                                          </div>
+                                          <div class="cal-grid" id="cal-grid"></div>
+                                          <div class="col-menu-divider"></div>
+                                          <div class="cal-quick-row">
+                                              <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,7)">7d</button>
+                                              <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,30)">30d</button>
+                                              <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,90)">3m</button>
+                                              <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,365)">1y</button>
+                                          </div>
+                                          <div class="date-range-actions">
+                                              <button type="button" class="date-range-btn date-range-clear" onclick="clearDateFilter(event)">Clear</button>
+                                              <button type="button" class="date-range-btn date-range-apply" onclick="applyDateFilter(event)">Apply</button>
                                           </div>
                                       </div>
-                                  </th>
-                                  <th>Value</th>
-                              </tr>
-                          </thead>
-                          <tbody id="portfolio-tbody">
-                              <!-- Dynamic Insertion -->
-                          </tbody>
-                      </table>
-                  </div>
-              </div>
-            </div>
-            </div>
-          </div>
-          <div class="budget-tab-content" id="budget-view-btc" style="display: none;">
-            <!-- TradingView Widget BEGIN -->
-            <div class="tradingview-widget-container" id="chart-micro" style="width: 100%; background: transparent; overflow: hidden;">
-              <iframe 
-                src="https://s.tradingview.com/embed-widget/symbol-overview/?locale=en#%7B%22lineWidth%22%3A2%2C%22lineType%22%3A0%2C%22chartType%22%3A%22area%22%2C%22fontColor%22%3A%22rgb(106%2C%20109%2C%20120)%22%2C%22gridLineColor%22%3A%22rgba(242%2C%20242%2C%20242%2C%200)%22%2C%22volumeUpColor%22%3A%22rgba(34%2C%20171%2C%20148%2C%200.5)%22%2C%22volumeDownColor%22%3A%22rgba(247%2C%2082%2C%2095%2C%200.5)%22%2C%22backgroundColor%22%3A%22rgba(0%2C%200%2C%200%2C%200)%22%2C%22widgetFontColor%22%3A%22%23DBDBDB%22%2C%22upColor%22%3A%22%2322ab94%22%2C%22downColor%22%3A%22%23f7525f%22%2C%22borderUpColor%22%3A%22%2322ab94%22%2C%22borderDownColor%22%3A%22%23f7525f%22%2C%22wickUpColor%22%3A%22%2322ab94%22%2C%22wickDownColor%22%3A%22%23f7525f%22%2C%22colorTheme%22%3A%22dark%22%2C%22isTransparent%22%3Atrue%2C%22locale%22%3A%22en%22%2C%22chartOnly%22%3Afalse%2C%22scalePosition%22%3A%22right%22%2C%22scaleMode%22%3A%22Normal%22%2C%22fontFamily%22%3A%22-apple-system%2C%20BlinkMacSystemFont%2C%20Trebuchet%20MS%2C%20Roboto%2C%20Ubuntu%2C%20sans-serif%22%2C%22valuesTracking%22%3A%221%22%2C%22changeMode%22%3A%22price-and-percent%22%2C%22symbols%22%3A%5B%5B%22Bitcoin%22%2C%22COINBASE%3ABTCUSD%7C1M%22%5D%2C%5B%22Gold%22%2C%22OANDA%3AXAUUSD%7C1D%22%5D%2C%5B%22DXY%22%2C%22CAPITALCOM%3ADXY%7C1Y%22%5D%5D%2C%22dateRanges%22%3A%5B%221d%7C1%22%2C%221m%7C30%22%2C%223m%7C60%22%2C%2212m%7C1D%22%2C%2260m%7C1W%22%2C%22all%7C1M%22%5D%2C%22fontSize%22%3A%2210%22%2C%22headerFontSize%22%3A%22medium%22%2C%22autosize%22%3Afalse%2C%22width%22%3A%22100%25%22%2C%22height%22%3A%22310%22%2C%22noTimeScale%22%3Afalse%2C%22hideDateRanges%22%3Afalse%2C%22hideMarketStatus%22%3Afalse%2C%22hideSymbolLogo%22%3Afalse%7D" 
-                style="width: 100%; height: 310px; border: none; margin: 0; padding: 0; display: block; background: transparent;" 
-                scrolling="no"
-                frameborder="0" 
-                allowtransparency="true">
-              </iframe>
-            </div>
-            <!-- TradingView Widget END -->
-
-            <!-- Added 'sub-tab-bar' modifier -->
-            <div class="tab-bar sub-tab-bar" id="tab-bar">
-              <div class="sub-tab-btn active" data-sub-idx="0" id="tab-btn-10">
-                <i class="bi bi-graph-up"></i>
-                <span>Cycle Tracker</span>
-              </div>  
-              <div class="sub-tab-btn" data-sub-idx="1" id="tab-btn-11">
-                <i class="bi bi-exclamation-triangle"></i>
-                <span>Indicators</span>
-              </div>
-            </div>
-
-            <!-- Khung trượt nội bộ dành riêng cho 2 tab nhỏ -->
-            <div class="sub-slides-outer">
-              <div class="sub-slides-wrap" id="sub-slides-wrap">
-                <!-- Tab nhỏ 1 -->
-                <div class="sub-slide">
-                  <div class="btc-card">
-                    <div class="subtitle" id="subtitle">Loading matrix data...</div>
-                    <!-- Dynamic Chart Engine Layout -->
-                    <div class="chart-wrap" id="chart-wrap">
-                      <svg id="wave-svg" viewBox="0 0 640 200" preserveAspectRatio="none"></svg>
-                    </div>
-                    <div class="legend-row">
-                      <div class="legend-item"><span class="legend-dot" style="background:#b2b5be;"></span> Cycle Trendline</div>
-                      <div class="legend-item"><span class="legend-dot" style="background:#00bfa5;"></span> ATH</div>
-                      <div class="legend-item"><span class="legend-dot" style="background:#ff6097;"></span> ATL</div>
-                    </div>
-                    <div id="loading-msg">Fetching spreadsheet matrices&hellip;</div>            
-                    <div class="table-container" id="table-container" style="display:none;">
-                      <table id="cycle-table">
-                        <thead>
-                          <tr>
-                            <th style="width: 9%;">#</th>
-                            <th style="width: 30%;">Cycle</th>
-                            <th style="width: 14%;">Days</th>
-                            <th style="width: 23%;" class="text-right">ATH / ATL</th>
-                            <th style="width: 25%;" class="text-right">Changed</th>
-                          </tr>
+                                  </div>
+                                </th>
+                                <th>Vol/Price</th>
+                                <th>
+                                    <div class="th-filter-wrap" onclick="toggleColMenu(event, 'pnl')">
+                                        <span>PnL</span>
+                                        <i class="bi bi-funnel-fill th-filter-icon" id="pnl-filter-icon"></i>
+                                        <div class="col-menu" id="col-menu-pnl">
+                                            <div class="col-menu-item" data-filter-type="pnl" data-filter-value="all">All</div>
+                                            <div class="col-menu-item" data-filter-type="pnl" data-filter-value="profited">Profited</div>
+                                            <div class="col-menu-item" data-filter-type="pnl" data-filter-value="lost">Lost</div>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th>Value</th>
+                            </tr>
                         </thead>
-                        <tbody id="table-body"></tbody>
-                      </table>
+                        <tbody id="portfolio-tbody">
+                            <!-- Dynamic Insertion -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="budget-tab-content" id="budget-view-btc" style="display: none;">
+          <!-- TradingView Widget BEGIN -->
+          <div class="tradingview-widget-container" id="chart-micro" style="width: 100%; background: transparent; overflow: hidden;">
+            <iframe 
+              src="https://s.tradingview.com/embed-widget/symbol-overview/?locale=en#%7B%22lineWidth%22%3A2%2C%22lineType%22%3A0%2C%22chartType%22%3A%22area%22%2C%22fontColor%22%3A%22rgb(106%2C%20109%2C%20120)%22%2C%22gridLineColor%22%3A%22rgba(242%2C%20242%2C%20242%2C%200)%22%2C%22volumeUpColor%22%3A%22rgba(34%2C%20171%2C%20148%2C%200.5)%22%2C%22volumeDownColor%22%3A%22rgba(247%2C%2082%2C%2095%2C%200.5)%22%2C%22backgroundColor%22%3A%22rgba(0%2C%200%2C%200%2C%200)%22%2C%22widgetFontColor%22%3A%22%23DBDBDB%22%2C%22upColor%22%3A%22%2322ab94%22%2C%22downColor%22%3A%22%23f7525f%22%2C%22borderUpColor%22%3A%22%2322ab94%22%2C%22borderDownColor%22%3A%22%23f7525f%22%2C%22wickUpColor%22%3A%22%2322ab94%22%2C%22wickDownColor%22%3A%22%23f7525f%22%2C%22colorTheme%22%3A%22dark%22%2C%22isTransparent%22%3Atrue%2C%22locale%22%3A%22en%22%2C%22chartOnly%22%3Afalse%2C%22scalePosition%22%3A%22right%22%2C%22scaleMode%22%3A%22Normal%22%2C%22fontFamily%22%3A%22-apple-system%2C%20BlinkMacSystemFont%2C%20Trebuchet%20MS%2C%20Roboto%2C%20Ubuntu%2C%20sans-serif%22%2C%22valuesTracking%22%3A%221%22%2C%22changeMode%22%3A%22price-and-percent%22%2C%22symbols%22%3A%5B%5B%22Bitcoin%22%2C%22COINBASE%3ABTCUSD%7C1M%22%5D%2C%5B%22Gold%22%2C%22OANDA%3AXAUUSD%7C1D%22%5D%2C%5B%22DXY%22%2C%22CAPITALCOM%3ADXY%7C1Y%22%5D%5D%2C%22dateRanges%22%3A%5B%221d%7C1%22%2C%221m%7C30%22%2C%223m%7C60%22%2C%2212m%7C1D%22%2C%2260m%7C1W%22%2C%22all%7C1M%22%5D%2C%22fontSize%22%3A%2210%22%2C%22headerFontSize%22%3A%22medium%22%2C%22autosize%22%3Afalse%2C%22width%22%3A%22100%25%22%2C%22height%22%3A%22310%22%2C%22noTimeScale%22%3Afalse%2C%22hideDateRanges%22%3Afalse%2C%22hideMarketStatus%22%3Afalse%2C%22hideSymbolLogo%22%3Afalse%7D" 
+              style="width: 100%; height: 310px; border: none; margin: 0; padding: 0; display: block; background: transparent;" 
+              scrolling="no"
+              frameborder="0" 
+              allowtransparency="true">
+            </iframe>
+          </div>
+          <!-- TradingView Widget END -->
+
+          <!-- Added 'sub-tab-bar' modifier -->
+          <div class="tab-bar sub-tab-bar" id="tab-bar">
+            <div class="sub-tab-btn active" data-sub-idx="0" id="tab-btn-10">
+              <i class="bi bi-graph-up"></i>
+              <span>Cycle Tracker</span>
+            </div>  
+            <div class="sub-tab-btn" data-sub-idx="1" id="tab-btn-11">
+              <i class="bi bi-exclamation-triangle"></i>
+              <span>Indicators</span>
+            </div>
+          </div>
+
+          <!-- Khung trượt nội bộ dành riêng cho 2 tab nhỏ -->
+          <div class="sub-slides-outer">
+            <div class="sub-slides-wrap" id="sub-slides-wrap">
+              <!-- Tab nhỏ 1 -->
+              <div class="sub-slide">
+                <div class="btc-card">
+                  <div class="subtitle" id="subtitle">Loading matrix data...</div>
+                  <!-- Dynamic Chart Engine Layout -->
+                  <div class="chart-wrap" id="chart-wrap">
+                    <svg id="wave-svg" viewBox="0 0 640 200" preserveAspectRatio="none"></svg>
+                  </div>
+                  <div class="legend-row">
+                    <div class="legend-item"><span class="legend-dot" style="background:#b2b5be;"></span> Cycle Trendline</div>
+                    <div class="legend-item"><span class="legend-dot" style="background:#00bfa5;"></span> ATH</div>
+                    <div class="legend-item"><span class="legend-dot" style="background:#ff6097;"></span> ATL</div>
+                  </div>
+                  <div id="loading-msg">Fetching spreadsheet matrices&hellip;</div>            
+                  <div class="table-container" id="table-container" style="display:none;">
+                    <table id="cycle-table">
+                      <thead>
+                        <tr>
+                          <th style="width: 9%;">#</th>
+                          <th style="width: 30%;">Cycle</th>
+                          <th style="width: 14%;">Days</th>
+                          <th style="width: 23%;" class="text-right">ATH / ATL</th>
+                          <th style="width: 25%;" class="text-right">Changed</th>
+                        </tr>
+                      </thead>
+                      <tbody id="table-body"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <!-- Tab nhỏ 2 -->
+              <div class="sub-slide">
+                <div class="btc-widget-container">
+                  <div class="donuts-row">
+                    <!-- Ring 1: Halving Progress -->
+                    <div class="donut-item">
+                      <div class="circle-wrapper">
+                        <svg class="progress-ring" viewBox="0 0 80 80">
+                          <circle class="progress-ring__bg" stroke="#1c1e22" stroke-width="9" fill="transparent" r="31" cx="40" cy="40"/>
+                          <circle id="ring-halving" class="progress-ring__bar" stroke="url(#grad-halving)" stroke-width="9" stroke-linecap="round" fill="transparent" r="31" cx="40" cy="40" stroke-dasharray="194.78" stroke-dashoffset="194.78" transform="rotate(-90 40 40)"/>
+                        </svg>
+                        <div class="circle-value" id="val-halving">0%</div>
+                      </div>
+                      <div class="circle-label">Cycle Progress</div>
+                    </div>
+
+                    <!-- Ring 2: Pi Cycle MA Convergence -->
+                    <div class="donut-item">
+                      <div class="circle-wrapper">
+                        <svg class="progress-ring" viewBox="0 0 80 80">
+                          <circle class="progress-ring__bg" stroke="#1c1e22" stroke-width="9" fill="transparent" r="31" cx="40" cy="40"/>
+                          <circle id="ring-pi" class="progress-ring__bar" stroke="url(#grad-pi)" stroke-width="9" stroke-linecap="round" fill="transparent" r="31" cx="40" cy="40" stroke-dasharray="194.78" stroke-dashoffset="194.78" transform="rotate(-90 40 40)"/>
+                        </svg>
+                        <div class="circle-value" id="val-pi">0%</div>
+                      </div>
+                      <div class="circle-label">Pi Cycle Top</div>
+                    </div>
+
+                    <!-- Ring 3: Macro Risk Level -->
+                    <div class="donut-item">
+                      <div class="circle-wrapper">
+                        <svg class="progress-ring" viewBox="0 0 80 80">
+                          <circle class="progress-ring__bg" stroke="#1c1e22" stroke-width="9" fill="transparent" r="31" cx="40" cy="40"/>
+                          <circle id="ring-risk" class="progress-ring__bar" stroke="url(#grad-risk)" stroke-width="9" stroke-linecap="round" fill="transparent" r="31" cx="40" cy="40" stroke-dasharray="194.78" stroke-dashoffset="194.78" transform="rotate(-90 40 40)"/>
+                        </svg>
+                        <div class="circle-value" id="val-risk">0%</div>
+                      </div>
+                      <div class="circle-label">Risk Score</div>
+                    </div>
+                  </div>
+
+                  <!-- Bottom Data Grid & Dynamic Output -->
+                  <div class="widget-footer">
+                    <div class="footer-metric">
+                      <span class="lbl">Target Price</span>
+                      <span class="val" id="target-price-display">$0</span>
+                    </div>
+                    <div class="widget-divider"></div>
+                    <div class="footer-metric">
+                      <span class="lbl">Risk Status</span>
+                      <span class="val" id="risk-status-display">-</span>
+                    </div>
+                    <div class="widget-divider"></div>
+                    <div class="footer-metric">
+                      <span class="lbl">Days Left</span>
+                      <span class="val" id="days-until-display">-</span>
                     </div>
                   </div>
                 </div>
-                <!-- Tab nhỏ 2 -->
-                <div class="sub-slide">
-                  <div class="btc-widget-container">
-                    <div class="donuts-row">
-                      <!-- Ring 1: Halving Progress -->
-                      <div class="donut-item">
-                        <div class="circle-wrapper">
-                          <svg class="progress-ring" viewBox="0 0 80 80">
-                            <circle class="progress-ring__bg" stroke="#1c1e22" stroke-width="9" fill="transparent" r="31" cx="40" cy="40"/>
-                            <circle id="ring-halving" class="progress-ring__bar" stroke="url(#grad-halving)" stroke-width="9" stroke-linecap="round" fill="transparent" r="31" cx="40" cy="40" stroke-dasharray="194.78" stroke-dashoffset="194.78" transform="rotate(-90 40 40)"/>
-                          </svg>
-                          <div class="circle-value" id="val-halving">0%</div>
-                        </div>
-                        <div class="circle-label">Cycle Progress</div>
-                      </div>
 
-                      <!-- Ring 2: Pi Cycle MA Convergence -->
-                      <div class="donut-item">
-                        <div class="circle-wrapper">
-                          <svg class="progress-ring" viewBox="0 0 80 80">
-                            <circle class="progress-ring__bg" stroke="#1c1e22" stroke-width="9" fill="transparent" r="31" cx="40" cy="40"/>
-                            <circle id="ring-pi" class="progress-ring__bar" stroke="url(#grad-pi)" stroke-width="9" stroke-linecap="round" fill="transparent" r="31" cx="40" cy="40" stroke-dasharray="194.78" stroke-dashoffset="194.78" transform="rotate(-90 40 40)"/>
-                          </svg>
-                          <div class="circle-value" id="val-pi">0%</div>
-                        </div>
-                        <div class="circle-label">Pi Cycle Top</div>
-                      </div>
+                <div class="cycle-timeline-container light-theme">
+                <!-- Top Boundary Labels (Dynamic) -->
+                <div class="timeline-headers">
+                  <span class="halving-label left" id="lbl-start-halving">Halving N</span>
+                  <span class="halving-label right" id="lbl-end-halving">Halving N+1</span>
+                </div>
 
-                      <!-- Ring 3: Macro Risk Level -->
-                      <div class="donut-item">
-                        <div class="circle-wrapper">
-                          <svg class="progress-ring" viewBox="0 0 80 80">
-                            <circle class="progress-ring__bg" stroke="#1c1e22" stroke-width="9" fill="transparent" r="31" cx="40" cy="40"/>
-                            <circle id="ring-risk" class="progress-ring__bar" stroke="url(#grad-risk)" stroke-width="9" stroke-linecap="round" fill="transparent" r="31" cx="40" cy="40" stroke-dasharray="194.78" stroke-dashoffset="194.78" transform="rotate(-90 40 40)"/>
-                          </svg>
-                          <div class="circle-value" id="val-risk">0%</div>
-                        </div>
-                        <div class="circle-label">Risk Score</div>
-                      </div>
-                    </div>
+                <!-- Main Progress Track -->
+                <div class="timeline-track" id="timeline-track-element">
+                  <!-- Clean Structured Color Phases -->
+                  <div class="phase phase-bull" style="flex: 25;"><span class="phase-name"><i class="bi bi-rocket-takeoff-fill"></i>Bull Run</span></div>
+                  <div class="phase phase-bear" style="flex: 25;"><span class="phase-name"><i class="bi bi-arrow-down-circle-fill"></i>Bear Market</span></div>
+                  <div class="phase phase-accum" style="flex: 25;"><span class="phase-name"><i class="bi bi-droplet-half"></i>Accumulation</span></div>
+                  <div class="phase phase-pre" style="flex: 25;"><span class="phase-name"><i class="bi bi-airplane-engines"></i>Pre-Halving</span></div>
 
-                    <!-- Bottom Data Grid & Dynamic Output -->
-                    <div class="widget-footer">
-                      <div class="footer-metric">
-                        <span class="lbl">Target Price</span>
-                        <span class="val" id="target-price-display">$0</span>
-                      </div>
-                      <div class="widget-divider"></div>
-                      <div class="footer-metric">
-                        <span class="lbl">Risk Status</span>
-                        <span class="val" id="risk-status-display">-</span>
-                      </div>
-                      <div class="widget-divider"></div>
-                      <div class="footer-metric">
-                        <span class="lbl">Days Left</span>
-                        <span class="val" id="days-until-display">-</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="cycle-timeline-container light-theme">
-                  <!-- Top Boundary Labels (Dynamic) -->
-                  <div class="timeline-headers">
-                    <span class="halving-label left" id="lbl-start-halving">Halving N</span>
-                    <span class="halving-label right" id="lbl-end-halving">Halving N+1</span>
-                  </div>
-
-                  <!-- Main Progress Track -->
-                  <div class="timeline-track" id="timeline-track-element">
-                    <!-- Clean Structured Color Phases -->
-                    <div class="phase phase-bull" style="flex: 25;"><span class="phase-name"><i class="bi bi-rocket-takeoff-fill"></i>Bull Run</span></div>
-                    <div class="phase phase-bear" style="flex: 25;"><span class="phase-name"><i class="bi bi-arrow-down-circle-fill"></i>Bear Market</span></div>
-                    <div class="phase phase-accum" style="flex: 25;"><span class="phase-name"><i class="bi bi-droplet-half"></i>Accumulation</span></div>
-                    <div class="phase phase-pre" style="flex: 25;"><span class="phase-name"><i class="bi bi-airplane-engines"></i>Pre-Halving</span></div>
-
-                    <!-- Tracker Pin Assembly (Dark Contrast for White Theme) -->
-                    <div class="progress-indicator" id="progress-pin" style="left: 56.0%;">
-                      <div class="indicator-line"></div>
-                      <div class="indicator-dot"></div>
-                      <div class="indicator-text" id="progress-text-label">YOU ARE HERE: 56.0%</div>
-                    </div>
-                  </div>
-
-                  <!-- 1st Axis: Percentage Steps -->
-                  <div class="timeline-axis percent-axis">
-                    <span>0</span><span>20</span><span>40</span><span>60</span><span>80</span><span>100</span>
-                  </div>
-                  <div class="timeline-axis date-axis" id="dynamic-date-axis"></div>
-                  <div class="timeline-footer">
+                  <!-- Tracker Pin Assembly (Dark Contrast for White Theme) -->
+                  <div class="progress-indicator" id="progress-pin" style="left: 56.0%;">
+                    <div class="indicator-line"></div>
+                    <div class="indicator-dot"></div>
+                    <div class="indicator-text" id="progress-text-label">YOU ARE HERE: 56.0%</div>
                   </div>
                 </div>
+
+                <!-- 1st Axis: Percentage Steps -->
+                <div class="timeline-axis percent-axis">
+                  <span>0</span><span>20</span><span>40</span><span>60</span><span>80</span><span>100</span>
                 </div>
+                <div class="timeline-axis date-axis" id="dynamic-date-axis"></div>
+                <div class="timeline-footer">
+                </div>
+              </div>
               </div>
             </div>
           </div>
+        </div>
       </div>
     </div>
   </div>
