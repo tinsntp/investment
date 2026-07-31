@@ -961,9 +961,12 @@ tbody tr.current-row td{font-weight:600;}
             border-bottom: 1px solid var(--border-color);
             font-weight: 700;
             white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+
         }
+        thead {
+    position: relative;
+    z-index: 10;
+}
 
         td {
             padding: 14px 10px;
@@ -1175,6 +1178,258 @@ tbody tr.current-row td{font-weight:600;}
 .stat-cycles-num {
     font-weight: 700;
     font-size: 14px;
+}
+.th-filter-wrap {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+}
+
+.th-filter-icon {
+    font-size: 10px;
+    color: var(--text-secondary);
+    opacity: 0.6;
+    transition: opacity 0.2s, color 0.2s;
+}
+
+.th-filter-wrap:hover .th-filter-icon {
+    opacity: 1;
+}
+
+.th-filter-icon.active-filter {
+    opacity: 1;
+    color: var(--teal-primary);
+}
+
+.col-menu {
+    display: none;
+    position: fixed;       /* changed from absolute */
+    background: var(--bg-card, #161b22);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    min-width: 130px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    z-index: 999;           /* raised, since fixed elements need to sit above everything */
+    overflow: hidden;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.col-menu.open {
+    display: block;
+}
+
+.col-menu-item {
+    padding: 9px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-primary);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s;
+}
+
+.col-menu-item:hover {
+    background: var(--bg-card-hover, rgba(255,255,255,0.06));
+}
+
+.col-menu-item.selected {
+    color: var(--teal-primary);
+    font-weight: 700;
+}
+.col-menu-date-range {
+    width: 260px;
+    padding: 12px;
+}
+
+.cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.cal-nav-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.05);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 11px;
+    transition: background 0.15s;
+}
+
+.cal-nav-btn:hover {
+    background: rgba(255,255,255,0.1);
+    color: var(--text-primary);
+}
+
+.cal-month-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.cal-range-display {
+    font-size: 11px;
+    color: var(--teal-primary);
+    text-align: center;
+    margin-bottom: 10px;
+    font-weight: 600;
+    min-height: 14px;
+}
+
+.cal-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 4px;
+}
+
+.cal-weekdays span {
+    text-align: center;
+    font-size: 10px;
+    color: var(--text-secondary);
+    font-weight: 700;
+}
+
+.cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+}
+
+.cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: var(--text-primary);
+    cursor: pointer;
+    border-radius: 6px;
+    position: relative;
+    transition: background 0.1s;
+}
+
+.cal-day.other-month {
+    color: var(--text-secondary);
+    opacity: 0.3;
+}
+
+.cal-day:hover {
+    background: rgba(255,255,255,0.08);
+}
+
+.cal-day.in-range {
+    background: rgba(20,184,166,0.15);
+    border-radius: 0;
+}
+
+.cal-day.range-start {
+    background: var(--teal-primary);
+    color: #ffffff;
+    font-weight: 700;
+    border-radius: 6px 0 0 6px;
+}
+
+.cal-day.range-end {
+    background: var(--teal-primary);
+    color: #ffffff;
+    font-weight: 700;
+    border-radius: 0 6px 6px 0;
+}
+
+.cal-day.range-start.range-end {
+    border-radius: 6px;
+}
+
+.cal-day.today::after {
+    content: "";
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--teal-primary);
+}
+
+.cal-day.range-start.today::after,
+.cal-day.range-end.today::after {
+    background: #ffffff;
+}
+
+.cal-quick-row {
+    display: flex;
+    gap: 6px;
+    margin: 10px 0;
+}
+
+.cal-quick-btn {
+    flex: 1;
+    padding: 6px 0;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.cal-quick-btn:hover {
+    background: rgba(255,255,255,0.08);
+    color: var(--text-primary);
+}
+
+.date-range-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.date-range-btn {
+    flex: 1;
+    padding: 8px 0;
+    border-radius: 8px;
+    border: none;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.date-range-clear {
+    background: rgba(255,255,255,0.06);
+    color: var(--text-secondary);
+}
+
+.date-range-clear:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.date-range-apply {
+    background: var(--teal-primary);
+    color: #ffffff;
+}
+
+.date-range-apply:hover {
+    opacity: 0.9;
+}
+
+.col-menu-divider {
+    height: 1px;
+    background: var(--border-color);
+    margin: 8px 0;
 }
 /*TOP CHART*/
 .card-top{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
@@ -1668,10 +1923,60 @@ to{transform:rotate(360deg)}
                           </colgroup>
                           <thead>
                               <tr>
-                                  <th>Asset</th>
-                                  <th>Date</th>
+                                  <th>
+                                      <div class="th-filter-wrap" onclick="toggleColMenu(event, 'asset')">
+                                          <span>Asset</span>
+                                          <i class="bi bi-funnel-fill th-filter-icon" id="asset-filter-icon"></i>
+                                          <div class="col-menu" id="col-menu-asset">
+                                              <div class="col-menu-item" data-filter-type="asset" data-filter-value="all">All</div>
+                                              <div class="col-menu-item" data-filter-type="asset" data-filter-value="stock">Stock</div>
+                                              <div class="col-menu-item" data-filter-type="asset" data-filter-value="saving">Saving</div>
+                                              <div class="col-menu-item" data-filter-type="asset" data-filter-value="crypto">Crypto</div>
+                                              <div class="col-menu-item" data-filter-type="asset" data-filter-value="forex">Forex</div>
+                                          </div>
+                                      </div>
+                                  </th>
+                                  <th>
+                                    <div class="th-filter-wrap" onclick="toggleColMenu(event, 'date')">
+                                        <span>Date</span>
+                                        <i class="bi bi-funnel-fill th-filter-icon" id="date-filter-icon"></i>
+                                        <div class="col-menu col-menu-date-range" id="col-menu-date">
+                                            <div class="cal-header">
+                                                <button type="button" class="cal-nav-btn" onclick="calNavigate(event, -1)"><i class="bi bi-chevron-left"></i></button>
+                                                <div class="cal-month-label" id="cal-month-label">—</div>
+                                                <button type="button" class="cal-nav-btn" onclick="calNavigate(event, 1)"><i class="bi bi-chevron-right"></i></button>
+                                            </div>
+                                            <div class="cal-range-display" id="cal-range-display">Select a date range</div>
+                                            <div class="cal-weekdays">
+                                                <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                                            </div>
+                                            <div class="cal-grid" id="cal-grid"></div>
+                                            <div class="col-menu-divider"></div>
+                                            <div class="cal-quick-row">
+                                                <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,7)">7d</button>
+                                                <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,30)">30d</button>
+                                                <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,90)">3m</button>
+                                                <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,365)">1y</button>
+                                            </div>
+                                            <div class="date-range-actions">
+                                                <button type="button" class="date-range-btn date-range-clear" onclick="clearDateFilter(event)">Clear</button>
+                                                <button type="button" class="date-range-btn date-range-apply" onclick="applyDateFilter(event)">Apply</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                  </th>
                                   <th>Vol/Price</th>
-                                  <th>PnL</th>
+                                  <th>
+                                      <div class="th-filter-wrap" onclick="toggleColMenu(event, 'pnl')">
+                                          <span>PnL</span>
+                                          <i class="bi bi-funnel-fill th-filter-icon" id="pnl-filter-icon"></i>
+                                          <div class="col-menu" id="col-menu-pnl">
+                                              <div class="col-menu-item" data-filter-type="pnl" data-filter-value="all">All</div>
+                                              <div class="col-menu-item" data-filter-type="pnl" data-filter-value="profited">Profited</div>
+                                              <div class="col-menu-item" data-filter-type="pnl" data-filter-value="lost">Lost</div>
+                                          </div>
+                                      </div>
+                                  </th>
                                   <th>Value</th>
                               </tr>
                           </thead>
@@ -1681,6 +1986,7 @@ to{transform:rotate(360deg)}
                       </table>
                   </div>
               </div>
+            </div>
             </div>
           </div>
           <div class="budget-tab-content" id="budget-view-btc" style="display: none;">
@@ -4421,6 +4727,24 @@ to{transform:rotate(360deg)}
   function cleanNum(val){if(!val)return 0;let c=val.toString().replace(/[\$,%\s]/g,"");c.startsWith("(")&&c.endsWith(")")&&(c="-"+c.slice(1,-1));const n=parseFloat(c);return isNaN(n)?0:n}function formatShortNumber(val){if(null==val||isNaN(val))return"-";if(0===val)return"0";const absNum=Math.abs(val),sign=val<0?"-":"",decimals=window.innerWidth>400?3:1;let formatted="";return formatted=absNum>=1e9?(absNum/1e9).toFixed(decimals)+"B":absNum>=1e6?(absNum/1e6).toFixed(decimals)+"M":absNum>=1e3?(absNum/1e3).toFixed(decimals)+"K":absNum.toLocaleString(void 0,{minimumFractionDigits:0,maximumFractionDigits:decimals}),`${sign}${formatted}`}function formatStockPrice(price){if(!price||isNaN(price))return"0.0";let formatted=(price>1e3?price/1e3:price).toFixed(2);return(formatted.endsWith("0")&&!formatted.endsWith(".00")||formatted.endsWith(".00"))&&(formatted=formatted.slice(0,-1)),formatted}function formatCryptoPrice(price){return!price||isNaN(price)?"0.000":price.toLocaleString(void 0,{minimumFractionDigits:0,maximumFractionDigits:0})}function formatPnlValue(num){if(0===num||null==num)return"-";return(num>0?"+":"")+formatShortNumber(num)}function formatPnlPct(pctVal){if(0===pctVal||null==pctVal||isNaN(pctVal))return"-";return`${pctVal>0?"+":""}${pctVal.toFixed(2)}%`}function parseDate(dateStr){if(!dateStr)return null;if(dateStr.includes("-")){const parts=dateStr.split("-");return new Date(parseInt(parts[0],10),parseInt(parts[1],10)-1,parseInt(parts[2],10))}if(dateStr.includes("/")){const parts=dateStr.split("/");return new Date(parseInt(parts[2],10),parseInt(parts[1],10)-1,parseInt(parts[0],10))}return new Date(dateStr)}function formatNoYearDate(dateObj){if(!dateObj)return"-";return`${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][dateObj.getMonth()]} ${String(dateObj.getDate()).padStart(2,"0")}`}function formatDateRangeTwoLinesNoYear(startDateStr,exitDateStr,isSaving=!1,volumeMonths=0){const sDate=parseDate(startDateStr);let eDate=null;isSaving&&volumeMonths>0&&sDate?(eDate=new Date(sDate),eDate.setMonth(eDate.getMonth()+parseInt(volumeMonths,10))):exitDateStr&&""!==exitDateStr.trim()&&(eDate=parseDate(exitDateStr));return`<div class="val-primary">${sDate?formatNoYearDate(sDate):"-"}</div><div class="val-secondary">${eDate?formatNoYearDate(eDate):"Present"}</div>`}function cleanNoteText(noteStr,statusStr){if(!noteStr||""===noteStr.trim())return statusStr||"";let cleaned=noteStr.replace(/MAIN\b/gi,"").replace(/LOG\b/gi,"").replace(/\bC\d+\b/gi,"").replace(/[\+\-]/g,"").trim();return""===cleaned?statusStr:cleaned}function getShortLogKeyword(text){if(!text)return"Log";const lower=text.toLowerCase();return lower.includes("dca")?"DCA":lower.includes("buy")?"Buy":lower.includes("sell")?"Sell":lower.includes("close")?"Close":lower.includes("deposit")||lower.includes("saving")?"Deposit":text.split(" ")[0].slice(0,5)}function parseCSVLine(line){for(var values=[],currentVal="",inQuotes=!1,i=0;i<line.length;i++){var char=line.charAt(i);'"'===char&&'"'===line.charAt(i+1)?(currentVal+='"',i++):'"'===char?inQuotes=!inQuotes:","!==char||inQuotes?currentVal+=char:(values.push(currentVal.trim()),currentVal="")}return values.push(currentVal.trim()),values}
   function fetchOrderSheetCSV(){fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=488369714",{cache:"no-store"}).then(res=>{if(!res.ok)throw new Error("HTTP "+res.status);return res.text()}).then(csvText=>processAndRenderData(csvText)).catch(err=>{console.error("Widget load error:",err);var msgEl=document.getElementById("det-msg");msgEl&&(msgEl.style.display="block",msgEl.textContent="CSV Fetch Error: "+err.message)})}
 
+  var portfolioFilters = {
+    asset: "all",
+    dateFrom: null,
+    dateTo: null,
+    dateSort: null,
+    pnl: "all"
+  };  
+
+  var calState={viewYear:(new Date).getFullYear(),viewMonth:(new Date).getMonth(),rangeStart:null,rangeEnd:null,hoverDate:null},MONTH_NAMES=["January","February","March","April","May","June","July","August","September","October","November","December"];function formatDateShort(d){return d?d.getMonth()+1+"/"+d.getDate()+"/"+d.getFullYear():""}function isSameDay(a,b){return a&&b&&a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate()}
+  function renderCalendar(){var label=document.getElementById("cal-month-label"),grid=document.getElementById("cal-grid");document.getElementById("cal-range-display");if(label&&grid){label.textContent=MONTH_NAMES[calState.viewMonth]+" "+calState.viewYear,updateRangeDisplay(),grid.innerHTML="";for(var startDow=new Date(calState.viewYear,calState.viewMonth,1).getDay(),daysInMonth=new Date(calState.viewYear,calState.viewMonth+1,0).getDate(),daysInPrevMonth=new Date(calState.viewYear,calState.viewMonth,0).getDate(),today=new Date,i=0;i<42;i++){var cellDate,isOtherMonth=!1,dayNum=i-startDow+1;dayNum<1?(cellDate=new Date(calState.viewYear,calState.viewMonth-1,daysInPrevMonth+dayNum),isOtherMonth=!0):dayNum>daysInMonth?(cellDate=new Date(calState.viewYear,calState.viewMonth+1,dayNum-daysInMonth),isOtherMonth=!0):cellDate=new Date(calState.viewYear,calState.viewMonth,dayNum);var cellEl=document.createElement("div");cellEl.className="cal-day"+(isOtherMonth?" other-month":""),cellEl.dataset.time=cellDate.getTime(),isSameDay(cellDate,today)&&cellEl.classList.add("today"),cellEl.textContent=cellDate.getDate(),function(d,el){el.addEventListener("click",function(e){e.stopPropagation(),calSelectDate(d)}),el.addEventListener("mouseenter",function(){calState.rangeStart&&!calState.rangeEnd&&(calState.hoverDate=d,updateRangeClassesOnly())})}(cellDate,cellEl),grid.appendChild(cellEl)}updateRangeClassesOnly()}}
+  function updateRangeClassesOnly(){var grid=document.getElementById("cal-grid");if(grid){var cells=grid.querySelectorAll(".cal-day"),effectiveEnd=calState.rangeEnd||calState.hoverDate;cells.forEach(function(cellEl){cellEl.classList.remove("in-range","range-start","range-end");var cellDate=new Date(parseInt(cellEl.dataset.time,10));if(calState.rangeStart&&effectiveEnd){var rs=calState.rangeStart<effectiveEnd?calState.rangeStart:effectiveEnd,re=calState.rangeStart<effectiveEnd?effectiveEnd:calState.rangeStart;cellDate>=rs&&cellDate<=re&&cellEl.classList.add("in-range"),isSameDay(cellDate,rs)&&cellEl.classList.add("range-start"),isSameDay(cellDate,re)&&cellEl.classList.add("range-end")}else calState.rangeStart&&isSameDay(cellDate,calState.rangeStart)&&cellEl.classList.add("range-start")}),updateRangeDisplay()}}function updateRangeDisplay(){var display=document.getElementById("cal-range-display");display&&(calState.rangeStart&&calState.rangeEnd?display.textContent=formatDateShort(calState.rangeStart)+"  →  "+formatDateShort(calState.rangeEnd):calState.rangeStart?display.textContent=formatDateShort(calState.rangeStart)+"  →  Select end date":display.textContent="Select a date range")}function calSelectDate(d){!calState.rangeStart||calState.rangeStart&&calState.rangeEnd?(calState.rangeStart=d,calState.rangeEnd=null,calState.hoverDate=null):(d<calState.rangeStart?(calState.rangeEnd=calState.rangeStart,calState.rangeStart=d):calState.rangeEnd=d,calState.hoverDate=null),updateRangeClassesOnly()}function calSelectDate(d){!calState.rangeStart||calState.rangeStart&&calState.rangeEnd?(calState.rangeStart=d,calState.rangeEnd=null,calState.hoverDate=null):(d<calState.rangeStart?(calState.rangeEnd=calState.rangeStart,calState.rangeStart=d):calState.rangeEnd=d,calState.hoverDate=null),renderCalendar()}function calNavigate(e,dir){e.stopPropagation(),calState.viewMonth+=dir,calState.viewMonth>11&&(calState.viewMonth=0,calState.viewYear++),calState.viewMonth<0&&(calState.viewMonth=11,calState.viewYear--),renderCalendar()}
+  function calQuickRange(e,days){e.stopPropagation();var end=new Date,start=new Date;start.setDate(start.getDate()-days),calState.rangeStart=start,calState.rangeEnd=end,calState.viewYear=end.getFullYear(),calState.viewMonth=end.getMonth(),renderCalendar()}
+  function applyDateFilter(e){e.stopPropagation(),portfolioFilters.dateFrom=calState.rangeStart?calState.rangeStart.toISOString().slice(0,10):null,portfolioFilters.dateTo=calState.rangeEnd?calState.rangeEnd.toISOString().slice(0,10):null;var icon=document.getElementById("date-filter-icon");icon&&icon.classList.toggle("active-filter",!(!portfolioFilters.dateFrom||!portfolioFilters.dateTo)),document.getElementById("col-menu-date").classList.remove("open"),applyPortfolioFiltersAndRender()}
+  function clearDateFilter(e){e.stopPropagation(),calState.rangeStart=null,calState.rangeEnd=null,calState.hoverDate=null,portfolioFilters.dateFrom=null,portfolioFilters.dateTo=null;var icon=document.getElementById("date-filter-icon");icon&&icon.classList.remove("active-filter"),renderCalendar(),document.getElementById("col-menu-date").classList.remove("open"),applyPortfolioFiltersAndRender()}
+  var origToggleColMenu=toggleColMenu;function toggleColMenu(e,colKey){e.stopPropagation();var menu=document.getElementById("col-menu-"+colKey),isOpen=menu.classList.contains("open");if(document.querySelectorAll(".col-menu").forEach(function(m){m.classList.remove("open")}),!isOpen){document.body.appendChild(menu);var rect=e.currentTarget.getBoundingClientRect();menu.style.top=rect.bottom+6+"px",menu.style.left=rect.left+"px",menu.classList.add("open"),"date"===colKey&&renderCalendar()}}
+  document.addEventListener("DOMContentLoaded",function(){var dateMenu=document.getElementById("col-menu-date");dateMenu&&dateMenu.addEventListener("click",function(e){e.stopPropagation()})});
+  function applyPortfolioFiltersAndRender(){if(void 0!==window.currentPortfolioGroups){var filtered=window.currentPortfolioGroups.filter(function(group){if("all"!==portfolioFilters.asset&&group.accountType.toLowerCase()!==portfolioFilters.asset)return!1;if("all"!==portfolioFilters.pnl){var records=group.records||[],mainRec=group.mainRecord,sumPnl=mainRec?mainRec.actualPnl:records.reduce(function(acc,r){return acc+r.actualPnl},0);if("profited"===portfolioFilters.pnl&&sumPnl<=0)return!1;if("lost"===portfolioFilters.pnl&&sumPnl>=0)return!1}if(portfolioFilters.dateFrom||portfolioFilters.dateTo){var refRec=group.mainRecord||group.records&&group.records[0],refDate=refRec?new Date(refRec.entryDate):null;if(!refDate||isNaN(refDate))return!1;if(portfolioFilters.dateFrom)if(refDate<new Date(portfolioFilters.dateFrom))return!1;if(portfolioFilters.dateTo){var toDate=new Date(portfolioFilters.dateTo);if(toDate.setHours(23,59,59,999),refDate>toDate)return!1}}return!0});renderAccordion(filtered)}}
+
   function processAndRenderData(csvText) {
     const lines = csvText.trim().split(/\r?\n/);
     if (lines.length < 2) return;
@@ -4436,7 +4760,7 @@ to{transform:rotate(360deg)}
 
         const colCPnlPct = cleanNum(row[2]);
         const actualPnl = cleanNum(row[3]);
-        const livePrice = cleanNum(row[4]); // Column E / Live Market Price
+        const livePrice = cleanNum(row[4]);
         const execPrice = cleanNum(row[5]);
         const entryPrice = cleanNum(row[6]);
         const volume = cleanNum(row[7]);
@@ -4486,7 +4810,6 @@ to{transform:rotate(360deg)}
         if (note.toUpperCase() === "MAIN") {
             groupsMap[symbol].mainRecord = recordObj;
         } else if (isSavingRecord) {
-            // Only keep saving sub-records that are still on-going
             if (isOnGoing) {
                 groupsMap[symbol].records.push(recordObj);
             }
@@ -4495,8 +4818,16 @@ to{transform:rotate(360deg)}
         }
     });
 
-    renderAccordion(Object.values(groupsMap));
-}
+    // Store raw, unfiltered groups globally so filters always reset from full data
+    window.currentPortfolioGroups = Object.values(groupsMap);
+
+    // Apply current filter state (defaults show everything on first load)
+    applyPortfolioFiltersAndRender();
+  }
+
+
+  document.addEventListener("click",function(){document.querySelectorAll(".col-menu").forEach(function(m){m.classList.remove("open")})});
+  document.addEventListener("click",function(e){var item=e.target.closest(".col-menu-item");if(item){e.stopPropagation();var filterType=item.getAttribute("data-filter-type"),filterValue=item.getAttribute("data-filter-value");portfolioFilters[filterType]=filterValue;var menu=item.closest(".col-menu");menu.querySelectorAll(".col-menu-item").forEach(function(el){el.classList.remove("selected")}),item.classList.add("selected");var icon=document.getElementById(filterType+"-filter-icon");if(icon){var isDefault="date"!==filterType&&"all"===filterValue;icon.classList.toggle("active-filter",!isDefault)}menu.classList.remove("open"),applyPortfolioFiltersAndRender()}});
 
   function renderAccordion(portfolioGroups) {
     const tbody = document.getElementById('portfolio-tbody');
@@ -4506,7 +4837,7 @@ to{transform:rotate(360deg)}
     let totalMarketValVnd = 0;
     let totalCostVnd = 0;
     let activePositions = 0;
-    const activeIcons = []; // NEW: collect icon info for on-going positions
+    const activeIcons = [];
     const now = new Date();
 
     portfolioGroups.forEach((group, index) => {
@@ -4538,8 +4869,6 @@ to{transform:rotate(360deg)}
         const isOngoing = group.status.toLowerCase().includes('on-going');
         if (isOngoing) {
             activePositions++;
-
-            // NEW: collect this group's icon info for the stack
             const hasIconUrlForStack = group.iconUrl && group.iconUrl.trim().startsWith("http");
             activeIcons.push({
                 iconUrl: hasIconUrlForStack ? group.iconUrl : null,
@@ -4551,7 +4880,6 @@ to{transform:rotate(360deg)}
         const isZero = sumPnl === 0;
         const dotClass = isOngoing ? 'ongoing' : 'close';
 
-        // Dynamic PnL color style string for matching live price color
         const pnlColorStyle = isZero ? 'var(--text-secondary)' : (isPositive ? 'var(--teal-primary)' : 'var(--pink-primary)');
 
         const hasIconUrl = group.iconUrl && group.iconUrl.trim().startsWith("http");
@@ -4583,7 +4911,6 @@ to{transform:rotate(360deg)}
             });
         }
 
-        // Raw live market price
         const rawLive = mainRec ? mainRec.livePrice : group.livePrice;
 
         let volumePriceHTML = "";
@@ -4622,7 +4949,6 @@ to{transform:rotate(360deg)}
                 <div class="val-secondary">${avgPrice.toLocaleString()}</div>`;
         }
 
-        // MAIN ROW
         const mainTr = document.createElement('tr');
         mainTr.className = 'main-row';
         mainTr.setAttribute('onclick', `toggleGroup('${groupGroupId}', this)`);
@@ -4672,7 +4998,6 @@ to{transform:rotate(360deg)}
         `;
         tbody.appendChild(mainTr);
 
-        // SUB-ROWS
         if (records.length > 0) {
             records.forEach(r => {
                 const logTr = document.createElement('tr');
@@ -4736,46 +5061,16 @@ to{transform:rotate(360deg)}
         }
     });
 
-    // Update Hero Summary
     document.getElementById('total-profit-val').textContent = (totalPnlVnd > 0 ? '+' : '') + totalPnlVnd.toLocaleString()+"₫";
     const overallPct = totalCostVnd > 0 ? (totalPnlVnd / totalCostVnd) * 100 : 0;
     const badgeEl = document.getElementById('total-profit-badge');
     badgeEl.textContent = formatPnlPct(overallPct);
     badgeEl.className = `badge-pill ${totalPnlVnd >= 0 ? 'badge-teal' : 'badge-pink'}`;
 
-    // NEW: render icon stack + count together for stat-cycles
     renderActivePositionsStat(activePositions, activeIcons);
-}
+  }
 
-// NEW helper: builds the overlapping icon stack + number
-function renderActivePositionsStat(count, icons) {
-    const statEl = document.getElementById('stat-cycles');
-    if (!statEl) return;
-
-    const maxIconsShown = 4; // cap how many icons render before collapsing into "+N"
-    const shownIcons = icons.slice(0, maxIconsShown);
-    const remaining = icons.length - shownIcons.length;
-
-    let stackHTML = '<div class="stat-icon-stack">';
-    shownIcons.forEach(function(ic) {
-        if (ic.iconUrl) {
-            stackHTML += `<div class="stat-stack-icon" style="background-image:url('${ic.iconUrl}');"></div>`;
-        } else {
-            stackHTML += `<div class="stat-stack-icon stat-stack-icon-text">${ic.symbol.slice(0, 2)}</div>`;
-        }
-    });
-    if (remaining > 0) {
-        stackHTML += `<div class="stat-stack-icon stat-stack-icon-more">+${remaining}</div>`;
-    }
-    stackHTML += '</div>';
-
-    statEl.innerHTML = `
-    <div class="stat-cycles-row">
-        <span class="stat-cycles-num">${count}</span>
-        ${stackHTML}
-    </div>`;
-}
-
+  function renderActivePositionsStat(count,icons){const statEl=document.getElementById("stat-cycles");if(!statEl)return;const shownIcons=icons.slice(0,4),remaining=icons.length-shownIcons.length;let stackHTML='<div class="stat-icon-stack">';shownIcons.forEach(function(ic){ic.iconUrl?stackHTML+=`<div class="stat-stack-icon" style="background-image:url('${ic.iconUrl}');"></div>`:stackHTML+=`<div class="stat-stack-icon stat-stack-icon-text">${ic.symbol.slice(0,2)}</div>`}),remaining>0&&(stackHTML+=`<div class="stat-stack-icon stat-stack-icon-more">+${remaining}</div>`),stackHTML+="</div>",statEl.innerHTML=`\n        <div class="stat-cycles-row">\n            <span class="stat-cycles-num">${count}</span>\n            ${stackHTML}\n        </div>`}
   function toggleGroup(groupId,mainRowEl){const logRows=document.querySelectorAll(`.${groupId}`);if(0===logRows.length)return;mainRowEl.classList.contains("expanded")?(mainRowEl.classList.remove("expanded"),logRows.forEach(row=>row.classList.remove("visible"))):(mainRowEl.classList.add("expanded"),logRows.forEach(row=>row.classList.add("visible")))}
   function closeModal(){const backdrop=document.getElementById("modalBackdrop");backdrop.style.pointerEvents="none",backdrop.classList.remove("active")}
   function createChipElement(container,totalAmount,sign="+"){let displayLabel="";if(totalAmount>=1e6){const clearMillions=totalAmount/1e6;displayLabel=`${sign}${clearMillions%1==0?clearMillions:clearMillions.toFixed(1)}M`}else if(totalAmount>=1e3){const clearThousands=totalAmount/1e3;displayLabel=`${sign}${clearThousands%1==0?clearThousands:clearThousands.toFixed(0)}K`}else displayLabel=`${sign}${totalAmount}`;const chip=document.createElement("div");chip.className="quick-amt-chip",chip.innerText=displayLabel,chip.onclick=()=>{const inputField=document.getElementById("transactionAmount"),clearBtn=document.getElementById("clearAmountBtn");inputField&&(inputField.value=parseInt(totalAmount,10).toLocaleString("en-US"),clearBtn&&(clearBtn.style.display="block"),window.generateDynamicChips(totalAmount))},container.appendChild(chip)}
