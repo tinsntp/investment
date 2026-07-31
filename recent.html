@@ -60,8 +60,8 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 
 .tab-btn {
     flex: 0 0 auto;
-    width: 25px;
-    height: 25px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     position: relative;
     overflow: hidden;
@@ -118,8 +118,8 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .tab-btn i{font-size:3.8vw!important;}
 .tab-line {position:absolute; bottom:0; height:2.5px; background:#fff; border-radius:2px; transition:left 0.25s ease, width 0.25s ease;}
 #tab-btn-2 { display:flex; }
-@media (max-width: 400px) {.tab-btn span {display: none;}.tab-btn i{font-size:4.8vw!important;}}
-@media (min-width: 401px) {.tab-btn span {display: none;}}
+@media (max-width: 400px) {.tab-btn span {display: none;}.tab-btn i{font-size:4.6vw!important;}}
+@media (min-width: 401px) {.tab-btn span {display: none;} .tab-bar {margin-top:20px}}
 .big-wrap{overflow-y: auto;overflow-x: hidden;}
 @media (max-width: 400px) {.card,.det-col-hdr,.wallet-container,.sub-slide,#cat-list{padding:0 2vw 0 2vw;}}
 /* ── Slides ── */
@@ -293,7 +293,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 
 #slide-1{position:relative}
 .tab-header{display:flex-end;justify-content:space-between;align-items:center;margin-bottom:15px}
-#add-cash {
+#add-cash,#add-fab,#add-order {
     margin-left: auto;
     margin-right: 10px;
     top: 0px;
@@ -321,7 +321,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 }
 
 /* Glossy top highlight streak */
-#add-cash::before {
+#add-cash::before,#add-fab::before,#add-order::before {
     content: "";
     position: absolute;
     top: -35%;
@@ -334,7 +334,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 }
 
 /* Sparkle highlight, small and bright, top-left */
-#add-cash::after {
+#add-cash::before,#add-fab::before,#add-order::after {
     content: "";
     position: absolute;
     top: 12%;
@@ -346,17 +346,32 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
     pointer-events: none;
 }
 
-#add-cash:hover {
+#add-cash:hover ,#add-fab:hover ,#add-order:hover {
     background: linear-gradient(135deg, rgba(94,234,212,0.98) 0%, rgba(20,184,166,0.92) 100%);
 
 }
 
-#add-cash:active {
+#add-cash:active ,#add-fab:active ,#add-order:active {
     background: linear-gradient(135deg, rgba(20,184,166,0.95) 0%, rgba(13,148,136,0.9) 100%);
+}
+.stat-cycles-row-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+/* Constrain the FAB size within this compact metric card context */
+.stat-cycles-row-wrap #add-order {
+    width: 20px;
+    height: 20px;
+    font-size: 16px;
+    margin-left: 0;
+    margin-right: 0;
 }
 
 
-#add-cash.loading{pointer-events:none;display:flex;align-items:center;justify-content:center}
+#add-cash.loading,#add-fab.loading{pointer-events:none;display:flex;align-items:center;justify-content:center}
 .cash-modal-overlay{display:none;position:fixed;inset:0; z-index:600;align-items:flex-start;justify-content:center;padding-top:20vh;overflow-y:auto}
 .cash-modal-overlay.open{display:flex!important}.btn-spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,0.3);border-top-color:#ffffff;border-radius:50%;animation:spinCircle 0.8s linear infinite;display:inline-block}
 #add-cash.success-confirm{background-color:#10b981 !important;color:#ffffff !important;font-size:15px;font-weight:500;display:flex;align-items:center;justify-content:center;transition:background-color 0.3s ease}
@@ -530,7 +545,7 @@ to{transform:rotate(360deg)}
 .sub-stat-label{font-size:12.5px;color:rgba(255,255,255,0.45)}
 .sub-stat-label .hl-teal{color:#2dd4bf;font-weight:600}
 .sub-list-title{display:flex;align-items:center;justify-content:left;gap:2vw;width:100%;font-size:14.5px;font-weight:300;color:rgba(255,255,255,0.75);margin-bottom:12px;margin-left:2vw;}
-.add-inline-btn{width:6vw;height:6vw;padding-bottom:px;max-width:6vw;max-height:6vw;font-family:monospace!important;font-size:5vw;font-weight:500;border-radius:50%;background:#14b8a6;border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:opacity 0.2s}
+.add-inline-btn{width:7vw;height:7vw;padding-bottom:0px;max-width:7vw;max-height:7vw;font-family:monospace!important;font-size:5vw;font-weight:500;border-radius:50%;background:#14b8a6;border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:opacity 0.2s}
 .add-inline-btn:active{opacity:0.8}
 @media (max-width:400px){.add-inline-btn{width:8vw;height:8vw;}}
 #sub-list{display:flex;flex-direction:column}
@@ -731,24 +746,32 @@ tbody tr.current-row td{font-weight:600;}
 .live-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:20px;background:rgba(16,185,129,0.1);font-size:11px;font-weight:700;color:var(--accent-teal);text-transform:uppercase}
 .live-dot{width:4px;height:4px;border-radius:50%;background:var(--accent-teal);box-shadow:0 0 6px var(--accent-teal);animation:pulse 2s infinite}
 @keyframes pulse{0%{opacity:0.4;transform:scale(0.9)}50%{opacity:1;transform:scale(1.2)}100%{opacity:0.4;transform:scale(0.9)}}
-.hero-card{position:relative;border-radius:14px;padding:12px 14px;margin-bottom:12px;box-shadow:0 12px 24px -10px rgba(0,0,0,0.5);backdrop-filter:blur(16px);background: 
-    linear-gradient(135deg, rgba(30, 41, 59, 0.01) 0%, rgba(15, 23, 42, 0.3) 100%),
-    url('https://i.pinimg.com/736x/b5/9e/d0/b59ed0f3c50e8a5155dab39ac867ef32.jpg');background-size: cover;
-  background-position: center 45%;background-repeat: no-repeat;}
- @media (min-width:401px){.hero-card{padding:22px 14px;background-position: center 61%;}}
+.hero-bg-wrap {
+  border-radius: 15px;
+  position: relative;
+  overflow: hidden;
+  background: 
+    linear-gradient(135deg, rgba(30, 41, 59, 0.01) 0%, rgba(15, 23, 42, 0.1) 100%),
+    url('https://i.pinimg.com/736x/b5/9e/d0/b59ed0f3c50e8a5155dab39ac867ef32.jpg');
+  background-size: cover;
+  background-position: center 47%;
+  background-repeat: no-repeat;filter: saturate(170%) contrast(1.1);
+}
+.hero-card{position:relative;border-radius:14px;padding:12px 14px;margin-bottom:12px;}
+ @media (min-width:401px){.hero-card{padding:22px 14px;}}
 .hero-caption-row{display:flex;align-items:center;justify-content: center;gap:2px;}
 .hero-caption{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#fff;opacity:0.7;}
 .hero-main-val{text-align:center;font-size:25px;font-family:"JetBrains Mono";font-weight:500;color:#fff;margin:2px 0 0px 0}
 .hero-grid{display:grid;grid-template-columns:0.9fr 1.1fr;gap:8px}
-.hero-stat-box{background:rgba(15, 23, 42, 0.2);border-radius:8px;padding:6px 8px}
+.hero-stat-box{background:rgba(15, 23, 42, 0.1);border-radius:8px;padding:6px 8px}
 .hero-stat-label{font-size:9px;color:#fff;opacity:0.7;}
 .hero-stat-num{font-family:DM Sans;font-size:16px;font-weight:700}
-.chart-card{border-radius:12px;padding:10px 12px;margin-bottom:12px}
-.chart-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-secondary);margin-bottom:8px}
+.chart-card{border-radius:12px;padding:10px 12px;margin-bottom:12px;opacity:0.8;color:#fff;}
+.chart-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px}
 .stacked-bar-container{height:10px;width:100%;border-radius:5px;overflow:hidden;display:flex;background:rgba(255,255,255,0.05);margin-bottom:8px}
 .stacked-bar-segment{height:100%;transition:width 0.5s ease}
-.chart-legend{display:flex;flex-wrap:wrap;gap:8px}
-.legend-item{display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--text-secondary)}
+.chart-legend{display:flex;flex-wrap:wrap;gap:8px;}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11.5px;color:#fff;}
 .legend-color-dot{width:6px;height:6px;border-radius:50%}
 .section-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
 .section-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted)}
@@ -874,7 +897,6 @@ tbody tr.current-row td{font-weight:600;}
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
             gap: 12px;
-            padding-top: 16px;
             border-top: 0px solid var(--border-color);
         }
 
@@ -1839,33 +1861,34 @@ to{transform:rotate(360deg)}
           </header>
 
           <!-- Hero Overview Card -->
-          <div class="hero-card" id="hero-card" style="display:none;">
-            <div class="hero-caption-row">
-              <div class="hero-caption"><span>Total </span><i class="bi bi-fire" style="font-size:25px;margin-bottom:10px!important;" aria-hidden="true"></i><span> F. I. R. E. BUDGET</span></div>
-              <div class="live-badge">
-                <span class="live-dot"></span> Live
+          <div class="hero-bg-wrap">
+            <div class="hero-card" id="hero-card" style="display:none;">
+              <div class="hero-caption-row">
+                <div class="hero-caption"><span>Total </span><i class="bi bi-fire" style="font-size:25px;margin-bottom:10px!important;" aria-hidden="true"></i><span> F. I. R. E. BUDGET</span></div>
+                <div class="live-badge">
+                  <span class="live-dot"></span> Live
+                </div>
+              </div>
+              <div class="hero-main-val" id="hero-invested">&#x2014;</div>
+              
+              <div class="hero-grid">
+                <div class="hero-stat-box">
+                  <div class="hero-stat-label" style="text-align:right">&#x2014;</div>
+                  <div class="hero-stat-num" id="hero-pct" style="text-align:right">&#x2014;</div>
+                </div>
+                <div class="hero-stat-box">
+                  <div class="hero-stat-label">Total Return per month</div>
+                  <div class="hero-stat-num" id="hero-amt">&#x2014;</div>
+                </div>
               </div>
             </div>
-            <div class="hero-main-val" id="hero-invested">&#x2014;</div>
-            
-            <div class="hero-grid">
-              <div class="hero-stat-box">
-                <div class="hero-stat-label" style="text-align:right">&#x2014;</div>
-                <div class="hero-stat-num" id="hero-pct" style="text-align:right">&#x2014;</div>
-              </div>
-              <div class="hero-stat-box">
-                <div class="hero-stat-label">Total Return per month</div>
-                <div class="hero-stat-num" id="hero-amt">&#x2014;</div>
-              </div>
+            <!-- Visual Asset Allocation Chart -->
+            <div class="chart-card" id="chart-card" style="display:none;">
+              <div class="chart-title">Allocation Ratio</div>
+              <div class="stacked-bar-container" id="stacked-bar"></div>
+              <div class="chart-legend" id="chart-legend"></div>
             </div>
-          </div>
-
-          <!-- Visual Asset Allocation Chart -->
-          <div class="chart-card" id="chart-card" style="display:none;">
-            <div class="chart-title">Allocation Ratio</div>
-            <div class="stacked-bar-container" id="stacked-bar"></div>
-            <div class="chart-legend" id="chart-legend"></div>
-          </div>
+          </div>  
 
           <!-- Category List -->
           <div id="category-section" style="display:none;">
@@ -1905,8 +1928,10 @@ to{transform:rotate(360deg)}
                     </div>
                     <div class="metric-card">
                         <div class="metric-label">Active Positions</div>
-                        <div class="metric-value" id="stat-cycles">0</div>
-                    </div>
+                        <div class="stat-cycles-row-wrap">
+                          <div class="metric-value" id="stat-cycles">0</div>
+                          <button type="button" id="add-order" onclick="openPortfolioModal()">+</button>
+                        </div>
                 </div>
             </div>
 
@@ -2147,7 +2172,7 @@ to{transform:rotate(360deg)}
 </div>
 <!-- Shared Pop-up Modal Container -->
 <div class="modal-backdrop" id="modalBackdrop" onclick="closeModal()">
-  <div class="modal-box" onclick="event.stopPropagation()">
+  <div class="expense-edit-modal" onclick="event.stopPropagation()">
     <div class="modal-title" id="modalTitle">Modal Title</div>
     <div class="modal-body" id="modalBody">Modal action content goes here.</div>
   </div>
@@ -2504,8 +2529,7 @@ to{transform:rotate(360deg)}
   function buildColHdr(){var isMobile=window.innerWidth<400,hdr=document.getElementById("col-hdr");hdr&&(hdr.innerHTML="",hdr.style.fontSize=isMobile?"3.6vw":"2.6vw",hdr.style.gridTemplateColumns=isMobile?"5.2fr 1.8fr 1.6fr":"5.6fr 1.6fr 1.8fr 1.4fr",(isMobile?["Category","Amount","Change"]:["Category","Amount","Previous","Change"]).forEach(function(t,i){var d=document.createElement("div");d.className="ch";var iconEl=document.createElement("i");iconEl.style.display="inline-block",iconEl.style.marginRight="4px",iconEl.style.marginBottom="2px",iconEl.style.setProperty("font-size","13px","important"),"Category"===t?iconEl.className="bi bi-list":"Amount"===t?iconEl.className="bi bi-cash":"Previous"===t?iconEl.className="bi bi-calendar4-event":"Change"===t&&(iconEl.className="bi bi-droplet-half",t=""),iconEl.className&&d.appendChild(iconEl),t&&d.appendChild(document.createTextNode(t)),hdr.appendChild(d)}))}
 
   function switchBudgetTab(e,t){var a=e.closest(".budget-card")||document,group=e.closest("[data-tabgroup]"),groupKey=group?group.getAttribute("data-tabgroup"):null;a.querySelectorAll(".budget-subtab, .budget-subtab-v2, .tab-btn:not(#tab-btn-x)").forEach(function(el){el.classList.remove("active")}),e.classList.add("active"),a.querySelectorAll(".budget-tab-content").forEach(function(el){el.style.display="none"});var c=a.querySelector("#budget-view-"+t);c&&(c.style.display="block"),groupKey?localStorage.setItem("active_budget_subtab_"+groupKey,t):localStorage.setItem("active_budget_subtab",t),e.id&&localStorage.setItem("active_regular_tab_id",e.id);var card=document.getElementById("card"),chartBtn=document.getElementById("tab-btn-x");card&&chartBtn&&("none"!==card.style.display&&"none"!==getComputedStyle(card).display&&"0px"!==card.style.maxHeight?chartBtn.classList.add("active"):chartBtn.classList.remove("active")),"subcategory"===t&&"function"==typeof renderSubcategoryBreakdown&&renderSubcategoryBreakdown()}
-  document.addEventListener("DOMContentLoaded",function(){var savedSubtabV1=localStorage.getItem("active_budget_subtab")||"spending",targetBtnV1=document.querySelector(`.budget-subtab[onclick*="'${savedSubtabV1}'"]`);targetBtnV1&&switchBudgetTab(targetBtnV1,savedSubtabV1);var groupEl=document.querySelector('[data-tabgroup="wallet-fire"]');if(groupEl){var savedSubtabV2=localStorage.getItem("active_budget_subtab_wallet-fire")||"wallet",targetBtnV2=groupEl.querySelector(`.budget-subtab-v2[onclick*="'${savedSubtabV2}'"]`);targetBtnV2&&switchBudgetTab(targetBtnV2,savedSubtabV2)}var groupEl3=document.querySelector('[data-tabgroup="portfolio-btc"]');if(groupEl3){var savedSubtabV4=localStorage.getItem("active_budget_subtab_portfolio-btc")||"portfolio",targetBtnV4=groupEl3.querySelector(`.budget-subtab-v2[onclick*="'${savedSubtabV4}'"]`);targetBtnV4&&switchBudgetTab(targetBtnV4,savedSubtabV4)}var chartBtn=document.getElementById("tab-btn-x"),card=document.getElementById("card");chartBtn&&card&&(card.style.overflow="hidden",card.style.transition="max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease-in-out, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)","none"!==card.style.display&&"none"!==getComputedStyle(card).display?(chartBtn.classList.add("active"),card.style.display="block",card.style.maxHeight="1000px",card.style.opacity="1",card.style.transform="translateY(0)"):(chartBtn.classList.remove("active"),card.style.display="none",card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)"),chartBtn.addEventListener("click",function(e){e.stopPropagation(),"none"===card.style.display||"none"===getComputedStyle(card).display||"0px"===card.style.maxHeight?(card.style.display="block",card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)",card.offsetHeight,card.style.maxHeight="1000px",card.style.opacity="1",card.style.transform="translateY(0)",this.classList.add("active")):(card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)",this.classList.remove("active"),setTimeout(function(){"0px"===card.style.maxHeight&&(card.style.display="none")},400));var savedId=localStorage.getItem("active_regular_tab_id"),activeBtn=(savedId?document.getElementById(savedId):null)||targetBtn||document.querySelector(".budget-subtab, .budget-subtab-v2, .tab-btn:not(#tab-btn-x)");activeBtn&&activeBtn.classList.add("active")})),document.querySelectorAll(".tab-btn").forEach(function(btn){btn.addEventListener("click",function(){"tab-btn-x"!==this.id&&(document.querySelectorAll(".tab-btn:not(#tab-btn-x)").forEach(function(otherBtn){otherBtn.classList.remove("active")}),this.classList.add("active"),this.id&&localStorage.setItem("active_regular_tab_id",this.id),card&&chartBtn&&("none"!==card.style.display&&"none"!==getComputedStyle(card).display&&"0px"!==card.style.maxHeight?chartBtn.classList.add("active"):chartBtn.classList.remove("active")))})})});
-
+  document.addEventListener("DOMContentLoaded",function(){var savedSubtabV1=localStorage.getItem("active_budget_subtab")||"spending",targetBtnV1=document.querySelector(`.budget-subtab[onclick*="'${savedSubtabV1}'"]`);targetBtnV1&&switchBudgetTab(targetBtnV1,savedSubtabV1);var groupEl=document.querySelector('[data-tabgroup="wallet-fire"]');if(groupEl){var savedSubtabV2=localStorage.getItem("active_budget_subtab_wallet-fire")||"wallet",targetBtnV2=groupEl.querySelector(`.budget-subtab-v2[onclick*="'${savedSubtabV2}'"]`);targetBtnV2&&switchBudgetTab(targetBtnV2,savedSubtabV2)}var groupEl3=document.querySelector('[data-tabgroup="portfolio-btc"]');if(groupEl3){var savedSubtabV4=localStorage.getItem("active_budget_subtab_portfolio-btc")||"portfolio",targetBtnV4=groupEl3.querySelector(`.budget-subtab-v2[onclick*="'${savedSubtabV4}'"]`);targetBtnV4&&switchBudgetTab(targetBtnV4,savedSubtabV4)}var chartBtn=document.getElementById("tab-btn-x"),card=document.getElementById("card");chartBtn&&card&&(card.style.overflow="hidden",card.style.transition="max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease-in-out, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)","shown"===(localStorage.getItem("tab-btn-x-card-state")||"shown")?(chartBtn.classList.add("active"),card.style.display="block",card.style.maxHeight="1000px",card.style.opacity="1",card.style.transform="translateY(0)"):(chartBtn.classList.remove("active"),card.style.display="none",card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)"),chartBtn.addEventListener("click",function(e){e.stopPropagation(),"none"===card.style.display||"none"===getComputedStyle(card).display||"0px"===card.style.maxHeight?(card.style.display="block",card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)",card.offsetHeight,card.style.maxHeight="1000px",card.style.opacity="1",card.style.transform="translateY(0)",this.classList.add("active"),localStorage.setItem("tab-btn-x-card-state","shown")):(card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)",this.classList.remove("active"),setTimeout(function(){"0px"===card.style.maxHeight&&(card.style.display="none")},400),localStorage.setItem("tab-btn-x-card-state","hidden"));var savedId=localStorage.getItem("active_regular_tab_id"),activeBtn=(savedId?document.getElementById(savedId):null)||targetBtnV1||document.querySelector(".budget-subtab, .budget-subtab-v2, .tab-btn:not(#tab-btn-x)");activeBtn&&activeBtn.classList.add("active")}));document.querySelectorAll(".tab-btn").forEach(function(btn){btn.addEventListener("click",function(){"tab-btn-x"!==this.id&&(document.querySelectorAll(".tab-btn:not(#tab-btn-x)").forEach(function(otherBtn){otherBtn.classList.remove("active")}),this.classList.add("active"),this.id&&localStorage.setItem("active_regular_tab_id",this.id),card&&chartBtn&&("none"!==card.style.display&&"none"!==getComputedStyle(card).display&&"0px"!==card.style.maxHeight?chartBtn.classList.add("active"):chartBtn.classList.remove("active")))})})});
   !function(){var tabOrdersByGroup={"wallet-fire":["wallet","fire"],"portfolio-btc":["portfolio","btc"]},startX=0,startY=0,isSwiping=!1,mouseDown=!1,activeCard=null,activeGroup=null;function goToTab(card,tabName){var btn=card.querySelector(".budget-subtab-v2[onclick*=\"'"+tabName+"'\"]");btn&&switchBudgetTab(btn,tabName)}function handleSwipeEnd(card,groupEl,dx){var groupKey=groupEl.getAttribute("data-tabgroup"),tabOrder=tabOrdersByGroup[groupKey];if(tabOrder){var currentTab=function(card){var activeBtn=card.querySelector(".budget-subtab-v2.active");if(!activeBtn)return null;var match=activeBtn.getAttribute("onclick").match(/'([^']+)'/);return match?match[1]:null}(groupEl)||tabOrder[0],currentIndex=tabOrder.indexOf(currentTab),len=tabOrder.length;currentIndex<0||(dx<-50?goToTab(card,tabOrder[(currentIndex+1)%len]):dx>50&&goToTab(card,tabOrder[(currentIndex-1+len)%len]))}}function findTabGroupEl(card){return card.querySelector("[data-tabgroup]")}document.addEventListener("touchstart",function(e){var card=e.target.closest(".budget-card");if(card){var groupEl=findTabGroupEl(card);groupEl&&(activeCard=card,activeGroup=groupEl,startX=e.touches[0].clientX,startY=e.touches[0].clientY,isSwiping=!0)}},{passive:!0}),document.addEventListener("touchmove",function(e){if(isSwiping&&activeCard){var dx=e.touches[0].clientX-startX,dy=e.touches[0].clientY-startY;Math.abs(dy)>Math.abs(dx)&&(isSwiping=!1)}},{passive:!0}),document.addEventListener("touchend",function(e){if(isSwiping&&activeCard&&activeGroup){var dx=e.changedTouches[0].clientX-startX;handleSwipeEnd(activeCard,activeGroup,dx),isSwiping=!1,activeCard=null,activeGroup=null}}),document.addEventListener("mousedown",function(e){var card=e.target.closest(".budget-card");if(card){var groupEl=findTabGroupEl(card);groupEl&&(activeCard=card,activeGroup=groupEl,startX=e.clientX,startY=e.clientY,mouseDown=!0,isSwiping=!0)}}),document.addEventListener("mousemove",function(e){if(mouseDown&&isSwiping&&activeCard){var dx=e.clientX-startX,dy=e.clientY-startY;Math.abs(dy)>Math.abs(dx)&&(isSwiping=!1)}}),document.addEventListener("mouseup",function(e){if(mouseDown){if(isSwiping&&activeCard&&activeGroup){var dx=e.clientX-startX;handleSwipeEnd(activeCard,activeGroup,dx)}mouseDown=!1,isSwiping=!1,activeCard=null,activeGroup=null}})}();
   function restoreBudgetSubtab(groupKey,defaultTab){var groupEl=document.querySelector('[data-tabgroup="'+groupKey+'"]');if(groupEl){var storageKey="active_budget_subtab_"+groupKey,savedSubtab=localStorage.getItem(storageKey)||defaultTab,targetBtn=groupEl.querySelector(".budget-subtab-v2[onclick*=\"'"+savedSubtab+"'\"]");targetBtn&&switchBudgetTab(targetBtn,savedSubtab)}}
   
@@ -4730,7 +4754,7 @@ to{transform:rotate(360deg)}
     asset: "all",
     dateFrom: null,
     dateTo: null,
-    dateSort: null,
+    dateSort: "newest",
     pnl: "all"
   };  
 
@@ -4742,8 +4766,60 @@ to{transform:rotate(360deg)}
   function clearDateFilter(e){e.stopPropagation(),calState.rangeStart=null,calState.rangeEnd=null,calState.hoverDate=null,portfolioFilters.dateFrom=null,portfolioFilters.dateTo=null;var icon=document.getElementById("date-filter-icon");icon&&icon.classList.remove("active-filter"),renderCalendar(),document.getElementById("col-menu-date").classList.remove("open"),applyPortfolioFiltersAndRender()}
   var origToggleColMenu=toggleColMenu;function toggleColMenu(e,colKey){e.stopPropagation();var menu=document.getElementById("col-menu-"+colKey),isOpen=menu.classList.contains("open");if(document.querySelectorAll(".col-menu").forEach(function(m){m.classList.remove("open")}),!isOpen){document.body.appendChild(menu);var rect=e.currentTarget.getBoundingClientRect();menu.style.top=rect.bottom+6+"px",menu.style.left=rect.left+"px",menu.classList.add("open"),"date"===colKey&&renderCalendar()}}
   document.addEventListener("DOMContentLoaded",function(){var dateMenu=document.getElementById("col-menu-date");dateMenu&&dateMenu.addEventListener("click",function(e){e.stopPropagation()})});
-  function applyPortfolioFiltersAndRender(){if(void 0!==window.currentPortfolioGroups){var filtered=window.currentPortfolioGroups.filter(function(group){if("all"!==portfolioFilters.asset&&group.accountType.toLowerCase()!==portfolioFilters.asset)return!1;if("all"!==portfolioFilters.pnl){var records=group.records||[],mainRec=group.mainRecord,sumPnl=mainRec?mainRec.actualPnl:records.reduce(function(acc,r){return acc+r.actualPnl},0);if("profited"===portfolioFilters.pnl&&sumPnl<=0)return!1;if("lost"===portfolioFilters.pnl&&sumPnl>=0)return!1}if(portfolioFilters.dateFrom||portfolioFilters.dateTo){var refRec=group.mainRecord||group.records&&group.records[0],refDate=refRec?new Date(refRec.entryDate):null;if(!refDate||isNaN(refDate))return!1;if(portfolioFilters.dateFrom)if(refDate<new Date(portfolioFilters.dateFrom))return!1;if(portfolioFilters.dateTo){var toDate=new Date(portfolioFilters.dateTo);if(toDate.setHours(23,59,59,999),refDate>toDate)return!1}}return!0});renderAccordion(filtered)}}
+  function applyPortfolioFiltersAndRender() {
+    if (typeof window.currentPortfolioGroups === "undefined") return;
 
+    var filtered = window.currentPortfolioGroups.filter(function(group) {
+        if (portfolioFilters.asset !== "all") {
+            if (group.accountType.toLowerCase() !== portfolioFilters.asset) return false;
+        }
+
+        if (portfolioFilters.pnl !== "all") {
+            var records = group.records || [];
+            var mainRec = group.mainRecord;
+            var sumPnl = mainRec ? mainRec.actualPnl : records.reduce(function(acc, r) { return acc + r.actualPnl; }, 0);
+            if (portfolioFilters.pnl === "profited" && sumPnl <= 0) return false;
+            if (portfolioFilters.pnl === "lost" && sumPnl >= 0) return false;
+        }
+
+        if (portfolioFilters.dateFrom || portfolioFilters.dateTo) {
+            var refRec = group.mainRecord || (group.records && group.records[0]);
+            var refDate = refRec ? new Date(refRec.entryDate) : null;
+            if (!refDate || isNaN(refDate)) return false;
+
+            if (portfolioFilters.dateFrom) {
+                var fromDate = new Date(portfolioFilters.dateFrom);
+                if (refDate < fromDate) return false;
+            }
+            if (portfolioFilters.dateTo) {
+                var toDate = new Date(portfolioFilters.dateTo);
+                toDate.setHours(23, 59, 59, 999);
+                if (refDate > toDate) return false;
+            }
+        }
+
+        return true;
+    });
+
+    // NEW: sort by status first (on-going before close), then by date ascending within each group
+    filtered.sort(function(a, b) {
+        var aOngoing = a.status.toLowerCase().includes('on-going');
+        var bOngoing = b.status.toLowerCase().includes('on-going');
+
+        // On-going items come first
+        if (aOngoing && !bOngoing) return -1;
+        if (!aOngoing && bOngoing) return 1;
+
+        // Within the same status group, sort by date ascending (earliest first)
+        var aRec = a.mainRecord || (a.records && a.records[0]);
+        var bRec = b.mainRecord || (b.records && b.records[0]);
+        var aDate = aRec ? new Date(aRec.entryDate) : new Date(0);
+        var bDate = bRec ? new Date(bRec.entryDate) : new Date(0);
+        return bDate - aDate;
+    });
+
+    renderAccordion(filtered);
+  }
   function processAndRenderData(csvText) {
     const lines = csvText.trim().split(/\r?\n/);
     if (lines.length < 2) return;
@@ -5068,13 +5144,479 @@ to{transform:rotate(360deg)}
 
     renderActivePositionsStat(activePositions, activeIcons);
   }
+  function openPortfolioModal() {
+    const backdrop = document.getElementById('modalBackdrop');
+    const title = document.getElementById('modalTitle');
+    const body = document.getElementById('modalBody');
+
+    const defaultIcon = "https://github.com/tinsntp/investment/blob/main/stock.png?raw=true";
+
+    title.innerHTML = `
+    <img id="portfolioModalIcon" src="${defaultIcon}" style="width: 24px; height: 24px; border-radius: 6px; object-fit: cover;">
+    <span style="color: #f8f9fa; font-weight: 600;" id="portfolioModalTitleText">Add Position</span>
+    `;
+
+    // Account type options — using material-icons-round to match openModal()'s icon style
+    const accountTypes = [
+      { value: "Stock", icon: "https://github.com/tinsntp/investment/blob/main/stock.png?raw=true" },
+      { value: "Saving", icon: "https://github.com/tinsntp/investment/blob/main/saving.png?raw=true" },
+      { value: "Crypto", icon: "https://github.com/tinsntp/investment/blob/main/bitcoin.png?raw=true" },
+      { value: "Forex", icon: "https://github.com/tinsntp/investment/blob/main/exness.png?raw=true" }
+      ];
+      let accountTypeOptionsHTML = '';
+      accountTypes.forEach(function(t) {
+          accountTypeOptionsHTML += `
+          <div class="custom-option-item" data-value="${t.value}" data-icon="${t.icon}" onclick="handlePortfolioTypeSelect(this)" style="display:flex; align-items:center; gap:10px; padding:10px 12px; cursor:pointer;">
+              <img src="${t.icon}" style="width: 20px; height: 20px; border-radius: 4px; object-fit: cover;">
+              <span>${t.value}</span>
+          </div>
+          `;
+    });
+
+    body.innerHTML = `
+    <div class="modal-field-group" style="margin-bottom: 16px;">
+        <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Symbol:</label>
+        <input type="text"
+            id="portfolioSymbol"
+            placeholder="e.g. VCB, BTC, USD/JPY"
+            style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; font-weight:300!important; box-sizing: border-box; outline: none; text-transform: uppercase;" />
+    </div>
+
+    <div class="modal-field-group" style="margin-bottom: 16px;">
+        <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Account Type:</label>
+        <div class="premium-select-wrapper" style="position: relative;">
+            <div class="custom-select-trigger" id="portfolioTypeTrigger" onclick="togglePortfolioTypeDropdown(event)" style="font-weight:600; border:none; padding: 14px 16px; background: #111216; border-radius: 12px; color: #f8f9fa; font-size: 14px; display: flex; align-items: center; gap: 10px; justify-content: flex-start; cursor: pointer;">
+              <img id="portfolioTypeTriggerIcon" src="" style="width: 20px; height: 20px; border-radius: 4px; object-fit: cover; display:none;">
+              <span id="portfolioTypeTriggerText">Select Type</span>
+            </div>
+            <input type="hidden" id="portfolioAccountType" value="" />
+            <div class="custom-select-options" id="portfolioTypeOptions" style="display:none; position:absolute; left:0; top:calc(100% + 4px); background:#1e222b; border:0px solid #2d313c; border-radius:12px; width:100%; max-height:200px; overflow-y:auto; z-index:100; box-shadow:0 8px 24px rgba(0,0,0,0.5);">
+                ${accountTypeOptionsHTML}
+            </div>
+        </div>
+    </div>
+
+    <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+        <div class="modal-field-group" style="flex: 1;">
+            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioField1Label">Entry Price:</label>
+            <input type="text"
+                id="portfolioField1" inputmode="decimal"
+                placeholder="0"
+                oninput="handleAmountInput(this)"
+                style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:DM Sans; font-size: 20px; box-sizing: border-box; outline: none;" />
+        </div>
+        <div class="modal-field-group" style="flex: 1;">
+            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioField2Label">Volume:</label>
+            <input type="text"
+                id="portfolioField2" inputmode="decimal"
+                placeholder="0"
+                oninput="handlePortfolioRateInput(this)"
+                onblur="handlePortfolioRateBlur(this)"
+                onfocus="handlePortfolioRateFocus(this)"
+                style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:DM Sans; font-size: 20px; box-sizing: border-box; outline: none;" />
+        </div>
+    </div>
+
+    <div class="modal-field-group" style="margin-bottom: 16px;">
+        <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioField3Label">Entry Date:</label>
+
+        <div id="portfolioField3Wrapper">
+            <div class="th-filter-wrap" onclick="togglePortfolioDatePicker(event)" style="position: relative; width: 100%;">
+                <div id="portfolioDateTrigger" style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; box-sizing: border-box; cursor: pointer; display:flex; align-items:center; justify-content: space-between;">
+                    <span id="portfolioDateTriggerText">Select date</span>
+                    <i class="bi bi-calendar3" style="color: var(--text-secondary); font-size: 14px;"></i>
+                </div>
+                <div class="col-menu col-menu-date-single" id="portfolio-cal-menu">
+                    <div class="cal-header">
+                        <button type="button" class="cal-nav-btn" onclick="portfolioCalNavigate(event, -1)"><i class="bi bi-chevron-left"></i></button>
+                        <div class="cal-month-label" id="portfolio-cal-month-label">—</div>
+                        <button type="button" class="cal-nav-btn" onclick="portfolioCalNavigate(event, 1)"><i class="bi bi-chevron-right"></i></button>
+                    </div>
+                    <div class="cal-weekdays">
+                        <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                    </div>
+                    <div class="cal-grid" id="portfolio-cal-grid"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick-amount chips, shown only in Saving mode -->
+        <div class="quick-amt-group" id="portfolioAmountChips" style="font-family:DM Sans!important; display: none; gap: 6px; flex-wrap: wrap; margin-top: 12px; justify-content: flex-start;"></div>
+    </div>
+
+    <div class="modal-field-group" style="margin-bottom: 16px;">
+        <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Note:</label>
+        <input type="text"
+            id="portfolioNote"
+            placeholder="Optional note"
+            style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; font-weight:300!important; box-sizing: border-box; outline: none;" />
+    </div>
+
+    <div id="modalErrorMessage" style="display: none; padding: 12px; margin-bottom: 16px; background: rgba(220, 53, 69, 0.1); border: 0px solid #dc3545; color: #ea868f; border-radius: 8px; font-size: 13px; font-weight: 500;"></div>
+    <div id="modalSuccessMessage" style="display: none; padding: 14px; margin-bottom: 16px; background: rgba(40, 167, 69, 0.15); border: 0px solid #28a745; color: #75b798; border-radius: 12px; font-size: 14px; font-weight: 500; text-align: center; align-items: center; justify-content: center; gap: 8px;">
+        <span class="material-icons-round" style="color: #28a745; font-size: 18px;">check_circle</span>
+        <span id="successText">Position added successfully!</span>
+    </div>
+
+    <div style="display: flex; gap: 12px; margin-top: 16px;">
+        <button onclick="closeModal()" id="modalCancelBtn" style="flex: 1; font-family:Lexend!important; font-size:14px!important; padding: 13px; background: #1e222b; border: 0px solid #2d313c; color: #cbd5e1; border-radius: 12px; font-weight: 600; cursor: pointer;">Cancel</button>
+        <button onclick="processPortfolioAdd()" class="btn-submit-tx" id="portfolioSubmitBtn" style="flex: 2; font-family:Lexend!important; font-size:13px!important; padding: 14px; background: #2d3748; border: none; color: #ffffff; border-radius: 12px; font-weight: 600; cursor: pointer;">Add Position</button>
+    </div>
+    `;
+
+    backdrop.classList.add('active');
+    backdrop.style.pointerEvents = 'auto';
+
+    window.portfolioIsSavingMode = false;
+
+    // NEW: default Account Type to Stock on open
+    var defaultTypeOption = document.querySelector('#portfolioTypeOptions .custom-option-item[data-value="Stock"]');
+    if (defaultTypeOption) {
+        handlePortfolioTypeSelect(defaultTypeOption);
+    }
+
+    setTimeout(function() {
+        const symbolInput = document.getElementById('portfolioSymbol');
+        if (symbolInput) symbolInput.focus();
+    }, 50);
+}
+
+// ============ ACCOUNT TYPE DROPDOWN ============
+function togglePortfolioTypeDropdown(e) {
+    e.stopPropagation();
+    var options = document.getElementById('portfolioTypeOptions');
+    var isOpen = options.style.display === 'block';
+    options.style.display = isOpen ? 'none' : 'block';
+}
+
+function handlePortfolioTypeSelect(el) {
+    var value = el.getAttribute('data-value');
+    var icon = el.getAttribute('data-icon');
+
+    document.getElementById('portfolioAccountType').value = value;
+
+    var triggerIcon = document.getElementById('portfolioTypeTriggerIcon');
+    triggerIcon.src = icon;
+    triggerIcon.style.display = "inline-block";
+
+    document.getElementById('portfolioTypeTriggerText').textContent = value;
+    document.getElementById('portfolioTypeOptions').style.display = 'none';
+
+    var isSaving = value === "Saving";
+    window.portfolioIsSavingMode = isSaving;
+    applyPortfolioModalMode(isSaving);
+}
+
+document.addEventListener('click', function(e) {
+    var options = document.getElementById('portfolioTypeOptions');
+    var trigger = document.getElementById('portfolioTypeTrigger');
+    if (options && trigger && !trigger.contains(e.target) && !options.contains(e.target)) {
+        options.style.display = 'none';
+    }
+});
+
+// ============ DYNAMIC MODE SWITCH (Saving vs default) ============
+function applyPortfolioModalMode(isSaving) {
+    var titleText = document.getElementById('portfolioModalTitleText');
+    var icon = document.getElementById('portfolioModalIcon');
+    var label1 = document.getElementById('portfolioField1Label');
+    var label2 = document.getElementById('portfolioField2Label');
+    var label3 = document.getElementById('portfolioField3Label');
+    var submitBtn = document.getElementById('portfolioSubmitBtn');
+    var field3Wrapper = document.getElementById('portfolioField3Wrapper');
+    var chipsContainer = document.getElementById('portfolioAmountChips');
+
+    // Inside applyPortfolioModalMode(isSaving), update Field2's input attributes based on mode:
+    var field2 = document.getElementById('portfolioField2');
+    if (isSaving) {
+        titleText.textContent = "Open Saving Account";
+        icon.textContent = "savings";
+        icon.style.color = "#f59e0b";
+        label1.textContent = "# of Months:";
+        label2.textContent = "Rate:";
+        label3.textContent = "Amount:";
+        submitBtn.textContent = "Open Saving";
+        field2.setAttribute('oninput', "handlePortfolioRateInput(this)");
+        field2.setAttribute('onblur', "handlePortfolioRateBlur(this)");
+        field2.setAttribute('onfocus', "handlePortfolioRateFocus(this)");
+        field2.value = '';
+        delete field2.dataset.rawValue;
+
+        field3Wrapper.innerHTML = `
+           <div style="position: relative; display: flex; align-items: center;">
+            <input type="text"
+                id="portfolioField3" inputmode="decimal"
+                placeholder="0"
+                oninput="handleAmountInput(this); window.generateDynamicChips(this.value, 'portfolioAmountChips', 'portfolioField3'); "
+                style="width: 100%; padding: 14px 32px 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:DM Sans; font-size: 20px; box-sizing: border-box; outline: none;" />
+                <span class="material-icons-round"
+                    id="portfolioClearAmountBtn"
+                    onclick="window.clearAmountField('portfolioField3', 'portfolioClearAmountBtn', 'portfolioAmountChips')"
+                    style="display: none; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #6c757d; font-size: 20px; cursor: pointer; user-select: none;">
+                cancel
+                </span>
+        </div>
+        `;
+
+        chipsContainer.style.display = "flex";
+        window.generateDynamicChips("", "portfolioAmountChips", "portfolioField3");
+    } else {
+        titleText.textContent = "Add Position";
+        icon.textContent = "add_chart";
+        icon.style.color = "#14b8a6";
+        label1.textContent = "Entry Price:";
+        label2.textContent = "Volume:";
+        label3.textContent = "Entry Date:";
+        submitBtn.textContent = "Add Position";
+        field2.setAttribute('oninput', "handleAmountInput(this)");
+        field2.removeAttribute('onblur');
+        field2.removeAttribute('onfocus');
+        field2.value = '';
+
+        field3Wrapper.innerHTML = `
+            <div class="th-filter-wrap" onclick="togglePortfolioDatePicker(event)" style="position: relative; width: 100%;">
+                <div id="portfolioDateTrigger" style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; box-sizing: border-box; cursor: pointer; display:flex; align-items:center; justify-content: space-between;">
+                    <span id="portfolioDateTriggerText">${portfolioCalState.selectedDate ? formatDateShort(portfolioCalState.selectedDate) : "Select date"}</span>
+                    <i class="bi bi-calendar3" style="color: var(--text-secondary); font-size: 14px;"></i>
+                </div>
+                <div class="col-menu col-menu-date-single" id="portfolio-cal-menu">
+                    <div class="cal-header">
+                        <button type="button" class="cal-nav-btn" onclick="portfolioCalNavigate(event, -1)"><i class="bi bi-chevron-left"></i></button>
+                        <div class="cal-month-label" id="portfolio-cal-month-label">—</div>
+                        <button type="button" class="cal-nav-btn" onclick="portfolioCalNavigate(event, 1)"><i class="bi bi-chevron-right"></i></button>
+                    </div>
+                    <div class="cal-weekdays">
+                        <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                    </div>
+                    <div class="cal-grid" id="portfolio-cal-grid"></div>
+                </div>
+            </div>
+        `;
+
+        chipsContainer.style.display = "none";
+        chipsContainer.innerHTML = "";
+    }
+}
+
+// ============ SINGLE-DATE CALENDAR ============
+var portfolioCalState = {
+    viewYear: new Date().getFullYear(),
+    viewMonth: new Date().getMonth(),
+    selectedDate: null
+};
+
+function togglePortfolioDatePicker(e) {
+    e.stopPropagation();
+    var menu = document.getElementById('portfolio-cal-menu');
+    var isOpen = menu.classList.contains('open');
+
+    document.querySelectorAll('.col-menu').forEach(function(m) { m.classList.remove('open'); });
+
+    if (!isOpen) {
+        document.body.appendChild(menu);
+        var rect = e.currentTarget.getBoundingClientRect();
+        menu.style.top = (rect.bottom + 6) + "px";
+        menu.style.left = rect.left + "px";
+        menu.style.position = "fixed";
+        menu.classList.add('open');
+        renderPortfolioCalendar();
+    }
+}
+
+function renderPortfolioCalendar() {
+    var label = document.getElementById('portfolio-cal-month-label');
+    var grid = document.getElementById('portfolio-cal-grid');
+    if (!label || !grid) return;
+
+    label.textContent = MONTH_NAMES[portfolioCalState.viewMonth] + " " + portfolioCalState.viewYear;
+    grid.innerHTML = "";
+
+    var firstOfMonth = new Date(portfolioCalState.viewYear, portfolioCalState.viewMonth, 1);
+    var startDow = firstOfMonth.getDay();
+    var daysInMonth = new Date(portfolioCalState.viewYear, portfolioCalState.viewMonth + 1, 0).getDate();
+    var daysInPrevMonth = new Date(portfolioCalState.viewYear, portfolioCalState.viewMonth, 0).getDate();
+    var today = new Date();
+
+    for (var i = 0; i < 42; i++) {
+        var cellDate, isOtherMonth = false;
+        var dayNum = i - startDow + 1;
+
+        if (dayNum < 1) {
+            cellDate = new Date(portfolioCalState.viewYear, portfolioCalState.viewMonth - 1, daysInPrevMonth + dayNum);
+            isOtherMonth = true;
+        } else if (dayNum > daysInMonth) {
+            cellDate = new Date(portfolioCalState.viewYear, portfolioCalState.viewMonth + 1, dayNum - daysInMonth);
+            isOtherMonth = true;
+        } else {
+            cellDate = new Date(portfolioCalState.viewYear, portfolioCalState.viewMonth, dayNum);
+        }
+
+        var cellEl = document.createElement('div');
+        cellEl.className = "cal-day" + (isOtherMonth ? " other-month" : "");
+        if (isSameDay(cellDate, today)) cellEl.classList.add("today");
+        if (portfolioCalState.selectedDate && isSameDay(cellDate, portfolioCalState.selectedDate)) {
+            cellEl.classList.add("range-start", "range-end");
+        }
+        cellEl.textContent = cellDate.getDate();
+
+        (function(d) {
+            cellEl.addEventListener("click", function(e) {
+                e.stopPropagation();
+                portfolioCalState.selectedDate = d;
+                var triggerText = document.getElementById('portfolioDateTriggerText');
+                if (triggerText) triggerText.textContent = formatDateShort(d);
+                document.getElementById('portfolio-cal-menu').classList.remove('open');
+            });
+        })(cellDate);
+
+        grid.appendChild(cellEl);
+    }
+}
+
+function portfolioCalNavigate(e, dir) {
+    e.stopPropagation();
+    portfolioCalState.viewMonth += dir;
+    if (portfolioCalState.viewMonth > 11) { portfolioCalState.viewMonth = 0; portfolioCalState.viewYear++; }
+    if (portfolioCalState.viewMonth < 0) { portfolioCalState.viewMonth = 11; portfolioCalState.viewYear--; }
+    renderPortfolioCalendar();
+}
+
+// ============ SUBMIT ============
+function processPortfolioAdd() {
+    const symbol = document.getElementById('portfolioSymbol').value.trim().toUpperCase();
+    const accountType = document.getElementById('portfolioAccountType').value;
+    const field1 = parseFloat(document.getElementById('portfolioField1').value.replace(/,/g, '')) || 0;
+    const field2 = parseFloat(document.getElementById('portfolioField2').value.replace(/,/g, '')) || 0;
+    const note = document.getElementById('portfolioNote').value.trim();
+
+    const errorEl = document.getElementById('modalErrorMessage');
+    const successEl = document.getElementById('modalSuccessMessage');
+
+    var field3Value;
+    if (window.portfolioIsSavingMode) {
+        field3Value = parseFloat(document.getElementById('portfolioField3').value.replace(/,/g, '')) || 0;
+    } else {
+        field3Value = portfolioCalState.selectedDate ? portfolioCalState.selectedDate.toISOString().slice(0, 10) : null;
+    }
+
+    if (!symbol || !accountType || !field1 || !field2 || !field3Value) {
+        errorEl.textContent = "Please fill in all required fields.";
+        errorEl.style.display = "block";
+        successEl.style.display = "none";
+        return;
+    }
+
+    errorEl.style.display = "none";
+
+    // TODO: integrate with your actual data pipeline
+    successEl.style.display = "flex";
+    setTimeout(function() {
+        closeModal();
+    }, 1200);
+}
+  // New dedicated handler for the Rate field (separate from handleAmountInput, which is for currency)
+function handlePortfolioRateInput(el) {
+    var raw = el.value;
+
+    // Strip everything except digits and a single decimal point
+    var cleaned = raw.replace(/[^\d.]/g, '');
+
+    // Prevent multiple decimal points
+    var parts = cleaned.split('.');
+    if (parts.length > 2) {
+        cleaned = parts[0] + '.' + parts.slice(1).join('');
+    }
+
+    el.value = cleaned;
+
+    // Store raw numeric value in a data attribute for later retrieval (submit time)
+    el.dataset.rawValue = cleaned;
+}
+
+function handlePortfolioRateBlur(el) {
+    var val = el.dataset.rawValue || el.value.replace('%', '');
+    if (val === '' || isNaN(parseFloat(val))) {
+        el.value = '';
+        return;
+    }
+    el.value = val + '%';
+}
+
+function handlePortfolioRateFocus(el) {
+    // Strip the % back off so the user can edit the raw number
+    el.value = el.dataset.rawValue || el.value.replace('%', '');
+}
+
 
   function renderActivePositionsStat(count,icons){const statEl=document.getElementById("stat-cycles");if(!statEl)return;const shownIcons=icons.slice(0,4),remaining=icons.length-shownIcons.length;let stackHTML='<div class="stat-icon-stack">';shownIcons.forEach(function(ic){ic.iconUrl?stackHTML+=`<div class="stat-stack-icon" style="background-image:url('${ic.iconUrl}');"></div>`:stackHTML+=`<div class="stat-stack-icon stat-stack-icon-text">${ic.symbol.slice(0,2)}</div>`}),remaining>0&&(stackHTML+=`<div class="stat-stack-icon stat-stack-icon-more">+${remaining}</div>`),stackHTML+="</div>",statEl.innerHTML=`\n        <div class="stat-cycles-row">\n            <span class="stat-cycles-num">${count}</span>\n            ${stackHTML}\n        </div>`}
   function toggleGroup(groupId,mainRowEl){const logRows=document.querySelectorAll(`.${groupId}`);if(0===logRows.length)return;mainRowEl.classList.contains("expanded")?(mainRowEl.classList.remove("expanded"),logRows.forEach(row=>row.classList.remove("visible"))):(mainRowEl.classList.add("expanded"),logRows.forEach(row=>row.classList.add("visible")))}
   function closeModal(){const backdrop=document.getElementById("modalBackdrop");backdrop.style.pointerEvents="none",backdrop.classList.remove("active")}
-  function createChipElement(container,totalAmount,sign="+"){let displayLabel="";if(totalAmount>=1e6){const clearMillions=totalAmount/1e6;displayLabel=`${sign}${clearMillions%1==0?clearMillions:clearMillions.toFixed(1)}M`}else if(totalAmount>=1e3){const clearThousands=totalAmount/1e3;displayLabel=`${sign}${clearThousands%1==0?clearThousands:clearThousands.toFixed(0)}K`}else displayLabel=`${sign}${totalAmount}`;const chip=document.createElement("div");chip.className="quick-amt-chip",chip.innerText=displayLabel,chip.onclick=()=>{const inputField=document.getElementById("transactionAmount"),clearBtn=document.getElementById("clearAmountBtn");inputField&&(inputField.value=parseInt(totalAmount,10).toLocaleString("en-US"),clearBtn&&(clearBtn.style.display="block"),window.generateDynamicChips(totalAmount))},container.appendChild(chip)}
-  function updateDropdownOptions(uniqueTypesMap){const dropdown=document.getElementById("transactionFilterOptions");if(!dropdown)return;var depositIcon=uniqueTypesMap.get("Deposit")||uniqueTypesMap.get("deposit")||uniqueTypesMap.get("Deposits")||uniqueTypesMap.get("deposits"),withdrawIcon=uniqueTypesMap.get("Withdrawal")||uniqueTypesMap.get("withdrawal")||uniqueTypesMap.get("Withdrawals")||uniqueTypesMap.get("withdrawals")||uniqueTypesMap.get("Withdraw")||uniqueTypesMap.get("withdraw");function getVisualIcon(iconUrl,defaultMaterialIcon,iconColor){return iconUrl&&"n/a"!==iconUrl.toLowerCase()?`\n          <img src="${iconUrl}" style="width: 18px; height: 18px; object-fit: contain; border-radius: 4px;" alt="" \n              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">\n          <span class="material-icons-round" style="display: none; font-size: 15px; color: ${iconColor}; width: 18px; height: 18px; align-items: center; justify-content: center;">${defaultMaterialIcon}</span>\n        `:`<span class="material-icons-round" style="font-size: 15px; color: ${iconColor}; display: flex; align-items: center; justify-content: center; width: 18px; height: 18px;">${defaultMaterialIcon}</span>`}let optionsHtml=`\n      <div class="filter-opt-item" onclick="window.selectTransactionFilter('all', 'All')" \n          style="padding: 8px 12px; color: #f8f9fa; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;"\n          onmouseover="this.style.background='#22252d'" onmouseout="this.style.background='transparent'">\n        <span class="material-icons-round" style="font-size: 15px; color: #6c757d; display: flex; align-items: center; justify-content: center; width: 18px; height: 18px;">filter_list</span>\n        All\n      </div>\n      \n      <div class="filter-opt-item" onclick="window.selectTransactionFilter('deposit', 'Deposits')" \n          style="padding: 8px 12px; color: #f8f9fa; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;"\n          onmouseover="this.style.background='#22252d'" onmouseout="this.style.background='transparent'">\n        <div style="display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0;">\n          ${getVisualIcon(depositIcon,"arrow_downward","#14b8a6")}\n        </div>\n        Deposits\n      </div>\n      \n      <div class="filter-opt-item" onclick="window.selectTransactionFilter('withdrawal', 'Withdrawals')" \n          style="padding: 8px 12px; color: #f8f9fa; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;"\n          onmouseover="this.style.background='#22252d'" onmouseout="this.style.background='transparent'">\n        <div style="display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0;">\n          ${getVisualIcon(withdrawIcon,"arrow_upward","rgb(255, 105, 180)")}\n        </div>\n        Withdrawals\n      </div>\n    `;uniqueTypesMap.forEach(function(iconUrl,type){var lowerT=(type||"").toLowerCase().trim();if(lowerT.startsWith("withdraw")||lowerT.startsWith("deposit"))return;let visualIconHtml="";iconUrl&&"n/a"!==iconUrl.toLowerCase()&&(visualIconHtml=`<img src="${iconUrl}" style="width: 18px; height: 18px; object-fit: contain; border-radius: 4px;" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`),visualIconHtml+=`\n        <div style="display: ${iconUrl?"none":"flex"}; width: 18px; height: 18px; background: rgba(255,255,255,0.1); border-radius: 4px; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: #3b82f6;">\n          ${(type||"?").charAt(0).toUpperCase()}\n        </div>\n      `,optionsHtml+=`\n        <div class="filter-opt-item" onclick="window.selectTransactionFilter('${type}', '${type}')" \n            style="padding: 8px 12px; color: #f8f9fa; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;"\n            onmouseover="this.style.background='#22252d'" onmouseout="this.style.background='transparent'">\n          <div style="display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0;">\n            ${visualIconHtml}\n          </div>\n          ${type}\n        </div>\n      `}),dropdown.innerHTML=optionsHtml}
+  function createChipElement(container, totalAmount, sign = "+", targetInputId = "transactionAmount") {
+    let displayLabel = "";
+    if (totalAmount >= 1e6) {
+        const clearMillions = totalAmount / 1e6;
+        displayLabel = `${sign}${clearMillions % 1 == 0 ? clearMillions : clearMillions.toFixed(1)}M`
+    } else if (totalAmount >= 1e3) {
+        const clearThousands = totalAmount / 1e3;
+        displayLabel = `${sign}${clearThousands % 1 == 0 ? clearThousands : clearThousands.toFixed(0)}K`
+    } else {
+        displayLabel = `${sign}${totalAmount}`
+    }
+
+    const chip = document.createElement("div");
+    chip.className = "quick-amt-chip";
+    chip.innerText = displayLabel;
+
+    chip.onclick = () => {
+        const inputField = document.getElementById(targetInputId);
+        const clearBtnId = targetInputId === "portfolioField3" ? "portfolioClearAmountBtn" : "clearAmountBtn";
+        const clearBtn = document.getElementById(clearBtnId);
+
+        if (inputField) {
+            inputField.value = parseInt(totalAmount, 10).toLocaleString("en-US");
+            if (clearBtn) clearBtn.style.display = "block";
+            window.generateDynamicChips(totalAmount, container.id, targetInputId);
+        }
+    };
+
+    container.appendChild(chip);
+}
+function updateDropdownOptions(uniqueTypesMap){const dropdown=document.getElementById("transactionFilterOptions");if(!dropdown)return;var depositIcon=uniqueTypesMap.get("Deposit")||uniqueTypesMap.get("deposit")||uniqueTypesMap.get("Deposits")||uniqueTypesMap.get("deposits"),withdrawIcon=uniqueTypesMap.get("Withdrawal")||uniqueTypesMap.get("withdrawal")||uniqueTypesMap.get("Withdrawals")||uniqueTypesMap.get("withdrawals")||uniqueTypesMap.get("Withdraw")||uniqueTypesMap.get("withdraw");function getVisualIcon(iconUrl,defaultMaterialIcon,iconColor){return iconUrl&&"n/a"!==iconUrl.toLowerCase()?`\n          <img src="${iconUrl}" style="width: 18px; height: 18px; object-fit: contain; border-radius: 4px;" alt="" \n              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">\n          <span class="material-icons-round" style="display: none; font-size: 15px; color: ${iconColor}; width: 18px; height: 18px; align-items: center; justify-content: center;">${defaultMaterialIcon}</span>\n        `:`<span class="material-icons-round" style="font-size: 15px; color: ${iconColor}; display: flex; align-items: center; justify-content: center; width: 18px; height: 18px;">${defaultMaterialIcon}</span>`}let optionsHtml=`\n      <div class="filter-opt-item" onclick="window.selectTransactionFilter('all', 'All')" \n          style="padding: 8px 12px; color: #f8f9fa; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;"\n          onmouseover="this.style.background='#22252d'" onmouseout="this.style.background='transparent'">\n        <span class="material-icons-round" style="font-size: 15px; color: #6c757d; display: flex; align-items: center; justify-content: center; width: 18px; height: 18px;">filter_list</span>\n        All\n      </div>\n      \n      <div class="filter-opt-item" onclick="window.selectTransactionFilter('deposit', 'Deposits')" \n          style="padding: 8px 12px; color: #f8f9fa; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;"\n          onmouseover="this.style.background='#22252d'" onmouseout="this.style.background='transparent'">\n        <div style="display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0;">\n          ${getVisualIcon(depositIcon,"arrow_downward","#14b8a6")}\n        </div>\n        Deposits\n      </div>\n      \n      <div class="filter-opt-item" onclick="window.selectTransactionFilter('withdrawal', 'Withdrawals')" \n          style="padding: 8px 12px; color: #f8f9fa; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;"\n          onmouseover="this.style.background='#22252d'" onmouseout="this.style.background='transparent'">\n        <div style="display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0;">\n          ${getVisualIcon(withdrawIcon,"arrow_upward","rgb(255, 105, 180)")}\n        </div>\n        Withdrawals\n      </div>\n    `;uniqueTypesMap.forEach(function(iconUrl,type){var lowerT=(type||"").toLowerCase().trim();if(lowerT.startsWith("withdraw")||lowerT.startsWith("deposit"))return;let visualIconHtml="";iconUrl&&"n/a"!==iconUrl.toLowerCase()&&(visualIconHtml=`<img src="${iconUrl}" style="width: 18px; height: 18px; object-fit: contain; border-radius: 4px;" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`),visualIconHtml+=`\n        <div style="display: ${iconUrl?"none":"flex"}; width: 18px; height: 18px; background: rgba(255,255,255,0.1); border-radius: 4px; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: #3b82f6;">\n          ${(type||"?").charAt(0).toUpperCase()}\n        </div>\n      `,optionsHtml+=`\n        <div class="filter-opt-item" onclick="window.selectTransactionFilter('${type}', '${type}')" \n            style="padding: 8px 12px; color: #f8f9fa; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;"\n            onmouseover="this.style.background='#22252d'" onmouseout="this.style.background='transparent'">\n          <div style="display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0;">\n            ${visualIconHtml}\n          </div>\n          ${type}\n        </div>\n      `}),dropdown.innerHTML=optionsHtml}
   
+  window.generateDynamicChips = function(rawValue, containerId, targetInputId) {
+    containerId = containerId || "dynamicChipsContainer";
+    targetInputId = targetInputId || "transactionAmount";
+
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = "";
+
+    const sign = "Withdraw" === window.currentTransactionType ? "-" : "+";
+    const trimmed = rawValue.toString().trim().replace(/\D/g, "");
+
+    if ("" === trimmed) {
+        return void [5e5, 1e6, 2e6, 5e6, 1e7, 2e7].forEach(amount => {
+            createChipElement(container, amount, sign, targetInputId);
+        });
+    }
+
+    const num = parseInt(trimmed, 10);
+    if (isNaN(num) || num <= 0) return;
+
+    const chipSet = new Set;
+    [1, 10, 100, 1e3, 1e4, 1e5, 1e6].forEach(mult => {
+        const projected = num * mult;
+        projected >= 5e5 && projected <= 1e9 && chipSet.add(projected)
+    });
+    num >= 5e5 && [num, 2 * num, 5 * num].forEach(amt => {
+        amt <= 1e9 && chipSet.add(amt)
+    });
+
+    Array.from(chipSet).sort((a, b) => a - b).forEach(amount => {
+        createChipElement(container, amount, sign, targetInputId);
+    });
+};
+
   document.addEventListener("DOMContentLoaded", initFullyAutomatedTimeline);
   document.getElementById('days-until-display').innerText = data.until + " days";
   document.addEventListener("DOMContentLoaded",()=>{const historyBtn=document.getElementById("btn-square-history"),historyPanel=document.getElementById("walletHistorySection"),donutSection=document.getElementById("ca-section-expense"),colRight=document.getElementById("ca-col-right"),colLeft=document.getElementById("ca-col-left"),caWrap=document.getElementById("ca-wrap");let isHistoryActive=window.innerWidth>=401;historyBtn&&historyPanel&&donutSection&&(historyBtn.addEventListener("click",function(e){e.stopPropagation();if(window.innerWidth<401){const isOpen=historyPanel.classList.toggle("is-expanded");this.classList.toggle("is-active",isOpen),isHistoryActive=isOpen,isOpen?(colLeft&&colLeft.insertAdjacentElement("afterend",historyPanel),historyPanel.appendChild(donutSection),historyPanel.offsetHeight,setTimeout(()=>{historyPanel.scrollIntoView({behavior:"smooth",block:"nearest"})},300)):(historyPanel.classList.remove("is-expanded"),setTimeout(()=>{colRight&&colRight.appendChild(donutSection),caWrap&&caWrap.appendChild(historyPanel)},350))}else isHistoryActive=!isHistoryActive,this.classList.toggle("is-active",isHistoryActive),historyPanel.classList.toggle("is-hidden-ipad",!isHistoryActive)}),window.addEventListener("resize",()=>{window.innerWidth<401||(colRight&&!colRight.contains(donutSection)&&colRight.appendChild(donutSection),caWrap&&caWrap.lastElementChild!==historyPanel&&caWrap.appendChild(historyPanel),historyBtn.classList.toggle("is-active",isHistoryActive),historyPanel.classList.toggle("is-hidden-ipad",!isHistoryActive))}))});
@@ -5088,10 +5630,81 @@ to{transform:rotate(360deg)}
   window.toggleCustomDropdown=function(event){event&&event.stopPropagation();const menu=document.getElementById("customSelectOptions");menu&&menu.classList.toggle("show")};
   window.handleCustomSelect=function(element){const selectedValue=element.getAttribute("data-value"),selectedInnerHtml=element.innerHTML,hiddenInput=document.getElementById("targetAccount"),triggerBtn=document.getElementById("customSelectTrigger");hiddenInput&&(hiddenInput.value=selectedValue),triggerBtn&&(triggerBtn.innerHTML=selectedInnerHtml);const menu=document.getElementById("customSelectOptions");menu&&menu.classList.remove("show")};
   window.addEventListener("click",function(event){const triggerBtn=document.getElementById("customSelectTrigger"),menu=document.getElementById("customSelectOptions");menu&&menu.classList.contains("show")&&triggerBtn&&!triggerBtn.contains(event.target)&&menu.classList.remove("show")});
-  window.clearAmountField=function(){const inputField=document.getElementById("transactionAmount"),clearBtn=document.getElementById("clearAmountBtn");inputField&&(inputField.value="",inputField.focus()),clearBtn&&(clearBtn.style.display="none"),window.generateDynamicChips("")};
-  window.handleAmountInput=function(inputElement){const clearBtn=document.getElementById("clearAmountBtn"),selectionStart=inputElement.selectionStart,selectionEnd=inputElement.selectionEnd,originalLength=inputElement.value.length;let rawDigits=inputElement.value.replace(/\D/g,"");if(""===rawDigits)return inputElement.value="",clearBtn&&(clearBtn.style.display="none"),void window.generateDynamicChips("");clearBtn&&(clearBtn.style.display="block");let numericValue=parseInt(rawDigits,10);if(!isNaN(numericValue)){inputElement.value=numericValue.toLocaleString("en-US");const lengthDifference=inputElement.value.length-originalLength;inputElement.setSelectionRange(selectionStart+lengthDifference,selectionEnd+lengthDifference),window.generateDynamicChips(rawDigits)}};
-  window.generateDynamicChips=function(rawValue){const container=document.getElementById("dynamicChipsContainer");if(!container)return;container.innerHTML="";const sign="Withdraw"===window.currentTransactionType?"-":"+",trimmed=rawValue.toString().trim().replace(/\D/g,"");if(""===trimmed)return void[5e5,1e6,2e6,5e6,1e7,2e7].forEach(amount=>{createChipElement(container,amount,sign)});const num=parseInt(trimmed,10);if(isNaN(num)||num<=0)return;const chipSet=new Set;[1,10,100,1e3,1e4,1e5,1e6].forEach(mult=>{const projected=num*mult;projected>=5e5&&projected<=1e9&&chipSet.add(projected)}),num>=5e5&&[num,2*num,5*num].forEach(amt=>{amt<=1e9&&chipSet.add(amt)}),Array.from(chipSet).sort((a,b)=>a-b).forEach(amount=>{createChipElement(container,amount,sign)})};
-  window.flipTransferDirection=function(){if(!window.swapState)return;const tempAccount=window.swapState.fromAccount,tempIcon=window.swapState.fromIcon,tempBalance=window.swapState.fromBalance;window.swapState.fromAccount=window.swapState.toAccount,window.swapState.fromIcon=window.swapState.toIcon,window.swapState.fromBalance=window.swapState.toBalance||0,window.swapState.toAccount=tempAccount,window.swapState.toIcon=tempIcon,window.swapState.toBalance=tempBalance;const cleanFromStr=(window.swapState.fromAccount.toUpperCase().startsWith("SAVING")?"SAVING":window.swapState.fromAccount).replace(/[︾▼]/g,"").trim(),cleanToStr=(window.swapState.toAccount.toUpperCase().startsWith("SAVING")?"SAVING":window.swapState.toAccount).replace(/[︾▼]/g,"").trim(),fromBalText=` (₫${Math.round(window.swapState.fromBalance).toLocaleString("vi-VN")})`,toBalText=window.swapState.toBalance?` (₫${Math.round(window.swapState.toBalance).toLocaleString("vi-VN")})`:"";document.getElementById("fromAccountLabel").textContent=`${cleanFromStr}${fromBalText}`,document.getElementById("transferFromIcon").src=window.swapState.fromIcon,document.getElementById("toAccountLabel").textContent=`${cleanToStr}${toBalText}`,document.getElementById("transferToIcon").src=window.swapState.toIcon,"function"==typeof window.reloadDropdownMenus&&window.reloadDropdownMenus()};
+  window.handleAmountInput = function(inputElement, clearBtnId, chipsContainerId) {
+    clearBtnId = clearBtnId || "clearAmountBtn";
+    chipsContainerId = chipsContainerId || "dynamicChipsContainer";
+
+    const clearBtn = document.getElementById(clearBtnId),
+        selectionStart = inputElement.selectionStart,
+        selectionEnd = inputElement.selectionEnd,
+        originalLength = inputElement.value.length;
+
+    let rawDigits = inputElement.value.replace(/\D/g, "");
+
+    if ("" === rawDigits) {
+        inputElement.value = "";
+        clearBtn && (clearBtn.style.display = "none");
+        return void window.generateDynamicChips("", chipsContainerId, inputElement.id);
+    }
+
+    clearBtn && (clearBtn.style.display = "block");
+
+    let numericValue = parseInt(rawDigits, 10);
+    if (!isNaN(numericValue)) {
+        inputElement.value = numericValue.toLocaleString("en-US");
+        const lengthDifference = inputElement.value.length - originalLength;
+        inputElement.setSelectionRange(selectionStart + lengthDifference, selectionEnd + lengthDifference);
+        window.generateDynamicChips(rawDigits, chipsContainerId, inputElement.id);
+    }
+};
+
+window.clearAmountField = function(targetInputId, clearBtnId, chipsContainerId) {
+    targetInputId = targetInputId || "transactionAmount";
+    clearBtnId = clearBtnId || "clearAmountBtn";
+    chipsContainerId = chipsContainerId || "dynamicChipsContainer";
+
+    const inputField = document.getElementById(targetInputId);
+    const clearBtn = document.getElementById(clearBtnId);
+
+    inputField && (inputField.value = "", inputField.focus());
+    clearBtn && (clearBtn.style.display = "none");
+
+    window.generateDynamicChips("", chipsContainerId, targetInputId);
+};
+window.generateDynamicChips = function(rawValue, containerId, targetInputId) {
+    containerId = containerId || "dynamicChipsContainer";
+    targetInputId = targetInputId || "transactionAmount";
+
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = "";
+
+    const sign = "Withdraw" === window.currentTransactionType ? "-" : "+";
+    const trimmed = rawValue.toString().trim().replace(/\D/g, "");
+
+    if ("" === trimmed) {
+        return void [5e5, 1e6, 2e6, 5e6, 1e7, 2e7].forEach(amount => {
+            createChipElement(container, amount, sign, targetInputId);
+        });
+    }
+
+    const num = parseInt(trimmed, 10);
+    if (isNaN(num) || num <= 0) return;
+
+    const chipSet = new Set;
+    [1, 10, 100, 1e3, 1e4, 1e5, 1e6].forEach(mult => {
+        const projected = num * mult;
+        projected >= 5e5 && projected <= 1e9 && chipSet.add(projected)
+    });
+    num >= 5e5 && [num, 2 * num, 5 * num].forEach(amt => {
+        amt <= 1e9 && chipSet.add(amt)
+    });
+
+    Array.from(chipSet).sort((a, b) => a - b).forEach(amount => {
+        createChipElement(container, amount, sign, targetInputId);
+    });
+};
+window.flipTransferDirection=function(){if(!window.swapState)return;const tempAccount=window.swapState.fromAccount,tempIcon=window.swapState.fromIcon,tempBalance=window.swapState.fromBalance;window.swapState.fromAccount=window.swapState.toAccount,window.swapState.fromIcon=window.swapState.toIcon,window.swapState.fromBalance=window.swapState.toBalance||0,window.swapState.toAccount=tempAccount,window.swapState.toIcon=tempIcon,window.swapState.toBalance=tempBalance;const cleanFromStr=(window.swapState.fromAccount.toUpperCase().startsWith("SAVING")?"SAVING":window.swapState.fromAccount).replace(/[︾▼]/g,"").trim(),cleanToStr=(window.swapState.toAccount.toUpperCase().startsWith("SAVING")?"SAVING":window.swapState.toAccount).replace(/[︾▼]/g,"").trim(),fromBalText=` (₫${Math.round(window.swapState.fromBalance).toLocaleString("vi-VN")})`,toBalText=window.swapState.toBalance?` (₫${Math.round(window.swapState.toBalance).toLocaleString("vi-VN")})`:"";document.getElementById("fromAccountLabel").textContent=`${cleanFromStr}${fromBalText}`,document.getElementById("transferFromIcon").src=window.swapState.fromIcon,document.getElementById("toAccountLabel").textContent=`${cleanToStr}${toBalText}`,document.getElementById("transferToIcon").src=window.swapState.toIcon,"function"==typeof window.reloadDropdownMenus&&window.reloadDropdownMenus()};
   window.openTransferAccountPicker=function(side,event){event.stopPropagation();const existingPicker=document.getElementById("transferAccountPickerMenu");if(existingPicker&&existingPicker.remove(),"undefined"==typeof accountsData||!Array.isArray(accountsData))return;const usableAccounts=accountsData.filter(acc=>"Salary"!==acc.account&&"SOCIAL"!==acc.account),menu=document.createElement("div");menu.id="transferAccountPickerMenu",menu.style.cssText="\n        position: absolute;\n        top: calc(100% + 6px);\n        right: 0;\n        background: #1e222b;\n        border: 1px solid #2d313c;\n        border-radius: 12px;\n        min-width: 220px;\n        max-height: 200px;\n        overflow-y: auto;\n        z-index: 9999;\n        box-shadow: 0 8px 24px rgba(0,0,0,0.5);\n        padding: 4px;\n    ",usableAccounts.forEach(acc=>{if("from"===side&&acc.account===window.swapState.toAccount)return;if("to"===side&&acc.account===window.swapState.fromAccount)return;const balanceFormatted="₫"+Math.round(acc.amount).toLocaleString("vi-VN"),iconUrl=acc.icon||"https://cdn-icons-png.flaticon.com/512/3135/3135706.png",item=document.createElement("div");item.style.cssText="\n            display: flex;\n            align-items: center;\n            gap: 10px;\n            padding: 10px 12px;\n            color: #cbd5e1;\n            font-size: 13px;\n            cursor: pointer;\n            border-radius: 8px;\n            transition: background 0.15s;\n        ",item.innerHTML=`\n          <img src="${iconUrl}" style="width: 18px; height: 18px; border-radius: 4px; object-fit: cover;">\n          <span style="flex-grow:1; text-align:left;">${acc.account.toUpperCase().startsWith("SAVING")?"SAVING":acc.account}</span>\n          <span style="color: #6c757d; font-size:11px;">${balanceFormatted}</span>\n        `,item.onmouseenter=()=>item.style.background="#2d313c",item.onmouseleave=()=>item.style.background="transparent",item.onclick=e=>{e.stopPropagation(),window.selectTransferAccount(side,acc.account,Math.round(acc.amount)),menu.remove()},menu.appendChild(item)});event.currentTarget.appendChild(menu);const closePicker=()=>{menu.remove(),document.removeEventListener("click",closePicker)};document.addEventListener("click",closePicker)};
   window.selectTransferAccount=function(side,accountName,accountBalance){if(!window.swapState)return;if("from"===side){window.swapState.fromAccount=accountName,window.swapState.fromBalance=accountBalance;const balanceDisplay=document.getElementById("fromAccountBalance");balanceDisplay&&(balanceDisplay.textContent=accountBalance.toLocaleString("en-US"));const fromLabel=document.getElementById("fromAccountLabel");fromLabel&&(fromLabel.textContent=accountName)}else{window.swapState.toAccount=accountName;const toLabel=document.getElementById("toAccountLabel");toLabel&&(toLabel.textContent=accountName)}const amountInput=document.getElementById("transactionAmount");amountInput&&"function"==typeof window.handleAmountInput&&window.handleAmountInput(amountInput)};
   window.handleTransferAmountInput=function(inputElement){let valueStr=inputElement.value.replace(/[^0-9]/g,""),numericVal=parseInt(valueStr,10)||0;inputElement.value=0===numericVal?"":numericVal.toLocaleString("vi-VN");const clearBtn=document.getElementById("clearAmountBtn");clearBtn&&(clearBtn.style.display=numericVal>0?"block":"none"),"function"==typeof window.generateDynamicChips&&window.generateDynamicChips(numericVal>0?numericVal:"")};
