@@ -3440,7 +3440,7 @@ buildColHdr(); applyLayout();
 
   /* ══ ADD RECORD (writes to the sheet via Apps Script Web App) ══ */
   var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxb1lPB9kZh-Q5C01U-DjuesOVlHgDEorEBK-pavyJUd5jPxZSub-Rx6unOCTDdrCS2/exec";
-  var EXPENSE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzyyhunzLi9sCADczavBkuPqNnJH_SKFxVvyAYhQxZRTDJ2iEj-JBpPfOGN7g0dQ2oskA/exec";
+  var EXPENSE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwsWV8iXJwSJ79qtZq7zwmVFc1WqiEwnMXlzBKXvO0pAzDqEgMe704SCUiLeAdCgoanvA/exec";
 
   var addOverlay = document.getElementById("add-modal-overlay");
   var addStatusEl = document.getElementById("add-status");
@@ -4318,6 +4318,7 @@ document.addEventListener("DOMContentLoaded", function() {
         var iconVal = elementOrItem.icon || "";
         var idVal = elementOrItem.id || "";
         var accountVal = elementOrItem.account || elementOrItem.Vi || "";
+        
 
         targetItem = {
             id: idVal,
@@ -4363,7 +4364,10 @@ document.addEventListener("DOMContentLoaded", function() {
             amount: Number(rowContainer.getAttribute("data-amount")),
             title: rowContainer.getAttribute("data-title") || "History Transaction",
             icon: domIcon,
-            account: rowContainer.getAttribute("data-account") || ""
+            account: (function() {
+                var acc = rowContainer.getAttribute("data-tx-account") || "";
+                return acc === "***000" ? "TPBANK***000" : acc;
+            })()
         };
     }
 
@@ -4507,8 +4511,71 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("history-edit-cancel").addEventListener("click",function(e){e.preventDefault(),cleanupModal(),resetRowInterface()});
     var restoreButtonsFromError=function(){var buttonsContainer=document.getElementById("modalActionButtonsContainer"),errorEl=document.getElementById("modalErrorMessage"),saveBtn=document.getElementById("history-edit-save"),cancelBtn=document.getElementById("history-edit-cancel");errorEl&&(errorEl.style.display="none"),buttonsContainer&&(buttonsContainer.style.display="flex"),saveBtn&&(saveBtn.disabled=!1,saveBtn.style.opacity="1",saveBtn.textContent="Update"),cancelBtn&&(cancelBtn.disabled=!1),rowContainer&&(rowContainer.style.opacity="1",rowContainer.style.pointerEvents="auto")};
     document.getElementById("modalErrorMessage").addEventListener("click", restoreButtonsFromError);
-    document.getElementById("history-edit-save").addEventListener("click",function(e){e.preventDefault();var saveBtn=document.getElementById("history-edit-save"),cancelBtn=document.getElementById("history-edit-cancel"),buttonsContainer=document.getElementById("modalActionButtonsContainer"),errorEl=document.getElementById("modalErrorMessage"),errorTextEl=document.getElementById("errorText"),successEl=document.getElementById("modalSuccessMessage"),successTextEl=document.getElementById("successText");errorEl&&(errorEl.style.display="none"),successEl&&(successEl.style.display="none");var updatedTitle=document.getElementById("history-edit-title").value.trim(),amountRawString=document.getElementById("history-edit-amount").value.replace(/,/g,""),updatedAmount=Number(amountRawString)||0,updatedDetail=document.getElementById("history-edit-detail").value.trim(),updatedDate=document.getElementById("history-edit-date").value;if(!updatedTitle)return buttonsContainer&&(buttonsContainer.style.display="none"),errorTextEl&&(errorTextEl.textContent="Title / Category cannot be empty."),void(errorEl&&(errorEl.style.display="flex",setTimeout(restoreButtonsFromError,2500)));if(!updatedDate)return buttonsContainer&&(buttonsContainer.style.display="none"),errorTextEl&&(errorTextEl.textContent="Date field cannot be empty."),void(errorEl&&(errorEl.style.display="flex",setTimeout(restoreButtonsFromError,2500)));saveBtn&&(saveBtn.disabled=!0,saveBtn.style.opacity="0.5",saveBtn.textContent="Processing..."),cancelBtn&&(cancelBtn.disabled=!0),rowContainer&&(rowContainer.style.opacity="0.3",rowContainer.style.pointerEvents="none");var updatePayload={action:"updateHistory",date:targetItem.date,title:targetItem.title,account:targetItem.account,oldAmount:targetItem.amount,oldDetail:targetItem.detail,newDate:updatedDate,newTitle:updatedTitle,newAmount:updatedAmount,newDetail:updatedDetail};fetch(EXPENSE_APPS_SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify(updatePayload)}).then(function(){buttonsContainer&&(buttonsContainer.style.display="none"),errorEl&&(errorEl.style.display="none"),successTextEl&&(successTextEl.textContent="History updated!"),successEl&&(successEl.style.display="flex"),setTimeout(function(){if(cleanupModal(),rowContainer){rowContainer.style.opacity="1",rowContainer.style.pointerEvents="auto",rowContainer.style.transform="";var targetInner=rowContainer.querySelector(".ca-history-row, .subs-row, .row, [style*='transform']");targetInner&&(targetInner.style.transform="")}document.querySelectorAll(".sub-swipe-container, .swiped").forEach(function(item){item.classList.remove("swiped"),item.style.transform="",item.querySelectorAll(".ca-history-row, .subs-row, .row, div").forEach(function(inner){inner.style.transform&&(inner.style.transform="")});var delAct=item.querySelector(".sub-delete-action"),editAct=item.querySelector(".sub-edit-action");delAct&&(delAct.style.zIndex="1"),editAct&&(editAct.style.zIndex="1")});var historyContainer=document.getElementById("historyListContainer");historyContainer&&historyContainer.classList.add("data-refreshing"),"function"==typeof loadHistoryTransactions?loadHistoryTransactions():"function"==typeof loadTransactions&&loadTransactions(),setTimeout(function(){historyContainer&&(historyContainer.classList.remove("data-refreshing"),historyContainer.classList.add("data-refreshed"),setTimeout(function(){historyContainer.classList.remove("data-refreshed")},600))},500)},1200)}).catch(function(err){rowContainer&&(rowContainer.style.opacity="1",rowContainer.style.pointerEvents="auto"),buttonsContainer&&(buttonsContainer.style.display="none"),successEl&&(successEl.style.display="none"),errorTextEl&&(errorTextEl.textContent="Failed: "+err.message),errorEl&&(errorEl.style.display="flex"),setTimeout(restoreButtonsFromError,3e3)})});
-  
+    document.getElementById("history-edit-save").addEventListener("click", function(e) {
+  e.preventDefault();
+  var saveBtn = document.getElementById("history-edit-save"),
+    cancelBtn = document.getElementById("history-edit-cancel"),
+    buttonsContainer = document.getElementById("modalActionButtonsContainer"),
+    errorEl = document.getElementById("modalErrorMessage"),
+    errorTextEl = document.getElementById("errorText"),
+    successEl = document.getElementById("modalSuccessMessage"),
+    successTextEl = document.getElementById("successText");
+  errorEl && (errorEl.style.display = "none"), successEl && (successEl.style.display = "none");
+  var updatedTitle = document.getElementById("history-edit-title").value.trim(),
+    amountRawString = document.getElementById("history-edit-amount").value.replace(/,/g, ""),
+    updatedAmount = Number(amountRawString) || 0,
+    updatedDetail = document.getElementById("history-edit-detail").value.trim(),
+    updatedDate = document.getElementById("history-edit-date").value;
+  if (!updatedTitle) return buttonsContainer && (buttonsContainer.style.display = "none"), errorTextEl && (errorTextEl.textContent = "Title / Category cannot be empty."), void(errorEl && (errorEl.style.display = "flex", setTimeout(restoreButtonsFromError, 2500)));
+  if (!updatedDate) return buttonsContainer && (buttonsContainer.style.display = "none"), errorTextEl && (errorTextEl.textContent = "Date field cannot be empty."), void(errorEl && (errorEl.style.display = "flex", setTimeout(restoreButtonsFromError, 2500)));
+  saveBtn && (saveBtn.disabled = !0, saveBtn.style.opacity = "0.5", saveBtn.textContent = "Processing..."), cancelBtn && (cancelBtn.disabled = !0), rowContainer && (rowContainer.style.opacity = "0.3", rowContainer.style.pointerEvents = "none");
+  var updatePayload = {
+    action: "updateHistory",
+    date: targetItem.date,
+    title: targetItem.title,
+    account: targetItem.account,
+    oldAmount: targetItem.amount,
+    oldDetail: targetItem.detail,
+    newDate: updatedDate,
+    newTitle: updatedTitle,
+    newAmount: updatedAmount,
+    newDetail: updatedDetail
+  };
+  console.log(updatePayload);
+  fetch(EXPENSE_APPS_SCRIPT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: {
+      "Content-Type": "text/plain"
+    },
+    body: JSON.stringify(updatePayload)
+  }).then(function() {
+    buttonsContainer && (buttonsContainer.style.display = "none"), errorEl && (errorEl.style.display = "none"), successTextEl && (successTextEl.textContent = "History updated!"), successEl && (successEl.style.display = "flex"), setTimeout(function() {
+      if (cleanupModal(), rowContainer) {
+        rowContainer.style.opacity = "1", rowContainer.style.pointerEvents = "auto", rowContainer.style.transform = "";
+        var targetInner = rowContainer.querySelector(".ca-history-row, .subs-row, .row, [style*='transform']");
+        targetInner && (targetInner.style.transform = "")
+      }
+      document.querySelectorAll(".sub-swipe-container, .swiped").forEach(function(item) {
+        item.classList.remove("swiped"), item.style.transform = "", item.querySelectorAll(".ca-history-row, .subs-row, .row, div").forEach(function(inner) {
+          inner.style.transform && (inner.style.transform = "")
+        });
+        var delAct = item.querySelector(".sub-delete-action"),
+          editAct = item.querySelector(".sub-edit-action");
+        delAct && (delAct.style.zIndex = "1"), editAct && (editAct.style.zIndex = "1")
+      });
+      var historyContainer = document.getElementById("historyListContainer");
+      historyContainer && historyContainer.classList.add("data-refreshing"), "function" == typeof loadHistoryTransactions ? loadHistoryTransactions() : "function" == typeof loadTransactions && loadTransactions(), setTimeout(function() {
+        historyContainer && (historyContainer.classList.remove("data-refreshing"), historyContainer.classList.add("data-refreshed"), setTimeout(function() {
+          historyContainer.classList.remove("data-refreshed")
+        }, 600))
+      }, 500)
+    }, 1200)
+  }).catch(function(err) {
+    rowContainer && (rowContainer.style.opacity = "1", rowContainer.style.pointerEvents = "auto"), buttonsContainer && (buttonsContainer.style.display = "none"), successEl && (successEl.style.display = "none"), errorTextEl && (errorTextEl.textContent = "Failed: " + err.message), errorEl && (errorEl.style.display = "flex"), setTimeout(restoreButtonsFromError, 3e3)
+  })
+});
+
   }
   // ============ HISTORY EDIT DATE PICKER ============
 var historyEditCalState = {
