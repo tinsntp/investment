@@ -5402,7 +5402,7 @@ function applyPortfolioModalMode(isSaving) {
             <input type="text"
                 id="portfolioField3" inputmode="decimal"
                 placeholder="0"
-                oninput="handleAmountInput(this); window.generateDynamicChips(this.value, 'portfolioAmountChips', 'portfolioField3'); "
+                oninput="handleAmountInput(this, 'portfolioClearAmountBtn', 'portfolioAmountChips'); window.generateDynamicChips(this.value, 'portfolioAmountChips', 'portfolioField3'); "
                 style="width: 100%; padding: 14px 32px 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:DM Sans; font-size: 20px; box-sizing: border-box; outline: none;" />
                 <span class="material-icons-round"
                     id="portfolioClearAmountBtn"
