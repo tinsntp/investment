@@ -393,9 +393,11 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 
 
 #add-cash.loading,#add-fab.loading{pointer-events:none;display:flex;align-items:center;justify-content:center}
-.cash-modal-overlay{display:none;position:fixed;inset:0; z-index:600;align-items:flex-start;justify-content:center;padding-top:20vh;overflow-y:auto}
-.cash-modal-overlay.open{display:flex!important}.btn-spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,0.3);border-top-color:#ffffff;border-radius:50%;animation:spinCircle 0.8s linear infinite;display:inline-block}
+.cash-modal-overlay,.add-modal-overlay{-webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);display:none;position:fixed;inset:0; z-index:600;align-items:flex-start;justify-content:center;padding-top:20vh;overflow-y:auto}
+.cash-modal-overlay.open,.add-modal-overlay.open{display:flex!important}
+.btn-spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,0.3);border-top-color:#ffffff;border-radius:50%;animation:spinCircle 0.8s linear infinite;display:inline-block}
 #add-cash.success-confirm{background-color:#10b981 !important;color:#ffffff !important;font-size:15px;font-weight:500;display:flex;align-items:center;justify-content:center;transition:background-color 0.3s ease}
+
 @keyframes spinCircle{to{transform:rotate(360deg)}}
 @media screen and (min-width:401px){#add-cash{width:6vw;height:6vw;font-size:5vw;} #add-cash.success-confirm{font-size:3.4vw;} .btn-spinner{width:20px;height:20px;}}
 
@@ -585,8 +587,7 @@ to{transform:rotate(360deg)}
 .sub-price-unit{font-size:11px;font-weight:500;color:rgba(255,255,255,0.4);margin-left:2px}
 @media (min-width:401px){.sub-badge::after{content:" subscription"}}
 
-.add-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:600;align-items:flex-start;justify-content:center;padding-top:200px;overflow-y:auto}
-.add-modal-overlay.open{display:flex!important;}
+
 .add-modal h3{font-size: 16px;margin-bottom:4vw;text-align:center;}
 .add-modal, .expense-edit-modal {
     position: relative;
@@ -612,27 +613,188 @@ to{transform:rotate(360deg)}
     mask-repeat: no-repeat, no-repeat, repeat-x;
     filter: drop-shadow(0 10px 20px rgba(0,0,0,.6));
 }
+
+
 .add-field{margin-bottom:3.5vw}
-.add-field label{display:block;font-size:2.6vw!important;font-weight:300!important;color:rgba(255,255,255,0.5);margin-bottom:1.2vw}
-.add-field input[type="text"]{width: 100% !important;height: 11vw;padding:2.5vw 2.5vw;border-radius:2.5vw;border:0px solid rgba(255,255,255,0.15)!important;background:rgba(255,255,255,0.06);color:#fff;font-size:2.8vw;font-weight:300!important;font-family:"Lexend";}
 .add-actions{display:flex;gap:3vw;margin-top:5vw}
-.add-actions button{flex:1;padding:3vw;border-radius:3vw;border:none;font-size:3.4vw;font-weight:600;cursor:pointer}
+.add-actions button{flex:1;padding:3vw;border-radius:3vw;border:none;font-size:13px;font-weight:600;cursor:pointer}
 .add-cancel-btn{background:rgba(255,255,255,0.08);color:#fff;font-size:2.6vw!important;font-family:Lexend!important;}
-.add-submit-btn{background:#14b8a6;color:#fff;font-size:2.6vw!important;font-family:Lexend!important;}
+.add-submit-btn{background:#14b8a6;color:#fff;font-size:13px!important;font-family:Lexend!important;}
 .add-submit-btn:disabled{opacity:0.5}
-.add-status{font-size:2.8vw;margin-top:2vw;text-align:center}
+.add-status{font-size:13px;margin-top:2vw;text-align:center}
 .add-status.error{color:#FF69B4}
 .add-status.success{color:#14b8a6}
-@media (max-width:400px){.add-cancel-btn,.add-submit-btn,.add-field label,.add-field input{font-size:4.1vw!important;font-weight:300!important;}}
+
 .data-refreshing{opacity:.35!important;filter:blur(1px);pointer-events:none;transition:opacity .3s ease,filter .3s ease}.data-refreshed{animation:flashHighlight .6s ease-out}@keyframes flashHighlight{0%{opacity:.4}to{opacity:1;filter:blur(0)}}@keyframes filterSpinner{0%{transform:rotate(0deg)}to{transform:rotate(360deg)}}.filter-icon-spinner{display:inline-block;animation:filterSpinner .8s linear infinite;color:#3b82f6!important}
 .form-row-2col{display:flex !important;flex-direction:row !important;gap:3vw !important;width:100%;margin-bottom:4vw}
 .form-row-2col .add-field{flex:1 1 0% !important;min-width:0;display:flex;flex-direction:column}
-.add-field label{font-size:3.8vw;font-weight:600;color:rgba(255,255,255,0.5);margin-bottom:1.5vw}
-.add-field input[type="text"],.add-field input[type="number"],.add-field input[type="date"]{-webkit-appearance:none;-moz-appearance:none;appearance:none;width:100% !important;height:11vw !important;background:#2a2a2a !important;border:0px solid rgba(255,255,255,0.1) !important;border-radius:12px !important;color:#fff !important;padding:0 3vw !important;font-size:3.5vw !important;outline:none;box-sizing:border-box !important;display:flex !important;align-items:center !important;justify-content:center !important;text-align:left !important}
+.add-field label{font-size:12px;font-weight:300;color:rgba(255,255,255,0.5);margin-bottom:1.5vw}
+.add-field input[type="text"],.add-field input[type="number"],.add-field input[type="date"]{-webkit-appearance:none;-moz-appearance:none;appearance:none;width:100% !important;height:11vw !important;background:#2a2a2a !important;border:0px solid rgba(255,255,255,0.1) !important;border-radius:12px !important;color:#fff !important;padding:0 3vw !important;font-size:18px!important;font-family:"DM Sans"!important;outline:none;box-sizing:border-box !important;display:flex !important;align-items:center !important;justify-content:center !important;text-align:center !important}
+
+/* NEW: date-range trigger matches the same input look/font as above */
+.add-field .add-sub-date-trigger{
+    -webkit-appearance:none;-moz-appearance:none;appearance:none;
+    width:100% !important;
+    height:11vw !important;
+    background:#2a2a2a !important;
+    border:0px solid rgba(255,255,255,0.1) !important;
+    border-radius:12px !important;
+    color:#fff !important;
+    padding:0 3vw !important;
+    font-size:3.5vw !important;
+    font-family:"DM Sans"!important;
+    outline:none;
+    box-sizing:border-box !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:space-between !important;
+    text-align:left !important;
+    cursor:pointer;
+}
+@media (max-width:400px){.add-cancel-btn,.add-submit-btn,.add-field label,.add-field input{font-size:12px!important;font-weight:300!important;}}
 @media (min-width:401px){.form-row-2col{gap:15px !important;margin-bottom:16px}
 .add-field label{font-size:13px;margin-bottom:6px}
-.add-field input[type="text"],.add-field input[type="number"],.add-field input[type="date"]{height:44px !important;font-size:15px !important;padding:0 12px !important;border-radius:8px !important}
+.add-field input[type="text"],.add-field input[type="number"],.add-field input[type="date"]{height:44px !important;font-size:18px !important;padding:0 12px !important;border-radius:8px !important}
+.add-field .add-sub-date-trigger{height:44px !important;font-size:15px !important;padding:0 12px !important;border-radius:8px !important}
 }
+.price-toggle-wrap {
+    display: flex;
+    gap: 1vw;
+    background: rgba(255,255,255,0.06);
+    border-radius: 16px;
+    padding: 1.2vw;
+    margin-bottom: 4vw;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.price-toggle-card {
+    flex: 1 1 0; /* CHANGED: explicit flex-basis: 0 forces equal 50/50 split regardless of content width */
+    min-width: 0; /* CHANGED: prevents content from forcing the card wider than its share */
+    background: transparent;
+    border-radius: 12px;
+    padding: 2.5vw 3.5vw;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    box-sizing: border-box;
+}
+
+.price-toggle-card.selected {
+    background: #1e1e1e;
+}
+
+.price-toggle-label {
+    font-size: 12px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.4);
+    font-family: 'Lexend', sans-serif;
+    margin-bottom: 0.8vw;
+}
+
+.price-toggle-card.selected .price-toggle-label {
+    color: rgba(255,255,255,0.85);
+}
+
+.price-toggle-sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.3);
+    font-family: 'Lexend', sans-serif;
+    margin-bottom: 1.5vw;
+}
+
+.price-toggle-card.selected .price-toggle-sub {
+    color: #14b8a6;
+}
+
+.price-toggle-amt-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.price-toggle-currency {
+    font-size: 18px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.35);
+    font-family: 'DM Sans', sans-serif;
+}
+
+.price-toggle-card.selected .price-toggle-currency {
+    color: #fff;
+}
+
+.price-toggle-input {
+    flex: 1;
+    min-width: 0;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: rgba(255,255,255,0.35);
+    font-size: 18px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.price-toggle-card.selected .price-toggle-input {
+    color: #fff;
+}
+.user-stepper {
+    display: flex;
+    align-items: center;
+    background: #2a2a2a;
+    border-radius: 12px;
+    height: 11vw;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.user-stepper-btn {
+    width: 10vw;
+    height: 100%;
+    flex-shrink: 0;
+    border: none;
+    background: rgba(255,255,255,0.06);
+    color: #fff;
+    font-size: 5vw;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center!important;
+    justify-content: center!important;
+}
+
+.user-stepper-btn:active {
+    background: rgba(255,255,255,0.12);
+}
+
+.user-stepper-input {
+    flex: 1;
+    min-width: 0;
+    text-align: center;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 3.5vw;
+    font-family: "DM Sans", sans-serif;
+    box-sizing: border-box;
+}
+
+@media (min-width: 401px) {
+    .user-stepper { height: 44px; border-radius: 8px; }
+    .user-stepper-btn { width: 40px; font-size: 18px; }
+    .user-stepper-input { font-size: 15px; }
+}
+
+@media (min-width: 401px) {
+    .price-toggle-wrap { gap: 4px; padding: 4px; border-radius: 14px; margin-bottom: 16px; }
+    .price-toggle-card { padding: 10px 14px; border-radius: 10px; }
+    .price-toggle-label { font-size: 13px; }
+    .price-toggle-sub { font-size: 11px; }
+}
+
 .sub-swipe-container{border-bottom: none;position:relative;width:100%;overflow:hidden;margin-bottom:0;border-radius:0px;background:#191919;}
 .subs-row{position:relative;z-index:2;width:100%;padding:1.5vw 0 1.5vw 0!important;margin-bottom:0 !important;will-change:transform;cursor:grab}
 .subs-row:active{cursor:grabbing}
@@ -643,7 +805,7 @@ to{transform:rotate(360deg)}
 .sub-delete-action{opacity:0;visibility:hidden;pointer-events:none;transition:opacity 0.2s ease,visibility 0.2s ease}
 .sub-swipe-container.swiped .sub-delete-action{opacity:1 !important;visibility:visible !important;pointer-events:auto !important;}
 .sub-delete-action i{font-size:20px !important;display:inline-flex !important;align-items:center !important;justify-content:center !important}
-Object.assign(modalOverlay.style{position:"fixed",top:"0",left:"0",width:"100%",height:"100%",backgroundColor:"rgba(0,0,0,0.75)",backdropFilter:"blur(4px)",webkitBackdropFilter:"blur(4px)",zIndex:"2147483647",display:"flex",alignItems:"center",justifyContent:"center",opacity:"1"});
+Object.assign(modalOverlay.style{position:"fixed",top:"0",left:"0",width:"100%",height:"100%",backgroundColor:"rgba(0,0,0,0.75)",backdropFilter:"blur(4px)",webkitBackdropFilter:"blur(4px)",zIndex:"999",display:"flex",alignItems:"center",justifyContent:"center",opacity:"1"});
 .sub-swipe-container.swiped .row,
 .sub-swipe-container.swiped .row:active,
 .sub-swipe-container.swiped .row:hover { transform: translateX(-73px) scale(1) !important;}
@@ -1332,11 +1494,19 @@ tbody tr.current-row td{font-weight:600;}
     background: rgba(255,255,255,0.1);
     color: var(--text-primary);
 }
+.col-menu-date-single {
+    width: 260px; /* fixed width sized to fit "September YYYY" comfortably with nav buttons */
+    padding: 12px;
+    box-sizing: border-box;
+}
 
 .cal-month-label {
     font-size: 13px;
     font-weight: 700;
     color: var(--text-primary);
+    min-width: 140px; /* reserves space for the longest month name, e.g. "September 2026" */
+    text-align: center;
+    font-family: 'DM Sans', sans-serif;
 }
 
 .cal-range-display {
@@ -1356,9 +1526,10 @@ tbody tr.current-row td{font-weight:600;}
 
 .cal-weekdays span {
     text-align: center;
-    font-size: 10px;
+    font-size: 12px;
     color: var(--text-secondary);
     font-weight: 700;
+    font-family: 'DM Sans', sans-serif; /* NEW: weekday letters also DM Sans for consistency */
 }
 
 .cal-grid {
@@ -1372,12 +1543,14 @@ tbody tr.current-row td{font-weight:600;}
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 11px;
+    font-size: 13px;
     color: var(--text-primary);
     cursor: pointer;
     border-radius: 6px;
     position: relative;
     transition: background 0.1s;
+    font-family: 'DM Sans', sans-serif; /* NEW: day numbers use DM Sans */
+    font-weight: 500;
 }
 
 .cal-day.other-month {
@@ -1434,6 +1607,7 @@ tbody tr.current-row td{font-weight:600;}
     gap: 6px;
     margin: 10px 0;
 }
+.cal-quick-btn,.date-range-btn{font-family:Lexend!important;}
 
 .cal-quick-btn {
     flex: 1;
@@ -2247,30 +2421,73 @@ to{transform:rotate(360deg)}
         <input type="text" id="add-title">
       </div>
       <div class="add-field">
-        <label># of users</label>
-        <input type="number" id="add-user">
-      </div>
+            <label># of users</label>
+            <div class="user-stepper">
+                <button type="button" class="user-stepper-btn" onclick="adjustUserCount(-1)">−</button>
+                <input type="text" inputmode="numeric" id="add-user"
+                    class="user-stepper-input"
+                    value="1"
+                    readonly>
+                <button type="button" class="user-stepper-btn" onclick="adjustUserCount(1)">+</button>
+            </div>
+        </div>
     </div>
-    <div class="form-row-2col">
-      <div class="add-field">
-        <label>Monthly Price</label>
-        <input type="number" id="add-amount">
-      </div>
-      <div class="add-field">
-        <label>Total Price</label>
-        <input type="number" id="add-total-amount">
-      </div>
+    <div class="price-toggle-wrap">
+        <div class="price-toggle-card selected" id="monthly-price-card" onclick="selectPriceMode('monthly')">
+            <div class="price-toggle-label">Monthly</div>
+            <div class="price-toggle-amt-row">
+                <span class="price-toggle-currency">₫</span>
+                <input type="text" inputmode="decimal" id="add-amount"
+                    class="price-toggle-input"
+                    placeholder="0"
+                    oninput="handleAddSubAmountInput(this)"
+                    onclick="event.stopPropagation(); selectPriceMode('monthly');">
+            </div>
+        </div>
+
+        <div class="price-toggle-card" id="total-price-card" onclick="selectPriceMode('total')">
+            <div class="price-toggle-label">Yearly</div>
+            <div class="price-toggle-amt-row">
+                <span class="price-toggle-currency">₫</span>
+                <input type="text" inputmode="decimal" id="add-total-amount"
+                    class="price-toggle-input"
+                    placeholder="0"
+                    oninput="handleAddSubAmountInput(this)"
+                    onclick="event.stopPropagation(); selectPriceMode('total');">
+            </div>
+        </div>
     </div>
-    <div class="form-row-2col">
-      <div class="add-field">
-        <label><i class="bi bi-calendar4"></i> From Date</label>
-        <input type="date" id="add-start-date">
-      </div>
-      <div class="add-field">
-        <label><i class="bi bi-calendar4"></i> To Date</label>
-        <input type="date" id="add-end-date">
-      </div>
+
+    <!-- NEW: single date-range trigger replacing From/To date inputs -->
+    <div class="add-field">
+        <label>Subscription Period</label>
+        <div class="th-filter-wrap" onclick="toggleAddSubDatePicker(event)" style="position: relative; width: 100%;">
+            <div id="add-sub-date-trigger" class="add-sub-date-trigger">
+                <span id="add-sub-date-trigger-text">Select date range</span>
+                <i class="bi bi-calendar" style="color: rgba(255,255,255,0.5); font-size: 4vw!important;"></i>
+            </div>
+            <input type="hidden" id="add-start-date" value="">
+            <input type="hidden" id="add-end-date" value="">
+            <div class="col-menu col-menu-date-range" id="add-sub-cal-menu">
+                <div class="cal-header">
+                    <button type="button" class="cal-nav-btn" onclick="addSubCalNavigate(event, -1)"><i class="bi bi-chevron-left"></i></button>
+                    <div class="cal-month-label" id="add-sub-cal-month-label">—</div>
+                    <button type="button" class="cal-nav-btn" onclick="addSubCalNavigate(event, 1)"><i class="bi bi-chevron-right"></i></button>
+                </div>
+                <div class="cal-range-display" id="add-sub-cal-range-display">Select a date range</div>
+                <div class="cal-weekdays">
+                    <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                </div>
+                <div class="cal-grid" id="add-sub-cal-grid"></div>
+                <div class="col-menu-divider"></div>
+                <div class="date-range-actions">
+                    <button type="button" class="date-range-btn date-range-clear" onclick="clearAddSubDateRange(event)">Clear</button>
+                    <button type="button" class="date-range-btn date-range-apply" onclick="applyAddSubDateRange(event)">Apply</button>
+                </div>
+            </div>
+        </div>
     </div>
+
     <div class="add-actions">
       <button class="add-cancel-btn" id="add-cancel-btn">Cancel</button>
       <button class="add-submit-btn" id="add-submit-btn">Save</button>
@@ -3223,9 +3440,29 @@ buildColHdr(); applyLayout();
   var addStatusEl = document.getElementById("add-status");
   var addSubmitBtn = document.getElementById("add-submit-btn");
 
-  document.getElementById("add-fab").addEventListener("click",function(){document.getElementById("add-title").value="",document.getElementById("add-total-amount").value="",document.getElementById("add-amount").value="",document.getElementById("add-start-date").value=(new Date).toISOString().slice(0,10),document.getElementById("add-end-date").value=(new Date).toISOString().slice(0,10),document.getElementById("add-user").value="1",addStatusEl.textContent="",addStatusEl.className="add-status",addOverlay.classList.add("open")});
-  document.getElementById("add-cancel-btn").addEventListener("click",function(){addOverlay.classList.remove("open")}),addOverlay.addEventListener("click",function(e){e.target===addOverlay&&addOverlay.classList.remove("open")});
+  document.getElementById("add-fab").addEventListener("click", function() {
+    document.getElementById("add-title").value = "";
+    document.getElementById("add-total-amount").value = "";
+    document.getElementById("add-amount").value = "";
 
+    // NEW: reset date-range picker instead of native date inputs
+    addSubCalState.rangeStart = null;
+    addSubCalState.rangeEnd = null;
+    addSubCalState.hoverDate = null;
+    document.getElementById("add-start-date").value = "";
+    document.getElementById("add-end-date").value = "";
+    document.getElementById("add-sub-date-trigger-text").textContent = "Select date range";
+
+    document.getElementById("add-user").value = "1";
+    addStatusEl.textContent = "";
+    addStatusEl.className = "add-status";
+    addOverlay.classList.add("open");
+    selectPriceMode("monthly");
+});
+  document.getElementById("add-cancel-btn").addEventListener("click", function() {
+    addOverlay.classList.remove("open");
+    document.querySelectorAll('[id="add-sub-cal-menu"]').forEach(function(el) { el.remove(); }); // NEW
+});
   var addCancelBtn = document.getElementById("add-cancel-btn") || document.getElementById("add-close-btn");
   var addSubmitBtn = document.getElementById("add-submit-btn");
   var addStatusEl = document.getElementById("add-status-el") || document.getElementById("add-status");
@@ -3341,6 +3578,266 @@ buildColHdr(); applyLayout();
     });
     });
   }
+  // ============ NUMBER FIELD FORMATTING (matches previous modal's DM Sans amount style) ============
+function handleAddSubAmountInput(el) {
+    var raw = el.value.replace(/[^\d]/g, "");
+    if (raw === "") {
+        el.value = "";
+    } else {
+        el.value = parseInt(raw, 10).toLocaleString("en-US");
+    }
+
+    // NEW: if the user is typing into Yearly, auto-calculate Monthly
+    if (el.id === "add-total-amount") {
+        var yearlyVal = raw === "" ? 0 : parseInt(raw, 10);
+        var monthlyInput = document.getElementById("add-amount");
+        if (yearlyVal > 0) {
+            var calculatedMonthly = Math.round(yearlyVal / 12);
+            monthlyInput.value = calculatedMonthly.toLocaleString("en-US");
+            monthlyInput.dataset.autoCalculated = "true"; // mark as auto-filled, not user-typed
+        } else {
+            monthlyInput.value = "";
+            delete monthlyInput.dataset.autoCalculated;
+        }
+    }
+
+    // If user manually edits Monthly directly, clear the auto-calculated flag
+    if (el.id === "add-amount") {
+        delete el.dataset.autoCalculated;
+    }
+}
+function adjustUserCount(delta) {
+    var input = document.getElementById('add-user');
+    var current = parseInt(input.value, 10) || 1;
+    var next = current + delta;
+    if (next < 1) next = 1; // minimum 1 user
+    if (next > 999) next = 999; // reasonable upper cap, adjust as needed
+    input.value = next;
+}
+var currentPriceMode = "monthly"; // "monthly" or "total"
+
+function selectPriceMode(mode) {
+    currentPriceMode = mode;
+    document.getElementById("monthly-price-card").classList.toggle("selected", mode === "monthly");
+    document.getElementById("total-price-card").classList.toggle("selected", mode === "total");
+}
+
+function syncPriceToggleDisplay() {
+
+}
+
+// ============ ADD SUBSCRIPTION DATE-RANGE PICKER (namespaced to avoid collisions) ============
+var addSubCalState = {
+    viewYear: new Date().getFullYear(),
+    viewMonth: new Date().getMonth(),
+    rangeStart: null,
+    rangeEnd: null,
+    hoverDate: null
+};
+
+var FULL_MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+function formatDateLong(d) {
+    if (!d) return "";
+    return FULL_MONTH_NAMES[d.getMonth()] + " " + String(d.getDate()).padStart(2, '0') + ", " + d.getFullYear();
+}
+
+function toggleAddSubDatePicker(e) {
+    e.stopPropagation();
+    var menu = document.getElementById('add-sub-cal-menu');
+    var isOpen = menu.classList.contains('open');
+
+    document.querySelectorAll('.col-menu').forEach(function(m) { m.classList.remove('open'); });
+
+    if (!isOpen) {
+        document.querySelectorAll('[id="add-sub-cal-menu"]').forEach(function(el) {
+            if (el !== menu) el.remove();
+        });
+
+        document.body.appendChild(menu);
+        var rect = e.currentTarget.getBoundingClientRect();
+
+        if (window.innerWidth <= 400) {
+            menu.style.position = "fixed";
+            menu.style.top = (rect.bottom + 6) + "px";
+            menu.style.left = "50%";
+            menu.style.right = "auto";
+            menu.style.transform = "translateX(-50%)";
+            menu.style.margin = "0";
+        } else {
+            menu.style.position = "fixed";
+            menu.style.top = (rect.bottom + 6) + "px";
+            menu.style.left = rect.left + "px";
+            menu.style.transform = "none";
+        }
+
+        menu.classList.add('open');
+        renderAddSubCalendar();
+    }
+}
+
+function renderAddSubCalendar() {
+    var label = document.getElementById("add-sub-cal-month-label");
+    var grid = document.getElementById("add-sub-cal-grid");
+    if (!label || !grid) return;
+
+    label.textContent = MONTH_NAMES[addSubCalState.viewMonth] + " " + addSubCalState.viewYear;
+    updateAddSubRangeDisplay();
+
+    grid.innerHTML = "";
+
+    var firstOfMonth = new Date(addSubCalState.viewYear, addSubCalState.viewMonth, 1);
+    var startDow = firstOfMonth.getDay();
+    var daysInMonth = new Date(addSubCalState.viewYear, addSubCalState.viewMonth + 1, 0).getDate();
+    var daysInPrevMonth = new Date(addSubCalState.viewYear, addSubCalState.viewMonth, 0).getDate();
+    var today = new Date();
+
+    for (var i = 0; i < 42; i++) {
+        var cellDate, isOtherMonth = false;
+        var dayNum = i - startDow + 1;
+
+        if (dayNum < 1) {
+            cellDate = new Date(addSubCalState.viewYear, addSubCalState.viewMonth - 1, daysInPrevMonth + dayNum);
+            isOtherMonth = true;
+        } else if (dayNum > daysInMonth) {
+            cellDate = new Date(addSubCalState.viewYear, addSubCalState.viewMonth + 1, dayNum - daysInMonth);
+            isOtherMonth = true;
+        } else {
+            cellDate = new Date(addSubCalState.viewYear, addSubCalState.viewMonth, dayNum);
+        }
+
+        var cellEl = document.createElement("div");
+        cellEl.className = "cal-day" + (isOtherMonth ? " other-month" : "");
+        cellEl.dataset.time = cellDate.getTime();
+        if (isSameDay(cellDate, today)) cellEl.classList.add("today");
+        cellEl.textContent = cellDate.getDate();
+
+        (function(d, el) {
+            el.addEventListener("click", function(e) {
+                e.stopPropagation();
+                addSubSelectDate(d);
+            });
+            el.addEventListener("mouseenter", function() {
+                if (addSubCalState.rangeStart && !addSubCalState.rangeEnd) {
+                    addSubCalState.hoverDate = d;
+                    updateAddSubRangeClassesOnly();
+                }
+            });
+        })(cellDate, cellEl);
+
+        grid.appendChild(cellEl);
+    }
+
+    updateAddSubRangeClassesOnly();
+}
+
+function updateAddSubRangeClassesOnly() {
+    var grid = document.getElementById("add-sub-cal-grid");
+    if (!grid) return;
+
+    var cells = grid.querySelectorAll(".cal-day");
+    var effectiveEnd = addSubCalState.rangeEnd || addSubCalState.hoverDate;
+
+    cells.forEach(function(cellEl) {
+        cellEl.classList.remove("in-range", "range-start", "range-end");
+        var cellDate = new Date(parseInt(cellEl.dataset.time, 10));
+
+        if (addSubCalState.rangeStart && effectiveEnd) {
+            var rs = addSubCalState.rangeStart < effectiveEnd ? addSubCalState.rangeStart : effectiveEnd;
+            var re = addSubCalState.rangeStart < effectiveEnd ? effectiveEnd : addSubCalState.rangeStart;
+            if (cellDate >= rs && cellDate <= re) cellEl.classList.add("in-range");
+            if (isSameDay(cellDate, rs)) cellEl.classList.add("range-start");
+            if (isSameDay(cellDate, re)) cellEl.classList.add("range-end");
+        } else if (addSubCalState.rangeStart && isSameDay(cellDate, addSubCalState.rangeStart)) {
+            cellEl.classList.add("range-start");
+        }
+    });
+
+    updateAddSubRangeDisplay();
+}
+
+function updateAddSubRangeDisplay() {
+    var display = document.getElementById("add-sub-cal-range-display");
+    if (!display) return;
+
+    if (addSubCalState.rangeStart && addSubCalState.rangeEnd) {
+        display.textContent = formatDateShort(addSubCalState.rangeStart) + "  →  " + formatDateShort(addSubCalState.rangeEnd);
+    } else if (addSubCalState.rangeStart) {
+        display.textContent = formatDateShort(addSubCalState.rangeStart) + "  →  Select end date";
+    } else {
+        display.textContent = "Select a date range";
+    }
+}
+
+function addSubSelectDate(d) {
+    if (!addSubCalState.rangeStart || (addSubCalState.rangeStart && addSubCalState.rangeEnd)) {
+        addSubCalState.rangeStart = d;
+        addSubCalState.rangeEnd = null;
+        addSubCalState.hoverDate = null;
+    } else {
+        if (d < addSubCalState.rangeStart) {
+            addSubCalState.rangeEnd = addSubCalState.rangeStart;
+            addSubCalState.rangeStart = d;
+        } else {
+            addSubCalState.rangeEnd = d;
+        }
+        addSubCalState.hoverDate = null;
+    }
+    updateAddSubRangeClassesOnly();
+}
+
+function addSubCalNavigate(e, dir) {
+    e.stopPropagation();
+    addSubCalState.viewMonth += dir;
+    if (addSubCalState.viewMonth > 11) { addSubCalState.viewMonth = 0; addSubCalState.viewYear++; }
+    if (addSubCalState.viewMonth < 0) { addSubCalState.viewMonth = 11; addSubCalState.viewYear--; }
+    renderAddSubCalendar();
+}
+
+function applyAddSubDateRange(e) {
+    e.stopPropagation();
+
+    if (!addSubCalState.rangeStart || !addSubCalState.rangeEnd) {
+        return; // require both dates before applying
+    }
+
+    var startISO = addSubCalState.rangeStart.toISOString().slice(0, 10);
+    var endISO = addSubCalState.rangeEnd.toISOString().slice(0, 10);
+
+    document.getElementById("add-start-date").value = startISO;
+    document.getElementById("add-end-date").value = endISO;
+
+    // Display formatted like "August 01, 2026 - December 01, 2026"
+    var triggerText = document.getElementById("add-sub-date-trigger-text");
+    if (triggerText) {
+        triggerText.textContent = formatDateLong(addSubCalState.rangeStart) + " - " + formatDateLong(addSubCalState.rangeEnd);
+    }
+
+    document.getElementById("add-sub-cal-menu").classList.remove("open");
+}
+
+function clearAddSubDateRange(e) {
+    e.stopPropagation();
+    addSubCalState.rangeStart = null;
+    addSubCalState.rangeEnd = null;
+    addSubCalState.hoverDate = null;
+
+    document.getElementById("add-start-date").value = "";
+    document.getElementById("add-end-date").value = "";
+
+    var triggerText = document.getElementById("add-sub-date-trigger-text");
+    if (triggerText) triggerText.textContent = "Select date range";
+
+    renderAddSubCalendar();
+}
+
+// Prevent clicks inside the calendar from closing it
+document.addEventListener("DOMContentLoaded", function() {
+    var menu = document.getElementById("add-sub-cal-menu");
+    if (menu) {
+        menu.addEventListener("click", function(e) { e.stopPropagation(); });
+    }
+});
 
   function initCashModal() {
     var CASH_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbybMjy9UV5AeEgMULGe-RhBeqV2-vW6snqQcHWAZY_rxpI3aUretpPOP5y_kV4sbIw4/exec";
@@ -3354,7 +3851,7 @@ buildColHdr(); applyLayout();
 
     if (!addCashBtn || !cashOverlay || !cashSubmit) {console.warn("Cash modal elements missing from the DOM. Skipping initialization.");return;}
 
-    Object.assign(cashOverlay.style,{position:"fixed",top:"0",left:"0",width:"100%",height:"100%",backgroundColor:"rgba(0, 0, 0, 0.75)",backdropFilter:"blur(4px)",webkitBackdropFilter:"blur(4px)",zIndex:"2147483647",display:"none",alignItems:"flex-start",justifyContent:"center",paddingTop:"200px",opacity:"1"});
+    Object.assign(cashOverlay.style,{position:"fixed",top:"0",left:"0",width:"100%",height:"100%",backgroundColor:"rgba(0, 0, 0, 0.75)",backdropFilter:"blur(4px)",webkitBackdropFilter:"blur(4px)",zIndex:"999",display:"none",alignItems:"flex-start",justifyContent:"center",paddingTop:"200px",opacity:"1"});
     cashCancel&&Object.assign(cashCancel.style,{flex:"1",fontFamily:"Lexend, sans-serif",fontSize:"14px",padding:"14px",background:"#1e222b",border:"0px solid #2d313c",color:"#cbd5e1",borderRadius:"12px",fontWeight:"600",cursor:"pointer"});
     cashSubmit&&Object.assign(cashSubmit.style,{flex:"2",fontFamily:"Lexend, sans-serif",fontSize:"14px",padding:"14px",background:"#2d3748",border:"none",color:"#ffffff",borderRadius:"12px",fontWeight:"600",cursor:"pointer"});
 
@@ -3434,7 +3931,7 @@ buildColHdr(); applyLayout();
 
     var modalOverlay = document.createElement("div");
     modalOverlay.id = modalId;
-    Object.assign(modalOverlay.style,{position:"fixed",top:"0",left:"0",width:"100%",height:"100%",backgroundColor:"rgba(0, 0, 0, 0.75)",backdropFilter:"blur(4px)",webkitBackdropFilter:"blur(4px)",zIndex:"2147483647",display:"flex",alignItems:"flex-start",justifyContent:"center",paddingTop:"200px",justifyContent:"center",opacity:"1"});
+    Object.assign(modalOverlay.style,{position:"fixed",top:"0",left:"0",width:"100%",height:"100%",backgroundColor:"rgba(0, 0, 0, 0.75)",backdropFilter:"blur(4px)",webkitBackdropFilter:"blur(4px)",zIndex:"999",display:"flex",alignItems:"flex-start",justifyContent:"center",paddingTop:"200px",justifyContent:"center",opacity:"1"});
     var displayName = targetItem.title || targetItem.detail;
     var displayIcon = targetItem.icon;
     var displayAmount = typeof fmtMoney === "function" ? fmtMoney(targetItem.amount) : targetItem.amount;
@@ -3478,7 +3975,7 @@ buildColHdr(); applyLayout();
     if (!targetItem) {console.error("FAIL: Target item is completely null.");alert("Unable to validate transaction details: No data received.");return;}
     var modalId = "expense-edit-modal";var existingModal = document.getElementById(modalId);if (existingModal) existingModal.remove();
     var modalOverlay = document.createElement("div");modalOverlay.id = modalId;
-    Object.assign(modalOverlay.style,{position:"fixed",top:"0",left:"0",width:"100%",height:"100%",backgroundColor:"rgba(0, 0, 0, 0.75)",backdropFilter:"blur(4px)",webkitBackdropFilter:"blur(4px)",zIndex:"2147483647",display:"flex",alignItems:"flex-start",justifyContent:"center",paddingTop:"200px",opacity:"1"});
+    Object.assign(modalOverlay.style,{position:"fixed",top:"0",left:"0",width:"100%",height:"100%",backgroundColor:"rgba(0, 0, 0, 0.75)",backdropFilter:"blur(4px)",webkitBackdropFilter:"blur(4px)",zIndex:"999",display:"flex",alignItems:"flex-start",justifyContent:"center",paddingTop:"200px",opacity:"1"});
     var iconHtml = '';var fallbackChar = targetItem.title ? targetItem.title.charAt(0) : "?";
     var fallbackDivString = `<div class=\\'ico-fb\\' style=\\'width: 9vw; height: 9vw; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 13px; font-weight: 600; text-transform: uppercase;\\'>${fallbackChar}</div>`;
     var iconStr = targetItem.icon.trim();
@@ -3689,7 +4186,7 @@ buildColHdr(); applyLayout();
     if (existingModal) existingModal.remove();
     var modalOverlay = document.createElement("div");
     modalOverlay.id = modalId;
-    Object.assign(modalOverlay.style,{position:"fixed",top:"0",left:"0",width:"100%",height:"100%",backgroundColor:"rgba(0, 0, 0, 0.75)",backdropFilter:"blur(4px)",webkitBackdropFilter:"blur(4px)",zIndex:"2147483647",display:"flex",alignItems:"flex-start",justifyContent:"center",paddingTop:"200px",opacity:"1"});    var displayName = targetItem.title || targetItem.detail || "Transaction";
+    Object.assign(modalOverlay.style,{position:"fixed",top:"0",left:"0",width:"100%",height:"100%",backgroundColor:"rgba(0, 0, 0, 0.75)",backdropFilter:"blur(4px)",webkitBackdropFilter:"blur(4px)",zIndex:"999",display:"flex",alignItems:"flex-start",justifyContent:"center",paddingTop:"200px",opacity:"1"});    var displayName = targetItem.title || targetItem.detail || "Transaction";
     var displayAmount = typeof fmtMoney === "function" ? fmtMoney(targetItem.amount) : targetItem.amount;
 
     var iconHtml = '';
@@ -3891,7 +4388,7 @@ buildColHdr(); applyLayout();
     var modalOverlay = document.createElement("div");
     modalOverlay.id = modalId;
     
-    Object.assign(modalOverlay.style,{position:"fixed",top:"0",left:"0",width:"100%",height:"100%",backgroundColor:"rgba(0, 0, 0, 0.75)",backdropFilter:"blur(4px)",webkitBackdropFilter:"blur(4px)",zIndex:"2147483647",display:"flex",alignItems:"flex-start",justifyContent:"center",paddingTop:"200px",opacity:"1"});
+    Object.assign(modalOverlay.style,{position:"fixed",top:"0",left:"0",width:"100%",height:"100%",backgroundColor:"rgba(0, 0, 0, 0.75)",backdropFilter:"blur(4px)",webkitBackdropFilter:"blur(4px)",zIndex:"999",display:"flex",alignItems:"flex-start",justifyContent:"center",paddingTop:"200px",opacity:"1"});
 
     var iconHtml = '';
     var fallbackChar = targetItem.title ? targetItem.title.charAt(0) : "?";
@@ -3945,12 +4442,24 @@ buildColHdr(); applyLayout();
         </div>
         <div style="width: 40%; flex-shrink: 0;">
             <label style="color: rgba(255,255,255,0.5); font-size: 12px; display: block; margin-bottom: 6px;">Date</label>
-            <input type="date" 
-                id="history-edit-date" 
-                value="${inputFormattedDate}" 
-                style="font-family: 'Lexend', sans-serif !important; -webkit-appearance:none;-moz-appearance:none;appearance:none;width:100% !important;height:10vw !important;width: 100%; background: rgba(255,255,255,0.05); border: 0px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 8px; color: #fff; font-size: 13px; box-sizing: border-box; outline: none; transition: border-color 0.2s; color-scheme: dark;" 
-                onfocus="this.style.borderColor='rgba(255,255,255,0.25)'" 
-                onblur="this.style.borderColor='rgba(255,255,255,0.1)'"/>
+            <div class="th-filter-wrap" onclick="toggleHistoryEditDatePicker(event)" style="position: relative; width: 100%;">
+                <div id="history-edit-date-trigger" style="font-family: 'Lexend', sans-serif !important; width:100% !important; height:10vw !important; background: rgba(255,255,255,0.05); border: 0px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 8px; color: #fff; font-size: 13px; box-sizing: border-box; outline: none; display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
+                    <span id="history-edit-date-text">${inputFormattedDate ? formatDateShort(new Date(inputFormattedDate)) : "Select date"}</span>
+                    <i class="bi bi-calendar" style="color: rgba(255,255,255,0.5); font-size: 14px!important;"></i>
+                </div>
+                <input type="hidden" id="history-edit-date" value="${inputFormattedDate}" />
+                <div class="col-menu col-menu-date-single" id="history-edit-cal-menu">
+                    <div class="cal-header">
+                        <button type="button" class="cal-nav-btn" onclick="historyEditCalNavigate(event, -1)"><i class="bi bi-chevron-left"></i></button>
+                        <div class="cal-month-label" id="history-edit-cal-month-label">—</div>
+                        <button type="button" class="cal-nav-btn" onclick="historyEditCalNavigate(event, 1)"><i class="bi bi-chevron-right"></i></button>
+                    </div>
+                    <div class="cal-weekdays">
+                        <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                    </div>
+                    <div class="cal-grid" id="history-edit-cal-grid"></div>
+                </div>
+            </div>
         </div>
         </div>
 
@@ -3993,7 +4502,127 @@ buildColHdr(); applyLayout();
     var restoreButtonsFromError=function(){var buttonsContainer=document.getElementById("modalActionButtonsContainer"),errorEl=document.getElementById("modalErrorMessage"),saveBtn=document.getElementById("history-edit-save"),cancelBtn=document.getElementById("history-edit-cancel");errorEl&&(errorEl.style.display="none"),buttonsContainer&&(buttonsContainer.style.display="flex"),saveBtn&&(saveBtn.disabled=!1,saveBtn.style.opacity="1",saveBtn.textContent="Update"),cancelBtn&&(cancelBtn.disabled=!1),rowContainer&&(rowContainer.style.opacity="1",rowContainer.style.pointerEvents="auto")};
     document.getElementById("modalErrorMessage").addEventListener("click", restoreButtonsFromError);
     document.getElementById("history-edit-save").addEventListener("click",function(e){e.preventDefault();var saveBtn=document.getElementById("history-edit-save"),cancelBtn=document.getElementById("history-edit-cancel"),buttonsContainer=document.getElementById("modalActionButtonsContainer"),errorEl=document.getElementById("modalErrorMessage"),errorTextEl=document.getElementById("errorText"),successEl=document.getElementById("modalSuccessMessage"),successTextEl=document.getElementById("successText");errorEl&&(errorEl.style.display="none"),successEl&&(successEl.style.display="none");var updatedTitle=document.getElementById("history-edit-title").value.trim(),amountRawString=document.getElementById("history-edit-amount").value.replace(/,/g,""),updatedAmount=Number(amountRawString)||0,updatedDetail=document.getElementById("history-edit-detail").value.trim(),updatedDate=document.getElementById("history-edit-date").value;if(!updatedTitle)return buttonsContainer&&(buttonsContainer.style.display="none"),errorTextEl&&(errorTextEl.textContent="Title / Category cannot be empty."),void(errorEl&&(errorEl.style.display="flex",setTimeout(restoreButtonsFromError,2500)));if(!updatedDate)return buttonsContainer&&(buttonsContainer.style.display="none"),errorTextEl&&(errorTextEl.textContent="Date field cannot be empty."),void(errorEl&&(errorEl.style.display="flex",setTimeout(restoreButtonsFromError,2500)));saveBtn&&(saveBtn.disabled=!0,saveBtn.style.opacity="0.5",saveBtn.textContent="Processing..."),cancelBtn&&(cancelBtn.disabled=!0),rowContainer&&(rowContainer.style.opacity="0.3",rowContainer.style.pointerEvents="none");var updatePayload={action:"updateHistory",date:targetItem.date,title:targetItem.title,account:targetItem.account,oldAmount:targetItem.amount,oldDetail:targetItem.detail,newDate:updatedDate,newTitle:updatedTitle,newAmount:updatedAmount,newDetail:updatedDetail};fetch(EXPENSE_APPS_SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify(updatePayload)}).then(function(){buttonsContainer&&(buttonsContainer.style.display="none"),errorEl&&(errorEl.style.display="none"),successTextEl&&(successTextEl.textContent="History updated!"),successEl&&(successEl.style.display="flex"),setTimeout(function(){if(cleanupModal(),rowContainer){rowContainer.style.opacity="1",rowContainer.style.pointerEvents="auto",rowContainer.style.transform="";var targetInner=rowContainer.querySelector(".ca-history-row, .subs-row, .row, [style*='transform']");targetInner&&(targetInner.style.transform="")}document.querySelectorAll(".sub-swipe-container, .swiped").forEach(function(item){item.classList.remove("swiped"),item.style.transform="",item.querySelectorAll(".ca-history-row, .subs-row, .row, div").forEach(function(inner){inner.style.transform&&(inner.style.transform="")});var delAct=item.querySelector(".sub-delete-action"),editAct=item.querySelector(".sub-edit-action");delAct&&(delAct.style.zIndex="1"),editAct&&(editAct.style.zIndex="1")});var historyContainer=document.getElementById("historyListContainer");historyContainer&&historyContainer.classList.add("data-refreshing"),"function"==typeof loadHistoryTransactions?loadHistoryTransactions():"function"==typeof loadTransactions&&loadTransactions(),setTimeout(function(){historyContainer&&(historyContainer.classList.remove("data-refreshing"),historyContainer.classList.add("data-refreshed"),setTimeout(function(){historyContainer.classList.remove("data-refreshed")},600))},500)},1200)}).catch(function(err){rowContainer&&(rowContainer.style.opacity="1",rowContainer.style.pointerEvents="auto"),buttonsContainer&&(buttonsContainer.style.display="none"),successEl&&(successEl.style.display="none"),errorTextEl&&(errorTextEl.textContent="Failed: "+err.message),errorEl&&(errorEl.style.display="flex"),setTimeout(restoreButtonsFromError,3e3)})});
+  
   }
+  // ============ HISTORY EDIT DATE PICKER ============
+var historyEditCalState = {
+    viewYear: new Date().getFullYear(),
+    viewMonth: new Date().getMonth(),
+    selectedDate: null
+};
+
+function toggleHistoryEditDatePicker(e) {
+    e.stopPropagation();
+    var menu = document.getElementById('history-edit-cal-menu');
+    var isOpen = menu.classList.contains('open');
+
+    document.querySelectorAll('.col-menu').forEach(function(m) { m.classList.remove('open'); });
+
+    if (!isOpen) {
+        document.querySelectorAll('[id="history-edit-cal-menu"]').forEach(function(el) {
+            if (el !== menu) el.remove();
+        });
+
+        document.body.appendChild(menu);
+        var rect = e.currentTarget.getBoundingClientRect();
+
+        if (window.innerWidth <= 400) {
+            menu.style.position = "fixed";
+            menu.style.top = (rect.bottom + 6) + "px";
+            menu.style.left = "50%";
+            menu.style.right = "auto";
+            menu.style.transform = "translateX(-50%)";
+            menu.style.margin = "0";
+        } else {
+            menu.style.position = "fixed";
+            menu.style.top = (rect.bottom + 6) + "px";
+            menu.style.left = rect.left + "px";
+            menu.style.transform = "none";
+        }
+
+        menu.classList.add('open');
+
+        // Initialize view to the currently selected date, or today if none set
+        var existingVal = document.getElementById('history-edit-date').value;
+        if (existingVal) {
+            var d = new Date(existingVal);
+            if (!isNaN(d)) {
+                historyEditCalState.selectedDate = d;
+                historyEditCalState.viewYear = d.getFullYear();
+                historyEditCalState.viewMonth = d.getMonth();
+            }
+        }
+
+        renderHistoryEditCalendar();
+    }
+}
+
+function renderHistoryEditCalendar() {
+    var label = document.getElementById('history-edit-cal-month-label');
+    var grid = document.getElementById('history-edit-cal-grid');
+    if (!label || !grid) return;
+
+    label.textContent = MONTH_NAMES[historyEditCalState.viewMonth] + " " + historyEditCalState.viewYear;
+    grid.innerHTML = "";
+
+    var firstOfMonth = new Date(historyEditCalState.viewYear, historyEditCalState.viewMonth, 1);
+    var startDow = firstOfMonth.getDay();
+    var daysInMonth = new Date(historyEditCalState.viewYear, historyEditCalState.viewMonth + 1, 0).getDate();
+    var daysInPrevMonth = new Date(historyEditCalState.viewYear, historyEditCalState.viewMonth, 0).getDate();
+    var today = new Date();
+
+    for (var i = 0; i < 42; i++) {
+        var cellDate, isOtherMonth = false;
+        var dayNum = i - startDow + 1;
+
+        if (dayNum < 1) {
+            cellDate = new Date(historyEditCalState.viewYear, historyEditCalState.viewMonth - 1, daysInPrevMonth + dayNum);
+            isOtherMonth = true;
+        } else if (dayNum > daysInMonth) {
+            cellDate = new Date(historyEditCalState.viewYear, historyEditCalState.viewMonth + 1, dayNum - daysInMonth);
+            isOtherMonth = true;
+        } else {
+            cellDate = new Date(historyEditCalState.viewYear, historyEditCalState.viewMonth, dayNum);
+        }
+
+        var cellEl = document.createElement('div');
+        cellEl.className = "cal-day" + (isOtherMonth ? " other-month" : "");
+        if (isSameDay(cellDate, today)) cellEl.classList.add("today");
+        if (historyEditCalState.selectedDate && isSameDay(cellDate, historyEditCalState.selectedDate)) {
+            cellEl.classList.add("range-start", "range-end");
+        }
+        cellEl.textContent = cellDate.getDate();
+
+        (function(d) {
+            cellEl.addEventListener("click", function(e) {
+                e.stopPropagation();
+                historyEditCalState.selectedDate = d;
+
+                var hiddenInput = document.getElementById('history-edit-date');
+                var triggerText = document.getElementById('history-edit-date-text');
+
+                // Store as YYYY-MM-DD (same format the native <input type="date"> would have given)
+                var yyyy = d.getFullYear();
+                var mm = String(d.getMonth() + 1).padStart(2, '0');
+                var dd = String(d.getDate()).padStart(2, '0');
+                hiddenInput.value = yyyy + '-' + mm + '-' + dd;
+
+                if (triggerText) triggerText.textContent = formatDateShort(d);
+                document.getElementById('history-edit-cal-menu').classList.remove('open');
+            });
+        })(cellDate);
+
+        grid.appendChild(cellEl);
+    }
+}
+
+function historyEditCalNavigate(e, dir) {
+    e.stopPropagation();
+    historyEditCalState.viewMonth += dir;
+    if (historyEditCalState.viewMonth > 11) { historyEditCalState.viewMonth = 0; historyEditCalState.viewYear++; }
+    if (historyEditCalState.viewMonth < 0) { historyEditCalState.viewMonth = 11; historyEditCalState.viewYear--; }
+    renderHistoryEditCalendar();
+}
 
   /* ══ BTC Cycle Tracker ══ */
   var BTC_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=523826078";
@@ -4839,7 +5468,37 @@ buildColHdr(); applyLayout();
   function calQuickRange(e,days){e.stopPropagation();var end=new Date,start=new Date;start.setDate(start.getDate()-days),calState.rangeStart=start,calState.rangeEnd=end,calState.viewYear=end.getFullYear(),calState.viewMonth=end.getMonth(),renderCalendar()}
   function applyDateFilter(e){e.stopPropagation(),portfolioFilters.dateFrom=calState.rangeStart?calState.rangeStart.toISOString().slice(0,10):null,portfolioFilters.dateTo=calState.rangeEnd?calState.rangeEnd.toISOString().slice(0,10):null;var icon=document.getElementById("date-filter-icon");icon&&icon.classList.toggle("active-filter",!(!portfolioFilters.dateFrom||!portfolioFilters.dateTo)),document.getElementById("col-menu-date").classList.remove("open"),applyPortfolioFiltersAndRender()}
   function clearDateFilter(e){e.stopPropagation(),calState.rangeStart=null,calState.rangeEnd=null,calState.hoverDate=null,portfolioFilters.dateFrom=null,portfolioFilters.dateTo=null;var icon=document.getElementById("date-filter-icon");icon&&icon.classList.remove("active-filter"),renderCalendar(),document.getElementById("col-menu-date").classList.remove("open"),applyPortfolioFiltersAndRender()}
-  var origToggleColMenu=toggleColMenu;function toggleColMenu(e,colKey){e.stopPropagation();var menu=document.getElementById("col-menu-"+colKey),isOpen=menu.classList.contains("open");if(document.querySelectorAll(".col-menu").forEach(function(m){m.classList.remove("open")}),!isOpen){document.body.appendChild(menu);var rect=e.currentTarget.getBoundingClientRect();menu.style.top=rect.bottom+6+"px",menu.style.left=rect.left+"px",menu.classList.add("open"),"date"===colKey&&renderCalendar()}}
+  var origToggleColMenu=toggleColMenu;
+  function toggleColMenu(e, colKey) {
+    e.stopPropagation();
+    var menu = document.getElementById("col-menu-" + colKey);
+    var isOpen = menu.classList.contains("open");
+
+    document.querySelectorAll(".col-menu").forEach(function(m) { m.classList.remove("open"); });
+
+    if (!isOpen) {
+        document.body.appendChild(menu);
+        var rect = e.currentTarget.getBoundingClientRect();
+
+        if (window.innerWidth <= 400) {
+            // NEW: center horizontally on mobile
+            menu.style.position = "fixed";
+            menu.style.top = (rect.bottom + 6) + "px";
+            menu.style.left = "50%";
+            menu.style.right = "auto";
+            menu.style.transform = "translateX(-50%)";
+            menu.style.margin = "0";
+        } else {
+            menu.style.position = "fixed";
+            menu.style.top = (rect.bottom + 6) + "px";
+            menu.style.left = rect.left + "px";
+            menu.style.transform = "none";
+        }
+
+        menu.classList.add("open");
+        if (colKey === "date") renderCalendar();
+    }
+}
   document.addEventListener("DOMContentLoaded",function(){var dateMenu=document.getElementById("col-menu-date");dateMenu&&dateMenu.addEventListener("click",function(e){e.stopPropagation()})});
   function applyPortfolioFiltersAndRender() {
     if (typeof window.currentPortfolioGroups === "undefined") return;
@@ -5232,43 +5891,95 @@ buildColHdr(); applyLayout();
     <span style="color: #f8f9fa; font-weight: 600;" id="portfolioModalTitleText">Add Position</span>
     `;
 
-    // Account type options — using material-icons-round to match openModal()'s icon style
     const accountTypes = [
       { value: "Stock", icon: "https://github.com/tinsntp/investment/blob/main/stock.png?raw=true" },
       { value: "Saving", icon: "https://github.com/tinsntp/investment/blob/main/saving.png?raw=true" },
       { value: "Crypto", icon: "https://github.com/tinsntp/investment/blob/main/bitcoin.png?raw=true" },
       { value: "Forex", icon: "https://github.com/tinsntp/investment/blob/main/exness.png?raw=true" }
       ];
-      let accountTypeOptionsHTML = '';
-      accountTypes.forEach(function(t) {
-          accountTypeOptionsHTML += `
-          <div class="custom-option-item" data-value="${t.value}" data-icon="${t.icon}" onclick="handlePortfolioTypeSelect(this)" style="display:flex; align-items:center; gap:10px; padding:10px 12px; cursor:pointer;">
-              <img src="${t.icon}" style="width: 20px; height: 20px; border-radius: 4px; object-fit: cover;">
-              <span>${t.value}</span>
-          </div>
-          `;
+    let accountTypeOptionsHTML = '';
+    accountTypes.forEach(function(t) {
+        accountTypeOptionsHTML += `
+        <div class="custom-option-item" data-value="${t.value}" data-icon="${t.icon}" onclick="handlePortfolioTypeSelect(this)" style="display:flex; align-items:center; gap:10px; padding:10px 12px; cursor:pointer;">
+            <img src="${t.icon}" style="width: 20px; height: 20px; border-radius: 4px; object-fit: cover;">
+            <span>${t.value}</span>
+        </div>
+        `;
     });
 
+    // NEW: build "Select Account" options — same pattern/source as openModal()'s accountOptionsHTML
+    let portfolioAccountOptionsHTML = '';
+    let portfolioInitialTriggerText = "Select Account";
+    let portfolioDefaultAccountValue = '';
+
+    if (typeof accountsData !== 'undefined' && Array.isArray(accountsData)) {
+        const usableAccounts = accountsData.filter(acc => acc.account !== "Salary" && acc.account !== "SOCIAL");
+
+        // NEW: find the default account — the one containing "BANK" (case-insensitive)
+        const defaultBankAccount = usableAccounts.find(acc => acc.account && acc.account.toUpperCase().includes("BANK"));
+
+        usableAccounts.forEach(function(acc) {
+            const balanceFormatted = '₫' + Math.round(acc.amount).toLocaleString('vi-VN');
+            const iconUrl = acc.icon || 'https://cdn-icons-png.flaticon.com/512/3135/3135706.png';
+            const displayName = acc.account.toUpperCase().startsWith('SAVING') ? 'SAVING' : acc.account;
+
+            const innerContentHTML = `
+            <img src="${iconUrl}"
+                style="width: 20px; height: 20px; border-radius: 4px; object-fit: cover;"
+                onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135706.png'">
+            <span>${displayName} (${balanceFormatted})</span>
+            `;
+
+            // NEW: pre-fill trigger text + hidden value if this is the default BANK account
+            if (defaultBankAccount && acc.account === defaultBankAccount.account) {
+                portfolioInitialTriggerText = innerContentHTML;
+                portfolioDefaultAccountValue = acc.account;
+            }
+
+            portfolioAccountOptionsHTML += `
+            <div class="custom-option-item" data-value="${acc.account}" onclick="handlePortfolioAccountSelect(this)">
+                ${innerContentHTML}
+            </div>
+            `;
+        });
+    }
+
     body.innerHTML = `
-    <div class="modal-field-group" style="margin-bottom: 16px;">
-        <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Symbol:</label>
-        <input type="text"
-            id="portfolioSymbol"
-            placeholder="e.g. VCB, BTC, USD/JPY"
-            style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; font-weight:300!important; box-sizing: border-box; outline: none; text-transform: uppercase;" />
+    <!-- NEW: Select Account dropdown — only visible in Saving mode, sits where Symbol used to be -->
+    <div class="modal-field-group" style="margin-bottom: 16px; display: none;" id="portfolioSelectAccountWrapper">
+        <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Select Account:</label>
+        <div class="premium-select-wrapper" style="position: relative;">
+            <div class="custom-select-trigger" id="portfolioSelectAccountTrigger" onclick="togglePortfolioAccountDropdown(event)" style="font-weight:600; border:none; padding: 14px 16px; background: #111216; border-radius: 12px; color: #f8f9fa; font-size: 14px; display: flex; align-items: center; gap: 8px; justify-content: flex-start; cursor: pointer;">
+                ${portfolioInitialTriggerText}
+            </div>
+            <input type="hidden" id="portfolioTargetAccount" value="${portfolioDefaultAccountValue}" />
+            <div class="custom-select-options" id="portfolioSelectAccountOptions" style="display:none; position:absolute; left:0; top:calc(100% + 4px); background:#1e222b; border:0px solid #2d313c; border-radius:12px; width:100%; max-height:200px; overflow-y:auto; z-index:100; box-shadow:0 8px 24px rgba(0,0,0,0.5);">
+                ${portfolioAccountOptionsHTML}
+            </div>
+        </div>
     </div>
 
-    <div class="modal-field-group" style="margin-bottom: 16px;">
-        <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Account Type:</label>
-        <div class="premium-select-wrapper" style="position: relative;">
-            <div class="custom-select-trigger" id="portfolioTypeTrigger" onclick="togglePortfolioTypeDropdown(event)" style="font-weight:600; border:none; padding: 14px 16px; background: #111216; border-radius: 12px; color: #f8f9fa; font-size: 14px; display: flex; align-items: center; gap: 10px; justify-content: flex-start; cursor: pointer;">
-              <img id="portfolioTypeTriggerIcon" src="" style="width: 20px; height: 20px; border-radius: 4px; object-fit: cover; display:none;">
-              <span id="portfolioTypeTriggerText">Select Type</span>
+    <!-- Symbol + Account Type row — stacked in normal mode, side-by-side in Saving mode -->
+    <div id="portfolioTopRow">
+        <div class="modal-field-group" style="margin-bottom: 16px;" id="portfolioAccountTypeWrapper">
+            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Account Type:</label>
+            <div class="premium-select-wrapper" style="position: relative;">
+                <div class="custom-select-trigger" id="portfolioTypeTrigger" onclick="togglePortfolioTypeDropdown(event)" style="font-weight:600; border:none; padding: 14px 16px; background: #111216; border-radius: 12px; color: #f8f9fa; font-size: 14px; display: flex; align-items: center; gap: 10px; justify-content: flex-start; cursor: pointer;">
+                    <img id="portfolioTypeTriggerIcon" src="" style="width: 20px; height: 20px; border-radius: 4px; object-fit: cover; display:none;">
+                    <span id="portfolioTypeTriggerText">Select Type</span>
+                </div>
+                <input type="hidden" id="portfolioAccountType" value="" />
+                <div class="custom-select-options" id="portfolioTypeOptions" style="display:none; position:absolute; left:0; top:calc(100% + 4px); background:#1e222b; border:0px solid #2d313c; border-radius:12px; width:100%; max-height:200px; overflow-y:auto; z-index:100; box-shadow:0 8px 24px rgba(0,0,0,0.5);">
+                    ${accountTypeOptionsHTML}
+                </div>
             </div>
-            <input type="hidden" id="portfolioAccountType" value="" />
-            <div class="custom-select-options" id="portfolioTypeOptions" style="display:none; position:absolute; left:0; top:calc(100% + 4px); background:#1e222b; border:0px solid #2d313c; border-radius:12px; width:100%; max-height:200px; overflow-y:auto; z-index:100; box-shadow:0 8px 24px rgba(0,0,0,0.5);">
-                ${accountTypeOptionsHTML}
-            </div>
+        </div>
+        <div class="modal-field-group" style="margin-bottom: 16px;" id="portfolioSymbolWrapper">
+            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioSymbolLabel">Symbol:</label>
+            <input type="text"
+                id="portfolioSymbol"
+                placeholder="MBB"
+                style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; font-weight:300!important; box-sizing: border-box; outline: none; text-transform: uppercase;" />
         </div>
     </div>
 
@@ -5294,15 +6005,15 @@ buildColHdr(); applyLayout();
                 style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:DM Sans; font-size: 20px; box-sizing: border-box; outline: none;" />
         </div>
     </div>
-    
-   <div id="portfolioDateNoteRow" style="display: flex; gap: 12px; margin-bottom: 16px;">
+
+    <div id="portfolioDateNoteRow" style="display: flex; gap: 12px; margin-bottom: 16px;">
         <div style="flex: 1;" id="portfolioField3Col">
             <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioField3Label">Entry Date:</label>
             <div id="portfolioField3Wrapper">
                 <div class="th-filter-wrap" onclick="togglePortfolioDatePicker(event)" style="position: relative; width: 100%;">
                     <div id="portfolioDateTrigger" style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; box-sizing: border-box; cursor: pointer; display:flex; align-items:center; justify-content: space-between;">
                         <span id="portfolioDateTriggerText">Select date</span>
-                        <i class="bi bi-calendar3" style="color: var(--text-secondary); font-size: 14px;"></i>
+                        <i class="bi bi-calendar" style="color: var(--text-secondary); font-size: 14px!important;"></i>
                     </div>
                     <div class="col-menu col-menu-date-single" id="portfolio-cal-menu">
                         <div class="cal-header">
@@ -5327,7 +6038,6 @@ buildColHdr(); applyLayout();
                 style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; font-weight:300!important; box-sizing: border-box; outline: none;" />
         </div>
     </div>
-    </div>
 
     <div id="modalErrorMessage" style="display: none; padding: 12px; margin-bottom: 16px; background: rgba(220, 53, 69, 0.1); border: 0px solid #dc3545; color: #ea868f; border-radius: 8px; font-size: 13px; font-weight: 500;"></div>
     <div id="modalSuccessMessage" style="display: none; padding: 14px; margin-bottom: 16px; background: rgba(40, 167, 69, 0.15); border: 0px solid #28a745; color: #75b798; border-radius: 12px; font-size: 14px; font-weight: 500; text-align: center; align-items: center; justify-content: center; gap: 8px;">
@@ -5346,7 +6056,6 @@ buildColHdr(); applyLayout();
 
     window.portfolioIsSavingMode = false;
 
-    // NEW: default Account Type to Stock on open
     var defaultTypeOption = document.querySelector('#portfolioTypeOptions .custom-option-item[data-value="Stock"]');
     if (defaultTypeOption) {
         handlePortfolioTypeSelect(defaultTypeOption);
@@ -5358,7 +6067,29 @@ buildColHdr(); applyLayout();
     }, 50);
 }
 
-// ============ ACCOUNT TYPE DROPDOWN ============
+function togglePortfolioAccountDropdown(e) {
+    e.stopPropagation();
+    var options = document.getElementById('portfolioSelectAccountOptions');
+    var isOpen = options.style.display === 'block';
+    options.style.display = isOpen ? 'none' : 'block';
+}
+
+function handlePortfolioAccountSelect(el) {
+    var selectedValue = el.getAttribute('data-value');
+    var selectedInnerHtml = el.innerHTML;
+
+    document.getElementById('portfolioTargetAccount').value = selectedValue;
+    document.getElementById('portfolioSelectAccountTrigger').innerHTML = selectedInnerHtml;
+    document.getElementById('portfolioSelectAccountOptions').style.display = 'none';
+}
+
+document.addEventListener('click', function(e) {
+    var options = document.getElementById('portfolioSelectAccountOptions');
+    var trigger = document.getElementById('portfolioSelectAccountTrigger');
+    if (options && trigger && !trigger.contains(e.target) && !options.contains(e.target)) {
+        options.style.display = 'none';
+    }
+});
 function togglePortfolioTypeDropdown(e) {
     e.stopPropagation();
     var options = document.getElementById('portfolioTypeOptions');
@@ -5443,10 +6174,14 @@ function applyPortfolioModalMode(isSaving) {
     var field3Wrapper = document.getElementById('portfolioField3Wrapper');
     var chipsContainer = document.getElementById('portfolioAmountChips');
     var field2 = document.getElementById('portfolioField2');
-
     var dateNoteRow = document.getElementById('portfolioDateNoteRow');
     var field3Col = document.getElementById('portfolioField3Col');
     var noteCol = document.getElementById('portfolioNoteCol');
+    var topRow = document.getElementById('portfolioTopRow');
+    var symbolWrapper = document.getElementById('portfolioSymbolWrapper');
+    var accountTypeWrapper = document.getElementById('portfolioAccountTypeWrapper');
+    var selectAccountWrapper = document.getElementById('portfolioSelectAccountWrapper');
+    var symbolLabel = document.getElementById('portfolioSymbolLabel');
 
     if (isSaving) {
         titleText.textContent = "Open Saving Account";
@@ -5461,6 +6196,12 @@ function applyPortfolioModalMode(isSaving) {
         field2.setAttribute('onfocus', "handlePortfolioRateFocus(this)");
         field2.value = '';
         delete field2.dataset.rawValue;
+        selectAccountWrapper.style.display = "block";
+        topRow.style.display = "flex";
+        topRow.style.gap = "12px";
+        symbolWrapper.style.flex = "1";
+        accountTypeWrapper.style.flex = "1";
+        symbolLabel.textContent = "Bank:";
 
         // Saving branch:
         var field1Wrapper = document.getElementById('portfolioField1OuterWrapper'); // FIXED: always the stable outer div
@@ -5515,6 +6256,11 @@ function applyPortfolioModalMode(isSaving) {
         field2.removeAttribute('onblur');
         field2.removeAttribute('onfocus');
         field2.value = '';
+        selectAccountWrapper.style.display = "none";
+        topRow.style.display = "block";
+        symbolWrapper.style.flex = "none";
+        accountTypeWrapper.style.flex = "none";
+        symbolLabel.textContent = "Symbol:";
 
         // Else (normal) branch:
         var field1Wrapper = document.getElementById('portfolioField1OuterWrapper'); // FIXED: same stable ID, no more conditional lookup
@@ -5534,7 +6280,7 @@ function applyPortfolioModalMode(isSaving) {
             <div class="th-filter-wrap" onclick="togglePortfolioDatePicker(event)" style="position: relative; width: 100%;">
                 <div id="portfolioDateTrigger" style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; box-sizing: border-box; cursor: pointer; display:flex; align-items:center; justify-content: space-between;">
                     <span id="portfolioDateTriggerText">${portfolioCalState.selectedDate ? formatDateShort(portfolioCalState.selectedDate) : "Select date"}</span>
-                    <i class="bi bi-calendar3" style="color: var(--text-secondary); font-size: 14px;"></i>
+                    <i class="bi bi-calendar" style="color: var(--text-secondary); font-size: 14px!important;"></i>
                 </div>
                 <div class="col-menu col-menu-date-single" id="portfolio-cal-menu">
                     <div class="cal-header">
@@ -5560,6 +6306,137 @@ function applyPortfolioModalMode(isSaving) {
         noteCol.style.width = "auto";
     }
 }
+    function processPortfolioAdd() {
+        const symbol = document.getElementById('portfolioSymbol').value.trim().toUpperCase();
+        const accountType = document.getElementById('portfolioAccountType').value;
+
+        var field1El = document.getElementById('portfolioField1');
+        var field1; // Entry Price (normal mode) or # of Months (Saving mode)
+
+        if (window.portfolioIsSavingMode) {
+            field1 = parseFloat(field1El.value.replace(/,/g, '')) || 0;
+        } else {
+            field1 = field1El.dataset.computedValue
+                ? parseFloat(field1El.dataset.computedValue)
+                : parseFloat(field1El.value.replace(/,/g, '')) || 0;
+        }
+
+        // Field2: Rate (Saving) or Volume (normal) — use rawValue for Rate since it's stored without the % sign
+        var field2El = document.getElementById('portfolioField2');
+        var field2 = window.portfolioIsSavingMode
+            ? parseFloat(field2El.dataset.rawValue || field2El.value.replace('%', '')) || 0
+            : parseFloat(field2El.value.replace(/,/g, '')) || 0;
+
+        const note = document.getElementById('portfolioNote').value.trim();
+
+        // NEW: capture selected bank account when in Saving mode
+        const savingTargetAccount = window.portfolioIsSavingMode
+            ? document.getElementById('portfolioTargetAccount').value
+            : null;
+
+        const errorEl = document.getElementById('modalErrorMessage');
+        const successEl = document.getElementById('modalSuccessMessage');
+        const submitBtn = document.getElementById('portfolioSubmitBtn');
+        const cancelBtn = document.getElementById('modalCancelBtn');
+
+        // Field3: Amount (Saving) or Entry Date (normal)
+        var field3Value;
+        if (window.portfolioIsSavingMode) {
+            field3Value = parseFloat(document.getElementById('portfolioField3').value.replace(/,/g, '')) || 0;
+        } else {
+            // NEW: default to today's date if the user never picked one
+            if (portfolioCalState.selectedDate) {
+                field3Value = portfolioCalState.selectedDate.toISOString().slice(0, 10);
+            } else {
+                field3Value = new Date().toISOString().slice(0, 10);
+            }
+        }
+
+        // Validation
+        if (!symbol || !accountType || !field1 || !field2 || !field3Value || (window.portfolioIsSavingMode && !savingTargetAccount)) {
+            errorEl.textContent = "Please fill in all required fields.";
+            errorEl.style.display = "block";
+            successEl.style.display = "none";
+            return;
+        }
+
+        errorEl.style.display = "none";
+        successEl.style.display = "none";
+
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = "0.6";
+            submitBtn.textContent = window.portfolioIsSavingMode ? "Opening..." : "Adding...";
+        }
+        if (cancelBtn) {
+            cancelBtn.disabled = true;
+            cancelBtn.style.opacity = "0.5";
+        }
+
+        // Build payload
+        var payload = {};
+        if (window.portfolioIsSavingMode) {
+            payload = {
+                action: "portfolio_open_saving",
+                bank: symbol,          // "Bank" field (relabeled Symbol)
+                account: savingTargetAccount,
+                months: field1,
+                rate: field2,
+                amount: field3Value,
+                note: note
+            };
+        } else {
+            payload = {
+                action: "portfolio_add_position",
+                symbol: symbol,
+                accountType: accountType,
+                entryPrice: field1,
+                volume: field2,
+                entryDate: field3Value,
+                note: note
+            };
+        }
+
+        fetch(EXPENSE_APPS_SCRIPT_URL, {
+            method: "POST",
+            mode: "cors",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify(payload)
+        })
+        .then(function(response) {
+            if (!response.ok) throw new Error("Network response error: " + response.status);
+            return response.json();
+        })
+        .then(function(result) {
+            if (result.status !== "success") throw new Error(result.message || "Execution exception.");
+
+            // Refresh portfolio data if the loader function exists
+            if (typeof fetchOrderSheetCSV === "function") fetchOrderSheetCSV();
+
+            successEl.style.display = "flex";
+            if (submitBtn) submitBtn.style.display = "none";
+            if (cancelBtn) cancelBtn.style.display = "none";
+
+            setTimeout(function() {
+                if (typeof closeModal === "function") closeModal();
+            }, 1200);
+        })
+        .catch(function(err) {
+            console.error(err);
+            errorEl.textContent = "Server Error: " + err.message;
+            errorEl.style.display = "block";
+
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = "1";
+                submitBtn.textContent = window.portfolioIsSavingMode ? "Open Saving" : "Add Position";
+            }
+            if (cancelBtn) {
+                cancelBtn.disabled = false;
+                cancelBtn.style.opacity = "1";
+            }
+        });
+    }
 window.adjustPortfolioMonths = function(delta) {
     var input = document.getElementById('portfolioField1');
     if (!input) return;
@@ -5585,16 +6462,27 @@ function togglePortfolioDatePicker(e) {
     document.querySelectorAll('.col-menu').forEach(function(m) { m.classList.remove('open'); });
 
     if (!isOpen) {
-        // NEW: dedupe — remove any OTHER stray copies before using this one
         document.querySelectorAll('[id="portfolio-cal-menu"]').forEach(function(el) {
             if (el !== menu) el.remove();
         });
 
         document.body.appendChild(menu);
         var rect = e.currentTarget.getBoundingClientRect();
-        menu.style.top = (rect.bottom + 6) + "px";
-        menu.style.left = rect.left + "px";
-        menu.style.position = "fixed";
+
+        if (window.innerWidth <= 400) {
+            menu.style.position = "fixed";
+            menu.style.top = (rect.bottom + 6) + "px";
+            menu.style.left = "50%";
+            menu.style.right = "auto";
+            menu.style.transform = "translateX(-50%)";
+            menu.style.margin = "0";
+        } else {
+            menu.style.position = "fixed";
+            menu.style.top = (rect.bottom + 6) + "px";
+            menu.style.left = rect.left + "px";
+            menu.style.transform = "none";
+        }
+
         menu.classList.add('open');
         renderPortfolioCalendar();
     }
@@ -5662,6 +6550,9 @@ function portfolioCalNavigate(e, dir) {
 function processPortfolioAdd() {
     const symbol = document.getElementById('portfolioSymbol').value.trim().toUpperCase();
     const accountType = document.getElementById('portfolioAccountType').value;
+    const savingTargetAccount = window.portfolioIsSavingMode
+        ? document.getElementById('portfolioTargetAccount').value
+        : null;
 
     var field1El = document.getElementById('portfolioField1');
     var field1; // Entry Price (normal mode) or # of Months (Saving mode)
@@ -5688,7 +6579,7 @@ function processPortfolioAdd() {
         field3Value = portfolioCalState.selectedDate ? portfolioCalState.selectedDate.toISOString().slice(0, 10) : null;
     }
 
-    if (!symbol || !accountType || !field1 || !field2 || !field3Value) {
+    if (!symbol || !accountType || !field1 || !field2 || !field3Value || (window.portfolioIsSavingMode && !savingTargetAccount)) {
         errorEl.textContent = "Please fill in all required fields.";
         errorEl.style.display = "block";
         successEl.style.display = "none";
