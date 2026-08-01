@@ -898,7 +898,7 @@ tbody tr.current-row td{font-weight:600;}
         }
 
         .hero-amount,#balance-val {
-            font-size: 36px;
+            font-size: 15px;
             font-weight: 800;
             letter-spacing: -1px;
             background: linear-gradient(90deg, #FFFFFF 0%, rgb(20, 184, 166) 100%);
@@ -910,7 +910,7 @@ tbody tr.current-row td{font-weight:600;}
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            padding: 4px 12px;
+            padding: 2px 10px;
             border-radius: 20px;
             font-size: 12px;
             font-weight: 700;
@@ -997,8 +997,8 @@ tbody tr.current-row td{font-weight:600;}
 
         .table-wrapper {
             overflow-x: auto;
-            margin: 0 -24px -24px -24px;
-            padding: 0 12px 12px 12px;
+
+   
         }
 
         table {
@@ -1168,7 +1168,7 @@ tbody tr.current-row td{font-weight:600;}
         /* Mobile Optimization */
         @media (max-width: 400px) {
             .portfolio-card, .hero-card-port { padding: 2px; }
-            .table-wrapper { margin: 0 0px -6px -6px; padding-right: 6px; }
+            .table-wrapper { margin: 0 0px -6px -6px; padding-right: 0px; }
             col.col-asset { width: 30%; }
             col.col-duration { width: 16%; }
             col.col-volprice { width: 19%; }
@@ -1182,7 +1182,6 @@ tbody tr.current-row td{font-weight:600;}
             .sub-indent { padding-left: 8px !important; }
             .asset-cell { gap: 3px;  }
             .asset-icon { width: 25px; height: 25px; font-size: 8px; }
-            .hero-amount { font-size: 20px; }
             .metrics-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
             .metric-card { padding: 8px; }
             .metric-value { font-size: 14px; }
@@ -1194,7 +1193,6 @@ tbody tr.current-row td{font-weight:600;}
 
         @media (min-width: 401px) {
             .hero-card-port, .portfolio-card { padding: 16px;}
-            .hero-amount { font-size: 30px; }
             td, th { padding: 10px 6px; }
             .metrics-grid { grid-template-columns: repeat(2, 1fr); }
         }
@@ -5220,6 +5218,7 @@ buildColHdr(); applyLayout();
     renderActivePositionsStat(activePositions, activeIcons);
   }
   function openPortfolioModal() {
+    document.querySelectorAll('[id="portfolio-cal-menu"]').forEach(function(el) { el.remove(); });
     const backdrop = document.getElementById('modalBackdrop');
     const title = document.getElementById('modalTitle');
     const body = document.getElementById('modalBody');
@@ -5272,12 +5271,14 @@ buildColHdr(); applyLayout();
     </div>
 
     <div style="display: flex; gap: 12px; margin-bottom: 16px;">
-        <div class="modal-field-group" style="flex: 1;">
+        <div class="modal-field-group" style="flex: 1;" id="portfolioField1OuterWrapper">
             <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioField1Label">Entry Price:</label>
             <input type="text"
                 id="portfolioField1" inputmode="decimal"
-                placeholder="0"
-                oninput="handleAmountInput(this)"
+                placeholder="e.g. 35.45"
+                oninput="handlePortfolioEntryPriceInput(this)"
+                onblur="handlePortfolioEntryPriceBlur(this)"
+                onfocus="handlePortfolioEntryPriceFocus(this)"
                 style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:DM Sans; font-size: 20px; box-sizing: border-box; outline: none;" />
         </div>
         <div class="modal-field-group" style="flex: 1;">
@@ -5291,40 +5292,39 @@ buildColHdr(); applyLayout();
                 style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:DM Sans; font-size: 20px; box-sizing: border-box; outline: none;" />
         </div>
     </div>
-
-    <div class="modal-field-group" style="margin-bottom: 16px;">
-        <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioField3Label">Entry Date:</label>
-
-        <div id="portfolioField3Wrapper">
-            <div class="th-filter-wrap" onclick="togglePortfolioDatePicker(event)" style="position: relative; width: 100%;">
-                <div id="portfolioDateTrigger" style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; box-sizing: border-box; cursor: pointer; display:flex; align-items:center; justify-content: space-between;">
-                    <span id="portfolioDateTriggerText">Select date</span>
-                    <i class="bi bi-calendar3" style="color: var(--text-secondary); font-size: 14px;"></i>
-                </div>
-                <div class="col-menu col-menu-date-single" id="portfolio-cal-menu">
-                    <div class="cal-header">
-                        <button type="button" class="cal-nav-btn" onclick="portfolioCalNavigate(event, -1)"><i class="bi bi-chevron-left"></i></button>
-                        <div class="cal-month-label" id="portfolio-cal-month-label">—</div>
-                        <button type="button" class="cal-nav-btn" onclick="portfolioCalNavigate(event, 1)"><i class="bi bi-chevron-right"></i></button>
+    
+   <div id="portfolioDateNoteRow" style="display: flex; gap: 12px; margin-bottom: 16px;">
+        <div style="flex: 1;" id="portfolioField3Col">
+            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioField3Label">Entry Date:</label>
+            <div id="portfolioField3Wrapper">
+                <div class="th-filter-wrap" onclick="togglePortfolioDatePicker(event)" style="position: relative; width: 100%;">
+                    <div id="portfolioDateTrigger" style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; box-sizing: border-box; cursor: pointer; display:flex; align-items:center; justify-content: space-between;">
+                        <span id="portfolioDateTriggerText">Select date</span>
+                        <i class="bi bi-calendar3" style="color: var(--text-secondary); font-size: 14px;"></i>
                     </div>
-                    <div class="cal-weekdays">
-                        <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                    <div class="col-menu col-menu-date-single" id="portfolio-cal-menu">
+                        <div class="cal-header">
+                            <button type="button" class="cal-nav-btn" onclick="portfolioCalNavigate(event, -1)"><i class="bi bi-chevron-left"></i></button>
+                            <div class="cal-month-label" id="portfolio-cal-month-label">—</div>
+                            <button type="button" class="cal-nav-btn" onclick="portfolioCalNavigate(event, 1)"><i class="bi bi-chevron-right"></i></button>
+                        </div>
+                        <div class="cal-weekdays">
+                            <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                        </div>
+                        <div class="cal-grid" id="portfolio-cal-grid"></div>
                     </div>
-                    <div class="cal-grid" id="portfolio-cal-grid"></div>
                 </div>
             </div>
         </div>
-
-        <!-- Quick-amount chips, shown only in Saving mode -->
-        <div class="quick-amt-group" id="portfolioAmountChips" style="font-family:DM Sans!important; display: none; gap: 6px; flex-wrap: wrap; margin-top: 12px; justify-content: flex-start;"></div>
+        <div class="quick-amt-group" id="portfolioAmountChips" style="font-family:DM Sans!important; display: none; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; justify-content: flex-start;"></div>
+        <div style="flex: 1;" id="portfolioNoteCol">
+            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Note:</label>
+            <input type="text"
+                id="portfolioNote"
+                placeholder="Optional note"
+                style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; font-weight:300!important; box-sizing: border-box; outline: none;" />
+        </div>
     </div>
-
-    <div class="modal-field-group" style="margin-bottom: 16px;">
-        <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Note:</label>
-        <input type="text"
-            id="portfolioNote"
-            placeholder="Optional note"
-            style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; font-weight:300!important; box-sizing: border-box; outline: none;" />
     </div>
 
     <div id="modalErrorMessage" style="display: none; padding: 12px; margin-bottom: 16px; background: rgba(220, 53, 69, 0.1); border: 0px solid #dc3545; color: #ea868f; border-radius: 8px; font-size: 13px; font-weight: 500;"></div>
@@ -5374,6 +5374,10 @@ function handlePortfolioTypeSelect(el) {
     triggerIcon.src = icon;
     triggerIcon.style.display = "inline-block";
 
+    // NEW: sync the modal title icon to match the selected account type
+    var titleIcon = document.getElementById('portfolioModalIcon');
+    if (titleIcon) titleIcon.src = icon;
+
     document.getElementById('portfolioTypeTriggerText').textContent = value;
     document.getElementById('portfolioTypeOptions').style.display = 'none';
 
@@ -5389,6 +5393,42 @@ document.addEventListener('click', function(e) {
         options.style.display = 'none';
     }
 });
+// New handler: Entry Price allows decimal shorthand (e.g. 35.45 -> stored/displayed as 35,450)
+function handlePortfolioEntryPriceInput(el) {
+    var raw = el.value;
+
+    // Allow digits and a single decimal point while typing
+    var cleaned = raw.replace(/[^\d.]/g, '');
+    var parts = cleaned.split('.');
+    if (parts.length > 2) {
+        cleaned = parts[0] + '.' + parts.slice(1).join('');
+    }
+
+    el.value = cleaned;
+    el.dataset.rawValue = cleaned; // store the raw shorthand (e.g. "35.45") for blur/submit
+}
+
+function handlePortfolioEntryPriceBlur(el) {
+    var raw = el.dataset.rawValue || el.value;
+    var num = parseFloat(raw);
+
+    if (raw === '' || isNaN(num)) {
+        el.value = '';
+        delete el.dataset.computedValue;
+        return;
+    }
+
+    var computed = Math.round(num * 1000); // 35.45 -> 35450
+    el.dataset.computedValue = computed; // store the real value for submit time
+    el.value = computed.toLocaleString('en-US'); // display formatted full value on blur
+}
+
+function handlePortfolioEntryPriceFocus(el) {
+    // Restore the shorthand for editing
+    if (el.dataset.rawValue) {
+        el.value = el.dataset.rawValue;
+    }
+}
 
 // ============ DYNAMIC MODE SWITCH (Saving vs default) ============
 function applyPortfolioModalMode(isSaving) {
@@ -5400,9 +5440,12 @@ function applyPortfolioModalMode(isSaving) {
     var submitBtn = document.getElementById('portfolioSubmitBtn');
     var field3Wrapper = document.getElementById('portfolioField3Wrapper');
     var chipsContainer = document.getElementById('portfolioAmountChips');
-
-    // Inside applyPortfolioModalMode(isSaving), update Field2's input attributes based on mode:
     var field2 = document.getElementById('portfolioField2');
+
+    var dateNoteRow = document.getElementById('portfolioDateNoteRow');
+    var field3Col = document.getElementById('portfolioField3Col');
+    var noteCol = document.getElementById('portfolioNoteCol');
+
     if (isSaving) {
         titleText.textContent = "Open Saving Account";
         icon.textContent = "savings";
@@ -5417,12 +5460,29 @@ function applyPortfolioModalMode(isSaving) {
         field2.value = '';
         delete field2.dataset.rawValue;
 
+        // Saving branch:
+        var field1Wrapper = document.getElementById('portfolioField1OuterWrapper'); // FIXED: always the stable outer div
+        field1Wrapper.style.minWidth = "0";
+        field1Wrapper.innerHTML = `
+            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioField1Label"># of Months:</label>
+            <div style="display: flex; align-items: center; gap: 6px; background: #111216; border-radius: 12px; padding: 0; box-sizing: border-box; height: 52px; width: 100%; overflow: hidden;">
+                <button type="button" onclick="window.adjustPortfolioMonths(-1)" style="width: 36px; height: 100%; flex-shrink: 0; border-radius: 12px 0 0 12px; border: none; background: #1e222b; color: #f8f9fa; font-size: 18px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center;">−</button>
+                <input type="text"
+                    id="portfolioField1" inputmode="numeric"
+                    readonly
+                    value="6"
+                    style="flex: 1; min-width: 0; width: 0; text-align: center; padding: 0; background: transparent; border: none; color: #f8f9fa; font-family:DM Sans; font-size: 18px; box-sizing: border-box; outline: none;" />
+                <button type="button" onclick="window.adjustPortfolioMonths(1)" style="width: 36px; height: 100%; flex-shrink: 0; border-radius: 0 12px 12px 0; border: none; background: #1e222b; color: #f8f9fa; font-size: 18px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center;">+</button>
+            </div>
+        `;
+
+        // Field3 becomes Amount input (full width) — Note is hidden entirely in Saving mode
         field3Wrapper.innerHTML = `
            <div style="position: relative; display: flex; align-items: center;">
             <input type="text"
                 id="portfolioField3" inputmode="decimal"
                 placeholder="0"
-                oninput="handleAmountInput(this, 'portfolioClearAmountBtn', 'portfolioAmountChips'); window.generateDynamicChips(this.value, 'portfolioAmountChips', 'portfolioField3'); "
+                oninput="handleAmountInput(this, 'portfolioClearAmountBtn', 'portfolioAmountChips')"
                 style="width: 100%; padding: 14px 32px 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:DM Sans; font-size: 20px; box-sizing: border-box; outline: none;" />
                 <span class="material-icons-round"
                     id="portfolioClearAmountBtn"
@@ -5435,6 +5495,12 @@ function applyPortfolioModalMode(isSaving) {
 
         chipsContainer.style.display = "flex";
         window.generateDynamicChips("", "portfolioAmountChips", "portfolioField3");
+
+        // Layout: Amount takes full width, Note column is hidden entirely
+        dateNoteRow.style.display = "block";
+        field3Col.style.width = "100%";
+        noteCol.style.display = "none";
+
     } else {
         titleText.textContent = "Add Position";
         icon.textContent = "add_chart";
@@ -5448,6 +5514,20 @@ function applyPortfolioModalMode(isSaving) {
         field2.removeAttribute('onfocus');
         field2.value = '';
 
+        // Else (normal) branch:
+        var field1Wrapper = document.getElementById('portfolioField1OuterWrapper'); // FIXED: same stable ID, no more conditional lookup
+        field1Wrapper.innerHTML = `
+            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioField1Label">Entry Price:</label>
+            <input type="text"
+                id="portfolioField1" inputmode="decimal"
+                placeholder="35.45"
+                oninput="handlePortfolioEntryPriceInput(this)"
+                onblur="handlePortfolioEntryPriceBlur(this)"
+                onfocus="handlePortfolioEntryPriceFocus(this)"
+                style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:DM Sans; font-size: 20px; box-sizing: border-box; outline: none;" />
+        `;
+
+        // Restore Field3 back to date picker
         field3Wrapper.innerHTML = `
             <div class="th-filter-wrap" onclick="togglePortfolioDatePicker(event)" style="position: relative; width: 100%;">
                 <div id="portfolioDateTrigger" style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; box-sizing: border-box; cursor: pointer; display:flex; align-items:center; justify-content: space-between;">
@@ -5470,9 +5550,23 @@ function applyPortfolioModalMode(isSaving) {
 
         chipsContainer.style.display = "none";
         chipsContainer.innerHTML = "";
+
+        // Layout: Entry Date + Note side-by-side
+        dateNoteRow.style.display = "flex";
+        field3Col.style.width = "auto";
+        noteCol.style.display = "block";
+        noteCol.style.width = "auto";
     }
 }
-
+window.adjustPortfolioMonths = function(delta) {
+    var input = document.getElementById('portfolioField1');
+    if (!input) return;
+    var current = parseInt(input.value, 10) || 6;
+    var next = current + delta;
+    if (next < 1) next = 1;   // minimum 1 month
+    if (next > 60) next = 60; // adjust max as needed
+    input.value = next;
+};
 // ============ SINGLE-DATE CALENDAR ============
 var portfolioCalState = {
     viewYear: new Date().getFullYear(),
@@ -5489,6 +5583,11 @@ function togglePortfolioDatePicker(e) {
     document.querySelectorAll('.col-menu').forEach(function(m) { m.classList.remove('open'); });
 
     if (!isOpen) {
+        // NEW: dedupe — remove any OTHER stray copies before using this one
+        document.querySelectorAll('[id="portfolio-cal-menu"]').forEach(function(el) {
+            if (el !== menu) el.remove();
+        });
+
         document.body.appendChild(menu);
         var rect = e.currentTarget.getBoundingClientRect();
         menu.style.top = (rect.bottom + 6) + "px";
@@ -5561,7 +5660,19 @@ function portfolioCalNavigate(e, dir) {
 function processPortfolioAdd() {
     const symbol = document.getElementById('portfolioSymbol').value.trim().toUpperCase();
     const accountType = document.getElementById('portfolioAccountType').value;
-    const field1 = parseFloat(document.getElementById('portfolioField1').value.replace(/,/g, '')) || 0;
+
+    var field1El = document.getElementById('portfolioField1');
+    var field1; // Entry Price (normal mode) or # of Months (Saving mode)
+
+    if (window.portfolioIsSavingMode) {
+        field1 = parseFloat(field1El.value.replace(/,/g, '')) || 0;
+    } else {
+        // NEW: use the computed ×1000 value if available, otherwise fall back to parsing displayed value
+        field1 = field1El.dataset.computedValue
+            ? parseFloat(field1El.dataset.computedValue)
+            : parseFloat(field1El.value.replace(/,/g, '')) || 0;
+    }
+
     const field2 = parseFloat(document.getElementById('portfolioField2').value.replace(/,/g, '')) || 0;
     const note = document.getElementById('portfolioNote').value.trim();
 
@@ -5626,8 +5737,13 @@ function handlePortfolioRateFocus(el) {
 
   function renderActivePositionsStat(count,icons){const statEl=document.getElementById("stat-cycles");if(!statEl)return;const shownIcons=icons.slice(0,4),remaining=icons.length-shownIcons.length;let stackHTML='<div class="stat-icon-stack">';shownIcons.forEach(function(ic){ic.iconUrl?stackHTML+=`<div class="stat-stack-icon" style="background-image:url('${ic.iconUrl}');"></div>`:stackHTML+=`<div class="stat-stack-icon stat-stack-icon-text">${ic.symbol.slice(0,2)}</div>`}),remaining>0&&(stackHTML+=`<div class="stat-stack-icon stat-stack-icon-more">+${remaining}</div>`),stackHTML+="</div>",statEl.innerHTML=`\n        <div class="stat-cycles-row">\n            <span class="stat-cycles-num">${count}</span>\n            ${stackHTML}\n        </div>`}
   function toggleGroup(groupId,mainRowEl){const logRows=document.querySelectorAll(`.${groupId}`);if(0===logRows.length)return;mainRowEl.classList.contains("expanded")?(mainRowEl.classList.remove("expanded"),logRows.forEach(row=>row.classList.remove("visible"))):(mainRowEl.classList.add("expanded"),logRows.forEach(row=>row.classList.add("visible")))}
-  function closeModal(){const backdrop=document.getElementById("modalBackdrop");backdrop.style.pointerEvents="none",backdrop.classList.remove("active")}
-  function createChipElement(container, totalAmount, sign = "+", targetInputId = "transactionAmount") {
+  function closeModal() {
+    const backdrop = document.getElementById("modalBackdrop");
+    backdrop.style.pointerEvents = "none";
+    backdrop.classList.remove("active");
+    document.querySelectorAll('[id="portfolio-cal-menu"]').forEach(function(el) { el.remove(); });
+}
+function createChipElement(container, totalAmount, sign = "+", targetInputId = "transactionAmount") {
     let displayLabel = "";
     if (totalAmount >= 1e6) {
         const clearMillions = totalAmount / 1e6;
