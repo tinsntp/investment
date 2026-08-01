@@ -221,11 +221,11 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .budget-subtabs{background:rgba(255,255,255,.05);border-radius:13px;padding:3px;gap:4px}.budget-subtab{flex:1;font-family:Lexend;display:flex;align-items:center;justify-content:center;gap:5px;background:0 0;border:0;color:rgba(255,255,255,.5);padding:4px 10px;font-size:12px;font-weight:400;border-radius:10px;cursor:pointer;transition:all .2s ease-in-out;outline:0}
 .budget-subtab.active,.budget-subtab-v2.active{opacity:1;background:#2a2d37;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.25)}.budget-subtab .material-icons-round{vertical-align:middle}.chart-container{position:relative;width:100%;height:220px;display:flex;align-items:flex-end;padding:20px 10px 10px 10px;box-sizing:border-box}.glass-chart-bars{width:100%!important;height:100%!important;display:block}.chart-col{flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end;position:relative}.bar-fill{width:100%;max-width:28px;background:linear-gradient(180deg,rgba(255,255,255,.8)0,rgba(255,255,255,.2) 100%);border-radius:6px 6px 2px 2px;transition:height .4s ease;min-height:4px;box-shadow:0 4px 12px rgba(0,0,0,.15)}.bar-baseline{position:absolute;width:100%;max-width:28px;border-top:2px dashed #8e90a6;z-index:2;transition:bottom .4s ease}.col-label{margin-top:8px;font-family:"DM Sans",sans-serif;font-size:11px;color:#8e90a6}canvas#myChart{width:100%!important;height:100%!important}
 .budget-total,#budget-spent,.marker-value,#budget-remaining{font-family:"JetBrains Mono";}
-.budget-total{font-size:18px;font-weight:500;color:rgba(255,255,255,.85);margin-bottom:5px}
+.budget-total{font-size:18px;font-weight:500;color:rgba(255,255,255,.85);margin-bottom:8px}
 
 .budget-bar{position:relative;width:100%;height:7px;background:#505867;border-radius:999px;overflow:hidden}
 #budget-fill{position:absolute;left:0;top:0;height:100%;border-radius:999px;background:linear-gradient( 90deg,#4f21ff 0%,#6b4dff 35%,#9a88ff 65%,#ffffff 100% );transition:width .4s ease}
-.budget-bottom{margin-top:5px;display:flex;justify-content:space-between;align-items:center}.budget-inline-row{display:flex;align-items:center;gap:6px}.budget-inline-row.right{justify-content:flex-end}
+.budget-bottom{margin:5px 0 10px;display:flex;justify-content:space-between;align-items:center}.budget-inline-row{display:flex;align-items:center;gap:6px}.budget-inline-row.right{justify-content:flex-end}
 .budget-label{font-size:12px;color:rgba(255,255,255,.55);}
 .budget-values{display:flex;align-items:center;gap:4px}@keyframes svg-pulse{0%{r:4px;opacity:1}50%{r:6px;opacity:.4}to{r:4px;opacity:1}}.svg-live-pulse{animation:svg-pulse 1.8s infinite ease-in-out}
 .marker-label{font-size:10px;color:rgba(255,255,255,.45);line-height:1;margin-bottom:2px;white-space:nowrap}
@@ -278,8 +278,8 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .row{display:flex;align-items:center;padding:2vw 0;border-bottom:1px solid rgba(255,255,255,0.08);gap:3vw;cursor:pointer;transition:background 0.2s ease,border-radius 0.2s ease,padding 0.2s ease}
 .row:last-child { border-bottom:none; }
 .row:hover { background:rgba(255,255,255,0.04);}
-.ico { width:10vw; height:10vw; border-radius:50%; object-fit:cover; flex-shrink:0; background:rgba(255,255,255,0.08); padding:0vw; margin-left:2vw;}
-.ico-fb { width:10vw; height:10vw; border-radius:50%; flex-shrink:0; background:rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; font-size:4.5vw; font-weight:700; color:rgba(255,255,255,0.6); }
+.ico { width:9vw; height:9vw; border-radius:50%; object-fit:cover; flex-shrink:0; background:rgba(255,255,255,0.08); padding:0vw; margin-left:2vw;}
+.ico-fb { width:9vw; height:9vw; border-radius:50%; flex-shrink:0; background:rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; font-size:4.5vw; font-weight:700; color:rgba(255,255,255,0.6);margin-left:2vw; }
 .mid { flex:1; min-width:0; }
 .ttl { font-size:2.4vw; opacity:0.95;font-weight:400; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:0.6vw; }
 .dtl { font-size:2vw; font-weight:300; color:rgba(255,255,255,0.5); line-height:1.4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -289,7 +289,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .ttl{display:flex;align-items:center;gap:1.5vw}
 .recent-badge{font-size:2.4vw;font-weight:700;color:#14b8a6;background:rgba(74,222,128,0.14);border-radius:99px;padding:0.4vw 1.2vw;white-space:nowrap}
 .recent-badge .bi,label .bi {font-size: 0.8rem!important;vertical-align: 0em;}
-@media screen and (max-width:400px){.recent-badge{font-size:3.4vw}.ico {width:13vw!important; height:13vw!important;}}
+@media screen and (max-width:400px){.recent-badge{font-size:3.4vw}.ico,.ico-fb {width:11vw!important; height:11vw!important;}}
 .budget-bar-wrap { position: relative;}
 .budget-bar{width:100%;height:15px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.06)}
 #budget-fill-container{display:flex;width:100%;height:100%;gap:0}
@@ -393,7 +393,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 
 
 #add-cash.loading,#add-fab.loading{pointer-events:none;display:flex;align-items:center;justify-content:center}
-.cash-modal-overlay,.add-modal-overlay{-webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);display:none;position:fixed;inset:0; z-index:600;align-items:flex-start;justify-content:center;padding-top:20vh;overflow-y:auto}
+.cash-modal-overlay,.add-modal-overlay{-webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);display:none;position:fixed;inset:0; z-index:600;align-items:flex-start;justify-content:center;padding-top:20vh;overflow-y:auto}
 .cash-modal-overlay.open,.add-modal-overlay.open{display:flex!important}
 .btn-spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,0.3);border-top-color:#ffffff;border-radius:50%;animation:spinCircle 0.8s linear infinite;display:inline-block}
 #add-cash.success-confirm{background-color:#10b981 !important;color:#ffffff !important;font-size:15px;font-weight:500;display:flex;align-items:center;justify-content:center;transition:background-color 0.3s ease}
@@ -1830,7 +1830,7 @@ to{transform:rotate(360deg)}
         <!-- Tab 1: Spending Budget View -->
         <div class="budget-tab-content" id="budget-view-spending">
           <div style="padding:0px 15px 0 15px;">
-            <div class="budget-label" style="font-size:11px">Spending Budget</div>
+            <div class="budget-label" style="font-size:11px;margin-bottom:3px">Spending Budget</div>
             <div class="budget-total" id="budget-average"></div>
             <div class="budget-bar-wrap" style="padding-right: 0%; box-sizing: border-box; position: relative;">
                 <div id="last-month-marker"></div>
@@ -3434,7 +3434,7 @@ buildColHdr(); applyLayout();
 
   /* ══ ADD RECORD (writes to the sheet via Apps Script Web App) ══ */
   var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxb1lPB9kZh-Q5C01U-DjuesOVlHgDEorEBK-pavyJUd5jPxZSub-Rx6unOCTDdrCS2/exec";
-  var EXPENSE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw1GCCMBfd8Uihsr_aP_xdm2iepSQW-C9WHKu1Wxtt98d-GpCLMsrWor6pWUp0QVikuLQ/exec";
+  var EXPENSE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRT0LJ_xJ6MyD8zlN6jy_p5zrIRgrQ-TPUsrW33Kpf2RkNMh1unYe1Zevxtx1rOiFmfA/exec";
 
   var addOverlay = document.getElementById("add-modal-overlay");
   var addStatusEl = document.getElementById("add-status");
@@ -5945,22 +5945,14 @@ function historyEditCalNavigate(e, dir) {
     }
 
     body.innerHTML = `
-    <!-- NEW: Select Account dropdown — only visible in Saving mode, sits where Symbol used to be -->
-    <div class="modal-field-group" style="margin-bottom: 16px; display: none;" id="portfolioSelectAccountWrapper">
-        <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Select Account:</label>
-        <div class="premium-select-wrapper" style="position: relative;">
-            <div class="custom-select-trigger" id="portfolioSelectAccountTrigger" onclick="togglePortfolioAccountDropdown(event)" style="font-weight:600; border:none; padding: 14px 16px; background: #111216; border-radius: 12px; color: #f8f9fa; font-size: 14px; display: flex; align-items: center; gap: 8px; justify-content: flex-start; cursor: pointer;">
-                ${portfolioInitialTriggerText}
-            </div>
-            <input type="hidden" id="portfolioTargetAccount" value="${portfolioDefaultAccountValue}" />
-            <div class="custom-select-options" id="portfolioSelectAccountOptions" style="display:none; position:absolute; left:0; top:calc(100% + 4px); background:#1e222b; border:0px solid #2d313c; border-radius:12px; width:100%; max-height:200px; overflow-y:auto; z-index:100; box-shadow:0 8px 24px rgba(0,0,0,0.5);">
-                ${portfolioAccountOptionsHTML}
-            </div>
-        </div>
-    </div>
-
     <!-- Symbol + Account Type row — stacked in normal mode, side-by-side in Saving mode -->
     <div id="portfolioTopRow">
+        <div class="modal-field-group" style="margin-bottom: 16px;" id="portfolioSymbolWrapper">
+            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioSymbolLabel">Symbol:</label>
+            <input type="text"
+                id="portfolioSymbol"
+                style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; font-weight:300!important; box-sizing: border-box; outline: none; text-transform: uppercase;" />
+        </div>
         <div class="modal-field-group" style="margin-bottom: 16px;" id="portfolioAccountTypeWrapper">
             <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Account Type:</label>
             <div class="premium-select-wrapper" style="position: relative;">
@@ -5974,12 +5966,19 @@ function historyEditCalNavigate(e, dir) {
                 </div>
             </div>
         </div>
-        <div class="modal-field-group" style="margin-bottom: 16px;" id="portfolioSymbolWrapper">
-            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioSymbolLabel">Symbol:</label>
-            <input type="text"
-                id="portfolioSymbol"
-                placeholder="MBB"
-                style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; font-weight:300!important; box-sizing: border-box; outline: none; text-transform: uppercase;" />
+        
+    </div>
+    <!-- NEW: Select Account dropdown — only visible in Saving mode, sits where Symbol used to be -->
+    <div class="modal-field-group" style="margin-bottom: 16px; display: none;" id="portfolioSelectAccountWrapper">
+        <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Select Account:</label>
+        <div class="premium-select-wrapper" style="position: relative;">
+            <div class="custom-select-trigger" id="portfolioSelectAccountTrigger" onclick="togglePortfolioAccountDropdown(event)" style="font-weight:600; border:none; padding: 14px 16px; background: #111216; border-radius: 12px; color: #f8f9fa; font-size: 14px; display: flex; align-items: center; gap: 8px; justify-content: flex-start; cursor: pointer;">
+                ${portfolioInitialTriggerText}
+            </div>
+            <input type="hidden" id="portfolioTargetAccount" value="${portfolioDefaultAccountValue}" />
+            <div class="custom-select-options" id="portfolioSelectAccountOptions" style="display:none; position:absolute; left:0; top:calc(100% + 4px); background:#1e222b; border:0px solid #2d313c; border-radius:12px; width:100%; max-height:200px; overflow-y:auto; z-index:100; box-shadow:0 8px 24px rgba(0,0,0,0.5);">
+                ${portfolioAccountOptionsHTML}
+            </div>
         </div>
     </div>
 
@@ -6204,7 +6203,7 @@ function applyPortfolioModalMode(isSaving) {
         symbolLabel.textContent = "Bank:";
 
         // Saving branch:
-        var field1Wrapper = document.getElementById('portfolioField1OuterWrapper'); // FIXED: always the stable outer div
+        var field1Wrapper = document.getElementById('portfolioField1OuterWrapper');
         field1Wrapper.style.minWidth = "0";
         field1Wrapper.innerHTML = `
             <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioField1Label"># of Months:</label>
@@ -6257,9 +6256,10 @@ function applyPortfolioModalMode(isSaving) {
         field2.removeAttribute('onfocus');
         field2.value = '';
         selectAccountWrapper.style.display = "none";
-        topRow.style.display = "block";
-        symbolWrapper.style.flex = "none";
-        accountTypeWrapper.style.flex = "none";
+        topRow.style.display = "flex";
+        topRow.style.gap = "12px";
+        symbolWrapper.style.flex = "1";
+        accountTypeWrapper.style.flex = "1";
         symbolLabel.textContent = "Symbol:";
 
         // Else (normal) branch:
@@ -6378,7 +6378,7 @@ function applyPortfolioModalMode(isSaving) {
         if (window.portfolioIsSavingMode) {
             payload = {
                 action: "portfolio_open_saving",
-                bank: symbol,          // "Bank" field (relabeled Symbol)
+                bank: symbol,  
                 account: savingTargetAccount,
                 months: field1,
                 rate: field2,
@@ -6546,54 +6546,7 @@ function portfolioCalNavigate(e, dir) {
     renderPortfolioCalendar();
 }
 
-// ============ SUBMIT ============
-function processPortfolioAdd() {
-    const symbol = document.getElementById('portfolioSymbol').value.trim().toUpperCase();
-    const accountType = document.getElementById('portfolioAccountType').value;
-    const savingTargetAccount = window.portfolioIsSavingMode
-        ? document.getElementById('portfolioTargetAccount').value
-        : null;
 
-    var field1El = document.getElementById('portfolioField1');
-    var field1; // Entry Price (normal mode) or # of Months (Saving mode)
-
-    if (window.portfolioIsSavingMode) {
-        field1 = parseFloat(field1El.value.replace(/,/g, '')) || 0;
-    } else {
-        // NEW: use the computed ×1000 value if available, otherwise fall back to parsing displayed value
-        field1 = field1El.dataset.computedValue
-            ? parseFloat(field1El.dataset.computedValue)
-            : parseFloat(field1El.value.replace(/,/g, '')) || 0;
-    }
-
-    const field2 = parseFloat(document.getElementById('portfolioField2').value.replace(/,/g, '')) || 0;
-    const note = document.getElementById('portfolioNote').value.trim();
-
-    const errorEl = document.getElementById('modalErrorMessage');
-    const successEl = document.getElementById('modalSuccessMessage');
-
-    var field3Value;
-    if (window.portfolioIsSavingMode) {
-        field3Value = parseFloat(document.getElementById('portfolioField3').value.replace(/,/g, '')) || 0;
-    } else {
-        field3Value = portfolioCalState.selectedDate ? portfolioCalState.selectedDate.toISOString().slice(0, 10) : null;
-    }
-
-    if (!symbol || !accountType || !field1 || !field2 || !field3Value || (window.portfolioIsSavingMode && !savingTargetAccount)) {
-        errorEl.textContent = "Please fill in all required fields.";
-        errorEl.style.display = "block";
-        successEl.style.display = "none";
-        return;
-    }
-
-    errorEl.style.display = "none";
-
-    // TODO: integrate with your actual data pipeline
-    successEl.style.display = "flex";
-    setTimeout(function() {
-        closeModal();
-    }, 1200);
-}
   // New dedicated handler for the Rate field (separate from handleAmountInput, which is for currency)
 function handlePortfolioRateInput(el) {
     var raw = el.value;
