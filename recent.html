@@ -1068,7 +1068,7 @@ tbody tr.current-row td{font-weight:600;}
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .hero-amount{font-size: 16px;}
+        .hero-amount{font-size: 16px;margin-bottom:3px}
         #balance-val {font-size: 36px;}
         .badge-pill {
             display: inline-flex;
@@ -1107,7 +1107,7 @@ tbody tr.current-row td{font-weight:600;}
         .metric-card {
             background: rgba(255, 255, 255, 0.02);
             border-radius: 16px;
-            padding: 12px;
+            padding: 12px;text-align:center;
 
         }
 
@@ -1356,9 +1356,15 @@ tbody tr.current-row td{font-weight:600;}
         }
 
         @media (min-width: 401px) {
-            .hero-card-port, .portfolio-card { padding: 16px;}
+            .hero-card-port, .portfolio-card { padding: 2px;}
             td, th { padding: 10px 6px; }
             .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+            .metric-label {text-align:left;}
+            col.col-asset { width: 26%; }
+            col.col-duration { width: 16%; }
+            col.col-volprice { width: 19%; }
+            col.col-pnl { width: 20%; }
+            col.col-costmarket { width: 19%; }
         }
         .stat-cycles-row {
     display: flex;
@@ -3434,7 +3440,7 @@ buildColHdr(); applyLayout();
 
   /* ══ ADD RECORD (writes to the sheet via Apps Script Web App) ══ */
   var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxb1lPB9kZh-Q5C01U-DjuesOVlHgDEorEBK-pavyJUd5jPxZSub-Rx6unOCTDdrCS2/exec";
-  var EXPENSE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRT0LJ_xJ6MyD8zlN6jy_p5zrIRgrQ-TPUsrW33Kpf2RkNMh1unYe1Zevxtx1rOiFmfA/exec";
+  var EXPENSE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzyyhunzLi9sCADczavBkuPqNnJH_SKFxVvyAYhQxZRTDJ2iEj-JBpPfOGN7g0dQ2oskA/exec";
 
   var addOverlay = document.getElementById("add-modal-overlay");
   var addStatusEl = document.getElementById("add-status");
