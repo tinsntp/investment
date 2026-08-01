@@ -221,11 +221,13 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .budget-subtabs{background:rgba(255,255,255,.05);border-radius:13px;padding:3px;gap:4px}.budget-subtab{flex:1;font-family:Lexend;display:flex;align-items:center;justify-content:center;gap:5px;background:0 0;border:0;color:rgba(255,255,255,.5);padding:4px 10px;font-size:12px;font-weight:400;border-radius:10px;cursor:pointer;transition:all .2s ease-in-out;outline:0}
 .budget-subtab.active,.budget-subtab-v2.active{opacity:1;background:#2a2d37;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.25)}.budget-subtab .material-icons-round{vertical-align:middle}.chart-container{position:relative;width:100%;height:220px;display:flex;align-items:flex-end;padding:20px 10px 10px 10px;box-sizing:border-box}.glass-chart-bars{width:100%!important;height:100%!important;display:block}.chart-col{flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end;position:relative}.bar-fill{width:100%;max-width:28px;background:linear-gradient(180deg,rgba(255,255,255,.8)0,rgba(255,255,255,.2) 100%);border-radius:6px 6px 2px 2px;transition:height .4s ease;min-height:4px;box-shadow:0 4px 12px rgba(0,0,0,.15)}.bar-baseline{position:absolute;width:100%;max-width:28px;border-top:2px dashed #8e90a6;z-index:2;transition:bottom .4s ease}.col-label{margin-top:8px;font-family:"DM Sans",sans-serif;font-size:11px;color:#8e90a6}canvas#myChart{width:100%!important;height:100%!important}
 .budget-total,#budget-spent,.marker-value,#budget-remaining{font-family:"JetBrains Mono";}
-.budget-total{font-size:18px;font-weight:500;color:rgba(255,255,255,.85);margin-bottom:16px}
+.budget-total{font-size:18px;font-weight:500;color:rgba(255,255,255,.85);margin-bottom:5px}
 
 .budget-bar{position:relative;width:100%;height:7px;background:#505867;border-radius:999px;overflow:hidden}
 #budget-fill{position:absolute;left:0;top:0;height:100%;border-radius:999px;background:linear-gradient( 90deg,#4f21ff 0%,#6b4dff 35%,#9a88ff 65%,#ffffff 100% );transition:width .4s ease}
-.budget-bottom{margin-top:5px;display:flex;justify-content:space-between;align-items:center}.budget-inline-row{display:flex;align-items:center;gap:6px}.budget-inline-row.right{justify-content:flex-end}.budget-label{font-size:12px;color:rgba(255,255,255,.55)}.budget-values{display:flex;align-items:center;gap:4px}@keyframes svg-pulse{0%{r:4px;opacity:1}50%{r:6px;opacity:.4}to{r:4px;opacity:1}}.svg-live-pulse{animation:svg-pulse 1.8s infinite ease-in-out}
+.budget-bottom{margin-top:5px;display:flex;justify-content:space-between;align-items:center}.budget-inline-row{display:flex;align-items:center;gap:6px}.budget-inline-row.right{justify-content:flex-end}
+.budget-label{font-size:12px;color:rgba(255,255,255,.55);}
+.budget-values{display:flex;align-items:center;gap:4px}@keyframes svg-pulse{0%{r:4px;opacity:1}50%{r:6px;opacity:.4}to{r:4px;opacity:1}}.svg-live-pulse{animation:svg-pulse 1.8s infinite ease-in-out}
 .marker-label{font-size:10px;color:rgba(255,255,255,.45);line-height:1;margin-bottom:2px;white-space:nowrap}
 #budget-spent,#budget-remaining{font-family:Lexend;font-size:13px;font-weight:600;color:rgba(255,255,255,.85)}
 .budget-spent-row{display:flex;align-items:center;gap:8px}
@@ -787,7 +789,7 @@ tbody tr.current-row td{font-weight:600;}
 .live-dot{width:4px;height:4px;border-radius:50%;background:var(--accent-teal);box-shadow:0 0 6px var(--accent-teal);animation:pulse 2s infinite}
 @keyframes pulse{0%{opacity:0.4;transform:scale(0.9)}50%{opacity:1;transform:scale(1.2)}100%{opacity:0.4;transform:scale(0.9)}}
 .hero-bg-wrap {
-  border-radius: 15px;
+  border-radius: 15px;margin-bottom:5px;
   position: relative;
   overflow: hidden;
   background: 
@@ -797,7 +799,7 @@ tbody tr.current-row td{font-weight:600;}
   background-position: center 47%;
   background-repeat: no-repeat;filter: saturate(170%) contrast(1.1);
 }
-.hero-card{position:relative;border-radius:14px;padding:12px 14px;margin-bottom:12px;}
+.hero-card{position:relative;border-radius:14px;padding:12px 14px;}
  @media (min-width:401px){.hero-card{padding:22px 14px;}}
 .hero-caption-row{display:flex;align-items:center;justify-content: center;gap:2px;}
 .hero-caption{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#fff;opacity:0.7;}
@@ -806,7 +808,7 @@ tbody tr.current-row td{font-weight:600;}
 .hero-stat-box{background:rgba(15, 23, 42, 0.1);border-radius:8px;padding:6px 8px}
 .hero-stat-label{font-size:9px;color:#fff;opacity:0.7;}
 .hero-stat-num{font-family:DM Sans;font-size:16px;font-weight:700}
-.chart-card{border-radius:12px;padding:10px 12px;margin-bottom:12px;opacity:0.8;color:#fff;}
+.chart-card{border-radius:12px;padding:10px 12px;opacity:0.8;color:#fff;}
 .chart-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px}
 .stacked-bar-container{height:10px;width:100%;border-radius:5px;overflow:hidden;display:flex;background:rgba(255,255,255,0.05);margin-bottom:8px}
 .stacked-bar-segment{height:100%;transition:width 0.5s ease}
@@ -814,7 +816,7 @@ tbody tr.current-row td{font-weight:600;}
 .legend-item{display:flex;align-items:center;gap:5px;font-size:11.5px;color:#fff;}
 .legend-color-dot{width:6px;height:6px;border-radius:50%}
 .section-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.section-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted)}
+.section-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-left:5px}
 .toggle-mode-btn{background:rgba(255,255,255,0.08);border:none;color:var(--text-primary);font-family:var(--font-sans);font-size:12px;font-weight:600;padding:4px 10px;border-radius:8px;cursor:pointer;transition:all 0.2s ease}
 .toggle-mode-btn:hover{background:rgba(255,255,255,0.16)}
 #category-list{display:flex;flex-direction:column;gap:8px;padding:2px;}
@@ -898,14 +900,14 @@ tbody tr.current-row td{font-weight:600;}
         }
 
         .hero-amount,#balance-val {
-            font-size: 15px;
             font-weight: 800;
             letter-spacing: -1px;
             background: linear-gradient(90deg, #FFFFFF 0%, rgb(20, 184, 166) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-
+        .hero-amount{font-size: 16px;}
+        #balance-val {font-size: 36px;}
         .badge-pill {
             display: inline-flex;
             align-items: center;
@@ -1653,8 +1655,8 @@ to{transform:rotate(360deg)}
 
         <!-- Tab 1: Spending Budget View -->
         <div class="budget-tab-content" id="budget-view-spending">
-          <div style="padding:15px">
-            <div class="budget-label">Spending Budget</div>
+          <div style="padding:0px 15px 0 15px;">
+            <div class="budget-label" style="font-size:11px">Spending Budget</div>
             <div class="budget-total" id="budget-average"></div>
             <div class="budget-bar-wrap" style="padding-right: 0%; box-sizing: border-box; position: relative;">
                 <div id="last-month-marker"></div>
