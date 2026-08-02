@@ -85,8 +85,8 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 
     /* 2. Pulsing Image Container */
     .loader-logo {
-      width: 80px;
-      height: 80px;
+      width: 50px;
+      height: 50px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -114,7 +114,44 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
         opacity: 0.8;
       }
     }
+#ptr-indicator {
+      position: fixed;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 30px;
+      height: 30px;
+      background-color: #fff;
+      border-radius: 50%;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 100000;
+      transition: transform 0.2s ease-out;
+      will-change: transform;
+      pointer-events: none;
+    }
 
+    /* Animated Icon inside indicator */
+    .ptr-icon {
+      width: 22px;
+      height: 22px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #e60023; /* Pinterest Red */
+      border-radius: 50%;
+      transition: transform 0.1s linear;
+    }
+
+    /* Active spinner animation during reload */
+    .ptr-loading .ptr-icon {
+      animation: ptrSpin 0.8s linear infinite;
+    }
+
+    @keyframes ptrSpin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
 
 .tab-bar {
     display: flex;
@@ -2076,8 +2113,10 @@ to{transform:rotate(360deg)}
     <div class="loader-logo">
       <img src="https://github.com/tinsntp/investment/blob/main/income.png?raw=true" alt="Loading...">
     </div>
-  </div>
-<div class="main-content">
+</div>
+<div id="ptr-indicator">
+    <div class="ptr-icon" id="ptr-icon"></div>
+</div>
 <div class="tab-bar" id="tab-bar">
   <div class="tab-btn" id="tab-btn-x"><i class="bi bi-activity"></i><span></span></div>
   <div class="tab-btn active" data-idx="0" id="tab-btn-0"><i class="bi bi-basket-fill"></i><span>Expense</span>  </div>
@@ -2859,7 +2898,7 @@ to{transform:rotate(360deg)}
     <div class="add-status" id="add-status"></div>
   </div>
 </div>
-</div></div>
+</div>
 <script>
   var currentTab = 0;var numTabs = 7;var caDataLoaded = false;
   //  0 Expense 1 Overview 2 Portfolio 3 BTC
@@ -7963,6 +8002,81 @@ window.generateDynamicChips = function(rawValue, containerId, targetInputId) {
         createChipElement(container, amount, sign, targetInputId);
     });
 };
+const ptrIndicator = document.getElementById('ptr-indicator');
+    const ptrIcon = document.getElementById('ptr-icon');
+
+    let startY = 0;
+    let currentY = 0;
+    let pulling = false;
+
+    const PULL_THRESHOLD = 90; // Pull distance to trigger refresh
+    const RESISTANCE = 0.45;   // Drag weight resistance
+
+    // Unified coordinate extractor (works for both Touch and Mouse)
+    const getClientY = (e) => e.touches ? e.touches[0].clientY : e.clientY;
+
+    // 1. START DRAG (Touch or Mouse Down)
+    const onStart = (e) => {
+      // Only trigger if scrolled to top and using left mouse button (if mouse event)
+      if (window.scrollY === 0 && (e.type === 'touchstart' || e.button === 0)) {
+        startY = getClientY(e);
+        pulling = true;
+        ptrIndicator.style.transition = 'none';
+      }
+    };
+
+    // 2. MOVE DRAG (Touch or Mouse Move)
+    const onMove = (e) => {
+      if (!pulling) return;
+
+      currentY = getClientY(e);
+      const distance = currentY - startY;
+
+      if (distance > 0 && window.scrollY === 0) {
+        // Prevent default drag scrolling behavior
+        if (e.cancelable) e.preventDefault();
+
+        const pullDistance = Math.min(distance * RESISTANCE, PULL_THRESHOLD + 20);
+        ptrIndicator.style.transform = `translate(-50%, ${pullDistance}px)`;
+
+        const rotation = (pullDistance / PULL_THRESHOLD) * 360;
+        ptrIcon.style.transform = `rotate(${rotation}deg)`;
+      }
+    };
+
+    // 3. END DRAG (Touch or Mouse Up)
+    const onEnd = () => {
+      if (!pulling) return;
+      pulling = false;
+
+      ptrIndicator.style.transition = 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)';
+      const totalDistance = (currentY - startY) * RESISTANCE;
+
+      if (totalDistance >= PULL_THRESHOLD) {
+        ptrIndicator.style.transform = `translate(-50%, ${PULL_THRESHOLD}px)`;
+        ptrIndicator.classList.add('ptr-loading');
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
+      } else {
+        ptrIndicator.style.transform = 'translate(-50%, 0px)';
+        ptrIcon.style.transform = 'rotate(0deg)';
+      }
+
+      startY = 0;
+      currentY = 0;
+    };
+
+    // Touch Listeners
+    window.addEventListener('touchstart', onStart, { passive: true });
+    window.addEventListener('touchmove', onMove, { passive: false });
+    window.addEventListener('touchend', onEnd);
+
+    // Mouse Listeners (Desktop Support)
+    window.addEventListener('mousedown', onStart);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onEnd);
 window.flipTransferDirection=function(){if(!window.swapState)return;const tempAccount=window.swapState.fromAccount,tempIcon=window.swapState.fromIcon,tempBalance=window.swapState.fromBalance;window.swapState.fromAccount=window.swapState.toAccount,window.swapState.fromIcon=window.swapState.toIcon,window.swapState.fromBalance=window.swapState.toBalance||0,window.swapState.toAccount=tempAccount,window.swapState.toIcon=tempIcon,window.swapState.toBalance=tempBalance;const cleanFromStr=(window.swapState.fromAccount.toUpperCase().startsWith("SAVING")?"SAVING":window.swapState.fromAccount).replace(/[︾▼]/g,"").trim(),cleanToStr=(window.swapState.toAccount.toUpperCase().startsWith("SAVING")?"SAVING":window.swapState.toAccount).replace(/[︾▼]/g,"").trim(),fromBalText=` (₫${Math.round(window.swapState.fromBalance).toLocaleString("vi-VN")})`,toBalText=window.swapState.toBalance?` (₫${Math.round(window.swapState.toBalance).toLocaleString("vi-VN")})`:"";document.getElementById("fromAccountLabel").textContent=`${cleanFromStr}${fromBalText}`,document.getElementById("transferFromIcon").src=window.swapState.fromIcon,document.getElementById("toAccountLabel").textContent=`${cleanToStr}${toBalText}`,document.getElementById("transferToIcon").src=window.swapState.toIcon,"function"==typeof window.reloadDropdownMenus&&window.reloadDropdownMenus()};
   window.openTransferAccountPicker=function(side,event){event.stopPropagation();const existingPicker=document.getElementById("transferAccountPickerMenu");if(existingPicker&&existingPicker.remove(),"undefined"==typeof accountsData||!Array.isArray(accountsData))return;const usableAccounts=accountsData.filter(acc=>"Salary"!==acc.account&&"SOCIAL"!==acc.account),menu=document.createElement("div");menu.id="transferAccountPickerMenu",menu.style.cssText="\n        position: absolute;\n        top: calc(100% + 6px);\n        right: 0;\n        background: #1e222b;\n        border: 1px solid #2d313c;\n        border-radius: 12px;\n        min-width: 220px;\n        max-height: 200px;\n        overflow-y: auto;\n        z-index: 9999;\n        box-shadow: 0 8px 24px rgba(0,0,0,0.5);\n        padding: 4px;\n    ",usableAccounts.forEach(acc=>{if("from"===side&&acc.account===window.swapState.toAccount)return;if("to"===side&&acc.account===window.swapState.fromAccount)return;const balanceFormatted="₫"+Math.round(acc.amount).toLocaleString("vi-VN"),iconUrl=acc.icon||"https://cdn-icons-png.flaticon.com/512/3135/3135706.png",item=document.createElement("div");item.style.cssText="\n            display: flex;\n            align-items: center;\n            gap: 10px;\n            padding: 10px 12px;\n            color: #cbd5e1;\n            font-size: 13px;\n            cursor: pointer;\n            border-radius: 8px;\n            transition: background 0.15s;\n        ",item.innerHTML=`\n          <img src="${iconUrl}" style="width: 18px; height: 18px; border-radius: 4px; object-fit: cover;">\n          <span style="flex-grow:1; text-align:left;">${acc.account.toUpperCase().startsWith("SAVING")?"SAVING":acc.account}</span>\n          <span style="color: #6c757d; font-size:11px;">${balanceFormatted}</span>\n        `,item.onmouseenter=()=>item.style.background="#2d313c",item.onmouseleave=()=>item.style.background="transparent",item.onclick=e=>{e.stopPropagation(),window.selectTransferAccount(side,acc.account,Math.round(acc.amount)),menu.remove()},menu.appendChild(item)});event.currentTarget.appendChild(menu);const closePicker=()=>{menu.remove(),document.removeEventListener("click",closePicker)};document.addEventListener("click",closePicker)};
   window.selectTransferAccount=function(side,accountName,accountBalance){if(!window.swapState)return;if("from"===side){window.swapState.fromAccount=accountName,window.swapState.fromBalance=accountBalance;const balanceDisplay=document.getElementById("fromAccountBalance");balanceDisplay&&(balanceDisplay.textContent=accountBalance.toLocaleString("en-US"));const fromLabel=document.getElementById("fromAccountLabel");fromLabel&&(fromLabel.textContent=accountName)}else{window.swapState.toAccount=accountName;const toLabel=document.getElementById("toAccountLabel");toLabel&&(toLabel.textContent=accountName)}const amountInput=document.getElementById("transactionAmount");amountInput&&"function"==typeof window.handleAmountInput&&window.handleAmountInput(amountInput)};
@@ -7985,6 +8099,7 @@ window.addEventListener("DOMContentLoaded", () => {
         loader.classList.add("fade-out");
       }, 1500);
     });
+    
 
   loadBalanceHistoryTC();restoreBudgetSubtab();
   updateBalanceVisibility();
