@@ -339,7 +339,7 @@ background:
 .ttl { font-size:2.4vw; opacity:0.95;font-weight:400; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:0.6vw; }
 .dtl { font-size:2vw; font-weight:300; color:rgba(255,255,255,0.5); line-height:1.4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .rgt { margin-right:1.5vw;display:flex; flex-direction:column; align-items:flex-end; flex-shrink:0; gap:0.8vw; }
-.amt { font-family:DM Sans;opacity:0.95;font-weight:500; color:#fff; white-space:nowrap; }
+.amt { font-family:DM Sans;opacity:0.95;font-weight:500; color:#fff; white-space:nowrap;}
 .dte { font-size:1.9vw; color:rgba(255,255,255,0.4); white-space:nowrap; }
 .ttl{display:flex;align-items:center;gap:1.5vw}
 .recent-badge{font-size:2.4vw;font-weight:700;color:#14b8a6;background:rgba(74,222,128,0.14);border-radius:99px;padding:0.4vw 1.2vw;white-space:nowrap}
@@ -884,6 +884,30 @@ Object.assign(modalOverlay.style{position:"fixed",top:"0",left:"0",width:"100%",
 .chart-wrap{position:relative;width:100%;background:#191919;border:0px solid #2a2e39;border-radius:6px;margin-bottom:14px;overflow:hidden;user-select:none}
 #wave-svg { width:100%; height:200px; display:block; overflow:visible; }
 @media only screen and (min-width: 401px) {#wave-svg {height: 240px!important}}
+/* The interactive highlight dot on the chart line */
+#hover-dot {
+  fill: var(--accent-teal, #4f46e5);
+  stroke: #4f46e5;
+  stroke-width: 2px;
+  r: 5px;
+  transition: cx 0.1s ease, cy 0.1s ease;
+  animation: pulse-dot 4.5s infinite;
+}
+
+@keyframes pulse-dot {
+  0% {
+    r: 4px;
+    opacity: 1;
+  }
+  50% {
+    r: 8px;
+    opacity: 0.6;
+  }
+  100% {
+    r: 4px;
+    opacity: 1;
+  }
+}
 .axis-line { stroke:#2a2e39; stroke-width:1; }
 .grid-line { stroke:#1c2030; stroke-width:1; stroke-dasharray: 2,2; }
 .axis-text { font-size:12px; fill:#787b86; font-family:monospace; font-weight:500; }
@@ -2978,49 +3002,13 @@ to{transform:rotate(360deg)}
   document.getElementById("expand-btn").addEventListener("click",function(){allExpanded=!allExpanded,this.innerHTML=allExpanded?'<i class="bi bi-chevron-up"></i> Collapse All':'<i class="bi bi-chevron-down"></i> Expand All',allExpanded?document.querySelectorAll(".main-row").forEach(function(r){r.classList.add("ring-highlighted")}):(document.querySelectorAll(".main-row.ring-highlighted").forEach(function(r){r.classList.remove("ring-highlighted")}),document.querySelectorAll(".ring-item.selected").forEach(function(r){r.classList.remove("selected")})),document.querySelectorAll(".sub-row").forEach(function(s){allExpanded?s.classList.add("visible"):s.classList.remove("visible")}),document.querySelectorAll(".main-row").forEach(function(r){r.dataset.open=allExpanded?"1":"0"}),document.querySelectorAll(".chevron").forEach(function(c){c.textContent=(allExpanded,"")})});
   function buildColHdr(){var isMobile=window.innerWidth<400,hdr=document.getElementById("col-hdr");hdr&&(hdr.innerHTML="",hdr.style.fontSize=isMobile?"3.6vw":"2.6vw",hdr.style.gridTemplateColumns=isMobile?"5.2fr 1.8fr 1.6fr":"5.6fr 1.6fr 1.8fr 1.4fr",(isMobile?["Category","Amount","Change"]:["Category","Amount","Previous","Change"]).forEach(function(t,i){var d=document.createElement("div");d.className="ch";var iconEl=document.createElement("i");iconEl.style.display="inline-block",iconEl.style.marginRight="4px",iconEl.style.marginBottom="2px",iconEl.style.setProperty("font-size","13px","important"),"Category"===t?iconEl.className="bi bi-list":"Amount"===t?iconEl.className="bi bi-cash":"Previous"===t?iconEl.className="bi bi-calendar4-event":"Change"===t&&(iconEl.className="bi bi-droplet-half",t=""),iconEl.className&&d.appendChild(iconEl),t&&d.appendChild(document.createTextNode(t)),hdr.appendChild(d)}))}
 
-  function switchBudgetTab(e,t){var a=e.closest(".budget-card")||document,group=e.closest("[data-tabgroup]"),groupKey=group?group.getAttribute("data-tabgroup"):null;a.querySelectorAll(".budget-subtab, .budget-subtab-v2, .tab-btn:not(#tab-btn-x)").forEach(function(el){el.classList.remove("active")}),e.classList.add("active"),a.querySelectorAll(".budget-tab-content").forEach(function(el){el.style.display="none"});var c=a.querySelector("#budget-view-"+t);c&&(c.style.display="block"),groupKey?localStorage.setItem("active_budget_subtab_"+groupKey,t):localStorage.setItem("active_budget_subtab",t),e.id&&localStorage.setItem("active_regular_tab_id",e.id);var card=document.getElementById("card"),chartBtn=document.getElementById("tab-btn-x");card&&chartBtn&&("none"!==card.style.display&&"none"!==getComputedStyle(card).display&&"0px"!==card.style.maxHeight?chartBtn.classList.add("active"):chartBtn.classList.remove("active")),"subcategory"===t&&"function"==typeof renderSubcategoryBreakdown&&renderSubcategoryBreakdown()}
-  document.addEventListener("DOMContentLoaded",function(){var savedSubtabV1=localStorage.getItem("active_budget_subtab")||"spending",targetBtnV1=document.querySelector(`.budget-subtab[onclick*="'${savedSubtabV1}'"]`);targetBtnV1&&switchBudgetTab(targetBtnV1,savedSubtabV1);var groupEl=document.querySelector('[data-tabgroup="wallet-fire"]');if(groupEl){var savedSubtabV2=localStorage.getItem("active_budget_subtab_wallet-fire")||"wallet",targetBtnV2=groupEl.querySelector(`.budget-subtab-v2[onclick*="'${savedSubtabV2}'"]`);targetBtnV2&&switchBudgetTab(targetBtnV2,savedSubtabV2)}var groupEl3=document.querySelector('[data-tabgroup="portfolio-btc"]');if(groupEl3){var savedSubtabV4=localStorage.getItem("active_budget_subtab_portfolio-btc")||"portfolio",targetBtnV4=groupEl3.querySelector(`.budget-subtab-v2[onclick*="'${savedSubtabV4}'"]`);targetBtnV4&&switchBudgetTab(targetBtnV4,savedSubtabV4)}var chartBtn=document.getElementById("tab-btn-x"),card=document.getElementById("card");chartBtn&&card&&(card.style.overflow="hidden",card.style.transition="max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease-in-out, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)","shown"===(localStorage.getItem("tab-btn-x-card-state")||"shown")?(chartBtn.classList.add("active"),card.style.display="block",card.style.maxHeight="1000px",card.style.opacity="1",card.style.transform="translateY(0)"):(chartBtn.classList.remove("active"),card.style.display="none",card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)"),chartBtn.addEventListener("click",function(e){e.stopPropagation(),"none"===card.style.display||"none"===getComputedStyle(card).display||"0px"===card.style.maxHeight?(card.style.display="block",card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)",card.offsetHeight,card.style.maxHeight="1000px",card.style.opacity="1",card.style.transform="translateY(0)",this.classList.add("active"),localStorage.setItem("tab-btn-x-card-state","shown")):(card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)",this.classList.remove("active"),setTimeout(function(){"0px"===card.style.maxHeight&&(card.style.display="none")},400),localStorage.setItem("tab-btn-x-card-state","hidden"));var savedId=localStorage.getItem("active_regular_tab_id"),activeBtn=(savedId?document.getElementById(savedId):null)||targetBtnV1||document.querySelector(".budget-subtab, .budget-subtab-v2, .tab-btn:not(#tab-btn-x)");activeBtn&&activeBtn.classList.add("active")}));document.querySelectorAll(".tab-btn").forEach(function(btn){btn.addEventListener("click",function(){"tab-btn-x"!==this.id&&(document.querySelectorAll(".tab-btn:not(#tab-btn-x)").forEach(function(otherBtn){otherBtn.classList.remove("active")}),this.classList.add("active"),this.id&&localStorage.setItem("active_regular_tab_id",this.id),card&&chartBtn&&("none"!==card.style.display&&"none"!==getComputedStyle(card).display&&"0px"!==card.style.maxHeight?chartBtn.classList.add("active"):chartBtn.classList.remove("active")))})})});
+  function switchBudgetTab(e,t){var a=e.closest(".budget-card")||document,group=e.closest("[data-tabgroup]"),groupKey=group?group.getAttribute("data-tabgroup"):null;a.querySelectorAll(".budget-subtab, .budget-subtab-v2, .tab-btn:not(#tab-btn-x)").forEach(function(el){el.classList.remove("active")}),e.classList.add("active"),a.querySelectorAll(".budget-tab-content").forEach(function(el){el.style.display="none"});var c=a.querySelector("#budget-view-"+t);c&&(c.style.display="block"),groupKey?localStorage.setItem("active_budget_subtab_"+groupKey,t):localStorage.setItem("active_budget_subtab",t),e.id&&localStorage.setItem("active_regular_tab_id",e.id);var card=document.getElementById("card"),chartBtn=document.getElementById("tab-btn-x");card&&chartBtn&&("none"!==card.style.display&&"none"!==getComputedStyle(card).display&&"0px"!==card.style.maxHeight?chartBtn.classList.add("active"):chartBtn.classList.remove("active")),"subcategory"===t&&"function"==typeof renderSubcategoryBreakdown&&renderSubcategoryBreakdown()}document.addEventListener("DOMContentLoaded",function(){var savedSubtabV1=localStorage.getItem("active_budget_subtab")||"spending",targetBtnV1=document.querySelector(`.budget-subtab[onclick*="'${savedSubtabV1}'"]`);targetBtnV1&&switchBudgetTab(targetBtnV1,savedSubtabV1);var groupEl=document.querySelector('[data-tabgroup="wallet-fire"]');if(groupEl){var savedSubtabV2=localStorage.getItem("active_budget_subtab_wallet-fire")||"wallet",targetBtnV2=groupEl.querySelector(`.budget-subtab-v2[onclick*="'${savedSubtabV2}'"]`);targetBtnV2&&switchBudgetTab(targetBtnV2,savedSubtabV2)}var groupEl3=document.querySelector('[data-tabgroup="portfolio-btc"]');if(groupEl3){var savedSubtabV4=localStorage.getItem("active_budget_subtab_portfolio-btc")||"portfolio",targetBtnV4=groupEl3.querySelector(`.budget-subtab-v2[onclick*="'${savedSubtabV4}'"]`);targetBtnV4&&switchBudgetTab(targetBtnV4,savedSubtabV4)}var chartBtn=document.getElementById("tab-btn-x"),card=document.getElementById("card");chartBtn&&card&&(card.style.overflow="hidden",card.style.transition="max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease-in-out, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)","shown"===(localStorage.getItem("tab-btn-x-card-state")||"shown")?(chartBtn.classList.add("active"),card.style.display="block",card.style.maxHeight="1000px",card.style.opacity="1",card.style.transform="translateY(0)"):(chartBtn.classList.remove("active"),card.style.display="none",card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)"),chartBtn.addEventListener("click",function(e){e.stopPropagation(),"none"===card.style.display||"none"===getComputedStyle(card).display||"0px"===card.style.maxHeight?(card.style.display="block",card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)",card.offsetHeight,card.style.maxHeight="1000px",card.style.opacity="1",card.style.transform="translateY(0)",this.classList.add("active"),localStorage.setItem("tab-btn-x-card-state","shown")):(card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)",this.classList.remove("active"),setTimeout(function(){"0px"===card.style.maxHeight&&(card.style.display="none")},400),localStorage.setItem("tab-btn-x-card-state","hidden"));var savedId=localStorage.getItem("active_regular_tab_id"),activeBtn=(savedId?document.getElementById(savedId):null)||targetBtnV1||document.querySelector(".budget-subtab, .budget-subtab-v2, .tab-btn:not(#tab-btn-x)");activeBtn&&activeBtn.classList.add("active"),"block"===card.style.display&&"function"==typeof loadBalanceHistoryTC&&loadBalanceHistoryTC()})),document.querySelectorAll(".tab-btn").forEach(function(btn){btn.addEventListener("click",function(){"tab-btn-x"!==this.id&&(document.querySelectorAll(".tab-btn:not(#tab-btn-x)").forEach(function(otherBtn){otherBtn.classList.remove("active")}),this.classList.add("active"),this.id&&localStorage.setItem("active_regular_tab_id",this.id),card&&chartBtn&&("none"!==card.style.display&&"none"!==getComputedStyle(card).display&&"0px"!==card.style.maxHeight?chartBtn.classList.add("active"):chartBtn.classList.remove("active")))})})});
   !function(){var tabOrdersByGroup={"wallet-fire":["wallet","fire"],"portfolio-btc":["portfolio","btc"]},startX=0,startY=0,isSwiping=!1,mouseDown=!1,activeCard=null,activeGroup=null;function goToTab(card,tabName){var btn=card.querySelector(".budget-subtab-v2[onclick*=\"'"+tabName+"'\"]");btn&&switchBudgetTab(btn,tabName)}function handleSwipeEnd(card,groupEl,dx){var groupKey=groupEl.getAttribute("data-tabgroup"),tabOrder=tabOrdersByGroup[groupKey];if(tabOrder){var currentTab=function(card){var activeBtn=card.querySelector(".budget-subtab-v2.active");if(!activeBtn)return null;var match=activeBtn.getAttribute("onclick").match(/'([^']+)'/);return match?match[1]:null}(groupEl)||tabOrder[0],currentIndex=tabOrder.indexOf(currentTab),len=tabOrder.length;currentIndex<0||(dx<-50?goToTab(card,tabOrder[(currentIndex+1)%len]):dx>50&&goToTab(card,tabOrder[(currentIndex-1+len)%len]))}}function findTabGroupEl(card){return card.querySelector("[data-tabgroup]")}document.addEventListener("touchstart",function(e){var card=e.target.closest(".budget-card");if(card){var groupEl=findTabGroupEl(card);groupEl&&(activeCard=card,activeGroup=groupEl,startX=e.touches[0].clientX,startY=e.touches[0].clientY,isSwiping=!0)}},{passive:!0}),document.addEventListener("touchmove",function(e){if(isSwiping&&activeCard){var dx=e.touches[0].clientX-startX,dy=e.touches[0].clientY-startY;Math.abs(dy)>Math.abs(dx)&&(isSwiping=!1)}},{passive:!0}),document.addEventListener("touchend",function(e){if(isSwiping&&activeCard&&activeGroup){var dx=e.changedTouches[0].clientX-startX;handleSwipeEnd(activeCard,activeGroup,dx),isSwiping=!1,activeCard=null,activeGroup=null}}),document.addEventListener("mousedown",function(e){var card=e.target.closest(".budget-card");if(card){var groupEl=findTabGroupEl(card);groupEl&&(activeCard=card,activeGroup=groupEl,startX=e.clientX,startY=e.clientY,mouseDown=!0,isSwiping=!0)}}),document.addEventListener("mousemove",function(e){if(mouseDown&&isSwiping&&activeCard){var dx=e.clientX-startX,dy=e.clientY-startY;Math.abs(dy)>Math.abs(dx)&&(isSwiping=!1)}}),document.addEventListener("mouseup",function(e){if(mouseDown){if(isSwiping&&activeCard&&activeGroup){var dx=e.clientX-startX;handleSwipeEnd(activeCard,activeGroup,dx)}mouseDown=!1,isSwiping=!1,activeCard=null,activeGroup=null}})}();
   function restoreBudgetSubtab(groupKey,defaultTab){var groupEl=document.querySelector('[data-tabgroup="'+groupKey+'"]');if(groupEl){var storageKey="active_budget_subtab_"+groupKey,savedSubtab=localStorage.getItem(storageKey)||defaultTab,targetBtn=groupEl.querySelector(".budget-subtab-v2[onclick*=\"'"+savedSubtab+"'\"]");targetBtn&&switchBudgetTab(targetBtn,savedSubtab)}}
   
   function fetchSheetCSV(){var csvUrl="https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1608160084&t="+Date.now();fetch(csvUrl,{cache:"no-store"}).then(function(response){if(!response.ok)throw new Error("HTTP "+response.status);return response.text()}).then(function(text){parseCSVData(text)}).catch(function(err){console.error("Widget load error:",err);var msgEl=document.getElementById("det-msg");msgEl&&(msgEl.style.display="block",msgEl.textContent="Chart Error: "+err.message)})}function parseCSVLine(line){for(var values=[],currentVal="",inQuotes=!1,i=0;i<line.length;i++){var char=line.charAt(i);'"'===char&&'"'===line.charAt(i+1)?(currentVal+='"',i++):'"'===char?inQuotes=!inQuotes:","!==char||inQuotes?currentVal+=char:(values.push(currentVal.trim()),currentVal="")}return values.push(currentVal.trim()),values}function parseCSVData(csvText){const lines=csvText.trim().split(/\r?\n/);if(lines.length<3)return;iconURLs=parseCSVLine(lines[0]),headers=parseCSVLine(lines[1]),buildCustomCategoryDropdown(headers,iconURLs);const now=new Date,currentYear=now.getFullYear()%100,currentMonth=now.getMonth()+1;sheetData=[],lines.slice(2).forEach(line=>{const parsedRow=parseCSVLine(line),dateStr=parsedRow[0];if(!dateStr)return;let isFuture=!1;if(dateStr.includes("/")){const parts=dateStr.split("/"),m=parseInt(parts[0],10),y=parseInt(parts[1],10);isNaN(m)||isNaN(y)||(y>currentYear||y===currentYear&&m>currentMonth)&&(isFuture=!0)}if(isFuture)return;const rowObj={0:dateStr};parsedRow.forEach((cellVal,idx)=>{if(0!==idx)if(cellVal){let clean=cellVal.replace(/[\$,\s]/g,"");clean.startsWith("(")&&clean.endsWith(")")&&(clean="-"+clean.slice(1,-1));const num=parseFloat(clean);rowObj[idx]=isNaN(num)?0:num}else rowObj[idx]=0}),sheetData.push(rowObj)}),renderWidget()}
-  function buildCustomCategoryDropdown(colHeaders,urls){
-  const menu=document.getElementById("dropdownMenu");
-  menu.innerHTML="";
-
-  // NEW: labels to exclude entirely from the dropdown
-  const excludedLabels = ["Insurance & Health", "Bills & Subscription", "Dad & Bro"];
-  function isExcluded(label) {
-    return label && excludedLabels.some(ex => label.trim().toLowerCase() === ex.trim().toLowerCase());
-  }
-
-  const categories=[];
-  categories.push({idx:2,label:colHeaders[2]||"Total Expense",icon:urls[2]||"",type:"total"});
-
-  colHeaders.forEach((label,idx)=>{
-    !label||idx<3||idx>=3&&idx<=8&&!isExcluded(label)&&categories.push({idx,label,icon:urls[idx]||"",type:"main"});
-  });
-
-  colHeaders.forEach((label,idx)=>{
-    !label||idx<9||isExcluded(label)||categories.push({idx,label,icon:urls[idx]||"",type:"sub"});
-  });
-
-  let currentGroup="";
-  categories.forEach(item=>{
-    if("main"===item.type&&"main"!==currentGroup){currentGroup="main";const divider=document.createElement("hr");divider.className="dropdown-divider",menu.appendChild(divider)}
-    else if("sub"===item.type&&"sub"!==currentGroup){currentGroup="sub";const divider=document.createElement("hr");divider.className="dropdown-divider",menu.appendChild(divider)}
-    const itemEl=document.createElement("div");
-    if(itemEl.className="dropdown-item "+(item.idx===selectedColIdx?"selected":""),itemEl.onclick=()=>selectCategory(item.idx,item.label,item.icon),item.icon){
-      const img=document.createElement("img");
-      img.src=item.icon,img.className="cat-icon",img.alt="",itemEl.appendChild(img)
-    }
-    const span=document.createElement("span");
-    span.textContent=item.label,itemEl.appendChild(span),menu.appendChild(itemEl)
-  });
-
-  selectCategory(selectedColIdx,categories[0].label,categories[0].icon,!1)
-}
-    function selectCategory(colIdx,label,iconUrl,shouldRender=!0){selectedColIdx=colIdx;const selectedLabel=document.getElementById("selectedLabel"),selectedIcon=document.getElementById("selectedIcon");selectedLabel.textContent=label,iconUrl?(selectedIcon.src=iconUrl,selectedIcon.style.display="block"):selectedIcon.style.display="none",document.querySelectorAll(".dropdown-item").forEach(el=>{el.classList.remove("selected")}),closeDropdown(),shouldRender&&renderWidget()}function toggleDropdown(event){event&&event.stopPropagation();const menu=document.getElementById("dropdownMenu"),dropdown=document.getElementById("customDropdown");menu&&dropdown&&(menu.classList.toggle("show"),dropdown.classList.toggle("open"))}function closeDropdown(){const menu=document.getElementById("dropdownMenu"),dropdown=document.getElementById("customDropdown");menu&&menu.classList.remove("show"),dropdown&&dropdown.classList.remove("open")}
+  function buildCustomCategoryDropdown(colHeaders,urls){const menu=document.getElementById("dropdownMenu");menu.innerHTML="";const excludedLabels=["Insurance & Health","Bills & Subscription","Dad & Bro"];function isExcluded(label){return label&&excludedLabels.some(ex=>label.trim().toLowerCase()===ex.trim().toLowerCase())}const categories=[];categories.push({idx:2,label:colHeaders[2]||"Total Expense",icon:urls[2]||"",type:"total"}),colHeaders.forEach((label,idx)=>{!label||idx<3||idx>=3&&idx<=8&&!isExcluded(label)&&categories.push({idx,label,icon:urls[idx]||"",type:"main"})}),colHeaders.forEach((label,idx)=>{!label||idx<9||isExcluded(label)||categories.push({idx,label,icon:urls[idx]||"",type:"sub"})});let currentGroup="";categories.forEach(item=>{if("main"===item.type&&"main"!==currentGroup){currentGroup="main";const divider=document.createElement("hr");divider.className="dropdown-divider",menu.appendChild(divider)}else if("sub"===item.type&&"sub"!==currentGroup){currentGroup="sub";const divider=document.createElement("hr");divider.className="dropdown-divider",menu.appendChild(divider)}const itemEl=document.createElement("div");if(itemEl.className="dropdown-item "+(item.idx===selectedColIdx?"selected":""),itemEl.onclick=()=>selectCategory(item.idx,item.label,item.icon),item.icon){const img=document.createElement("img");img.src=item.icon,img.className="cat-icon",img.alt="",itemEl.appendChild(img)}const span=document.createElement("span");span.textContent=item.label,itemEl.appendChild(span),menu.appendChild(itemEl)}),selectCategory(selectedColIdx,categories[0].label,categories[0].icon,!1)}
+  function selectCategory(colIdx,label,iconUrl,shouldRender=!0){selectedColIdx=colIdx;const selectedLabel=document.getElementById("selectedLabel"),selectedIcon=document.getElementById("selectedIcon");selectedLabel.textContent=label,iconUrl?(selectedIcon.src=iconUrl,selectedIcon.style.display="block"):selectedIcon.style.display="none",document.querySelectorAll(".dropdown-item").forEach(el=>{el.classList.remove("selected")}),closeDropdown(),shouldRender&&renderWidget()}function toggleDropdown(event){event&&event.stopPropagation();const menu=document.getElementById("dropdownMenu"),dropdown=document.getElementById("customDropdown");menu&&dropdown&&(menu.classList.toggle("show"),dropdown.classList.toggle("open"))}function closeDropdown(){const menu=document.getElementById("dropdownMenu"),dropdown=document.getElementById("customDropdown");menu&&menu.classList.remove("show"),dropdown&&dropdown.classList.remove("open")}
   function handleCategoryChange(val){selectedColIdx=parseInt(val,10),renderWidget()}function updateView(range,btn){currentRange=range,document.querySelectorAll(".segment-btn").forEach(b=>b.classList.remove("active")),btn.classList.add("active"),renderWidget()}document.addEventListener("click",function(e){const wrap=document.querySelector(".category-select-wrap");wrap&&!wrap.contains(e.target)&&closeDropdown()}),document.addEventListener("click",function(e){const selectWrap=document.querySelector(".category-select-wrap");selectWrap&&!selectWrap.contains(e.target)&&closeDropdown()}),document.addEventListener("keydown",function(e){"Escape"===e.key&&closeDropdown()}),document.addEventListener("click",e=>{const wrap=document.querySelector(".category-select-wrap");wrap&&!wrap.contains(e.target)&&closeDropdown()});
   function formatShortCurrency(value){const absVal=Math.abs(value),sign=value<0?"-":"";return absVal>=1e6?sign+"$"+(absVal/1e6).toFixed(1)+"M":absVal>=1e3?sign+"$"+(absVal/1e3).toFixed(1)+"k":sign+"$"+absVal.toFixed(0)}
   function renderSVGLineChart(chartLabels, rawLabels, currentValues, baselineValues) {
@@ -3104,10 +3092,10 @@ to{transform:rotate(360deg)}
       if (!sheetData || sheetData.length === 0) return;
       var activeData=sheetData.slice();"6M"===currentRange?activeData=activeData.slice(-6):"Year"===currentRange&&(activeData=activeData.slice(-12));for(var rawLabels=[],currentValues=[],i=0;i<activeData.length;i++){var d=activeData[i];rawLabels.push(d[0]?String(d[0]).trim():"");var val=Number(d[selectedColIdx]);currentValues.push(isNaN(val)?0:Math.abs(val))}
 
-      // NEW: derive the baseline year dynamically (current year - 1), as a 2-digit suffix
+
       var currentFullYear = new Date().getFullYear();
       var baselineFullYear = currentFullYear - 1;
-      var baselineYearSuffix = String(baselineFullYear).slice(-2); // e.g. 2025 -> "25"
+      var baselineYearSuffix = String(baselineFullYear).slice(-2);
 
       for(var baselineValues=[],j=0;j<rawLabels.length;j++){var label=rawLabels[j],valBaseline=0;if(label&&-1!==label.indexOf("/"))for(var monthStr=label.split("/")[0].trim(),targetBaselineLabel=monthStr+"/"+baselineYearSuffix,k=0;k<sheetData.length;k++){var rowLabel=sheetData[k][0]?String(sheetData[k][0]).trim():"";if(rowLabel===targetBaselineLabel){var rawBaselineVal=Number(sheetData[k][selectedColIdx]);valBaseline=isNaN(rawBaselineVal)?0:Math.abs(rawBaselineVal);break}}baselineValues.push(valBaseline)}
 
@@ -3122,7 +3110,7 @@ to{transform:rotate(360deg)}
       var currEl = document.getElementById('currPeriodVal'); var prevEl = document.getElementById('prevPeriodVal');
       if(currEl&&(currEl.innerHTML=formatCurrencyResponsive(avgCurr)),prevEl&&(prevEl.innerHTML=formatCurrencyResponsive(avgBaseline)),rawLabels.length>0){var currSub=document.getElementById("currPeriodSub"),prevSub=document.getElementById("prevPeriodSub");currSub&&(currSub.innerText=rawLabels[rawLabels.length-1]||"For Now"),prevSub&&(prevSub.innerText="Same Period "+baselineFullYear)}
 
-      // NEW: update the label text dynamically instead of hardcoded "2025"
+
       var prevLabelEl = document.getElementById("prevPeriodLabel");
       if (prevLabelEl) prevLabelEl.innerText = baselineFullYear + " Avg Baseline";
 
@@ -5234,8 +5222,8 @@ function historyEditCalNavigate(e, dir) {
         .ca-history-badge-txt { font-size: 3vw !important; }
         .ca-history-dte, .tx-group-hdr { font-size: 3.5vw !important; }
         
-        .ca-history-rgt-wrap { display: flex; flex-direction: row; align-items: center; gap: 2.5vw; flex-shrink: 0; }
-        .ca-history-amt { font-family:DM Sans;font-size: 3.6vw !important; min-width: 50px; padding-right: 2vw !important; text-align: right; font-weight: 600; white-space: nowrap; }
+        .ca-history-rgt-wrap { display: flex; flex-direction: row; align-items: center; gap: 2.5vw; flex-shrink: 0;}
+        .ca-history-amt { font-family:DM Sans;font-size: 3.6vw !important; min-width: 70px; padding-right: 2vw !important; text-align: right; font-weight: 600; white-space: nowrap; }
         
         .ca-display-desktop { display: none !important; }
         .ca-display-mobile { display: inline !important; }
@@ -5263,7 +5251,8 @@ function historyEditCalNavigate(e, dir) {
     }
     
     showFilterSpinner();
-    function getPeriodHeader(dateStr){try{var d=new Date(dateStr);if(isNaN(d.getTime()))return"Other";var now=new Date,diffMonths=12*(now.getFullYear()-d.getFullYear())+(now.getMonth()-d.getMonth());return 0===diffMonths?"This Month":1===diffMonths?"Last Month":now.getFullYear()===d.getFullYear()?"This Year":d.getFullYear().toString()}catch(e){return"Other"}}function formatShortNum(num){var val,absNum=Math.abs(num);return absNum>=1e6?((val=absNum/1e6)%1==0?val:val.toFixed(1))+"M":absNum>=1e3?((val=absNum/1e3)%1==0?val:val.toFixed(1))+"K":absNum.toString()}
+    function getPeriodHeader(dateStr){try{var d=new Date(dateStr);if(isNaN(d.getTime()))return"Other";var now=new Date,diffMonths=12*(now.getFullYear()-d.getFullYear())+(now.getMonth()-d.getMonth());return 0===diffMonths?"This Month":1===diffMonths?"Last Month":now.getFullYear()===d.getFullYear()?"This Year":d.getFullYear().toString()}catch(e){return"Other"}}
+    function formatShortNum(num){var val,absNum=Math.abs(num);return absNum>=1e6?((val=absNum/1e6)%1==0?val:val.toFixed(3))+"M":absNum>=1e3?((val=absNum/1e3)%1==0?val:val.toFixed(1))+"K":absNum.toString()}
     fetch(CA_CSV_BI + "&t=" + Date.now(), { cache: "no-store" })
     .then(function(r) {
         if (!r.ok) throw new Error("HTTP " + r.status);
@@ -5288,7 +5277,7 @@ function historyEditCalNavigate(e, dir) {
         var amountRaw  = (cols[12] || "").replace(/^"|"$/g, "").trim();
         var accountVal = (cols[13] || "").replace(/^"|"$/g, "").trim();
         var detailVal  = (cols[14] || "").replace(/^"|"$/g, "").trim();
-        var incomeIconUrl  = (cols[22] || "").replace(/^"|"$/g, "").trim();
+        var incomeIconUrl  = (cols[23] || "").replace(/^"|"$/g, "").trim();
         var accountIconUrl = (cols[23] || "").replace(/^"|"$/g, "").trim();
 
         var lowerType = typeVal.toLowerCase();
@@ -5299,7 +5288,9 @@ function historyEditCalNavigate(e, dir) {
         var cleanAmt = caNum(amountRaw);
         
         if (dateVal && typeVal) {
-            incomeIconUrl&&"n/a"!==incomeIconUrl.toLowerCase()?uniqueTypesMap.set(typeVal,incomeIconUrl):uniqueTypesMap.has(typeVal)||uniqueTypesMap.set(typeVal,"");var periodGroup=getPeriodHeader(dateVal);periodGroup!==currentPeriod&&(currentPeriod=periodGroup,htmlMarkup+=`<div class="tx-group-hdr" style="padding: 1vw 0 0.3vw; margin-top: 0.1vw; font-size: 1.8vw;">${currentPeriod}</div>`);var formattedDateStr="MMM dd";try{var dObj=new Date(dateVal);if(!isNaN(dObj.getTime())){var monthName=dObj.toLocaleDateString("en-US",{month:"short"}),dayNum=String(dObj.getDate()).padStart(2,"0");formattedDateStr=monthName+" "+dayNum}}catch(e){}var absoluteAmt=Math.abs(cleanAmt),fullAmountText=isNaN(absoluteAmt)?amountRaw:new Intl.NumberFormat("vi-VN").format(absoluteAmt),shortAmountText=formatShortNum(cleanAmt),isNegative=cleanAmt<0,amountPrefix=isNegative?"-":"+",themeColor=isNegative?"rgb(255, 105, 180)":"#14b8a6",badgeBg=isNegative?"rgba(255, 105, 180, 0.1)":"rgba(20, 184, 166, 0.1)",iconHtml="";incomeIconUrl&&"n/a"!==incomeIconUrl.toLowerCase()&&(iconHtml=`<img src="${incomeIconUrl}" class="ico ca-history-ico" style="padding: 0.1vw;" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`);var fallbackLetter=(typeVal||"?").charAt(0).toUpperCase();iconHtml+=`<div class="ico-fb ca-history-fb" style="display: ${incomeIconUrl?"none":"flex"}">${fallbackLetter}</div>`;var accountBadgeHtml="";accountVal&&(accountBadgeHtml=`\n                <div style="display: inline-flex; align-items: center; gap: 0.4vw; background: ${badgeBg}; padding: 0.2vw 0.8vw; border-radius: 4px; margin-left: 0.8vw;">\n                  ${accountIconUrl?`<img src="${accountIconUrl}" style="width: 2.2vw; height: 2.2vw; object-fit: contain; border-radius: 50%;" />`:""}\n                  <span class="ca-history-badge-txt" style="color: ${themeColor}; font-weight: 600; letter-spacing: 0.02em;">${accountVal}</span>\n                </div>\n              `);
+            incomeIconUrl&&"n/a"!==incomeIconUrl.toLowerCase()?uniqueTypesMap.set(typeVal,incomeIconUrl):uniqueTypesMap.has(typeVal)||uniqueTypesMap.set(typeVal,"");var periodGroup=getPeriodHeader(dateVal);periodGroup!==currentPeriod&&(currentPeriod=periodGroup,htmlMarkup+=`<div class="tx-group-hdr" style="padding: 1vw 0 0.3vw; margin-top: 0.1vw; font-size: 1.8vw;">${currentPeriod}</div>`);var formattedDateStr="MMM dd";try{var dObj=new Date(dateVal);if(!isNaN(dObj.getTime())){var monthName=dObj.toLocaleDateString("en-US",{month:"short"}),dayNum=String(dObj.getDate()).padStart(2,"0");formattedDateStr=monthName+" "+dayNum}}catch(e){}var absoluteAmt=Math.abs(cleanAmt),
+            fullAmountText=isNaN(absoluteAmt)?amountRaw:new Intl.NumberFormat("vi-VN").format(absoluteAmt),
+            shortAmountText=formatShortNum(cleanAmt),isNegative=cleanAmt<0,amountPrefix=isNegative?"-":"+",themeColor=isNegative?"rgb(255, 105, 180)":"#14b8a6",badgeBg=isNegative?"rgba(255, 105, 180, 0.1)":"rgba(20, 184, 166, 0.1)",iconHtml="";incomeIconUrl&&"n/a"!==incomeIconUrl.toLowerCase()&&(iconHtml=`<img src="${incomeIconUrl}" class="ico ca-history-ico" style="padding: 0.1vw;" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`);var fallbackLetter=(typeVal||"?").charAt(0).toUpperCase();iconHtml+=`<div class="ico-fb ca-history-fb" style="display: ${incomeIconUrl?"none":"flex"}">${fallbackLetter}</div>`;var accountBadgeHtml="";accountVal&&(accountBadgeHtml=`\n                <div style="display: inline-flex; align-items: center; gap: 0.4vw; background: ${badgeBg}; padding: 0.2vw 0.8vw; border-radius: 4px; margin-left: 0.8vw;">\n                  ${accountIconUrl?`<img src="${accountIconUrl}" style="width: 2.2vw; height: 2.2vw; object-fit: contain; border-radius: 50%;" />`:""}\n                  <span class="ca-history-badge-txt" style="color: ${themeColor}; font-weight: 600; letter-spacing: 0.02em;">${accountVal}</span>\n                </div>\n              `);
             htmlMarkup += `
             <div class="sub-swipe-container"
                 data-tx-id="${txId}"
@@ -5339,13 +5330,14 @@ function historyEditCalNavigate(e, dir) {
                 <div class="ca-history-icon-wrap" style="display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                     ${iconHtml}
                 </div>
+                
                 <div class="mid" style="display: flex; align-items: center; justify-content: space-between; gap: 1.2vw; min-width: 0;">
                     <div style="display: flex; align-items: center; gap: 0.8vw; min-width: 0; flex: 1;">
                     <span class="ttl ca-history-ttl" style="margin-bottom: 0; flex-shrink: 0;">${typeVal}</span>
                     <span class="dtl ca-history-dtl" style="color: rgba(255,255,255,0.35); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;">
                         — ${detailVal}
                     </span>
-                    ${accountBadgeHtml}
+                    <!--${accountBadgeHtml}-->
                     </div>
                 </div>
                 <div class="rgt ca-history-rgt-wrap">
