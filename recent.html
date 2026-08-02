@@ -121,9 +121,16 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
       transform: translateX(-50%);
       width: 30px;
       height: 30px;
-      background-color: #fff;
+background-color: rgba(255, 255, 255, 0.65);
+  
+  /* Frosted glass blur effect behind the indicator */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  
+  
+  border-radius: 50%;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); /* Softer shadow */
       border-radius: 50%;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -141,6 +148,9 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
       border-top: 3px solid #e60023; /* Pinterest Red */
       border-radius: 50%;
       transition: transform 0.1s linear;
+      background: 
+
+    url('https://i.pinimg.com/1200x/75/ab/b1/75abb1ed3cc7e63dc9161635c015e925.jpg');
     }
 
     /* Active spinner animation during reload */
