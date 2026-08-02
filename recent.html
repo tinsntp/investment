@@ -116,50 +116,38 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
     }
 #ptr-indicator {
       position: fixed;
-      top: -60px;
+      top: -40px;
       left: 50%;
       transform: translateX(-50%);
-      width: 30px;
-      height: 30px;
-background-color: rgba(255, 255, 255, 0.65);
-  
-  /* Frosted glass blur effect behind the indicator */
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  
-  
-  border-radius: 50%;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); /* Softer shadow */
-      border-radius: 50%;
+      width: 25px;
+      height: 25px;
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 100000;
-      transition: transform 0.2s ease-out;
+      z-index: 10000;
+      transition: transform 0.2s ease-out, opacity 0.2s ease-out;
       will-change: transform;
       pointer-events: none;
+      opacity: 0;
     }
 
-    /* Animated Icon inside indicator */
-    .ptr-icon {
-      width: 22px;
-      height: 22px;
-      border: 3px solid #f3f3f3;
-      border-top: 3px solid #e60023; /* Pinterest Red */
+    /* Simple Gray/White CSS Ring Spinner */
+    .ptr-spinner {
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.2); /* Dark gray track */
+      border-top-color: #ffffff;                 /* Pure white active segment */
       border-radius: 50%;
+      transform-origin: center center;
       transition: transform 0.1s linear;
-      background: 
-
-    url('https://i.pinimg.com/1200x/75/ab/b1/75abb1ed3cc7e63dc9161635c015e925.jpg');
     }
 
-    /* Active spinner animation during reload */
-    .ptr-loading .ptr-icon {
-      animation: ptrSpin 0.8s linear infinite;
+    /* Continuous Spin Animation on Reload */
+    .ptr-loading .ptr-spinner {
+      animation: spin 0.75s linear infinite;
     }
 
-    @keyframes ptrSpin {
-      0% { transform: rotate(0deg); }
+    @keyframes spin {
       100% { transform: rotate(360deg); }
     }
 
@@ -2125,8 +2113,8 @@ to{transform:rotate(360deg)}
     </div>
 </div>
 <div id="ptr-indicator">
-    <div class="ptr-icon" id="ptr-icon"></div>
-</div>
+    <div class="ptr-spinner" id="ptr-spinner"></div>
+  </div>
 <div class="tab-bar" id="tab-bar">
   <div class="tab-btn" id="tab-btn-x"><i class="bi bi-activity"></i><span></span></div>
   <div class="tab-btn active" data-idx="0" id="tab-btn-0"><i class="bi bi-basket-fill"></i><span>Expense</span>  </div>
@@ -8013,77 +8001,67 @@ window.generateDynamicChips = function(rawValue, containerId, targetInputId) {
     });
 };
 const ptrIndicator = document.getElementById('ptr-indicator');
-    const ptrIcon = document.getElementById('ptr-icon');
+    const ptrSpinner = document.getElementById('ptr-spinner');
 
-    let startY = 0;
-    let currentY = 0;
-    let pulling = false;
+    let startY = 0, currentY = 0, pulling = false;
+    const THRESHOLD = 75;
+    const RESISTANCE = 0.45;
 
-    const PULL_THRESHOLD = 90; // Pull distance to trigger refresh
-    const RESISTANCE = 0.45;   // Drag weight resistance
+    const getY = (e) => e.touches ? e.touches[0].clientY : e.clientY;
 
-    // Unified coordinate extractor (works for both Touch and Mouse)
-    const getClientY = (e) => e.touches ? e.touches[0].clientY : e.clientY;
-
-    // 1. START DRAG (Touch or Mouse Down)
     const onStart = (e) => {
-      // Only trigger if scrolled to top and using left mouse button (if mouse event)
       if (window.scrollY === 0 && (e.type === 'touchstart' || e.button === 0)) {
-        startY = getClientY(e);
+        startY = getY(e);
         pulling = true;
         ptrIndicator.style.transition = 'none';
       }
     };
 
-    // 2. MOVE DRAG (Touch or Mouse Move)
     const onMove = (e) => {
       if (!pulling) return;
+      currentY = getY(e);
+      const dist = currentY - startY;
 
-      currentY = getClientY(e);
-      const distance = currentY - startY;
-
-      if (distance > 0 && window.scrollY === 0) {
-        // Prevent default drag scrolling behavior
+      if (dist > 0 && window.scrollY === 0) {
         if (e.cancelable) e.preventDefault();
+        const pullDist = Math.min(dist * RESISTANCE, THRESHOLD + 15);
+        
+        // Translate down & fade in smoothly
+        ptrIndicator.style.transform = `translate(-50%, ${pullDist}px)`;
+        ptrIndicator.style.opacity = Math.min(pullDist / (THRESHOLD * 0.5), 1);
 
-        const pullDistance = Math.min(distance * RESISTANCE, PULL_THRESHOLD + 20);
-        ptrIndicator.style.transform = `translate(-50%, ${pullDistance}px)`;
-
-        const rotation = (pullDistance / PULL_THRESHOLD) * 360;
-        ptrIcon.style.transform = `rotate(${rotation}deg)`;
+        // Rotate ring dynamically during pull
+        const rotation = (pullDist / THRESHOLD) * 360;
+        ptrSpinner.style.transform = `rotate(${rotation}deg)`;
       }
     };
 
-    // 3. END DRAG (Touch or Mouse Up)
     const onEnd = () => {
       if (!pulling) return;
       pulling = false;
+      ptrIndicator.style.transition = 'transform 0.2s ease-out, opacity 0.2s ease-out';
+      const totalDist = (currentY - startY) * RESISTANCE;
 
-      ptrIndicator.style.transition = 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)';
-      const totalDistance = (currentY - startY) * RESISTANCE;
-
-      if (totalDistance >= PULL_THRESHOLD) {
-        ptrIndicator.style.transform = `translate(-50%, ${PULL_THRESHOLD}px)`;
+      if (totalDist >= THRESHOLD) {
+        ptrIndicator.style.transform = `translate(-50%, ${THRESHOLD}px)`;
+        ptrIndicator.style.opacity = '1';
         ptrIndicator.classList.add('ptr-loading');
-
-        setTimeout(() => {
-          window.location.reload();
-        }, 500);
+        
+        setTimeout(() => window.location.reload(), 500);
       } else {
         ptrIndicator.style.transform = 'translate(-50%, 0px)';
-        ptrIcon.style.transform = 'rotate(0deg)';
+        ptrIndicator.style.opacity = '0';
+        ptrSpinner.style.transform = 'rotate(0deg)';
       }
-
-      startY = 0;
-      currentY = 0;
+      startY = 0; currentY = 0;
     };
 
-    // Touch Listeners
+    // Touch events
     window.addEventListener('touchstart', onStart, { passive: true });
     window.addEventListener('touchmove', onMove, { passive: false });
     window.addEventListener('touchend', onEnd);
 
-    // Mouse Listeners (Desktop Support)
+    // Mouse events
     window.addEventListener('mousedown', onStart);
     window.addEventListener('mousemove', onMove);
     window.addEventListener('mouseup', onEnd);
