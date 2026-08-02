@@ -209,6 +209,11 @@ background:
   padding: 1.5vw 0.5vw;
   transition: background 0.2s;
 }
+@media (max-width: 400px) {
+    .ring-item[data-hide-on-mobile="1"] {
+        display: none;
+    }
+}
 
 .ring-item:hover { background: rgba(255, 255, 255, 0.04); }
 .ring-item.selected { background: rgba(255, 255, 255, 0.04); }
@@ -3544,14 +3549,39 @@ function buildRingsForMonth(mains) {
                 return;
             }
             if (m.budget > 0) {
-                ringsWrap.appendChild(buildRing(m.name, m.curr, m.budget, m.icon, isRental, [gid]));
+                var ringEl = buildRing(m.name, m.curr, m.budget, m.icon, isRental, [gid]);
+
+                // NEW: sync category dropdown + chart when this ring is clicked
+                ringEl.addEventListener("click", function() {
+                    var matchedIdx = headers.findIndex(function(h) {
+                        return h && h.trim().toLowerCase() === m.name.trim().toLowerCase();
+                    });
+                    if (matchedIdx >= 0 && typeof selectCategory === "function") {
+                        selectCategory(matchedIdx, m.name, m.icon, true); // true = shouldRender, updates chart
+                    }
+                });
+
+                ringsWrap.appendChild(ringEl);
             }
         });
-        
-
         if (billsBudget > 0 || billsSpent > 0) {
-            ringsWrap.appendChild(buildRing("Bills & Insurance", billsSpent, billsBudget, billsIcon, false, billsGids));
+            var billsRingEl = buildRing("Bills & Insurance", billsSpent, billsBudget, billsIcon, false, billsGids);
+
+            billsRingEl.addEventListener("click", function() {
+                // Find first main category matching bill/insurance/health keywords
+                var matchedIdx = headers.findIndex(function(h) {
+                    if (!h) return false;
+                    var hl = h.trim().toLowerCase();
+                    return hl.indexOf("bill") >= 0 || hl.indexOf("insurance") >= 0 || hl.indexOf("health") >= 0;
+                });
+                if (matchedIdx >= 0 && typeof selectCategory === "function") {
+                    selectCategory(matchedIdx, "Bills & Insurance", billsIcon, true);
+                }
+            });
+
+            ringsWrap.appendChild(billsRingEl);
         }
+         if (typeof applyLayout === "function") applyLayout();
     });
 }
 // NEW: ensures sheetData is loaded (via fetchSheetCSV), then renders the month view
