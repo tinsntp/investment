@@ -3132,14 +3132,37 @@ to{transform:rotate(360deg)}
     item.appendChild(remEl);
     
     item.addEventListener("click", function() {
-        var alreadySel = this.classList.contains("selected"),
-            gids2 = (this.dataset.gids || "").split(",").filter(function(g) { return g });
-        document.querySelectorAll(".ring-item.selected").forEach(function(r2) { r2.classList.remove("selected") }),
-        alreadySel ? (document.querySelectorAll(".main-row.ring-highlighted").forEach(function(r) { r.classList.remove("ring-highlighted") }), gids2.forEach(function(gid) { var mainRow = document.querySelector(".main-row[data-id='" + gid + "']"); if (mainRow) { mainRow.dataset.open = "0"; var chev2 = document.getElementById("chev-" + gid); chev2 && (chev2.textContent = "▸"), document.querySelectorAll(".sub-row[data-group='" + gid + "']").forEach(function(s) { s.classList.remove("visible") }) } })) : (this.classList.add("selected"), document.querySelectorAll(".main-row.ring-highlighted").forEach(function(r) { r.classList.remove("ring-highlighted") }), gids2.forEach(function(gid) { var mainRow = document.querySelector(".main-row[data-id='" + gid + "']"); if (mainRow) { mainRow.classList.add("ring-highlighted"), mainRow.dataset.open = "1"; var chev2 = document.getElementById("chev-" + gid); chev2 && (chev2.textContent = "▾"), document.querySelectorAll(".sub-row[data-group='" + gid + "']").forEach(function(s) { s.classList.add("visible") }) } }))
-    });
+    var alreadySel = this.classList.contains("selected"),
+        gids2 = (this.dataset.gids || "").split(",").filter(function(g) { return g });
+    document.querySelectorAll(".ring-item.selected").forEach(function(r2) { r2.classList.remove("selected") }),
+    alreadySel
+        ? (document.querySelectorAll(".main-row.ring-highlighted").forEach(function(r) { r.classList.remove("ring-highlighted") }),
+           gids2.forEach(function(gid) {
+               var mainRow = document.querySelector(".main-row[data-id='" + gid + "']");
+               if (mainRow) {
+                   mainRow.dataset.open = "0";
+                   var chev2 = document.getElementById("chev-" + gid);
+                   chev2 && (chev2.className = "chevron bi bi-chevron-right"); // CHANGED from textContent
+                   document.querySelectorAll(".sub-row[data-group='" + gid + "']").forEach(function(s) { s.classList.remove("visible") });
+               }
+           }))
+        : (this.classList.add("selected"),
+           document.querySelectorAll(".main-row.ring-highlighted").forEach(function(r) { r.classList.remove("ring-highlighted") }),
+           gids2.forEach(function(gid) {
+               var mainRow = document.querySelector(".main-row[data-id='" + gid + "']");
+               if (mainRow) {
+                   mainRow.classList.add("ring-highlighted");
+                   mainRow.dataset.open = "1";
+                   var chev2 = document.getElementById("chev-" + gid);
+                   chev2 && (chev2.className = "chevron bi bi-chevron-down"); // CHANGED from textContent
+                   document.querySelectorAll(".sub-row[data-group='" + gid + "']").forEach(function(s) { s.classList.add("visible") });
+               }
+           }))
+});
     
     return item;
 }
+
 
   var DETAIL_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1492221762";
   var cachedTxData = null; 
@@ -3392,6 +3415,8 @@ function renderCatListForMonth() {
         });
     }
 
+    
+
     // CHANGED: sub categories now K-AK (index 10-36)
     for (var idx2 = 10; idx2 <= 36; idx2++) {
         var label2 = headers[idx2];
@@ -3448,10 +3473,87 @@ function renderCatListForMonth() {
         }
     });
 
-    buildColHdr();
+    buildColHdr();buildRingsForMonth(mains);
     if (typeof applyLayout === "function") applyLayout();
 }
 
+var cachedBudgetMap = null;
+
+function fetchBudgetMap(callback) {
+    if (cachedBudgetMap) { callback(cachedBudgetMap); return; }
+
+    fetch(CSV_EXPENSE + "&t=" + Date.now(), { cache: "no-store" })
+        .then(function(r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.text(); })
+        .then(function(text) {
+            var lines = text.split("\n");
+            var rows = [];
+            for (var i = 0; i < lines.length; i++) rows.push(parseCsvRow(lines[i]));
+            function g(ri, col) { var ci = col.toUpperCase().charCodeAt(0) - 65; return rows[ri] ? rows[ri][ci] || "" : ""; }
+            function n(ri, col) { return parseNum(g(ri, col)); }
+
+            var budgetMap = {};
+            for (var bi = 1; bi <= 8; bi++) {
+                var bn = g(bi, "B"), bv = n(bi, "C");
+                if (bn) budgetMap[bn.toLowerCase().trim()] = bv;
+            }
+            cachedBudgetMap = budgetMap;
+            callback(budgetMap);
+        })
+        .catch(function(err) {
+            console.error("Budget fetch error:", err);
+            callback({});
+        });
+}
+
+function buildRingsForMonth(mains) {
+    fetchBudgetMap(function(budgetMap) {
+        // Attach budget to each main, matching loadExpense()'s lookup logic
+        mains.forEach(function(m) {
+            var key = m.name.toLowerCase().trim();
+            if (budgetMap[key] !== undefined) {
+                m.budget = budgetMap[key];
+            } else {
+                for (var bk in budgetMap) {
+                    if (key.indexOf(bk) >= 0 || bk.indexOf(key) >= 0) {
+                        m.budget = budgetMap[bk];
+                        break;
+                    }
+                }
+            }
+            if (m.budget === undefined) m.budget = 0;
+        });
+
+        var ringsWrap = document.getElementById("rings-wrap");
+        if (!ringsWrap) return;
+        ringsWrap.innerHTML = "";
+        ringsWrap.style.marginTop = "5px";
+
+        var billsSpent = 0, billsBudget = 0, billsIcon = "", billsGids = [];
+
+        mains.forEach(function(m, i) {
+            var gid = "cm" + i;
+            var mn = m.name.toLowerCase();
+            var isRental = mn.indexOf("rental") >= 0 || mn.indexOf("rent") >= 0;
+            var isBills = mn.indexOf("bill") >= 0 || mn.indexOf("insurance") >= 0 || mn.indexOf("health") >= 0;
+
+            if (isBills) {
+                billsSpent += m.curr;
+                billsBudget += m.budget;
+                billsGids.push(gid);
+                if (!billsIcon) billsIcon = m.icon;
+                return;
+            }
+            if (m.budget > 0) {
+                ringsWrap.appendChild(buildRing(m.name, m.curr, m.budget, m.icon, isRental, [gid]));
+            }
+        });
+        
+
+        if (billsBudget > 0 || billsSpent > 0) {
+            ringsWrap.appendChild(buildRing("Bills & Insurance", billsSpent, billsBudget, billsIcon, false, billsGids));
+        }
+    });
+}
 // NEW: ensures sheetData is loaded (via fetchSheetCSV), then renders the month view
 function loadCatListForMonth() {
     if (typeof sheetData !== "undefined" && sheetData && sheetData.length > 0) {
