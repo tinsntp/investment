@@ -8107,12 +8107,13 @@ window.addEventListener("DOMContentLoaded", () => {
   fetchOrderSheetCSV();
   caLoadAccounts();loadTransactionHistory();
   loadSubscriptions();
-  //loadExpense();
+
   loadRecent();fetchSheetCSV();
   loadCycles();initFullyAutomatedTimeline();
   loadFIRE();
   setInterval(loadRecent,60000);
   setInterval(loadTransactionHistory,60000);
+  setInterval(loadBalanceHistoryTC,60000);
   setInterval(fetchOrderSheetCSV,60000);
 </script>
 </body>
