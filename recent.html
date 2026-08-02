@@ -3143,22 +3143,100 @@ to{transform:rotate(360deg)}
 
   var DETAIL_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1492221762";
   var cachedTxData = null; 
-var CURRENT_DATA_START_YEAR = 2026;
   
-  function renderTxRows(subCatName,containerEl){containerEl.innerHTML="";var cleanStr=function(str){return(str||"").toLowerCase().replace(/[\u200B-\u200D\uFEFF]/g,"").replace(/\s+/g," ").trim()},targetName=cleanStr(subCatName),filtered=cachedTxData.filter(function(tx){return cleanStr(tx.subCat)===targetName});0!==filtered.length?filtered.forEach(function(tx){var row=document.createElement("div");row.className="tx-detail-row";var shortDay="";if(tx.date){var parts=tx.date.split(" ")[0].split(/[\/\-\.]/);if(parts.length>=2){var dayPart=parts[1];parts[0].length>2&&(dayPart=parts[2]),dayPart&&1===dayPart.length&&(dayPart="0"+dayPart),shortDay=dayPart||""}}row.innerHTML=`\n        <div class="td-desc">${tx.detail||"—"}</div>\n        <div class="td-amt">${fmtK(tx.amount)}</div>\n        <div></div>\n        <div class="td-date">${shortDay||"—"}</div>\n      `,containerEl.appendChild(row)}):containerEl.innerHTML="<div class='tx-detail-row'><div class='td-desc' style='color:rgba(255,255,255,0.4)'>No transactions found</div></div>"}
-  function fetchTransactionDetails(subCatName,containerEl){cachedTxData?renderTxRows(subCatName,containerEl):(containerEl.innerHTML="<div class='tx-detail-row'><div class='td-desc'>Loading details...</div></div>",fetch(DETAIL_SHEET_URL).then(res=>res.text()).then(text=>{var lines=text.split(/\r?\n/);cachedTxData=[];for(var i=1;i<lines.length;i++)if(lines[i].trim()){var cols=parseCsvRow(lines[i]);cols.length>=9&&cachedTxData.push({date:cols[2],subCat:cols[4],detail:cols[6],cleanDetail:cols[6]||"",amount:parseNum(cols[5]),iconUrl:cols[8]})}renderTxRows(subCatName,containerEl)}).catch(err=>{containerEl.innerHTML="<div class='tx-detail-row'><div class='td-desc'>Error loading data</div></div>"}))}
-  function toggleSubCategoryTx(subRowEl, subCatName) {
-    // NEW: block transaction-detail expansion for months before July (no granular data exists)
-    var hasDetailData = !(monthPickerState.selectedYear === new Date().getFullYear() && monthPickerState.selectedMonth < 6) &&
-                         !(monthPickerState.selectedYear < new Date().getFullYear());
-    // Simplify: only allow detail expansion from July (month index 6) of the CURRENT year onward
-    var isJulyOrLater = monthPickerState.selectedYear > CURRENT_DATA_START_YEAR ||
-                        (monthPickerState.selectedYear === CURRENT_DATA_START_YEAR && monthPickerState.selectedMonth >= 6);
+  function renderTxRows(subCatName, containerEl) {
+    containerEl.innerHTML = "";
 
-    if (!isJulyOrLater) {
-        return; // silently do nothing — no expand for months with no transaction-level data
+    var cleanStr = function(str) {
+        return (str || "").toLowerCase().replace(/[\u200B-\u200D\uFEFF]/g, "").replace(/\s+/g, " ").trim();
+    };
+    var targetName = cleanStr(subCatName);
+
+    // NEW: only include transactions matching both subCat AND the currently selected month/year
+    var filtered = cachedTxData.filter(function(tx) {
+        if (cleanStr(tx.subCat) !== targetName) return false;
+
+        if (!tx.date) return false;
+        var d = new Date(tx.date);
+        if (isNaN(d.getTime())) return false;
+
+        return d.getFullYear() === monthPickerState.selectedYear &&
+               d.getMonth() === monthPickerState.selectedMonth;
+    });
+
+    if (0 === filtered.length) {
+        containerEl.innerHTML = "<div class='tx-detail-row'><div class='td-desc' style='color:rgba(255,255,255,0.4)'>No transactions found</div></div>";
+        return;
     }
 
+    filtered.forEach(function(tx) {
+        var row = document.createElement("div");
+        row.className = "tx-detail-row";
+
+        var shortDay = "";
+        if (tx.date) {
+            var parts = tx.date.split(" ")[0].split(/[\/\-\.]/);
+            if (parts.length >= 2) {
+                var dayPart = parts[1];
+                parts[0].length > 2 && (dayPart = parts[2]);
+                dayPart && 1 === dayPart.length && (dayPart = "0" + dayPart);
+                shortDay = dayPart || "";
+            }
+        }
+
+        var iconHtml = "";
+        if (tx.iconUrl && 0 === tx.iconUrl.indexOf("http")) {
+            iconHtml = `<img src="${tx.iconUrl}" class="cat-ico" style="width:5vw; height:5vw; margin-right:1vw; border-radius:50%; object-fit:cover; flex-shrink:0;" onerror="this.outerHTML='<div class=&quot;cat-ico-fb&quot; style=&quot;width:5vw; height:5vw; font-size:1.8vw; margin-right:1vw; flex-shrink:0;&quot;>&bull;</div>'">`;
+        } else {
+            iconHtml = `<div class="cat-ico-fb" style="width:5vw; height:5vw; font-size:1.8vw; margin-right:1vw; flex-shrink:0;">&bull;</div>`;
+        }
+
+        row.innerHTML = `
+          <div class="td-desc">
+            ${iconHtml}
+            <span class="td-detail">${tx.detail ? cleanDetail(tx.detail) : "—"}</span>
+          </div>
+          <div class="td-amt">${fmtK(tx.amount)}</div>
+          <div class="td-empty"></div>
+          <div class="td-date">
+            ${shortDay ? `<span class="tx-date-badge">${shortDay}</span>` : "—"}
+          </div>
+        `;
+        containerEl.appendChild(row);
+    });
+}
+function fetchTransactionDetails(subCatName, containerEl) {
+    cachedTxData ? renderTxRows(subCatName, containerEl) : (
+        containerEl.innerHTML = "<div class='tx-detail-row'><div class='td-desc'>Loading details...</div></div>",
+        fetch(DETAIL_SHEET_URL).then(res => res.text()).then(text => {
+            var lines = text.split(/\r?\n/);
+            cachedTxData = [];
+            var skippedRows = 0;
+            for (var i = 1; i < lines.length; i++) {
+                if (lines[i].trim()) {
+                    var cols = parseCsvRow(lines[i]);
+                    if (cols.length >= 9) {
+                        cachedTxData.push({ date: cols[2], subCat: cols[4], detail: cols[6], cleanDetail: cols[6] || "", amount: parseNum(cols[5]), iconUrl: cols[8] });
+                    } else {
+                        skippedRows++;
+                    }
+                }
+            }
+
+            // DEBUG — remove after checking
+            console.log("Total rows fetched:", cachedTxData.length);
+            console.log("Rows skipped (cols.length < 9):", skippedRows);
+            console.log("Date range in data:", cachedTxData.map(t => t.date).sort()[0], "to", cachedTxData.map(t => t.date).sort().slice(-1)[0]);
+            console.log("Sample rows:", cachedTxData.slice(0, 5));
+
+            renderTxRows(subCatName, containerEl);
+        }).catch(err => {
+            containerEl.innerHTML = "<div class='tx-detail-row'><div class='td-desc'>Error loading data</div></div>";
+            console.error("Fetch error:", err);
+        })
+    );
+}
+function toggleSubCategoryTx(subRowEl, subCatName) {
     var nextEl = subRowEl.nextSibling;
     if (!(nextEl && nextEl.classList && nextEl.classList.contains("tx-details-container"))) {
         var container = document.createElement("div");
@@ -3347,18 +3425,9 @@ function renderCatListForMonth() {
         if (chevEl) chevEl.id = "chev-" + gid;
 
         list.appendChild(mainRowEl);
-        var isJulyOrLater = monthPickerState.selectedYear > CURRENT_DATA_START_YEAR ||
-                    (monthPickerState.selectedYear === CURRENT_DATA_START_YEAR && monthPickerState.selectedMonth >= 6);
-
         m.subs.forEach(function(s) {
             if (s.curr === 0) return;
-            var subRowEl = buildCatRow(s, true, gid);
-            if (!isJulyOrLater) {
-                subRowEl.style.cursor = "default";
-                var subChev = subRowEl.querySelector('.sub-chev');
-                if (subChev) subChev.style.visibility = "hidden";
-            }
-            list.appendChild(subRowEl);
+            list.appendChild(buildCatRow(s, true, gid));
         });
     });
 
@@ -3397,9 +3466,16 @@ function loadCatListForMonth() {
         }, 100);
     }
 }
-
+function closeAllTxDetails() {
+    document.querySelectorAll('.tx-details-container.visible').forEach(function(container) {
+        container.classList.remove('visible');
+        var prevSibling = container.previousElementSibling;
+        if (prevSibling) prevSibling.classList.remove('visible-tx');
+    });
+}
 // Month picker navigation calls this
 function filterCatListByMonth() {
+    closeAllTxDetails(); // NEW: reset any open transaction details before switching months
     loadCatListForMonth();
 }
 var monthPickerState = {
