@@ -3278,7 +3278,26 @@ function toggleSubCategoryTx(subRowEl, subCatName) {
 }
    function makeIcon(iconUrl,fallback){if(iconUrl&&0===iconUrl.indexOf("http")){var img=document.createElement("img");return img.className="cat-ico",img.src=iconUrl,img.onerror=(fb=fallback,function(){var d=document.createElement("div");d.className="cat-ico-fb",d.textContent=fb||"•",this.parentNode.replaceChild(d,this)}),img}var fb,d=document.createElement("div");return d.className="cat-ico-fb",d.textContent=iconUrl||fallback||"•",d}
   function buildCatRow(item,isSub,gid){var row=document.createElement("div");row.className="cat-row"+(isSub?" sub-row":" main-row"),isSub?row.dataset.group=gid:(row.dataset.id=gid,row.dataset.open="0");var p=pctInfo(item.curr,item.last),nameCell=document.createElement("div");if(nameCell.className="name-cell",isSub){var subChev=document.createElement("span");subChev.className="chevron sub-chev bi bi-chevron-right",subChev.style.fontSize="2.5vw",nameCell.appendChild(subChev)}else{var chev=document.createElement("span");chev.className="chevron bi bi-chevron-right",nameCell.appendChild(chev)}nameCell.appendChild(makeIcon(item.icon,item.name?item.name.charAt(0):"•"));var nameSpan=document.createElement("span");nameSpan.className="cat-name",nameSpan.textContent=item.name,nameCell.appendChild(nameSpan);var amtEl=document.createElement("div");amtEl.className="amt-val",amtEl.textContent=fmtK(item.curr);var lastEl=document.createElement("div");lastEl.className="last-val",lastEl.textContent=fmtK(item.last);var pctEl=document.createElement("div");return pctEl.className="pct-val "+p.cls,pctEl.innerHTML=p.html,row.appendChild(nameCell),row.appendChild(amtEl),row.appendChild(lastEl),row.appendChild(pctEl),isSub?row.addEventListener("click",function(e){e.stopPropagation(),toggleSubCategoryTx(row,item.name)}):row.addEventListener("click",function(){var g=this.dataset.id,isOpen="1"===this.dataset.open;this.dataset.open=isOpen?"0":"1";var chev2=document.getElementById("chev-"+g);chev2&&(chev2.className=isOpen?"bi bi-chevron-right":"bi bi-chevron-down"),document.querySelectorAll(".sub-row[data-group='"+g+"']").forEach(function(s){isOpen?(s.classList.remove("visible"),s.classList.contains("visible-tx")&&toggleSubCategoryTx(s,"")):s.classList.add("visible")})}),row}
-  document.getElementById("expand-btn").addEventListener("click",function(){allExpanded=!allExpanded,this.innerHTML=allExpanded?'<i class="bi bi-chevron-up"></i> Collapse All':'<i class="bi bi-chevron-down"></i> Expand All',allExpanded?document.querySelectorAll(".main-row").forEach(function(r){r.classList.add("ring-highlighted")}):(document.querySelectorAll(".main-row.ring-highlighted").forEach(function(r){r.classList.remove("ring-highlighted")}),document.querySelectorAll(".ring-item.selected").forEach(function(r){r.classList.remove("selected")})),document.querySelectorAll(".sub-row").forEach(function(s){allExpanded?s.classList.add("visible"):s.classList.remove("visible")}),document.querySelectorAll(".main-row").forEach(function(r){r.dataset.open=allExpanded?"1":"0"}),document.querySelectorAll(".chevron").forEach(function(c){c.textContent=(allExpanded,"")})});
+  document.getElementById("expand-btn").addEventListener("click", function() {
+    allExpanded = !allExpanded;
+    this.innerHTML = allExpanded
+        ? '<i class="bi bi-chevron-up"></i> Collapse All'
+        : '<i class="bi bi-chevron-down"></i> Expand All';
+
+    if (allExpanded) {
+        document.querySelectorAll(".main-row").forEach(function(r) { r.classList.add("ring-highlighted") });
+    } else {
+        document.querySelectorAll(".main-row.ring-highlighted").forEach(function(r) { r.classList.remove("ring-highlighted") });
+        document.querySelectorAll(".ring-item.selected").forEach(function(r) { r.classList.remove("selected") });
+        closeAllTxDetails(); // NEW: also collapse any open transaction-detail rows
+    }
+
+    document.querySelectorAll(".sub-row").forEach(function(s) {
+        allExpanded ? s.classList.add("visible") : s.classList.remove("visible");
+    });
+    document.querySelectorAll(".main-row").forEach(function(r) { r.dataset.open = allExpanded ? "1" : "0" });
+    document.querySelectorAll(".chevron").forEach(function(c) { c.textContent = (allExpanded, "") });
+});
   function buildColHdr(){var isMobile=window.innerWidth<400,hdr=document.getElementById("col-hdr");hdr&&(hdr.innerHTML="",hdr.style.fontSize=isMobile?"3.6vw":"2.6vw",hdr.style.gridTemplateColumns=isMobile?"5.2fr 1.8fr 1.6fr":"5.6fr 1.6fr 1.8fr 1.4fr",(isMobile?["Category","Amount","Change"]:["Category","Amount","Previous","Change"]).forEach(function(t,i){var d=document.createElement("div");d.className="ch";var iconEl=document.createElement("i");iconEl.style.display="inline-block",iconEl.style.marginRight="4px",iconEl.style.marginBottom="2px",iconEl.style.setProperty("font-size","13px","important"),"Category"===t?iconEl.className="bi bi-list":"Amount"===t?iconEl.className="bi bi-cash":"Previous"===t?iconEl.className="bi bi-calendar4-event":"Change"===t&&(iconEl.className="bi bi-droplet-half",t=""),iconEl.className&&d.appendChild(iconEl),t&&d.appendChild(document.createTextNode(t)),hdr.appendChild(d)}))}
 
     // NEW: filter cachedTxData by month instead of subCat, render into #cat-list using the same row style as renderTxRows
