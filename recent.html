@@ -153,8 +153,8 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
       100% { transform: rotate(360deg); }
     }
 .profile-icon {
-    width: 32px;
-    height: 32px;margin:0 auto;
+    width: 36px;
+    height: 36px;margin:0 auto;
     border-radius: 50%;
     object-fit: cover;
     flex-shrink: 0;
@@ -231,7 +231,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .tab-btn i{font-size:3.8vw!important;}
 .tab-line {position:absolute; bottom:0; height:2.5px; background:#fff; border-radius:2px; transition:left 0.25s ease, width 0.25s ease;}
 #tab-btn-2 { display:flex; }
-@media (max-width: 400px) {.profile-icon {margin-right:44vw;}.tab-btn span {display: none;}.tab-btn i{font-size:4.6vw!important;}}
+@media (max-width: 400px) {.profile-icon {margin-right:43vw;}.tab-btn span {display: none;}.tab-btn i{font-size:4.6vw!important;}}
 @media (min-width: 401px) {.profile-icon {margin-right:50vw;}.tab-btn span {display: none;} .tab-bar {margin-top:20px}}
 .big-wrap{overflow-y: auto;overflow-x: hidden;}
 @media (max-width: 400px) {.card,.det-col-hdr,.wallet-container,.sub-slide,#cat-list{padding:0 2vw 0 2vw;}}
@@ -394,7 +394,7 @@ background:
 .budget-subtabs{background:rgba(255,255,255,.05);border-radius:13px;padding:3px;gap:4px}.budget-subtab{flex:1;font-family:Lexend;display:flex;align-items:center;justify-content:center;gap:5px;background:0 0;border:0;color:rgba(255,255,255,.5);padding:4px 10px;font-size:12px;font-weight:400;border-radius:10px;cursor:pointer;transition:all .2s ease-in-out;outline:0}
 .budget-subtab.active,.budget-subtab-v2.active{opacity:1;background:#2a2d37;color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.25)}.budget-subtab .material-icons-round{vertical-align:middle}.chart-container{position:relative;width:100%;height:220px;display:flex;align-items:flex-end;padding:20px 10px 10px 10px;box-sizing:border-box}.glass-chart-bars{width:100%!important;height:100%!important;display:block}.chart-col{flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end;position:relative}.bar-fill{width:100%;max-width:28px;background:linear-gradient(180deg,rgba(255,255,255,.8)0,rgba(255,255,255,.2) 100%);border-radius:6px 6px 2px 2px;transition:height .4s ease;min-height:4px;box-shadow:0 4px 12px rgba(0,0,0,.15)}.bar-baseline{position:absolute;width:100%;max-width:28px;border-top:2px dashed #8e90a6;z-index:2;transition:bottom .4s ease}.col-label{margin-top:8px;font-family:"DM Sans",sans-serif;font-size:11px;color:#8e90a6}canvas#myChart{width:100%!important;height:100%!important}
 .budget-total,#budget-spent,.marker-value,#budget-remaining{font-family:"Lora";}
-.budget-total{font-size:18px;font-weight:500;color:rgba(255,255,255,.85);margin-bottom:8px}
+.budget-total{font-size:20px;font-weight:500;color:rgba(255,255,255,.85);margin-bottom:8px}
 
 .budget-bar{position:relative;width:100%;height:7px;background:#505867;border-radius:999px;overflow:hidden}
 #budget-fill{position:absolute;left:0;top:0;height:100%;border-radius:999px;background:linear-gradient( 90deg,#4f21ff 0%,#6b4dff 35%,#9a88ff 65%,#ffffff 100% );transition:width .4s ease}
@@ -961,7 +961,7 @@ to{transform:rotate(360deg)}
     text-align:left !important;
     cursor:pointer;
 }
-@media (max-width:400px){.add-cancel-btn,.add-submit-btn,.add-field label,.add-field input{font-size:12px!important;font-weight:300!important;}}
+@media (max-width:400px){.add-cancel-btn,.add-submit-btn,.add-field label,.add-field input{font-size:13px!important;font-weight:300!important;}}
 @media (min-width:401px){.form-row-2col{gap:15px !important;margin-bottom:16px}
 .add-field label{font-size:13px;margin-bottom:6px}
 .add-field input[type="text"],.add-field input[type="number"],.add-field input[type="date"]{height:44px !important;font-size:18px !important;padding:0 12px !important;border-radius:8px !important}
@@ -4288,7 +4288,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var marker = document.getElementById("last-month-marker");
             marker.style.left = (markerPercent * 100) + "%";
             marker.innerHTML = '<div class="marker-label">Last month</div>' +
-                '<div class="marker-value">' + fmtAxis(lastMonthExpense) + '</div>' +
+                '<div class="marker-value"style="font-family:DM Sans">' + fmtFull(lastMonthExpense) + '</div>' +
                 '<i class="bi bi-caret-up Custom-triangle"></i>';
         }
 
