@@ -6171,7 +6171,7 @@ function historyEditCalNavigate(e, dir) {
         .ca-history-dte, .tx-group-hdr { font-size: 3.5vw !important; }
         
         .ca-history-rgt-wrap { display: flex; flex-direction: row; align-items: center; gap: 2.5vw; flex-shrink: 0;}
-        .ca-history-amt { font-family:DM Sans;font-size: 3.6vw !important; min-width: 70px; padding-right: 2vw !important; text-align: right; font-weight: 600; white-space: nowrap; }
+        .ca-history-amt { font-family:DM Sans;font-size: 3.6vw !important; min-width: 70px; text-align: right; font-weight: 600; white-space: nowrap; }
         
         .ca-display-desktop { display: none !important; }
         .ca-display-mobile { display: inline !important; }
@@ -6189,7 +6189,7 @@ function historyEditCalNavigate(e, dir) {
         .ca-history-dte, .tx-group-hdr { font-size: 2.5vw !important; }
         
         .ca-history-rgt-wrap { display: flex; flex-direction: row; align-items: center; gap: 2vw; flex-shrink: 0; min-width: max-content; }
-        .ca-history-amt { font-family:DM Sans;font-size: 2.6vw !important; min-width: 100px; padding-right: 0px !important; text-align: right; font-weight: 600; white-space: nowrap; }
+        .ca-history-amt { font-family:DM Sans;font-size: 2.6vw !important; min-width: 100px;text-align: right; font-weight: 600; white-space: nowrap; }
         
         .ca-display-desktop { display: inline !important; }
         .ca-display-mobile { display: none !important; }
@@ -6225,7 +6225,7 @@ function historyEditCalNavigate(e, dir) {
         var amountRaw  = (cols[12] || "").replace(/^"|"$/g, "").trim();
         var accountVal = (cols[13] || "").replace(/^"|"$/g, "").trim();
         var detailVal  = (cols[14] || "").replace(/^"|"$/g, "").trim();
-        var incomeIconUrl  = (cols[23] || "").replace(/^"|"$/g, "").trim();
+        var incomeIconUrl  = (cols[22] || "").replace(/^"|"$/g, "").trim();
         var accountIconUrl = (cols[23] || "").replace(/^"|"$/g, "").trim();
 
         var lowerType = typeVal.toLowerCase();
@@ -6238,7 +6238,9 @@ function historyEditCalNavigate(e, dir) {
         if (dateVal && typeVal) {
             incomeIconUrl&&"n/a"!==incomeIconUrl.toLowerCase()?uniqueTypesMap.set(typeVal,incomeIconUrl):uniqueTypesMap.has(typeVal)||uniqueTypesMap.set(typeVal,"");var periodGroup=getPeriodHeader(dateVal);periodGroup!==currentPeriod&&(currentPeriod=periodGroup,htmlMarkup+=`<div class="tx-group-hdr" style="padding: 1vw 0 0.3vw; margin-top: 0.1vw; font-size: 1.8vw;">${currentPeriod}</div>`);var formattedDateStr="MMM dd";try{var dObj=new Date(dateVal);if(!isNaN(dObj.getTime())){var monthName=dObj.toLocaleDateString("en-US",{month:"short"}),dayNum=String(dObj.getDate()).padStart(2,"0");formattedDateStr=monthName+" "+dayNum}}catch(e){}var absoluteAmt=Math.abs(cleanAmt),
             fullAmountText=isNaN(absoluteAmt)?amountRaw:new Intl.NumberFormat("vi-VN").format(absoluteAmt),
-            shortAmountText=formatShortNum(cleanAmt),isNegative=cleanAmt<0,amountPrefix=isNegative?"-":"+",themeColor=isNegative?"rgb(255, 105, 180)":"#14b8a6",badgeBg=isNegative?"rgba(255, 105, 180, 0.1)":"rgba(20, 184, 166, 0.1)",iconHtml="";incomeIconUrl&&"n/a"!==incomeIconUrl.toLowerCase()&&(iconHtml=`<img src="${incomeIconUrl}" class="ico ca-history-ico" style="padding: 0.1vw;" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`);var fallbackLetter=(typeVal||"?").charAt(0).toUpperCase();iconHtml+=`<div class="ico-fb ca-history-fb" style="display: ${incomeIconUrl?"none":"flex"}">${fallbackLetter}</div>`;var accountBadgeHtml="";accountVal&&(accountBadgeHtml=`\n                <div style="display: inline-flex; align-items: center; gap: 0.4vw; background: ${badgeBg}; padding: 0.2vw 0.8vw; border-radius: 4px; margin-left: 0.8vw;">\n                  ${accountIconUrl?`<img src="${accountIconUrl}" style="width: 2.2vw; height: 2.2vw; object-fit: contain; border-radius: 50%;" />`:""}\n                  <span class="ca-history-badge-txt" style="color: ${themeColor}; font-weight: 600; letter-spacing: 0.02em;">${accountVal}</span>\n                </div>\n              `);
+            shortAmountText=formatShortNum(cleanAmt),isNegative=cleanAmt<0,amountPrefix=isNegative?"-":"+",themeColor=isNegative?"rgb(255, 105, 180)":"#14b8a6",badgeBg=isNegative?"rgba(255, 105, 180, 0.1)":"rgba(20, 184, 166, 0.1)",iconHtml="";
+            incomeIconUrl&&"n/a"!==incomeIconUrl.toLowerCase()&&(iconHtml=`<img src="${incomeIconUrl}" class="ico ca-history-ico" style="padding: 0.1vw;" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`);var fallbackLetter=(typeVal||"?").charAt(0).toUpperCase();iconHtml+=`<div class="ico-fb ca-history-fb" style="display: ${incomeIconUrl?"none":"flex"}">${fallbackLetter}</div>`;
+            var accountBadgeHtml="";accountVal&&(accountBadgeHtml=`\n                <div style="display: inline-flex; align-items: center; ">\n                  ${accountIconUrl?`<img src="${accountIconUrl}" style="width: 3.5vw; height: 3.5vw; object-fit: contain;" />`:""}\n                  <span class="ca-history-badge-txt" style="color: ${themeColor}; font-weight: 600; letter-spacing: 0.02em;"></span>\n                </div>\n              `);
             htmlMarkup += `
             <div class="sub-swipe-container"
                 data-tx-id="${txId}"
@@ -6285,17 +6287,18 @@ function historyEditCalNavigate(e, dir) {
                     <span class="dtl ca-history-dtl" style="color: rgba(255,255,255,0.35); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;">
                         — ${detailVal}
                     </span>
-                    <!--${accountBadgeHtml}-->
+                    
                     </div>
                 </div>
                 <div class="rgt ca-history-rgt-wrap">
-                    <div class="dte ca-history-dte" style="background: rgba(255,255,255,0.04); padding: 0.2vw 0.6vw; border-radius: 3px; font-family: sans-serif; color: rgba(255,255,255,0.5);">
+                    <div class="dte ca-history-dte" style="background: rgba(255,255,255,0.04);  border-radius: 3px; font-family: sans-serif; color: rgba(255,255,255,0.5);">
                     ${formattedDateStr}
                     </div>
                     <div class="amt ca-history-amt" style="color: ${themeColor};">
                     <span class="ca-display-desktop">${amountPrefix}${fullAmountText}</span>
                     <span class="ca-display-mobile">${amountPrefix}${shortAmountText}</span>
                     </div>
+                    ${accountBadgeHtml}
                 </div>
                 </div>
             </div>
@@ -6305,31 +6308,31 @@ function historyEditCalNavigate(e, dir) {
 
         const filterOptionsContainer = document.getElementById('transactionFilterOptions');
         if (filterOptionsContainer) {
-        // Start with the default "All" option
-        let filterItemsHtml = `
-            <div class="filter-option-item" onclick="selectTransactionFilter('all', 'All', 'filter_list')" style="padding: 8px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
-            <span class="material-icons-round" style="font-size: 12px;">filter_list</span>
-            <span style="font-size: 12px;">All</span>
-            </div>
-        `;
-
-        // Dynamically add every unique transaction type found in your CSV (Salary, Deposit, etc.)
-        uniqueTypesMap.forEach((iconUrl, typeName) => {
-            const iconHtml = (iconUrl && iconUrl.toLowerCase() !== 'n/a')
-            ? `<img src="${iconUrl}" style="width: 16px; height: 16px; object-fit: contain; border-radius: 2px;" alt="" />`
-            : `<span class="material-icons-round" style="font-size: 12px;">label</span>`;
-
-            // Safe escaped string for onclick handler
-            const safeType = typeName.replace(/'/g, "\\'");
-
-            filterItemsHtml += `
-            <div class="filter-option-item" onclick="selectTransactionFilter('${safeType}', '${safeType}', '${iconUrl || 'label'}')" style="padding: 8px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
-                ${iconHtml}
-                <span style="font-size: 12px;font-family:Lexend!important">${typeName}</span>
-            </div>
+            // Start with the default "All" option
+            let filterItemsHtml = `
+                <div class="filter-option-item" onclick="selectTransactionFilter('all', 'All', 'filter_list')" style="padding: 8px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                <span class="material-icons-round" style="font-size: 12px;">filter_list</span>
+                <span style="font-size: 12px;">All</span>
+                </div>
             `;
-        });
-        filterOptionsContainer.innerHTML = filterItemsHtml;
+
+            // Dynamically add every unique transaction type found in your CSV (Salary, Deposit, etc.)
+            uniqueTypesMap.forEach((iconUrl, typeName) => {
+                const iconHtml = (iconUrl && iconUrl.toLowerCase() !== 'n/a')
+                ? `<img src="${iconUrl}" style="width: 16px; height: 16px; object-fit: contain; border-radius: 2px;" alt="" />`
+                : `<span class="material-icons-round" style="font-size: 12px;">label</span>`;
+
+                // Safe escaped string for onclick handler
+                const safeType = typeName.replace(/'/g, "\\'");
+
+                filterItemsHtml += `
+                <div class="filter-option-item" onclick="selectTransactionFilter('${safeType}', '${safeType}', '${iconUrl || 'label'}')" style="padding: 8px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                    ${iconHtml}
+                    <span style="font-size: 12px;font-family:Lexend!important">${typeName}</span>
+                </div>
+                `;
+            });
+            filterOptionsContainer.innerHTML = filterItemsHtml;
         }
 
         container.innerHTML = htmlMarkup || '<div style="padding: 2vw; text-align: center; color: rgba(255,255,255,0.3);">No transactions found.</div>';
