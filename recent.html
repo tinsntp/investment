@@ -7573,7 +7573,25 @@ function fetchVnIndexData(isUserRefresh) {
     svg.innerHTML = "";
     if (totalValue <= 0) return;
 
-    var palette = ["#a5c8f0", "#f472b6", "#7ee8a8", "#facc15", "#c084fc", "#38bdf8"];
+    var categoryColorMap = {
+        "saving": "#f472b6",
+        "savings": "#f472b6",
+        "crypto": "#facc15",
+        "cryptos": "#facc15",
+        "cryptocurrency": "#facc15",
+        "stock": "#7ee8a8",
+        "stocks": "#7ee8a8"
+    };
+
+    var palette = ["#facc15", "#7ee8a8", "#f472b6", "#a5c8f0", "#c084fc", "#38bdf8"];
+
+    function getCategoryColor(catName, index) {
+        var key = (catName || "").toString().trim().toLowerCase();
+        if (categoryColorMap.hasOwnProperty(key)) {
+            return categoryColorMap[key];
+        }
+        return palette[index % palette.length];
+    }
 
     var categories = Object.keys(categoryValueTotals)
         .map(function(cat) {
@@ -7587,29 +7605,34 @@ function fetchVnIndexData(isUserRefresh) {
         .filter(function(c) { return c.value > 0; })
         .sort(function(a, b) { return b.value - a.value; });
 
-        // Rearrange: largest in middle, others alternating on each side
-        function arrangeMiddle(arr) {
-            var n = arr.length;
-            var result = new Array(n);
-            var mid = Math.floor(n / 2);
-            result[mid] = arr[0]; // largest goes to center position
-            var l = mid - 1, r = mid + 1;
-            for (var i = 1; i < n; i++) {
-                if (r < n && (l < 0 || i % 2 === 1)) {
-                    result[r++] = arr[i];
-                } else {
-                    result[l--] = arr[i];
-                }
+    // Rearrange: largest in middle, others alternating on each side
+    function arrangeMiddle(arr) {
+        if (!arr.length) return [];
+        var n = arr.length;
+        var result = new Array(n);
+        var mid = Math.floor(n / 2);
+        result[mid] = arr[0]; // largest goes to center position
+        var l = mid - 1, r = mid + 1;
+        for (var i = 1; i < n; i++) {
+            if (r < n && (l < 0 || i % 2 === 1)) {
+                result[r++] = arr[i];
+            } else {
+                result[l--] = arr[i];
             }
-            return result;
         }
-        categories = arrangeMiddle(categories);
+        return result;
+    }
 
-    // Center at TOP of viewBox — bowl opens downward into visible area
+    categories = arrangeMiddle(categories);
+    
+    // Assign the specific category color to each category object
+    categories.forEach(function(c, idx) {
+        c.color = getCategoryColor(c.name, idx);
+    });
+
     var cx = 100, cy = 100, rOuter = 90, rInner = 45;
-    var GAP = 0; // degrees gap between segments
+    var GAP = 0;
 
-    // Standard math coords: 0°=right, 90°=SVG-down(bottom), 180°=left, 270°=SVG-up
     function pt(r, deg) {
         var rad = deg * Math.PI / 180;
         return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
@@ -7627,15 +7650,17 @@ function fetchVnIndexData(isUserRefresh) {
                 "Z"].join(" ");
     }
 
-    var currentDeg = 270; // start at left (9 o'clock)
+    var currentDeg = 270;
     var uid = "p" + Math.random().toString(36).slice(2, 8);
     var defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
-    // find largest in arranged order
+    
     var maxIdx = 0;
     categories.forEach(function(c, i) {
-            if (c.value > categories[maxIdx].value) maxIdx = i;
-        });
-    palette.forEach(function(color, idx) {
+        if (c.value > categories[maxIdx].value) maxIdx = i;
+    });
+
+    // Create striped pattern defs dynamically from assigned cat.color
+    categories.forEach(function(cat, idx) {
         var pat = document.createElementNS("http://www.w3.org/2000/svg", "pattern");
         pat.setAttribute("id", uid + idx);
         pat.setAttribute("patternUnits", "userSpaceOnUse");
@@ -7644,40 +7669,40 @@ function fetchVnIndexData(isUserRefresh) {
         pat.setAttribute("patternTransform", "rotate(-45 0 0)");
         pat.setAttribute("overflow", "visible");
 
-        // Solid background tint
         var bg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
         bg.setAttribute("x", "-1"); bg.setAttribute("y", "-1");
         bg.setAttribute("width", "10"); bg.setAttribute("height", "10");
-        bg.setAttribute("fill", color); bg.setAttribute("opacity", "0.18");
+        bg.setAttribute("fill", cat.color); bg.setAttribute("opacity", "0.18");
         pat.appendChild(bg);
 
-        // Stripe — use rect, not line or path
         var stripe = document.createElementNS("http://www.w3.org/2000/svg", "rect");
         stripe.setAttribute("x", "0"); stripe.setAttribute("y", "0");
         stripe.setAttribute("width", "5"); stripe.setAttribute("height", "8");
-        stripe.setAttribute("fill", color); stripe.setAttribute("opacity", "0.75");
+        stripe.setAttribute("fill", cat.color); stripe.setAttribute("opacity", "0.75");
         pat.appendChild(stripe);
 
         defs.appendChild(pat);
     });
     svg.appendChild(defs);
+
     categories.forEach(function(cat, i) {
         var pct = cat.value / totalValue;
         var sweep = pct * 180;
-        var d0 = currentDeg - GAP / 2;       // shrink start edge inward
-        var d1 = currentDeg - sweep + GAP / 2; // shrink end edge inward
+        var d0 = currentDeg - GAP / 2;
+        var d1 = currentDeg - sweep + GAP / 2;
         currentDeg -= sweep;
 
-        if (d1 >= d0) return; // segment too small for gap, skip
+        if (d1 >= d0) return;
 
-        var color = palette[i % palette.length];
+        // FIXED: Use cat.color directly
+        var color = cat.color;
 
         var isLargest = (i === maxIdx);
-        var rOut = isLargest ? rOuter - 5 : rOuter; // shrink largest inward
+        var rOut = isLargest ? rOuter - 5 : rOuter;
 
         var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
         path.setAttribute("d", arc(d0, d1, rOut));
-        path.setAttribute("fill", isLargest ? "url(#" + uid + (i % palette.length) + ")" : color);
+        path.setAttribute("fill", isLargest ? "url(#" + uid + i + ")" : color);
         path.setAttribute("stroke", color);
         path.setAttribute("stroke-width", "1");
         path.setAttribute('data-seg', i);
@@ -7725,19 +7750,17 @@ function fetchVnIndexData(isUserRefresh) {
                 navSelectedCatIdx = isSelected ? null : segIdx;
 
                 portfolioFilters.asset = isSelected ? 'all' : catName.toLowerCase();
-                applyPortfolioFiltersAndRender(); // re-renders, then highlight runs on fresh DOM
+                applyPortfolioFiltersAndRender();
 
                 var icon = document.getElementById('asset-filter-icon');
                 if (icon) icon.classList.toggle('active-filter', !isSelected);
 
-                navUpdateHighlight(); // uses getElementById — always gets fresh elements
+                navUpdateHighlight();
             };
         })(cat.name, i));
 
         statList.appendChild(item);
     });
-    
-    
 }
   function toggleCategoryGroup(categoryKey, headerRowEl) {
     var isCollapsed = headerRowEl.classList.toggle('collapsed');
