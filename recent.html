@@ -164,11 +164,11 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 }
 
 .profile-icon {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     object-fit: cover;
-    flex-shrink: 0;margin-left:-10px;
+    flex-shrink: 0;margin-left:-5px;
     border: 1px solid rgba(255,255,255,0.15);
 }
 
@@ -692,9 +692,13 @@ background:
 #add-cash:active ,#add-fab:active ,#add-order:active {
     background: linear-gradient(135deg, rgba(20,184,166,0.95) 0%, rgba(13,148,136,0.9) 100%);
 }
+.stat-cycles-row-wrap-v2 {
+    display: flex;padding-left:5px;
+    gap: 3px;
+}
 .stat-cycles-row-wrap {
     display: flex;
-    align-items: center;
+    align-items: right;
     justify-content: space-between;
     gap: 8px;
 }
@@ -1359,6 +1363,113 @@ tbody tr.current-row td{font-weight:600;}
 
 
 /*Portfolio*/
+.nav-card {
+    grid-column: 1 / -1;font-family:DM Sans;
+    padding: 0px;margin-bottom:10px;
+    text-align: left; /* NEW: override the base .metric-card centering */
+}
+
+.nav-card-body {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    align-items: start;
+}
+
+.nav-card-left {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+}
+
+.nav-stat-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    flex: 1;
+    min-width: 0;
+}
+
+.nav-stat-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-stat-icon {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background-size: cover;
+    background-position: center;
+}
+
+.nav-stat-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.nav-stat-label-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.nav-stat-label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+}
+
+.nav-stat-pct {
+    color: rgba(255,255,255,0.35);
+    font-weight: 500;
+}
+
+.nav-stat-value {
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.nav-stat-pnl {
+    font-size: 11px;text-align:left;
+    font-weight: 600;
+}
+.nav-donut-wrap {
+    position: relative;
+    width: 90px;    /* was 180px */
+    height: 180px;  /* was 90px */
+    flex-shrink: 0;margin-right:6px;
+    overflow: visible; /* was: hidden */
+}
+
+#nav-donut-svg {
+    width: 100px;
+    height: 200px;
+    position: static;
+    top: auto; left: auto;
+}
+
+.nav-donut-label {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    fill: #fff;
+    text-anchor: middle;
+    dominant-baseline: middle; /* add this */
+}
+@media (max-width: 400px) {
+    .nav-stat-icon { width: 20px; height: 20px; } /* NEW: smaller on mobile */
+    .nav-stat-item { gap: 8px; }
+}
+
+
 .dashboard-grid {
             display: flex;
             flex-direction: column;
@@ -1410,7 +1521,7 @@ tbody tr.current-row td{font-weight:600;}
             -webkit-text-fill-color: transparent;
         }
         .hero-balance{font-size: 16px!important;color:#fff!important;margin-bottom:3px}
-        .hero-amount{font-size: 14px;font-weight: 600;margin-bottom:3px}
+        .hero-amount{font-size: 14px;font-weight: 600;margin-bottom:3px;}
         #balance-val {font-size: 36px;}
         .badge-pill {
             display: inline-flex;
@@ -2166,7 +2277,7 @@ to{transform:rotate(360deg)}
   </div>
 <div class="tab-bar" id="tab-bar">
   <img class="profile-icon" src="https://i.pinimg.com/736x/c1/de/26/c1de261375437d0323551e96c19ee810.jpg"/>
-    <h5 style="font-family:Lora;text-align:left; flex:1; margin:0;">Hi hayashi!</h5>
+    <h4 style="font-family:Lora;text-align:left; flex:1; margin:0;">Hi hayashi!</h4>
   <div class="tab-btn-group">
     <div class="tab-btn" id="tab-btn-x"><i class="bi bi-activity"></i><span></span></div>
     <div class="tab-btn active" data-idx="0" id="tab-btn-0"><i class="bi bi-basket-fill"></i><span>Expense</span></div>
@@ -2591,30 +2702,34 @@ to{transform:rotate(360deg)}
             <!-- HERO STAT CARD -->
             <div class="hero-card-port">
                 <div class="metrics-grid">
-                    <div class="metric-card">
-                        <div class="stat-cycles-row-wrap">
-                                <div class="metric-label">NAV</div>
-                            <div style="display:flex">    
-                                <img class="stat-stack-icon" style="border:none" src="https://cdn-icons-png.flaticon.com/512/6211/6211662.png"/>
-                                <div class="hero-balance" id="total-profit-bal">0</div>
+                    <div class="metric-card nav-card">
+                        <div class="nav-card-body">
+                            <div class="nav-card-left">
+                                <div class="metric-card">
+                                    <div class="stat-cycles-row-wrap-v2">
+                                        <div class="metric-label">NAV</div>
+                                        <div style="display:flex">
+                                            <img class="stat-stack-icon" style="border:none" src="https://cdn-icons-png.flaticon.com/512/6211/6211662.png"/>
+                                            <div class="hero-balance" id="total-profit-bal">0</div>
+                                        </div>
+                                    </div>
+                                    <div class="stat-cycles-row-wrap-v2">
+                                        <div class="hero-amount" id="total-profit-val">0</div>
+                                        <div class="badge-pill badge-teal" id="total-profit-badge">▲ +0.00%</div>
+                                    </div>
+                                </div>
+                                <div class="nav-stat-list" id="nav-stat-list"></div>
+                            </div>
+                            <div class="nav-donut-wrap">
+                                <svg id="nav-donut-svg" viewBox="0 0 100 200"></svg>
                             </div>
                         </div>
-                        <div class="stat-cycles-row-wrap">
-                            <div class="hero-amount" id="total-profit-val">0</div>
-                            <div class="badge-pill badge-teal" id="total-profit-badge">▲ +0.00%</div>
-                        </div>
                     </div>
+                </div>
+                <div class="metrics-grid">
+                    
                     <div class="metric-card">
-                        <div class="stat-cycles-row-wrap">
-                            <div class="metric-label">Active</div>
-                            <button type="button" id="add-order" onclick="openPortfolioModal()">+</button>
-                        </div>
-                        <div class="stat-cycles-row-wrap">
-                          <div class="metric-value" id="stat-cycles">0</div>
-                        </div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="stat-cycles-row-wrap">
+                        <div class="stat-cycles-row-wrap-v2">
                             <div class="metric-label">VNINDEX</div>
                             <div style="display:flex; align-items:center; gap:6px;">
                                 <img class="stat-stack-icon" style="border:none" src="https://cdn-icons-png.flaticon.com/512/6211/6211662.png"/>
@@ -2624,9 +2739,18 @@ to{transform:rotate(360deg)}
                                 </button>
                             </div>
                         </div>
-                        <div class="stat-cycles-row-wrap">
+                        <div class="stat-cycles-row-wrap-v2">
                             <div class="hero-amount" id="vnindex-val">0</div>
-                            <div class="badge-pill badge-teal" id="vnindex-badge">▲ +0.00%</div>
+                            <div class="badge-pill badge-teal" id="vnindex-badge">+0.00%</div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="stat-cycles-row-wrap">
+                            <div class="metric-label">Active</div>
+                            <button type="button" id="add-order" onclick="openPortfolioModal()">+</button>
+                        </div>
+                        <div class="stat-cycles-row-wrap">
+                          <div class="metric-value" id="stat-cycles">0</div>
                         </div>
                     </div>
             </div>
@@ -6770,8 +6894,7 @@ function fetchVnIndexData() {
 
             var badgeEl = document.getElementById("vnindex-badge");
             var pctSign = isZero ? "" : (isPositive ? "+" : "");
-            var arrow = isZero ? "" : (isPositive ? "▲ " : "▼ ");
-            badgeEl.textContent = arrow + pctSign + pctChangeVal.toFixed(2) + "%";
+            badgeEl.textContent = pctSign + pctChangeVal.toFixed(2) + "%";
             badgeEl.className = "badge-pill " + (isZero ? "badge-teal" : (isPositive ? "badge-teal" : "badge-pink"));
         })
         .catch(function(err) {
@@ -6992,8 +7115,16 @@ document.addEventListener("DOMContentLoaded", fetchVnIndexData);
     const now = new Date();
     let lastRenderedCategory = null;
 
-    // NEW: pre-compute PnL totals per category in a single pass
+    var ACCOUNT_TYPE_ICONS = {
+    "Stock": "https://github.com/tinsntp/investment/blob/main/stock.png?raw=true",
+    "Saving": "https://github.com/tinsntp/investment/blob/main/saving.png?raw=true",
+    "Crypto": "https://github.com/tinsntp/investment/blob/main/bitcoin.png?raw=true",
+    "Forex": "https://github.com/tinsntp/investment/blob/main/exness.png?raw=true"
+    };
     const categoryPnlTotals = {};
+    const categoryValueTotals = {};
+    const categoryIconMap = {}; // now populated from ACCOUNT_TYPE_ICONS, not per-group iconUrl
+
     portfolioGroups.forEach(group => {
         const records = group.records || [];
         const isStock = group.accountType.toLowerCase() === "stock";
@@ -7004,8 +7135,17 @@ document.addEventListener("DOMContentLoaded", fetchVnIndexData);
             ? mainRec.actualPnl
             : (records.reduce((acc, r) => acc + r.actualPnl, 0) + (group.mainRecord ? group.mainRecord.actualPnl : 0));
 
+        const sumValue = mainRec
+            ? mainRec.marketValue
+            : (records.reduce((acc, r) => acc + r.marketValue, 0) + (group.mainRecord ? group.mainRecord.marketValue : 0));
+
         const cat = group.accountType || "Other";
         categoryPnlTotals[cat] = (categoryPnlTotals[cat] || 0) + sumPnl;
+        categoryValueTotals[cat] = (categoryValueTotals[cat] || 0) + sumValue;
+
+        if (!categoryIconMap[cat]) {
+            categoryIconMap[cat] = ACCOUNT_TYPE_ICONS[cat] || "";
+        }
     });
 
     portfolioGroups.forEach((group, index) => {
@@ -7036,8 +7176,7 @@ document.addEventListener("DOMContentLoaded", fetchVnIndexData);
                 <td class="portfolio-group-hdr" colspan="5">
                     <div class="portfolio-group-hdr-inner">
                         <span class="portfolio-group-hdr-label">
-                            ${categoryLabel}
-                            <span class="portfolio-group-hdr-pnl" style="color: ${catPnlColor};">${catPnlFormatted}</span>
+                            ${categoryLabel}                      
                         </span>
                         <span class="portfolio-group-hdr-chevron"><i class="bi bi-chevron-down"></i></span>
                     </div>
@@ -7267,12 +7406,169 @@ document.addEventListener("DOMContentLoaded", fetchVnIndexData);
     document.getElementById('total-profit-val').textContent = (totalPnlVnd > 0 ? '+' : '') + totalPnlVnd.toLocaleString() + "₫";
     const overallPct = totalCostVnd > 0 ? (totalPnlVnd / totalCostVnd) * 100 : 0;
     const badgeEl = document.getElementById('total-profit-badge');
-    
     badgeEl.textContent = formatPnlPct(overallPct);
     badgeEl.className = `badge-pill ${totalPnlVnd >= 0 ? 'badge-teal' : 'badge-pink'}`;
 
     renderActivePositionsStat(activePositions, activeIcons);
+    renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap, totalMarketValVnd);
   }
+
+  function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap, totalValue) {
+    var statList = document.getElementById('nav-stat-list');
+    var svg = document.getElementById('nav-donut-svg');
+    if (!statList || !svg) return;
+
+    statList.innerHTML = "";
+    svg.innerHTML = "";
+    if (totalValue <= 0) return;
+
+    var palette = ["#a5c8f0", "#f472b6", "#7ee8a8", "#facc15", "#c084fc", "#38bdf8"];
+
+    var categories = Object.keys(categoryValueTotals)
+        .map(function(cat) {
+            return {
+                name: cat,
+                value: categoryValueTotals[cat],
+                pnl: categoryPnlTotals[cat] || 0,
+                icon: categoryIconMap[cat] || ""
+            };
+        })
+        .filter(function(c) { return c.value > 0; })
+        .sort(function(a, b) { return b.value - a.value; });
+
+        // Rearrange: largest in middle, others alternating on each side
+        function arrangeMiddle(arr) {
+            var n = arr.length;
+            var result = new Array(n);
+            var mid = Math.floor(n / 2);
+            result[mid] = arr[0]; // largest goes to center position
+            var l = mid - 1, r = mid + 1;
+            for (var i = 1; i < n; i++) {
+                if (r < n && (l < 0 || i % 2 === 1)) {
+                    result[r++] = arr[i];
+                } else {
+                    result[l--] = arr[i];
+                }
+            }
+            return result;
+        }
+        categories = arrangeMiddle(categories);
+
+    // Center at TOP of viewBox — bowl opens downward into visible area
+    var cx = 100, cy = 100, rOuter = 90, rInner = 45;
+    var GAP = 0; // degrees gap between segments
+
+    // Standard math coords: 0°=right, 90°=SVG-down(bottom), 180°=left, 270°=SVG-up
+    function pt(r, deg) {
+        var rad = deg * Math.PI / 180;
+        return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+    }
+
+    function arc(d0, d1, rOut) {
+        rOut = rOut || rOuter;
+        var o0 = pt(rOut, d0), o1 = pt(rOut, d1);
+        var i1 = pt(rInner, d1), i0 = pt(rInner, d0);
+        var la = (d0 - d1) > 180 ? 1 : 0;
+        return ["M", o0.x.toFixed(2), o0.y.toFixed(2),
+                "A", rOut, rOut, 0, la, 0, o1.x.toFixed(2), o1.y.toFixed(2),
+                "L", i1.x.toFixed(2), i1.y.toFixed(2),
+                "A", rInner, rInner, 0, la, 1, i0.x.toFixed(2), i0.y.toFixed(2),
+                "Z"].join(" ");
+    }
+
+    var currentDeg = 270; // start at left (9 o'clock)
+    var uid = "p" + Math.random().toString(36).slice(2, 8);
+    var defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+    // find largest in arranged order
+    var maxIdx = 0;
+    categories.forEach(function(c, i) {
+        if (c.value > categories[maxIdx].value) maxIdx = i;
+    });
+palette.forEach(function(color, idx) {
+    var pat = document.createElementNS("http://www.w3.org/2000/svg", "pattern");
+    pat.setAttribute("id", uid + idx);
+    pat.setAttribute("patternUnits", "userSpaceOnUse");
+    pat.setAttribute("width", "8");
+    pat.setAttribute("height", "8");
+    pat.setAttribute("patternTransform", "rotate(-45 0 0)");
+    pat.setAttribute("overflow", "visible");
+
+    // Solid background tint
+    var bg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    bg.setAttribute("x", "-1"); bg.setAttribute("y", "-1");
+    bg.setAttribute("width", "10"); bg.setAttribute("height", "10");
+    bg.setAttribute("fill", color); bg.setAttribute("opacity", "0.18");
+    pat.appendChild(bg);
+
+    // Stripe — use rect, not line or path
+    var stripe = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    stripe.setAttribute("x", "0"); stripe.setAttribute("y", "0");
+    stripe.setAttribute("width", "5"); stripe.setAttribute("height", "8");
+    stripe.setAttribute("fill", color); stripe.setAttribute("opacity", "0.75");
+    pat.appendChild(stripe);
+
+    defs.appendChild(pat);
+});
+svg.appendChild(defs);
+    categories.forEach(function(cat, i) {
+        var pct = cat.value / totalValue;
+        var sweep = pct * 180;
+        var d0 = currentDeg - GAP / 2;       // shrink start edge inward
+        var d1 = currentDeg - sweep + GAP / 2; // shrink end edge inward
+        currentDeg -= sweep;
+
+        if (d1 >= d0) return; // segment too small for gap, skip
+
+        var color = palette[i % palette.length];
+
+        var isLargest = (i === maxIdx);
+        var rOut = isLargest ? rOuter - 5 : rOuter; // shrink largest inward
+
+        var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", arc(d0, d1, rOut));
+        path.setAttribute("fill", isLargest ? "url(#" + uid + (i % palette.length) + ")" : color);
+        path.setAttribute("stroke", color);
+        path.setAttribute("stroke-width", "1");
+        svg.appendChild(path);
+
+        if (pct >= 0.05) {
+            var mid = (d0 + d1) / 2;
+            var lr = (rOuter + rInner) / 2;
+            var lp = pt(lr, mid);
+            var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            text.setAttribute("x", lp.x.toFixed(1));
+            text.setAttribute("y", lp.y.toFixed(1));
+            text.setAttribute("class", "nav-donut-label");
+            text.setAttribute("font-size", "13");
+            text.textContent = "(" + Math.round(pct * 100) + "%)";
+            svg.appendChild(text);
+        }
+
+        var pnlPos = cat.pnl > 0, pnlZero = cat.pnl === 0;
+        var pnlColor = pnlZero ? 'rgba(255,255,255,0.5)' : (pnlPos ? '#14b8a6' : '#f472b6');
+        var pnlFmt = (pnlPos ? '+' : '') + formatShortNumber(cat.pnl);
+        var basis = cat.value - cat.pnl;
+        var pnlPct = basis > 0 ? (cat.pnl / basis) * 100 : 0;
+        var pnlPctFmt = (pnlPos ? '+' : '') + pnlPct.toFixed(1) + '%';
+
+        var item = document.createElement("div");
+        item.className = "nav-stat-item";
+        var iconHtml = cat.icon
+            ? `<div class="nav-stat-icon" style="background-image:url('${cat.icon}');"></div>`
+            : `<div class="nav-stat-icon" style="background:${color};color:#111;font-weight:700;font-size:12px;">${cat.name.charAt(0)}</div>`;
+        item.innerHTML = `${iconHtml}
+            <div class="nav-stat-info">
+                <div class="nav-stat-label-row">
+                    <div class="nav-stat-label">${cat.name}<span class="nav-stat-pct"> (${Math.round(pct * 100)}%)</span></div>
+                    <div class="nav-stat-value">${formatShortNumber(cat.value)}</div>
+                </div>
+                <div class="nav-stat-pnl" style="color:${pnlColor};">${pnlFmt} (${pnlPctFmt})</div>
+            </div>`;
+        statList.appendChild(item);
+    });
+    
+    
+}
   function toggleCategoryGroup(categoryKey, headerRowEl) {
     var isCollapsed = headerRowEl.classList.toggle('collapsed');
     var rows = document.querySelectorAll(`tr[data-category-key="${categoryKey}"]:not(.portfolio-group-hdr-row)`);
