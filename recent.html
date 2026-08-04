@@ -152,23 +152,31 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
     @keyframes spin {
       100% { transform: rotate(360deg); }
     }
-.profile-icon {
-    width: 36px;
-    height: 36px;margin:0 auto;
-    border-radius: 50%;
-    object-fit: cover;
-    flex-shrink: 0;
-    border: 1px solid rgba(255,255,255,0.15);
-}
 .tab-bar {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between; /* CHANGED from flex-end — pushes profile left, tabs right */
     gap: 8px;
     border-bottom: 0px solid rgba(255, 255, 255, 0.1);
     position: relative;
     flex-shrink: 0;
     padding: 0 5vw 5px;
+}
+
+.profile-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;margin-left:-10px;
+    border: 1px solid rgba(255,255,255,0.15);
+}
+
+.tab-btn-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative; /* keeps .tab-line positioned correctly relative to this group instead of the whole bar */
 }
 
 .tab-btn {
@@ -179,7 +187,6 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
     position: relative;
     overflow: hidden;
 
-    /* Glass base */
     background: linear-gradient(135deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.04) 100%);
     -webkit-backdrop-filter: blur(12px) saturate(180%);
     backdrop-filter: blur(12px) saturate(180%);
@@ -231,8 +238,8 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 .tab-btn i{font-size:3.8vw!important;}
 .tab-line {position:absolute; bottom:0; height:2.5px; background:#fff; border-radius:2px; transition:left 0.25s ease, width 0.25s ease;}
 #tab-btn-2 { display:flex; }
-@media (max-width: 400px) {.profile-icon {margin-right:43vw;}.tab-btn span {display: none;}.tab-btn i{font-size:4.6vw!important;}}
-@media (min-width: 401px) {.profile-icon {margin-right:50vw;}.tab-btn span {display: none;} .tab-bar {margin-top:20px}}
+@media (max-width: 400px) {.tab-btn span {display: none;}.tab-btn i{font-size:4.6vw!important;}}
+@media (min-width: 401px) {.tab-btn span {display: none;} .tab-bar {margin-top:20px}}
 .big-wrap{overflow-y: auto;overflow-x: hidden;}
 @media (max-width: 400px) {.card,.det-col-hdr,.wallet-container,.sub-slide,#cat-list{padding:0 2vw 0 2vw;}}
 /* ── Slides ── */
@@ -399,7 +406,7 @@ background:
 .budget-bar{position:relative;width:100%;height:7px;background:#505867;border-radius:999px;overflow:hidden}
 #budget-fill{position:absolute;left:0;top:0;height:100%;border-radius:999px;background:linear-gradient( 90deg,#4f21ff 0%,#6b4dff 35%,#9a88ff 65%,#ffffff 100% );transition:width .4s ease}
 .budget-bottom{margin:5px 0 10px;display:flex;justify-content:space-between;align-items:center}.budget-inline-row{display:flex;align-items:center;gap:6px}.budget-inline-row.right{justify-content:flex-end}
-.budget-label{font-size:12px;color:rgba(255,255,255,.55);}
+.budget-label{font-size:12px;color:rgba(255,255,255,.55);margin-bottom:-1px!important;}
 .budget-values{display:flex;align-items:center;gap:4px}@keyframes svg-pulse{0%{r:4px;opacity:1}50%{r:6px;opacity:.4}to{r:4px;opacity:1}}.svg-live-pulse{animation:svg-pulse 1.8s infinite ease-in-out}
 .marker-label{font-size:10px;color:rgba(255,255,255,.45);line-height:1;margin-bottom:2px;white-space:nowrap}
 #budget-spent,#budget-remaining{font-family:Lexend;font-size:13px;font-weight:600;color:rgba(255,255,255,.85)}
@@ -2134,12 +2141,15 @@ to{transform:rotate(360deg)}
     <div class="ptr-spinner" id="ptr-spinner"></div>
   </div>
 <div class="tab-bar" id="tab-bar">
-    <img class="profile-icon" src="https://i.pinimg.com/736x/4a/0a/2d/4a0a2d84976ca4c48bdaa5f2f20715be.jpg" alt="Profile" />
-  <div class="tab-btn" id="tab-btn-x"><i class="bi bi-activity"></i><span></span></div>
-  <div class="tab-btn active" data-idx="0" id="tab-btn-0"><i class="bi bi-basket-fill"></i><span>Expense</span>  </div>
-  <div class="tab-btn" data-idx="1" id="tab-btn-1"><i class="bi bi-wallet2"></i><span>Overview</span>  </div>
-  <div class="tab-btn" data-idx="2" id="tab-btn-2"><i class="bi bi-rocket-takeoff-fill"></i><span>Portfolio</span>  </div>
-  <div class="tab-line" id="tab-line"></div>
+  <img class="profile-icon" src="https://i.pinimg.com/736x/c1/de/26/c1de261375437d0323551e96c19ee810.jpg"/>
+    <h5 style="font-family:Lora;text-align:left; flex:1; margin:0;">Hi hayashi!</h5>
+  <div class="tab-btn-group">
+    <div class="tab-btn" id="tab-btn-x"><i class="bi bi-activity"></i><span></span></div>
+    <div class="tab-btn active" data-idx="0" id="tab-btn-0"><i class="bi bi-basket-fill"></i><span>Expense</span></div>
+    <div class="tab-btn" data-idx="1" id="tab-btn-1"><i class="bi bi-wallet2"></i><span>Overview</span></div>
+    <div class="tab-btn" data-idx="2" id="tab-btn-2"><i class="bi bi-rocket-takeoff-fill"></i><span>Portfolio</span></div>
+    <div class="tab-line" id="tab-line"></div>
+  </div>
 </div>
 <div class="big-wrap">
 <div class="card" id="card">
@@ -2969,8 +2979,21 @@ to{transform:rotate(360deg)}
   function saveTabOrder(order){try{localStorage.setItem(LS_TAB_ORDER_KEY,JSON.stringify(order))}catch(e){console.warn("Could not save tab order:",e)}}
   function loadActiveTab(){try{var raw=localStorage.getItem(LS_ACTIVE_TAB_KEY);if(null!==raw){var idx=parseInt(raw);if(!isNaN(idx)&&idx>=0&&idx<numTabs)return idx}}catch(e){}return DEFAULT_ACTIVE_TAB}
   function saveActiveTab(idx){try{localStorage.setItem(LS_ACTIVE_TAB_KEY,String(idx))}catch(e){console.warn("Could not save active tab:",e)}}
-  function applyTabOrder(order){var tabBar=document.getElementById("tab-bar"),slidesWrap=document.getElementById("slides-wrap"),tabLine=document.getElementById("tab-line"),tabs=Array.prototype.slice.call(tabBar.querySelectorAll(".tab-btn")),slides=Array.prototype.slice.call(slidesWrap.querySelectorAll(".slide"));order.forEach(function(idx){var btn=tabs.find(function(b){return parseInt(b.dataset.idx)===idx});btn&&tabBar.insertBefore(btn,tabLine);var slide=slides.find(function(s){return parseInt(s.dataset.idx)===idx});slide&&slidesWrap.appendChild(slide)})}
-  function switchTab(idx) {
+  function applyTabOrder(order) {
+    var tabGroup = document.getElementById("tab-bar").querySelector(".tab-btn-group"); // CHANGED
+    var slidesWrap = document.getElementById("slides-wrap");
+    var tabLine = document.getElementById("tab-line");
+    var tabs = Array.prototype.slice.call(tabGroup.querySelectorAll(".tab-btn")); // CHANGED: query within tabGroup
+    var slides = Array.prototype.slice.call(slidesWrap.querySelectorAll(".slide"));
+
+    order.forEach(function(idx) {
+        var btn = tabs.find(function(b) { return parseInt(b.dataset.idx) === idx; });
+        if (btn) tabGroup.insertBefore(btn, tabLine); // CHANGED: insert into tabGroup, not tabBar
+
+        var slide = slides.find(function(s) { return parseInt(s.dataset.idx) === idx; });
+        if (slide) slidesWrap.appendChild(slide);
+    });
+} function switchTab(idx) {
       currentTab = idx;
       var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab-btn"));
       tabs.forEach(function(btn) {
