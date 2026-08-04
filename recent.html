@@ -1467,6 +1467,30 @@ tbody tr.current-row td{font-weight:600;}
             font-weight: 700;
             color: var(--text-primary);
         }
+        #vnindex-reload-btn {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 11px;
+    flex-shrink: 0;
+    transition: background 0.15s, transform 0.15s;
+}
+
+#vnindex-reload-btn:hover {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+}
+
+#vnindex-reload-btn.spinning i {
+    animation: spinCircle 0.8s linear infinite;
+}
  .portfolio-group-hdr {
     padding: 10px 10px 6px;
     font-size: 12px;
@@ -2592,9 +2616,12 @@ to{transform:rotate(360deg)}
                     <div class="metric-card">
                         <div class="stat-cycles-row-wrap">
                             <div class="metric-label">VNINDEX</div>
-                            <div style="display:flex">
+                            <div style="display:flex; align-items:center; gap:6px;">
                                 <img class="stat-stack-icon" style="border:none" src="https://cdn-icons-png.flaticon.com/512/6211/6211662.png"/>
                                 <div class="hero-balance" id="vnindex-bal">0</div>
+                                <button type="button" id="vnindex-reload-btn" onclick="fetchVnIndexData()" title="Refresh VNINDEX">
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                </button>
                             </div>
                         </div>
                         <div class="stat-cycles-row-wrap">
@@ -4626,7 +4653,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   /* ══ ADD RECORD (writes to the sheet via Apps Script Web App) ══ */
   var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxb1lPB9kZh-Q5C01U-DjuesOVlHgDEorEBK-pavyJUd5jPxZSub-Rx6unOCTDdrCS2/exec";
-  var EXPENSE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwsWV8iXJwSJ79qtZq7zwmVFc1WqiEwnMXlzBKXvO0pAzDqEgMe704SCUiLeAdCgoanvA/exec";
+  var EXPENSE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwufdrqTF7ErACV5DIBQYavcC8W0JbXHOnUjNVhaPim0Yrl_bTiptS0rngLyXYEc_lz6Q/exec";
 
   var addOverlay = document.getElementById("add-modal-overlay");
   var addStatusEl = document.getElementById("add-status");
@@ -6717,36 +6744,21 @@ function historyEditCalNavigate(e, dir) {
     });
   }
 
-    function fetchVnIndexData() {
-    var csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=523826078&t=" + Date.now();
+function fetchVnIndexData() {
+    var reloadBtn = document.getElementById("vnindex-reload-btn");
+    if (reloadBtn) reloadBtn.classList.add("spinning");
 
-    fetch(csvUrl, { cache: "no-store" })
+    fetch(EXPENSE_APPS_SCRIPT_URL + "?action=vnindex&t=" + Date.now(), { cache: "no-store" })
         .then(function(response) {
             if (!response.ok) throw new Error("HTTP " + response.status);
-            return response.text();
+            return response.json();
         })
-        .then(function(text) {
-            var lines = text.split(/\r?\n/);
-            var targetLine = lines[12]; // row 13 (1-indexed) -> index 12
-            if (!targetLine) return;
+        .then(function(result) {
+            if (result.status !== "success") throw new Error(result.message || "Failed to fetch VNINDEX");
 
-            var cols = parseCsvRow(targetLine);
-
-            var vnindexRaw = cols[10] || ""; // Column K
-            var changeRaw = cols[11] || "";  // Column L
-            var pctChangeRaw = cols[12] || ""; // Column M
-
-            function cleanNum(val) {
-                if (!val) return 0;
-                var c = val.toString().replace(/[\$,%\s]/g, "");
-                if (c.startsWith("(") && c.endsWith(")")) c = "-" + c.slice(1, -1);
-                var n = parseFloat(c);
-                return isNaN(n) ? 0 : n;
-            }
-
-            var vnindexVal = cleanNum(vnindexRaw);
-            var changeVal = cleanNum(changeRaw);
-            var pctChangeVal = cleanNum(pctChangeRaw);
+            var vnindexVal = Number(result.data.close) || 0;
+            var changeVal = Number(result.data.change) || 0;
+            var pctChangeVal = Number(result.data.pctChange) || 0;
 
             var isPositive = changeVal > 0;
             var isZero = changeVal === 0;
@@ -6764,10 +6776,14 @@ function historyEditCalNavigate(e, dir) {
         })
         .catch(function(err) {
             console.error("VNINDEX fetch error:", err);
+        })
+        .finally(function() {
+            if (reloadBtn) reloadBtn.classList.remove("spinning");
         });
 }
 
 document.addEventListener("DOMContentLoaded", fetchVnIndexData);
+
   function cleanNum(val){if(!val)return 0;let c=val.toString().replace(/[\$,%\s]/g,"");c.startsWith("(")&&c.endsWith(")")&&(c="-"+c.slice(1,-1));const n=parseFloat(c);return isNaN(n)?0:n}function formatShortNumber(val){if(null==val||isNaN(val))return"-";if(0===val)return"0";const absNum=Math.abs(val),sign=val<0?"-":"",decimals=window.innerWidth>400?3:1;let formatted="";return formatted=absNum>=1e9?(absNum/1e9).toFixed(decimals)+"B":absNum>=1e6?(absNum/1e6).toFixed(decimals)+"M":absNum>=1e3?(absNum/1e3).toFixed(decimals)+"K":absNum.toLocaleString(void 0,{minimumFractionDigits:0,maximumFractionDigits:decimals}),`${sign}${formatted}`}function formatStockPrice(price){if(!price||isNaN(price))return"0.0";let formatted=(price>1e3?price/1e3:price).toFixed(2);return(formatted.endsWith("0")&&!formatted.endsWith(".00")||formatted.endsWith(".00"))&&(formatted=formatted.slice(0,-1)),formatted}function formatCryptoPrice(price){return!price||isNaN(price)?"0.000":price.toLocaleString(void 0,{minimumFractionDigits:0,maximumFractionDigits:0})}function formatPnlValue(num){if(0===num||null==num)return"-";return(num>0?"+":"")+formatShortNumber(num)}function formatPnlPct(pctVal){if(0===pctVal||null==pctVal||isNaN(pctVal))return"-";return`${pctVal>0?"+":""}${pctVal.toFixed(2)}%`}function parseDate(dateStr){if(!dateStr)return null;if(dateStr.includes("-")){const parts=dateStr.split("-");return new Date(parseInt(parts[0],10),parseInt(parts[1],10)-1,parseInt(parts[2],10))}if(dateStr.includes("/")){const parts=dateStr.split("/");return new Date(parseInt(parts[2],10),parseInt(parts[1],10)-1,parseInt(parts[0],10))}return new Date(dateStr)}function formatNoYearDate(dateObj){if(!dateObj)return"-";return`${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][dateObj.getMonth()]} ${String(dateObj.getDate()).padStart(2,"0")}`}function formatDateRangeTwoLinesNoYear(startDateStr,exitDateStr,isSaving=!1,volumeMonths=0){const sDate=parseDate(startDateStr);let eDate=null;isSaving&&volumeMonths>0&&sDate?(eDate=new Date(sDate),eDate.setMonth(eDate.getMonth()+parseInt(volumeMonths,10))):exitDateStr&&""!==exitDateStr.trim()&&(eDate=parseDate(exitDateStr));return`<div class="val-primary">${sDate?formatNoYearDate(sDate):"-"}</div><div class="val-secondary">${eDate?formatNoYearDate(eDate):"Present"}</div>`}function cleanNoteText(noteStr,statusStr){if(!noteStr||""===noteStr.trim())return statusStr||"";let cleaned=noteStr.replace(/MAIN\b/gi,"").replace(/LOG\b/gi,"").replace(/\bC\d+\b/gi,"").replace(/[\+\-]/g,"").trim();return""===cleaned?statusStr:cleaned}function getShortLogKeyword(text){if(!text)return"Log";const lower=text.toLowerCase();return lower.includes("dca")?"DCA":lower.includes("buy")?"Buy":lower.includes("sell")?"Sell":lower.includes("close")?"Close":lower.includes("deposit")||lower.includes("saving")?"Deposit":text.split(" ")[0].slice(0,5)}function parseCSVLine(line){for(var values=[],currentVal="",inQuotes=!1,i=0;i<line.length;i++){var char=line.charAt(i);'"'===char&&'"'===line.charAt(i+1)?(currentVal+='"',i++):'"'===char?inQuotes=!inQuotes:","!==char||inQuotes?currentVal+=char:(values.push(currentVal.trim()),currentVal="")}return values.push(currentVal.trim()),values}
   function fetchOrderSheetCSV(){const addOrderBtn=document.getElementById("add-order");addOrderBtn&&(addOrderBtn.classList.add("loading"),addOrderBtn.innerHTML='<span class="btn-spinner"></span>'),fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=488369714",{cache:"no-store"}).then(res=>{if(!res.ok)throw new Error("HTTP "+res.status);return res.text()}).then(csvText=>{processAndRenderData(csvText),addOrderBtn&&(addOrderBtn.classList.remove("loading"),addOrderBtn.classList.add("success-confirm")),setTimeout(function(){addOrderBtn&&(addOrderBtn.classList.remove("success-confirm"),addOrderBtn.innerHTML="+")},500)}).catch(err=>{console.error("Widget load error:",err);var msgEl=document.getElementById("det-msg");msgEl&&(msgEl.style.display="block",msgEl.textContent="CSV Fetch Error: "+err.message),addOrderBtn&&(addOrderBtn.classList.remove("loading","success-confirm"),addOrderBtn.innerHTML="+")})}
   var portfolioFilters = {
