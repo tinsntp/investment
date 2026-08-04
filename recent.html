@@ -137,7 +137,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
     .ptr-spinner {
       width: 25px;
       height: 25px;
-      border: 5px solid rgba(255, 255, 255, 0.2); /* Dark gray track */
+      border: 4px solid rgba(255, 255, 255, 0.2); /* Dark gray track */
       border-top-color: #ffffff;                 /* Pure white active segment */
       border-radius: 50%;
       transform-origin: center center;
@@ -693,8 +693,8 @@ background:
     background: linear-gradient(135deg, rgba(20,184,166,0.95) 0%, rgba(13,148,136,0.9) 100%);
 }
 .stat-cycles-row-wrap-v2 {
-    display: flex;padding-left:5px;
-    gap: 3px;
+    display: flex;
+    gap: 8px;
 }
 .stat-cycles-row-wrap {
     display: flex;
@@ -1385,7 +1385,7 @@ tbody tr.current-row td{font-weight:600;}
 
 .nav-stat-list {
     display: flex;
-    flex-direction: column;
+    flex-direction: column;margin-left:5px;
     gap: 14px;
     flex: 1;
     min-width: 0;
@@ -1446,13 +1446,13 @@ tbody tr.current-row td{font-weight:600;}
     position: relative;
     width: 90px;    /* was 180px */
     height: 180px;  /* was 90px */
-    flex-shrink: 0;margin-right:6px;
+    flex-shrink: 0;margin-right:21px;margin-top:-15px;
     overflow: visible; /* was: hidden */
 }
 
 #nav-donut-svg {
-    width: 100px;
-    height: 200px;
+    width: 120px;
+    height: 220px;
     position: static;
     top: auto; left: auto;
 }
@@ -1521,7 +1521,7 @@ tbody tr.current-row td{font-weight:600;}
             -webkit-text-fill-color: transparent;
         }
         .hero-balance{font-size: 16px!important;color:#fff!important;margin-bottom:3px}
-        .hero-amount{font-size: 14px;font-weight: 600;margin-bottom:3px;}
+        .hero-amount{font-size: 14px;font-weight: 600;margin-bottom:3px;padding-right:1px;}
         #balance-val {font-size: 36px;}
         .badge-pill {
             display: inline-flex;
@@ -1589,11 +1589,18 @@ tbody tr.current-row td{font-weight:600;}
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 11px;
     flex-shrink: 0;
     transition: background 0.15s, transform 0.15s;
 }
-
+#vnindex-reload-btn .bi { font-size: 14px!important;}
+.bi-arrow-clockwise {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    line-height: 1;
+}
 #vnindex-reload-btn:hover {
     background: rgba(255,255,255,0.15);
     color: #fff;
@@ -2707,13 +2714,13 @@ to{transform:rotate(360deg)}
                             <div class="nav-card-left">
                                 <div class="metric-card">
                                     <div class="stat-cycles-row-wrap-v2">
-                                        <div class="metric-label">NAV</div>
                                         <div style="display:flex">
                                             <img class="stat-stack-icon" style="border:none" src="https://cdn-icons-png.flaticon.com/512/6211/6211662.png"/>
                                             <div class="hero-balance" id="total-profit-bal">0</div>
                                         </div>
+                                        <div class="metric-label">NAV</div>                                        
                                     </div>
-                                    <div class="stat-cycles-row-wrap-v2">
+                                    <div class="stat-cycles-row-wrap-v2" style="margin-left:5px">
                                         <div class="hero-amount" id="total-profit-val">0</div>
                                         <div class="badge-pill badge-teal" id="total-profit-badge">▲ +0.00%</div>
                                     </div>
@@ -2729,19 +2736,19 @@ to{transform:rotate(360deg)}
                 <div class="metrics-grid">
                     
                     <div class="metric-card">
-                        <div class="stat-cycles-row-wrap-v2">
-                            <div class="metric-label">VNINDEX</div>
+                        <div class="stat-cycles-row-wrap-v2">              
                             <div style="display:flex; align-items:center; gap:6px;">
-                                <img class="stat-stack-icon" style="border:none" src="https://cdn-icons-png.flaticon.com/512/6211/6211662.png"/>
+                                <img class="stat-stack-icon" style="border:none;" src="https://media.licdn.com/dms/image/v2/C560BAQHmH86Q4SeGmQ/company-logo_200_200/company-logo_200_200/0/1631231281847?e=2147483647&v=beta&t=ODrzN6-FGWaBdwhmtBJEQ2m-HUR3oL_OTgnHYR1fxWA"/>
                                 <div class="hero-balance" id="vnindex-bal">0</div>
-                                <button type="button" id="vnindex-reload-btn" onclick="fetchVnIndexData()" title="Refresh VNINDEX">
-                                    <i class="bi bi-arrow-clockwise"></i>
-                                </button>
                             </div>
+                            <div class="metric-label">VNINDEX</div>
                         </div>
-                        <div class="stat-cycles-row-wrap-v2">
+                        <div class="stat-cycles-row-wrap-v2" style="margin-left:5px">
                             <div class="hero-amount" id="vnindex-val">0</div>
                             <div class="badge-pill badge-teal" id="vnindex-badge">+0.00%</div>
+                            <button type="button" id="vnindex-reload-btn" onclick="fetchVnIndexData()" title="Refresh VNINDEX">
+                                <i class="bi bi-arrow-clockwise"></i>
+                            </button>
                         </div>
                     </div>
                     <div class="metric-card">
@@ -6868,7 +6875,22 @@ function historyEditCalNavigate(e, dir) {
     });
   }
 
-function fetchVnIndexData() {
+function fetchVnIndexData(isUserRefresh) {
+    var now = new Date();
+    var vnTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Ho_Chi_Minh" }));
+    var day = vnTime.getDay();
+    var totalMins = vnTime.getHours() * 60 + vnTime.getMinutes();
+    var isWeekday = day >= 1 && day <= 5;
+    var isMarketHours = totalMins >= (9 * 60 + 15) && totalMins <= (15 * 60);
+    var useRealtime = isWeekday && isMarketHours;
+
+    if (!useRealtime) {
+        // First load OR outside market hours — always use CSV
+        fetchVnIndexData2();
+        return;
+    }
+
+    // User clicked refresh during market hours — try API, fall back to CSV
     var reloadBtn = document.getElementById("vnindex-reload-btn");
     if (reloadBtn) reloadBtn.classList.add("spinning");
 
@@ -6878,11 +6900,60 @@ function fetchVnIndexData() {
             return response.json();
         })
         .then(function(result) {
-            if (result.status !== "success") throw new Error(result.message || "Failed to fetch VNINDEX");
-
-            var vnindexVal = Number(result.data.close) || 0;
-            var changeVal = Number(result.data.change) || 0;
+            if (result.status !== "success") throw new Error(result.message || "Failed");
+            var vnindexVal   = Number(result.data.close)     || 0;
+            var changeVal    = Number(result.data.change)    || 0;
             var pctChangeVal = Number(result.data.pctChange) || 0;
+            var isPositive   = changeVal > 0;
+            var isZero       = changeVal === 0;
+            document.getElementById("vnindex-bal").textContent = vnindexVal.toLocaleString("en-US");
+            var changeSign = isZero ? "" : (isPositive ? "+" : "");
+            document.getElementById("vnindex-val").textContent = changeSign + changeVal.toLocaleString("en-US");
+            var badgeEl = document.getElementById("vnindex-badge");
+            var pctSign = isZero ? "" : (isPositive ? "+" : "");
+            badgeEl.textContent = pctSign + pctChangeVal.toFixed(2) + "%";
+            badgeEl.className   = "badge-pill " + (isZero ? "badge-teal" : (isPositive ? "badge-teal" : "badge-pink"));
+        })
+        .catch(function(err) {
+            console.warn("VNINDEX realtime failed, falling back to CSV:", err.message);
+            fetchVnIndexData2();
+        })
+        .finally(function() {
+            if (reloadBtn) reloadBtn.classList.remove("spinning");
+        });
+}
+
+    document.addEventListener("DOMContentLoaded", fetchVnIndexData(true));
+    function fetchVnIndexData2() {
+    var csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=523826078&t=" + Date.now();
+
+    fetch(csvUrl, { cache: "no-store" })
+        .then(function(response) {
+            if (!response.ok) throw new Error("HTTP " + response.status);
+            return response.text();
+        })
+        .then(function(text) {
+            var lines = text.split(/\r?\n/);
+            var targetLine = lines[12]; // row 13 (1-indexed) -> index 12
+            if (!targetLine) return;
+
+            var cols = parseCsvRow(targetLine);
+
+            var vnindexRaw = cols[10] || ""; // Column K
+            var changeRaw = cols[11] || "";  // Column L
+            var pctChangeRaw = cols[12] || ""; // Column M
+
+            function cleanNum(val) {
+                if (!val) return 0;
+                var c = val.toString().replace(/[\$,%\s]/g, "");
+                if (c.startsWith("(") && c.endsWith(")")) c = "-" + c.slice(1, -1);
+                var n = parseFloat(c);
+                return isNaN(n) ? 0 : n;
+            }
+
+            var vnindexVal = cleanNum(vnindexRaw);
+            var changeVal = cleanNum(changeRaw);
+            var pctChangeVal = cleanNum(pctChangeRaw);
 
             var isPositive = changeVal > 0;
             var isZero = changeVal === 0;
@@ -6899,13 +6970,24 @@ function fetchVnIndexData() {
         })
         .catch(function(err) {
             console.error("VNINDEX fetch error:", err);
-        })
-        .finally(function() {
-            if (reloadBtn) reloadBtn.classList.remove("spinning");
         });
-}
+    }
 
-document.addEventListener("DOMContentLoaded", fetchVnIndexData);
+    var navSelectedCatIdx = null;
+
+    function navUpdateHighlight() {
+        var svg = document.getElementById('nav-donut-svg');
+        var statList = document.getElementById('nav-stat-list');
+        if (!svg || !statList) return;
+        svg.querySelectorAll('path[data-seg]').forEach(function(p) {
+            var idx = parseInt(p.getAttribute('data-seg'));
+            p.style.opacity = (navSelectedCatIdx === null || navSelectedCatIdx === idx) ? '1' : '0.2';
+        });
+        statList.querySelectorAll('.nav-stat-item').forEach(function(el) {
+            var idx = parseInt(el.getAttribute('data-seg'));
+            el.style.opacity = (navSelectedCatIdx === null || navSelectedCatIdx === idx) ? '1' : '0.35';
+        });
+    }
 
   function cleanNum(val){if(!val)return 0;let c=val.toString().replace(/[\$,%\s]/g,"");c.startsWith("(")&&c.endsWith(")")&&(c="-"+c.slice(1,-1));const n=parseFloat(c);return isNaN(n)?0:n}function formatShortNumber(val){if(null==val||isNaN(val))return"-";if(0===val)return"0";const absNum=Math.abs(val),sign=val<0?"-":"",decimals=window.innerWidth>400?3:1;let formatted="";return formatted=absNum>=1e9?(absNum/1e9).toFixed(decimals)+"B":absNum>=1e6?(absNum/1e6).toFixed(decimals)+"M":absNum>=1e3?(absNum/1e3).toFixed(decimals)+"K":absNum.toLocaleString(void 0,{minimumFractionDigits:0,maximumFractionDigits:decimals}),`${sign}${formatted}`}function formatStockPrice(price){if(!price||isNaN(price))return"0.0";let formatted=(price>1e3?price/1e3:price).toFixed(2);return(formatted.endsWith("0")&&!formatted.endsWith(".00")||formatted.endsWith(".00"))&&(formatted=formatted.slice(0,-1)),formatted}function formatCryptoPrice(price){return!price||isNaN(price)?"0.000":price.toLocaleString(void 0,{minimumFractionDigits:0,maximumFractionDigits:0})}function formatPnlValue(num){if(0===num||null==num)return"-";return(num>0?"+":"")+formatShortNumber(num)}function formatPnlPct(pctVal){if(0===pctVal||null==pctVal||isNaN(pctVal))return"-";return`${pctVal>0?"+":""}${pctVal.toFixed(2)}%`}function parseDate(dateStr){if(!dateStr)return null;if(dateStr.includes("-")){const parts=dateStr.split("-");return new Date(parseInt(parts[0],10),parseInt(parts[1],10)-1,parseInt(parts[2],10))}if(dateStr.includes("/")){const parts=dateStr.split("/");return new Date(parseInt(parts[2],10),parseInt(parts[1],10)-1,parseInt(parts[0],10))}return new Date(dateStr)}function formatNoYearDate(dateObj){if(!dateObj)return"-";return`${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][dateObj.getMonth()]} ${String(dateObj.getDate()).padStart(2,"0")}`}function formatDateRangeTwoLinesNoYear(startDateStr,exitDateStr,isSaving=!1,volumeMonths=0){const sDate=parseDate(startDateStr);let eDate=null;isSaving&&volumeMonths>0&&sDate?(eDate=new Date(sDate),eDate.setMonth(eDate.getMonth()+parseInt(volumeMonths,10))):exitDateStr&&""!==exitDateStr.trim()&&(eDate=parseDate(exitDateStr));return`<div class="val-primary">${sDate?formatNoYearDate(sDate):"-"}</div><div class="val-secondary">${eDate?formatNoYearDate(eDate):"Present"}</div>`}function cleanNoteText(noteStr,statusStr){if(!noteStr||""===noteStr.trim())return statusStr||"";let cleaned=noteStr.replace(/MAIN\b/gi,"").replace(/LOG\b/gi,"").replace(/\bC\d+\b/gi,"").replace(/[\+\-]/g,"").trim();return""===cleaned?statusStr:cleaned}function getShortLogKeyword(text){if(!text)return"Log";const lower=text.toLowerCase();return lower.includes("dca")?"DCA":lower.includes("buy")?"Buy":lower.includes("sell")?"Sell":lower.includes("close")?"Close":lower.includes("deposit")||lower.includes("saving")?"Deposit":text.split(" ")[0].slice(0,5)}function parseCSVLine(line){for(var values=[],currentVal="",inQuotes=!1,i=0;i<line.length;i++){var char=line.charAt(i);'"'===char&&'"'===line.charAt(i+1)?(currentVal+='"',i++):'"'===char?inQuotes=!inQuotes:","!==char||inQuotes?currentVal+=char:(values.push(currentVal.trim()),currentVal="")}return values.push(currentVal.trim()),values}
   function fetchOrderSheetCSV(){const addOrderBtn=document.getElementById("add-order");addOrderBtn&&(addOrderBtn.classList.add("loading"),addOrderBtn.innerHTML='<span class="btn-spinner"></span>'),fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=488369714",{cache:"no-store"}).then(res=>{if(!res.ok)throw new Error("HTTP "+res.status);return res.text()}).then(csvText=>{processAndRenderData(csvText),addOrderBtn&&(addOrderBtn.classList.remove("loading"),addOrderBtn.classList.add("success-confirm")),setTimeout(function(){addOrderBtn&&(addOrderBtn.classList.remove("success-confirm"),addOrderBtn.innerHTML="+")},500)}).catch(err=>{console.error("Widget load error:",err);var msgEl=document.getElementById("det-msg");msgEl&&(msgEl.style.display="block",msgEl.textContent="CSV Fetch Error: "+err.message),addOrderBtn&&(addOrderBtn.classList.remove("loading","success-confirm"),addOrderBtn.innerHTML="+")})}
@@ -6963,6 +7045,13 @@ document.addEventListener("DOMContentLoaded", fetchVnIndexData);
 }
   document.addEventListener("DOMContentLoaded",function(){var dateMenu=document.getElementById("col-menu-date");dateMenu&&dateMenu.addEventListener("click",function(e){e.stopPropagation()})});
   function applyPortfolioFiltersAndRender() {
+    var navBal   = document.getElementById('total-profit-bal');
+    var navVal   = document.getElementById('total-profit-val');
+    var navBadge = document.getElementById('total-profit-badge');
+    var snapBal   = navBal   ? navBal.innerHTML   : null;
+    var snapVal   = navVal   ? navVal.innerHTML   : null;
+    var snapBadge = navBadge ? navBadge.innerHTML : null;
+    var snapBadgeClass = navBadge ? navBadge.className : null;
     if (typeof window.currentPortfolioGroups === "undefined") return;
 
     var filtered = window.currentPortfolioGroups.filter(function(group) {
@@ -6996,28 +7085,37 @@ document.addEventListener("DOMContentLoaded", fetchVnIndexData);
 
         return true;
     });
+    
 
     // NEW: sort by status first (on-going before close), then by date ascending within each group
     filtered.sort(function(a, b) {
-    // NEW: primary sort — group by accountType first
-    var catCompare = a.accountType.localeCompare(b.accountType);
-    if (catCompare !== 0) return catCompare;
+        // NEW: primary sort — group by accountType first
+        var catCompare = a.accountType.localeCompare(b.accountType);
+        if (catCompare !== 0) return catCompare;
 
-    // Existing secondary sort — status (on-going first), then date descending
-    var aOngoing = a.status.toLowerCase().includes('on-going');
-    var bOngoing = b.status.toLowerCase().includes('on-going');
+        // Existing secondary sort — status (on-going first), then date descending
+        var aOngoing = a.status.toLowerCase().includes('on-going');
+        var bOngoing = b.status.toLowerCase().includes('on-going');
 
-    if (aOngoing && !bOngoing) return -1;
-    if (!aOngoing && bOngoing) return 1;
+        if (aOngoing && !bOngoing) return -1;
+        if (!aOngoing && bOngoing) return 1;
 
-    var aRec = a.mainRecord || (a.records && a.records[0]);
-    var bRec = b.mainRecord || (b.records && b.records[0]);
-    var aDate = aRec ? new Date(aRec.entryDate) : new Date(0);
-    var bDate = bRec ? new Date(bRec.entryDate) : new Date(0);
-    return bDate - aDate;
-});
+        var aRec = a.mainRecord || (a.records && a.records[0]);
+        var bRec = b.mainRecord || (b.records && b.records[0]);
+        var aDate = aRec ? new Date(aRec.entryDate) : new Date(0);
+        var bDate = bRec ? new Date(bRec.entryDate) : new Date(0);
+        return bDate - aDate;
+    });
 
     renderAccordion(filtered);
+    if (portfolioFilters.asset && portfolioFilters.asset !== 'all') {
+        if (navBal   && snapBal   !== null) navBal.innerHTML   = snapBal;
+        if (navVal   && snapVal   !== null) navVal.innerHTML   = snapVal;
+        if (navBadge && snapBadge !== null) {
+            navBadge.innerHTML  = snapBadge;
+            navBadge.className  = snapBadgeClass;
+        }
+    }
   }
   function processAndRenderData(csvText) {
     const lines = csvText.trim().split(/\r?\n/);
@@ -7094,8 +7192,34 @@ document.addEventListener("DOMContentLoaded", fetchVnIndexData);
 
     // Store raw, unfiltered groups globally so filters always reset from full data
     window.currentPortfolioGroups = Object.values(groupsMap);
-
-    // Apply current filter state (defaults show everything on first load)
+    // In processAndRenderData, after window.currentPortfolioGroups is set:
+    var fullValues = {}, fullPnls = {}, fullIcons = {};
+    var ACCOUNT_TYPE_ICONS = {
+        "Stock":  "https://github.com/tinsntp/investment/blob/main/stock.png?raw=true",
+        "Saving": "https://github.com/tinsntp/investment/blob/main/saving.png?raw=true",
+        "Crypto": "https://github.com/tinsntp/investment/blob/main/bitcoin.png?raw=true",
+        "Forex":  "https://github.com/tinsntp/investment/blob/main/exness.png?raw=true"
+    };
+    window.currentPortfolioGroups.forEach(function(group) {
+        var isStock  = group.accountType.toLowerCase() === "stock";
+        var isCrypto = group.accountType.toLowerCase() === "crypto";
+        var mainRec  = ((isStock || isCrypto) && group.mainRecord) ? group.mainRecord : null;
+        var sumPnl   = mainRec ? mainRec.actualPnl
+            : ((group.records || []).reduce(function(a, r) { return a + r.actualPnl; }, 0)
+            + (group.mainRecord ? group.mainRecord.actualPnl : 0));
+        var sumVal   = mainRec ? mainRec.marketValue
+            : ((group.records || []).reduce(function(a, r) { return a + r.marketValue; }, 0)
+            + (group.mainRecord ? group.mainRecord.marketValue : 0));
+        var cat = group.accountType || "Other";
+        fullValues[cat] = (fullValues[cat] || 0) + sumVal;
+        fullPnls[cat]   = (fullPnls[cat]   || 0) + sumPnl;
+        if (!fullIcons[cat]) fullIcons[cat] = ACCOUNT_TYPE_ICONS[cat] || "";
+    });
+    window.navFullCategoryValueTotals = fullValues;
+    window.navFullCategoryPnlTotals   = fullPnls;
+    window.navFullCategoryIconMap     = fullIcons;
+    window.navFullTotalValue = Object.values(fullValues).reduce(function(s, v) { return s + v; }, 0);
+    
     applyPortfolioFiltersAndRender();
   }
 
@@ -7147,7 +7271,10 @@ document.addEventListener("DOMContentLoaded", fetchVnIndexData);
             categoryIconMap[cat] = ACCOUNT_TYPE_ICONS[cat] || "";
         }
     });
-
+    window.navFullCategoryValueTotals = Object.assign({}, categoryValueTotals);
+    window.navFullCategoryPnlTotals   = Object.assign({}, categoryPnlTotals);
+    window.navFullCategoryIconMap     = Object.assign({}, categoryIconMap);
+    window.navFullTotalValue = Object.values(categoryValueTotals).reduce(function(s, v) { return s + v; }, 0);
     portfolioGroups.forEach((group, index) => {
         const groupGroupId = `group-${index}`;
         const records = group.records || [];
@@ -7410,7 +7537,31 @@ document.addEventListener("DOMContentLoaded", fetchVnIndexData);
     badgeEl.className = `badge-pill ${totalPnlVnd >= 0 ? 'badge-teal' : 'badge-pink'}`;
 
     renderActivePositionsStat(activePositions, activeIcons);
-    renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap, totalMarketValVnd);
+
+    var donutValues = {}, donutPnls = {}, donutIcons = {};
+    var CAT_ICONS = {
+        "Stock":  "https://github.com/tinsntp/investment/blob/main/stock.png?raw=true",
+        "Saving": "https://github.com/tinsntp/investment/blob/main/saving.png?raw=true",
+        "Crypto": "https://github.com/tinsntp/investment/blob/main/bitcoin.png?raw=true",
+        "Forex":  "https://github.com/tinsntp/investment/blob/main/exness.png?raw=true"
+    };
+    (window.currentPortfolioGroups || []).forEach(function(group) {
+        var cat = group.accountType || "Other";
+        var isStock  = cat.toLowerCase() === "stock";
+        var isCrypto = cat.toLowerCase() === "crypto";
+        var mainRec  = (isStock || isCrypto) ? group.mainRecord : null;
+        var val = mainRec ? mainRec.marketValue
+            : (group.records || []).reduce(function(a, r) { return a + (r.marketValue || 0); }, 0)
+            + (group.mainRecord ? (group.mainRecord.marketValue || 0) : 0);
+        var pnl = mainRec ? mainRec.actualPnl
+            : (group.records || []).reduce(function(a, r) { return a + (r.actualPnl || 0); }, 0)
+            + (group.mainRecord ? (group.mainRecord.actualPnl || 0) : 0);
+        donutValues[cat] = (donutValues[cat] || 0) + val;
+        donutPnls[cat]   = (donutPnls[cat]   || 0) + pnl;
+        if (!donutIcons[cat]) donutIcons[cat] = CAT_ICONS[cat] || "";
+    });
+    var donutTotal = Object.values(donutValues).reduce(function(s, v) { return s + v; }, 0);
+    renderNavDonut(donutValues, donutPnls, donutIcons, donutTotal);
   }
 
   function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap, totalValue) {
@@ -7482,34 +7633,34 @@ document.addEventListener("DOMContentLoaded", fetchVnIndexData);
     // find largest in arranged order
     var maxIdx = 0;
     categories.forEach(function(c, i) {
-        if (c.value > categories[maxIdx].value) maxIdx = i;
+            if (c.value > categories[maxIdx].value) maxIdx = i;
+        });
+    palette.forEach(function(color, idx) {
+        var pat = document.createElementNS("http://www.w3.org/2000/svg", "pattern");
+        pat.setAttribute("id", uid + idx);
+        pat.setAttribute("patternUnits", "userSpaceOnUse");
+        pat.setAttribute("width", "8");
+        pat.setAttribute("height", "8");
+        pat.setAttribute("patternTransform", "rotate(-45 0 0)");
+        pat.setAttribute("overflow", "visible");
+
+        // Solid background tint
+        var bg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        bg.setAttribute("x", "-1"); bg.setAttribute("y", "-1");
+        bg.setAttribute("width", "10"); bg.setAttribute("height", "10");
+        bg.setAttribute("fill", color); bg.setAttribute("opacity", "0.18");
+        pat.appendChild(bg);
+
+        // Stripe — use rect, not line or path
+        var stripe = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        stripe.setAttribute("x", "0"); stripe.setAttribute("y", "0");
+        stripe.setAttribute("width", "5"); stripe.setAttribute("height", "8");
+        stripe.setAttribute("fill", color); stripe.setAttribute("opacity", "0.75");
+        pat.appendChild(stripe);
+
+        defs.appendChild(pat);
     });
-palette.forEach(function(color, idx) {
-    var pat = document.createElementNS("http://www.w3.org/2000/svg", "pattern");
-    pat.setAttribute("id", uid + idx);
-    pat.setAttribute("patternUnits", "userSpaceOnUse");
-    pat.setAttribute("width", "8");
-    pat.setAttribute("height", "8");
-    pat.setAttribute("patternTransform", "rotate(-45 0 0)");
-    pat.setAttribute("overflow", "visible");
-
-    // Solid background tint
-    var bg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-    bg.setAttribute("x", "-1"); bg.setAttribute("y", "-1");
-    bg.setAttribute("width", "10"); bg.setAttribute("height", "10");
-    bg.setAttribute("fill", color); bg.setAttribute("opacity", "0.18");
-    pat.appendChild(bg);
-
-    // Stripe — use rect, not line or path
-    var stripe = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-    stripe.setAttribute("x", "0"); stripe.setAttribute("y", "0");
-    stripe.setAttribute("width", "5"); stripe.setAttribute("height", "8");
-    stripe.setAttribute("fill", color); stripe.setAttribute("opacity", "0.75");
-    pat.appendChild(stripe);
-
-    defs.appendChild(pat);
-});
-svg.appendChild(defs);
+    svg.appendChild(defs);
     categories.forEach(function(cat, i) {
         var pct = cat.value / totalValue;
         var sweep = pct * 180;
@@ -7529,6 +7680,7 @@ svg.appendChild(defs);
         path.setAttribute("fill", isLargest ? "url(#" + uid + (i % palette.length) + ")" : color);
         path.setAttribute("stroke", color);
         path.setAttribute("stroke-width", "1");
+        path.setAttribute('data-seg', i);
         svg.appendChild(path);
 
         if (pct >= 0.05) {
@@ -7564,6 +7716,24 @@ svg.appendChild(defs);
                 </div>
                 <div class="nav-stat-pnl" style="color:${pnlColor};">${pnlFmt} (${pnlPctFmt})</div>
             </div>`;
+        item.setAttribute('data-seg', i);
+        item.style.cursor = 'pointer';
+
+        item.addEventListener('click', (function(catName, segIdx) {
+            return function() {
+                var isSelected = navSelectedCatIdx === segIdx;
+                navSelectedCatIdx = isSelected ? null : segIdx;
+
+                portfolioFilters.asset = isSelected ? 'all' : catName.toLowerCase();
+                applyPortfolioFiltersAndRender(); // re-renders, then highlight runs on fresh DOM
+
+                var icon = document.getElementById('asset-filter-icon');
+                if (icon) icon.classList.toggle('active-filter', !isSelected);
+
+                navUpdateHighlight(); // uses getElementById — always gets fresh elements
+            };
+        })(cat.name, i));
+
         statList.appendChild(item);
     });
     
@@ -8529,6 +8699,11 @@ window.flipTransferDirection=function(){if(!window.swapState)return;const tempAc
   window.closeAllFilterDropdowns=function(){const optionsPanel=document.getElementById("transactionFilterOptions"),arrowIcon=document.getElementById("filterDropdownArrow");optionsPanel&&(optionsPanel.style.display="none"),arrowIcon&&(arrowIcon.style.transform="rotate(0deg)")};
   window.handleRefreshCards=function(event){event&&event.stopPropagation();const refreshBtn=document.getElementById("refreshCardsBtn");refreshBtn&&(refreshBtn.style.transition="transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)",refreshBtn.style.transform="rotate(360deg)",setTimeout(()=>{refreshBtn.style.transform="rotate(0deg)"},500)),"function"==typeof renderCards?renderCards():"function"==typeof window.renderCards&&window.renderCards(),"function"==typeof caLoadAccounts&&caLoadAccounts(),"function"==typeof loadTransactionHistory&&loadTransactionHistory()};
   window.addEventListener('resize', () => {fetchOrderSheetCSV();});
+
+// On refresh button click — API if market hours:
+document.getElementById("vnindex-reload-btn").addEventListener("click", function() {
+    fetchVnIndexData(true);
+});
 window.addEventListener("resize", function() {
     if (typeof buildColHdr === "function") buildColHdr();
     if (typeof applyLayout === "function") applyLayout();
