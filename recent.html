@@ -2363,10 +2363,16 @@ incomeSeries = keys.map(function(k) {
                 finalTop = anchorScreenY - gap - tooltipH;
             }
 
-            // Hard clamp using the safe margins instead of a flat 4px
-            finalTop = Math.max(topSafeMargin, Math.min(finalTop, chartH - tooltipH - bottomSafeMargin));
-            
+            if (lineVisibility.expense) {
+                topSafeMargin = 80;
+            } else if (lineVisibility.debt && lineVisibility.balance ) {
+                topSafeMargin = 105; 
+            } else if (lineVisibility.debt) {
+                topSafeMargin = 145; 
+            }
 
+            finalTop = Math.max(topSafeMargin, Math.min(finalTop, chartH - tooltipH - bottomSafeMargin));
+        
             // Horizontal clamping (unchanged)
             var tooltipW = tooltip.offsetWidth;
             var chartW = wrapRect.width;
@@ -2376,16 +2382,6 @@ incomeSeries = keys.map(function(k) {
             var maxLeft = chartW - halfW - 4;
             var clampedLeft = Math.max(minLeft, Math.min(rawLeft, maxLeft));
 
-            if (visibleLineCount === 1) {
-                if (lineVisibility.expense) {
-                    topSafeMargin = 82 + 0;clampedLeft+=0;
-                } else if (lineVisibility.debt) {
-                    topSafeMargin = 82 + 25; 
-                }
-            } else if (visibleLineCount === 2) {
-                topSafeMargin = 82 + 75; 
-            }
-            
             tooltip.style.left = clampedLeft + "px";
             tooltip.style.top = finalTop + "px";
         }
