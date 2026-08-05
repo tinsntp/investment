@@ -937,7 +937,7 @@ to{transform:rotate(360deg)}
     mask-repeat: no-repeat, no-repeat, repeat-x;
     filter: drop-shadow(0 10px 20px rgba(0,0,0,.6));
 }
-
+.add-modal-expense {opacity:0.8}
 .add-modal-expense::before {
     content: "";
     position: absolute;
@@ -1001,7 +1001,7 @@ to{transform:rotate(360deg)}
     cursor:pointer;
 }
 #cash-modal-cancel:hover,#cash-modal-submit:hover {
-    color:#fff;opacity:1!important;background: rgba(255, 255, 255, 0.2) !important;
+   transform: scale(1.08);
 }
 
 #cash-modal-cancel:active {
@@ -3067,7 +3067,6 @@ to{transform:rotate(360deg)}
           -webkit-backdrop-filter: blur(16px) saturate(180%);
           backdrop-filter: blur(16px) saturate(180%);
       color: #ffffff;
-      opacity: 0.8;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -3080,15 +3079,15 @@ to{transform:rotate(360deg)}
       x
     </button>
 
-    <div style="margin-top:10px;margin-left:10px;width:100%">
-      <h3 style="font-family: Alegreya; text-align:left;text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); color: rgba(255, 255, 255, 0.8); margin: 0; white-space: nowrap; font-size: 20px;">Add today cash expense...</h3>
-      <div class="add-field" style="margin-top:5px;position: relative; display: flex; align-items: center; flex: 1;">
+    <div style="margin-top:-5px;margin-left:10px;width:100%">
+      <h3 style="font-family: Alegreya; text-align:left;text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); color: #fff; margin: 0; white-space: nowrap; font-size: 20px;">Add today cash expense...</h3>
+      <div class="add-field" style="margin-top:10px;position: relative; display: flex; align-items: center; flex: 1;">
         <input type="text" id="cash-modal-input"  style="
           width: 100%;
           padding: 12px 46px 12px; 
-          border: none !important;font-family:Alegreya!important;
+          border: none !important;font-family:Lora!important;
           outline: none !important;
-          color: #ffffff;text-align:left!important;
+          color: #fff;text-align:left!important;
 background: transparent!important; border-width: medium medium 2px!important; border-style: none none dashed!important; border-color: currentcolor currentcolor rgba(255, 255, 255, 0.2)!important; border-image: none; padding: 0px 0px 2px; color: rgb(255, 255, 255); font-size: 18px; font-weight: 300;
           ">
 
@@ -3098,7 +3097,6 @@ background: transparent!important; border-width: medium medium 2px!important; bo
           right: 5px;
           width: 30px;font-family:Lexend;font-size:25px;
           height: 30px;
-          opacity: 0.8;
           border-radius: 50%;
           border: none !important;
           outline: none !important;
