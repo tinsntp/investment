@@ -1898,360 +1898,356 @@ incomeSeries = keys.map(function(k) {
 
     function getMonthIndex(monthOffset){if(!currentXY.length)return 0;for(var currentIndex=getCurrentMonthIndex(),currentDate=currentXY[currentIndex].date,targetTC=new Date(currentDate.getFullYear(),currentDate.getMonth()+monthOffset,1),targetYear=targetTC.getFullYear(),targetMonth=targetTC.getMonth(),idx=currentIndex,i=0;i<currentXY.length;i++){var d=currentXY[i].date;d.getFullYear()===targetYear&&d.getMonth()===targetMonth&&(idx=i)}return idx}
     function renderChartTC(range) {
-        var pts;currentRangeTC = range;
-        if (lineVisibility.expense && !lineVisibility.balance) {
-            pts = [];
-            var currentIndex = getCurrentMonthIndex();
-            for (var i = 0; i < fullSeries.length; i++) {
-            if (expenseSeries[i].amount > 0 || (i > currentIndex && i <= currentIndex + 3)) {
-                pts.push({
-                balance: fullSeries[i].balance,
-                expense: expenseSeries[i].amount,
-                debtTotal: debtSeries[i] ? debtSeries[i].total : 0,
-                debtShinhan: debtSeries[i] ? debtSeries[i].shinhan : 0,
-                debtSC: debtSeries[i] ? debtSeries[i].sc : 0,
-                date: fullSeries[i].date,
-                originalIndex: i
-                });
-            }
-            }
-        } else {
-            pts = fullSeries.map(function(p, i) {
-            return {
-                balance: p.balance,
-                expense: expenseSeries[i].amount,
-                debtTotal: debtSeries[i] ? debtSeries[i].total : 0,
-                debtShinhan: debtSeries[i] ? debtSeries[i].shinhan : 0,
-                debtSC: debtSeries[i] ? debtSeries[i].sc : 0,
-                date: p.date,
-                originalIndex: i
-            };
-            });
-        }
+  var pts;
+  currentRangeTC = range;
 
-        if (lineVisibility.expense && pts.length > 0) {
-            var now = new Date();
-            var past6M = new Date(now.getFullYear(), now.getMonth() - 6, 1);
-            var future6M = new Date(now.getFullYear(), now.getMonth() + 6, 1);
+  // 1. Build points series
+  if (lineVisibility.expense && !lineVisibility.balance) {
+    pts = [];
+    var currentIndex = getCurrentMonthIndex();
+    for (var i = 0; i < fullSeries.length; i++) {
+      if (expenseSeries[i].amount > 0 || (i > currentIndex && i <= currentIndex + 3)) {
+        pts.push({
+          balance: fullSeries[i].balance,
+          expense: expenseSeries[i].amount,
+          debtTotal: debtSeries[i] ? debtSeries[i].total : 0,
+          debtShinhan: debtSeries[i] ? debtSeries[i].shinhan : 0,
+          debtSC: debtSeries[i] ? debtSeries[i].sc : 0,
+          date: fullSeries[i].date,
+          originalIndex: i
+        });
+      }
+    }
+  } else {
+    pts = fullSeries.map(function(p, i) {
+      return {
+        balance: p.balance,
+        expense: expenseSeries[i].amount,
+        debtTotal: debtSeries[i] ? debtSeries[i].total : 0,
+        debtShinhan: debtSeries[i] ? debtSeries[i].shinhan : 0,
+        debtSC: debtSeries[i] ? debtSeries[i].sc : 0,
+        date: p.date,
+        originalIndex: i
+      };
+    });
+  }
 
-            pts = pts.filter(function(p) {
-            var d = p.date;
-            return d >= past6M && d <= future6M;
-            });
-        }
+  // 2. Filter 12-month rolling window for Expense view
+  if (lineVisibility.expense && pts.length > 0) {
+    var now = new Date();
+    var past6M = new Date(now.getFullYear(), now.getMonth() - 6, 1);
+    var future6M = new Date(now.getFullYear(), now.getMonth() + 6, 1);
+
+    pts = pts.filter(function(p) {
+      var d = p.date;
+      return d >= past6M && d <= future6M;
+    });
+  }
 
   if (pts.length) {
     var svg = document.getElementById("chart-svg");
     svg.innerHTML = "";
-    var ns = "http://www.w3.org/2000/svg",
-      values = [];
-    lineVisibility.balance && (values = values.concat(pts.map(function(p) {
-      return p.balance
-    }))), lineVisibility.expense && (values = values.concat(expenseSeries.map(function(p) {
-      return p.amount
-    }))), lineVisibility.debt && (values = (values = (values = values.concat(pts.map(function(p) {
-      return p.debtTotal
-    }))).concat(pts.map(function(p) {
-      return p.debtShinhan
-    }))).concat(pts.map(function(p) {
-      return p.debtSC
-    }))), values.length || (values = [0, 1]);
+    var ns = "http://www.w3.org/2000/svg";
+
+    // =========================================================================
+    // STEP 1: Collect Values & Compute Y-Axis Scaling (FIXED: Done BEFORE mapping)
+    // =========================================================================
+    var values = [];
+    if (lineVisibility.balance) {
+      values = values.concat(pts.map(function(p) { return p.balance; }));
+    }
     if (lineVisibility.expense) {
-    values = values.concat(expenseSeries.map(function(p) { return p.amount; }));
-    values = values.concat(incomeSeries.map(function(p) { return p.amount; })); // Include Total Income values
-  }
-    var minV = Math.min.apply(null, values),
-      maxV = Math.max.apply(null, values),
-      range_ = maxV - minV;
-    0 === range_ && (range_ = Math.abs(maxV) || 1);
-    var padV = .12 * range_;
-    minV -= padV, maxV += padV;
+      values = values.concat(pts.map(function(p) { return expenseSeries[p.originalIndex].amount; }));
+      values = values.concat(pts.map(function(p) { return incomeSeries[p.originalIndex].amount; }));
+    }
+    if (lineVisibility.debt) {
+      values = values
+        .concat(pts.map(function(p) { return p.debtTotal; }))
+        .concat(pts.map(function(p) { return p.debtShinhan; }))
+        .concat(pts.map(function(p) { return p.debtSC; }));
+    }
+
+    if (!values.length) values = [0, 1];
+
+    var minV = Math.min.apply(null, values);
+    var maxV = Math.max.apply(null, values);
+    var range_ = maxV - minV;
+    if (0 === range_) range_ = Math.abs(maxV) || 1;
+
+    // Apply Expense-specific scale or standard padding
+    if (lineVisibility.expense) {
+      minV = 0;           // Force bottom baseline to 0
+      maxV = maxV * 1.90; // 50% top headroom to compress height
+    } else {
+      var padV = 0.12 * range_;
+      minV -= padV;
+      maxV += padV;
+    }
+
+    // =========================================================================
+    // STEP 2: Map Data Points to Pixel Coordinates
+    // =========================================================================
     var plotW = VB_W - PAD_LEFT - PAD_RIGHT,
-      plotH = VB_H - PAD_TOP - PAD_BOTTOM,
-      xy = pts.map(function(p, i) {
-        var x = PAD_LEFT + (1 === pts.length ? 0 : i / (pts.length - 1) * plotW),
+        plotH = VB_H - PAD_TOP - PAD_BOTTOM;
+
+    var xy = pts.map(function(p, i) {
+      var x = PAD_LEFT + (1 === pts.length ? 0 : i / (pts.length - 1) * plotW),
           y = PAD_TOP + (1 - (p.balance - minV) / (maxV - minV)) * plotH,
           fullIdx = p.originalIndex,
           prevBalance = fullIdx > 0 ? fullSeries[fullIdx - 1].balance : p.balance;
-        return {
-          x,
-          y,
-          date: p.date,
-          balance: p.balance,
-          momDelta: p.balance - prevBalance
-        }
-      });
-    currentXY = xy, currentExpenseXY = [];currentIncomeXY = [];
+      return {
+        x: x,
+        y: y,
+        date: p.date,
+        balance: p.balance,
+        momDelta: p.balance - prevBalance
+      };
+    });
+
+    currentXY = xy;
+    currentExpenseXY = [];
+    currentIncomeXY = [];
+
     pts.forEach(function(p, i) {
-  var origIdx = p.originalIndex;
-  var balancePoint = currentXY[i]; // Guaranteed to exist because currentXY is mapped directly from pts
+      var origIdx = p.originalIndex;
+      var balancePoint = currentXY[i];
 
-  // 1. Process Expense Point
-  var expense = expenseSeries[origIdx];
-  if (expense) {
-    var expY = PAD_TOP + (1 - (expense.amount - minV) / (maxV - minV)) * plotH;
-    var prevExpAmount = origIdx > 0 ? expenseSeries[origIdx - 1].amount : expense.amount;
+      // Expense point mapping
+      var expense = expenseSeries[origIdx];
+      if (expense) {
+        var expY = PAD_TOP + (1 - (expense.amount - minV) / (maxV - minV)) * plotH;
+        var prevExpAmount = origIdx > 0 ? expenseSeries[origIdx - 1].amount : expense.amount;
 
-    currentExpenseXY.push({
-      x: balancePoint.x,
-      y: expY,
-      date: expense.date,
-      amount: expense.amount,
-      momDelta: expense.amount - prevExpAmount
+        currentExpenseXY.push({
+          x: balancePoint.x,
+          y: expY,
+          date: expense.date,
+          amount: expense.amount,
+          momDelta: expense.amount - prevExpAmount
+        });
+      }
+
+      // Income point mapping
+      var income = incomeSeries[origIdx];
+      if (income) {
+        var incY = PAD_TOP + (1 - (income.amount - minV) / (maxV - minV)) * plotH;
+        var prevIncAmount = origIdx > 0 ? incomeSeries[origIdx - 1].amount : income.amount;
+
+        currentIncomeXY.push({
+          x: balancePoint.x,
+          y: incY,
+          date: income.date,
+          amount: income.amount,
+          momDelta: income.amount - prevIncAmount
+        });
+      }
     });
-  }
 
-  // 2. Process Income Point
-  var income = incomeSeries[origIdx];
-  if (income) {
-    var incY = PAD_TOP + (1 - (income.amount - minV) / (maxV - minV)) * plotH;
-    var prevIncAmount = origIdx > 0 ? incomeSeries[origIdx - 1].amount : income.amount;
-
-    currentIncomeXY.push({
-      x: balancePoint.x,
-      y: incY,
-      date: income.date,
-      amount: income.amount,
-      momDelta: income.amount - prevIncAmount
-    });
-  }
-});
-    
     currentDebtTotalXY = pts.map(function(p, i) {
       return {
         x: PAD_LEFT + (1 == pts.length ? 0 : i / (pts.length - 1) * plotW),
         y: PAD_TOP + (1 - (p.debtTotal - minV) / (maxV - minV)) * plotH,
         date: p.date,
         amount: p.debtTotal
-      }
-    }), currentDebtShinhanXY = pts.map(function(p, i) {
+      };
+    });
+    currentDebtShinhanXY = pts.map(function(p, i) {
       return {
         x: PAD_LEFT + (1 == pts.length ? 0 : i / (pts.length - 1) * plotW),
         y: PAD_TOP + (1 - (p.debtShinhan - minV) / (maxV - minV)) * plotH,
         date: p.date,
         amount: p.debtShinhan
-      }
-    }), currentDebtSCXY = pts.map(function(p, i) {
+      };
+    });
+    currentDebtSCXY = pts.map(function(p, i) {
       return {
         x: PAD_LEFT + (1 == pts.length ? 0 : i / (pts.length - 1) * plotW),
         y: PAD_TOP + (1 - (p.debtSC - minV) / (maxV - minV)) * plotH,
         date: p.date,
         amount: p.debtSC
-      }
+      };
     });
-    var now = new Date;
-    for (currentIndex = 0, i = 0; i < xy.length && xy[i].date <= now; i++) currentIndex = i;
-    var targetIndex = currentIndex;
-    switch (targetIndex = currentIndex = getCurrentMonthIndex(), range) {
-      case "today":
-        targetIndex = getMonthIndex(-1);
-        break;
-      case "-3m":
-        targetIndex = getMonthIndex(-3);
-        break;
-      case "-6m":
-        targetIndex = getMonthIndex(-6);
-        break;
-      case "-1y":
-        targetIndex = getMonthIndex(-12);
-        break;
-      case "-2y":
-        targetIndex = getMonthIndex(-24);
-        break;
-      case "+3m":
-        targetIndex = getMonthIndex(3);
-        break;
-      case "+6m":
-        targetIndex = getMonthIndex(6);
-        break;
-      case "+1y":
-        targetIndex = getMonthIndex(12);
-        break;
-      case "+2y":
-        targetIndex = getMonthIndex(24);
-        break;
-      case "max":
-        targetIndex = currentXY.length - 1
-    }
-    for (var hoverIndex = getDefaultHoverIndex(), g = 0; g <= 4; g++) {
+
+    // =========================================================================
+    // STEP 3: Render Horizontal Gridlines & Axis Labels
+    // =========================================================================
+    for (var g = 0; g <= 4; g++) {
       var gv = minV + g / 4 * (maxV - minV),
-        gy = PAD_TOP + (1 - g / 4) * plotH,
-        line = document.createElementNS(ns, "line");
-      line.setAttribute("x1", PAD_LEFT), line.setAttribute("x2", VB_W - PAD_RIGHT), line.setAttribute("y1", gy), line.setAttribute("y2", gy), line.setAttribute("stroke", "rgba(255,255,255,0.06)"), line.setAttribute("stroke-width", "1"), svg.appendChild(line);
+          gy = PAD_TOP + (1 - g / 4) * plotH,
+          line = document.createElementNS(ns, "line");
+      line.setAttribute("x1", PAD_LEFT);
+      line.setAttribute("x2", VB_W - PAD_RIGHT);
+      line.setAttribute("y1", gy);
+      line.setAttribute("y2", gy);
+      line.setAttribute("stroke", "rgba(255,255,255,0.06)");
+      line.setAttribute("stroke-width", "1");
+      svg.appendChild(line);
+
       var txt = document.createElementNS(ns, "text");
-      txt.setAttribute("x", PAD_LEFT - 8), txt.setAttribute("y", gy + 4), txt.setAttribute("text-anchor", "end"), txt.setAttribute("font-size", "11"), txt.setAttribute("fill", "rgba(255,255,255,0.35)"), txt.textContent = "₫" + fmtAxis(gv), svg.appendChild(txt)
+      txt.setAttribute("x", PAD_LEFT - 8);
+      txt.setAttribute("y", gy + 4);
+      txt.setAttribute("text-anchor", "end");
+      txt.setAttribute("font-size", "11");
+      txt.setAttribute("fill", "rgba(255,255,255,0.35)");
+      txt.textContent = "₫" + fmtAxis(gv);
+      svg.appendChild(txt);
     }
 
-    
+    // =========================================================================
+    // STEP 4: SVG Gradient Definitions
+    // =========================================================================
+    var defsTC = document.createElementNS(ns, "defs");
 
-    var defsTC = document.createElementNS(ns, "defs"),
-      grad = document.createElementNS(ns, "linearGradient");
-    grad.setAttribute("id", "tealFill"), grad.setAttribute("x1", "0"), grad.setAttribute("y1", "0"), grad.setAttribute("x2", "0"), grad.setAttribute("y2", "1");
-    var s1 = document.createElementNS(ns, "stop");
-    s1.setAttribute("offset", "0%"), s1.setAttribute("stop-color", TEAL), s1.setAttribute("stop-opacity", "0.30");
-    var s2 = document.createElementNS(ns, "stop");
-    s2.setAttribute("offset", "100%"), s2.setAttribute("stop-color", TEAL), s2.setAttribute("stop-opacity", "0"), grad.appendChild(s1), grad.appendChild(s2), defsTC.appendChild(grad);
+    // Teal Gradient (Balance)
+    var grad = document.createElementNS(ns, "linearGradient");
+    grad.setAttribute("id", "tealFill"); grad.setAttribute("x1", "0"); grad.setAttribute("y1", "0"); grad.setAttribute("x2", "0"); grad.setAttribute("y2", "1");
+    var s1 = document.createElementNS(ns, "stop"); s1.setAttribute("offset", "0%"); s1.setAttribute("stop-color", TEAL); s1.setAttribute("stop-opacity", "0.30");
+    var s2 = document.createElementNS(ns, "stop"); s2.setAttribute("offset", "100%"); s2.setAttribute("stop-color", TEAL); s2.setAttribute("stop-opacity", "0");
+    grad.appendChild(s1); grad.appendChild(s2); defsTC.appendChild(grad);
+
+    // Pink Gradient (Expense)
     var gradPink = document.createElementNS(ns, "linearGradient");
-    gradPink.setAttribute("id", "pinkFill"), gradPink.setAttribute("x1", "0"), gradPink.setAttribute("y1", "0"), gradPink.setAttribute("x2", "0"), gradPink.setAttribute("y2", "1");
-    var p1 = document.createElementNS(ns, "stop");
-    p1.setAttribute("offset", "0%"), p1.setAttribute("stop-color", "#f472b6"), p1.setAttribute("stop-opacity", "0.28");
-    var p2 = document.createElementNS(ns, "stop");
+    gradPink.setAttribute("id", "pinkFill"); gradPink.setAttribute("x1", "0"); gradPink.setAttribute("y1", "0"); gradPink.setAttribute("x2", "0"); gradPink.setAttribute("y2", "1");
+    var p1 = document.createElementNS(ns, "stop"); p1.setAttribute("offset", "0%"); p1.setAttribute("stop-color", "#f472b6"); p1.setAttribute("stop-opacity", "0.28");
+    var p2 = document.createElementNS(ns, "stop"); p2.setAttribute("offset", "100%"); p2.setAttribute("stop-color", "#f472b6"); p2.setAttribute("stop-opacity", "0");
+    gradPink.appendChild(p1); gradPink.appendChild(p2); defsTC.appendChild(gradPink);
 
-    // Change stop-color to yellow (#facc15)
-  var gradYellow = document.createElementNS(ns, "linearGradient");
-  gradYellow.setAttribute("id", "yellowFill");
-  gradYellow.setAttribute("x1", "0"); gradYellow.setAttribute("y1", "0");
-  gradYellow.setAttribute("x2", "0"); gradYellow.setAttribute("y2", "1");
-  var g1 = document.createElementNS(ns, "stop");
-  g1.setAttribute("offset", "0%"); g1.setAttribute("stop-color", "#facc15"); g1.setAttribute("stop-opacity", "0.25");
-  var g2 = document.createElementNS(ns, "stop");
-  g2.setAttribute("offset", "100%"); g2.setAttribute("stop-color", "#facc15"); g2.setAttribute("stop-opacity", "0");
-  gradYellow.appendChild(g1); gradYellow.appendChild(g2);
-  defsTC.appendChild(gradYellow);
+    // Yellow Gradient (Income)
+    var gradYellow = document.createElementNS(ns, "linearGradient");
+    gradYellow.setAttribute("id", "yellowFill"); gradYellow.setAttribute("x1", "0"); gradYellow.setAttribute("y1", "0"); gradYellow.setAttribute("x2", "0"); gradYellow.setAttribute("y2", "1");
+    var g1 = document.createElementNS(ns, "stop"); g1.setAttribute("offset", "0%"); g1.setAttribute("stop-color", "#facc15"); g1.setAttribute("stop-opacity", "0.25");
+    var g2 = document.createElementNS(ns, "stop"); g2.setAttribute("offset", "100%"); g2.setAttribute("stop-color", "#facc15"); g2.setAttribute("stop-opacity", "0");
+    gradYellow.appendChild(g1); gradYellow.appendChild(g2); defsTC.appendChild(gradYellow);
 
-    if (p2.setAttribute("offset", "100%"), p2.setAttribute("stop-color", "#f472b6"), p2.setAttribute("stop-opacity", "0"), gradPink.appendChild(p1), gradPink.appendChild(p2), defsTC.appendChild(gradPink), svg.appendChild(defsTC), lineVisibility.balance) {
+    svg.appendChild(defsTC);
+
+    // =========================================================================
+    // STEP 5: Render Paths & Lines
+    // =========================================================================
+    if (lineVisibility.balance) {
       var paths = buildSmoothPathTC(xy),
-        areaEl = document.createElementNS(ns, "path");
-      areaEl.setAttribute("d", paths.area), areaEl.setAttribute("fill", "url(#tealFill)"), areaEl.setAttribute("stroke", "none"), svg.appendChild(areaEl);
+          areaEl = document.createElementNS(ns, "path");
+      areaEl.setAttribute("d", paths.area); areaEl.setAttribute("fill", "url(#tealFill)"); areaEl.setAttribute("stroke", "none"); svg.appendChild(areaEl);
       var lineEl = document.createElementNS(ns, "path");
-      lineEl.setAttribute("d", paths.line), lineEl.setAttribute("fill", "none"), lineEl.setAttribute("stroke", TEAL), lineEl.setAttribute("stroke-width", "2.5"), lineEl.setAttribute("stroke-linecap", "round"), lineEl.setAttribute("stroke-linejoin", "round"), svg.appendChild(lineEl)
+      lineEl.setAttribute("d", paths.line); lineEl.setAttribute("fill", "none"); lineEl.setAttribute("stroke", TEAL); lineEl.setAttribute("stroke-width", "2.5"); lineEl.setAttribute("stroke-linecap", "round"); lineEl.setAttribute("stroke-linejoin", "round"); svg.appendChild(lineEl);
     }
+
     if (lineVisibility.expense) {
-      var pathsExp = buildSmoothPathTC(currentExpenseXY),
-        areaElExp = document.createElementNS(ns, "path");
-      areaElExp.setAttribute("d", pathsExp.area), areaElExp.setAttribute("fill", "url(#pinkFill)"), areaElExp.setAttribute("stroke", "none"), svg.appendChild(areaElExp);
+      // Draw Expense Line (Pink)
+      var pathsExp = buildSmoothPathTC(currentExpenseXY);
+      var areaElExp = document.createElementNS(ns, "path");
+      areaElExp.setAttribute("d", pathsExp.area); areaElExp.setAttribute("fill", "url(#pinkFill)"); svg.appendChild(areaElExp);
       var lineElExp = document.createElementNS(ns, "path");
-      lineElExp.setAttribute("d", pathsExp.line), lineElExp.setAttribute("fill", "none"), lineElExp.setAttribute("stroke", "#f472b6"), lineElExp.setAttribute("stroke-width", "2.5"), lineElExp.setAttribute("stroke-linecap", "round"), lineElExp.setAttribute("stroke-linejoin", "round"), svg.appendChild(lineElExp)
+      lineElExp.setAttribute("d", pathsExp.line); lineElExp.setAttribute("fill", "none"); lineElExp.setAttribute("stroke", "#f472b6"); lineElExp.setAttribute("stroke-width", "2.5"); lineElExp.setAttribute("stroke-linecap", "round"); lineElExp.setAttribute("stroke-linejoin", "round"); svg.appendChild(lineElExp);
+
+      // Draw Income Line (Yellow)
+      var pathsInc = buildSmoothPathTC(currentIncomeXY);
+      var areaElInc = document.createElementNS(ns, "path");
+      areaElInc.setAttribute("d", pathsInc.area); areaElInc.setAttribute("fill", "url(#yellowFill)"); svg.appendChild(areaElInc);
+      var lineElInc = document.createElementNS(ns, "path");
+      lineElInc.setAttribute("d", pathsInc.line); lineElInc.setAttribute("fill", "none"); lineElInc.setAttribute("stroke", "#facc15"); lineElInc.setAttribute("stroke-width", "2.5"); lineElInc.setAttribute("stroke-linecap", "round"); lineElInc.setAttribute("stroke-linejoin", "round"); svg.appendChild(lineElInc);
     }
 
-    if (lineVisibility.expense) {
-    // Draw Expense Line (Pink)
-    var pathsExp = buildSmoothPathTC(currentExpenseXY);
-    var areaElExp = document.createElementNS(ns, "path");
-    areaElExp.setAttribute("d", pathsExp.area);
-    areaElExp.setAttribute("fill", "url(#pinkFill)");
-    svg.appendChild(areaElExp);
+    if (lineVisibility.debt) {
+      drawDebtLine(currentDebtTotalXY, "#ffffff", 3);
+      drawDebtLine(currentDebtShinhanXY, "#60a5fa", 2, "6 4");
+      drawDebtLine(currentDebtSCXY, "#fbbf24", 2, "2 2");
+    }
 
-    var lineElExp = document.createElementNS(ns, "path");
-    lineElExp.setAttribute("d", pathsExp.line);
-    lineElExp.setAttribute("fill", "none");
-    lineElExp.setAttribute("stroke", "#f472b6");
-    lineElExp.setAttribute("stroke-width", "2.5");
-    lineElExp.setAttribute("stroke-linecap", "round");
-    lineElExp.setAttribute("stroke-linejoin", "round");
-    svg.appendChild(lineElExp);
-
-    // Draw Total Income Line (Yellow)
-    var pathsInc = buildSmoothPathTC(currentIncomeXY);
-    var areaElInc = document.createElementNS(ns, "path");
-    areaElInc.setAttribute("d", pathsInc.area);
-    areaElInc.setAttribute("fill", "url(#yellowFill)"); // Updated to yellow fill
-    svg.appendChild(areaElInc);
-
-    var lineElInc = document.createElementNS(ns, "path");
-    lineElInc.setAttribute("d", pathsInc.line);
-    lineElInc.setAttribute("fill", "none");
-    lineElInc.setAttribute("stroke", "#facc15"); // Updated line color to yellow
-    lineElInc.setAttribute("stroke-width", "2.5");
-    lineElInc.setAttribute("stroke-linecap", "round");
-    lineElInc.setAttribute("stroke-linejoin", "round");
-    svg.appendChild(lineElInc);
-  }
-
-  
-    
-    lineVisibility.debt && (drawDebtLine(currentDebtTotalXY, "#ffffff", 3), drawDebtLine(currentDebtShinhanXY, "#60a5fa", 2, "6 4"), drawDebtLine(currentDebtSCXY, "#fbbf24", 2, "2 2"));
-    var lastLabelX = -1e3,
-      prevQuarter = null;
-    for (i = 0; i < xy.length; i++) {
-      var d = xy[i].date,
-        x = xy[i].x,
-        year = d.getFullYear(),
-        month = d.getMonth(),
-        quarter = Math.floor(month / 3),
-        text = "",
-        important = !1;
+    // X-Axis Date Labels
+    var lastLabelX = -1e3, prevQuarter = null;
+    for (var i = 0; i < xy.length; i++) {
+      var d = xy[i].date, x = xy[i].x, year = d.getFullYear(), month = d.getMonth(), quarter = Math.floor(month / 3), text = "", important = !1;
       if (0 === month ? (text = year, important = !0) : quarter !== prevQuarter && (text = monthShort(d), important = !0), important && !(x - lastLabelX < 75)) {
         var lbl = document.createElementNS(ns, "text");
-        lbl.setAttribute("x", x), lbl.setAttribute("y", VB_H - 10), lbl.setAttribute("text-anchor", "middle"), lbl.setAttribute("font-size", 0 === month ? "12" : "11"), lbl.setAttribute("font-weight", 0 === month ? "700" : "500"), lbl.setAttribute("fill", 0 === month ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.45)"), lbl.textContent = text, svg.appendChild(lbl), lastLabelX = x, prevQuarter = quarter
+        lbl.setAttribute("x", x); lbl.setAttribute("y", VB_H - 10); lbl.setAttribute("text-anchor", "middle"); lbl.setAttribute("font-size", 0 === month ? "12" : "11"); lbl.setAttribute("font-weight", 0 === month ? "700" : "500"); lbl.setAttribute("fill", 0 === month ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.45)"); lbl.textContent = text; svg.appendChild(lbl); lastLabelX = x; prevQuarter = quarter;
       }
     }
+
+    // =========================================================================
+    // STEP 6: Hover Indicators & Initial Hover Trigger
+    // =========================================================================
     var hoverLine = document.createElementNS(ns, "line");
-    hoverLine.setAttribute("id", "hover-line"), hoverLine.setAttribute("y1", PAD_TOP), hoverLine.setAttribute("y2", VB_H - PAD_BOTTOM), hoverLine.setAttribute("stroke", "rgba(255,255,255,0.35)"), hoverLine.setAttribute("stroke-width", "1.3"), hoverLine.setAttribute("stroke-dasharray", "4 4"), svg.appendChild(hoverLine);
+    hoverLine.setAttribute("id", "hover-line"); hoverLine.setAttribute("y1", PAD_TOP); hoverLine.setAttribute("y2", VB_H - PAD_BOTTOM); hoverLine.setAttribute("stroke", "rgba(255,255,255,0.35)"); hoverLine.setAttribute("stroke-width", "1.3"); hoverLine.setAttribute("stroke-dasharray", "4 4"); svg.appendChild(hoverLine);
+
     var hoverDot = document.createElementNS(ns, "circle");
-    hoverDot.setAttribute("id", "hover-dot"), hoverDot.setAttribute("r", "5"), hoverDot.setAttribute("fill", TEAL), hoverDot.setAttribute("stroke", "#191919"), hoverDot.setAttribute("stroke-width", "2"), svg.appendChild(hoverDot);
+    hoverDot.setAttribute("id", "hover-dot"); hoverDot.setAttribute("r", "5"); hoverDot.setAttribute("fill", TEAL); hoverDot.setAttribute("stroke", "#191919"); hoverDot.setAttribute("stroke-width", "2"); svg.appendChild(hoverDot);
+
     var hoverDotExp = document.createElementNS(ns, "circle");
-    hoverDotExp.setAttribute("id", "hover-dot-expense"), hoverDotExp.setAttribute("r", "5"), hoverDotExp.setAttribute("fill", "#f472b6"), hoverDotExp.setAttribute("stroke", "#191919"), hoverDotExp.setAttribute("stroke-width", "2"), svg.appendChild(hoverDotExp), showPointAt(hoverIndex);
+    hoverDotExp.setAttribute("id", "hover-dot-expense"); hoverDotExp.setAttribute("r", "5"); hoverDotExp.setAttribute("fill", "#f472b6"); hoverDotExp.setAttribute("stroke", "#191919"); hoverDotExp.setAttribute("stroke-width", "2"); svg.appendChild(hoverDotExp);
 
     var hoverDotInc = document.createElementNS(ns, "circle");
-    hoverDotInc.setAttribute("id", "hover-dot-income");
-    hoverDotInc.setAttribute("r", "5");
-    hoverDotInc.setAttribute("fill", "#facc15"); // Updated dot fill to yellow
-    hoverDotInc.setAttribute("stroke", "#191919");
-    hoverDotInc.setAttribute("stroke-width", "2");
-    svg.appendChild(hoverDotInc);
-    
-    var diff, current = xy[currentIndex],
-      targetTC = xy[targetIndex];
-    diff = "today" === range || range.startsWith("-") ? current.balance - targetTC.balance : targetTC.balance - current.balance;
-    var pct = 0 !== current.balance ? diff / Math.abs(current.balance) * 100 : 0,
-      isPos = diff >= 0;
-    document.getElementById("balance-val").textContent = balanceVisible ? fmtFullTC(current.balance) : "*********", document.getElementById("balance-usd").textContent = fmtUSDTC(current.balance), updateGoalRing(current.balance), updateCountdown();
-    var subText = document.getElementById("sub-text");
-    range;
-    var verb;
-    subText = document.getElementById("sub-text");
+    hoverDotInc.setAttribute("id", "hover-dot-income"); hoverDotInc.setAttribute("r", "5"); hoverDotInc.setAttribute("fill", "#facc15"); hoverDotInc.setAttribute("stroke", "#191919"); hoverDotInc.setAttribute("stroke-width", "2"); svg.appendChild(hoverDotInc);
+
+    // Call showPointAt AFTER all hover dots are attached to DOM
+    var hoverIndex = getDefaultHoverIndex();
+    showPointAt(hoverIndex);
+
+    // =========================================================================
+    // STEP 7: Range Change Metrics & Subtext Updates
+    // =========================================================================
+    var currentIndex = getCurrentMonthIndex();
+    var targetIndex = currentIndex;
+
     switch (range) {
-      case "today":
-        directionText = "over the last month";
-        break;
-      case "-3m":
-        directionText = "in the last 3 months";
-        break;
-      case "-6m":
-        directionText = "in the last 6 months";
-        break;
-      case "-1y":
-        directionText = "in the last year";
-        break;
-      case "-2y":
-        directionText = "in the last 2 years";
-        break;
-      case "+3m":
-        directionText = "over the next 3 months";
-        break;
-      case "+6m":
-        directionText = "over the next 6 months";
-        break;
-      case "+1y":
-        directionText = "over the next year";
-        break;
-      case "+2y":
-        directionText = "over the next 2 years";
-        break;
-      default:
-        var directionText = {
-          today: "over the last month",
-          "-3m": "in the last 3 months",
-          "-6m": "in the last 6 months",
-          "-1y": "in the last year",
-          "-2y": "in the last 2 years",
-          "+3m": "over the next 3 months",
-          "+6m": "over the next 6 months",
-          "+1y": "over the next year",
-          "+2y": "over the next 2 years",
-          max: "across all future projections"
-        } [range] || ""
+      case "today": targetIndex = getMonthIndex(-1); break;
+      case "-3m":   targetIndex = getMonthIndex(-3); break;
+      case "-6m":   targetIndex = getMonthIndex(-6); break;
+      case "-1y":   targetIndex = getMonthIndex(-12); break;
+      case "-2y":   targetIndex = getMonthIndex(-24); break;
+      case "+3m":   targetIndex = getMonthIndex(3); break;
+      case "+6m":   targetIndex = getMonthIndex(6); break;
+      case "+1y":   targetIndex = getMonthIndex(12); break;
+      case "+2y":   targetIndex = getMonthIndex(24); break;
+      case "max":   targetIndex = currentXY.length - 1; break;
     }
-    verb = "today" === range ? "You " + (isPos ? "gain " : "loss ") : range.startsWith("-") ? isPos ? "You gained " : "You lost " : "You " + (isPos ? "gain " : "loss "), subText.innerHTML = verb + '<span id="amt-hl" class="amt-hl ' + (isPos ? "pos" : "neg") + '">' + fmtFullTC(Math.abs(diff)) + "</span> ";
+
+    var current = xy[currentIndex], targetTC = xy[targetIndex];
+    var diff = "today" === range || range.startsWith("-") ? current.balance - targetTC.balance : targetTC.balance - current.balance;
+    var pct = 0 !== current.balance ? diff / Math.abs(current.balance) * 100 : 0;
+    var isPos = diff >= 0;
+
+    document.getElementById("balance-val").textContent = balanceVisible ? fmtFullTC(current.balance) : "*********";
+    document.getElementById("balance-usd").textContent = fmtUSDTC(current.balance);
+    updateGoalRing(current.balance);
+    updateCountdown();
+
+    var directionTextMap = {
+      today: "over the last month",
+      "-3m": "in the last 3 months",
+      "-6m": "in the last 6 months",
+      "-1y": "in the last year",
+      "-2y": "in the last 2 years",
+      "+3m": "over the next 3 months",
+      "+6m": "over the next 6 months",
+      "+1y": "over the next year",
+      "+2y": "over the next 2 years",
+      max: "across all future projections"
+    };
+    var directionText = directionTextMap[range] || "";
+
+    var verb = "today" === range ? "You " + (isPos ? "gain " : "loss ") : range.startsWith("-") ? (isPos ? "You gained " : "You lost ") : "You " + (isPos ? "gain " : "loss ");
+    var subText = document.getElementById("sub-text");
+    subText.innerHTML = verb + '<span id="amt-hl" class="amt-hl ' + (isPos ? "pos" : "neg") + '">' + fmtFullTC(Math.abs(diff)) + "</span> ";
+
     var pill = document.getElementById("change-pill");
-    pill.style.display = "inline-flex", pill.className = "pill " + (isPos ? "pos" : "neg"), pill.innerHTML = (isPos ? "&#9650;" : "&#9660;") + Math.abs(pct).toFixed(1) + "%";
+    pill.style.display = "inline-flex";
+    pill.className = "pill " + (isPos ? "pos" : "neg");
+    pill.innerHTML = (isPos ? "&#9650;" : "&#9660;") + Math.abs(pct).toFixed(1) + "%";
+
     var existingDirSpan = document.getElementById("pill-direction-text");
-    if (existingDirSpan && existingDirSpan.remove(), window.matchMedia("(min-width: 401px)").matches) {
+    if (existingDirSpan) existingDirSpan.remove();
+
+    if (window.matchMedia("(min-width: 401px)").matches) {
       var dirSpan = document.createElement("span");
-      dirSpan.id = "pill-direction-text", dirSpan.textContent = directionText, dirSpan.className = "card-sub-text", dirSpan.style.marginLeft = "6px", pill.parentNode.insertBefore(dirSpan, pill.nextSibling)
+      dirSpan.id = "pill-direction-text";
+      dirSpan.textContent = directionText;
+      dirSpan.className = "card-sub-text";
+      dirSpan.style.marginLeft = "6px";
+      pill.parentNode.insertBefore(dirSpan, pill.nextSibling);
     }
   }
+
 
   function drawDebtLine(points, color, width, dash) {
     var paths = buildSmoothPathTC(points),
@@ -2382,7 +2378,7 @@ incomeSeries = keys.map(function(k) {
 
             if (visibleLineCount === 1) {
                 if (lineVisibility.expense) {
-                    topSafeMargin = 82 + 0;clampedLeft+=95;
+                    topSafeMargin = 82 + 0;clampedLeft+=0;
                 } else if (lineVisibility.debt) {
                     topSafeMargin = 82 + 25; 
                 }
