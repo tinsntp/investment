@@ -2133,20 +2133,50 @@ incomeSeries = keys.map(function(k) {
     }
 
     if (lineVisibility.expense) {
-      // Draw Expense Line (Pink)
-      var pathsExp = buildSmoothPathTC(currentExpenseXY);
-      var areaElExp = document.createElementNS(ns, "path");
-      areaElExp.setAttribute("d", pathsExp.area); areaElExp.setAttribute("fill", "url(#pinkFill)"); svg.appendChild(areaElExp);
-      var lineElExp = document.createElementNS(ns, "path");
-      lineElExp.setAttribute("d", pathsExp.line); lineElExp.setAttribute("fill", "none"); lineElExp.setAttribute("stroke", "#f472b6"); lineElExp.setAttribute("stroke-width", "2.5"); lineElExp.setAttribute("stroke-linecap", "round"); lineElExp.setAttribute("stroke-linejoin", "round"); svg.appendChild(lineElExp);
+        // -------------------------------------------------------------
+        // 1. Draw Expense Line (Pink)
+        // -------------------------------------------------------------
+        var pathsExp = buildSharpPathTC(currentExpenseXY);
 
-      // Draw Income Line (Yellow)
-      var pathsInc = buildSmoothPathTC(currentIncomeXY);
-      var areaElInc = document.createElementNS(ns, "path");
-      areaElInc.setAttribute("d", pathsInc.area); areaElInc.setAttribute("fill", "url(#yellowFill)"); svg.appendChild(areaElInc);
-      var lineElInc = document.createElementNS(ns, "path");
-      lineElInc.setAttribute("d", pathsInc.line); lineElInc.setAttribute("fill", "none"); lineElInc.setAttribute("stroke", "#facc15"); lineElInc.setAttribute("stroke-width", "2.5"); lineElInc.setAttribute("stroke-linecap", "round"); lineElInc.setAttribute("stroke-linejoin", "round"); svg.appendChild(lineElInc);
-    }
+        var areaElExp = document.createElementNS(ns, "path");
+        areaElExp.setAttribute("d", pathsExp.area);
+        areaElExp.setAttribute("fill", "url(#pinkFill)");
+        areaElExp.setAttribute("mask", "url(#chartFadeMask)"); // Apply left/right fade mask
+        svg.appendChild(areaElExp);
+
+        var lineElExp = document.createElementNS(ns, "path");
+        lineElExp.setAttribute("d", pathsExp.line);
+        lineElExp.setAttribute("fill", "none");
+        lineElExp.setAttribute("stroke", "#f472b6");
+        lineElExp.setAttribute("stroke-width", "3.5");          // Thicker stroke
+        lineElExp.setAttribute("stroke-linecap", "butt");       // Sharp ends
+        lineElExp.setAttribute("stroke-linejoin", "miter");     // Sharp corners
+        lineElExp.setAttribute("stroke-miterlimit", "10");     // Sharp peak limits
+        lineElExp.setAttribute("mask", "url(#chartFadeMask)"); // Apply left/right fade mask
+        svg.appendChild(lineElExp);
+
+        // -------------------------------------------------------------
+        // 2. Draw Total Income Line (Yellow)
+        // -------------------------------------------------------------
+        var pathsInc = buildSharpPathTC(currentIncomeXY);
+
+        var areaElInc = document.createElementNS(ns, "path");
+        areaElInc.setAttribute("d", pathsInc.area);
+        areaElInc.setAttribute("fill", "url(#yellowFill)");
+        areaElInc.setAttribute("mask", "url(#chartFadeMask)");
+        svg.appendChild(areaElInc);
+
+        var lineElInc = document.createElementNS(ns, "path");
+        lineElInc.setAttribute("d", pathsInc.line);
+        lineElInc.setAttribute("fill", "none");
+        lineElInc.setAttribute("stroke", "#facc15");
+        lineElInc.setAttribute("stroke-width", "3.5");
+        lineElInc.setAttribute("stroke-linecap", "butt");
+        lineElInc.setAttribute("stroke-linejoin", "miter");
+        lineElInc.setAttribute("stroke-miterlimit", "10");
+        lineElInc.setAttribute("mask", "url(#chartFadeMask)");
+        svg.appendChild(lineElInc);
+        }
 
     if (lineVisibility.debt) {
       drawDebtLine(currentDebtTotalXY, "#ffffff", 3);
@@ -2319,7 +2349,7 @@ incomeSeries = keys.map(function(k) {
 
             // 4. Render Cashflow line
             html += '<div id="tooltip-cashflow-amt" style="margin-top:0px;font-weight:600;">' + 
-                        inlineBreakdown + ' <i class="bi bi-droplet-half" style="color:' + cfColor + ';"></i></div>';
+                        inlineBreakdown + ' <span style="color:' + cfColor + ';"> remain</span></div>';
 
             
 
@@ -2394,7 +2424,28 @@ incomeSeries = keys.map(function(k) {
     window.addEventListener("resize", function(){ if (fullSeries.length) renderChartTC(currentRangeTC); });
     window.addEventListener("load", function () { setTimeout(function () { const selector = document.getElementById("range-selector"); const btn = selector.querySelector('[data-range="-3m"]'); btn.scrollIntoView({ inline:"start",behavior:"instant"});}, 0);});
     document.querySelectorAll(".line-toggle-btn").forEach(function(btn){btn.addEventListener("click",function(){var line=this.dataset.line;lineVisibility[line]=!lineVisibility[line],"expense"===line&&lineVisibility.expense?(lineVisibility.balance=!1,lineVisibility.debt=!1):("balance"===line&&lineVisibility.balance||"debt"===line&&lineVisibility.debt)&&(lineVisibility.expense=!1),lineVisibility.balance||lineVisibility.expense||lineVisibility.debt||(lineVisibility[line]=!0),document.querySelectorAll(".line-toggle-btn").forEach(function(b){var l=b.dataset.line;b.classList.toggle("active",!!lineVisibility[l])}),fullSeries.length&&renderChartTC(currentRangeTC)})});
-    
+    function buildSharpPathTC(pts) {
+  if (!pts || !pts.length) return { line: "", area: "" };
+
+  var first = pts[0];
+  var last = pts[pts.length - 1];
+
+  // Build straight 'M x y L x y ...' path string
+  var lineCmds = ["M", first.x.toFixed(2), first.y.toFixed(2)];
+  for (var i = 1; i < pts.length; i++) {
+    lineCmds.push("L", pts[i].x.toFixed(2), pts[i].y.toFixed(2));
+  }
+  var lineD = lineCmds.join(" ");
+
+  // Close area path to bottom baseline
+  var bottomY = (VB_H - PAD_BOTTOM).toFixed(2);
+  var areaD = lineD + 
+              " L " + last.x.toFixed(2) + " " + bottomY + 
+              " L " + first.x.toFixed(2) + " " + bottomY + 
+              " Z";
+
+  return { line: lineD, area: areaD };
+}
     /* ══ DETAIL TAB ══ */
     var CSV_EXPENSE = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1324702331";
     var allExpanded=!1,monthlyBudget=0,currentExpense=0,lastExpense=0;
