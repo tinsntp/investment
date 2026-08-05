@@ -878,6 +878,11 @@ background:
 
 /* ══ SUBSCRIPTION SLIDE ══ */
 .card{max-width:100%;}
+.sub-header-bg{border-radius:15px;margin:10px;background: 
+    linear-gradient(135deg, rgba(30, 41, 59, 0.2) 0%, rgba(15, 23, 42, 0.2) 100%),
+    url('https://i.pinimg.com/736x/36/96/ea/3696eae7d79c2a90e7d2eb35134c2497.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;filter: saturate(110%) contrast(1.1);}
 .sub-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
 .sub-title{font-size:13px;font-weight:300;color:rgba(255,255,255,0.55);margin-left:2vw;}
 .sub-refresh-row{display:flex;align-items:center;gap:8px}
@@ -887,7 +892,7 @@ background:
 .sub-refresh-btn.spinning svg{animation:subSpin 0.6s linear}
 @keyframes subSpin{from{transform:rotate(0deg)}
 to{transform:rotate(360deg)}
-}.sub-stats-row{display:flex;gap:28px;margin-left:2vw;margin-bottom:30px}
+}.sub-stats-row{display:flex;gap:28px;margin-left:2vw;padding-bottom:5px}
 .sub-stat-val{font-size:28px;font-weight:500;color:rgba(255,255,255,0.95);letter-spacing:-0.02em;line-height:1;margin-bottom:4px;font-family:DM Sans;}
 .sub-stat-label{font-size:12.5px;color:rgba(255,255,255,0.45)}
 .sub-stat-label .hl-teal{color:#2dd4bf;font-weight:600}
@@ -1007,6 +1012,49 @@ to{transform:rotate(360deg)}
 #cash-modal-cancel:active {
     transform: scale(0.92);
 }
+#cash-modal-cancel{position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;border: none !important;
+      outline: none !important;
+          background: rgba(255, 255, 255, 0.2) !important;
+          -webkit-backdrop-filter: blur(16px) saturate(180%);
+          backdrop-filter: blur(16px) saturate(180%);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      line-height: 1;
+      padding: 0;font-size:13px;
+      cursor: pointer;
+      z-index: 10;
+      transition: background 0.2s ease, transform 0.15s ease;}
+#cash-modal-submit{position: absolute;
+          right: 5px;
+          width: 30px;font-family:Lexend;font-size:25px;
+          height: 30px;
+          border-radius: 50%;
+          border: none !important;
+          outline: none !important;
+          background: rgba(255, 255, 255, 0.2) !important;
+          -webkit-backdrop-filter: blur(16px) saturate(180%);
+          backdrop-filter: blur(16px) saturate(180%);
+          color: #ffffff;font-weight: 300!important;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: transform 0.15s ease, opacity 0.2s ease;}
+#cash-modal-input{width: 100%;
+          padding: 12px 46px 12px; 
+          border: none !important;font-family:Lora!important;
+          outline: none !important;
+          color: #fff;text-align:left!important;
+background: transparent!important; border-width: medium medium 2px!important; border-style: none none dashed!important; border-color: currentcolor currentcolor rgba(255, 255, 255, 0.3)!important; border-image: none; padding: 0px 0px 2px; color: rgb(255, 255, 255); font-size: 18px; font-weight: 300;" onfocus="this.style.setProperty('border-color', 'currentcolor currentcolor rgba(255, 255, 255, 0.3)', 'important');}
+#cash-modal-status{font-family:Lora;margin-top:10px;}
 @media (max-width:400px){.add-cancel-btn,.add-submit-btn,.add-field label,.add-field input{font-size:13px!important;font-weight:300!important;}}
 @media (min-width:401px){.form-row-2col{gap:15px !important;margin-bottom:16px}
 .add-field label{font-size:13px;margin-bottom:6px}
@@ -1022,6 +1070,10 @@ to{transform:rotate(360deg)}
     margin-bottom: 4vw;
     width: 100%;
     box-sizing: border-box;
+    background: url('https://i.pinimg.com/736x/a3/99/78/a39978d0cc7deaa5e9299b9b9ea6fbcd.jpg');
+    background-size: cover;
+    background-position: center 47%;
+    background-repeat: no-repeat;
 }
 
 .price-toggle-card {
@@ -1029,7 +1081,7 @@ to{transform:rotate(360deg)}
     min-width: 0; /* CHANGED: prevents content from forcing the card wider than its share */
     background: transparent;
     border-radius: 12px;
-    padding: 2.5vw 3.5vw;
+    padding: 2.5vw 3.5vw;opacity:0.9;
     cursor: pointer;
     transition: background 0.2s ease;
     box-sizing: border-box;
@@ -2319,7 +2371,7 @@ to{transform:rotate(360deg)}
   </div>
 <div class="tab-bar" id="tab-bar">
   <img class="profile-icon" src="https://i.pinimg.com/736x/c1/de/26/c1de261375437d0323551e96c19ee810.jpg"/>
-    <h4 style="font-family:Alegreya;text-align:left;font-size:18px; flex:1; margin:0;">Hi hayashi!</h4>
+    <h4 style="font-family:Alegreya;text-align:left;font-size:18px;font-weight:300; flex:1; margin:0;">Hi hayashi!</h4>
   <div class="tab-btn-group">
     <div class="tab-btn" id="tab-btn-x"><i class="bi bi-activity"></i><span></span></div>
     <div class="tab-btn active" data-idx="0" id="tab-btn-0"><i class="bi bi-basket-fill"></i><span>Expense</span></div>
@@ -2532,26 +2584,28 @@ to{transform:rotate(360deg)}
         <!-- Tab 3: Subscription View -->
         <div class="budget-tab-content" id="budget-view-subscription" style="display: none;">
           <div class="card" id="card">
-          <div class="sub-header-row">
-            <div class="sub-title">Spending overview</div>
-          </div>
-          <div class="sub-stats-row">
-            <div class="sub-stat-block">
-              <div class="sub-stat-val" id="sub-total-val">&#x2014;</div>
-              <div class="sub-stat-label" id="sub-total-label">Active subscriptions / month</div>
+            <div class="sub-header-bg">
+                <div class="sub-header-row">
+                    <div class="sub-title">Spending overview</div>
+                </div>
+                <div class="sub-stats-row">
+                    <div class="sub-stat-block">
+                    <div class="sub-stat-val" id="sub-total-val">&#x2014;</div>
+                    <div class="sub-stat-label" id="sub-total-label">Active subscriptions / month</div>
+                    </div>
+                    <div class="sub-stat-block">
+                    <div class="sub-stat-val" id="sub-total-excl-val">&#x2014;</div>
+                    <div class="sub-stat-label" id="sub-total-excl-label">Excl. KungfuStocksPro</div>
+                    </div>
+                </div>
             </div>
-            <div class="sub-stat-block">
-              <div class="sub-stat-val" id="sub-total-excl-val">&#x2014;</div>
-              <div class="sub-stat-label" id="sub-total-excl-label">Excl. KungfuStocksPro</div>
+            <div class="sub-list-title">
+                <span>Active subscription</span>
+                <button class="add-inline-btn" id="add-fab">+</button>
             </div>
-          </div>
-          <div class="sub-list-title">
-            <span>Active subscription</span>
-            <button class="add-inline-btn" id="add-fab">+</button>
-          </div>
-          <div id="sub-loading">Loading&hellip;</div>
-          <div id="sub-list"></div>
-        </div>
+            <div id="sub-loading">Loading&hellip;</div>
+            <div id="sub-list"></div>
+            </div>
         </div>
       </div>
       
@@ -2747,7 +2801,7 @@ to{transform:rotate(360deg)}
                     <div class="metric-card nav-card">
                         <div class="nav-card-body">
                             <div class="nav-card-left">
-                                <div class="metric-card">
+                                <div class="metric-card" style="max-width:200px">
                                     <div class="stat-cycles-row-wrap-v2">
                                         <div style="display:flex">
                                             <img class="stat-stack-icon" style="border:none" src="https://cdn-icons-png.flaticon.com/512/6211/6211662.png"/>
@@ -3052,71 +3106,16 @@ to{transform:rotate(360deg)}
 </div>
 <!-- CASH TRANSACTION MODAL POPUP -->
 <div id="cash-modal-overlay" class="cash-modal-overlay">
-  <div class="add-modal-expense" style="height:350px">
-
-    <!-- X close button, top-right corner -->
-    <button id="cash-modal-cancel" type="button" style="
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;border: none !important;
-      outline: none !important;
-          background: rgba(255, 255, 255, 0.2) !important;
-          -webkit-backdrop-filter: blur(16px) saturate(180%);
-          backdrop-filter: blur(16px) saturate(180%);
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      line-height: 1;
-      padding: 0;font-size:13px;
-      cursor: pointer;
-      z-index: 10;
-      transition: background 0.2s ease, transform 0.15s ease;">
-      x
-    </button>
-
+  <div class="add-modal-expense" style="height:380px">
+    <button id="cash-modal-cancel" type="button">x</button>
     <div style="margin-top:-5px;margin-left:10px;width:100%">
       <h3 style="font-family: Alegreya; text-align:left;text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); color: #fff; margin: 0; white-space: nowrap; font-size: 20px;">Add today cash expense...</h3>
       <div class="add-field" style="margin-top:10px;position: relative; display: flex; align-items: center; flex: 1;">
-        <input type="text" id="cash-modal-input"  style="
-          width: 100%;
-          padding: 12px 46px 12px; 
-          border: none !important;font-family:Lora!important;
-          outline: none !important;
-          color: #fff;text-align:left!important;
-background: transparent!important; border-width: medium medium 2px!important; border-style: none none dashed!important; border-color: currentcolor currentcolor rgba(255, 255, 255, 0.2)!important; border-image: none; padding: 0px 0px 2px; color: rgb(255, 255, 255); font-size: 18px; font-weight: 300;
-          ">
-
-        <!-- Send Icon Button Inside Input Bar -->
-        <button id="cash-modal-submit" type="button" style="
-          position: absolute;
-          right: 5px;
-          width: 30px;font-family:Lexend;font-size:25px;
-          height: 30px;
-          border-radius: 50%;
-          border: none !important;
-          outline: none !important;
-          background: rgba(255, 255, 255, 0.2) !important;
-          -webkit-backdrop-filter: blur(16px) saturate(180%);
-          backdrop-filter: blur(16px) saturate(180%);
-          color: #ffffff;font-weight: 300!important;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          transition: transform 0.15s ease, opacity 0.2s ease;">
-          +
-        </button>
+        <input type="text" id="cash-modal-input" onblur="this.style.setProperty('border-color', 'currentcolor currentcolor rgba(255, 255, 255, 0.2)', 'important');">
+        <button id="cash-modal-submit" type="button">+</button>
       </div>
-
+      <div id="cash-modal-status" class="add-status"></div>
     </div>
-    
-    <!-- Status feedback element -->
-    <div id="cash-modal-status" class="add-status"></div>
   </div>
 </div>
 <!-- Custom Subcription Modal Popup -->
@@ -5433,7 +5432,7 @@ document.addEventListener("DOMContentLoaded", function() {
             <input type="text" 
                 id="expense-edit-amount" inputmode="numeric"
                 value="${formattedAmount}" 
-                style="width: 100%; background: transparent; border: none; padding: 0; color: #fff; font-size: 16px; font-weight: 700; font-family: 'Lexend', sans-serif; text-align: right; outline: none; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 2px;"
+                style="width: 100%; background: transparent; border: none; padding: 0; color: #fff; font-size: 20px; font-weight: 500; font-family: 'DM Sans'; text-align: right; outline: none; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 2px;"
                 onfocus="this.style.borderBottomColor='rgba(255,255,255,0.6)'"
                 onblur="this.style.borderBottomColor='rgba(255,255,255,0.2)'" />
         </div>
