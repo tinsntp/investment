@@ -913,7 +913,7 @@ to{transform:rotate(360deg)}
 
 
 .add-modal h3{font-size: 16px;margin-bottom:4vw;text-align:center;}
-.add-modal, .expense-edit-modal {
+.add-modal,.add-modal-expense, .expense-edit-modal {
     position: relative;
     background: rgba(35, 35, 35, 0.6);
     color: #fff;
@@ -937,6 +937,31 @@ to{transform:rotate(360deg)}
     mask-repeat: no-repeat, no-repeat, repeat-x;
     filter: drop-shadow(0 10px 20px rgba(0,0,0,.6));
 }
+
+.add-modal-expense::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://github.com/tinsntp/investment/blob/main/banner/add-cash-bg.png?raw=true');
+    background-size: cover;
+    background-position: center 47%;
+    background-repeat: no-repeat;
+    
+    /* Control background opacity here (0.4 = 40% visible) */
+    opacity: 0.7;
+    
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Keep all content elements above the background layer */
+  .add-modal-expense > * {
+    position: relative;
+    z-index: 1;
+  }
 
 
 .add-field{margin-bottom:3.5vw}
@@ -3027,42 +3052,37 @@ to{transform:rotate(360deg)}
 </div>
 <!-- CASH TRANSACTION MODAL POPUP -->
 <div id="cash-modal-overlay" class="cash-modal-overlay">
-  <div class="add-modal" style="height:500px; position: relative; background: 
-    linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.2) 100%),
-    url('https://github.com/tinsntp/investment/blob/main/banner/add-cash-bg.png?raw=true');
-    background-size: cover;
-    background-position: center 47%;
-    background-repeat: no-repeat;
-    filter: saturate(110%) contrast(1.05);
-    border-radius: 24px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
-    border: none !important;
-    outline: none !important;
-    padding: 20px;">
+  <div class="add-modal-expense" style="height:350px">
 
     <!-- X close button, top-right corner -->
     <button id="cash-modal-cancel" type="button" style="
       position: absolute;
       top: 16px;
       right: 16px;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      border: 0px solid rgba(255, 255, 255, 0.3) !important;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;border: none !important;
       outline: none !important;
-      color: #ffffff;opacity:0.9;
-      align-items: center;display: flex;
+          background: rgba(255, 255, 255, 0.2) !important;
+          -webkit-backdrop-filter: blur(16px) saturate(180%);
+          backdrop-filter: blur(16px) saturate(180%);
+      color: #ffffff;
+      opacity: 0.8;
+      display: flex;
+      align-items: center;
       justify-content: center;
+      text-align: center;
+      line-height: 1;
+      padding: 0;font-size:13px;
       cursor: pointer;
       z-index: 10;
-      transition: background 0.2s ease, transform 0.15s ease;
-      ">
+      transition: background 0.2s ease, transform 0.15s ease;">
       x
     </button>
 
-    <div style="margin-top:20px;margin-left:10px;width:100%">
-      <h3 style="font-family: Alegreya; text-align:left;text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); color: #ffffff; margin: 0; white-space: nowrap; font-size: 16px;">Add your cash expense...</h3>
-      <div class="add-field" style="margin-top:15px;position: relative; display: flex; align-items: center; flex: 1;">
+    <div style="margin-top:10px;margin-left:10px;width:100%">
+      <h3 style="font-family: Alegreya; text-align:left;text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); color: rgba(255, 255, 255, 0.8); margin: 0; white-space: nowrap; font-size: 20px;">Add today cash expense...</h3>
+      <div class="add-field" style="margin-top:5px;position: relative; display: flex; align-items: center; flex: 1;">
         <input type="text" id="cash-modal-input"  style="
           width: 100%;
           padding: 12px 46px 12px; 
@@ -3076,7 +3096,7 @@ background: transparent!important; border-width: medium medium 2px!important; bo
         <button id="cash-modal-submit" type="button" style="
           position: absolute;
           right: 5px;
-          width: 30px;font-family:Lexend;
+          width: 30px;font-family:Lexend;font-size:25px;
           height: 30px;
           opacity: 0.8;
           border-radius: 50%;
@@ -3085,7 +3105,7 @@ background: transparent!important; border-width: medium medium 2px!important; bo
           background: rgba(255, 255, 255, 0.2) !important;
           -webkit-backdrop-filter: blur(16px) saturate(180%);
           backdrop-filter: blur(16px) saturate(180%);
-          color: #ffffff;font-weight: 700!important;
+          color: #ffffff;font-weight: 300!important;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -5269,9 +5289,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (!addCashBtn || !cashOverlay || !cashSubmit) {console.warn("Cash modal elements missing from the DOM. Skipping initialization.");return;}
 
-    Object.assign(cashOverlay.style,{position:"fixed",top:"0",left:"0",width:"100%",height:"100%",backgroundColor:"rgba(0, 0, 0, 0.75)",backdropFilter:"blur(4px)",webkitBackdropFilter:"blur(4px)",zIndex:"999",display:"none",alignItems:"flex-start",justifyContent:"center",paddingTop:"100px",opacity:"1"});
-    cashCancel&&Object.assign(cashCancel.style,{fontFamily:"DM Sans",fontSize:"18px",background:"none",color:"#cbd5e1",fontWeight:"300",cursor:"pointer"});
-    cashSubmit&&Object.assign(cashSubmit.style,{fontFamily:"DM Sans",fontSize:"20px",border:"none",color:"#ffffff",fontWeight:"300",cursor:"pointer"});
+    Object.assign(cashOverlay.style,{position:"fixed",top:"0",left:"0",width:"100%",height:"100%",backgroundColor:"rgba(0, 0, 0, 0.75)",backdropFilter:"blur(4px)",webkitBackdropFilter:"blur(4px)",zIndex:"999",display:"none",alignItems:"flex-start",justifyContent:"center",paddingTop:"150px",opacity:"1"});
+    cashCancel&&Object.assign(cashCancel.style,{fontFamily:"DM Sans",cursor:"pointer"});
+    cashSubmit&&Object.assign(cashSubmit.style,{fontFamily:"DM Sans",cursor:"pointer"});
 
     var actionContainer = (cashCancel && cashCancel.parentElement) || (cashSubmit && cashSubmit.parentElement);
     actionContainer&&(actionContainer.style.display="flex",actionContainer.style.gap="12px"),addCashBtn.addEventListener("click",function(){cashInput.value="",cashStatus&&(cashStatus.className="add-status",cashStatus.innerText=""),cashOverlay.style.display="flex",setTimeout(function(){cashInput.focus()},50)}),cashCancel&&cashCancel.addEventListener("click",function(){cashOverlay.style.display="none"});
