@@ -714,8 +714,10 @@ background:
 
 
 #add-cash.loading,#add-fab.loading{pointer-events:none;display:flex;align-items:center;justify-content:center}
-.cash-modal-overlay,.add-modal-overlay{-webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);display:none;position:fixed;inset:0; z-index:600;align-items:flex-start;justify-content:center;padding-top:20vh;overflow-y:auto}
-.cash-modal-overlay.open,.add-modal-overlay.open{display:flex!important}
+.cash-modal-overlay,.add-modal-overlay{-webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);display:none;position:fixed;inset:0; z-index:600;align-items:flex-start;justify-content:center;padding-top:20vh;overflow-y:auto;
+
+}
+.cash-modal-overlay.open,.add-modal-overlay.open{display:flex!important;}
 .btn-spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,0.3);border-top-color:#ffffff;border-radius:50%;animation:spinCircle 0.8s linear infinite;display:inline-block}
 #add-cash.success-confirm{background-color:#10b981 !important;color:#ffffff !important;font-size:15px;font-weight:500;display:flex;align-items:center;justify-content:center;transition:background-color 0.3s ease}
 
@@ -912,7 +914,7 @@ to{transform:rotate(360deg)}
 .add-modal h3{font-size: 16px;margin-bottom:4vw;text-align:center;}
 .add-modal, .expense-edit-modal {
     position: relative;
-    background: rgba(35, 35, 35, 0.6); /* was #232323 — now 70% opaque background only */
+    background: rgba(35, 35, 35, 0.6);
     color: #fff;
     width: 90%;
     max-width: 440px;
@@ -971,6 +973,13 @@ to{transform:rotate(360deg)}
     justify-content:space-between !important;
     text-align:left !important;
     cursor:pointer;
+}
+#cash-modal-cancel:hover,#cash-modal-submit:hover {
+    color:#fff;opacity:1!important;background: rgba(255, 255, 255, 0.2) !important;
+}
+
+#cash-modal-cancel:active {
+    transform: scale(0.92);
 }
 @media (max-width:400px){.add-cancel-btn,.add-submit-btn,.add-field label,.add-field input{font-size:13px!important;font-weight:300!important;}}
 @media (min-width:401px){.form-row-2col{gap:15px !important;margin-bottom:16px}
@@ -3017,20 +3026,84 @@ to{transform:rotate(360deg)}
 </div>
 <!-- CASH TRANSACTION MODAL POPUP -->
 <div id="cash-modal-overlay" class="cash-modal-overlay">
-  <div class="add-modal">
-    <div style="display: flex; align-items: center; justify-content: center;">
-      <img style="width: 25vw!important; height: 25vw!important;margin-bottom: -10px;background:none;object-fit: contain; flex-shrink: 0; border-radius: 0%; display: block;" src="https://github.com/tinsntp/investment/blob/main/icon/add-cash-removebg.png?raw=true" alt="Category Icon" onerror="this.outerHTML='<div class=\'ico-fb\' style=\'width: 10vw; height: 10vw; max-width: 36px; max-height: 36px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 13px; font-weight: 600; text-transform: uppercase;\'>?</div>'"/>
+  <div class="add-modal" style="height:500px; position: relative; background: 
+    linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.2) 100%),
+    url('https://github.com/tinsntp/investment/blob/main/banner/add-cash-bg.png?raw=true');
+    background-size: cover;
+    background-position: center 47%;
+    background-repeat: no-repeat;
+    filter: saturate(110%) contrast(1.05);
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    border: none !important;
+    outline: none !important;
+    padding: 20px;">
+
+    <!-- X close button, top-right corner -->
+    <button id="cash-modal-cancel" type="button" style="
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      border: none !important;
+      outline: none !important;
+      color: #ffffff;opacity:0.8;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      transition: background 0.2s ease, transform 0.15s ease;
+      ">
+      x
+    </button>
+
+    <div style="margin-top:20px;margin-left:10px;width:100%">
+      <h3 style="font-family: Lora; text-align:left;text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); color: #ffffff; margin: 0; white-space: nowrap; font-size: 16px;">Add your cash expense...</h3>
+      <div class="add-field" style="margin-top:15px;position: relative; display: flex; align-items: center; flex: 1;">
+        <input type="text" id="cash-modal-input" autocomplete="off" placeholder="Enter amount or note..." style="
+          width: 100%;
+          padding: 12px 46px 12px 16px;
+          background: rgba(255, 255, 255, 0.2) !important;
+          -webkit-backdrop-filter: blur(16px) saturate(180%);
+          backdrop-filter: blur(16px) saturate(180%);
+          border: none !important;
+          outline: none !important;
+          border-radius: 15px!important;
+          color: #ffffff;
+          font-size: 17px!important;
+          font-weight: 300!important;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+          box-sizing: border-box;">
+
+        <!-- Send Icon Button Inside Input Bar -->
+        <button id="cash-modal-submit" type="button" style="
+          position: absolute;
+          right: 5px;
+          width: 30px;font-family:Lexend;
+          height: 30px;
+          opacity: 0.8;
+          border-radius: 50%;
+          border: none !important;
+          outline: none !important;
+          background: rgba(255, 255, 255, 0.2) !important;
+          -webkit-backdrop-filter: blur(16px) saturate(180%);
+          backdrop-filter: blur(16px) saturate(180%);
+          color: #ffffff;font-weight: 700!important;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: transform 0.15s ease, opacity 0.2s ease;">
+          +
+        </button>
+      </div>
+
     </div>
-    <h3 style="font-family:Lora">Add you cash expense...</h3>
-    <div class="add-field">
-      <input type="text" id="cash-modal-input" autocomplete="off">
-    </div>
-    <!-- Status feedback element utilizing your error/success colors -->
+    
+    <!-- Status feedback element -->
     <div id="cash-modal-status" class="add-status"></div>
-    <div class="add-actions">
-      <button id="cash-modal-cancel" class="add-cancel-btn"><label>Cancel</button>
-      <button id="cash-modal-submit" class="add-submit-btn"><label>Add</button>
-    </div>
   </div>
 </div>
 <!-- Custom Subcription Modal Popup -->
@@ -5202,8 +5275,8 @@ document.addEventListener("DOMContentLoaded", function() {
     if (!addCashBtn || !cashOverlay || !cashSubmit) {console.warn("Cash modal elements missing from the DOM. Skipping initialization.");return;}
 
     Object.assign(cashOverlay.style,{position:"fixed",top:"0",left:"0",width:"100%",height:"100%",backgroundColor:"rgba(0, 0, 0, 0.75)",backdropFilter:"blur(4px)",webkitBackdropFilter:"blur(4px)",zIndex:"999",display:"none",alignItems:"flex-start",justifyContent:"center",paddingTop:"200px",opacity:"1"});
-    cashCancel&&Object.assign(cashCancel.style,{flex:"1",fontFamily:"Lexend, sans-serif",fontSize:"14px",padding:"14px",background:"#1e222b",border:"0px solid #2d313c",color:"#cbd5e1",borderRadius:"12px",fontWeight:"600",cursor:"pointer"});
-    cashSubmit&&Object.assign(cashSubmit.style,{flex:"2",fontFamily:"Lexend, sans-serif",fontSize:"14px",padding:"14px",background:"#2d3748",border:"none",color:"#ffffff",borderRadius:"12px",fontWeight:"600",cursor:"pointer"});
+    cashCancel&&Object.assign(cashCancel.style,{fontFamily:"Lexend, sans-serif",fontSize:"17px",background:"none",color:"#cbd5e1",fontWeight:"300",cursor:"pointer"});
+    cashSubmit&&Object.assign(cashSubmit.style,{fontFamily:"Lexend, sans-serif",fontSize:"20px",border:"none",color:"#ffffff",fontWeight:"300",cursor:"pointer"});
 
     var actionContainer = (cashCancel && cashCancel.parentElement) || (cashSubmit && cashSubmit.parentElement);
     actionContainer&&(actionContainer.style.display="flex",actionContainer.style.gap="12px"),addCashBtn.addEventListener("click",function(){cashInput.value="",cashStatus&&(cashStatus.className="add-status",cashStatus.innerText=""),cashOverlay.style.display="flex",setTimeout(function(){cashInput.focus()},50)}),cashCancel&&cashCancel.addEventListener("click",function(){cashOverlay.style.display="none"});
