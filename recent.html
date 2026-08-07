@@ -785,6 +785,200 @@ to{transform:rotate(360deg)}
 .line-toggle-btn.active[data-line="debt"]{border-color:#fff;background:rgba(244,114,182,0.12)}
 .balance-toggle-area{cursor:pointer;user-select:none}
 .balance-hidden{user-select:none;}
+
+.fb-card {
+  border-radius: 20px;
+  color: #ffffff;padding: 0 20px 0 20px;
+  font-family: "DM Sans";
+}
+
+.fb-nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.fb-nav-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 0px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 11px;
+  transition: all 0.2s ease;
+}
+
+.fb-nav-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.fb-nav-label {
+  font-size: 12px; /* Smaller font size */
+  font-weight: 700;
+  color: #ffffff;
+  min-width: 60px;
+  text-align: center;
+  letter-spacing: -0.2px;
+}
+
+/* Layout Canvas */
+.fb-chart-layout {
+  position: relative;
+  width: 100%;
+  min-height: 320px;
+  margin-bottom: 20px;
+}
+
+/* Metric Items Positioning */
+.fb-top-right-metric {
+  position: absolute;
+  top: 0;
+  right: 0;
+  text-align: right;
+  z-index: 2;
+  max-width: 50%;
+}
+
+.fb-left-top-metric {
+  position: absolute;
+  top: 70px;
+  left: 0;
+  z-index: 2;
+  max-width: 48%;
+}
+
+.fb-left-bottom-metric {
+  position: absolute;
+  bottom: -15px;
+  left: 0;
+  z-index: 2;
+  max-width: 48%;
+}
+
+/* Typography */
+.fb-metric-header {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 2px;
+  white-space: nowrap;
+}
+
+.fb-main-pct {
+  font-size: 42px;
+  font-weight:300;
+  line-height: 1;
+  letter-spacing: -1px;
+  margin-bottom: 6px;
+}
+
+.fb-sec-pct {
+  font-size: 28px;
+  font-weight: 300;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+/* Chips & Containers */
+.fb-inline-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.fb-top-right-metric .fb-inline-chips {
+  justify-content: flex-end;
+}
+
+.fb-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.06);
+
+  border-radius: 12px;
+  padding: 3px 8px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+}
+
+.fb-chip-icon {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.fb-chip-val {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+/* 1. Debts Display: One row for Current, Stacked for others */
+.fb-debt-chips-inline {
+  display: flex !important;
+  flex-wrap: nowrap !important; /* Prevents wrapping */
+  gap: 6px;
+  margin-top: 4px;
+  overflow-x: auto; /* Enables horizontal scrolling if needed */
+  scrollbar-width: none; /* Hides scrollbar in Firefox */
+  -ms-overflow-style: none; /* Hides scrollbar in IE/Edge */
+}
+
+.fb-debt-chips-inline::-webkit-scrollbar {
+  display: none; /* Hides scrollbar in Chrome/Safari */
+}
+
+.fb-debt-chips-stacked {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px;
+  margin-top: 4px;
+}
+
+.fb-chip-icon-only {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 3px 8px;
+  font-size: 11px;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+.fb-chip-icon-only .fb-chip-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* 3. SVG Canvas & Thicker Gradient Line Chart */
+.fb-svg-canvas {
+  width: 100%;
+  height: 320px;
+  overflow: visible;
+}
+
+.fb-chart-line {
+  stroke-width: 1px; /* Thicker Line */
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  shape-rendering: geometricPrecision; /* Forces high-precision rendering */
+}
+
 </style>
 </head>
 <body>
@@ -1107,6 +1301,16 @@ to{transform:rotate(360deg)}
 
           </div><div id="ca-col-right">
             <!-- Right column: Chart Analysis & Dynamic Breakdown lists -->
+<!-- Consolidated Single Chart Container -->
+<div id="financial-breakdown-card" class="fb-card">
+
+
+  <!-- Single Chart Canvas Container -->
+  <div id="fb-content" class="fb-content">
+    <div class="fb-loading">Loading chart data...</div>
+  </div>
+</div>            
+
             <div id="ca-section-expense">
               <div class="ca-filter-header">
                 <button class="ca-filter-btn" id="ca-btn-income" title="Incomes">
@@ -2384,213 +2588,9 @@ incomeSeries = keys.map(function(k) {
       pill.parentNode.insertBefore(dirSpan, pill.nextSibling);
     }
   }
-
-
-  function drawDebtLine(points, color, width, dash) {
-    var paths = buildSmoothPathTC(points),
-      line = document.createElementNS(ns, "path");
-    line.setAttribute("d", paths.line), line.setAttribute("fill", "none"), line.setAttribute("stroke", color), line.setAttribute("stroke-width", width), line.setAttribute("stroke-linecap", "round"), line.setAttribute("stroke-linejoin", "round"), dash && line.setAttribute("stroke-dasharray", dash), svg.appendChild(line)
-  }
+    function drawDebtLine(points,color,width,dash){var paths=buildSmoothPathTC(points),line=document.createElementNS(ns,"path");line.setAttribute("d",paths.line),line.setAttribute("fill","none"),line.setAttribute("stroke",color),line.setAttribute("stroke-width",width),line.setAttribute("stroke-linecap","round"),line.setAttribute("stroke-linejoin","round"),dash&&line.setAttribute("stroke-dasharray",dash),svg.appendChild(line)}
 }
-function drawSegmentedExpenseLine(pts, mainColor, futureColor, fillUrl, glowFilterId, svg, ns, showLiveDot) {
-  if (!pts || !pts.length) return;
-
-  var now = new Date();
-  var pastPts = [];
-  var futurePts = [];
-
-  // Split points at current month
-  for (var i = 0; i < pts.length; i++) {
-    if (pts[i].date <= now) {
-      pastPts.push(pts[i]);
-    } else {
-      if (futurePts.length === 0 && pastPts.length > 0) {
-        futurePts.push(pastPts[pastPts.length - 1]);
-      }
-      futurePts.push(pts[i]);
-    }
-  }
-
-  // Generate complete area path for clipping gridlines
-  var fullPaths = buildSharpPathTC(pts);
-  var clipId = "areaClip-" + Math.random().toString(36).substring(2, 9);
-  
-  // Create SVG ClipPath matching the chart's filled area shape
-  var defs = svg.querySelector("defs") || svg;
-  var clipPath = document.createElementNS(ns, "clipPath");
-  clipPath.setAttribute("id", clipId);
-  
-  var clipAreaPath = document.createElementNS(ns, "path");
-  clipAreaPath.setAttribute("d", fullPaths.area);
-  clipPath.appendChild(clipAreaPath);
-  defs.appendChild(clipPath);
-
-  // Group wrapped with clip-path & edge fade mask for both grid directions
-  var gridGroup = document.createElementNS(ns, "g");
-  gridGroup.setAttribute("clip-path", "url(#" + clipId + ")");
-  gridGroup.setAttribute("mask", "url(#lineEdgeFadeMask)");
-
-  // =========================================================================
-  // A. VERTICAL MONTHLY GRID LINES (Clipped inside Area Gradient)
-  // =========================================================================
-  for (var k = 0; k < pts.length; k++) {
-    var vLine = document.createElementNS(ns, "line");
-    vLine.setAttribute("x1", pts[k].x);
-    vLine.setAttribute("x2", pts[k].x);
-    vLine.setAttribute("y1", PAD_TOP);
-    vLine.setAttribute("y2", VB_H - PAD_BOTTOM);
-    vLine.setAttribute("stroke", "rgba(255, 255, 255, 0.12)");
-    vLine.setAttribute("stroke-width", "1");
-    vLine.setAttribute("stroke-dasharray", "3 3");
-    gridGroup.appendChild(vLine);
-  }
-
-  // =========================================================================
-  // B. HORIZONTAL VALUE GRID LINES (Clipped inside Area Gradient)
-  // =========================================================================
-  var plotH = VB_H - PAD_TOP - PAD_BOTTOM;
-  for (var g = 0; g <= 4; g++) {
-    var gy = PAD_TOP + (1 - g / 4) * plotH;
-    var hLine = document.createElementNS(ns, "line");
-    hLine.setAttribute("x1", PAD_LEFT);
-    hLine.setAttribute("x2", VB_W - PAD_RIGHT);
-    hLine.setAttribute("y1", gy);
-    hLine.setAttribute("y2", gy);
-    hLine.setAttribute("stroke", "rgba(255, 255, 255, 0.12)");
-    hLine.setAttribute("stroke-width", "1");
-    hLine.setAttribute("stroke-dasharray", "3 3");
-    gridGroup.appendChild(hLine);
-  }
-
-  svg.appendChild(gridGroup);
-
-  // C. HISTORICAL DATA (Sharp Line + Area Gradient)
-  if (pastPts.length > 1) {
-    var pastPaths = buildSharpPathTC(pastPts);
-
-    // Area Gradient (Past)
-    var areaEl = document.createElementNS(ns, "path");
-    areaEl.setAttribute("d", pastPaths.area);
-    areaEl.setAttribute("fill", fillUrl);
-    areaEl.setAttribute("mask", "url(#lineEdgeFadeMask)");
-    svg.appendChild(areaEl);
-
-    // Main Line (Past) with Edge Fade & Glow Filter
-    var lineEl = document.createElementNS(ns, "path");
-    lineEl.setAttribute("d", pastPaths.line);
-    lineEl.setAttribute("fill", "none");
-    lineEl.setAttribute("stroke", mainColor);
-    lineEl.setAttribute("stroke-width", "2.5");
-    lineEl.setAttribute("stroke-linecap", "butt");
-    lineEl.setAttribute("stroke-linejoin", "miter");
-    lineEl.setAttribute("stroke-miterlimit", "10");
-    if (glowFilterId) lineEl.setAttribute("filter", "url(#" + glowFilterId + ")");
-    lineEl.setAttribute("mask", "url(#lineEdgeFadeMask)");
-    svg.appendChild(lineEl);
-  }
-
-  // D. FUTURE PROJECTION (Sharp Line + Area Gradient)
-  if (futurePts.length > 1) {
-    var futurePaths = buildSharpPathTC(futurePts);
-
-    // Area Gradient (Future)
-    var futureAreaEl = document.createElementNS(ns, "path");
-    futureAreaEl.setAttribute("d", futurePaths.area);
-    futureAreaEl.setAttribute("fill", fillUrl);
-    futureAreaEl.setAttribute("opacity", "0.4");
-    futureAreaEl.setAttribute("mask", "url(#lineEdgeFadeMask)");
-    svg.appendChild(futureAreaEl);
-
-    // Future Projection Line
-    var futureLineEl = document.createElementNS(ns, "path");
-    futureLineEl.setAttribute("d", futurePaths.line);
-    futureLineEl.setAttribute("fill", "none");
-    futureLineEl.setAttribute("stroke", futureColor);
-    futureLineEl.setAttribute("stroke-width", "2");
-    futureLineEl.setAttribute("stroke-linecap", "round");
-    futureLineEl.setAttribute("stroke-linejoin", "round");
-    futureLineEl.setAttribute("mask", "url(#lineEdgeFadeMask)");
-    svg.appendChild(futureLineEl);
-  }
-
-  // E. LIVE TRANSITION DOT
-  if (showLiveDot && pastPts.length > 0) {
-    var lastPastPt = pastPts[pastPts.length - 1];
-
-    // Glow Aura Ring
-    var dotGlow = document.createElementNS(ns, "circle");
-    dotGlow.setAttribute("cx", lastPastPt.x);
-    dotGlow.setAttribute("cy", lastPastPt.y);
-    dotGlow.setAttribute("r", "8");
-    dotGlow.setAttribute("fill", mainColor);
-    dotGlow.setAttribute("opacity", "0.35");
-    if (glowFilterId) dotGlow.setAttribute("filter", "url(#" + glowFilterId + ")");
-    svg.appendChild(dotGlow);
-
-    // Solid Core Dot
-    var dotCore = document.createElementNS(ns, "circle");
-    dotCore.setAttribute("cx", lastPastPt.x);
-    dotCore.setAttribute("cy", lastPastPt.y);
-    dotCore.setAttribute("r", "5");
-    dotCore.setAttribute("fill", mainColor);
-    dotCore.setAttribute("stroke", "#0f172a");
-    dotCore.setAttribute("stroke-width", "1.5");
-    svg.appendChild(dotCore);
-  }
-
-  // =========================================================================
-  // F. PEAK / MAX DATA POINT LABEL (Small SVG Tag Badge)
-  // =========================================================================
-  var maxPt = pts.reduce(function(prev, current) {
-    return (current.amount > prev.amount) ? current : prev;
-  }, pts[0]);
-
-  if (maxPt && maxPt.amount > 0) {
-    var valTxt = fmtShort(maxPt.amount);
-    var badgeW = 60;
-    var badgeH = 18;
-    var bx = maxPt.x - badgeW / 2;
-    var by = maxPt.y - 26; // Positioned 26px above peak marker point
-
-    var labelGroup = document.createElementNS(ns, "g");
-    labelGroup.setAttribute("mask", "url(#lineEdgeFadeMask)");
-
-    // Hollow Ring Marker at Max Peak Point
-    var peakMarker = document.createElementNS(ns, "circle");
-    peakMarker.setAttribute("cx", maxPt.x);
-    peakMarker.setAttribute("cy", maxPt.y);
-    peakMarker.setAttribute("r", "4");
-    peakMarker.setAttribute("fill", "#0f172a");
-    peakMarker.setAttribute("stroke", mainColor);
-    peakMarker.setAttribute("stroke-width", "2");
-    labelGroup.appendChild(peakMarker);
-
-    // Background Pill Box
-    var rect = document.createElementNS(ns, "rect");
-    rect.setAttribute("x", bx);
-    rect.setAttribute("y", by);
-    rect.setAttribute("width", badgeW);
-    rect.setAttribute("height", badgeH);
-    rect.setAttribute("rx", "4");
-    rect.setAttribute("fill", "#0f172a");
-    rect.setAttribute("stroke-width", "1");
-    rect.setAttribute("opacity", "0.9");
-    labelGroup.appendChild(rect);
-
-    // Text Label Inside Pill
-    var txt = document.createElementNS(ns, "text");
-    txt.setAttribute("x", maxPt.x);
-    txt.setAttribute("y", by + 18);
-    txt.setAttribute("text-anchor", "middle");
-    txt.setAttribute("font-size", "14");
-    txt.setAttribute("font-weight", "700");
-    txt.setAttribute("fill", mainColor);
-    txt.textContent = valTxt;
-    labelGroup.appendChild(txt);
-
-    svg.appendChild(labelGroup);
-  }
-}
+    function drawSegmentedExpenseLine(pts,mainColor,futureColor,fillUrl,glowFilterId,svg,ns,showLiveDot){if(pts&&pts.length){for(var now=new Date,pastPts=[],futurePts=[],i=0;i<pts.length;i++)pts[i].date<=now?pastPts.push(pts[i]):(0===futurePts.length&&pastPts.length>0&&futurePts.push(pastPts[pastPts.length-1]),futurePts.push(pts[i]));var fullPaths=buildSharpPathTC(pts),clipId="areaClip-"+Math.random().toString(36).substring(2,9),defs=svg.querySelector("defs")||svg,clipPath=document.createElementNS(ns,"clipPath");clipPath.setAttribute("id",clipId);var clipAreaPath=document.createElementNS(ns,"path");clipAreaPath.setAttribute("d",fullPaths.area),clipPath.appendChild(clipAreaPath),defs.appendChild(clipPath);var gridGroup=document.createElementNS(ns,"g");gridGroup.setAttribute("clip-path","url(#"+clipId+")"),gridGroup.setAttribute("mask","url(#lineEdgeFadeMask)");for(var k=0;k<pts.length;k++){var vLine=document.createElementNS(ns,"line");vLine.setAttribute("x1",pts[k].x),vLine.setAttribute("x2",pts[k].x),vLine.setAttribute("y1",PAD_TOP),vLine.setAttribute("y2",VB_H-PAD_BOTTOM),vLine.setAttribute("stroke","rgba(255, 255, 255, 0.12)"),vLine.setAttribute("stroke-width","1"),vLine.setAttribute("stroke-dasharray","3 3"),gridGroup.appendChild(vLine)}for(var plotH=VB_H-PAD_TOP-PAD_BOTTOM,g=0;g<=4;g++){var gy=PAD_TOP+(1-g/4)*plotH,hLine=document.createElementNS(ns,"line");hLine.setAttribute("x1",PAD_LEFT),hLine.setAttribute("x2",VB_W-PAD_RIGHT),hLine.setAttribute("y1",gy),hLine.setAttribute("y2",gy),hLine.setAttribute("stroke","rgba(255, 255, 255, 0.12)"),hLine.setAttribute("stroke-width","1"),hLine.setAttribute("stroke-dasharray","3 3"),gridGroup.appendChild(hLine)}if(svg.appendChild(gridGroup),pastPts.length>1){var pastPaths=buildSharpPathTC(pastPts),areaEl=document.createElementNS(ns,"path");areaEl.setAttribute("d",pastPaths.area),areaEl.setAttribute("fill",fillUrl),areaEl.setAttribute("mask","url(#lineEdgeFadeMask)"),svg.appendChild(areaEl);var lineEl=document.createElementNS(ns,"path");lineEl.setAttribute("d",pastPaths.line),lineEl.setAttribute("fill","none"),lineEl.setAttribute("stroke",mainColor),lineEl.setAttribute("stroke-width","2.5"),lineEl.setAttribute("stroke-linecap","butt"),lineEl.setAttribute("stroke-linejoin","miter"),lineEl.setAttribute("stroke-miterlimit","10"),glowFilterId&&lineEl.setAttribute("filter","url(#"+glowFilterId+")"),lineEl.setAttribute("mask","url(#lineEdgeFadeMask)"),svg.appendChild(lineEl)}if(futurePts.length>1){var futurePaths=buildSharpPathTC(futurePts),futureAreaEl=document.createElementNS(ns,"path");futureAreaEl.setAttribute("d",futurePaths.area),futureAreaEl.setAttribute("fill",fillUrl),futureAreaEl.setAttribute("opacity","0.4"),futureAreaEl.setAttribute("mask","url(#lineEdgeFadeMask)"),svg.appendChild(futureAreaEl);var futureLineEl=document.createElementNS(ns,"path");futureLineEl.setAttribute("d",futurePaths.line),futureLineEl.setAttribute("fill","none"),futureLineEl.setAttribute("stroke",futureColor),futureLineEl.setAttribute("stroke-width","2"),futureLineEl.setAttribute("stroke-linecap","round"),futureLineEl.setAttribute("stroke-linejoin","round"),futureLineEl.setAttribute("mask","url(#lineEdgeFadeMask)"),svg.appendChild(futureLineEl)}if(showLiveDot&&pastPts.length>0){var lastPastPt=pastPts[pastPts.length-1],dotGlow=document.createElementNS(ns,"circle");dotGlow.setAttribute("cx",lastPastPt.x),dotGlow.setAttribute("cy",lastPastPt.y),dotGlow.setAttribute("r","8"),dotGlow.setAttribute("fill",mainColor),dotGlow.setAttribute("opacity","0.35"),glowFilterId&&dotGlow.setAttribute("filter","url(#"+glowFilterId+")"),svg.appendChild(dotGlow);var dotCore=document.createElementNS(ns,"circle");dotCore.setAttribute("cx",lastPastPt.x),dotCore.setAttribute("cy",lastPastPt.y),dotCore.setAttribute("r","5"),dotCore.setAttribute("fill",mainColor),dotCore.setAttribute("stroke","#0f172a"),dotCore.setAttribute("stroke-width","1.5"),svg.appendChild(dotCore)}var maxPt=pts.reduce(function(prev,current){return current.amount>prev.amount?current:prev},pts[0]);if(maxPt&&maxPt.amount>0){var valTxt=fmtShort(maxPt.amount),bx=maxPt.x-30,by=maxPt.y-26,labelGroup=document.createElementNS(ns,"g");labelGroup.setAttribute("mask","url(#lineEdgeFadeMask)");var peakMarker=document.createElementNS(ns,"circle");peakMarker.setAttribute("cx",maxPt.x),peakMarker.setAttribute("cy",maxPt.y),peakMarker.setAttribute("r","4"),peakMarker.setAttribute("fill","#0f172a"),peakMarker.setAttribute("stroke",mainColor),peakMarker.setAttribute("stroke-width","2"),labelGroup.appendChild(peakMarker);var rect=document.createElementNS(ns,"rect");rect.setAttribute("x",bx),rect.setAttribute("y",by),rect.setAttribute("width",60),rect.setAttribute("height",18),rect.setAttribute("rx","4"),rect.setAttribute("fill","#0f172a"),rect.setAttribute("stroke-width","1"),rect.setAttribute("opacity","0.9"),labelGroup.appendChild(rect);var txt=document.createElementNS(ns,"text");txt.setAttribute("x",maxPt.x),txt.setAttribute("y",by+18),txt.setAttribute("text-anchor","middle"),txt.setAttribute("font-size","14"),txt.setAttribute("font-weight","700"),txt.setAttribute("fill",mainColor),txt.textContent=valTxt,labelGroup.appendChild(txt),svg.appendChild(labelGroup)}}}
     function getCurrentMonthIndex(){if(!currentXY.length)return 0;for(var now=new Date,year=now.getFullYear(),month=now.getMonth(),idx=0,i=0;i<currentXY.length;i++){var d=currentXY[i].date;if(!(d.getFullYear()<year||d.getFullYear()===year&&d.getMonth()<=month))break;idx=i}return idx}
     function getDefaultHoverIndex(){var currentIdx=getCurrentMonthIndex();return lineVisibility.expense&&!lineVisibility.balance?Math.min(currentXY.length-1,currentIdx):Math.min(currentXY.length-1,currentIdx+6)}
     function fmtShort(v) {
@@ -6648,6 +6648,526 @@ const ptrIndicator = document.getElementById('ptr-indicator');
       }
       startY = 0; currentY = 0;
     };
+
+/* ══ CONSOLIDATED FINANCIAL BREAKDOWN MODULE ══ */
+(function() {
+  var FB_BASE_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv";
+  
+  var GIDS = { income: "311369594", expense: "1608160084", debt: "271989628" };
+  var rawData = { income: [], expense: [], debt: [] };
+
+  var icons = {
+    income: {
+      salary: "https://github.com/tinsntp/investment/blob/main/ces.png?raw=true",
+      comp: "https://github.com/tinsntp/investment/blob/main/cash.png?raw=true",
+      invest: "https://github.com/tinsntp/investment/blob/main/stock.png?raw=true"
+    },
+    expense: {},
+    debt: {}
+  };
+
+  var RANGES = ["-1y", "-6m", "-3m", "current", "+3m", "+6m", "+1y"];
+  var currentRangeIndex = 3; // Defaults to 'current'
+
+  var RANGE_LABELS = {
+    "-1y": "Past 1 Year",
+    "-6m": "Past 6 Months",
+    "-3m": "Past 3 Months",
+    "current": "Current Month",
+    "+3m": "+3 Months",
+    "+6m": "+6 Months",
+    "+1y": "+1 Year"
+  };
+
+  function fmtShortDec(v) {
+    var a = Math.abs(v), sign = v < 0 ? "-" : "";
+    if (a >= 1e9) return sign + (a / 1e9).toFixed(0) + "B";
+    if (a >= 1e6) return sign + (a / 1e6).toFixed(0) + "M";
+    if (a >= 1e3) return sign + (a / 1e3).toFixed(0) + "K";
+    return sign + Math.round(a);
+  }
+
+  function initFinancialBreakdown() {
+    var now = Date.now();
+    Promise.all([
+      fetch(FB_BASE_URL + "&gid=" + GIDS.income + "&t=" + now).then(r => r.text()),
+      fetch(FB_BASE_URL + "&gid=" + GIDS.expense + "&t=" + now).then(r => r.text()),
+      fetch(FB_BASE_URL + "&gid=" + GIDS.debt + "&t=" + now).then(r => r.text())
+    ]).then(function(results) {
+      parseIncomeCSV(results[0]);
+      parseExpenseCSV(results[1]);
+      parseDebtCSV(results[2]);
+      
+      renderFBBreakdown(RANGES[currentRangeIndex]);
+    }).catch(function(err) {
+      console.error("FB Single Chart load error:", err);
+    });
+  }
+
+  function parseIncomeCSV(csvText) {
+    var lines = csvText.trim().split(/\r?\n/);
+    if (lines.length < 2) return;
+
+    rawData.income = [];
+    for (var i = 1; i < lines.length; i++) {
+      var cols = parseCSVLine(lines[i]);
+      var qStr = (cols[16] || "").trim();
+      if (!qStr) continue;
+
+      var d = parseMonthYear ? parseMonthYear(qStr) : null;
+      if (!d) continue;
+
+      var salary = Math.abs(parseAmtTopChart(cols[19] || "0"));
+      var invest = Math.abs(parseAmtTopChart(cols[20] || "0"));
+      var comp   = Math.abs(parseAmtTopChart(cols[21] || "0"));
+
+      rawData.income.push({ date: d, salary: salary, invest: invest, comp: comp, total: salary + invest + comp });
+    }
+  }
+
+  function parseExpenseCSV(csvText) {
+    var lines = csvText.trim().split(/\r?\n/);
+    if (lines.length < 3) return;
+    var iconRow = parseCSVLine(lines[0]);
+
+    icons.expense = {
+      rental: iconRow[3] || "",
+      bills: iconRow[6] || "",
+      livingCost: iconRow[7] || iconRow[8] || "",
+      family: iconRow[9] || ""
+    };
+
+    rawData.expense = [];
+    for (var i = 2; i < lines.length; i++) {
+      var cols = parseCSVLine(lines[i]);
+      var parts = (cols[0] || "").split("/");
+      if (parts.length < 2) continue;
+      var d = new Date(2000 + parseInt(parts[1], 10), parseInt(parts[0], 10) - 1, 1);
+
+      var rental = Math.abs(parseAmtTopChart(cols[3] || "0"));
+      var bills = Math.abs(parseAmtTopChart(cols[6] || "0"));
+      var living = Math.abs(parseAmtTopChart(cols[7] || "0")) + Math.abs(parseAmtTopChart(cols[8] || "0"));
+      var family = Math.abs(parseAmtTopChart(cols[9] || "0"));
+
+      rawData.expense.push({ date: d, rental: rental, bills: bills, livingCost: living, family: family, total: rental + bills + living + family });
+    }
+  }
+
+  function parseDebtCSV(csvText) {
+    var lines = csvText.trim().split(/\r?\n/);
+    if (lines.length < 2) return;
+
+    var iconRow = parseCSVLine(lines[0]);
+    icons.debt = {
+      shinhan: iconRow[3] || "",
+      sc: iconRow[4] || ""
+    };
+
+    rawData.debt = [];
+    for (var i = 1; i < lines.length; i++) {
+      var cols = parseCSVLine(lines[i]);
+      var dateStr = (cols[0] || "").trim();
+      if (!dateStr) continue;
+
+      var m = dateStr.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+      if (!m) continue;
+
+      var month = parseInt(m[1], 10) - 1;
+      var day   = parseInt(m[2], 10);
+      var year  = parseInt(m[3], 10);
+      var d = new Date(year, month, day);
+
+      var shinhan = Math.abs(parseAmtTopChart(cols[3] || "0"));
+      var sc      = Math.abs(parseAmtTopChart(cols[4] || "0"));
+
+      rawData.debt.push({ date: d, shinhan: shinhan, sc: sc, total: shinhan + sc });
+    }
+  }
+
+  function getDateRange(rangeKey) {
+    var now = new Date();
+    var curYear = now.getFullYear();
+    var curMonth = now.getMonth();
+    var offsetMap = { "-1y": -12, "-6m": -6, "-3m": -3, "current": 0, "+3m": 3, "+6m": 6, "+1y": 12 };
+    var months = offsetMap[rangeKey] !== undefined ? offsetMap[rangeKey] : 0;
+    
+    var start, end, mCount;
+
+    if (months < 0) {
+      mCount = Math.abs(months);
+      start = new Date(curYear, curMonth - mCount + 1, 1);
+      end = new Date(curYear, curMonth + 1, 0);
+    } else if (months > 0) {
+      mCount = months;
+      start = new Date(curYear, curMonth + 1, 1);
+      end = new Date(curYear, curMonth + mCount + 1, 0);
+    } else {
+      mCount = 1;
+      start = new Date(curYear, curMonth, 1);
+      end = new Date(curYear, curMonth + 1, 0);
+    }
+
+    return { 
+      start: start, 
+      end: end, 
+      monthsCount: mCount, 
+      isCurrent: rangeKey === "current",
+      isFuture: rangeKey.startsWith("+")
+    };
+  }
+
+  function renderFBBreakdown(rangeKey) {
+    var range = getDateRange(rangeKey);
+    var now = new Date();
+
+    // 1. Income Data
+    var incFiltered = rawData.income.filter(r => r.date >= range.start && r.date <= range.end);
+    var incActiveMonths = incFiltered.filter(r => r.total > 0).length;
+    var activeDivisor = range.isCurrent ? 1 : (incActiveMonths || incFiltered.length || range.monthsCount || 1);
+
+    var incSums = incFiltered.reduce((acc, r) => {
+      acc.salary += r.salary; acc.invest += r.invest; acc.comp += r.comp; acc.total += r.total;
+      return acc;
+    }, { salary: 0, invest: 0, comp: 0, total: 0 });
+
+    var incTotals = {
+      sum: incSums,
+      avg: {
+        salary: incSums.salary / activeDivisor,
+        invest: incSums.invest / activeDivisor,
+        comp: incSums.comp / activeDivisor,
+        total: incSums.total / activeDivisor
+      }
+    };
+
+    // 2. Expense Data
+    var expAvgMonthly, expTotals;
+    if (range.isCurrent) {
+      var startT12M = new Date(now.getFullYear(), now.getMonth() - 12, 1);
+      var endT12M   = new Date(now.getFullYear(), now.getMonth(), 0);
+      var expT12M   = rawData.expense.filter(r => r.date >= startT12M && r.date <= endT12M);
+      var divT12M   = expT12M.length || 12;
+
+      var sumsT12M = expT12M.reduce((acc, r) => {
+        acc.rental += r.rental; acc.bills += r.bills; acc.livingCost += r.livingCost; acc.family += r.family; acc.total += r.total;
+        return acc;
+      }, { rental: 0, bills: 0, livingCost: 0, family: 0, total: 0 });
+
+      expAvgMonthly = {
+        rental: sumsT12M.rental / divT12M,
+        bills: sumsT12M.bills / divT12M,
+        livingCost: sumsT12M.livingCost / divT12M,
+        family: sumsT12M.family / divT12M,
+        total: sumsT12M.total / divT12M
+      };
+
+      var curExpRaw = rawData.expense.filter(r => r.date >= range.start && r.date <= range.end);
+      var curExpSum = curExpRaw.length > 0 ? curExpRaw[0].total : expAvgMonthly.total;
+
+      expTotals = {
+        avg: expAvgMonthly,
+        sum: {
+          rental: curExpRaw.length > 0 ? curExpRaw[0].rental : expAvgMonthly.rental,
+          bills: curExpRaw.length > 0 ? curExpRaw[0].bills : expAvgMonthly.bills,
+          livingCost: curExpRaw.length > 0 ? curExpRaw[0].livingCost : expAvgMonthly.livingCost,
+          family: curExpRaw.length > 0 ? curExpRaw[0].family : expAvgMonthly.family,
+          total: curExpSum
+        }
+      };
+    } else if (range.isFuture) {
+      var startT12M = new Date(now.getFullYear(), now.getMonth() - 12, 1);
+      var endT12M   = new Date(now.getFullYear(), now.getMonth(), 0);
+      var expT12M   = rawData.expense.filter(r => r.date >= startT12M && r.date <= endT12M);
+      var divT12M   = expT12M.length || 12;
+
+      var sumsT12M = expT12M.reduce((acc, r) => {
+        acc.rental += r.rental; acc.bills += r.bills; acc.livingCost += r.livingCost; acc.family += r.family; acc.total += r.total;
+        return acc;
+      }, { rental: 0, bills: 0, livingCost: 0, family: 0, total: 0 });
+
+      expAvgMonthly = {
+        rental: sumsT12M.rental / divT12M,
+        bills: sumsT12M.bills / divT12M,
+        livingCost: sumsT12M.livingCost / divT12M,
+        family: sumsT12M.family / divT12M,
+        total: sumsT12M.total / divT12M
+      };
+
+      var mCount = range.monthsCount;
+      expTotals = {
+        avg: expAvgMonthly,
+        sum: {
+          rental: expAvgMonthly.rental * mCount,
+          bills: expAvgMonthly.bills * mCount,
+          livingCost: expAvgMonthly.livingCost * mCount,
+          family: expAvgMonthly.family * mCount,
+          total: expAvgMonthly.total * mCount
+        }
+      };
+    } else {
+      var expFiltered = rawData.expense.filter(r => r.date >= range.start && r.date <= range.end);
+      var divHist = expFiltered.length || range.monthsCount || 1;
+      var sumsHist = expFiltered.reduce((acc, r) => {
+        acc.rental += r.rental; acc.bills += r.bills; acc.livingCost += r.livingCost; acc.family += r.family; acc.total += r.total;
+        return acc;
+      }, { rental: 0, bills: 0, livingCost: 0, family: 0, total: 0 });
+
+      expTotals = {
+        sum: sumsHist,
+        avg: {
+          rental: sumsHist.rental / divHist,
+          bills: sumsHist.bills / divHist,
+          livingCost: sumsHist.livingCost / divHist,
+          family: sumsHist.family / divHist,
+          total: sumsHist.total / divHist
+        }
+      };
+    }
+
+    // 3. Debt Data
+    var debtFiltered = rawData.debt.filter(r => r.date >= range.start && r.date <= range.end);
+    var debtDivisor = range.isCurrent ? 1 : activeDivisor;
+    var debtSums = debtFiltered.reduce((acc, r) => {
+      acc.shinhan += r.shinhan; acc.sc += r.sc; acc.total += r.total;
+      return acc;
+    }, { shinhan: 0, sc: 0, total: 0 });
+
+    var debtTotals = {
+      sum: debtSums,
+      avg: {
+        shinhan: debtSums.shinhan / debtDivisor,
+        sc: debtSums.sc / debtDivisor,
+        total: debtSums.total / debtDivisor
+      }
+    };
+
+    // Cashflow Calculations
+    var cashflowSum = incTotals.sum.total - expTotals.sum.total - debtTotals.sum.total;
+    var cashflowAvg = range.isCurrent ? (incTotals.sum.total - expTotals.avg.total - debtTotals.sum.total) : (cashflowSum / activeDivisor);
+
+    // Standardized Percentage Basis
+    var totalIncomeBasis = range.isCurrent ? incTotals.avg.total : incTotals.sum.total;
+    var totalDenom = totalIncomeBasis > 0 ? totalIncomeBasis : 1;
+
+    function fmtHeader(title, sumVal, avgVal) {
+      if (range.isCurrent) {
+        return title + " (AVG: " + fmtShortDec(avgVal) + ")";
+      }
+      return title + " (∑" + fmtShortDec(sumVal) + " / AVG: " + fmtShortDec(avgVal) + ")";
+    }
+
+    var categories = [
+      {
+        id: "cashflow",
+        title: "Cashflow",
+        headerLabel: fmtHeader("Cashflow", cashflowSum, cashflowAvg),
+        total: cashflowSum,
+        pct: (((range.isCurrent ? cashflowAvg : cashflowSum) / totalDenom) * 100).toFixed(1),
+        color: cashflowSum >= 0 ? "#2dd4bf" : "#f87171",
+        children: [
+          { name: "Salary", sumVal: incTotals.sum.salary, avgVal: incTotals.avg.salary, icon: icons.income.salary },
+          { name: "Invest", sumVal: incTotals.sum.invest, avgVal: incTotals.avg.invest, icon: icons.income.invest },
+          { name: "Comp.", sumVal: incTotals.sum.comp, avgVal: incTotals.avg.comp, icon: icons.income.comp }
+        ]
+      },
+      {
+        id: "expense",
+        title: "Expenses",
+        headerLabel: fmtHeader("Expenses", expTotals.sum.total, expTotals.avg.total),
+        total: expTotals.avg.total,
+        pct: (((range.isCurrent ? expTotals.avg.total : expTotals.sum.total) / totalDenom) * 100).toFixed(1),
+        color: "#f472b6",
+        isExpense: true,
+        children: [
+          { name: "Rental", sumVal: expTotals.sum.rental, avgVal: expTotals.avg.rental, icon: icons.expense.rental },
+          { name: "Bills", sumVal: expTotals.sum.bills, avgVal: expTotals.avg.bills, icon: icons.expense.bills },
+          { name: "Living", sumVal: expTotals.sum.livingCost, avgVal: expTotals.avg.livingCost, icon: icons.expense.livingCost },
+          { name: "Family", sumVal: expTotals.sum.family, avgVal: expTotals.avg.family, icon: icons.expense.family }
+        ]
+      },
+      {
+        id: "debts",
+        title: "Debts",
+        headerLabel: fmtHeader("Debts", debtTotals.sum.total, debtTotals.avg.total),
+        total: debtTotals.sum.total,
+        pct: (((range.isCurrent ? debtTotals.avg.total : debtTotals.sum.total) / totalDenom) * 100).toFixed(1),
+        color: "#60a5fa",
+        isDebt: true,
+        children: [
+          { name: "Shinhan", sumVal: debtTotals.sum.shinhan, avgVal: debtTotals.avg.shinhan, icon: icons.debt.shinhan },
+          { name: "SC", sumVal: debtTotals.sum.sc, avgVal: debtTotals.avg.sc, icon: icons.debt.sc }
+        ]
+      }
+    ];
+
+    categories.sort((a, b) => b.total - a.total);
+
+    var topItem = categories[0];
+    var midItem = categories[1];
+    var botItem = categories[2];
+
+    function buildInlineChipsHtml(item) {
+      function fmtVal(sumV, avgV) {
+        if (range.isCurrent) {
+          return "" + fmtShortDec(avgV);
+        }
+        if (item.isExpense && range.isFuture) {
+          return "AVG: " + fmtShortDec(avgV);
+        }
+        return "∑" + fmtShortDec(sumV) + " / x̄" + fmtShortDec(avgV);
+      }
+
+      // 5. Debt child items: strictly show ONLY average amount
+      function fmtDebtVal(avgV) {
+        if (range.isCurrent) {
+          return "" + fmtShortDec(avgV);
+        }
+        return "" + fmtShortDec(avgV);
+      }
+
+    if (item.isDebt) {
+    var dHtml = '<div class="fb-inline-chips fb-debt-chips-inline">';
+    item.children.forEach(function(c) {
+        if (!c.sumVal || isNaN(c.sumVal) || Math.round(c.sumVal) === 0) return;
+        dHtml += '<span class="fb-chip-icon-only">';
+        if (c.icon) {
+        dHtml += '<img class="fb-chip-icon" src="' + c.icon + '" alt="' + c.name + '" onerror="this.style.display=\'none\'" />';
+        }
+        dHtml += '<span class="fb-chip-val">' + fmtDebtVal(c.avgVal) + '</span></span>';
+    });
+    dHtml += '</div>';
+    return dHtml;
+    }
+
+      var html = '<div class="fb-inline-chips">';
+      item.children.forEach(function(c) {
+        if (!c.sumVal || isNaN(c.sumVal) || Math.round(c.sumVal) === 0) return;
+
+        html += '<span class="fb-chip">';
+        if (c.icon) {
+          html += '<img class="fb-chip-icon" src="' + c.icon + '" onerror="this.style.display=\'none\'" />';
+        }
+        html += c.name + ': <span class="fb-chip-val">' + fmtVal(c.sumVal, c.avgVal) + '</span></span>';
+      });
+      html += '</div>';
+      return html;
+    }
+
+    // BUILD MAIN HTML
+    var html = '';
+
+    // 4. Smaller Navigation Filter Bar
+    html += '<div class="fb-nav-bar">';
+    html += '  <button class="fb-nav-btn" id="fb-prev-btn" aria-label="Previous filter">';
+    html += '    <i class="bi bi-chevron-left"></i>';
+    html += '  </button>';
+    html += '  <span class="fb-nav-label">' + RANGE_LABELS[rangeKey] + '</span>';
+    html += '  <button class="fb-nav-btn" id="fb-next-btn" aria-label="Next filter">';
+    html += '    <i class="bi bi-chevron-right"></i>';
+    html += '  </button>';
+    html += '</div>';
+
+    // Chart Layout Canvas
+    html += '<div class="fb-chart-layout">';
+    
+    // Top-Right Section
+    html += '  <div class="fb-top-right-metric">';
+    html += '    <div class="fb-metric-header">' + topItem.headerLabel + '</div>';
+    html += '    <div class="fb-main-pct" style="color:' + topItem.color + ';">' + topItem.pct + '%</div>';
+    html +=      buildInlineChipsHtml(topItem);
+    html += '  </div>';
+
+    // Left Top Section
+    html += '  <div class="fb-left-top-metric">';
+    html += '    <div class="fb-metric-header">' + midItem.headerLabel + '</div>';
+    html += '    <div class="fb-sec-pct" style="color:' + midItem.color + ';">' + midItem.pct + '%</div>';
+    html +=      buildInlineChipsHtml(midItem);
+    html += '  </div>';
+
+    // Left Bottom Section
+    html += '  <div class="fb-left-bottom-metric">';
+    html += '    <div class="fb-metric-header">' + botItem.headerLabel + '</div>';
+    html += '    <div class="fb-sec-pct" style="color:' + botItem.color + ';">' + botItem.pct + '%</div>';
+    html +=      buildInlineChipsHtml(botItem);
+    html += '  </div>';
+
+  // Determine number of zigzag steps dynamically based on percentage scale or item weight
+var dynamicSteps = Math.min(18, Math.max(8, Math.round(topItem.pct / 5)));
+var dynamicPathData = generateDynamicZigzagPath(120, 20, dynamicSteps);
+
+// Build the SVG HTML using the dynamic path
+html += '  <svg class="fb-svg-canvas" viewBox="0 0 300 220" preserveAspectRatio="none">';
+html += '    <defs>';
+html += '      <linearGradient id="fbLineGradient" x1="0%" y1="100%" x2="100%" y2="0%">';
+html += '        <stop offset="0%" stop-color="#f472b6" />';
+html += '        <stop offset="50%" stop-color="#60a5fa" />';
+html += '        <stop offset="100%" stop-color="' + topItem.color + '" />';
+html += '      </linearGradient>';
+html += '    </defs>';
+html += '    <line x1="0" y1="110" x2="300" y2="110" stroke="rgba(255, 255, 255, 0.25)" stroke-width="1.5" stroke-dasharray="2 3" />';
+html += '    <path class="fb-chart-line" vector-effect="non-scaling-stroke" d="' + dynamicPathData + '" fill="none" stroke="url(#fbLineGradient)" />';
+html += '  </svg>';
+    // Shifted Path: Starts clear of bottom chips (x=120, y=210) and weaves cleanly between metrics to top right (x=275, y=10)
+   html += '    <path class="fb-chart-line" vector-effect="non-scaling-stroke" d="M 115 195 L 122 188 L 127 192 L 133 182 L 138 185 L 144 172 L 150 175 L 156 160 L 162 163 L 168 148 L 174 151 L 182 135 L 190 138 L 198 118 L 206 102 L 215 85 L 225 65 L 240 42 L 260 20" fill="none" stroke="url(#fbLineGradient)" />';
+   html += '  </svg>';
+    html += '</div>';
+
+    document.getElementById("fb-content").innerHTML = html;
+
+    // Attach Event Listeners to Nav Buttons
+    document.getElementById("fb-prev-btn").addEventListener("click", function() {
+      if (currentRangeIndex > 0) {
+        currentRangeIndex--;
+        renderFBBreakdown(RANGES[currentRangeIndex]);
+      }
+    });
+
+    document.getElementById("fb-next-btn").addEventListener("click", function() {
+      if (currentRangeIndex < RANGES.length - 1) {
+        currentRangeIndex++;
+        renderFBBreakdown(RANGES[currentRangeIndex]);
+      }
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initFinancialBreakdown);
+  } else {
+    initFinancialBreakdown();
+  }
+})();
+// Generates a dynamic zigzag path based on data percentage or totals
+function generateDynamicZigzagPath(startVal, peakVal, stepsCount) {
+  var startX = 115, startY = 195;
+  var endX = 260, endY = 20;
+  
+  var path = "M " + startX + " " + startY;
+  var currentX = startX;
+  var currentY = startY;
+  
+  var dx = (endX - startX) / stepsCount;
+  var dy = (startY - endY) / stepsCount;
+  
+  // Create dynamic zigzag steps climbing towards the target value
+  for (var i = 1; i <= stepsCount; i++) {
+    currentX += dx + (Math.random() * 4 - 2); // Slight organic variation
+    
+    // Alternate up and down steps for the jagged effect
+    var jitter = (i % 2 === 0) ? 6 : -6;
+    currentY -= dy;
+    
+    // Smooth out into a clean sweep near the top
+    if (i > stepsCount * 0.7) {
+      jitter = 0; 
+    }
+    
+    path += " L " + Math.round(currentX) + " " + Math.round(currentY + jitter);
+  }
+  
+  // Final point connecting to top-right
+  path += " L " + endX + " " + endY;
+  return path;
+}
 
     // Touch events
     window.addEventListener('touchstart', onStart, { passive: true });
