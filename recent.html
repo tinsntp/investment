@@ -360,13 +360,12 @@ background:
 #ca-wrap { display: block;  width: 100%; }
 #ca-section-expense{margin-top:10px;display:none!important;}
 #ca-col-left,
-#ca-col-right{display:inline-flex;flex-direction:column;gap:3vw;vertical-align:top;min-width:0;justify-content:flex-start;padding:0;overflow:hidden;margin-top:10px}
+#ca-col-right{display:inline-flex;flex-direction:column;gap:3vw;vertical-align:top;min-width:0;justify-content:flex-start;padding:0;overflow:hidden;}
 #ca-col-left { width: 60%;}
 #ca-col-right { width: 40%;gap: 0; }
 #ca-section-balance,#ca-section-income,#ca-section-expense,#ca-section-weather{display:flex;flex-direction:column;flex:0 0 auto;min-width:0}
 @media (max-width:400px){#ca-wrap{display:flex !important;flex-direction:column !important}
 #ca-col-left,#ca-col-right{display:flex !important;width:100% !important;max-width:100% !important;margin-top:0 !important;margin-right:0 !important}
-#ca-col-right{margin-top:20px !important}
 }
 .income-widget{padding:0;background:transparent;max-width:100%;margin:10px 0 30px 0}
 .income-total{font-size:23px;font-family:"JetBrains Mono";font-weight:700;color:#ffffff;margin-bottom:10px;letter-spacing:-0.2px;text-align:right;text-decoration:none !important}
@@ -797,7 +796,7 @@ to{transform:rotate(360deg)}
   align-items: center;
   justify-content: center;
   gap: 12px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;margin-top: 5px;
 }
 
 .fb-nav-btn {
@@ -824,7 +823,7 @@ to{transform:rotate(360deg)}
   font-size: 12px; /* Smaller font size */
   font-weight: 700;
   color: #ffffff;
-  min-width: 60px;
+  min-width: 85px;
   text-align: center;
   letter-spacing: -0.2px;
 }
@@ -6885,17 +6884,23 @@ if (rangeKey === "current-year") {
     };
   }
 
-  function renderFBBreakdown(rangeKey) {
+function renderFBBreakdown(rangeKey) {
     var range = getDateRange(rangeKey);
     var now = new Date();
 
-    // 1. Income Data
+    // 1. Income Data (incSums and incTotals)
     var incFiltered = rawData.income.filter(r => r.date >= range.start && r.date <= range.end);
-    var incActiveMonths = incFiltered.filter(r => r.total > 0).length;
-    var incDivisor = range.isCurrent ? 1 : (range.isYearly ? incActiveMonths : (incActiveMonths || incFiltered.length || range.monthsCount || 1));
+    var activeIncomeRows = incFiltered.filter(r => r.total > 0);
+    var activeDates = new Set(activeIncomeRows.map(r => r.date.getTime()));
+    var incActiveMonths = activeIncomeRows.length; // NEW: was referenced later but never defined — fixed here
+
+    var incDivisor = range.isCurrent ? 1 : (incActiveMonths || range.monthsCount || 1);
 
     var incSums = incFiltered.reduce((acc, r) => {
-      acc.salary += r.salary; acc.invest += r.invest; acc.comp += r.comp; acc.total += r.total;
+      acc.salary += r.salary; 
+      acc.invest += r.invest; 
+      acc.comp += r.comp; 
+      acc.total += r.total;
       return acc;
     }, { salary: 0, invest: 0, comp: 0, total: 0 });
 
@@ -6909,36 +6914,73 @@ if (rangeKey === "current-year") {
       }
     };
 
-    // 2. Expense Data
+    // 2. Expense Data — STRICTLY filtered to only months where income has a value
     var expFiltered = rawData.expense.filter(r => r.date >= range.start && r.date <= range.end);
-    var expActiveMonths = expFiltered.filter(r => r.total > 0).length;
-    var expDivisor = range.isCurrent ? 1 : (range.isYearly ? expActiveMonths : (expActiveMonths || expFiltered.length || range.monthsCount || 1));
+    var expActiveFiltered = range.isCurrent ? expFiltered : expFiltered.filter(r => activeDates.has(r.date.getTime()));
+    var expDivisor = range.isCurrent ? 1 : incDivisor; // NEW: uses incDivisor consistently (same active-month count as income)
 
-    var expSums = expFiltered.reduce((acc, r) => {
-      acc.rental += r.rental; acc.bills += r.bills; acc.livingCost += r.livingCost; acc.family += r.family; acc.total += r.total;
-      return acc;
-    }, { rental: 0, bills: 0, livingCost: 0, family: 0, total: 0 });
+    var expTotals;
 
-    var expAvgMonthly = {
-      rental: expSums.rental / expDivisor,
-      bills: expSums.bills / expDivisor,
-      livingCost: expSums.livingCost / expDivisor,
-      family: expSums.family / expDivisor,
-      total: expSums.total / expDivisor
-    };
+    if (range.isFuture) {
+      var currentYearExp = rawData.expense.filter(r => r.date.getFullYear() === now.getFullYear());
+      var divYear = currentYearExp.length || 1;
+      
+      var sumsYear = currentYearExp.reduce((acc, r) => {
+        acc.rental += r.rental; acc.bills += r.bills; acc.livingCost += r.livingCost; acc.family += r.family; acc.total += r.total;
+        return acc;
+      }, { rental: 0, bills: 0, livingCost: 0, family: 0, total: 0 });
 
-    var expTotals = {
-      sum: expSums,
-      avg: expAvgMonthly
-    };
+      var avgYearMonthly = {
+        rental: sumsYear.rental / divYear,
+        bills: sumsYear.bills / divYear,
+        livingCost: sumsYear.livingCost / divYear,
+        family: sumsYear.family / divYear,
+        total: sumsYear.total / divYear
+      };
 
-    // 3. Debt Data
+      var mCount = range.monthsCount || 1;
+      
+      expTotals = {
+        avg: avgYearMonthly,
+        sum: {
+          rental: avgYearMonthly.rental * mCount,
+          bills: avgYearMonthly.bills * mCount,
+          livingCost: avgYearMonthly.livingCost * mCount,
+          family: avgYearMonthly.family * mCount,
+          total: avgYearMonthly.total * mCount
+        }
+      };
+    } else {
+      var expSums = expActiveFiltered.reduce((acc, r) => {
+        acc.rental += r.rental; 
+        acc.bills += r.bills; 
+        acc.livingCost += r.livingCost; 
+        acc.family += r.family; 
+        acc.total += r.total; 
+        return acc;
+      }, { rental: 0, bills: 0, livingCost: 0, family: 0, total: 0 });
+
+      expTotals = {
+        sum: expSums,
+        avg: {
+          rental: expSums.rental / expDivisor,
+          bills: expSums.bills / expDivisor,
+          livingCost: expSums.livingCost / expDivisor,
+          family: expSums.family / expDivisor,
+          total: expSums.total / expDivisor
+        }
+      };
+    }
+
+    // 3. Debt Data — STRICTLY filtered to only months where income has a value (same pattern as Expense)
     var debtFiltered = rawData.debt.filter(r => r.date >= range.start && r.date <= range.end);
-    var debtActiveMonths = debtFiltered.filter(r => r.total > 0).length;
-    var debtDivisor = range.isCurrent ? 1 : (range.isYearly ? debtActiveMonths : (debtActiveMonths || debtFiltered.length || range.monthsCount || 1));
+    var debtActiveFiltered = range.isCurrent ? debtFiltered : debtFiltered.filter(r => activeDates.has(r.date.getTime()));
+    var debtDivisor = range.isCurrent ? 1 : incDivisor; // consistent with expDivisor
 
-    var debtSums = debtFiltered.reduce((acc, r) => {
-      acc.shinhan += r.shinhan; acc.sc += r.sc; acc.total += r.total;
+    var debtSums = debtActiveFiltered.reduce((acc, r) => {
+      acc.shinhan += r.shinhan; 
+      acc.sc += r.sc; 
+      acc.total += r.total; 
       return acc;
     }, { shinhan: 0, sc: 0, total: 0 });
 
@@ -6953,21 +6995,22 @@ if (rangeKey === "current-year") {
 
     // 4. Cashflow Calculations
     var cashflowSum = incTotals.sum.total - expTotals.sum.total - debtTotals.sum.total;
-    var cashflowDivisor = range.isCurrent ? 1 : (range.isYearly ? incActiveMonths : (incActiveMonths || range.monthsCount || 1));
+    var cashflowDivisor = range.isCurrent ? 1 : (range.isYearly ? incActiveMonths : (incActiveMonths || range.monthsCount || 1)); // FIXED: incActiveMonths now properly defined
     var cashflowAvg = cashflowSum / cashflowDivisor;
-    // Standardized Percentage Basis
+
     var totalIncomeBasis = range.isCurrent ? incTotals.avg.total : incTotals.sum.total;
     var totalDenom = totalIncomeBasis > 0 ? totalIncomeBasis : 1;
+
 
 function fmtHeader(title, sumVal, avgVal) {
       // Only force average display for Expenses during Current Year view
       if (title === "Expenses" && range.isYearly) {
-        return title + " (x̄ ₫" + fmtShortDec(avgVal) + ")";
+        return title + " (₫" + fmtShortDec(avgVal) + ")";
       }
       if (range.isCurrent || title === "Expenses" || title === "Debts") {
-        return title + " (x̄ ₫" + fmtShortDec(avgVal) + ")";
+        return title + " (₫" + fmtShortDec(avgVal) + ")";
       }
-      return title + " (∑₫" + fmtShortDec(sumVal) + " / x̄ ₫" + fmtShortDec(avgVal) + ")";
+      return title + " (∑₫" + fmtShortDec(sumVal) + " / ₫" + fmtShortDec(avgVal) + ")";
     }
 
     // Fixed Positions: Cashflow -> Top Right, Expenses -> Top Left, Debts -> Bottom Left
@@ -7277,7 +7320,7 @@ var caActiveIdx = null;
     updateBalanceVisibility();
 
     fetchOrderSheetCSV();
-    caLoadAccounts();loadTransactionHistory();
+    loadTransactionHistory();
     loadSubscriptions();
 
     loadRecent();fetchSheetCSV();
