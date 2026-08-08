@@ -707,7 +707,7 @@ tbody tr.current-row td{font-weight:600;}
 .neutral{color:var(--text-muted)}
 
 .nav-card{grid-column:1/-1;font-family:DM Sans;padding:0;margin-bottom:10px;text-align:left}.nav-card-body{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start}.nav-card-left{display:flex;flex-direction:column;gap:12px;min-width:0}.nav-stat-list{display:flex;flex-direction:column;margin-left:5px;gap:14px;flex:1;min-width:0}.nav-stat-item{display:flex;align-items:center;gap:10px}.nav-stat-icon{width:25px;height:25px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background-size:cover;background-position:center}.nav-stat-info{display:flex;flex-direction:column;min-width:0}.nav-stat-label-row{display:flex;align-items:baseline;justify-content:space-between;gap:8px}.nav-stat-label{font-size:12px;color:rgba(255,255,255,.5)}.nav-stat-pct{color:rgba(255,255,255,.35);font-weight:500}.nav-stat-value{font-size:12px;font-weight:700;color:#fff}.nav-stat-pnl{font-size:11px;text-align:left;font-weight:600}.nav-donut-wrap{position:relative;width:90px;height:180px;flex-shrink:0;margin-right:21px;margin-top:-15px;overflow:visible}
-#nav-donut-svg{width:120px;height:236px;position:static;top:auto;left:auto}.nav-donut-label{font-family:"DM Sans",sans-serif;font-weight:700;fill:#fff;text-anchor:middle;dominant-baseline:middle}@media (max-width:400px){.nav-stat-icon{width:20px;height:20px}.nav-stat-item{gap:8px}}.dashboard-grid{display:flex;flex-direction:column}.hero-card-port{background:0 0;margin:10px;position:relative;overflow:hidden}.hero-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}.hero-title-group h2{font-size:13px;font-weight:700;color:var(--teal-primary);text-transform:uppercase;letter-spacing:1px}.hero-title-group .date-range{font-size:12px;color:var(--text-secondary);margin-top:2px}.hero-main-stat{display:flex;align-items:baseline;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+#nav-donut-svg{width:120px;height:238px;position:static;top:auto;left:auto}.nav-donut-label{font-family:"DM Sans",sans-serif;font-weight:700;fill:#fff;text-anchor:middle;dominant-baseline:middle}@media (max-width:400px){.nav-stat-icon{width:20px;height:20px}.nav-stat-item{gap:8px}}.dashboard-grid{display:flex;flex-direction:column}.hero-card-port{background:0 0;margin:10px;position:relative;overflow:hidden}.hero-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}.hero-title-group h2{font-size:13px;font-weight:700;color:var(--teal-primary);text-transform:uppercase;letter-spacing:1px}.hero-title-group .date-range{font-size:12px;color:var(--text-secondary);margin-top:2px}.hero-main-stat{display:flex;align-items:baseline;gap:12px;margin-bottom:12px;flex-wrap:wrap}
 .hero-amount,#balance-val{font-weight:800;letter-spacing:-1px;background:linear-gradient(90deg,#fff 0,#14b8a6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .hero-balance{font-size:23px!important;color:#fff!important;margin-bottom:3px;font-weight:400!important;}
 .hero-balance-v2{font-size:16px!important;color:#fff!important;margin-bottom:3px;font-weight:700;}
@@ -2968,7 +2968,7 @@ incomeSeries = keys.map(function(k) {
 
         const currentPathD=createSmoothPath(currentValues),baselinePathD=createSmoothPath(baselineValues),lastIdx=currentValues.length-1,lastX=getX(lastIdx,currentValues.length),lastY=getY(currentValues[lastIdx]),firstX=getX(0,currentValues.length),areaPathD=`${currentPathD} L ${lastX},${height-paddingBottom} L ${firstX},${height-paddingBottom} Z`,xCoords=currentValues.map((_,i)=>getX(i,currentValues.length));
 
-        // NEW: find the highest point in currentValues, not just the last one
+        // find the highest point in currentValues
         let highestIdx = 0;
         for (let i = 1; i < currentValues.length; i++) {
             if (currentValues[i] > currentValues[highestIdx]) highestIdx = i;
@@ -2977,11 +2977,20 @@ incomeSeries = keys.map(function(k) {
         const highestY = getY(currentValues[highestIdx]);
         const highestValFormatted = formatValue(currentValues[highestIdx]);
 
+        // Current month is the last element
+        const currentIdx = lastIdx;
+        const currentX = lastX;
+        const currentY = lastY;
+        const currentValFormatted = formatValue(currentValues[currentIdx]);
+
+        // Badge X offsets: shift highest badge right if it's the first item, shift current badge left if it's the last item
+        const highestBadgeX = highestIdx === 0 ? highestX + 8 : highestX - 25;
+        const currentBadgeX = currentIdx === currentValues.length - 1 ? currentX - 58 : currentX - 25;
+
         let html = `
         <div id="svgChartWrap" style="position: relative; width: 100%; height: ${height}px; user-select: none; touch-action: none;">
             <svg width="100%" height="${height}" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" style="overflow: visible;">
             <defs>
-                <!-- NEW: stroke gradient fades out at both ends (first & last), full opacity in the middle -->
                 <linearGradient id="pinkStroke" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" stop-color="#ff528e" stop-opacity="0" />
                     <stop offset="12%" stop-color="#ff528e" stop-opacity="1" />
@@ -2999,12 +3008,21 @@ incomeSeries = keys.map(function(k) {
             <line id="svgHoverLine" x1="0" y1="${paddingTop - 10}" x2="0" y2="${height - paddingBottom}" 
                     stroke="rgba(255, 255, 255, 0.4)" stroke-width="1.5" stroke-dasharray="4 4" style="display: none;" />
             <circle id="svgActiveBaseCircle" cx="0" cy="0" r="4.5" fill="#8e90a6" stroke="#ffffff" stroke-width="2" style="display: none;" />
-            <circle id="svgActiveCircle" class="svg-live-pulse" cx="0" cy="0" r="5" fill="#ff528e" stroke="#ffffff" stroke-width="2.5" style="display: none;" />
-            <circle class="svg-live-pulse" cx="${highestX}" cy="${highestY}" r="5" fill="#ff528e" stroke="#ffffff" stroke-width="2" />
-            <g id="svgLastBadge" transform="translate(${highestX - 25}, ${highestY - 25})">
+            
+            <!-- Highest value marker: stroke only, no fill -->
+            <circle cx="${highestX}" cy="${highestY}" r="5" fill="none" stroke="#ff528e" stroke-width="2" />
+            <g id="svgHighestBadge" transform="translate(${highestBadgeX}, ${highestY + 5})" style="cursor: pointer;">
                 <rect x="0" y="0" width="50" height="18" rx="6" fill="#ff528e" fill-opacity="0.75"/>
                 <text x="25" y="13" fill="#ffffff" font-family="'DM Sans', sans-serif" font-size="10" font-weight="bold" text-anchor="middle">${highestValFormatted}</text>
             </g>
+
+            <!-- Current month marker with live effect -->
+            <circle class="svg-live-pulse" cx="${currentX}" cy="${currentY}" r="5" fill="#ff528e" stroke="#ffffff" stroke-width="2.5" />
+            <g id="svgCurrentBadge" transform="translate(${currentBadgeX}, ${currentY - 25})" style="cursor: pointer;">
+                <rect x="0" y="0" width="50" height="18" rx="6" fill="#ff528e" fill-opacity="0.75"/>
+                <text x="25" y="13" fill="#ffffff" font-family="'DM Sans', sans-serif" font-size="10" font-weight="bold" text-anchor="middle">${currentValFormatted}</text>
+            </g>
+
             </svg>
             <div id="svgTooltip" style="display: none; position: absolute; top: 0; left: 0; pointer-events: none;
                         background: #ffffff; color: #181928; padding: 6px 10px; border-radius: 10px;
@@ -3025,10 +3043,45 @@ incomeSeries = keys.map(function(k) {
             </div>
         </div>
         `;
-        container.innerHTML = html;const wrap=document.getElementById("svgChartWrap"),hoverLine=document.getElementById("svgHoverLine"),activeCircle=document.getElementById("svgActiveCircle"),activeBaseCircle=document.getElementById("svgActiveBaseCircle"),tooltip=document.getElementById("svgTooltip"),tooltipTitle=document.getElementById("svgTooltipTitle"),tooltipCurr=document.getElementById("svgTooltipCurr"),tooltipBase=document.getElementById("svgTooltipBase"),lastBadge=document.getElementById("svgLastBadge");
-        function handleMove(e){const rect=wrap.getBoundingClientRect(),mouseX=(e.touches?e.touches[0].clientX:e.clientX)-rect.left;let nearestIdx=0,minDistance=Math.abs(mouseX-xCoords[0]);for(let i=1;i<xCoords.length;i++){const dist=Math.abs(mouseX-xCoords[i]);dist<minDistance&&(minDistance=dist,nearestIdx=i)}const targetX=xCoords[nearestIdx],targetYCurr=getY(currentValues[nearestIdx]),targetYBase=getY(baselineValues[nearestIdx]),currVal=currentValues[nearestIdx],baseVal=baselineValues[nearestIdx];hoverLine.setAttribute("x1",targetX),hoverLine.setAttribute("x2",targetX),hoverLine.style.display="block",activeCircle.setAttribute("cx",targetX),activeCircle.setAttribute("cy",targetYCurr),activeCircle.style.display="block",activeBaseCircle.setAttribute("cx",targetX),activeBaseCircle.setAttribute("cy",targetYBase),activeBaseCircle.style.display="block",tooltipTitle.innerText=rawLabels[nearestIdx]||chartLabels[nearestIdx]||"",tooltipCurr.innerText=`Current: ${formatValue(currVal)}`,tooltipBase.innerText=`Baseline: ${formatValue(baseVal)}`,tooltip.style.display="block";let clampX=Math.max(45,Math.min(targetX,rect.width-45));const highestPointY=Math.min(targetYCurr,targetYBase);tooltip.style.left=clampX+"px",tooltip.style.top=Math.max(highestPointY-8,35)+"px",lastBadge&&(lastBadge.style.opacity=nearestIdx===highestIdx?"1":"0.2")}
-        function handleLeave(){hoverLine&&(hoverLine.style.display="none"),activeCircle&&(activeCircle.style.display="none"),activeBaseCircle&&(activeBaseCircle.style.display="none"),tooltip&&(tooltip.style.display="none"),lastBadge&&(lastBadge.style.opacity="1")}
-        wrap.addEventListener("mousemove",handleMove),wrap.addEventListener("mouseleave",handleLeave),wrap.addEventListener("touchmove",handleMove,{passive:!0}),wrap.addEventListener("touchend",handleLeave);
+        container.innerHTML = html;
+        
+        const wrap=document.getElementById("svgChartWrap"),hoverLine=document.getElementById("svgHoverLine"),activeBaseCircle=document.getElementById("svgActiveBaseCircle"),tooltip=document.getElementById("svgTooltip"),tooltipTitle=document.getElementById("svgTooltipTitle"),tooltipCurr=document.getElementById("svgTooltipCurr"),tooltipBase=document.getElementById("svgTooltipBase"),highestBadge=document.getElementById("svgHighestBadge"),currentBadge=document.getElementById("svgCurrentBadge");
+        
+        function handleMove(e){
+            const rect=wrap.getBoundingClientRect(),mouseX=(e.touches?e.touches[0].clientX:e.clientX)-rect.left;
+            let nearestIdx=0,minDistance=Math.abs(mouseX-xCoords[0]);
+            for(let i=1;i<xCoords.length;i++){const dist=Math.abs(mouseX-xCoords[i]);dist<minDistance&&(minDistance=dist,nearestIdx=i)}
+            const targetX=xCoords[nearestIdx],targetYCurr=getY(currentValues[nearestIdx]),targetYBase=getY(baselineValues[nearestIdx]),currVal=currentValues[nearestIdx],baseVal=baselineValues[nearestIdx];
+            
+            hoverLine.setAttribute("x1",targetX),hoverLine.setAttribute("x2",targetX),hoverLine.style.display="block";
+            activeBaseCircle.setAttribute("cx",targetX),activeBaseCircle.setAttribute("cy",targetYBase),activeBaseCircle.style.display="block";
+            
+            tooltipTitle.innerText=rawLabels[nearestIdx]||chartLabels[nearestIdx]||"";
+            tooltipCurr.innerText=`Current: ${formatValue(currVal)}`;
+            tooltipBase.innerText=`Baseline: ${formatValue(baseVal)}`;
+            tooltip.style.display="block";
+            
+            let clampX=Math.max(45,Math.min(targetX,rect.width-45));
+            const highestPointY=Math.min(targetYCurr,targetYBase);
+            tooltip.style.left=clampX+"px";
+            tooltip.style.top=Math.max(highestPointY-8,35)+"px";
+            
+            if(highestBadge) highestBadge.style.opacity = nearestIdx === highestIdx ? "1" : "0.2";
+            if(currentBadge) currentBadge.style.opacity = nearestIdx === currentIdx ? "1" : "0.2";
+        }
+        
+        function handleLeave(){
+            hoverLine&&(hoverLine.style.display="none");
+            activeBaseCircle&&(activeBaseCircle.style.display="none");
+            tooltip&&(tooltip.style.display="none");
+            if(highestBadge) highestBadge.style.opacity="1";
+            if(currentBadge) currentBadge.style.opacity="1";
+        }
+        
+        wrap.addEventListener("mousemove",handleMove);
+        wrap.addEventListener("mouseleave",handleLeave);
+        wrap.addEventListener("touchmove",handleMove,{passive:!0});
+        wrap.addEventListener("touchend",handleLeave);
     }
 
     function renderWidget() {
@@ -3065,6 +3118,10 @@ incomeSeries = keys.map(function(k) {
     function updateHeaderDisplay(currVal,prevVal,currSub,prevSub){document.getElementById("currPeriodVal").innerHTML=formatCurrencyResponsive(currVal),document.getElementById("prevPeriodVal").innerHTML=formatCurrencyResponsive(prevVal),document.getElementById("currPeriodSub").innerText=currSub,document.getElementById("prevPeriodSub").innerText=prevSub}
     function formatCurrencyResponsive(val){return window.innerWidth>400?Math.round(val).toLocaleString("vi-VN")+'<span class="unit"> đ</span>':val>=1e6?(val/1e6).toFixed(2)+'<span class="unit">M đ</span>':val>=1e3?(val/1e3).toFixed(0)+'<span class="unit">K đ</span>':Math.round(val).toLocaleString("en-US")+'<span class="unit">đ</span>'}
     window.addEventListener("resize",()=>{sheetData.length>0&&renderWidget()});
+    document.addEventListener("DOMContentLoaded", function() {
+    var yearBtn = document.querySelector('.segment-btn[data-range="Year"]') || document.querySelector('.segment-btn:nth-child(3)'); // adjust selector to match your Year button element
+    updateView('Year', yearBtn);
+});
     function loadFallbackData(){const dummyVals=[182e5,214e5,195e5,24e6,221e5,285e5,31e6];sheetData=["01/26","02/26","03/26","04/26","05/26","06/26","07/26"].map((lbl,idx)=>({0:lbl,2:dummyVals[idx]})),renderWidget()}
 
     /* ══ OVERVIEW TAB ══ */
@@ -7038,8 +7095,8 @@ function fmtHeader(title, sumVal, avgVal) {
       isExpense: true,
       children: [
         { name: "Rental", sumVal: expTotals.sum.rental, avgVal: expTotals.avg.rental, icon: icons.expense.rental },
-        { name: "Bills", sumVal: expTotals.sum.bills, avgVal: expTotals.avg.bills, icon: icons.expense.bills },
-        { name: "Living", sumVal: expTotals.sum.livingCost, avgVal: expTotals.avg.livingCost, icon: icons.expense.livingCost },
+        { name: "Bills & Ins.", sumVal: expTotals.sum.bills, avgVal: expTotals.avg.bills, icon: icons.expense.bills },
+        { name: "Living Cost", sumVal: expTotals.sum.livingCost, avgVal: expTotals.avg.livingCost, icon: icons.expense.livingCost },
         { name: "Family", sumVal: expTotals.sum.family, avgVal: expTotals.avg.family, icon: icons.expense.family }
       ]
     };
