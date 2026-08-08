@@ -229,7 +229,7 @@ background:
 .ttl{display:flex;align-items:center;gap:1.5vw}
 .recent-badge{font-size:2.4vw;font-weight:700;color:#14b8a6;background:rgba(74,222,128,0.14);border-radius:99px;padding:0.4vw 1.2vw;white-space:nowrap}
 .recent-badge .bi,label .bi {font-size: 0.8rem!important;vertical-align: 0em;}
-@media screen and (max-width:400px){.recent-badge{font-size:3.4vw}.ico,.ico-fb {width:11vw!important; height:11vw!important;}}
+@media screen and (max-width:400px){.recent-badge{font-size:3.4vw}.ico,.ico-fb {width:12vw!important; height:12vw!important;}}
 .budget-bar-wrap { position: relative;}
 .budget-bar{width:100%;height:15px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.06)}
 #budget-fill-container{display:flex;width:100%;height:100%;gap:0}
@@ -1543,17 +1543,11 @@ to{transform:rotate(360deg)}
                                         <div class="col-menu-item" data-filter-type="asset" data-filter-value="all">
                                             All
                                         </div>
-                                        <div class="col-menu-item" data-filter-type="asset" data-filter-value="stock">
-                                            <img src="https://github.com/tinsntp/investment/blob/main/stock.png?raw=true" alt="" class="col-menu-icon">Stock
+                                        <div class="col-menu-item" data-filter-type="asset" data-filter-value="on-going">
+                                            On-going
                                         </div>
-                                        <div class="col-menu-item" data-filter-type="asset" data-filter-value="saving">
-                                            <img src="https://github.com/tinsntp/investment/blob/main/saving.png?raw=true" alt="" class="col-menu-icon">Saving
-                                        </div>
-                                        <div class="col-menu-item" data-filter-type="asset" data-filter-value="crypto">
-                                            <img src="https://github.com/tinsntp/investment/blob/main/bitcoin.png?raw=true" alt="" class="col-menu-icon">Crypto
-                                        </div>
-                                        <div class="col-menu-item" data-filter-type="asset" data-filter-value="forex">
-                                            <img src="https://github.com/tinsntp/investment/blob/main/exness.png?raw=true" alt="" class="col-menu-icon">Forex
+                                        <div class="col-menu-item" data-filter-type="asset" data-filter-value="close">
+                                            Close
                                         </div>
                                     </div>
                                   </div>
@@ -3010,7 +3004,7 @@ incomeSeries = keys.map(function(k) {
             <circle id="svgActiveBaseCircle" cx="0" cy="0" r="4.5" fill="#8e90a6" stroke="#ffffff" stroke-width="2" style="display: none;" />
             
             <!-- Highest value marker: stroke only, no fill -->
-            <circle cx="${highestX}" cy="${highestY}" r="5" fill="none" stroke="#ff528e" stroke-width="2" />
+            <circle cx="${highestX}" cy="${highestY}" r="3" fill="none" stroke="#ff528e" stroke-width="2" />
             <g id="svgHighestBadge" transform="translate(${highestBadgeX}, ${highestY + 5})" style="cursor: pointer;">
                 <rect x="0" y="0" width="50" height="18" rx="6" fill="#ff528e" fill-opacity="0.75"/>
                 <text x="25" y="13" fill="#ffffff" font-family="'DM Sans', sans-serif" font-size="10" font-weight="bold" text-anchor="middle">${highestValFormatted}</text>
@@ -3025,9 +3019,9 @@ incomeSeries = keys.map(function(k) {
 
             </svg>
             <div id="svgTooltip" style="display: none; position: absolute; top: 0; left: 0; pointer-events: none;
-                        background: #ffffff; color: #181928; padding: 6px 10px; border-radius: 10px;
-                        box-shadow: 0 6px 18px rgba(0,0,0,0.35); font-family: 'DM Sans', sans-serif; font-size: 11px;
-                        z-index: 50; transform: translate(-50%, -110%); white-space: nowrap;">
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(4px); color: #181928; padding: 6px 10px; border-radius: 10px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.35); font-family: 'DM Sans', sans-serif; font-size: 11px;
+            z-index: 50; transform: translate(-50%, -110%); white-space: nowrap;">
             <div id="svgTooltipTitle" style="font-weight: normal; font-size: 10px; color: #666; text-align: center; margin-bottom: 2px;"></div>
             <div style="display: flex; align-items: center; gap: 6px; font-weight: bold;">
                 <span style="width: 6px; height: 6px; border-radius: 50%; background: #ff528e; display: inline-block;"></span>
@@ -5422,7 +5416,9 @@ function fetchVnIndexData2(){
 
         var filtered = window.currentPortfolioGroups.filter(function(group) {
             if (portfolioFilters.asset !== "all") {
-                if (group.accountType.toLowerCase() !== portfolioFilters.asset) return false;
+                var isOngoing = group.status.toLowerCase().includes('on-going');
+                if (portfolioFilters.asset === "on-going" && !isOngoing) return false;
+                if (portfolioFilters.asset === "close" && isOngoing) return false;
             }
 
             if (portfolioFilters.pnl !== "all") {
