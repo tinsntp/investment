@@ -247,6 +247,7 @@ background:
 
 #add-cash.loading,#add-fab.loading{pointer-events:none;display:flex;align-items:center;justify-content:center}
 .cash-modal-overlay,.add-modal-overlay{-webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);display:none;position:fixed;inset:0; z-index:600;align-items:flex-start;justify-content:center;padding-top:10vh;overflow-y:auto;}
+.add-modal-overlay{padding-top:5vh;}
 .cash-modal-overlay.open,.add-modal-overlay.open{display:flex!important;}
 .btn-spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,0.3);border-top-color:#ffffff;border-radius:50%;animation:spinCircle 0.8s linear infinite;display:inline-block}
 #add-cash.success-confirm{background-color:#10b981 !important;color:#ffffff !important;font-size:15px;font-weight:500;display:flex;align-items:center;justify-content:center;transition:background-color 0.3s ease}
@@ -314,7 +315,7 @@ background:
 .history-header h3{margin:0;font-size:14px;font-weight:500;color:rgba(255,255,255,.9)}
 .history-title-icon{font-size:18px;color:#e0245e}
 .badge-all{font-size:11px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.6);padding:2px 8px;border-radius:20px}
-.history-list{padding:10px;max-height:350px;overflow-y:auto}
+.history-list{padding:0px 10px 10px 10px;max-height:350px;overflow-y:auto}
 .history-card{display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:12px 16px;border-radius:8px;margin-bottom:6px;background:rgba(255,255,255,.01);border:1px solid rgba(255,255,255,.02)}
 .tx-main-col{display:flex;flex-direction:column;gap:4px}
 .tx-name{font-size:13.5px;color:#fff}.tx-date{font-size:11px;color:rgba(255,255,255,.4)}
@@ -1785,7 +1786,7 @@ to{transform:rotate(360deg)}
     <div class="form-row-2col">
       <div class="add-field">
         <label>Service Name</label>
-        <input type="text" id="add-title">
+        <input type="text" id="add-title" placeholder="Netflix">
       </div>
       <div class="add-field">
             <label># of users</label>
@@ -4275,7 +4276,7 @@ to{transform:rotate(360deg)}
             <div class="modal-field-group" style="margin-bottom: 16px;">
                 <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">${isDeposit ? 'Income Type/Detail Note:' : 'Detail Note:'}</label>
                 <input type="text" 
-                    id="transactionDetail" 
+                    id="transactionDetail" placeholder="Comp/Expense"
                     style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend;font-size: 14px; font-weight:300!important;box-sizing: border-box; outline: none;" />
             </div>
             `;
@@ -5218,7 +5219,7 @@ to{transform:rotate(360deg)}
             <div class="modal-field-group" style="margin-bottom: 16px;" id="portfolioSymbolWrapper">
                 <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioSymbolLabel">Symbol:</label>
                 <input type="text"
-                    id="portfolioSymbol"
+                    id="portfolioSymbol" placeholder="MBB"
                     style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; font-weight:300!important; box-sizing: border-box; outline: none; text-transform: uppercase;" />
             </div>
             <div class="modal-field-group" style="margin-bottom: 16px;" id="portfolioAccountTypeWrapper">
