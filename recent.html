@@ -246,7 +246,7 @@ background:
 
 
 #add-cash.loading,#add-fab.loading{pointer-events:none;display:flex;align-items:center;justify-content:center}
-.cash-modal-overlay,.add-modal-overlay{-webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);display:none;position:fixed;inset:0; z-index:600;align-items:flex-start;justify-content:center;padding-top:10vh;overflow-y:auto;}
+.cash-modal-overlay,.add-modal-overlay,.edit-subs-modal-overlay{-webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);display:none;position:fixed;inset:0; z-index:600;align-items:flex-start;justify-content:center;padding-top:10vh;overflow-y:auto;}
 .add-modal-overlay{padding-top:5vh;}
 .cash-modal-overlay.open,.add-modal-overlay.open{display:flex!important;}
 .btn-spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,0.3);border-top-color:#ffffff;border-radius:50%;animation:spinCircle 0.8s linear infinite;display:inline-block}
@@ -442,7 +442,7 @@ to{transform:rotate(360deg)}
 #sub-loading,#sub-empty{font-size:13px;color:rgba(255,255,255,0.4);padding:24px 0;text-align:center}
 .subs-row{display:flex;align-items:center;border-bottom:0px solid rgba(255,255,255,0.08);cursor:pointer;transition:background 0.2s ease}
 .subs-row:hover{background:rgba(255,255,255,0.04)!important;}
-.sub-icon{width:42px;height:42px;margin-right:1vw;margin-left:2vw;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff}
+.sub-icon{width:13vw;height:13vw;margin-right:1vw;margin-left:2vw;border-radius:50%!important;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff}
 .sub-mid{flex:1;min-width:0;margin:2vw}
 .sub-name-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;flex-wrap:wrap}
 .sub-name-left{display:flex;align-items:center;gap:8px;min-width:0;flex-wrap:wrap}
@@ -486,7 +486,7 @@ to{transform:rotate(360deg)}
 .add-actions{display:flex;gap:3vw;margin-top:5vw}
 .add-actions button{flex:1;padding:3vw;border-radius:3vw;border:none;font-size:13px;font-weight:600;cursor:pointer}
 .add-cancel-btn{background:rgba(255,255,255,0.08);color:#fff;font-size:2.6vw!important;font-family:Lexend!important;}
-.add-submit-btn{background:#14b8a6;color:#fff;font-size:14px!important;font-family:Lexend!important;}
+.add-submit-btn{background:rgb(43, 57, 74);color:#fff;font-size:14px!important;font-family:Lexend!important;}
 .add-submit-btn:disabled{opacity:0.5}
 .add-status{font-size:13px;margin-top:2vw;text-align:center}
 .add-status.error{color:#FF69B4}
@@ -2489,8 +2489,9 @@ to{transform:rotate(360deg)}
     var CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1737926422";
     var COL_ACTIVE = 0; // A
     var COL_NAME   = 1; // B
+    var COL_START  = 3; // D: Start Date
+    var COL_EXPIRY = 4; // E: End Date / Expiry
     var COL_PRICE  = 5; // F: Price/Month/User
-    var COL_EXPIRY = 4; // E: End Date
     var COL_ICON   = 9; // J: Icon URL
 
     function csvRow(line){var cols=[],cur="",inQ=false;for(var i=0;i<line.length;i++){var c=line[i];if(c==='"')inQ=!inQ;else if(c===','&&!inQ){cols.push(cur);cur=""}else cur+=c}cols.push(cur);return cols.map(function(s){return s.replace(/^"|"$/g,"").trim()})}function parseBool(s){if(!s)return false;var v=s.trim().toLowerCase();return v==="true"||v==="1"||v==="yes"||v==="active"||v==="x"||v==="✓"}function parseAmt(raw){if(!raw)return 0;var s=raw.trim();var neg=false;if(s.charAt(0)==="("&&s.charAt(s.length-1)===")"){neg=true;s=s.slice(1,-1)}s=s.replace(/[^\d,.\-]/g,"");if(s===""||s==="-")return 0;if(s.charAt(0)==="-"){neg=true;s=s.slice(1)}var lastComma=s.lastIndexOf(","),lastDot=s.lastIndexOf(".");if(lastComma>-1&&lastDot>-1){if(lastComma>lastDot)s=s.replace(/\./g,"").replace(",",".");else s=s.replace(/,/g,"")}else if(lastComma>-1){var afterComma=s.length-lastComma-1;var commaCount=(s.match(/,/g)||[]).length;if(commaCount===1&&afterComma<=2)s=s.replace(",",".");else s=s.replace(/,/g,"")}else if(lastDot>-1){var afterDot=s.length-lastDot-1;var dotCount=(s.match(/\./g)||[]).length;if(!(dotCount===1&&afterDot<=2))s=s.replace(/\./g,"")}var v=parseFloat(s);if(isNaN(v))return 0;return neg?-v:v}function parseSheetDate(raw){if(!raw)return null;var s=raw.trim();var iso=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);if(iso)return new Date(parseInt(iso[1]),parseInt(iso[2])-1,parseInt(iso[3]));var dmy=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);if(dmy){var a=parseInt(dmy[1]),b=parseInt(dmy[2]),y=parseInt(dmy[3]);var day=a,month=b;if(a<=12&&b>12){day=b;month=a}return new Date(y,month-1,day)}var d=new Date(s);return isNaN(d.getTime())?null:d}function fmtFull(v){var sign=v<0?"\u2212":"";return sign+"\u20ab"+Math.round(Math.abs(v)).toLocaleString("en-US")}function fmtExpiryDate(d){if(!d)return"\u2014";var months=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];return d.getDate()+" "+months[d.getMonth()]+", "+d.getFullYear()}function stripEmoji(str){return(str||"").replace(/\p{Emoji_Presentation}|\p{Extended_Pictographic}/gu,"").trim()}
@@ -2515,18 +2516,28 @@ to{transform:rotate(360deg)}
 
             rows = rows.slice(1);
             var items = [];
-            rows.forEach(function(cols){
-            if (!parseBool(cols[COL_ACTIVE])) return;
-            var rawName = (cols[COL_NAME]||"").trim();
-            if (!rawName) return;
-            var name = stripEmoji(rawName) || rawName;
-            var price = parseAmt(cols[COL_PRICE]);
-            var expiry = parseSheetDate(cols[COL_EXPIRY]||"");
-            var iconUrl = (cols[COL_ICON]||"").trim();
-            items.push({ name:name, price:price, expiry:expiry, iconUrl:iconUrl });
+            rows.forEach(function(cols, index){
+                if (!parseBool(cols[COL_ACTIVE])) return;
+                var rawName = (cols[COL_NAME]||"").trim();
+                if (!rawName) return;
+                var name = stripEmoji(rawName) || rawName;
+                var price = parseAmt(cols[COL_PRICE]);
+                var startdate = parseSheetDate(cols[COL_START]||""); // Column D[cite: 4]
+                var expiry = parseSheetDate(cols[COL_EXPIRY]||"");     // Column E[cite: 4]
+                var iconUrl = (cols[COL_ICON]||"").trim();
+                
+                items.push({ 
+                    id: index,
+                    name: name, 
+                    price: price, 
+                    startdate: startdate, 
+                    expiry: expiry, 
+                    iconUrl: iconUrl 
+                });
             });
 
             lastLoadedItems = items;
+            globalSubItems = items;
             renderSubscriptions(items);
 
             var now = new Date();
@@ -2536,7 +2547,8 @@ to{transform:rotate(360deg)}
             if (lastUpdatedEl) lastUpdatedEl.textContent = hh+":"+mm+" ago";
         })
         .catch(function(err){
-            document.getElementById("sub-loading").textContent = "Error: " + err.message;
+            var loadingEl = document.getElementById("sub-loading");
+            if (loadingEl) loadingEl.textContent = "Error: " + err.message;
         });
     }
 
@@ -2557,6 +2569,18 @@ to{transform:rotate(360deg)}
         var totalExclKfs = 0;
         items.forEach(function(item, index){
         total+=item.price,item.name.toLowerCase().indexOf("kungfu stocks pro")<0&&(totalExclKfs+=item.price);var icon=iconFor(item.name),swipeContainer=document.createElement("div");swipeContainer.className="sub-swipe-container";var itemId=item.id||index;swipeContainer.setAttribute("data-id",itemId);var editAction=document.createElement("div");editAction.className="sub-edit-action";var actionWidth=60;editAction.style.position="absolute",editAction.style.right=actionWidth+"px",editAction.style.top="0",editAction.style.bottom="0",editAction.style.width=actionWidth+"px";
+        var editAction=document.createElement("div");editAction.className="sub-edit-action";var actionWidth=60;editAction.style.position="absolute",editAction.style.right=actionWidth+"px",editAction.style.top="0",editAction.style.bottom="0",editAction.style.width=actionWidth+"px";
+        
+        editAction.addEventListener("click", function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            editSubscription(itemId);
+        });
+        editAction.addEventListener("touchend", function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            editSubscription(itemId);
+        }, { passive: false });
         editAction.innerHTML = `
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -2575,8 +2599,7 @@ to{transform:rotate(360deg)}
             </svg>
         `;
         var row=document.createElement("div");row.className="subs-row",Object.assign(row.style,{borderBottom:"1px solid rgba(255,255,255,0.08)"});var iconEl=document.createElement("div");iconEl.className="sub-icon";
-        if(item.iconUrl){iconEl.style.background="rgba(255,255,255,0.08)";var imgEl=document.createElement("img");imgEl.src=item.iconUrl,imgEl.style.width="100%",imgEl.style.height="100%",imgEl.style.objectFit="contain",imgEl.style.borderRadius="2.5vw",imgEl.onerror=function(el,fallbackIcon){return function(){el.style.background=fallbackIcon.bg,el.textContent=fallbackIcon.ltr,el.style.display="flex",el.style.alignItems="center",el.style.justifyContent="center"}}(iconEl,icon),iconEl.appendChild(imgEl),iconEl.style.display="flex",iconEl.style.alignItems="center",iconEl.style.justifyContent="center"}else iconEl.style.background=icon.bg,iconEl.textContent=icon.ltr;
-        var mid=document.createElement("div");mid.className="sub-mid";var nameRow=document.createElement("div");nameRow.className="sub-name-row";var nameLeft=document.createElement("div");nameLeft.className="sub-name-left";var nameEl=document.createElement("span");nameEl.className="sub-name",nameEl.textContent=getDisplayName(item.name,isMobile);var badge=document.createElement("span");badge.className="sub-badge",badge.textContent="Active",nameLeft.appendChild(nameEl),nameLeft.appendChild(badge);var priceEl=document.createElement("div");priceEl.className="sub-price",priceEl.innerHTML=fmtFull(item.price),nameRow.appendChild(nameLeft),nameRow.appendChild(priceEl);var expEl=document.createElement("div");expEl.className="sub-expiry",expEl.style.display="flex",expEl.style.alignItems="center",expEl.style.justifyContent="space-between",expEl.style.width="100%";
+        if(item.iconUrl){iconEl.style.background="rgba(255,255,255,0.08)";var imgEl=document.createElement("img");imgEl.src=item.iconUrl,imgEl.style.width="100%",imgEl.style.height="100%",imgEl.style.objectFit="contain",imgEl.style.borderRadius="50%",imgEl.onerror=function(el,fallbackIcon){return function(){el.style.background=fallbackIcon.bg,el.textContent=fallbackIcon.ltr,el.style.display="flex",el.style.alignItems="center",el.style.justifyContent="center"}}(iconEl,icon),iconEl.appendChild(imgEl),iconEl.style.display="flex",iconEl.style.alignItems="center",iconEl.style.justifyContent="center"}else iconEl.style.background=icon.bg,iconEl.textContent=icon.ltr;var mid=document.createElement("div");mid.className="sub-mid";var nameRow=document.createElement("div");nameRow.className="sub-name-row";var nameLeft=document.createElement("div");nameLeft.className="sub-name-left";var nameEl=document.createElement("span");nameEl.className="sub-name",nameEl.textContent=getDisplayName(item.name,isMobile);var badge=document.createElement("span");badge.className="sub-badge",badge.textContent="Active",nameLeft.appendChild(nameEl),nameLeft.appendChild(badge);var priceEl=document.createElement("div");priceEl.className="sub-price",priceEl.innerHTML=fmtFull(item.price),nameRow.appendChild(nameLeft),nameRow.appendChild(priceEl);var expEl=document.createElement("div");expEl.className="sub-expiry",expEl.style.display="flex",expEl.style.alignItems="center",expEl.style.justifyContent="space-between",expEl.style.width="100%";
         expEl.innerHTML =
             '<div class="sub-expiry-left" style="display: flex; align-items: center; gap: 4px;">' +
             '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>' +
@@ -2601,7 +2624,7 @@ to{transform:rotate(360deg)}
     window.addEventListener("resize",function(){globalSubItems&&globalSubItems.length&&renderSubscriptions(globalSubItems)}),window.addEventListener("resize",function(){globalTxItems&&globalTxItems.length&&buildTxRow(globalTxItems)});
 
     /* ══ ADD RECORD (writes to the sheet via Apps Script Web App) ══ */
-    var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxb1lPB9kZh-Q5C01U-DjuesOVlHgDEorEBK-pavyJUd5jPxZSub-Rx6unOCTDdrCS2/exec";
+    var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbylW9rWUDL6OkPqJhS4zIiK-tJgN_apQZGs-KuuX3Pv2cmQEe8q__BtAWve4pb8toqG/exec";
     var EXPENSE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwufdrqTF7ErACV5DIBQYavcC8W0JbXHOnUjNVhaPim0Yrl_bTiptS0rngLyXYEc_lz6Q/exec";
 
     var addOverlay = document.getElementById("add-modal-overlay");
@@ -2613,18 +2636,34 @@ to{transform:rotate(360deg)}
         document.getElementById("add-total-amount").value = "";
         document.getElementById("add-amount").value = "";
 
-        // NEW: reset date-range picker instead of native date inputs
-        addSubCalState.rangeStart = null;
-        addSubCalState.rangeEnd = null;
-        addSubCalState.hoverDate = null;
-        document.getElementById("add-start-date").value = "";
-        document.getElementById("add-end-date").value = "";
-        document.getElementById("add-sub-date-trigger-text").textContent = "Select date range";
+        // Reset date-range state safely if it exists globally
+        if (typeof addSubCalState !== "undefined") {
+            addSubCalState.rangeStart = null;
+            addSubCalState.rangeEnd = null;
+            addSubCalState.hoverDate = null;
+        }
+        
+        var startDateEl = document.getElementById("add-start-date");
+        if (startDateEl) startDateEl.value = "";
+        
+        var endDateEl = document.getElementById("add-end-date");
+        if (endDateEl) endDateEl.value = "";
+        
+        var triggerTextEl = document.getElementById("add-sub-date-trigger-text");
+        if (triggerTextEl) triggerTextEl.textContent = "Select date range";
 
-        document.getElementById("add-user").value = "1";
-        addStatusEl.textContent = "";
-        addStatusEl.className = "add-status";
-        addOverlay.classList.add("open");
+        var addUserEl = document.getElementById("add-user");
+        if (addUserEl) addUserEl.value = "1";
+
+        if (addStatusEl) {
+            addStatusEl.textContent = "";
+            addStatusEl.className = "add-status";
+        }
+        
+        if (addOverlay) {
+            addOverlay.classList.add("open");
+        }
+        
         selectPriceMode("monthly");
     });
     document.getElementById("add-cancel-btn").addEventListener("click", function() {
@@ -2746,19 +2785,258 @@ to{transform:rotate(360deg)}
         });
         });
     }
-    function handleAddSubAmountInput(el){var raw=el.value.replace(/[^\d]/g,"");if(el.value=""===raw?"":parseInt(raw,10).toLocaleString("en-US"),"add-total-amount"===el.id){var yearlyVal=""===raw?0:parseInt(raw,10),monthlyInput=document.getElementById("add-amount");if(yearlyVal>0){var calculatedMonthly=Math.round(yearlyVal/12);monthlyInput.value=calculatedMonthly.toLocaleString("en-US"),monthlyInput.dataset.autoCalculated="true"}else monthlyInput.value="",delete monthlyInput.dataset.autoCalculated}"add-amount"===el.id&&delete el.dataset.autoCalculated}function adjustUserCount(delta){var input=document.getElementById("add-user"),next=(parseInt(input.value,10)||1)+delta;next<1&&(next=1),next>999&&(next=999),input.value=next}var currentPriceMode="monthly";function selectPriceMode(mode){currentPriceMode=mode,document.getElementById("monthly-price-card").classList.toggle("selected","monthly"===mode),document.getElementById("total-price-card").classList.toggle("selected","total"===mode)}function syncPriceToggleDisplay(){}
+    function editSubscription(elementOrItem) {
+        var targetItem = null;
+        var rowContainer = null;
+        if (elementOrItem && typeof elementOrItem.closest === "function") {
+            rowContainer = elementOrItem.closest(".sub-swipe-container");
+        }
+        rowContainer || (rowContainer = document.querySelector(".sub-swipe-container.swiped") || document.querySelector(".sub-swipe-container:hover") || document.querySelector(".sub-swipe-container"));
+        
+        if (rowContainer && !targetItem) {
+            var itemId = rowContainer.getAttribute("data-id");
+            if (typeof globalSubItems !== "undefined" && globalSubItems) {
+                targetItem = globalSubItems.find(function(item, idx) {
+                    return (item.id || idx).toString() === itemId.toString();
+                });
+            }
+        }
+        
+        if (!targetItem) {
+            console.error("FAIL: Target subscription item is null.");
+            alert("Unable to validate subscription details: No data received.");
+            return;
+        }
 
-    var addSubCalState = {
-        viewYear: new Date().getFullYear(),
-        viewMonth: new Date().getMonth(),
-        rangeStart: null,
-        rangeEnd: null,
-        hoverDate: null
-    };
+        var modalId = "edit-sub-modal-overlay";
+        var existingModal = document.getElementById(modalId);
+        if (existingModal) existingModal.remove();
 
-    var FULL_MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-    function formatDateLong(d){return d?FULL_MONTH_NAMES[d.getMonth()]+" "+String(d.getDate()).padStart(2,"0")+", "+d.getFullYear():""}function toggleAddSubDatePicker(e){e.stopPropagation();var menu=document.getElementById("add-sub-cal-menu"),isOpen=menu.classList.contains("open");if(document.querySelectorAll(".col-menu").forEach(function(m){m.classList.remove("open")}),!isOpen){document.querySelectorAll('[id="add-sub-cal-menu"]').forEach(function(el){el!==menu&&el.remove()}),document.body.appendChild(menu);var rect=e.currentTarget.getBoundingClientRect();window.innerWidth<=400?(menu.style.position="fixed",menu.style.top=rect.bottom+6+"px",menu.style.left="50%",menu.style.right="auto",menu.style.transform="translateX(-50%)",menu.style.margin="0"):(menu.style.position="fixed",menu.style.top=rect.bottom+6+"px",menu.style.left=rect.left+"px",menu.style.transform="none"),menu.classList.add("open"),renderAddSubCalendar()}}function renderAddSubCalendar(){var label=document.getElementById("add-sub-cal-month-label"),grid=document.getElementById("add-sub-cal-grid");if(label&&grid){label.textContent=MONTH_NAMES[addSubCalState.viewMonth]+" "+addSubCalState.viewYear,updateAddSubRangeDisplay(),grid.innerHTML="";for(var startDow=new Date(addSubCalState.viewYear,addSubCalState.viewMonth,1).getDay(),daysInMonth=new Date(addSubCalState.viewYear,addSubCalState.viewMonth+1,0).getDate(),daysInPrevMonth=new Date(addSubCalState.viewYear,addSubCalState.viewMonth,0).getDate(),today=new Date,i=0;i<42;i++){var cellDate,isOtherMonth=!1,dayNum=i-startDow+1;dayNum<1?(cellDate=new Date(addSubCalState.viewYear,addSubCalState.viewMonth-1,daysInPrevMonth+dayNum),isOtherMonth=!0):dayNum>daysInMonth?(cellDate=new Date(addSubCalState.viewYear,addSubCalState.viewMonth+1,dayNum-daysInMonth),isOtherMonth=!0):cellDate=new Date(addSubCalState.viewYear,addSubCalState.viewMonth,dayNum);var cellEl=document.createElement("div");cellEl.className="cal-day"+(isOtherMonth?" other-month":""),cellEl.dataset.time=cellDate.getTime(),isSameDay(cellDate,today)&&cellEl.classList.add("today"),cellEl.textContent=cellDate.getDate(),function(d,el){el.addEventListener("click",function(e){e.stopPropagation(),addSubSelectDate(d)}),el.addEventListener("mouseenter",function(){addSubCalState.rangeStart&&!addSubCalState.rangeEnd&&(addSubCalState.hoverDate=d,updateAddSubRangeClassesOnly())})}(cellDate,cellEl),grid.appendChild(cellEl)}updateAddSubRangeClassesOnly()}}function updateAddSubRangeClassesOnly(){var grid=document.getElementById("add-sub-cal-grid");if(grid){var cells=grid.querySelectorAll(".cal-day"),effectiveEnd=addSubCalState.rangeEnd||addSubCalState.hoverDate;cells.forEach(function(cellEl){cellEl.classList.remove("in-range","range-start","range-end");var cellDate=new Date(parseInt(cellEl.dataset.time,10));if(addSubCalState.rangeStart&&effectiveEnd){var rs=addSubCalState.rangeStart<effectiveEnd?addSubCalState.rangeStart:effectiveEnd,re=addSubCalState.rangeStart<effectiveEnd?effectiveEnd:addSubCalState.rangeStart;cellDate>=rs&&cellDate<=re&&cellEl.classList.add("in-range"),isSameDay(cellDate,rs)&&cellEl.classList.add("range-start"),isSameDay(cellDate,re)&&cellEl.classList.add("range-end")}else addSubCalState.rangeStart&&isSameDay(cellDate,addSubCalState.rangeStart)&&cellEl.classList.add("range-start")}),updateAddSubRangeDisplay()}}function updateAddSubRangeDisplay(){var display=document.getElementById("add-sub-cal-range-display");display&&(addSubCalState.rangeStart&&addSubCalState.rangeEnd?display.textContent=formatDateShort(addSubCalState.rangeStart)+"  →  "+formatDateShort(addSubCalState.rangeEnd):addSubCalState.rangeStart?display.textContent=formatDateShort(addSubCalState.rangeStart)+"  →  Select end date":display.textContent="Select a date range")}function addSubSelectDate(d){!addSubCalState.rangeStart||addSubCalState.rangeStart&&addSubCalState.rangeEnd?(addSubCalState.rangeStart=d,addSubCalState.rangeEnd=null,addSubCalState.hoverDate=null):(d<addSubCalState.rangeStart?(addSubCalState.rangeEnd=addSubCalState.rangeStart,addSubCalState.rangeStart=d):addSubCalState.rangeEnd=d,addSubCalState.hoverDate=null),updateAddSubRangeClassesOnly()}function addSubCalNavigate(e,dir){e.stopPropagation(),addSubCalState.viewMonth+=dir,addSubCalState.viewMonth>11&&(addSubCalState.viewMonth=0,addSubCalState.viewYear++),addSubCalState.viewMonth<0&&(addSubCalState.viewMonth=11,addSubCalState.viewYear--),renderAddSubCalendar()}function applyAddSubDateRange(e){if(e.stopPropagation(),addSubCalState.rangeStart&&addSubCalState.rangeEnd){var startISO=addSubCalState.rangeStart.toISOString().slice(0,10),endISO=addSubCalState.rangeEnd.toISOString().slice(0,10);document.getElementById("add-start-date").value=startISO,document.getElementById("add-end-date").value=endISO;var triggerText=document.getElementById("add-sub-date-trigger-text");triggerText&&(triggerText.textContent=formatDateLong(addSubCalState.rangeStart)+" - "+formatDateLong(addSubCalState.rangeEnd)),document.getElementById("add-sub-cal-menu").classList.remove("open")}}function clearAddSubDateRange(e){e.stopPropagation(),addSubCalState.rangeStart=null,addSubCalState.rangeEnd=null,addSubCalState.hoverDate=null,document.getElementById("add-start-date").value="",document.getElementById("add-end-date").value="";var triggerText=document.getElementById("add-sub-date-trigger-text");triggerText&&(triggerText.textContent="Select date range"),renderAddSubCalendar()}document.addEventListener("DOMContentLoaded",function(){var menu=document.getElementById("add-sub-cal-menu");menu&&menu.addEventListener("click",function(e){e.stopPropagation()})});
+        var modalOverlay = document.createElement("div");
+        modalOverlay.className = "add-modal-overlay open";
+        modalOverlay.id = modalId;
 
+        var fallbackChar = "";
+        var fallbackDivString = `<div class="ico-fb" style="width: 28px; height: 28px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 12px; font-weight: 600; text-transform: uppercase; vertical-align: middle;">${fallbackChar}</div>`;
+        var iconHtml = fallbackDivString;
+        if (targetItem.iconUrl && targetItem.iconUrl.trim().indexOf("http") === 0) {
+            iconHtml = `<img src="${targetItem.iconUrl}" class="ico" style="width: 28px; height: 28px; object-fit: contain; border-radius: 50%; vertical-align: middle;" onerror="this.outerHTML='${fallbackDivString}`;
+        }
+
+        var monthlyVal = targetItem.price || 0;
+        var yearlyVal = monthlyVal * 12;
+
+        var startVal = "";
+        var startDateObj = null;
+        if (targetItem.startdate) {
+            startDateObj = new Date(targetItem.startdate);
+            if (!isNaN(startDateObj.getTime())) {
+                startVal = startDateObj.toISOString().split('T')[0];
+            }
+        }
+
+        var endVal = "";
+        var endDateObj = null;
+        if (targetItem.expiry || targetItem.enddate) {
+            endDateObj = new Date(targetItem.expiry || targetItem.enddate);
+            if (!isNaN(endDateObj.getTime())) {
+                endVal = endDateObj.toISOString().split('T')[0];
+            }
+        }
+
+        // Initialize global calendar state so the range is pre-loaded on first open
+        if (typeof addSubCalState !== "undefined") {
+            addSubCalState.rangeStart = startDateObj && !isNaN(startDateObj.getTime()) ? startDateObj : null;
+            addSubCalState.rangeEnd = endDateObj && !isNaN(endDateObj.getTime()) ? endDateObj : null;
+            addSubCalState.hoverDate = null;
+            if (startDateObj && !isNaN(startDateObj.getTime())) {
+                addSubCalState.viewMonth = startDateObj.getMonth();
+                addSubCalState.viewYear = startDateObj.getFullYear();
+            }
+        }
+
+        var initialRangeText = "Select a date range";
+        if (startDateObj && endDateObj && !isNaN(startDateObj.getTime()) && !isNaN(endDateObj.getTime())) {
+            initialRangeText = formatDateLong(startDateObj) + " - " + formatDateLong(endDateObj);
+        } else if (startDateObj && !isNaN(startDateObj.getTime())) {
+            initialRangeText = formatDateLong(startDateObj) + "  →  Select end date";
+        }
+        var triggerTextVal = "Select date range";
+        if (startDateObj && endDateObj && !isNaN(startDateObj.getTime()) && !isNaN(endDateObj.getTime())) {
+            triggerTextVal = formatDateLong(startDateObj) + " - " + formatDateLong(endDateObj);
+        } else if (startDateObj && !isNaN(startDateObj.getTime())) {
+            triggerTextVal = formatDateLong(startDateObj) + "  →  Select end date";
+        }
+
+        modalOverlay.innerHTML = `
+        <div class="expense-edit-modal"><div style="width: 100%;">
+            <div style="display: flex; padding-bottom: 16px; gap:8px;">
+              <div style="display: flex;">
+                  <div style="display: flex; align-items: center; flex-shrink: 0;">${iconHtml}</div>
+                  <input type="text" id="edit-sub-title" value="${targetItem.name || ''}" style="width: 100%; text-align:left!important;background: transparent; border-width: medium medium 1px; border-style: none none dashed; border-color: currentcolor currentcolor rgba(255, 255, 255, 0.2); border-image: none; padding: 0px 0px 2px; color: rgb(255, 255, 255); font-size: 20px; font-weight: 300; font-family: &quot;DM Sans&quot;; text-align: right; outline: none;">
+              </div>
+            </div>
+
+            <div class="price-toggle-wrap">
+                <div class="price-toggle-card selected" id="edit-monthly-price-card" onclick="selectPriceMode('monthly')">
+                    <div class="price-toggle-label">Monthly</div>
+                    <div class="price-toggle-amt-row">
+                        <span class="price-toggle-currency">₫</span>
+                        <input type="text" inputmode="decimal" id="edit-sub-amount"
+                            class="price-toggle-input"
+                            value="${monthlyVal ? new Intl.NumberFormat('en-US').format(monthlyVal) : ''}"
+                            placeholder="0"
+                            oninput="handleAddSubAmountInput(this)"
+                            onclick="event.stopPropagation(); selectPriceMode('monthly');">
+                    </div>
+                </div>
+
+                <div class="price-toggle-card" id="edit-total-price-card" onclick="selectPriceMode('total')">
+                    <div class="price-toggle-label">Yearly</div>
+                    <div class="price-toggle-amt-row">
+                        <span class="price-toggle-currency">₫</span>
+                        <input type="text" inputmode="decimal" id="edit-sub-total-amount"
+                            class="price-toggle-input"
+                            value="${yearlyVal ? new Intl.NumberFormat('en-US').format(yearlyVal) : ''}"
+                            placeholder="0"
+                            oninput="handleAddSubAmountInput(this)"
+                            onclick="event.stopPropagation(); selectPriceMode('total');">
+                    </div>
+                </div>
+            </div>
+
+            <div class="add-field">
+                <label>Subscription Period</label>
+                <div class="th-filter-wrap" onclick="toggleAddSubDatePicker(event)" style="position: relative; width: 100%;">
+                    <div id="edit-sub-date-trigger" class="add-sub-date-trigger">
+                        <span id="edit-sub-date-trigger-text">${triggerTextVal}</span>
+                        <i class="bi bi-calendar" style="color: rgba(255,255,255,0.5); font-size: 16px!important;"></i>
+                    </div>
+                    <input type="hidden" id="edit-sub-start-date" value="${startVal}">
+                    <input type="hidden" id="edit-sub-end-date" value="${endVal}">
+                    <div class="col-menu col-menu-date-range" id="edit-sub-cal-menu">
+                      <div class="cal-header">
+                          <button type="button" class="cal-nav-btn" onclick="addSubCalNavigate(event, -1)"><i class="bi bi-chevron-left"></i></button>
+                          <div class="cal-month-label" id="edit-sub-cal-month-label">—</div>
+                          <button type="button" class="cal-nav-btn" onclick="addSubCalNavigate(event, 1)"><i class="bi bi-chevron-right"></i></button>
+                      </div>
+                      <div class="cal-range-display" id="edit-sub-cal-range-display">${initialRangeText}</div>
+                      <div class="cal-weekdays">
+                          <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                      </div>
+                      <div class="cal-grid" id="edit-sub-cal-grid"></div>
+                      <div class="col-menu-divider"></div>
+                      <div class="date-range-actions">
+                          <button type="button" class="date-range-btn date-range-clear" onclick="clearAddSubDateRange(event)">Clear</button>
+                          <button type="button" class="date-range-btn date-range-apply" onclick="applyAddSubDateRange(event)">Apply</button>
+                      </div>
+                  </div>
+                </div>
+            </div>
+
+            <div class="add-actions">
+              <button class="add-cancel-btn" id="sub-edit-cancel-btn">Cancel</button>
+              <button class="add-submit-btn" id="sub-edit-save-btn">Update</button>
+            </div>
+            <div class="add-status" id="edit-sub-status"></div>
+          </div>
+        </div></div>
+        `;
+
+        document.body.insertAdjacentElement("beforeend", modalOverlay);
+
+        var cleanupModal = function() {
+            modalOverlay.remove();
+            document.querySelectorAll(".sub-swipe-container.swiped").forEach(function(item) {
+                item.classList.remove("swiped");
+            });
+        };
+
+        var resetRowInterface = function() {
+            document.querySelectorAll(".sub-swipe-container").forEach(function(el) {
+                el.style.opacity = "1";
+                el.style.transform = "translateX(0px)";
+                el.classList.remove("swiped");
+            });
+        };
+
+        document.getElementById("sub-edit-cancel-btn").addEventListener("click", function(e) {
+            e.preventDefault();
+            cleanupModal();
+            resetRowInterface();
+        });
+
+        document.getElementById("sub-edit-save-btn").addEventListener("click", function(e) {
+            e.preventDefault();
+
+            var titleEl = document.getElementById("edit-sub-title");
+            var monthlyEl = document.getElementById("edit-sub-amount");
+            var yearlyEl = document.getElementById("edit-sub-total-amount");
+            var startDateEl = document.getElementById("edit-sub-start-date");
+            var endDateEl = document.getElementById("edit-sub-end-date");
+            var statusEl = document.getElementById("edit-sub-status");
+
+            var updatedTitle = titleEl ? titleEl.value.trim() : "";
+            var updatedMonthly = monthlyEl ? Number(monthlyEl.value.replace(/,/g, "")) || 0 : 0;
+            var updatedYearly = yearlyEl ? Number(yearlyEl.value.replace(/,/g, "")) || 0 : 0;
+            var updatedStart = startDateEl ? startDateEl.value : "";
+            var updatedEnd = endDateEl ? endDateEl.value : "";
+
+            if (!updatedTitle) {
+                if (statusEl) {
+                    statusEl.textContent = "Service name cannot be empty.";
+                    statusEl.style.color = "#ea868f";
+                }
+                return;
+            }
+
+            var finalMonthly = updatedMonthly > 0 ? updatedMonthly : (updatedYearly > 0 ? updatedYearly / 12 : 0);
+            var finalTotal = updatedYearly > 0 ? updatedYearly : (updatedMonthly > 0 ? updatedMonthly * 12 : 0);
+
+            var updatePayload = {
+                action: "edit",
+                oldTitle: targetItem.name,
+                title: updatedTitle,
+                amount: finalMonthly,
+                totalamount: finalTotal,
+                startdate: updatedStart,
+                enddate: updatedEnd
+            };
+
+            if (statusEl) {
+                statusEl.textContent = "Processing...";
+                statusEl.style.color = "#f8f9fa";
+            }
+
+            fetch(APPS_SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "text/plain" },
+                body: JSON.stringify(updatePayload)
+            })
+            .then(function() {
+                if (statusEl) {
+                    statusEl.textContent = "Successfully updated!";
+                    statusEl.style.color = "#75b798";
+                }
+                setTimeout(function() {
+                    cleanupModal();
+                    resetRowInterface();
+                    if (typeof loadSubscriptions === "function") {
+                        loadSubscriptions();
+                    }
+                }, 1000);
+            })
+            .catch(function(err) {
+                if (statusEl) {
+                    statusEl.textContent = "Failed: " + err.message;
+                    statusEl.style.color = "#ea868f";
+                }
+            });
+        });
+    }
+    
+    function handleAddSubAmountInput(el){var raw=el.value.replace(/[^\d]/g,"");el.value=""===raw?"":parseInt(raw,10).toLocaleString("en-US");var isEdit=0===el.id.indexOf("edit-"),monthlyId=isEdit?"edit-sub-amount":"add-amount",totalId=isEdit?"edit-sub-total-amount":"add-total-amount",monthlyInput=document.getElementById(monthlyId),yearlyInput=document.getElementById(totalId);if(el.id===totalId){var yearlyVal=""===raw?0:parseInt(raw,10);if(monthlyInput)if(yearlyVal>0){var calculatedMonthly=Math.round(yearlyVal/12);monthlyInput.value=calculatedMonthly.toLocaleString("en-US"),monthlyInput.dataset.autoCalculated="true"}else monthlyInput.value="",delete monthlyInput.dataset.autoCalculated}else if(el.id===monthlyId){var monthlyVal=""===raw?0:parseInt(raw,10);if(yearlyInput)if(monthlyVal>0){var calculatedYearly=12*monthlyVal;yearlyInput.value=calculatedYearly.toLocaleString("en-US"),yearlyInput.dataset.autoCalculated="true"}else yearlyInput.value="",delete yearlyInput.dataset.autoCalculated;delete el.dataset.autoCalculated}}function selectPriceMode(mode){currentPriceMode=mode;var monthlyCard=document.getElementById("monthly-price-card");monthlyCard&&monthlyCard.classList.toggle("selected","monthly"===mode);var totalCard=document.getElementById("total-price-card");totalCard&&totalCard.classList.toggle("selected","total"===mode);var editMonthlyCard=document.getElementById("edit-monthly-price-card");editMonthlyCard&&editMonthlyCard.classList.toggle("selected","monthly"===mode);var editTotalCard=document.getElementById("edit-total-price-card");editTotalCard&&editTotalCard.classList.toggle("selected","total"===mode)}var FULL_MONTH_NAMES=["January","February","March","April","May","June","July","August","September","October","November","December"];function formatDateLong(d){return d?FULL_MONTH_NAMES[d.getMonth()]+" "+String(d.getDate()).padStart(2,"0")+", "+d.getFullYear():""}var addSubCalState={viewMonth:(new Date).getMonth(),viewYear:(new Date).getFullYear(),rangeStart:null,rangeEnd:null,hoverDate:null};function getActiveCalContext(e){var isEdit=!1;e&&e.currentTarget?(0===(e.currentTarget.id||"").indexOf("edit-")||e.currentTarget.closest("#edit-sub-modal-overlay"))&&(isEdit=!0):isEdit=!!document.getElementById("edit-sub-cal-menu")&&document.getElementById("edit-sub-cal-menu").classList.contains("open");return{isEdit,menuId:isEdit?"edit-sub-cal-menu":"add-sub-cal-menu",labelId:isEdit?"edit-sub-cal-month-label":"add-sub-cal-month-label",gridId:isEdit?"edit-sub-cal-grid":"add-sub-cal-grid",displayId:isEdit?"edit-sub-cal-range-display":"add-sub-cal-range-display",startDateId:isEdit?"edit-sub-start-date":"add-start-date",endDateId:isEdit?"edit-sub-end-date":"add-end-date",triggerTextId:isEdit?"edit-sub-date-trigger-text":"add-sub-date-trigger-text"}}function toggleAddSubDatePicker(e){e.stopPropagation();var ctx=getActiveCalContext(e),menu=document.getElementById(ctx.menuId);if(menu){var isOpen=menu.classList.contains("open");if(document.querySelectorAll(".col-menu").forEach(function(m){m.classList.remove("open")}),!isOpen){var rect=e.currentTarget.getBoundingClientRect();document.body.appendChild(menu),menu.style.position="fixed",menu.style.top=rect.bottom+6+"px",menu.style.left=rect.left+"px",menu.style.width=Math.max(rect.width,280)+"px",menu.style.zIndex="9999999",menu.style.transform="none",menu.style.margin="0",menu.classList.add("open"),renderAddSubCalendar(ctx)}}}function renderAddSubCalendar(ctx){ctx||(ctx=getActiveCalContext());var label=document.getElementById(ctx.labelId),grid=document.getElementById(ctx.gridId);if(label&&grid){label.textContent=FULL_MONTH_NAMES[addSubCalState.viewMonth]+" "+addSubCalState.viewYear,updateAddSubRangeDisplay(ctx),grid.innerHTML="";for(var startDow=new Date(addSubCalState.viewYear,addSubCalState.viewMonth,1).getDay(),daysInMonth=new Date(addSubCalState.viewYear,addSubCalState.viewMonth+1,0).getDate(),daysInPrevMonth=new Date(addSubCalState.viewYear,addSubCalState.viewMonth,0).getDate(),today=new Date,i=0;i<42;i++){var cellDate,isOtherMonth=!1,dayNum=i-startDow+1;dayNum<1?(cellDate=new Date(addSubCalState.viewYear,addSubCalState.viewMonth-1,daysInPrevMonth+dayNum),isOtherMonth=!0):dayNum>daysInMonth?(cellDate=new Date(addSubCalState.viewYear,addSubCalState.viewMonth+1,dayNum-daysInMonth),isOtherMonth=!0):cellDate=new Date(addSubCalState.viewYear,addSubCalState.viewMonth,dayNum);var cellEl=document.createElement("div");cellEl.className="cal-day"+(isOtherMonth?" other-month":""),cellEl.dataset.time=cellDate.getTime(),isSameDay(cellDate,today)&&cellEl.classList.add("today"),cellEl.textContent=cellDate.getDate(),function(d,el,currentCtx){el.addEventListener("click",function(e){e.stopPropagation(),addSubSelectDate(d,currentCtx)}),el.addEventListener("mouseenter",function(){addSubCalState.rangeStart&&!addSubCalState.rangeEnd&&(addSubCalState.hoverDate=d,updateAddSubRangeClassesOnly(currentCtx))})}(cellDate,cellEl,ctx),grid.appendChild(cellEl)}updateAddSubRangeClassesOnly(ctx)}}function updateAddSubRangeClassesOnly(ctx){ctx||(ctx=getActiveCalContext());var grid=document.getElementById(ctx.gridId);if(grid){var cells=grid.querySelectorAll(".cal-day"),effectiveEnd=addSubCalState.rangeEnd||addSubCalState.hoverDate;cells.forEach(function(cellEl){cellEl.classList.remove("in-range","range-start","range-end");var cellDate=new Date(parseInt(cellEl.dataset.time,10));if(addSubCalState.rangeStart&&effectiveEnd){var rs=addSubCalState.rangeStart<effectiveEnd?addSubCalState.rangeStart:effectiveEnd,re=addSubCalState.rangeStart<effectiveEnd?effectiveEnd:addSubCalState.rangeStart;cellDate>=rs&&cellDate<=re&&cellEl.classList.add("in-range"),isSameDay(cellDate,rs)&&cellEl.classList.add("range-start"),isSameDay(cellDate,re)&&cellEl.classList.add("range-end")}else addSubCalState.rangeStart&&isSameDay(cellDate,addSubCalState.rangeStart)&&cellEl.classList.add("range-start")}),updateAddSubRangeDisplay(ctx)}}function updateAddSubRangeDisplay(ctx){ctx||(ctx=getActiveCalContext());var display=document.getElementById(ctx.displayId);display&&(addSubCalState.rangeStart&&addSubCalState.rangeEnd?display.textContent=formatDateLong(addSubCalState.rangeStart)+" - "+formatDateLong(addSubCalState.rangeEnd):addSubCalState.rangeStart?display.textContent=formatDateLong(addSubCalState.rangeStart)+"  →  Select end date":display.textContent="Select a date range")}function addSubSelectDate(d,ctx){ctx||(ctx=getActiveCalContext()),!addSubCalState.rangeStart||addSubCalState.rangeStart&&addSubCalState.rangeEnd?(addSubCalState.rangeStart=d,addSubCalState.rangeEnd=null,addSubCalState.hoverDate=null):(d<addSubCalState.rangeStart?(addSubCalState.rangeEnd=addSubCalState.rangeStart,addSubCalState.rangeStart=d):addSubCalState.rangeEnd=d,addSubCalState.hoverDate=null),updateAddSubRangeClassesOnly(ctx)}function addSubCalNavigate(e,dir){e&&(e.stopPropagation(),e.preventDefault());var isEditMenu=document.getElementById("edit-sub-cal-menu")&&document.getElementById("edit-sub-cal-menu").classList.contains("open"),ctx={isEdit:isEditMenu,menuId:isEditMenu?"edit-sub-cal-menu":"add-sub-cal-menu",labelId:isEditMenu?"edit-sub-cal-month-label":"add-sub-cal-month-label",gridId:isEditMenu?"edit-sub-cal-grid":"add-sub-cal-grid",displayId:isEditMenu?"edit-sub-cal-range-display":"add-sub-cal-range-display",startDateId:isEditMenu?"edit-sub-start-date":"add-start-date",endDateId:isEditMenu?"edit-sub-end-date":"add-end-date",triggerTextId:isEditMenu?"edit-sub-date-trigger-text":"add-sub-date-trigger-text"};addSubCalState.viewMonth+=dir,addSubCalState.viewMonth>11?(addSubCalState.viewMonth=0,addSubCalState.viewYear++):addSubCalState.viewMonth<0&&(addSubCalState.viewMonth=11,addSubCalState.viewYear--),renderAddSubCalendar(ctx)}function applyAddSubDateRange(e){e&&(e.stopPropagation(),e.preventDefault());var isEditMenu=document.getElementById("edit-sub-cal-menu")&&document.getElementById("edit-sub-cal-menu").classList.contains("open"),ctx={menuId:isEditMenu?"edit-sub-cal-menu":"add-sub-cal-menu",startDateId:isEditMenu?"edit-sub-start-date":"add-start-date",endDateId:isEditMenu?"edit-sub-end-date":"add-end-date",triggerTextId:isEditMenu?"edit-sub-date-trigger-text":"add-sub-date-trigger-text"};if(addSubCalState.rangeStart&&addSubCalState.rangeEnd){var startISO=addSubCalState.rangeStart.toISOString().slice(0,10),endISO=addSubCalState.rangeEnd.toISOString().slice(0,10),startEl=document.getElementById(ctx.startDateId),endEl=document.getElementById(ctx.endDateId);startEl&&(startEl.value=startISO),endEl&&(endEl.value=endISO);var triggerText=document.getElementById(ctx.triggerTextId);triggerText&&(triggerText.textContent=formatDateLong(addSubCalState.rangeStart)+" - "+formatDateLong(addSubCalState.rangeEnd));var menu=document.getElementById(ctx.menuId);menu&&menu.classList.remove("open")}}function clearAddSubDateRange(e){e.stopPropagation();var ctx=getActiveCalContext(e);addSubCalState.rangeStart=null,addSubCalState.rangeEnd=null,addSubCalState.hoverDate=null;var startEl=document.getElementById(ctx.startDateId),endEl=document.getElementById(ctx.endDateId);startEl&&(startEl.value=""),endEl&&(endEl.value="");var triggerText=document.getElementById(ctx.triggerTextId);triggerText&&(triggerText.textContent="Select date range"),renderAddSubCalendar(ctx)}document.addEventListener("DOMContentLoaded",function(){["add-sub-cal-menu","edit-sub-cal-menu"].forEach(function(id){var menu=document.getElementById(id);menu&&menu.addEventListener("click",function(e){e.stopPropagation()})})});
     function initCashModal() {
         var CASH_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbybMjy9UV5AeEgMULGe-RhBeqV2-vW6snqQcHWAZY_rxpI3aUretpPOP5y_kV4sbIw4/exec";
 
@@ -5634,6 +5912,7 @@ to{transform:rotate(360deg)}
     window.addEventListener('mousedown', onStart);
     window.addEventListener('mousemove', onMove);
     window.addEventListener('mouseup', onEnd);
+    document.addEventListener("DOMContentLoaded", function() {var yearBtn = document.querySelector('.segment-btn[data-range="Year"]') || document.querySelector('.segment-btn:nth-child(2)');updateView('Year', yearBtn);});
     window.flipTransferDirection=function(){if(!window.swapState)return;const tempAccount=window.swapState.fromAccount,tempIcon=window.swapState.fromIcon,tempBalance=window.swapState.fromBalance;window.swapState.fromAccount=window.swapState.toAccount,window.swapState.fromIcon=window.swapState.toIcon,window.swapState.fromBalance=window.swapState.toBalance||0,window.swapState.toAccount=tempAccount,window.swapState.toIcon=tempIcon,window.swapState.toBalance=tempBalance;const cleanFromStr=(window.swapState.fromAccount.toUpperCase().startsWith("SAVING")?"SAVING":window.swapState.fromAccount).replace(/[︾▼]/g,"").trim(),cleanToStr=(window.swapState.toAccount.toUpperCase().startsWith("SAVING")?"SAVING":window.swapState.toAccount).replace(/[︾▼]/g,"").trim(),fromBalText=` (₫${Math.round(window.swapState.fromBalance).toLocaleString("vi-VN")})`,toBalText=window.swapState.toBalance?` (₫${Math.round(window.swapState.toBalance).toLocaleString("vi-VN")})`:"";document.getElementById("fromAccountLabel").textContent=`${cleanFromStr}${fromBalText}`,document.getElementById("transferFromIcon").src=window.swapState.fromIcon,document.getElementById("toAccountLabel").textContent=`${cleanToStr}${toBalText}`,document.getElementById("transferToIcon").src=window.swapState.toIcon,"function"==typeof window.reloadDropdownMenus&&window.reloadDropdownMenus()};
     window.openTransferAccountPicker=function(side,event){event.stopPropagation();const existingPicker=document.getElementById("transferAccountPickerMenu");if(existingPicker&&existingPicker.remove(),"undefined"==typeof accountsData||!Array.isArray(accountsData))return;const usableAccounts=accountsData.filter(acc=>"Salary"!==acc.account&&"SOCIAL"!==acc.account),menu=document.createElement("div");menu.id="transferAccountPickerMenu",menu.style.cssText="\n        position: absolute;\n        top: calc(100% + 6px);\n        right: 0;\n        background: #1e222b;\n        border: 1px solid #2d313c;\n        border-radius: 12px;\n        min-width: 220px;\n        max-height: 200px;\n        overflow-y: auto;\n        z-index: 9999;\n        box-shadow: 0 8px 24px rgba(0,0,0,0.5);\n        padding: 4px;\n    ",usableAccounts.forEach(acc=>{if("from"===side&&acc.account===window.swapState.toAccount)return;if("to"===side&&acc.account===window.swapState.fromAccount)return;const balanceFormatted="₫"+Math.round(acc.amount).toLocaleString("vi-VN"),iconUrl=acc.icon||"https://cdn-icons-png.flaticon.com/512/3135/3135706.png",item=document.createElement("div");item.style.cssText="\n            display: flex;\n            align-items: center;\n            gap: 10px;\n            padding: 10px 12px;\n            color: #cbd5e1;\n            font-size: 13px;\n            cursor: pointer;\n            border-radius: 8px;\n            transition: background 0.15s;\n        ",item.innerHTML=`\n          <img src="${iconUrl}" style="width: 18px; height: 18px; border-radius: 4px; object-fit: cover;">\n          <span style="flex-grow:1; text-align:left;">${acc.account.toUpperCase().startsWith("SAVING")?"SAVING":acc.account}</span>\n          <span style="color: #6c757d; font-size:11px;">${balanceFormatted}</span>\n        `,item.onmouseenter=()=>item.style.background="#2d313c",item.onmouseleave=()=>item.style.background="transparent",item.onclick=e=>{e.stopPropagation(),window.selectTransferAccount(side,acc.account,Math.round(acc.amount)),menu.remove()},menu.appendChild(item)});event.currentTarget.appendChild(menu);const closePicker=()=>{menu.remove(),document.removeEventListener("click",closePicker)};document.addEventListener("click",closePicker)};
     window.selectTransferAccount=function(side,accountName,accountBalance){if(!window.swapState)return;if("from"===side){window.swapState.fromAccount=accountName,window.swapState.fromBalance=accountBalance;const balanceDisplay=document.getElementById("fromAccountBalance");balanceDisplay&&(balanceDisplay.textContent=accountBalance.toLocaleString("en-US"));const fromLabel=document.getElementById("fromAccountLabel");fromLabel&&(fromLabel.textContent=accountName)}else{window.swapState.toAccount=accountName;const toLabel=document.getElementById("toAccountLabel");toLabel&&(toLabel.textContent=accountName)}const amountInput=document.getElementById("transactionAmount");amountInput&&"function"==typeof window.handleAmountInput&&window.handleAmountInput(amountInput)};
