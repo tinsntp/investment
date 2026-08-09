@@ -6568,8 +6568,26 @@ to{transform:rotate(360deg)}
     window.addEventListener('resize', () => {fetchOrderSheetCSV();});
     document.getElementById("vnindex-reload-btn").addEventListener("click", function() {fetchVnIndexData(true);});
     window.addEventListener("resize", function() {if (typeof buildColHdr === "function") buildColHdr(); if (typeof applyLayout === "function") applyLayout();});
-    window.addEventListener("DOMContentLoaded", () => { setTimeout(() => { const loader = document.getElementById("loader-overlay");loader.classList.add("fade-out");}, 1500);});
-        
+    window.addEventListener("DOMContentLoaded", async () => {
+  try {
+    // This explicitly halts execution until both functions 
+    // have completely fetched and processed their data
+    await Promise.all([
+      loadBalanceHistoryTC(),
+      loadRecent()
+    ]);
+  } catch (error) {
+    console.error("Failed to load data:", error);
+  }
+
+  // Once completely loaded, trigger the delay before fading out loader
+  setTimeout(() => {
+    const loader = document.getElementById("loader-overlay");
+    if (loader) {
+      loader.classList.add("fade-out");
+    }
+  }, 500); // adjust delay milliseconds if needed
+});   
     loadBalanceHistoryTC();restoreBudgetSubtab();
     updateBalanceVisibility();
 
