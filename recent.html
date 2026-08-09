@@ -265,7 +265,7 @@ background:
 .account-card.last-card{border-radius:0 0 12px 12px;height:120px;align-items:flex-start;padding-top:7px}
 .account-card .left-section{display:flex;align-items:center;gap:6px;font-weight:600;font-size:14px}
 .account-card .icon-img{width:18px;height:18px;object-fit:contain;border-radius:6px}
-.account-card .balance{font-family:DM Sans;font-weight:400;font-size:15px;letter-spacing:-0.3px}
+.account-card .balance{font-family:DM Sans;font-weight:300;font-size:16px;letter-spacing:-0.3px}
 .account-card.card-pink{color:var(--accent-pink-text)}
 .account-card.card-purple{color:var(--accent-purple-text)}
 .account-card.card-color-b .left-section span{color:#1c2541}
@@ -284,8 +284,8 @@ background:
   background-size: cover;}
 .pocket-header{margin-top:-10px;display:flex;align-items:center;gap:8px;color:var(--text-muted);font-size:13px;font-weight:500;position:relative;z-index:15}
 .pocket-header .material-icons-round{font-size:16px;}
-.total-balance-value{font-size:24px;font-family:"JetBrains Mono",monospace,sans-serif;font-weight:700;margin-top:2px;letter-spacing:-0.5px;position:relative;z-index:15}
-.usd-equivalence{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-muted);margin-top:-1px;position:relative;z-index:15}
+.total-balance-value{font-size:28px;font-family:"JetBrains Mono";font-weight:700;margin-top:2px;letter-spacing:-0.5px;position:relative;z-index:15}
+.usd-equivalence{display:flex;align-items:center;gap:6px;font-size:14px;color:var(--text-muted);margin-top:-1px;position:relative;z-index:15}
 .preview-section{margin-top:15px;width:100%;display:flex;flex-direction:column;gap:6px;position:relative;z-index:15}
 .preview-row{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--text-muted);padding-top:6px;border-top:1px dashed rgba(255,255,255,0.08)}
 .preview-row-left{display:flex;align-items:center;gap:6px}
@@ -537,7 +537,7 @@ Object.assign(modalOverlay.style{position:"fixed",top:"0",left:"0",width:"100%",
 .subtitle { font-size:11px; color:#787b86;margin-top:5px}
 .subtitle .now-pill { color:#2dd4bf; font-weight:700; margin-left:2px; }
 
-.chart-wrap{position:relative;width:100%;background:#191919;border:0px solid #2a2e39;border-radius:6px;margin-bottom:14px;overflow:hidden;user-select:none}
+.chart-wrap-tc{position:relative;width:100%;background:#191919;border-radius:24px;margin-bottom:14px;overflow:hidden;user-select:none}
 #wave-svg { width:100%; height:200px; display:block; overflow:visible; }
 @media only screen and (min-width: 401px) {#wave-svg {height: 240px!important}}
 #hover-dot{fill:#0d9488;stroke:#10b981;stroke-width:2px;r:5px;transition:cx .1s ease,cy .1s ease;animation:pulse-dot 4.5s infinite}@keyframes pulse-dot{0%{r:4px;opacity:1}50%{r:8px;opacity:.6;fill:#14b8a6}to{r:4px;opacity:1;fill:#0d9488}}
@@ -710,7 +710,7 @@ tbody tr.current-row td{font-weight:600;}
 .nav-card{grid-column:1/-1;font-family:DM Sans;padding:0;margin-bottom:10px;text-align:left}.nav-card-body{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start}.nav-card-left{display:flex;flex-direction:column;gap:12px;min-width:0}.nav-stat-list{display:flex;flex-direction:column;margin-left:5px;gap:14px;flex:1;min-width:0}.nav-stat-item{display:flex;align-items:center;gap:10px}.nav-stat-icon{width:25px;height:25px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background-size:cover;background-position:center}.nav-stat-info{display:flex;flex-direction:column;min-width:0}.nav-stat-label-row{display:flex;align-items:baseline;justify-content:space-between;gap:8px}.nav-stat-label{font-size:12px;color:rgba(255,255,255,.5)}.nav-stat-pct{color:rgba(255,255,255,.35);font-weight:500}.nav-stat-value{font-size:12px;font-weight:700;color:#fff}.nav-stat-pnl{font-size:11px;text-align:left;font-weight:600}.nav-donut-wrap{position:relative;width:90px;height:180px;flex-shrink:0;margin-right:21px;margin-top:-15px;overflow:visible}
 #nav-donut-svg{width:120px;height:238px;position:static;top:auto;left:auto}.nav-donut-label{font-family:"DM Sans",sans-serif;font-weight:700;fill:#fff;text-anchor:middle;dominant-baseline:middle}@media (max-width:400px){.nav-stat-icon{width:20px;height:20px}.nav-stat-item{gap:8px}}.dashboard-grid{display:flex;flex-direction:column}.hero-card-port{background:0 0;margin:10px;position:relative;overflow:hidden}.hero-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}.hero-title-group h2{font-size:13px;font-weight:700;color:var(--teal-primary);text-transform:uppercase;letter-spacing:1px}.hero-title-group .date-range{font-size:12px;color:var(--text-secondary);margin-top:2px}.hero-main-stat{display:flex;align-items:baseline;gap:12px;margin-bottom:12px;flex-wrap:wrap}
 .hero-amount,#balance-val{font-weight:800;letter-spacing:-1px;background:linear-gradient(90deg,#fff 0,#14b8a6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero-balance{font-size:23px!important;color:#fff!important;margin-bottom:3px;font-weight:400!important;}
+.hero-balance{font-size:23px!important;font-family:"JetBrains Mono";letter-spacing: -2.5px!important;color:#fff!important;margin-bottom:3px;font-weight:400!important;}
 .hero-balance-v2{font-size:16px!important;color:#fff!important;margin-bottom:3px;font-weight:700;}
 .hero-amount{font-size:16px;font-weight:600;margin-bottom:3px;padding-right:1px}
 .hero-amount-v2{font-size:14px;font-weight:600;margin-bottom:3px;padding-right:1px}
@@ -730,12 +730,12 @@ tbody tr.current-row td{font-weight:600;}
 .today-jp{font-size:12px;font-weight:500;color:rgba(255,255,255,.45);text-align:right}
 .card-top{flex-direction:row;align-items:center;justify-content:space-between}
 .today-jp{flex:0 0 auto;white-space:nowrap;margin:-5px 0px 5px 5px}
-.range-selector{margin-left:auto}
+.range-selector{margin-left:auto;}
 .card{border:0px solid rgba(255,255,255,0.08);border-radius:20px;max-width:100%;margin:0 auto}
 .card-title{font-size:14px;font-weight:600;color:rgba(255,255,255,0.5)}
-.range-selector{display:flex;gap:2px;width:250px;margin-bottom:10px;border:0px solid rgba(255,255,255,0.06);overflow-x:auto;overflow-y:hidden;border-radius:10px;padding:3px 12px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.range-selector{display:flex;gap:2px;width:250px;margin-bottom:10px;overflow-x:auto;overflow-y:hidden;border-radius:10px;padding:3px 12px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .range-selector::-webkit-scrollbar{display:none}
-.range-btn{border:none;background:transparent;cursor:pointer;flex:0 0 auto;font-size:12.5px;font-weight:600;color:rgba(255,255,255,0.45);padding:5px 11px;border-radius:7px;transition:background 0.15s,color 0.15s}
+.range-btn{border:none;background:transparent;cursor:pointer;font-family:"DM Sans";flex:0 0 auto;font-size:12.5px;font-weight:300;color:rgba(255,255,255,0.45);padding:5px 11px;border-radius:10px;transition:background 0.15s,color 0.15s}
 .range-btn:hover{color:rgba(255,255,255,0.75)}
 .range-btn.active{background:rgba(255,255,255,0.1);color:#fff}
 .card-balance,.card-balance-usd{font-family:"JetBrains Mono";}
@@ -748,7 +748,7 @@ tbody tr.current-row td{font-weight:600;}
 .usd-row{display:flex;justify-content:flex-end;align-items:center;gap:5px;width:100%}
 .usd-flag-wrap{width:15px;height:15px;flex-shrink:0;border-radius:50%;margin-top:-5px}
 .usd-flag-wrap img{width:100%;height:100%;display:block}
-.card-sub-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.card-sub-row{display:flex;background:transparent;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .card-sub-text{font-size:13.5px;color:rgba(255,255,255,0.45);line-height:1.5;max-width:390px;margin-bottom:0px}
 .card-sub-text .amt-hl{font-family:DM Sans;font-weight:700}
 .card-sub-text .amt-hl.pos{color:#2dd4bf}
@@ -757,8 +757,10 @@ tbody tr.current-row td{font-weight:600;}
 .pill.pos{background:var(--teal-bg);color:#2dd4bf}
 .pill.neg{background:rgba(248,113,113,0.14);color:#f87171}
 .chart-wrap{position:relative;width:100%;cursor:crosshair}
-#chart-svg{width:100%;display:block;overflow:visible}
-.tooltip{font-family:DM Sans;position:absolute;pointer-events:none;background:#1b1b1b;border:1px solid rgba(255,255,255,0.12);color:#fff;font-size:12.5px;font-weight:700;padding:6px 11px;border-radius:8px;white-space:nowrap;transform:translate(-50%,-130%);box-shadow:0 4px 16px rgba(0,0,0,0.4)}
+#chart-svg{width:100%;display:block;overflow:visible;margin-top:-5px;}
+.tooltip{font-family:DM Sans;position:absolute;pointer-events:none;background: rgba(25, 25, 25, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);border:1px solid rgba(255,255,255,0.12);color:#fff;font-size:12.5px;font-weight:700;padding:6px 11px;border-radius:8px;white-space:nowrap;transform:translate(-50%,-130%);box-shadow:0 4px 16px rgba(0,0,0,0.4)}
 .tooltip::after{content:'';position:absolute;left:50%;bottom:-5px;transform:translateX(-50%);width:9px;height:9px;background:#1b1b1b;border-right:1px solid rgba(255,255,255,0.12);border-bottom:1px solid rgba(255,255,255,0.12);rotate:45deg}
 .tooltip .arrow{color:#2dd4bf;margin-right:2px}
 .tooltip .arrow.neg{color:#f87171}
@@ -1095,7 +1097,7 @@ to{transform:rotate(360deg)}
     </div>
   </div>
   <div id="loading-msg-tc"></div>
-  <div class="chart-wrap" id="chart-wrap" style="display:none;">
+  <div class="chart-wrap-tc" id="chart-wrap" style="display:none;">
     <svg id="chart-svg" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
     <div class="tooltip" id="tooltip" style="display:none;"></div>
   </div>
@@ -1957,7 +1959,7 @@ to{transform:rotate(360deg)}
     var RED = "#f87171";
     var USD_RATE = 26300;
 
-    var PAD_LEFT = 52, PAD_RIGHT = 8, PAD_TOP = 10, PAD_BOTTOM = 24;
+    var PAD_LEFT = 25, PAD_RIGHT = 8, PAD_TOP = 0, PAD_BOTTOM = 0;
     var VB_W = 640, VB_H = 300;
 
     window.innerWidth<=400&&(VB_H=300,document.getElementById("chart-svg").setAttribute("viewBox",`0 0 ${VB_W} ${VB_H}`));
@@ -1986,12 +1988,565 @@ to{transform:rotate(360deg)}
     var currentDebtSCXY = []; 
 
     function getMonthIndex(monthOffset){if(!currentXY.length)return 0;for(var currentIndex=getCurrentMonthIndex(),currentDate=currentXY[currentIndex].date,targetTC=new Date(currentDate.getFullYear(),currentDate.getMonth()+monthOffset,1),targetYear=targetTC.getFullYear(),targetMonth=targetTC.getMonth(),idx=currentIndex,i=0;i<currentXY.length;i++){var d=currentXY[i].date;d.getFullYear()===targetYear&&d.getMonth()===targetMonth&&(idx=i)}return idx}
-    function renderChartTC(range){var pts;if(currentRangeTC=range,lineVisibility.expense&&!lineVisibility.balance){pts=[];for(var currentIndex=getCurrentMonthIndex(),i=0;i<fullSeries.length;i++)(expenseSeries[i].amount>0||i>currentIndex&&i<=currentIndex+3)&&pts.push({balance:fullSeries[i].balance,expense:expenseSeries[i].amount,debtTotal:debtSeries[i]?debtSeries[i].total:0,debtShinhan:debtSeries[i]?debtSeries[i].shinhan:0,debtSC:debtSeries[i]?debtSeries[i].sc:0,date:fullSeries[i].date,originalIndex:i})}else pts=fullSeries.map(function(p,i){return{balance:p.balance,expense:expenseSeries[i].amount,debtTotal:debtSeries[i]?debtSeries[i].total:0,debtShinhan:debtSeries[i]?debtSeries[i].shinhan:0,debtSC:debtSeries[i]?debtSeries[i].sc:0,date:p.date,originalIndex:i}});if(lineVisibility.expense&&pts.length>0){var now=new Date,past6M=new Date(now.getFullYear(),now.getMonth()-6,1),future6M=new Date(now.getFullYear(),now.getMonth()+6,1);pts=pts.filter(function(p){var d=p.date;return d>=past6M&&d<=future6M})}if(pts.length){var svg=document.getElementById("chart-svg");svg.innerHTML="";var ns="http://www.w3.org/2000/svg",values=[];lineVisibility.balance&&(values=values.concat(pts.map(function(p){return p.balance}))),lineVisibility.expense&&(values=(values=values.concat(pts.map(function(p){return expenseSeries[p.originalIndex].amount}))).concat(pts.map(function(p){return incomeSeries[p.originalIndex].amount}))),lineVisibility.debt&&(values=values.concat(pts.map(function(p){return p.debtTotal})).concat(pts.map(function(p){return p.debtShinhan})).concat(pts.map(function(p){return p.debtSC}))),values.length||(values=[0,1]);var minV=Math.min.apply(null,values),maxV=Math.max.apply(null,values),range_=maxV-minV;if(0===range_&&(range_=Math.abs(maxV)||1),lineVisibility.expense)minV=0,maxV*=1.9;else{var padV=.12*range_;minV-=padV,maxV+=padV}var plotW=VB_W-PAD_LEFT-PAD_RIGHT,plotH=VB_H-PAD_TOP-PAD_BOTTOM,xy=pts.map(function(p,i){var x=PAD_LEFT+(1===pts.length?0:i/(pts.length-1)*plotW),y=PAD_TOP+(1-(p.balance-minV)/(maxV-minV))*plotH,fullIdx=p.originalIndex,prevBalance=fullIdx>0?fullSeries[fullIdx-1].balance:p.balance;return{x,y,date:p.date,balance:p.balance,momDelta:p.balance-prevBalance}});currentXY=xy,currentExpenseXY=[],currentIncomeXY=[],pts.forEach(function(p,i){var origIdx=p.originalIndex,balancePoint=currentXY[i],expense=expenseSeries[origIdx];if(expense){var expY=PAD_TOP+(1-(expense.amount-minV)/(maxV-minV))*plotH,prevExpAmount=origIdx>0?expenseSeries[origIdx-1].amount:expense.amount;currentExpenseXY.push({x:balancePoint.x,y:expY,date:expense.date,amount:expense.amount,momDelta:expense.amount-prevExpAmount})}var income=incomeSeries[origIdx];if(income){var incY=PAD_TOP+(1-(income.amount-minV)/(maxV-minV))*plotH,prevIncAmount=origIdx>0?incomeSeries[origIdx-1].amount:income.amount;currentIncomeXY.push({x:balancePoint.x,y:incY,date:income.date,amount:income.amount,momDelta:income.amount-prevIncAmount})}}),currentDebtTotalXY=pts.map(function(p,i){return{x:PAD_LEFT+(1==pts.length?0:i/(pts.length-1)*plotW),y:PAD_TOP+(1-(p.debtTotal-minV)/(maxV-minV))*plotH,date:p.date,amount:p.debtTotal}}),currentDebtShinhanXY=pts.map(function(p,i){return{x:PAD_LEFT+(1==pts.length?0:i/(pts.length-1)*plotW),y:PAD_TOP+(1-(p.debtShinhan-minV)/(maxV-minV))*plotH,date:p.date,amount:p.debtShinhan}}),currentDebtSCXY=pts.map(function(p,i){return{x:PAD_LEFT+(1==pts.length?0:i/(pts.length-1)*plotW),y:PAD_TOP+(1-(p.debtSC-minV)/(maxV-minV))*plotH,date:p.date,amount:p.debtSC}});for(var g=0;g<=4;g++){var gv=minV+g/4*(maxV-minV),gy=PAD_TOP+(1-g/4)*plotH,line=document.createElementNS(ns,"line");line.setAttribute("x1",PAD_LEFT),line.setAttribute("x2",VB_W-PAD_RIGHT),line.setAttribute("y1",gy),line.setAttribute("y2",gy),line.setAttribute("stroke","rgba(255,255,255,0.06)"),line.setAttribute("stroke-width","1"),svg.appendChild(line);var txt=document.createElementNS(ns,"text");txt.setAttribute("x",PAD_LEFT-8),txt.setAttribute("y",gy+4),txt.setAttribute("text-anchor","end"),txt.setAttribute("font-size","11"),txt.setAttribute("fill","rgba(255,255,255,0.35)"),txt.textContent="₫"+fmtAxis(gv),svg.appendChild(txt)}var defsTC=document.createElementNS(ns,"defs"),grad=document.createElementNS(ns,"linearGradient");grad.setAttribute("id","tealFill"),grad.setAttribute("x1","0"),grad.setAttribute("y1","0"),grad.setAttribute("x2","0"),grad.setAttribute("y2","1"),(s1=document.createElementNS(ns,"stop")).setAttribute("offset","0%"),s1.setAttribute("stop-color",TEAL),s1.setAttribute("stop-opacity","0.30"),(s2=document.createElementNS(ns,"stop")).setAttribute("offset","100%"),s2.setAttribute("stop-color",TEAL),s2.setAttribute("stop-opacity","0"),grad.appendChild(s1),grad.appendChild(s2),defsTC.appendChild(grad);var gradPink=document.createElementNS(ns,"linearGradient");gradPink.setAttribute("id","pinkFill"),gradPink.setAttribute("x1","0"),gradPink.setAttribute("y1","0"),gradPink.setAttribute("x2","0"),gradPink.setAttribute("y2","1");var p1=document.createElementNS(ns,"stop");p1.setAttribute("offset","0%"),p1.setAttribute("stop-color","#f472b6"),p1.setAttribute("stop-opacity","0.28");var p2=document.createElementNS(ns,"stop");p2.setAttribute("offset","100%"),p2.setAttribute("stop-color","#f472b6"),p2.setAttribute("stop-opacity","0"),gradPink.appendChild(p1),gradPink.appendChild(p2),defsTC.appendChild(gradPink);var gradYellow=document.createElementNS(ns,"linearGradient");gradYellow.setAttribute("id","yellowFill"),gradYellow.setAttribute("x1","0"),gradYellow.setAttribute("y1","0"),gradYellow.setAttribute("x2","0"),gradYellow.setAttribute("y2","1");var g1=document.createElementNS(ns,"stop");g1.setAttribute("offset","0%"),g1.setAttribute("stop-color","#facc15"),g1.setAttribute("stop-opacity","0.25");var g2=document.createElementNS(ns,"stop");g2.setAttribute("offset","100%"),g2.setAttribute("stop-color","#facc15"),g2.setAttribute("stop-opacity","0"),gradYellow.appendChild(g1),gradYellow.appendChild(g2),defsTC.appendChild(gradYellow);var lemonGrad=document.createElementNS(ns,"linearGradient");lemonGrad.setAttribute("id","lemonFill"),lemonGrad.setAttribute("x1","0"),lemonGrad.setAttribute("y1","0"),lemonGrad.setAttribute("x2","0"),lemonGrad.setAttribute("y2","1");var stop1=document.createElementNS(ns,"stop");stop1.setAttribute("offset","0%"),stop1.setAttribute("stop-color","#a3e635"),stop1.setAttribute("stop-opacity","0.25");var stop2=document.createElementNS(ns,"stop");stop2.setAttribute("offset","100%"),stop2.setAttribute("stop-color","#a3e635"),stop2.setAttribute("stop-opacity","0"),lemonGrad.appendChild(stop1),lemonGrad.appendChild(stop2),defsTC.appendChild(lemonGrad);var edgeMask=document.createElementNS(ns,"mask");edgeMask.setAttribute("id","lineEdgeFadeMask"),edgeMask.setAttribute("maskUnits","userSpaceOnUse");var maskRect=document.createElementNS(ns,"rect");maskRect.setAttribute("x","0"),maskRect.setAttribute("y","0"),maskRect.setAttribute("width","100%"),maskRect.setAttribute("height","100%"),maskRect.setAttribute("fill","url(#edgeFadeGrad)");var s1,s2,edgeGrad=document.createElementNS(ns,"linearGradient");edgeGrad.setAttribute("id","edgeFadeGrad"),edgeGrad.setAttribute("x1","0%"),edgeGrad.setAttribute("y1","0%"),edgeGrad.setAttribute("x2","100%"),edgeGrad.setAttribute("y2","0%"),(s1=document.createElementNS(ns,"stop")).setAttribute("offset","0%"),s1.setAttribute("stop-color","white"),s1.setAttribute("stop-opacity","0.1"),(s2=document.createElementNS(ns,"stop")).setAttribute("offset","10%"),s2.setAttribute("stop-color","white"),s2.setAttribute("stop-opacity","1");var s3=document.createElementNS(ns,"stop");s3.setAttribute("offset","90%"),s3.setAttribute("stop-color","white"),s3.setAttribute("stop-opacity","1");var s4=document.createElementNS(ns,"stop");if(s4.setAttribute("offset","100%"),s4.setAttribute("stop-color","white"),s4.setAttribute("stop-opacity","0.15"),edgeGrad.appendChild(s1),edgeGrad.appendChild(s2),edgeGrad.appendChild(s3),edgeGrad.appendChild(s4),defsTC.appendChild(edgeGrad),edgeMask.appendChild(maskRect),defsTC.appendChild(edgeMask),svg.appendChild(defsTC),lineVisibility.balance){var paths=buildSmoothPathTC(xy),areaEl=document.createElementNS(ns,"path");areaEl.setAttribute("d",paths.area),areaEl.setAttribute("fill","url(#tealFill)"),areaEl.setAttribute("stroke","none"),svg.appendChild(areaEl);var lineEl=document.createElementNS(ns,"path");lineEl.setAttribute("d",paths.line),lineEl.setAttribute("fill","none"),lineEl.setAttribute("stroke",TEAL),lineEl.setAttribute("stroke-width","2.5"),lineEl.setAttribute("stroke-linecap","round"),lineEl.setAttribute("stroke-linejoin","round"),svg.appendChild(lineEl)}lineVisibility.expense&&(drawSegmentedExpenseLine(currentExpenseXY,"#f472b6","rgba(244, 114, 182, 0.45)","url(#pinkFill)","pinkGlow",svg,ns,!0),drawSegmentedExpenseLine(currentIncomeXY,"#ccf244","rgba(204, 242, 68, 0.45)","url(#lemonFill)","lemonGlow",svg,ns,!0)),lineVisibility.debt&&(drawDebtLine(currentDebtTotalXY,"#ffffff",3),drawDebtLine(currentDebtShinhanXY,"#60a5fa",2,"6 4"),drawDebtLine(currentDebtSCXY,"#fbbf24",2,"2 2"));var lastLabelX=-1e3,prevQuarter=null;for(i=0;i<xy.length;i++){var d=xy[i].date,x=xy[i].x,year=d.getFullYear(),month=d.getMonth(),quarter=Math.floor(month/3),text="",important=!1;if(0===month?(text=year,important=!0):quarter!==prevQuarter&&(text=monthShort(d),important=!0),important&&!(x-lastLabelX<75)){var lbl=document.createElementNS(ns,"text");lbl.setAttribute("x",x),lbl.setAttribute("y",VB_H-10),lbl.setAttribute("text-anchor","middle"),lbl.setAttribute("font-size",0===month?"12":"11"),lbl.setAttribute("font-weight",0===month?"700":"500"),lbl.setAttribute("fill",0===month?"rgba(255,255,255,0.85)":"rgba(255,255,255,0.45)"),lbl.textContent=text,svg.appendChild(lbl),lastLabelX=x,prevQuarter=quarter}}var hoverLine=document.createElementNS(ns,"line");hoverLine.setAttribute("id","hover-line"),hoverLine.setAttribute("y1",PAD_TOP),hoverLine.setAttribute("y2",VB_H-PAD_BOTTOM),hoverLine.setAttribute("stroke","rgba(255,255,255,0.35)"),hoverLine.setAttribute("stroke-width","1.3"),hoverLine.setAttribute("stroke-dasharray","4 4"),svg.appendChild(hoverLine);var hoverDot=document.createElementNS(ns,"circle");hoverDot.setAttribute("id","hover-dot"),hoverDot.setAttribute("r","5"),hoverDot.setAttribute("fill",TEAL),hoverDot.setAttribute("stroke","#191919"),hoverDot.setAttribute("stroke-width","2"),svg.appendChild(hoverDot);var hoverDotExp=document.createElementNS(ns,"circle");hoverDotExp.setAttribute("id","hover-dot-expense"),hoverDotExp.setAttribute("r","5"),hoverDotExp.setAttribute("fill","#f472b6"),hoverDotExp.setAttribute("stroke","#191919"),hoverDotExp.setAttribute("stroke-width","2"),svg.appendChild(hoverDotExp);var hoverDotInc=document.createElementNS(ns,"circle");hoverDotInc.setAttribute("id","hover-dot-income"),hoverDotInc.setAttribute("r","5"),hoverDotInc.setAttribute("fill","#ccf244"),hoverDotInc.setAttribute("stroke","#191919"),hoverDotInc.setAttribute("stroke-width","2"),svg.appendChild(hoverDotInc);var hoverIndex=getDefaultHoverIndex();showPointAt(hoverIndex);var targetIndex=currentIndex=getCurrentMonthIndex();switch(range){case"today":targetIndex=getMonthIndex(-1);break;case"-3m":targetIndex=getMonthIndex(-3);break;case"-6m":targetIndex=getMonthIndex(-6);break;case"-1y":targetIndex=getMonthIndex(-12);break;case"-2y":targetIndex=getMonthIndex(-24);break;case"+3m":targetIndex=getMonthIndex(3);break;case"+6m":targetIndex=getMonthIndex(6);break;case"+1y":targetIndex=getMonthIndex(12);break;case"+2y":targetIndex=getMonthIndex(24);break;case"max":targetIndex=currentXY.length-1}var current=xy[currentIndex],targetTC=xy[targetIndex],diff="today"===range||range.startsWith("-")?current.balance-targetTC.balance:targetTC.balance-current.balance,pct=0!==current.balance?diff/Math.abs(current.balance)*100:0,isPos=diff>=0;document.getElementById("balance-val").textContent=balanceVisible?fmtFullTC(current.balance):"*********",document.getElementById("balance-usd").textContent=fmtUSDTC(current.balance),updateGoalRing(current.balance),updateCountdown();var directionText={today:"over the last month","-3m":"in the last 3 months","-6m":"in the last 6 months","-1y":"in the last year","-2y":"in the last 2 years","+3m":"over the next 3 months","+6m":"over the next 6 months","+1y":"over the next year","+2y":"over the next 2 years",max:"across all future projections"}[range]||"",verb="today"===range?"You "+(isPos?"gain ":"loss "):range.startsWith("-")?isPos?"You gained ":"You lost ":"You "+(isPos?"gain ":"loss ");document.getElementById("sub-text").innerHTML=verb+'<span id="amt-hl" class="amt-hl '+(isPos?"pos":"neg")+'">'+fmtFullTC(Math.abs(diff))+"</span> ";var pill=document.getElementById("change-pill");pill.style.display="inline-flex",pill.className="pill "+(isPos?"pos":"neg"),pill.innerHTML=(isPos?"&#9650;":"&#9660;")+Math.abs(pct).toFixed(1)+"%";var existingDirSpan=document.getElementById("pill-direction-text");if(existingDirSpan&&existingDirSpan.remove(),window.matchMedia("(min-width: 401px)").matches){var dirSpan=document.createElement("span");dirSpan.id="pill-direction-text",dirSpan.textContent=directionText,dirSpan.className="card-sub-text",dirSpan.style.marginLeft="6px",pill.parentNode.insertBefore(dirSpan,pill.nextSibling)}}function drawDebtLine(points,color,width,dash){var paths=buildSmoothPathTC(points),line=document.createElementNS(ns,"path");line.setAttribute("d",paths.line),line.setAttribute("fill","none"),line.setAttribute("stroke",color),line.setAttribute("stroke-width",width),line.setAttribute("stroke-linecap","round"),line.setAttribute("stroke-linejoin","round"),dash&&line.setAttribute("stroke-dasharray",dash),svg.appendChild(line)}}
-    function drawSegmentedExpenseLine(pts,mainColor,futureColor,fillUrl,glowFilterId,svg,ns,showLiveDot){if(pts&&pts.length){for(var now=new Date,pastPts=[],futurePts=[],i=0;i<pts.length;i++)pts[i].date<=now?pastPts.push(pts[i]):(0===futurePts.length&&pastPts.length>0&&futurePts.push(pastPts[pastPts.length-1]),futurePts.push(pts[i]));var fullPaths=buildSharpPathTC(pts),clipId="areaClip-"+Math.random().toString(36).substring(2,9),defs=svg.querySelector("defs")||svg,clipPath=document.createElementNS(ns,"clipPath");clipPath.setAttribute("id",clipId);var clipAreaPath=document.createElementNS(ns,"path");clipAreaPath.setAttribute("d",fullPaths.area),clipPath.appendChild(clipAreaPath),defs.appendChild(clipPath);var gridGroup=document.createElementNS(ns,"g");gridGroup.setAttribute("clip-path","url(#"+clipId+")"),gridGroup.setAttribute("mask","url(#lineEdgeFadeMask)");for(var k=0;k<pts.length;k++){var vLine=document.createElementNS(ns,"line");vLine.setAttribute("x1",pts[k].x),vLine.setAttribute("x2",pts[k].x),vLine.setAttribute("y1",PAD_TOP),vLine.setAttribute("y2",VB_H-PAD_BOTTOM),vLine.setAttribute("stroke","rgba(255, 255, 255, 0.12)"),vLine.setAttribute("stroke-width","1"),vLine.setAttribute("stroke-dasharray","3 3"),gridGroup.appendChild(vLine)}for(var plotH=VB_H-PAD_TOP-PAD_BOTTOM,g=0;g<=4;g++){var gy=PAD_TOP+(1-g/4)*plotH,hLine=document.createElementNS(ns,"line");hLine.setAttribute("x1",PAD_LEFT),hLine.setAttribute("x2",VB_W-PAD_RIGHT),hLine.setAttribute("y1",gy),hLine.setAttribute("y2",gy),hLine.setAttribute("stroke","rgba(255, 255, 255, 0.12)"),hLine.setAttribute("stroke-width","1"),hLine.setAttribute("stroke-dasharray","3 3"),gridGroup.appendChild(hLine)}if(svg.appendChild(gridGroup),pastPts.length>1){var pastPaths=buildSharpPathTC(pastPts),areaEl=document.createElementNS(ns,"path");areaEl.setAttribute("d",pastPaths.area),areaEl.setAttribute("fill",fillUrl),areaEl.setAttribute("mask","url(#lineEdgeFadeMask)"),svg.appendChild(areaEl);var lineEl=document.createElementNS(ns,"path");lineEl.setAttribute("d",pastPaths.line),lineEl.setAttribute("fill","none"),lineEl.setAttribute("stroke",mainColor),lineEl.setAttribute("stroke-width","2.5"),lineEl.setAttribute("stroke-linecap","butt"),lineEl.setAttribute("stroke-linejoin","miter"),lineEl.setAttribute("stroke-miterlimit","10"),glowFilterId&&lineEl.setAttribute("filter","url(#"+glowFilterId+")"),lineEl.setAttribute("mask","url(#lineEdgeFadeMask)"),svg.appendChild(lineEl)}if(futurePts.length>1){var futurePaths=buildSharpPathTC(futurePts),futureAreaEl=document.createElementNS(ns,"path");futureAreaEl.setAttribute("d",futurePaths.area),futureAreaEl.setAttribute("fill",fillUrl),futureAreaEl.setAttribute("opacity","0.4"),futureAreaEl.setAttribute("mask","url(#lineEdgeFadeMask)"),svg.appendChild(futureAreaEl);var futureLineEl=document.createElementNS(ns,"path");futureLineEl.setAttribute("d",futurePaths.line),futureLineEl.setAttribute("fill","none"),futureLineEl.setAttribute("stroke",futureColor),futureLineEl.setAttribute("stroke-width","2"),futureLineEl.setAttribute("stroke-linecap","round"),futureLineEl.setAttribute("stroke-linejoin","round"),futureLineEl.setAttribute("mask","url(#lineEdgeFadeMask)"),svg.appendChild(futureLineEl)}if(showLiveDot&&pastPts.length>0){var lastPastPt=pastPts[pastPts.length-1],dotGlow=document.createElementNS(ns,"circle");dotGlow.setAttribute("cx",lastPastPt.x),dotGlow.setAttribute("cy",lastPastPt.y),dotGlow.setAttribute("r","8"),dotGlow.setAttribute("fill",mainColor),dotGlow.setAttribute("opacity","0.35"),glowFilterId&&dotGlow.setAttribute("filter","url(#"+glowFilterId+")"),svg.appendChild(dotGlow);var dotCore=document.createElementNS(ns,"circle");dotCore.setAttribute("cx",lastPastPt.x),dotCore.setAttribute("cy",lastPastPt.y),dotCore.setAttribute("r","5"),dotCore.setAttribute("fill",mainColor),dotCore.setAttribute("stroke","#0f172a"),dotCore.setAttribute("stroke-width","1.5"),svg.appendChild(dotCore)}var maxPt=pts.reduce(function(prev,current){return current.amount>prev.amount?current:prev},pts[0]);if(maxPt&&maxPt.amount>0){var valTxt=fmtShort(maxPt.amount),bx=maxPt.x-30,by=maxPt.y-26,labelGroup=document.createElementNS(ns,"g");labelGroup.setAttribute("mask","url(#lineEdgeFadeMask)");var peakMarker=document.createElementNS(ns,"circle");peakMarker.setAttribute("cx",maxPt.x),peakMarker.setAttribute("cy",maxPt.y),peakMarker.setAttribute("r","4"),peakMarker.setAttribute("fill","#0f172a"),peakMarker.setAttribute("stroke",mainColor),peakMarker.setAttribute("stroke-width","2"),labelGroup.appendChild(peakMarker);var rect=document.createElementNS(ns,"rect");rect.setAttribute("x",bx),rect.setAttribute("y",by),rect.setAttribute("width",60),rect.setAttribute("height",18),rect.setAttribute("rx","4"),rect.setAttribute("fill","#0f172a"),rect.setAttribute("stroke-width","1"),rect.setAttribute("opacity","0.9"),labelGroup.appendChild(rect);var txt=document.createElementNS(ns,"text");txt.setAttribute("x",maxPt.x),txt.setAttribute("y",by+18),txt.setAttribute("text-anchor","middle"),txt.setAttribute("font-size","14"),txt.setAttribute("font-weight","700"),txt.setAttribute("fill",mainColor),txt.textContent=valTxt,labelGroup.appendChild(txt),svg.appendChild(labelGroup)}}}
+    function renderChartTC(range) {
+  var pts;
+  if (currentRangeTC = range, lineVisibility.expense && !lineVisibility.balance) {
+    pts = [];
+    for (var currentIndex = getCurrentMonthIndex(), i = 0; i < fullSeries.length; i++)(expenseSeries[i].amount > 0 || i > currentIndex && i <= currentIndex + 3) && pts.push({
+      balance: fullSeries[i].balance,
+      expense: expenseSeries[i].amount,
+      debtTotal: debtSeries[i] ? debtSeries[i].total : 0,
+      debtShinhan: debtSeries[i] ? debtSeries[i].shinhan : 0,
+      debtSC: debtSeries[i] ? debtSeries[i].sc : 0,
+      date: fullSeries[i].date,
+      originalIndex: i
+    })
+  } else pts = fullSeries.map(function(p, i) {
+    return {
+      balance: p.balance,
+      expense: expenseSeries[i].amount,
+      debtTotal: debtSeries[i] ? debtSeries[i].total : 0,
+      debtShinhan: debtSeries[i] ? debtSeries[i].shinhan : 0,
+      debtSC: debtSeries[i] ? debtSeries[i].sc : 0,
+      date: p.date,
+      originalIndex: i
+    }
+  });
+  if (lineVisibility.expense && pts.length > 0) {
+    var now = new Date,
+      past6M = new Date(now.getFullYear(), now.getMonth() - 6, 1),
+      future6M = new Date(now.getFullYear(), now.getMonth() + 6, 1);
+    pts = pts.filter(function(p) {
+      var d = p.date;
+      return d >= past6M && d <= future6M
+    })
+  }
+  if (pts.length) {
+    var svg = document.getElementById("chart-svg");
+    svg.innerHTML = "";
+    var ns = "http://www.w3.org/2000/svg",
+      values = [];
+    lineVisibility.balance && (values = values.concat(pts.map(function(p) {
+      return p.balance
+    }))), lineVisibility.expense && (values = (values = values.concat(pts.map(function(p) {
+      return expenseSeries[p.originalIndex].amount
+    }))).concat(pts.map(function(p) {
+      return incomeSeries[p.originalIndex].amount
+    }))), lineVisibility.debt && (values = values.concat(pts.map(function(p) {
+      return p.debtTotal
+    })).concat(pts.map(function(p) {
+      return p.debtShinhan
+    })).concat(pts.map(function(p) {
+      return p.debtSC
+    }))), values.length || (values = [0, 1]);
+    var minV = Math.min.apply(null, values),
+      maxV = Math.max.apply(null, values),
+      range_ = maxV - minV;
+    if (0 === range_ && (range_ = Math.abs(maxV) || 1), lineVisibility.expense) minV = 0, maxV *= 1.9;
+    else {
+      var padV = .12 * range_;
+      minV -= padV, maxV += padV
+    }
+    var plotW = VB_W - PAD_LEFT - PAD_RIGHT,
+      plotH = VB_H - PAD_TOP - PAD_BOTTOM,
+      xy = pts.map(function(p, i) {
+        var x = PAD_LEFT + (1 === pts.length ? 0 : i / (pts.length - 1) * plotW),
+          y = PAD_TOP + (1 - (p.balance - minV) / (maxV - minV)) * plotH,
+          fullIdx = p.originalIndex,
+          prevBalance = fullIdx > 0 ? fullSeries[fullIdx - 1].balance : p.balance;
+        return {
+          x,
+          y,
+          date: p.date,
+          balance: p.balance,
+          momDelta: p.balance - prevBalance
+        }
+      });
+    currentXY = xy, currentExpenseXY = [], currentIncomeXY = [], pts.forEach(function(p, i) {
+      var origIdx = p.originalIndex,
+        balancePoint = currentXY[i],
+        expense = expenseSeries[origIdx];
+      if (expense) {
+        var expY = PAD_TOP + (1 - (expense.amount - minV) / (maxV - minV)) * plotH,
+          prevExpAmount = origIdx > 0 ? expenseSeries[origIdx - 1].amount : expense.amount;
+        currentExpenseXY.push({
+          x: balancePoint.x,
+          y: expY,
+          date: expense.date,
+          amount: expense.amount,
+          momDelta: expense.amount - prevExpAmount
+        })
+      }
+      var income = incomeSeries[origIdx];
+      if (income) {
+        var incY = PAD_TOP + (1 - (income.amount - minV) / (maxV - minV)) * plotH,
+          prevIncAmount = origIdx > 0 ? incomeSeries[origIdx - 1].amount : income.amount;
+        currentIncomeXY.push({
+          x: balancePoint.x,
+          y: incY,
+          date: income.date,
+          amount: income.amount,
+          momDelta: income.amount - prevIncAmount
+        })
+      }
+    }), currentDebtTotalXY = pts.map(function(p, i) {
+      return {
+        x: PAD_LEFT + (1 == pts.length ? 0 : i / (pts.length - 1) * plotW),
+        y: PAD_TOP + (1 - (p.debtTotal - minV) / (maxV - minV)) * plotH,
+        date: p.date,
+        amount: p.debtTotal
+      }
+    }), currentDebtShinhanXY = pts.map(function(p, i) {
+      return {
+        x: PAD_LEFT + (1 == pts.length ? 0 : i / (pts.length - 1) * plotW),
+        y: PAD_TOP + (1 - (p.debtShinhan - minV) / (maxV - minV)) * plotH,
+        date: p.date,
+        amount: p.debtShinhan
+      }
+    }), currentDebtSCXY = pts.map(function(p, i) {
+      return {
+        x: PAD_LEFT + (1 == pts.length ? 0 : i / (pts.length - 1) * plotW),
+        y: PAD_TOP + (1 - (p.debtSC - minV) / (maxV - minV)) * plotH,
+        date: p.date,
+        amount: p.debtSC
+      }
+    });
+
+    var defsTC = document.createElementNS(ns, "defs"),
+      grad = document.createElementNS(ns, "linearGradient");
+    grad.setAttribute("id", "tealFill"), grad.setAttribute("x1", "0"), grad.setAttribute("y1", "0"), grad.setAttribute("x2", "0"), grad.setAttribute("y2", "1"), (s1 = document.createElementNS(ns, "stop")).setAttribute("offset", "0%"), s1.setAttribute("stop-color", TEAL), s1.setAttribute("stop-opacity", "0.30"), (s2 = document.createElementNS(ns, "stop")).setAttribute("offset", "100%"), s2.setAttribute("stop-color", TEAL), s2.setAttribute("stop-opacity", "0"), grad.appendChild(s1), grad.appendChild(s2), defsTC.appendChild(grad);
+    var gradPink = document.createElementNS(ns, "linearGradient");
+    gradPink.setAttribute("id", "pinkFill"), gradPink.setAttribute("x1", "0"), gradPink.setAttribute("y1", "0"), gradPink.setAttribute("x2", "0"), gradPink.setAttribute("y2", "1");
+    var p1 = document.createElementNS(ns, "stop");
+    p1.setAttribute("offset", "0%"), p1.setAttribute("stop-color", "#f472b6"), p1.setAttribute("stop-opacity", "0.28");
+    var p2 = document.createElementNS(ns, "stop");
+    p2.setAttribute("offset", "100%"), p2.setAttribute("stop-color", "#f472b6"), p2.setAttribute("stop-opacity", "0"), gradPink.appendChild(p1), gradPink.appendChild(p2), defsTC.appendChild(gradPink);
+    var gradYellow = document.createElementNS(ns, "linearGradient");
+    gradYellow.setAttribute("id", "yellowFill"), gradYellow.setAttribute("x1", "0"), gradYellow.setAttribute("y1", "0"), gradYellow.setAttribute("x2", "0"), gradYellow.setAttribute("y2", "1");
+    var g1 = document.createElementNS(ns, "stop");
+    g1.setAttribute("offset", "0%"), g1.setAttribute("stop-color", "#facc15"), g1.setAttribute("stop-opacity", "0.25");
+    var g2 = document.createElementNS(ns, "stop");
+    g2.setAttribute("offset", "100%"), g2.setAttribute("stop-color", "#facc15"), g2.setAttribute("stop-opacity", "0"), gradYellow.appendChild(g1), gradYellow.appendChild(g2), defsTC.appendChild(gradYellow);
+    var lemonGrad = document.createElementNS(ns, "linearGradient");
+    lemonGrad.setAttribute("id", "lemonFill"), lemonGrad.setAttribute("x1", "0"), lemonGrad.setAttribute("y1", "0"), lemonGrad.setAttribute("x2", "0"), lemonGrad.setAttribute("y2", "1");
+    var stop1 = document.createElementNS(ns, "stop");
+    stop1.setAttribute("offset", "0%"), stop1.setAttribute("stop-color", "#a3e635"), stop1.setAttribute("stop-opacity", "0.25");
+    var stop2 = document.createElementNS(ns, "stop");
+    stop2.setAttribute("offset", "100%"), stop2.setAttribute("stop-color", "#a3e635"), stop2.setAttribute("stop-opacity", "0"), lemonGrad.appendChild(stop1), lemonGrad.appendChild(stop2), defsTC.appendChild(lemonGrad);
+    var edgeMask = document.createElementNS(ns, "mask");
+    edgeMask.setAttribute("id", "lineEdgeFadeMask"), edgeMask.setAttribute("maskUnits", "userSpaceOnUse");
+    var maskRect = document.createElementNS(ns, "rect");
+    maskRect.setAttribute("x", "0"), maskRect.setAttribute("y", "0"), maskRect.setAttribute("width", "100%"), maskRect.setAttribute("height", "100%"), maskRect.setAttribute("fill", "url(#edgeFadeGrad)");
+    var s1, s2, edgeGrad = document.createElementNS(ns, "linearGradient");
+    edgeGrad.setAttribute("id", "edgeFadeGrad"), edgeGrad.setAttribute("x1", "0%"), edgeGrad.setAttribute("y1", "0%"), edgeGrad.setAttribute("x2", "100%"), edgeGrad.setAttribute("y2", "0%"), (s1 = document.createElementNS(ns, "stop")).setAttribute("offset", "0%"), s1.setAttribute("stop-color", "white"), s1.setAttribute("stop-opacity", "0.1"), (s2 = document.createElementNS(ns, "stop")).setAttribute("offset", "10%"), s2.setAttribute("stop-color", "white"), s2.setAttribute("stop-opacity", "1");
+    var s3 = document.createElementNS(ns, "stop");
+    s3.setAttribute("offset", "90%"), s3.setAttribute("stop-color", "white"), s3.setAttribute("stop-opacity", "1");
+    var s4 = document.createElementNS(ns, "stop");
+    if (s4.setAttribute("offset", "100%"), s4.setAttribute("stop-color", "white"), s4.setAttribute("stop-opacity", "0.15"), edgeGrad.appendChild(s1), edgeGrad.appendChild(s2), edgeGrad.appendChild(s3), edgeGrad.appendChild(s4), defsTC.appendChild(edgeGrad), edgeMask.appendChild(maskRect), defsTC.appendChild(edgeMask), svg.appendChild(defsTC), lineVisibility.balance) {
+      var paths = buildSmoothPathTC(xy),
+        areaEl = document.createElementNS(ns, "path");
+      areaEl.setAttribute("d", paths.area), areaEl.setAttribute("fill", "url(#tealFill)"), areaEl.setAttribute("stroke", "none"), svg.appendChild(areaEl);
+      var lineEl = document.createElementNS(ns, "path");
+      lineEl.setAttribute("d", paths.line), lineEl.setAttribute("fill", "none"), lineEl.setAttribute("stroke", TEAL), lineEl.setAttribute("stroke-width", "2.5"), lineEl.setAttribute("stroke-linecap", "round"), lineEl.setAttribute("stroke-linejoin", "round"), svg.appendChild(lineEl)
+    }
+    lineVisibility.expense && (drawSegmentedExpenseLine(currentExpenseXY, "#f472b6", "rgba(244, 114, 182, 0.45)", "url(#pinkFill)", "pinkGlow", svg, ns, !0), drawSegmentedExpenseLine(currentIncomeXY, "#ccf244", "rgba(204, 242, 68, 0.45)", "url(#lemonFill)", "lemonGlow", svg, ns, !0)), lineVisibility.debt && (
+      drawDebtLine(currentDebtTotalXY, "#ffffff", 3, null, "url(#debtTotalFill)"), 
+      drawDebtLine(currentDebtShinhanXY, "#60a5fa", 2, "6 4", "url(#debtShinhanFill)"), 
+      drawDebtLine(currentDebtSCXY, "#fbbf24", 2, "2 2", "url(#debtSCFill)")
+    );
+    var lastLabelX = -1e3,
+      prevQuarter = null;
+    for (i = 0; i < xy.length; i++) {
+      var d = xy[i].date,
+        x = xy[i].x,
+        year = d.getFullYear(),
+        month = d.getMonth(),
+        quarter = Math.floor(month / 3),
+        text = "",
+        important = !1;
+      if (0 === month ? (text = year, important = !0) : quarter !== prevQuarter && (text = monthShort(d), important = !0), important && !(x - lastLabelX < 75)) {
+        var lbl = document.createElementNS(ns, "text");
+        lbl.setAttribute("x", x), lbl.setAttribute("y", VB_H - 10), lbl.setAttribute("text-anchor", "middle"), lbl.setAttribute("font-size", 0 === month ? "12" : "11"), lbl.setAttribute("font-weight", 0 === month ? "700" : "500"), lbl.setAttribute("fill", 0 === month ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.45)"), lbl.textContent = text, svg.appendChild(lbl), lastLabelX = x, prevQuarter = quarter
+      }
+    }
+
+    if (lineVisibility.balance) {
+      var paths = buildSmoothPathTC(xy);
+      
+      // 1. Create clip path for grid lines inside the balance area
+      var clipId = "balanceAreaClip-" + Math.random().toString(36).substring(2, 9);
+      var defs = svg.querySelector("defs") || svg;
+      var clipPath = document.createElementNS(ns, "clipPath");
+      clipPath.setAttribute("id", clipId);
+      var clipAreaPath = document.createElementNS(ns, "path");
+      clipAreaPath.setAttribute("d", paths.area);
+      clipPath.appendChild(clipAreaPath);
+      defs.appendChild(clipPath);
+
+      // 2. Render vertical dashed grid lines for every 3rd month (quarterly intervals) and horizontal grid lines restricted to the area clip path
+      var gridGroup = document.createElementNS(ns, "g");
+      gridGroup.setAttribute("clip-path", "url(#" + clipId + ")");
+      gridGroup.setAttribute("mask", "url(#lineEdgeFadeMask)");
+      
+      var prevQuarter = null;
+      for (var k = 0; k < pts.length; k++) {
+        var d = pts[k].date;
+        var month = d.getMonth();
+        var quarter = Math.floor(month / 3);
+        
+        // Show vertical dashed line every 3 months (quarter change or start of year)
+        if (quarter !== prevQuarter || k === 0) {
+          var vLine = document.createElementNS(ns, "line");
+          vLine.setAttribute("x1", xy[k].x);
+          vLine.setAttribute("x2", xy[k].x);
+          vLine.setAttribute("y1", PAD_TOP);
+          vLine.setAttribute("y2", VB_H - PAD_BOTTOM);
+          vLine.setAttribute("stroke", "rgba(255, 255, 255, 0.12)");
+          vLine.setAttribute("stroke-width", "1");
+          vLine.setAttribute("stroke-dasharray", "3 3");
+          gridGroup.appendChild(vLine);
+          prevQuarter = quarter;
+        }
+      }
+      
+      var plotH = VB_H - PAD_TOP - PAD_BOTTOM;
+      for (var g = 0; g <= 4; g++) {
+        var gy = PAD_TOP + (1 - g / 4) * plotH;
+        var hLine = document.createElementNS(ns, "line");
+        hLine.setAttribute("x1", PAD_LEFT);
+        hLine.setAttribute("x2", VB_W - PAD_RIGHT);
+        hLine.setAttribute("y1", gy);
+        hLine.setAttribute("y2", gy);
+        hLine.setAttribute("stroke", "rgba(255, 255, 255, 0.12)");
+        hLine.setAttribute("stroke-width", "1");
+        hLine.setAttribute("stroke-dasharray", "3 3");
+        gridGroup.appendChild(hLine);
+      }
+      svg.appendChild(gridGroup);
+
+      // 3. Render the balance gradient fill area
+      var areaEl = document.createElementNS(ns, "path");
+      areaEl.setAttribute("d", paths.area);
+      areaEl.setAttribute("fill", "url(#tealFill)");
+      areaEl.setAttribute("stroke", "none");
+      svg.appendChild(areaEl);
+
+      // 4. Render the top balance line stroke
+      var lineEl = document.createElementNS(ns, "path");
+      lineEl.setAttribute("d", paths.line);
+      lineEl.setAttribute("fill", "none");
+      lineEl.setAttribute("stroke", TEAL);
+      lineEl.setAttribute("stroke-width", "2.5");
+      lineEl.setAttribute("stroke-linecap", "round");
+      lineEl.setAttribute("stroke-linejoin", "round");
+      svg.appendChild(lineEl);
+    }
+
+    var gradDebtTotal = document.createElementNS(ns, "linearGradient");
+    gradDebtTotal.setAttribute("id", "debtTotalFill");
+    gradDebtTotal.setAttribute("x1", "0");
+    gradDebtTotal.setAttribute("y1", "0");
+    gradDebtTotal.setAttribute("x2", "0");
+    gradDebtTotal.setAttribute("y2", "1");
+    var dt1 = document.createElementNS(ns, "stop");
+    dt1.setAttribute("offset", "0%");
+    dt1.setAttribute("stop-color", "#ffffff");
+    dt1.setAttribute("stop-opacity", "0.20");
+    var dt2 = document.createElementNS(ns, "stop");
+    dt2.setAttribute("offset", "100%");
+    dt2.setAttribute("stop-color", "#ffffff");
+    dt2.setAttribute("stop-opacity", "0");
+    gradDebtTotal.appendChild(dt1);
+    gradDebtTotal.appendChild(dt2);
+    defsTC.appendChild(gradDebtTotal);
+
+    var gradDebtShinhan = document.createElementNS(ns, "linearGradient");
+    gradDebtShinhan.setAttribute("id", "debtShinhanFill");
+    gradDebtShinhan.setAttribute("x1", "0");
+    gradDebtShinhan.setAttribute("y1", "0");
+    gradDebtShinhan.setAttribute("x2", "0");
+    gradDebtShinhan.setAttribute("y2", "1");
+    var ds1 = document.createElementNS(ns, "stop");
+    ds1.setAttribute("offset", "0%");
+    ds1.setAttribute("stop-color", "#60a5fa");
+    ds1.setAttribute("stop-opacity", "0.20");
+    var ds2 = document.createElementNS(ns, "stop");
+    ds2.setAttribute("offset", "100%");
+    ds2.setAttribute("stop-color", "#60a5fa");
+    ds2.setAttribute("stop-opacity", "0");
+    gradDebtShinhan.appendChild(ds1);
+    gradDebtShinhan.appendChild(ds2);
+    defsTC.appendChild(gradDebtShinhan);
+
+    var gradDebtSC = document.createElementNS(ns, "linearGradient");
+    gradDebtSC.setAttribute("id", "debtSCFill");
+    gradDebtSC.setAttribute("x1", "0");
+    gradDebtSC.setAttribute("y1", "0");
+    gradDebtSC.setAttribute("x2", "0");
+    gradDebtSC.setAttribute("y2", "1");
+    var dc1 = document.createElementNS(ns, "stop");
+    dc1.setAttribute("offset", "0%");
+    dc1.setAttribute("stop-color", "#fbbf24");
+    dc1.setAttribute("stop-opacity", "0.20");
+    var dc2 = document.createElementNS(ns, "stop");
+    dc2.setAttribute("offset", "100%");
+    dc2.setAttribute("stop-color", "#fbbf24");
+    dc2.setAttribute("stop-opacity", "0");
+    gradDebtSC.appendChild(dc1);
+    gradDebtSC.appendChild(dc2);
+    defsTC.appendChild(gradDebtSC);
+    
+    var hoverLine = document.createElementNS(ns, "line");
+    hoverLine.setAttribute("id", "hover-line"), hoverLine.setAttribute("y1", PAD_TOP + lineVisibility.debt ? 155 : 75), hoverLine.setAttribute("y2", VB_H - PAD_BOTTOM), hoverLine.setAttribute("stroke", "rgba(255,255,255,0.35)"), hoverLine.setAttribute("stroke-width", "1.3"), hoverLine.setAttribute("stroke-dasharray", "4 4"), svg.appendChild(hoverLine);
+    var hoverDot = document.createElementNS(ns, "circle");
+    hoverDot.setAttribute("id", "hover-dot"), hoverDot.setAttribute("r", "5"), hoverDot.setAttribute("fill", TEAL), hoverDot.setAttribute("stroke", "#191919"), hoverDot.setAttribute("stroke-width", "2"), svg.appendChild(hoverDot);
+    var hoverDotExp = document.createElementNS(ns, "circle");
+    hoverDotExp.setAttribute("id", "hover-dot-expense"), hoverDotExp.setAttribute("r", "5"), hoverDotExp.setAttribute("fill", "#f472b6"), hoverDotExp.setAttribute("stroke", "#191919"), hoverDotExp.setAttribute("stroke-width", "2"), svg.appendChild(hoverDotExp);
+    var hoverDotInc = document.createElementNS(ns, "circle");
+    hoverDotInc.setAttribute("id", "hover-dot-income"), hoverDotInc.setAttribute("r", "5"), hoverDotInc.setAttribute("fill", "#ccf244"), hoverDotInc.setAttribute("stroke", "#191919"), hoverDotInc.setAttribute("stroke-width", "2"), svg.appendChild(hoverDotInc);
+    var hoverIndex = getDefaultHoverIndex();
+    showPointAt(hoverIndex);
+    var targetIndex = currentIndex = getCurrentMonthIndex();
+    switch (range) {
+      case "today":
+        targetIndex = getMonthIndex(-1);
+        break;
+      case "-3m":
+        targetIndex = getMonthIndex(-3);
+        break;
+      case "-6m":
+        targetIndex = getMonthIndex(-6);
+        break;
+      case "-1y":
+        targetIndex = getMonthIndex(-12);
+        break;
+      case "-2y":
+        targetIndex = getMonthIndex(-24);
+        break;
+      case "+3m":
+        targetIndex = getMonthIndex(3);
+        break;
+      case "+6m":
+        targetIndex = getMonthIndex(6);
+        break;
+      case "+1y":
+        targetIndex = getMonthIndex(12);
+        break;
+      case "+2y":
+        targetIndex = getMonthIndex(24);
+        break;
+      case "max":
+        targetIndex = currentXY.length - 1
+    }
+    var current = xy[currentIndex],
+      targetTC = xy[targetIndex],
+      diff = "today" === range || range.startsWith("-") ? current.balance - targetTC.balance : targetTC.balance - current.balance,
+      pct = 0 !== current.balance ? diff / Math.abs(current.balance) * 100 : 0,
+      isPos = diff >= 0;
+    document.getElementById("balance-val").textContent = balanceVisible ? fmtFullTC(current.balance) : "*********", document.getElementById("balance-usd").textContent = fmtUSDTC(current.balance), updateGoalRing(current.balance), updateCountdown();
+    var directionText = {
+        today: "over the last month",
+        "-3m": "in the last 3 months",
+        "-6m": "in the last 6 months",
+        "-1y": "in the last year",
+        "-2y": "in the last 2 years",
+        "+3m": "over the next 3 months",
+        "+6m": "over the next 6 months",
+        "+1y": "over the next year",
+        "+2y": "over the next 2 years",
+        max: "across all future projections"
+      } [range] || "",
+      verb = "today" === range ? "You " + (isPos ? "gain " : "loss ") : range.startsWith("-") ? isPos ? "You gained " : "You lost " : "You " + (isPos ? "gain " : "loss ");
+    document.getElementById("sub-text").innerHTML = verb + '<span id="amt-hl" class="amt-hl ' + (isPos ? "pos" : "neg") + '">' + fmtFullTC(Math.abs(diff)) + "</span> ";
+    var pill = document.getElementById("change-pill");
+    pill.style.display = "inline-flex", pill.className = "pill " + (isPos ? "pos" : "neg"), pill.innerHTML = (isPos ? "&#9650;" : "&#9660;") + Math.abs(pct).toFixed(1) + "%";
+    var existingDirSpan = document.getElementById("pill-direction-text");
+    if (existingDirSpan && existingDirSpan.remove(), window.matchMedia("(min-width: 401px)").matches) {
+      var dirSpan = document.createElement("span");
+      dirSpan.id = "pill-direction-text", dirSpan.textContent = directionText, dirSpan.className = "card-sub-text", dirSpan.style.marginLeft = "6px", pill.parentNode.insertBefore(dirSpan, pill.nextSibling)
+    }
+  }
+function drawDebtLine(points, color, width, dash, fillUrl) {
+    var paths = buildSmoothPathTC(points);
+    if (fillUrl) {
+      // 1. Create clip path for grid lines inside the debt area
+      var clipId = "debtAreaClip-" + Math.random().toString(36).substring(2, 9);
+      var defs = svg.querySelector("defs") || svg;
+      var clipPath = document.createElementNS(ns, "clipPath");
+      clipPath.setAttribute("id", clipId);
+      var clipAreaPath = document.createElementNS(ns, "path");
+      clipAreaPath.setAttribute("d", paths.area);
+      clipPath.appendChild(clipAreaPath);
+      defs.appendChild(clipPath);
+
+      // 2. Render vertical dashed grid lines every 3 months and horizontal grid lines restricted to the area clip path
+      var gridGroup = document.createElementNS(ns, "g");
+      gridGroup.setAttribute("clip-path", "url(#" + clipId + ")");
+      gridGroup.setAttribute("mask", "url(#lineEdgeFadeMask)");
+      
+      var prevQuarter = null;
+      for (var k = 0; k < pts.length; k++) {
+        var d = pts[k].date;
+        var month = d.getMonth();
+        var quarter = Math.floor(month / 3);
+        
+        if (quarter !== prevQuarter || k === 0) {
+          var vLine = document.createElementNS(ns, "line");
+          vLine.setAttribute("x1", points[k].x);
+          vLine.setAttribute("x2", points[k].x);
+          vLine.setAttribute("y1", PAD_TOP);
+          vLine.setAttribute("y2", VB_H - PAD_BOTTOM);
+          vLine.setAttribute("stroke", "rgba(255, 255, 255, 0.12)");
+          vLine.setAttribute("stroke-width", "1");
+          vLine.setAttribute("stroke-dasharray", "3 3");
+          gridGroup.appendChild(vLine);
+          prevQuarter = quarter;
+        }
+      }
+      
+      var plotH = VB_H - PAD_TOP - PAD_BOTTOM;
+      for (var g = 0; g <= 4; g++) {
+        var gy = PAD_TOP + (1 - g / 4) * plotH;
+        var hLine = document.createElementNS(ns, "line");
+        hLine.setAttribute("x1", PAD_LEFT);
+        hLine.setAttribute("x2", VB_W - PAD_RIGHT);
+        hLine.setAttribute("y1", gy);
+        hLine.setAttribute("y2", gy);
+        hLine.setAttribute("stroke", "rgba(255, 255, 255, 0.12)");
+        hLine.setAttribute("stroke-width", "1");
+        hLine.setAttribute("stroke-dasharray", "3 3");
+        gridGroup.appendChild(hLine);
+      }
+      svg.appendChild(gridGroup);
+
+      // 3. Render the area gradient fill
+      var areaEl = document.createElementNS(ns, "path");
+      areaEl.setAttribute("d", paths.area);
+      areaEl.setAttribute("fill", fillUrl);
+      areaEl.setAttribute("stroke", "none");
+      svg.appendChild(areaEl);
+    }
+
+    // 4. Render the top stroke line
+    var line = document.createElementNS(ns, "path");
+    line.setAttribute("d", paths.line);
+    line.setAttribute("fill", "none");
+    line.setAttribute("stroke", color);
+    line.setAttribute("stroke-width", width);
+    line.setAttribute("stroke-linecap", "round");
+    line.setAttribute("stroke-linejoin", "round");
+    dash && line.setAttribute("stroke-dasharray", dash);
+    svg.appendChild(line);
+  }
+}
+    function drawSegmentedExpenseLine(pts, mainColor, futureColor, fillUrl, glowFilterId, svg, ns, showLiveDot) {
+      if (pts && pts.length) {
+        for (var now = new Date, pastPts = [], futurePts = [], i = 0; i < pts.length; i++) pts[i].date <= now ? pastPts.push(pts[i]) : (0 === futurePts.length && pastPts.length > 0 && futurePts.push(pastPts[pastPts.length - 1]), futurePts.push(pts[i]));
+        var fullPaths=buildSharpPathTC(pts),clipId="areaClip-"+Math.random().toString(36).substring(2,9),defs=svg.querySelector("defs")||svg,clipPath=document.createElementNS(ns,"clipPath");clipPath.setAttribute("id",clipId);var clipAreaPath=document.createElementNS(ns,"path");clipAreaPath.setAttribute("d",fullPaths.area),clipPath.appendChild(clipAreaPath),defs.appendChild(clipPath);var gridGroup=document.createElementNS(ns,"g");
+        gridGroup.setAttribute("clip-path", "url(#" + clipId + ")"), gridGroup.setAttribute("mask", "url(#lineEdgeFadeMask)");
+        for (var k = 0; k < pts.length; k++) {
+          var vLine = document.createElementNS(ns, "line");
+          vLine.setAttribute("x1", pts[k].x), vLine.setAttribute("x2", pts[k].x), vLine.setAttribute("y1", PAD_TOP), vLine.setAttribute("y2", VB_H - PAD_BOTTOM), vLine.setAttribute("stroke", "rgba(255, 255, 255, 0.12)"), vLine.setAttribute("stroke-width", "1"), vLine.setAttribute("stroke-dasharray", "3 3"), gridGroup.appendChild(vLine)
+        }
+        for (var plotH = VB_H - PAD_TOP - PAD_BOTTOM, g = 0; g <= 4; g++) {
+          var gy = PAD_TOP + (1 - g / 4) * plotH,
+            hLine = document.createElementNS(ns, "line");
+          hLine.setAttribute("x1", PAD_LEFT), hLine.setAttribute("x2", VB_W - PAD_RIGHT), hLine.setAttribute("y1", gy), hLine.setAttribute("y2", gy), hLine.setAttribute("stroke", "rgba(255, 255, 255, 0.12)"), hLine.setAttribute("stroke-width", "1"), hLine.setAttribute("stroke-dasharray", "3 3"), gridGroup.appendChild(hLine)
+        }
+        if(svg.appendChild(gridGroup),pastPts.length>1){var pastPaths=buildSharpPathTC(pastPts),areaEl=document.createElementNS(ns,"path");areaEl.setAttribute("d",pastPaths.area),areaEl.setAttribute("fill",fillUrl),areaEl.setAttribute("mask","url(#lineEdgeFadeMask)"),svg.appendChild(areaEl);var lineEl=document.createElementNS(ns,"path");lineEl.setAttribute("d",pastPaths.line),lineEl.setAttribute("fill","none"),lineEl.setAttribute("stroke",mainColor),lineEl.setAttribute("stroke-width","2.5"),lineEl.setAttribute("stroke-linecap","butt"),lineEl.setAttribute("stroke-linejoin","miter"),lineEl.setAttribute("stroke-miterlimit","10"),glowFilterId&&lineEl.setAttribute("filter","url(#"+glowFilterId+")"),lineEl.setAttribute("mask","url(#lineEdgeFadeMask)"),svg.appendChild(lineEl)}
+        if(futurePts.length>1){var futurePaths=buildSharpPathTC(futurePts),futureAreaEl=document.createElementNS(ns,"path");futureAreaEl.setAttribute("d",futurePaths.area),futureAreaEl.setAttribute("fill",fillUrl),futureAreaEl.setAttribute("opacity","0.4"),futureAreaEl.setAttribute("mask","url(#lineEdgeFadeMask)"),svg.appendChild(futureAreaEl);var futureLineEl=document.createElementNS(ns,"path");futureLineEl.setAttribute("d",futurePaths.line),futureLineEl.setAttribute("fill","none"),futureLineEl.setAttribute("stroke",futureColor),futureLineEl.setAttribute("stroke-width","2"),futureLineEl.setAttribute("stroke-linecap","round"),futureLineEl.setAttribute("stroke-linejoin","round"),futureLineEl.setAttribute("mask","url(#lineEdgeFadeMask)"),svg.appendChild(futureLineEl)}if(showLiveDot&&pastPts.length>0){var lastPastPt=pastPts[pastPts.length-1],dotGlow=document.createElementNS(ns,"circle");dotGlow.setAttribute("cx",lastPastPt.x),dotGlow.setAttribute("cy",lastPastPt.y),dotGlow.setAttribute("r","8"),dotGlow.setAttribute("fill",mainColor),dotGlow.setAttribute("opacity","0.35"),glowFilterId&&dotGlow.setAttribute("filter","url(#"+glowFilterId+")"),svg.appendChild(dotGlow);var dotCore=document.createElementNS(ns,"circle");dotCore.setAttribute("cx",lastPastPt.x),dotCore.setAttribute("cy",lastPastPt.y),dotCore.setAttribute("r","5"),dotCore.setAttribute("fill",mainColor),dotCore.setAttribute("stroke","#0f172a"),dotCore.setAttribute("stroke-width","1.5"),svg.appendChild(dotCore)}
+        var maxPt = pts.reduce(function(prev, current) {
+          return current.amount > prev.amount ? current : prev
+        }, pts[0]);
+        if(maxPt&&maxPt.amount>0){var valTxt=fmtShort(maxPt.amount),bx=maxPt.x-30,by=maxPt.y-26,labelGroup=document.createElementNS(ns,"g");labelGroup.setAttribute("mask","url(#lineEdgeFadeMask)");var peakMarker=document.createElementNS(ns,"circle");peakMarker.setAttribute("cx",maxPt.x),peakMarker.setAttribute("cy",maxPt.y),peakMarker.setAttribute("r","4"),peakMarker.setAttribute("fill","#0f172a"),peakMarker.setAttribute("stroke",mainColor),peakMarker.setAttribute("stroke-width","2"),labelGroup.appendChild(peakMarker);var rect=document.createElementNS(ns,"rect");rect.setAttribute("x",bx),rect.setAttribute("y",by),rect.setAttribute("width",60),rect.setAttribute("height",18),rect.setAttribute("rx","4"),rect.setAttribute("fill","#0f172a"),rect.setAttribute("stroke-width","1"),rect.setAttribute("opacity","0.9"),labelGroup.appendChild(rect);var txt=document.createElementNS(ns,"text");txt.setAttribute("x",maxPt.x),txt.setAttribute("y",by+18),txt.setAttribute("text-anchor","middle"),txt.setAttribute("font-size","14"),txt.setAttribute("font-weight","700"),txt.setAttribute("fill",mainColor),txt.textContent=valTxt,labelGroup.appendChild(txt),svg.appendChild(labelGroup)}
+      }
+    }
     function getCurrentMonthIndex(){if(!currentXY.length)return 0;for(var now=new Date,year=now.getFullYear(),month=now.getMonth(),idx=0,i=0;i<currentXY.length;i++){var d=currentXY[i].date;if(!(d.getFullYear()<year||d.getFullYear()===year&&d.getMonth()<=month))break;idx=i}return idx}
     function getDefaultHoverIndex(){var currentIdx=getCurrentMonthIndex();return lineVisibility.expense&&!lineVisibility.balance?Math.min(currentXY.length-1,currentIdx):Math.min(currentXY.length-1,currentIdx+6)}
     function fmtShort(v){var a=Math.abs(v),sign=v<0?"-":"";return a>=1e9?sign+(a/1e9).toFixed(1).replace(/\.0$/,"")+"B":a>=1e6?sign+Math.round(a/1e6)+"M":a>=1e3?sign+Math.round(a/1e3)+"K":sign+Math.round(a)}
-    function showPointAt(idx){if(currentXY.length){idx=Math.max(0,Math.min(currentXY.length-1,idx));var pt=currentXY[idx],ptExp=currentExpenseXY&&currentExpenseXY[idx]?currentExpenseXY[idx]:null,ptInc=currentIncomeXY&&currentIncomeXY[idx]?currentIncomeXY[idx]:null,hoverLine=document.getElementById("hover-line"),hoverDot=document.getElementById("hover-dot"),hoverDotExp=document.getElementById("hover-dot-expense"),hoverDotInc=document.getElementById("hover-dot-income");hoverLine&&(hoverLine.setAttribute("x1",pt.x),hoverLine.setAttribute("x2",pt.x)),hoverDot&&(lineVisibility.balance?(hoverDot.setAttribute("cx",pt.x),hoverDot.setAttribute("cy",pt.y),hoverDot.style.display=""):hoverDot.style.display="none"),hoverDotExp&&(lineVisibility.expense&&ptExp?(hoverDotExp.setAttribute("cx",ptExp.x),hoverDotExp.setAttribute("cy",ptExp.y),hoverDotExp.style.display=""):hoverDotExp.style.display="none"),hoverDotInc&&(lineVisibility.expense&&ptInc?(hoverDotInc.setAttribute("cx",ptInc.x),hoverDotInc.setAttribute("cy",ptInc.y),hoverDotInc.style.display=""):hoverDotInc.style.display="none");var anchorY,tooltip=document.getElementById("tooltip"),wrapRect=document.getElementById("chart-wrap").getBoundingClientRect(),scaleX=wrapRect.width/VB_W,scaleY=wrapRect.height/VB_H;tooltip.style.display="block",!lineVisibility.expense||lineVisibility.balance||lineVisibility.debt?!lineVisibility.debt||lineVisibility.balance||lineVisibility.expense?(anchorY=pt.y,lineVisibility.expense&&ptExp&&(anchorY=Math.min(anchorY,ptExp.y)),lineVisibility.debt&&(anchorY=Math.min(anchorY,currentDebtTotalXY[idx].y,currentDebtShinhanXY[idx].y,currentDebtSCXY[idx].y))):anchorY=Math.min(currentDebtTotalXY[idx].y,currentDebtShinhanXY[idx].y,currentDebtSCXY[idx].y):anchorY=ptExp?ptExp.y:pt.y,!lineVisibility.debt||lineVisibility.balance||lineVisibility.expense||(anchorY=currentDebtTotalXY[idx].y-55),lineVisibility.expense&&(ptExp&&ptInc?anchorY=Math.min(ptExp.y,ptInc.y):ptExp?anchorY=ptExp.y:ptInc&&(anchorY=ptInc.y));var html='<div id="tooltip-month" class="tt-month">'+monthYearLabel(pt.date)+"</div>";if(lineVisibility.balance){var deltaIsPos=pt.momDelta>=0,deltaTxt=(deltaIsPos?"+":"−")+fmtFullTC(Math.abs(pt.momDelta));html+='<div id="tooltip-balance" >'+fmtFullTC(pt.balance)+'</div><div id="tooltip-gain" class="tt-delta '+(deltaIsPos?"pos":"neg")+'">'+(deltaIsPos?"&#9650;":"&#9660;")+" "+deltaTxt+" vs last month</div>"}if(lineVisibility.expense){var debtAmt=new Date<new Date(2029,0,1)?32453e3:19793347,incAmt=ptInc?ptInc.amount:0,expAmt=ptExp?ptExp.amount:0,cashflow=incAmt-expAmt-debtAmt,cfIsPos=cashflow>=0,cfColor=cfIsPos?"#2dd4bf":"#f87171";if(html+='<div id="tooltip-cashflow-amt" style="margin-top:0px;font-weight:600;">'+('<span style="color:#ccf244;">'+fmtShort(incAmt)+"</span>"+' <span style="color:rgba(255,255,255,0.6);">−</span> '+('<span style="color:#f472b6;">'+fmtShort(expAmt)+"</span>")+' <span style="color:rgba(255,255,255,0.6);">−</span> '+('<span style="color:#fff;">'+fmtShort(debtAmt)+"</span>")+' <span style="color:rgba(255,255,255,0.6);">=</span> '+('<span style="color:'+cfColor+';">'+(cfIsPos?"":"−")+fmtShort(Math.abs(cashflow))+"</span>"))+' <span style="color:'+cfColor+';"></span></div>',ptExp){var expDeltaIsPos=ptExp.momDelta>=0;html+='<div id="tooltip-expense" class="tt-delta" style="color:'+(expDeltaIsPos?"#f87171":"#2dd4bf")+';"><i class="bi bi-basket"></i> '+((expDeltaIsPos?"+":"−")+fmtFullTC(Math.abs(ptExp.momDelta)))+" vs last month</div>"}}if(lineVisibility.debt){var partsTC=[];0!==currentDebtShinhanXY[idx].amount&&partsTC.push('<span id="tooltip-debt" style="color:#60a5fa;font-weight:600;font-size:11px">'+fmtShort(currentDebtShinhanXY[idx].amount)+"</span>"),0!==currentDebtSCXY[idx].amount&&partsTC.push('<span id="tooltip-debt" style="color:#fbbf24;font-weight:600;font-size:11px">'+fmtShort(currentDebtSCXY[idx].amount)+"</span>"),partsTC.length>1&&partsTC.push("= "+fmtShort(currentDebtTotalXY[idx].amount)),partsTC.length&&(html+='<div id="tooltip-debt" style="margin-top:6px;font-weight:700;color:#fff;font-size:11px">'+partsTC.join("  ")+"</div>")}tooltip.innerHTML=html;var finalTop,tooltipH=tooltip.offsetHeight,chartH=wrapRect.height,anchorScreenY=anchorY*scaleY,topSafeMargin=78;anchorScreenY-12-tooltipH<topSafeMargin?(tooltip.classList.add("tt-below"),tooltip.classList.remove("tt-above"),finalTop=anchorScreenY+12):(tooltip.classList.add("tt-above"),tooltip.classList.remove("tt-below"),finalTop=anchorScreenY-12-tooltipH),lineVisibility.expense?topSafeMargin=83:lineVisibility.debt&&lineVisibility.balance?topSafeMargin=110:lineVisibility.debt&&(topSafeMargin=145),finalTop=Math.max(topSafeMargin,Math.min(finalTop,chartH-tooltipH-8)),lineVisibility.expense&&(finalTop=83);var tooltipW=tooltip.offsetWidth,chartW=wrapRect.width,rawLeft=pt.x*scaleX,halfW=tooltipW/2,minLeft=halfW+4,maxLeft=chartW-halfW-4,clampedLeft=Math.max(minLeft,Math.min(rawLeft,maxLeft));tooltip.style.left=clampedLeft+"px",tooltip.style.top=finalTop+"px"}}
+    function showPointAt(idx){
+  if(currentXY.length){
+    idx = Math.max(0, Math.min(currentXY.length - 1, idx));
+    var pt = currentXY[idx],
+        ptExp = currentExpenseXY && currentExpenseXY[idx] ? currentExpenseXY[idx] : null,
+        ptInc = currentIncomeXY && currentIncomeXY[idx] ? currentIncomeXY[idx] : null,
+        hoverLine = document.getElementById("hover-line"),
+        hoverDot = document.getElementById("hover-dot"),
+        hoverDotExp = document.getElementById("hover-dot-expense"),
+        hoverDotInc = document.getElementById("hover-dot-income");
+    
+    hoverLine && (hoverLine.setAttribute("x1", pt.x), hoverLine.setAttribute("x2", pt.x));
+    hoverDot && (lineVisibility.balance ? (hoverDot.setAttribute("cx", pt.x), hoverDot.setAttribute("cy", pt.y), hoverDot.style.display = "") : hoverDot.style.display = "none");
+    hoverDotExp && (lineVisibility.expense && ptExp ? (hoverDotExp.setAttribute("cx", ptExp.x), hoverDotExp.setAttribute("cy", ptExp.y), hoverDotExp.style.display = "") : hoverDotExp.style.display = "none");
+    hoverDotInc && (lineVisibility.expense && ptInc ? (hoverDotInc.setAttribute("cx", ptInc.x), hoverDotInc.setAttribute("cy", ptInc.y), hoverDotInc.style.display = "") : hoverDotInc.style.display = "none");
+    
+    var anchorY, tooltip = document.getElementById("tooltip"),
+        wrapRect = document.getElementById("chart-wrap").getBoundingClientRect(),
+        scaleX = wrapRect.width / VB_W,
+        scaleY = wrapRect.height / VB_H;
+    
+    tooltip.style.display = "block";
+    !lineVisibility.expense || lineVisibility.balance || lineVisibility.debt ? !lineVisibility.debt || lineVisibility.balance || lineVisibility.expense ? (anchorY = pt.y, lineVisibility.expense && ptExp && (anchorY = Math.min(anchorY, ptExp.y)), lineVisibility.debt && (anchorY = Math.min(anchorY, currentDebtTotalXY[idx].y, currentDebtShinhanXY[idx].y, currentDebtSCXY[idx].y))) : anchorY = Math.min(currentDebtTotalXY[idx].y, currentDebtShinhanXY[idx].y, currentDebtSCXY[idx].y) : anchorY = ptExp ? ptExp.y : pt.y;
+    !lineVisibility.debt || lineVisibility.balance || lineVisibility.expense || (anchorY = currentDebtTotalXY[idx].y - 55);
+    lineVisibility.expense && (ptExp && ptInc ? anchorY = Math.min(ptExp.y, ptInc.y) : ptExp ? anchorY = ptExp.y : ptInc && (anchorY = ptInc.y));
+    
+    var monthLbl = monthYearLabel(pt.date);
+    var html = '';
+    
+    if (lineVisibility.expense && ptExp) {
+      var expDeltaIsPos = ptExp.momDelta >= 0;
+      var expDeltaVal = Math.abs(ptExp.momDelta);
+      var expDeltaStr = expDeltaVal >= 1e9 ? (expDeltaVal/1e9).toFixed(3)+"B" : expDeltaVal >= 1e6 ? (expDeltaVal/1e6).toFixed(3)+"M" : expDeltaVal >= 1e3 ? (expDeltaVal/1e3).toFixed(3)+"K" : expDeltaVal.toFixed(0);
+      var expDeltaText = (expDeltaIsPos ? "+" : "−") + expDeltaStr;
+      
+      html += '<div id="tooltip-month" class="tt-month" style="display:flex; justify-content:space-between; align-items:baseline;">' +
+              '<span>' + monthLbl + '</span>' +
+              '<span class="tt-delta" style="color:' + (expDeltaIsPos ? "#f87171" : "#2dd4bf") + '; font-size:11px; font-weight:500;"><i class="bi bi-basket"></i> ' + expDeltaText + '</span>' +
+              '</div>';
+    } else {
+      html += '<div id="tooltip-month" class="tt-month">' + monthLbl + '</div>';
+    }
+
+    if (lineVisibility.balance) {
+      var deltaIsPos = pt.momDelta >= 0;
+      var deltaVal = Math.abs(pt.momDelta);
+      var deltaStr = deltaVal >= 1e9 ? (deltaVal/1e9).toFixed(1)+"B" : deltaVal >= 1e6 ? (deltaVal/1e6).toFixed(1)+"M" : deltaVal >= 1e3 ? (deltaVal/1e3).toFixed(1)+"K" : deltaVal.toFixed(0);
+      var deltaTxt = (deltaIsPos ? "+" : "−") + deltaStr;
+      html += '<div id="tooltip-balance" style="display:flex; justify-content:space-between; align-items:baseline;">' +
+              '<span>' + fmtFullTC(pt.balance) + '</span>' +
+              '<span class="tt-delta ' + (deltaIsPos ? "pos" : "neg") + '" style="margin-left:3px;">' + " " + deltaTxt + '</span>' +
+              '</div>';
+    }
+    
+    if (lineVisibility.expense) {
+      var debtAmt = new Date < new Date(2029, 0, 1) ? 32453e3 : 19793347,
+          incAmt = ptInc ? ptInc.amount : 0,
+          expAmt = ptExp ? ptExp.amount : 0,
+          cashflow = incAmt - expAmt - debtAmt,
+          cfIsPos = cashflow >= 0,
+          cfColor = cfIsPos ? "#2dd4bf" : "#f87171";
+      
+      html += '<div id="tooltip-cashflow-amt" style="margin-top:0px;font-weight:600;">' + ('<span style="color:#ccf244;">' + fmtShort(incAmt) + "</span>" + ' <span style="color:rgba(255,255,255,0.6);">−</span> ' + ('<span style="color:#f472b6;">' + fmtShort(expAmt) + "</span>") + ' <span style="color:rgba(255,255,255,0.6);">−</span> ' + ('<span style="color:#fff;">' + fmtShort(debtAmt) + "</span>") + ' <span style="color:rgba(255,255,255,0.6);">=</span> ' + ('<span style="color:' + cfColor + ';">' + (cfIsPos ? "" : "−") + fmtShort(Math.abs(cashflow)) + "</span>")) + ' <span style="color:' + cfColor + ';"></span></div>';
+    }
+    
+    if (lineVisibility.debt) {
+      var partsTC = [];
+      0 !== currentDebtShinhanXY[idx].amount && partsTC.push('<span id="tooltip-debt" style="color:#60a5fa;font-weight:600;font-size:11px">' + fmtShort(currentDebtShinhanXY[idx].amount) + "</span>");
+      0 !== currentDebtSCXY[idx].amount && partsTC.push('<span id="tooltip-debt" style="color:#fbbf24;font-weight:600;font-size:11px">' + fmtShort(currentDebtSCXY[idx].amount) + "</span>");
+      partsTC.length > 1 && partsTC.push("= " + fmtShort(currentDebtTotalXY[idx].amount));
+      partsTC.length && (html += '<div id="tooltip-debt" style="margin-top:6px;font-weight:700;color:#fff;font-size:11px">' + partsTC.join("  ") + "</div>");
+    }
+    
+    tooltip.innerHTML = html;
+    var finalTop, tooltipH = tooltip.offsetHeight, chartH = wrapRect.height, anchorScreenY = anchorY * scaleY, topSafeMargin = 78;
+    anchorScreenY - 12 - tooltipH < topSafeMargin ? (tooltip.classList.add("tt-below"), tooltip.classList.remove("tt-above"), finalTop = anchorScreenY + 12) : (tooltip.classList.add("tt-above"), tooltip.classList.remove("tt-below"), finalTop = anchorScreenY - 12 - tooltipH);
+    lineVisibility.expense ? topSafeMargin = 80 : lineVisibility.debt && lineVisibility.balance ? topSafeMargin = 110 : lineVisibility.debt && (topSafeMargin = 145);
+    finalTop = Math.max(topSafeMargin, Math.min(finalTop, chartH - tooltipH - 15));
+    lineVisibility.expense && (finalTop = 70);
+    var tooltipW = tooltip.offsetWidth, chartW = wrapRect.width, rawLeft = pt.x * scaleX, halfW = tooltipW / 2, minLeft = halfW + 4, maxLeft = chartW - halfW - 4, clampedLeft = Math.max(minLeft, Math.min(rawLeft, maxLeft));
+    tooltip.style.left = clampedLeft + "px", tooltip.style.top = finalTop + "px";
+  }
+}
     !function(){var chartWrap=document.getElementById("chart-wrap");function nearestIndexFromClientX(clientX){var rect=chartWrap.getBoundingClientRect(),svgX=(clientX-rect.left)/rect.width*VB_W,plotW=VB_W-PAD_LEFT-PAD_RIGHT,frac=(svgX-PAD_LEFT)/plotW;return frac=Math.max(0,Math.min(1,frac)),Math.round(frac*(currentXY.length-1))}chartWrap.addEventListener("mousemove",function(e){currentXY.length&&showPointAt(nearestIndexFromClientX(e.clientX))}),chartWrap.addEventListener("mouseleave",function(){currentXY.length&&showPointAt(getDefaultHoverIndex())}),chartWrap.addEventListener("touchstart",function(e){currentXY.length&&showPointAt(nearestIndexFromClientX(e.touches[0].clientX))},{passive:!0}),chartWrap.addEventListener("touchmove",function(e){currentXY.length&&showPointAt(nearestIndexFromClientX(e.touches[0].clientX))},{passive:!0})}();
     document.querySelectorAll(".range-btn").forEach(function(btn){btn.addEventListener("click",function(){document.querySelectorAll(".range-btn").forEach(b=>b.classList.remove("active")),this.classList.add("active"),this.scrollIntoView({behavior:"smooth",inline:"center",block:"nearest"}),renderChartTC(this.dataset.range)});const selector=document.getElementById("range-selector");selector.addEventListener("wheel",function(e){e.preventDefault(),selector.scrollLeft+=e.deltaY},{passive:!1})});
     var balanceVisible = true;
