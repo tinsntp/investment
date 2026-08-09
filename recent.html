@@ -2195,10 +2195,11 @@ to{transform:rotate(360deg)}
 
           var txtEl = document.createElementNS(ns, "text");
           txtEl.setAttribute("x", pt.x);
-          txtEl.setAttribute("y", pt.y - 14);
+          txtEl.setAttribute("y", pt.y - 8);
           txtEl.setAttribute("text-anchor", "middle");
-          txtEl.setAttribute("font-size", "11");
-          txtEl.setAttribute("font-weight", "700");
+          txtEl.setAttribute("font-size", "18");
+          txtEl.setAttribute("font-family", "DM Sans");
+          txtEl.setAttribute("font-weight", "300");
           txtEl.setAttribute("fill", markerColor); // Applies teal or lemon dynamically
           txtEl.textContent = fmtShort(pt.amount);
           markerGroup.appendChild(txtEl);
