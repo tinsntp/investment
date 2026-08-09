@@ -2546,8 +2546,9 @@ lineVisibility.invest = false;
               txtEl.setAttribute("x", pt.x);
               txtEl.setAttribute("y", pt.y - 14);
               txtEl.setAttribute("text-anchor", "middle");
-              txtEl.setAttribute("font-size", "11");
-              txtEl.setAttribute("font-weight", "700");
+              txtEl.setAttribute("font-size", "18");
+              txtEl.setAttribute("font-family", "DM Sans");
+              txtEl.setAttribute("font-weight", "500");
               txtEl.setAttribute("fill", markerColor);
               txtEl.textContent = fmtShort(pt.amount);
               markerGroup.appendChild(txtEl);
@@ -2985,7 +2986,7 @@ lineVisibility.invest = false;
           if (inv.comp) items.push({name: "Comp", val: inv.comp, formatVal: (inv.comp >= 0 ? "" : "-") + fmtShort(Math.abs(inv.comp)), color: "#60a5fa"});
 
           if (items.length > 0) {
-            html += '<div style="margin-top:2px; padding-top:2px; font-size:11px;">';
+            html += '<div style="margin-top:2px; padding-bottom:2px; font-size:11px;">';
             if (items.length === 1) {
               html += '<div><span style="color:' + items[0].color + ';"><b>' + items[0].name + ':</b> ' + items[0].formatVal + '</span></div>';
             } else {
