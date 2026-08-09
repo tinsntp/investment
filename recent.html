@@ -2065,7 +2065,7 @@ to{transform:rotate(360deg)}
       var pts;
       if (currentRangeTC = range, lineVisibility.expense && !lineVisibility.balance) {
         pts = [];
-        for (var currentIndex = getCurrentMonthIndex(), i = 0; i < fullSeries.length; i++)(expenseSeries[i].amount > 0 || i > currentIndex && i <= currentIndex + 3) && pts.push({
+        for (var currentIndex = getCurrentMonthIndex(), i = 0; i < fullSeries.length; i++)(expenseSeries[i].amount > 0 || i > currentIndex && i <= currentIndex + 12) && pts.push({
           balance: fullSeries[i].balance,
           expense: expenseSeries[i].amount,
           debtTotal: debtSeries[i] ? debtSeries[i].total : 0,
@@ -2088,13 +2088,214 @@ to{transform:rotate(360deg)}
       if (lineVisibility.expense && pts.length > 0) {
         var now = new Date,
           past6M = new Date(now.getFullYear(), now.getMonth() - 6, 1),
-          future6M = new Date(now.getFullYear(), now.getMonth() + 6, 1);
+          future12M = new Date(now.getFullYear(), now.getMonth() + 12, 1);
         pts = pts.filter(function(p) {
           var d = p.date;
-          return d >= past6M && d <= future6M
+          return d >= past6M && d <= future12M
         })
       }
-      if(pts.length){var svg=document.getElementById("chart-svg");svg.innerHTML="";var ns="http://www.w3.org/2000/svg",values=[];lineVisibility.balance&&(values=values.concat(pts.map(function(p){return p.balance}))),lineVisibility.expense&&(values=(values=values.concat(pts.map(function(p){return expenseSeries[p.originalIndex].amount}))).concat(pts.map(function(p){return incomeSeries[p.originalIndex].amount}))),lineVisibility.debt&&(values=values.concat(pts.map(function(p){return p.debtTotal})).concat(pts.map(function(p){return p.debtShinhan})).concat(pts.map(function(p){return p.debtSC}))),values.length||(values=[0,1]);var minV=Math.min.apply(null,values),maxV=Math.max.apply(null,values),range_=maxV-minV;if(0===range_&&(range_=Math.abs(maxV)||1),lineVisibility.expense)minV=0,maxV*=1.8;else{var padV=.12*range_;minV-=padV,maxV+=padV}var plotW=VB_W-PAD_LEFT-PAD_RIGHT,plotH=VB_H-PAD_TOP-PAD_BOTTOM,xy=pts.map(function(p,i){var x=PAD_LEFT+(1===pts.length?0:i/(pts.length-1)*plotW),y=PAD_TOP+(1-(p.balance-minV)/(maxV-minV))*plotH,fullIdx=p.originalIndex,prevBalance=fullIdx>0?fullSeries[fullIdx-1].balance:p.balance;return{x,y,date:p.date,balance:p.balance,momDelta:p.balance-prevBalance}});currentXY=xy,currentExpenseXY=[],currentIncomeXY=[],pts.forEach(function(p,i){var origIdx=p.originalIndex,balancePoint=currentXY[i],expense=expenseSeries[origIdx];if(expense){var expY=PAD_TOP+(1-(expense.amount-minV)/(maxV-minV))*plotH,prevExpAmount=origIdx>0?expenseSeries[origIdx-1].amount:expense.amount;currentExpenseXY.push({x:balancePoint.x,y:expY,date:expense.date,amount:expense.amount,momDelta:expense.amount-prevExpAmount})}var income=incomeSeries[origIdx];if(income){var incY=PAD_TOP+(1-(income.amount-minV)/(maxV-minV))*plotH,prevIncAmount=origIdx>0?incomeSeries[origIdx-1].amount:income.amount;currentIncomeXY.push({x:balancePoint.x,y:incY,date:income.date,amount:income.amount,momDelta:income.amount-prevIncAmount})}}),currentDebtTotalXY=pts.map(function(p,i){return{x:PAD_LEFT+(1==pts.length?0:i/(pts.length-1)*plotW),y:PAD_TOP+(1-(p.debtTotal-minV)/(maxV-minV))*plotH,date:p.date,amount:p.debtTotal}}),currentDebtShinhanXY=pts.map(function(p,i){return{x:PAD_LEFT+(1==pts.length?0:i/(pts.length-1)*plotW),y:PAD_TOP+(1-(p.debtShinhan-minV)/(maxV-minV))*plotH,date:p.date,amount:p.debtShinhan}}),currentDebtSCXY=pts.map(function(p,i){return{x:PAD_LEFT+(1==pts.length?0:i/(pts.length-1)*plotW),y:PAD_TOP+(1-(p.debtSC-minV)/(maxV-minV))*plotH,date:p.date,amount:p.debtSC}});var defsTC=document.createElementNS(ns,"defs"),grad=document.createElementNS(ns,"linearGradient");grad.setAttribute("id","tealFill"),grad.setAttribute("x1","0"),grad.setAttribute("y1","0"),grad.setAttribute("x2","0"),grad.setAttribute("y2","1"),(s1=document.createElementNS(ns,"stop")).setAttribute("offset","0%"),s1.setAttribute("stop-color",TEAL),s1.setAttribute("stop-opacity","0.30"),(s2=document.createElementNS(ns,"stop")).setAttribute("offset","100%"),s2.setAttribute("stop-color",TEAL),s2.setAttribute("stop-opacity","0"),grad.appendChild(s1),grad.appendChild(s2),defsTC.appendChild(grad);var gradPink=document.createElementNS(ns,"linearGradient");gradPink.setAttribute("id","pinkFill"),gradPink.setAttribute("x1","0"),gradPink.setAttribute("y1","0"),gradPink.setAttribute("x2","0"),gradPink.setAttribute("y2","1");var p1=document.createElementNS(ns,"stop");p1.setAttribute("offset","0%"),p1.setAttribute("stop-color","#f472b6"),p1.setAttribute("stop-opacity","0.28");var p2=document.createElementNS(ns,"stop");p2.setAttribute("offset","100%"),p2.setAttribute("stop-color","#f472b6"),p2.setAttribute("stop-opacity","0"),gradPink.appendChild(p1),gradPink.appendChild(p2),defsTC.appendChild(gradPink);var gradYellow=document.createElementNS(ns,"linearGradient");gradYellow.setAttribute("id","yellowFill"),gradYellow.setAttribute("x1","0"),gradYellow.setAttribute("y1","0"),gradYellow.setAttribute("x2","0"),gradYellow.setAttribute("y2","1");var g1=document.createElementNS(ns,"stop");g1.setAttribute("offset","0%"),g1.setAttribute("stop-color","#facc15"),g1.setAttribute("stop-opacity","0.25");var g2=document.createElementNS(ns,"stop");g2.setAttribute("offset","100%"),g2.setAttribute("stop-color","#facc15"),g2.setAttribute("stop-opacity","0"),gradYellow.appendChild(g1),gradYellow.appendChild(g2),defsTC.appendChild(gradYellow);var lemonGrad=document.createElementNS(ns,"linearGradient");lemonGrad.setAttribute("id","lemonFill"),lemonGrad.setAttribute("x1","0"),lemonGrad.setAttribute("y1","0"),lemonGrad.setAttribute("x2","0"),lemonGrad.setAttribute("y2","1");var stop1=document.createElementNS(ns,"stop");stop1.setAttribute("offset","0%"),stop1.setAttribute("stop-color","#a3e635"),stop1.setAttribute("stop-opacity","0.25");var stop2=document.createElementNS(ns,"stop");stop2.setAttribute("offset","100%"),stop2.setAttribute("stop-color","#a3e635"),stop2.setAttribute("stop-opacity","0"),lemonGrad.appendChild(stop1),lemonGrad.appendChild(stop2),defsTC.appendChild(lemonGrad);var edgeMask=document.createElementNS(ns,"mask");edgeMask.setAttribute("id","lineEdgeFadeMask"),edgeMask.setAttribute("maskUnits","userSpaceOnUse");var maskRect=document.createElementNS(ns,"rect");maskRect.setAttribute("x","0"),maskRect.setAttribute("y","0"),maskRect.setAttribute("width","100%"),maskRect.setAttribute("height","100%"),maskRect.setAttribute("fill","url(#edgeFadeGrad)");var s1,s2,edgeGrad=document.createElementNS(ns,"linearGradient");edgeGrad.setAttribute("id","edgeFadeGrad"),edgeGrad.setAttribute("x1","0%"),edgeGrad.setAttribute("y1","0%"),edgeGrad.setAttribute("x2","100%"),edgeGrad.setAttribute("y2","0%"),(s1=document.createElementNS(ns,"stop")).setAttribute("offset","0%"),s1.setAttribute("stop-color","white"),s1.setAttribute("stop-opacity","0.1"),(s2=document.createElementNS(ns,"stop")).setAttribute("offset","10%"),s2.setAttribute("stop-color","white"),s2.setAttribute("stop-opacity","1");var s3=document.createElementNS(ns,"stop");s3.setAttribute("offset","90%"),s3.setAttribute("stop-color","white"),s3.setAttribute("stop-opacity","1");var s4=document.createElementNS(ns,"stop");if(s4.setAttribute("offset","100%"),s4.setAttribute("stop-color","white"),s4.setAttribute("stop-opacity","0.15"),edgeGrad.appendChild(s1),edgeGrad.appendChild(s2),edgeGrad.appendChild(s3),edgeGrad.appendChild(s4),defsTC.appendChild(edgeGrad),edgeMask.appendChild(maskRect),defsTC.appendChild(edgeMask),svg.appendChild(defsTC),lineVisibility.balance){var paths=buildSmoothPathTC(xy);(areaEl=document.createElementNS(ns,"path")).setAttribute("d",paths.area),areaEl.setAttribute("fill","url(#tealFill)"),areaEl.setAttribute("stroke","none"),svg.appendChild(areaEl),(lineEl=document.createElementNS(ns,"path")).setAttribute("d",paths.line),lineEl.setAttribute("fill","none"),lineEl.setAttribute("stroke",TEAL),lineEl.setAttribute("stroke-width","2.5"),lineEl.setAttribute("stroke-linecap","round"),lineEl.setAttribute("stroke-linejoin","round"),svg.appendChild(lineEl)}lineVisibility.expense&&(drawSegmentedExpenseLine(currentExpenseXY,"#f472b6","rgba(244, 114, 182, 0.45)","url(#pinkFill)","pinkGlow",svg,ns,!0),drawSegmentedExpenseLine(currentIncomeXY,"#ccf244","rgba(204, 242, 68, 0.45)","url(#lemonFill)","lemonGlow",svg,ns,!0)),lineVisibility.debt&&(drawDebtLine(currentDebtTotalXY,"#ffffff",3,null,"url(#debtTotalFill)"),drawDebtLine(currentDebtShinhanXY,"#60a5fa",2,"6 4","url(#debtShinhanFill)"),drawDebtLine(currentDebtSCXY,"#fbbf24",2,"2 2","url(#debtSCFill)"));var lastLabelX=-1e3,prevQuarter=null;for(i=0;i<xy.length;i++){var d=xy[i].date,x=xy[i].x,year=d.getFullYear(),month=d.getMonth(),quarter=Math.floor(month/3),text="",important=!1;if(0===month?(text=year,important=!0):quarter!==prevQuarter&&(text=monthShort(d),important=!0),important&&!(x-lastLabelX<75)){var lbl=document.createElementNS(ns,"text");lbl.setAttribute("x",x),lbl.setAttribute("y",VB_H-10),lbl.setAttribute("text-anchor","middle"),lbl.setAttribute("font-size",0===month?"12":"11"),lbl.setAttribute("font-weight",0===month?"700":"500"),lbl.setAttribute("fill",0===month?"rgba(255,255,255,0.85)":"rgba(255,255,255,0.45)"),lbl.textContent=text,svg.appendChild(lbl),lastLabelX=x,prevQuarter=quarter}}if(lineVisibility.balance){paths=buildSmoothPathTC(xy);var clipId="balanceAreaClip-"+Math.random().toString(36).substring(2,9),defs=svg.querySelector("defs")||svg,clipPath=document.createElementNS(ns,"clipPath");clipPath.setAttribute("id",clipId);var clipAreaPath=document.createElementNS(ns,"path");clipAreaPath.setAttribute("d",paths.area),clipPath.appendChild(clipAreaPath),defs.appendChild(clipPath);var areaEl,lineEl,gridGroup=document.createElementNS(ns,"g");gridGroup.setAttribute("clip-path","url(#"+clipId+")"),gridGroup.setAttribute("mask","url(#lineEdgeFadeMask)");prevQuarter=null;for(var k=0;k<pts.length;k++){month=(d=pts[k].date).getMonth();if((quarter=Math.floor(month/3))!==prevQuarter||0===k){var vLine=document.createElementNS(ns,"line");vLine.setAttribute("x1",xy[k].x),vLine.setAttribute("x2",xy[k].x),vLine.setAttribute("y1",PAD_TOP),vLine.setAttribute("y2",VB_H-PAD_BOTTOM),vLine.setAttribute("stroke","rgba(255, 255, 255, 0.12)"),vLine.setAttribute("stroke-width","1"),vLine.setAttribute("stroke-dasharray","3 3"),gridGroup.appendChild(vLine),prevQuarter=quarter}}plotH=VB_H-PAD_TOP-PAD_BOTTOM;for(var g=0;g<=4;g++){var gy=PAD_TOP+(1-g/4)*plotH,hLine=document.createElementNS(ns,"line");hLine.setAttribute("x1",PAD_LEFT),hLine.setAttribute("x2",VB_W-PAD_RIGHT),hLine.setAttribute("y1",gy),hLine.setAttribute("y2",gy),hLine.setAttribute("stroke","rgba(255, 255, 255, 0.12)"),hLine.setAttribute("stroke-width","1"),hLine.setAttribute("stroke-dasharray","3 3"),gridGroup.appendChild(hLine)}svg.appendChild(gridGroup),(areaEl=document.createElementNS(ns,"path")).setAttribute("d",paths.area),areaEl.setAttribute("fill","url(#tealFill)"),areaEl.setAttribute("stroke","none"),svg.appendChild(areaEl),(lineEl=document.createElementNS(ns,"path")).setAttribute("d",paths.line),lineEl.setAttribute("fill","none"),lineEl.setAttribute("stroke",TEAL),lineEl.setAttribute("stroke-width","2.5"),lineEl.setAttribute("stroke-linecap","round"),lineEl.setAttribute("stroke-linejoin","round"),svg.appendChild(lineEl)}var gradDebtTotal=document.createElementNS(ns,"linearGradient");gradDebtTotal.setAttribute("id","debtTotalFill"),gradDebtTotal.setAttribute("x1","0"),gradDebtTotal.setAttribute("y1","0"),gradDebtTotal.setAttribute("x2","0"),gradDebtTotal.setAttribute("y2","1");var dt1=document.createElementNS(ns,"stop");dt1.setAttribute("offset","0%"),dt1.setAttribute("stop-color","#ffffff"),dt1.setAttribute("stop-opacity","0.20");var dt2=document.createElementNS(ns,"stop");dt2.setAttribute("offset","100%"),dt2.setAttribute("stop-color","#ffffff"),dt2.setAttribute("stop-opacity","0"),gradDebtTotal.appendChild(dt1),gradDebtTotal.appendChild(dt2),defsTC.appendChild(gradDebtTotal);var gradDebtShinhan=document.createElementNS(ns,"linearGradient");gradDebtShinhan.setAttribute("id","debtShinhanFill"),gradDebtShinhan.setAttribute("x1","0"),gradDebtShinhan.setAttribute("y1","0"),gradDebtShinhan.setAttribute("x2","0"),gradDebtShinhan.setAttribute("y2","1");var ds1=document.createElementNS(ns,"stop");ds1.setAttribute("offset","0%"),ds1.setAttribute("stop-color","#60a5fa"),ds1.setAttribute("stop-opacity","0.20");var ds2=document.createElementNS(ns,"stop");ds2.setAttribute("offset","100%"),ds2.setAttribute("stop-color","#60a5fa"),ds2.setAttribute("stop-opacity","0"),gradDebtShinhan.appendChild(ds1),gradDebtShinhan.appendChild(ds2),defsTC.appendChild(gradDebtShinhan);var gradDebtSC=document.createElementNS(ns,"linearGradient");gradDebtSC.setAttribute("id","debtSCFill"),gradDebtSC.setAttribute("x1","0"),gradDebtSC.setAttribute("y1","0"),gradDebtSC.setAttribute("x2","0"),gradDebtSC.setAttribute("y2","1");var dc1=document.createElementNS(ns,"stop");dc1.setAttribute("offset","0%"),dc1.setAttribute("stop-color","#fbbf24"),dc1.setAttribute("stop-opacity","0.20");var dc2=document.createElementNS(ns,"stop");dc2.setAttribute("offset","100%"),dc2.setAttribute("stop-color","#fbbf24"),dc2.setAttribute("stop-opacity","0"),gradDebtSC.appendChild(dc1),gradDebtSC.appendChild(dc2),defsTC.appendChild(gradDebtSC);var hoverLine=document.createElementNS(ns,"line");hoverLine.setAttribute("id","hover-line"),hoverLine.setAttribute("y1",PAD_TOP+lineVisibility.debt?155:85),hoverLine.setAttribute("y2",VB_H-PAD_BOTTOM),hoverLine.setAttribute("stroke","rgba(255,255,255,0.35)"),hoverLine.setAttribute("stroke-width","1.3"),hoverLine.setAttribute("stroke-dasharray","4 4"),svg.appendChild(hoverLine);var hoverDot=document.createElementNS(ns,"circle");hoverDot.setAttribute("id","hover-dot"),hoverDot.setAttribute("r","5"),hoverDot.setAttribute("fill",TEAL),hoverDot.setAttribute("stroke","#191919"),hoverDot.setAttribute("stroke-width","2"),svg.appendChild(hoverDot);var hoverDotExp=document.createElementNS(ns,"circle");hoverDotExp.setAttribute("id","hover-dot-expense"),hoverDotExp.setAttribute("r","5"),hoverDotExp.setAttribute("fill","#f472b6"),hoverDotExp.setAttribute("stroke","#191919"),hoverDotExp.setAttribute("stroke-width","2"),svg.appendChild(hoverDotExp);var hoverDotInc=document.createElementNS(ns,"circle");hoverDotInc.setAttribute("id","hover-dot-income"),hoverDotInc.setAttribute("r","5"),hoverDotInc.setAttribute("fill","#ccf244"),hoverDotInc.setAttribute("stroke","#191919"),hoverDotInc.setAttribute("stroke-width","2"),svg.appendChild(hoverDotInc);var hoverIndex=getDefaultHoverIndex();showPointAt(hoverIndex);var targetIndex=currentIndex=getCurrentMonthIndex();switch(range){case"today":targetIndex=getMonthIndex(-1);break;case"-3m":targetIndex=getMonthIndex(-3);break;case"-6m":targetIndex=getMonthIndex(-6);break;case"-1y":targetIndex=getMonthIndex(-12);break;case"-2y":targetIndex=getMonthIndex(-24);break;case"+3m":targetIndex=getMonthIndex(3);break;case"+6m":targetIndex=getMonthIndex(6);break;case"+1y":targetIndex=getMonthIndex(12);break;case"+2y":targetIndex=getMonthIndex(24);break;case"max":targetIndex=currentXY.length-1}var current=xy[currentIndex],targetTC=xy[targetIndex],diff="today"===range||range.startsWith("-")?current.balance-targetTC.balance:targetTC.balance-current.balance,pct=0!==current.balance?diff/Math.abs(current.balance)*100:0,isPos=diff>=0;document.getElementById("balance-val").textContent=balanceVisible?fmtFullTC(current.balance):"*********",document.getElementById("balance-usd").textContent=fmtUSDTC(current.balance),updateGoalRing(current.balance),updateCountdown();var directionText={today:"over the last month","-3m":"in the last 3 months","-6m":"in the last 6 months","-1y":"in the last year","-2y":"in the last 2 years","+3m":"over the next 3 months","+6m":"over the next 6 months","+1y":"over the next year","+2y":"over the next 2 years",max:"across all future projections"}[range]||"",verb="today"===range?"You "+(isPos?"gain ":"loss "):range.startsWith("-")?isPos?"You gained ":"You lost ":"You "+(isPos?"gain ":"loss ");document.getElementById("sub-text").innerHTML=verb+'<span id="amt-hl" class="amt-hl '+(isPos?"pos":"neg")+'">'+fmtFullTC(Math.abs(diff))+"</span> ";var pill=document.getElementById("change-pill");pill.style.display="inline-flex",pill.className="pill "+(isPos?"pos":"neg"),pill.innerHTML=(isPos?"&#9650;":"&#9660;")+Math.abs(pct).toFixed(1)+"%";var existingDirSpan=document.getElementById("pill-direction-text");if(existingDirSpan&&existingDirSpan.remove(),window.matchMedia("(min-width: 401px)").matches){var dirSpan=document.createElement("span");dirSpan.id="pill-direction-text",dirSpan.textContent=directionText,dirSpan.className="card-sub-text",dirSpan.style.marginLeft="6px",pill.parentNode.insertBefore(dirSpan,pill.nextSibling)}}
+      if(pts.length){var svg=document.getElementById("chart-svg");svg.innerHTML="";var ns="http://www.w3.org/2000/svg",values=[];lineVisibility.balance&&(values=values.concat(pts.map(function(p){return p.balance}))),lineVisibility.expense&&(values=(values=values.concat(pts.map(function(p){return expenseSeries[p.originalIndex].amount}))).concat(pts.map(function(p){return incomeSeries[p.originalIndex].amount}))),lineVisibility.debt&&(values=values.concat(pts.map(function(p){return p.debtTotal})).concat(pts.map(function(p){return p.debtShinhan})).concat(pts.map(function(p){return p.debtSC}))),values.length||(values=[0,1]);var minV=Math.min.apply(null,values),maxV=Math.max.apply(null,values),range_=maxV-minV;if(0===range_&&(range_=Math.abs(maxV)||1),lineVisibility.expense)minV=0,maxV*=1.8;else{var padV=.12*range_;minV-=padV,maxV+=padV}var plotW=VB_W-PAD_LEFT-PAD_RIGHT,plotH=VB_H-PAD_TOP-PAD_BOTTOM,xy=pts.map(function(p,i){var x=PAD_LEFT+(1===pts.length?0:i/(pts.length-1)*plotW),y=PAD_TOP+(1-(p.balance-minV)/(maxV-minV))*plotH,fullIdx=p.originalIndex,prevBalance=fullIdx>0?fullSeries[fullIdx-1].balance:p.balance;return{x,y,date:p.date,balance:p.balance,momDelta:p.balance-prevBalance}});currentXY=xy,currentExpenseXY=[],currentIncomeXY=[],pts.forEach(function(p,i){var origIdx=p.originalIndex,balancePoint=currentXY[i],expense=expenseSeries[origIdx];if(expense){var expY=PAD_TOP+(1-(expense.amount-minV)/(maxV-minV))*plotH,prevExpAmount=origIdx>0?expenseSeries[origIdx-1].amount:expense.amount;currentExpenseXY.push({x:balancePoint.x,y:expY,date:expense.date,amount:expense.amount,momDelta:expense.amount-prevExpAmount})}var income=incomeSeries[origIdx];if(income){var incY=PAD_TOP+(1-(income.amount-minV)/(maxV-minV))*plotH,prevIncAmount=origIdx>0?incomeSeries[origIdx-1].amount:income.amount;currentIncomeXY.push({x:balancePoint.x,y:incY,date:income.date,amount:income.amount,momDelta:income.amount-prevIncAmount})}}),currentDebtTotalXY=pts.map(function(p,i){return{x:PAD_LEFT+(1==pts.length?0:i/(pts.length-1)*plotW),y:PAD_TOP+(1-(p.debtTotal-minV)/(maxV-minV))*plotH,date:p.date,amount:p.debtTotal}}),currentDebtShinhanXY=pts.map(function(p,i){return{x:PAD_LEFT+(1==pts.length?0:i/(pts.length-1)*plotW),y:PAD_TOP+(1-(p.debtShinhan-minV)/(maxV-minV))*plotH,date:p.date,amount:p.debtShinhan}}),currentDebtSCXY=pts.map(function(p,i){return{x:PAD_LEFT+(1==pts.length?0:i/(pts.length-1)*plotW),y:PAD_TOP+(1-(p.debtSC-minV)/(maxV-minV))*plotH,date:p.date,amount:p.debtSC}});
+    
+    var defsTC = document.createElementNS(ns, "defs");
+    var grad = document.createElementNS(ns, "linearGradient");
+    grad.setAttribute("id","tealFill"), grad.setAttribute("x1","0"), grad.setAttribute("y1","0"), grad.setAttribute("x2","0"), grad.setAttribute("y2","1"), (s1=document.createElementNS(ns,"stop")).setAttribute("offset","0%"), s1.setAttribute("stop-color",TEAL), s1.setAttribute("stop-opacity","0.30"), (s2=document.createElementNS(ns,"stop")).setAttribute("offset","100%"), s2.setAttribute("stop-color",TEAL), s2.setAttribute("stop-opacity","0"), grad.appendChild(s1), grad.appendChild(s2), defsTC.appendChild(grad);
+    
+    // Teal Column Gradient for Current Month
+    var tealBlueColumnGrad = document.createElementNS(ns, "linearGradient");
+    tealBlueColumnGrad.setAttribute("id", "tealBlueColumnFill");
+    tealBlueColumnGrad.setAttribute("x1", "0"); tealBlueColumnGrad.setAttribute("y1", "0");
+    tealBlueColumnGrad.setAttribute("x2", "0"); tealBlueColumnGrad.setAttribute("y2", "1");
+    var tbc1 = document.createElementNS(ns, "stop");
+    tbc1.setAttribute("offset", "0%"); tbc1.setAttribute("stop-color", "#2dd4bf"); tbc1.setAttribute("stop-opacity", "0.85");
+    var tbc2 = document.createElementNS(ns, "stop");
+    tbc2.setAttribute("offset", "100%"); tbc2.setAttribute("stop-color", "#014f56"); tbc2.setAttribute("stop-opacity", "0.25");
+    tealBlueColumnGrad.appendChild(tbc1); tealBlueColumnGrad.appendChild(tbc2);
+    defsTC.appendChild(tealBlueColumnGrad);
+
+    // Lemon Column Gradient for All Other Columns
+    var lemonColumnGrad = document.createElementNS(ns, "linearGradient");
+    lemonColumnGrad.setAttribute("id", "lemonColumnFill");
+    lemonColumnGrad.setAttribute("x1", "0"); lemonColumnGrad.setAttribute("y1", "0");
+    lemonColumnGrad.setAttribute("x2", "0"); lemonColumnGrad.setAttribute("y2", "1");
+    var lc1 = document.createElementNS(ns, "stop");
+    lc1.setAttribute("offset", "0%"); lc1.setAttribute("stop-color", "#ccf244"); lc1.setAttribute("stop-opacity", "0.75");
+    var lc2 = document.createElementNS(ns, "stop");
+    lc2.setAttribute("offset", "100%"); lc2.setAttribute("stop-color", "#a3e635"); lc2.setAttribute("stop-opacity", "0.20");
+    lemonColumnGrad.appendChild(lc1); lemonColumnGrad.appendChild(lc2);
+    defsTC.appendChild(lemonColumnGrad);
+
+    var gradPink = document.createElementNS(ns,"linearGradient");gradPink.setAttribute("id","pinkFill"),gradPink.setAttribute("x1","0"),gradPink.setAttribute("y1","0"),gradPink.setAttribute("x2","0"),gradPink.setAttribute("y2","1");var p1=document.createElementNS(ns,"stop");p1.setAttribute("offset","0%"),p1.setAttribute("stop-color","#f472b6"),p1.setAttribute("stop-opacity","0.28");var p2=document.createElementNS(ns,"stop");p2.setAttribute("offset","100%"),p2.setAttribute("stop-color","#f472b6"),p2.setAttribute("stop-opacity","0"),gradPink.appendChild(p1),gradPink.appendChild(p2),defsTC.appendChild(gradPink);
+    
+    var edgeMask = document.createElementNS(ns,"mask");edgeMask.setAttribute("id","lineEdgeFadeMask"),edgeMask.setAttribute("maskUnits","userSpaceOnUse");var maskRect = document.createElementNS(ns,"rect");maskRect.setAttribute("x","0"),maskRect.setAttribute("y","0"),maskRect.setAttribute("width","100%"),maskRect.setAttribute("height","100%"),maskRect.setAttribute("fill","url(#edgeFadeGrad)");var s1,s2,edgeGrad=document.createElementNS(ns,"linearGradient");edgeGrad.setAttribute("id","edgeFadeGrad"),edgeGrad.setAttribute("x1","0%"),edgeGrad.setAttribute("y1","0%"),edgeGrad.setAttribute("x2","100%"),edgeGrad.setAttribute("y2","0%"),(s1=document.createElementNS(ns,"stop")).setAttribute("offset","0%"),s1.setAttribute("stop-color","white"),s1.setAttribute("stop-opacity","0.1"),(s2=document.createElementNS(ns,"stop")).setAttribute("offset","10%"),s2.setAttribute("stop-color","white"),s2.setAttribute("stop-opacity","1");var s3=document.createElementNS(ns,"stop");s3.setAttribute("offset","90%"),s3.setAttribute("stop-color","white"),s3.setAttribute("stop-opacity","1");var s4=document.createElementNS(ns,"stop");if(s4.setAttribute("offset","100%"),s4.setAttribute("stop-color","white"),s4.setAttribute("stop-opacity","0.15"),edgeGrad.appendChild(s1),edgeGrad.appendChild(s2),edgeGrad.appendChild(s3),edgeGrad.appendChild(s4),defsTC.appendChild(edgeGrad),edgeMask.appendChild(maskRect),defsTC.appendChild(edgeMask),svg.appendChild(defsTC),lineVisibility.balance){var paths=buildSmoothPathTC(xy);(areaEl=document.createElementNS(ns,"path")).setAttribute("d",paths.area),areaEl.setAttribute("fill","url(#tealFill)"),areaEl.setAttribute("stroke","none"),svg.appendChild(areaEl),(lineEl=document.createElementNS(ns,"path")).setAttribute("d",paths.line),lineEl.setAttribute("fill","none"),lineEl.setAttribute("stroke",TEAL),lineEl.setAttribute("stroke-width","2.5"),lineEl.setAttribute("stroke-linecap","round"),lineEl.setAttribute("stroke-linejoin","round"),svg.appendChild(lineEl)}
+    
+    // Identify Top 3 Highest Income Indices for Markers
+    var top3Indices = [];
+    if (currentIncomeXY.length > 0) {
+      top3Indices = currentIncomeXY.map(function(pt, idx) { return {idx: idx, amount: pt.amount}; })
+                                  .sort(function(a, b) { return b.amount - a.amount; })
+                                  .slice(0, 3)
+                                  .map(function(item) { return item.idx; });
+    }
+
+    var currentIdx = getCurrentMonthIndex();
+
+    // Render Income/Cashflow Columns
+    if (lineVisibility.expense && currentIncomeXY.length > 0) {
+      var colGroup = document.createElementNS(ns, "g");
+      colGroup.setAttribute("mask", "url(#lineEdgeFadeMask)");
+      
+      var colWidth = Math.max(6, Math.min(20, (plotW / currentIncomeXY.length) * 0.65));
+      var baselineY = VB_H - PAD_BOTTOM;
+      
+      for (var ci = 0; ci < currentIncomeXY.length; ci++) {
+        var incPt = currentIncomeXY[ci];
+        var colHeight = Math.max(6, baselineY - incPt.y);
+        var colX = incPt.x - colWidth / 2;
+        var colY = baselineY - colHeight;
+        
+        var rectCol = document.createElementNS(ns, "rect");
+        rectCol.setAttribute("x", colX.toFixed(1));
+        rectCol.setAttribute("y", colY.toFixed(1));
+        rectCol.setAttribute("width", colWidth.toFixed(1));
+        rectCol.setAttribute("height", colHeight.toFixed(1));
+        rectCol.setAttribute("rx", (colWidth / 2).toFixed(1));
+        
+        if (ci === currentIdx) {
+          rectCol.setAttribute("fill", "url(#tealBlueColumnFill)");
+        } else {
+          rectCol.setAttribute("fill", "url(#lemonColumnFill)");
+        }
+        
+        rectCol.setAttribute("data-index", ci);
+        colGroup.appendChild(rectCol);
+      }
+      svg.appendChild(colGroup);
+    }
+
+    // Render Top 3 Peak Value Markers for Cashflow (Without outer circle markers, label box only)
+    if (lineVisibility.expense && currentIncomeXY.length > 0) {
+      var markerGroup = document.createElementNS(ns, "g");
+      markerGroup.setAttribute("mask", "url(#lineEdgeFadeMask)");
+      
+      top3Indices.forEach(function(idx) {
+        var pt = currentIncomeXY[idx];
+        if (pt && pt.amount > 0) {
+          var bgRect = document.createElementNS(ns, "rect");
+          bgRect.setAttribute("x", pt.x - 28);
+          bgRect.setAttribute("y", pt.y - 28);
+          bgRect.setAttribute("width", "56");
+          bgRect.setAttribute("height", "18");
+          bgRect.setAttribute("rx", "4");
+          bgRect.setAttribute("fill", "#0f172a");
+          bgRect.setAttribute("opacity", "0.9");
+          markerGroup.appendChild(bgRect);
+
+          var txtEl = document.createElementNS(ns, "text");
+          txtEl.setAttribute("x", pt.x);
+          txtEl.setAttribute("y", pt.y - 14);
+          txtEl.setAttribute("text-anchor", "middle");
+          txtEl.setAttribute("font-size", "14");
+          txtEl.setAttribute("font-weight", "700");
+          txtEl.setAttribute("fill", "#ccf244");
+          txtEl.textContent = fmtShort(pt.amount);
+          markerGroup.appendChild(txtEl);
+        }
+      });
+      svg.appendChild(markerGroup);
+    }
+
+    // Add Live Dot for Current Month (Teal color)
+    if (lineVisibility.expense && currentIncomeXY.length > currentIdx) {
+      var livePt = currentIncomeXY[currentIdx];
+      if (livePt && livePt.amount > 0) {
+        var currentMarkerGroup = document.createElementNS(ns, "g");
+        currentMarkerGroup.setAttribute("mask", "url(#lineEdgeFadeMask)");
+
+        var pulseRing = document.createElementNS(ns, "circle");
+        pulseRing.setAttribute("cx", livePt.x);
+        pulseRing.setAttribute("cy", livePt.y);
+        pulseRing.setAttribute("r", "10");
+        pulseRing.setAttribute("fill", "none");
+        pulseRing.setAttribute("stroke", "#2dd4bf");
+        pulseRing.setAttribute("stroke-width", "1.5");
+        pulseRing.setAttribute("opacity", "0.8");
+        
+        var animateR = document.createElementNS(ns, "animate");
+        animateR.setAttribute("attributeName", "r");
+        animateR.setAttribute("values", "4;14");
+        animateR.setAttribute("dur", "1.8s");
+        animateR.setAttribute("repeatCount", "indefinite");
+        pulseRing.appendChild(animateR);
+        
+        var animateOpacity = document.createElementNS(ns, "animate");
+        animateOpacity.setAttribute("attributeName", "opacity");
+        animateOpacity.setAttribute("values", "0.9;0");
+        animateOpacity.setAttribute("dur", "1.8s");
+        animateOpacity.setAttribute("repeatCount", "indefinite");
+        pulseRing.appendChild(animateOpacity);
+        
+        currentMarkerGroup.appendChild(pulseRing);
+
+        var dotCore = document.createElementNS(ns, "circle");
+        dotCore.setAttribute("cx", livePt.x);
+        dotCore.setAttribute("cy", livePt.y);
+        dotCore.setAttribute("r", "5");
+        dotCore.setAttribute("fill", "#2dd4bf");
+        dotCore.setAttribute("stroke", "#0f172a");
+        dotCore.setAttribute("stroke-width", "1.5");
+        currentMarkerGroup.appendChild(dotCore);
+
+        svg.appendChild(currentMarkerGroup);
+      }
+    }
+
+    lineVisibility.expense && drawSegmentedExpenseLine(currentExpenseXY,"#f472b6","rgba(244, 114, 182, 0.45)","url(#pinkFill)","pinkGlow",svg,ns,!0);
+    
+    lineVisibility.debt&&(drawDebtLine(currentDebtTotalXY,"#ffffff",3,null,"url(#debtTotalFill)"),drawDebtLine(currentDebtShinhanXY,"#60a5fa",2,"6 4","url(#debtShinhanFill)"),drawDebtLine(currentDebtSCXY,"#fbbf24",2,"2 2","url(#debtSCFill)"));
+    
+    var lastLabelX=-1e3,prevQuarter=null;for(i=0;i<xy.length;i++){var d=xy[i].date,x=xy[i].x,year=d.getFullYear(),month=d.getMonth(),quarter=Math.floor(month/3),text="",important=!1;if(0===month?(text=year,important=!0):quarter!==prevQuarter&&(text=monthShort(d),important=!0),important&&!(x-lastLabelX<75)){var lbl=document.createElementNS(ns,"text");lbl.setAttribute("x",x),lbl.setAttribute("y",VB_H-10),lbl.setAttribute("text-anchor","middle"),lbl.setAttribute("font-size",0===month?"12":"11"),lbl.setAttribute("font-weight",0===month?"700":"500"),lbl.setAttribute("fill",0===month?"rgba(255,255,255,0.85)":"rgba(255,255,255,0.45)"),lbl.textContent=text,svg.appendChild(lbl),lastLabelX=x,prevQuarter=quarter}}
+    
+    if(lineVisibility.balance){paths=buildSmoothPathTC(xy);var clipId="balanceAreaClip-"+Math.random().toString(36).substring(2,9),defs=svg.querySelector("defs")||svg,clipPath=document.createElementNS(ns,"clipPath");clipPath.setAttribute("id",clipId);var clipAreaPath=document.createElementNS(ns,"path");clipAreaPath.setAttribute("d",paths.area),clipPath.appendChild(clipAreaPath),defs.appendChild(clipPath);var areaEl,lineEl,gridGroup=document.createElementNS(ns,"g");gridGroup.setAttribute("clip-path","url(#"+clipId+")"),gridGroup.setAttribute("mask","url(#lineEdgeFadeMask)");prevQuarter=null;for(var k=0;k<pts.length;k++){month=(d=pts[k].date).getMonth();if((quarter=Math.floor(month/3))!==prevQuarter||0===k){var vLine=document.createElementNS(ns,"line");vLine.setAttribute("x1",xy[k].x),vLine.setAttribute("x2",xy[k].x),vLine.setAttribute("y1",PAD_TOP),vLine.setAttribute("y2",VB_H-PAD_BOTTOM),vLine.setAttribute("stroke","rgba(255, 255, 255, 0.12)"),vLine.setAttribute("stroke-width","1"),vLine.setAttribute("stroke-dasharray","3 3"),gridGroup.appendChild(vLine),prevQuarter=quarter}}plotH=VB_H-PAD_TOP-PAD_BOTTOM;for(var g=0;g<=4;g++){var gy=PAD_TOP+(1-g/4)*plotH,hLine=document.createElementNS(ns,"line");hLine.setAttribute("x1",PAD_LEFT),hLine.setAttribute("x2",VB_W-PAD_RIGHT),hLine.setAttribute("y1",gy),hLine.setAttribute("y2",gy),hLine.setAttribute("stroke","rgba(255, 255, 255, 0.12)"),hLine.setAttribute("stroke-width","1"),hLine.setAttribute("stroke-dasharray","3 3"),gridGroup.appendChild(hLine)}svg.appendChild(gridGroup),(areaEl=document.createElementNS(ns,"path")).setAttribute("d",paths.area),areaEl.setAttribute("fill","url(#tealFill)"),areaEl.setAttribute("stroke","none"),svg.appendChild(areaEl),(lineEl=document.createElementNS(ns,"path")).setAttribute("d",paths.line),lineEl.setAttribute("fill","none"),lineEl.setAttribute("stroke",TEAL),lineEl.setAttribute("stroke-width","2.5"),lineEl.setAttribute("stroke-linecap","round"),lineEl.setAttribute("stroke-linejoin","round"),svg.appendChild(lineEl)}
+    
+    var gradDebtTotal=document.createElementNS(ns,"linearGradient");gradDebtTotal.setAttribute("id","debtTotalFill"),gradDebtTotal.setAttribute("x1","0"),gradDebtTotal.setAttribute("y1","0"),gradDebtTotal.setAttribute("x2","0"),gradDebtTotal.setAttribute("y2","1");var dt1=document.createElementNS(ns,"stop");dt1.setAttribute("offset","0%"),dt1.setAttribute("stop-color","#ffffff"),dt1.setAttribute("stop-opacity","0.20");var dt2=document.createElementNS(ns,"stop");dt2.setAttribute("offset","100%"),dt2.setAttribute("stop-color","#ffffff"),dt2.setAttribute("stop-opacity","0"),gradDebtTotal.appendChild(dt1),gradDebtTotal.appendChild(dt2),defsTC.appendChild(gradDebtTotal);
+    
+    var gradDebtShinhan=document.createElementNS(ns,"linearGradient");gradDebtShinhan.setAttribute("id","debtShinhanFill"),gradDebtShinhan.setAttribute("x1","0"),gradDebtShinhan.setAttribute("y1","0"),gradDebtShinhan.setAttribute("x2","0"),gradDebtShinhan.setAttribute("y2","1");var ds1=document.createElementNS(ns,"stop");ds1.setAttribute("offset","0%"),ds1.setAttribute("stop-color","#60a5fa"),ds1.setAttribute("stop-opacity","0.20");var ds2=document.createElementNS(ns,"stop");ds2.setAttribute("offset","100%"),ds2.setAttribute("stop-color","#60a5fa"),ds2.setAttribute("stop-opacity","0"),gradDebtShinhan.appendChild(ds1),gradDebtShinhan.appendChild(ds2),defsTC.appendChild(gradDebtShinhan);
+    
+    var gradDebtSC=document.createElementNS(ns,"linearGradient");gradDebtSC.setAttribute("id","debtSCFill"),gradDebtSC.setAttribute("x1","0"),gradDebtSC.setAttribute("y1","0"),gradDebtSC.setAttribute("x2","0"),gradDebtSC.setAttribute("y2","1");var dc1=document.createElementNS(ns,"stop");dc1.setAttribute("offset","0%"),dc1.setAttribute("stop-color","#fbbf24"),dc1.setAttribute("stop-opacity","0.20");var dc2=document.createElementNS(ns,"stop");dc2.setAttribute("offset","100%"),dc2.setAttribute("stop-color","#fbbf24"),dc2.setAttribute("stop-opacity","0"),gradDebtSC.appendChild(dc1),gradDebtSC.appendChild(dc2),defsTC.appendChild(gradDebtSC);
+    
+    var hoverLine=document.createElementNS(ns,"line");hoverLine.setAttribute("id","hover-line"),hoverLine.setAttribute("y1",PAD_TOP+lineVisibility.debt?155:85),hoverLine.setAttribute("y2",VB_H-PAD_BOTTOM),hoverLine.setAttribute("stroke","rgba(255,255,255,0.35)"),hoverLine.setAttribute("stroke-width","1.3"),hoverLine.setAttribute("stroke-dasharray","4 4"),svg.appendChild(hoverLine);
+    var hoverDot=document.createElementNS(ns,"circle");hoverDot.setAttribute("id","hover-dot"),hoverDot.setAttribute("r","5"),hoverDot.setAttribute("fill",TEAL),hoverDot.setAttribute("stroke","#191919"),hoverDot.setAttribute("stroke-width","2"),svg.appendChild(hoverDot);
+    var hoverDotExp=document.createElementNS(ns,"circle");hoverDotExp.setAttribute("id","hover-dot-expense"),hoverDotExp.setAttribute("r","5"),hoverDotExp.setAttribute("fill","#f472b6"),hoverDotExp.setAttribute("stroke","#191919"),hoverDotExp.setAttribute("stroke-width","2"),svg.appendChild(hoverDotExp);
+    
+    // Hover Dot for Income: Lemon color for other columns, Teal for current month
+    var hoverDotInc=document.createElementNS(ns,"circle");hoverDotInc.setAttribute("id","hover-dot-income"),hoverDotInc.setAttribute("r","5"),hoverDotInc.setAttribute("stroke","#191919"),hoverDotInc.setAttribute("stroke-width","2"),svg.appendChild(hoverDotInc);
+    
+    var hoverIndex=getDefaultHoverIndex();showPointAt(hoverIndex);
+    
+    // Update showPointAt logic wrapper or handler to dynamically set hoverDotInc color based on index
+    var origShowPointAt = window.showPointAt || showPointAt;
+    window.showPointAt = function(idx) {
+      if (typeof origShowPointAt === 'function') { origShowPointAt(idx); }
+      var curIdx = getCurrentMonthIndex();
+      var hDotInc = document.getElementById("hover-dot-income");
+      if (hDotInc) {
+        hDotInc.setAttribute("fill", (idx === curIdx) ? "#2dd4bf" : "#ccf244");
+      }
+    };
+    showPointAt(hoverIndex);
+
+    var targetIndex=currentIndex=getCurrentMonthIndex();
+    switch(range){case"today":targetIndex=getMonthIndex(-1);break;case"-3m":targetIndex=getMonthIndex(-3);break;case"-6m":targetIndex=getMonthIndex(-6);break;case"-1y":targetIndex=getMonthIndex(-12);break;case"-2y":targetIndex=getMonthIndex(-24);break;case"+3m":targetIndex=getMonthIndex(3);break;case"+6m":targetIndex=getMonthIndex(6);break;case"+1y":targetIndex=getMonthIndex(12);break;case"+2y":targetIndex=getMonthIndex(24);break;case"max":targetIndex=currentXY.length-1}
+    var current=xy[currentIndex],targetTC=xy[targetIndex],diff="today"===range||range.startsWith("-")?current.balance-targetTC.balance:targetTC.balance-current.balance,pct=0!==current.balance?diff/Math.abs(current.balance)*100:0,isPos=diff>=0;
+    document.getElementById("balance-val").textContent=balanceVisible?fmtFullTC(current.balance):"*********",document.getElementById("balance-usd").textContent=fmtUSDTC(current.balance),updateGoalRing(current.balance),updateCountdown();
+    
+    var directionText={today:"over the last month","-3m":"in the last 3 months","-6m":"in the last 6 months","-1y":"in the last year","-2y":"in the last 2 years","+3m":"over the next 3 months","+6m":"over the next 6 months","+1y":"over the next year","+2y":"over the next 2 years",max:"across all future projections"}[range]||"",verb="today"===range?"You "+(isPos?"gain ":"loss "):range.startsWith("-")?isPos?"You gained ":"You lost ":"You "+(isPos?"gain ":"loss ");
+    document.getElementById("sub-text").innerHTML=verb+'<span id="amt-hl" class="amt-hl '+(isPos?"pos":"neg")+'">'+fmtFullTC(Math.abs(diff))+"</span> ";
+    var pill=document.getElementById("change-pill");
+    pill.style.display="inline-flex",pill.className="pill "+(isPos?"pos":"neg"),pill.innerHTML=(isPos?"&#9650;":"&#9660;")+Math.abs(pct).toFixed(1)+"%";
+    var existingDirSpan=document.getElementById("pill-direction-text");
+    if(existingDirSpan&&existingDirSpan.remove(),window.matchMedia("(min-width: 401px)").matches){var dirSpan=document.createElement("span");dirSpan.id="pill-direction-text",dirSpan.textContent=directionText,dirSpan.className="card-sub-text",dirSpan.style.marginLeft="6px",pill.parentNode.insertBefore(dirSpan,pill.nextSibling)}
+}
       function drawDebtLine(points, color, width, dash, fillUrl) {
         var paths = buildSmoothPathTC(points);
         if (fillUrl) {
@@ -2171,8 +2372,22 @@ to{transform:rotate(360deg)}
     function drawSegmentedExpenseLine(pts, mainColor, futureColor, fillUrl, glowFilterId, svg, ns, showLiveDot) {
       if (pts && pts.length) {
         for (var now = new Date, pastPts = [], futurePts = [], i = 0; i < pts.length; i++) pts[i].date <= now ? pastPts.push(pts[i]) : (0 === futurePts.length && pastPts.length > 0 && futurePts.push(pastPts[pastPts.length - 1]), futurePts.push(pts[i]));
-        var fullPaths=buildSharpPathTC(pts),clipId="areaClip-"+Math.random().toString(36).substring(2,9),defs=svg.querySelector("defs")||svg,clipPath=document.createElementNS(ns,"clipPath");clipPath.setAttribute("id",clipId);var clipAreaPath=document.createElementNS(ns,"path");clipAreaPath.setAttribute("d",fullPaths.area),clipPath.appendChild(clipAreaPath),defs.appendChild(clipPath);var gridGroup=document.createElementNS(ns,"g");
-        gridGroup.setAttribute("clip-path", "url(#" + clipId + ")"), gridGroup.setAttribute("mask", "url(#lineEdgeFadeMask)");
+        
+        var fullPaths = buildSharpPathTC(pts),
+            clipId = "areaClip-" + Math.random().toString(36).substring(2, 9),
+            defs = svg.querySelector("defs") || svg,
+            clipPath = document.createElementNS(ns, "clipPath");
+        
+        clipPath.setAttribute("id", clipId);
+        var clipAreaPath = document.createElementNS(ns, "path");
+        clipAreaPath.setAttribute("d", fullPaths.area);
+        clipPath.appendChild(clipAreaPath);
+        defs.appendChild(clipPath);
+
+        var gridGroup = document.createElementNS(ns, "g");
+        gridGroup.setAttribute("clip-path", "url(#" + clipId + ")");
+        gridGroup.setAttribute("mask", "url(#lineEdgeFadeMask)");
+        
         for (var k = 0; k < pts.length; k++) {
           var vLine = document.createElementNS(ns, "line");
           vLine.setAttribute("x1", pts[k].x), vLine.setAttribute("x2", pts[k].x), vLine.setAttribute("y1", PAD_TOP), vLine.setAttribute("y2", VB_H - PAD_BOTTOM), vLine.setAttribute("stroke", "rgba(255, 255, 255, 0.12)"), vLine.setAttribute("stroke-width", "1"), vLine.setAttribute("stroke-dasharray", "3 3"), gridGroup.appendChild(vLine)
@@ -2182,13 +2397,55 @@ to{transform:rotate(360deg)}
             hLine = document.createElementNS(ns, "line");
           hLine.setAttribute("x1", PAD_LEFT), hLine.setAttribute("x2", VB_W - PAD_RIGHT), hLine.setAttribute("y1", gy), hLine.setAttribute("y2", gy), hLine.setAttribute("stroke", "rgba(255, 255, 255, 0.12)"), hLine.setAttribute("stroke-width", "1"), hLine.setAttribute("stroke-dasharray", "3 3"), gridGroup.appendChild(hLine)
         }
-        if(svg.appendChild(gridGroup),pastPts.length>1){var pastPaths=buildSharpPathTC(pastPts),areaEl=document.createElementNS(ns,"path");areaEl.setAttribute("d",pastPaths.area),areaEl.setAttribute("fill",fillUrl),areaEl.setAttribute("mask","url(#lineEdgeFadeMask)"),svg.appendChild(areaEl);var lineEl=document.createElementNS(ns,"path");lineEl.setAttribute("d",pastPaths.line),lineEl.setAttribute("fill","none"),lineEl.setAttribute("stroke",mainColor),lineEl.setAttribute("stroke-width","2.5"),lineEl.setAttribute("stroke-linecap","butt"),lineEl.setAttribute("stroke-linejoin","miter"),lineEl.setAttribute("stroke-miterlimit","10"),glowFilterId&&lineEl.setAttribute("filter","url(#"+glowFilterId+")"),lineEl.setAttribute("mask","url(#lineEdgeFadeMask)"),svg.appendChild(lineEl)}
-        if(futurePts.length>1){var futurePaths=buildSharpPathTC(futurePts),futureAreaEl=document.createElementNS(ns,"path");futureAreaEl.setAttribute("d",futurePaths.area),futureAreaEl.setAttribute("fill",fillUrl),futureAreaEl.setAttribute("opacity","0.4"),futureAreaEl.setAttribute("mask","url(#lineEdgeFadeMask)"),svg.appendChild(futureAreaEl);var futureLineEl=document.createElementNS(ns,"path");futureLineEl.setAttribute("d",futurePaths.line),futureLineEl.setAttribute("fill","none"),futureLineEl.setAttribute("stroke",futureColor),futureLineEl.setAttribute("stroke-width","2"),futureLineEl.setAttribute("stroke-linecap","round"),futureLineEl.setAttribute("stroke-linejoin","round"),futureLineEl.setAttribute("mask","url(#lineEdgeFadeMask)"),svg.appendChild(futureLineEl)}
-        
+        svg.appendChild(gridGroup);
+
+        if (pastPts.length > 1) {
+          var pastPaths = buildSharpPathTC(pastPts),
+              areaEl = document.createElementNS(ns, "path");
+          
+          areaEl.setAttribute("d", pastPaths.area);
+          areaEl.setAttribute("fill", fillUrl);
+          areaEl.setAttribute("mask", "url(#lineEdgeFadeMask)");
+          svg.appendChild(areaEl);
+
+          var lineEl = document.createElementNS(ns, "path");
+          lineEl.setAttribute("d", pastPaths.line);
+          lineEl.setAttribute("fill", "none");
+          lineEl.setAttribute("stroke", mainColor);
+          lineEl.setAttribute("stroke-width", "3.5");
+          lineEl.setAttribute("stroke-linecap", "butt");
+          lineEl.setAttribute("stroke-linejoin", "miter");
+          lineEl.setAttribute("stroke-miterlimit", "10");
+          glowFilterId && lineEl.setAttribute("filter", "url(#" + glowFilterId + ")");
+          lineEl.setAttribute("mask", "url(#lineEdgeFadeMask)");
+          svg.appendChild(lineEl);
+        }
+
+        if (futurePts.length > 1) {
+          var futurePaths = buildSharpPathTC(futurePts),
+              futureAreaEl = document.createElementNS(ns, "path");
+          
+          futureAreaEl.setAttribute("d", futurePaths.area);
+          futureAreaEl.setAttribute("fill", fillUrl);
+          futureAreaEl.setAttribute("opacity", "0.4");
+          futureAreaEl.setAttribute("mask", "url(#lineEdgeFadeMask)");
+          svg.appendChild(futureAreaEl);
+
+          var futureLineEl = document.createElementNS(ns, "path");
+          futureLineEl.setAttribute("d", futurePaths.line);
+          futureLineEl.setAttribute("fill", "none");
+          futureLineEl.setAttribute("stroke", mainColor);
+          futureLineEl.setAttribute("stroke-width", "0");
+          futureLineEl.setAttribute("stroke-linecap", "round");
+          futureLineEl.setAttribute("stroke-linejoin", "round");
+          futureLineEl.setAttribute("mask", "url(#lineEdgeFadeMask)");
+          svg.appendChild(futureLineEl);
+        }
+
         if(showLiveDot && pastPts.length > 0) {
           var lastPastPt = pastPts[pastPts.length - 1];
           
-          // Outer pulsing ring animation element
+          // Pulsing live ring effect
           var pulseRing = document.createElementNS(ns, "circle");
           pulseRing.setAttribute("cx", lastPastPt.x);
           pulseRing.setAttribute("cy", lastPastPt.y);
@@ -2198,7 +2455,6 @@ to{transform:rotate(360deg)}
           pulseRing.setAttribute("stroke-width", "1.5");
           pulseRing.setAttribute("opacity", "0.8");
           
-          // Inline keyframe animation for the double live dot ring
           var animateR = document.createElementNS(ns, "animate");
           animateR.setAttribute("attributeName", "r");
           animateR.setAttribute("values", "4;14");
@@ -2215,7 +2471,6 @@ to{transform:rotate(360deg)}
           
           svg.appendChild(pulseRing);
 
-          // Standard glow layer
           var dotGlow = document.createElementNS(ns, "circle");
           dotGlow.setAttribute("cx", lastPastPt.x);
           dotGlow.setAttribute("cy", lastPastPt.y);
@@ -2225,7 +2480,6 @@ to{transform:rotate(360deg)}
           glowFilterId && dotGlow.setAttribute("filter", "url(#" + glowFilterId + ")");
           svg.appendChild(dotGlow);
 
-          // Core dot center
           var dotCore = document.createElementNS(ns, "circle");
           dotCore.setAttribute("cx", lastPastPt.x);
           dotCore.setAttribute("cy", lastPastPt.y);
@@ -2237,9 +2491,49 @@ to{transform:rotate(360deg)}
         }
 
         var maxPt = pts.reduce(function(prev, current) {
-          return current.amount > prev.amount ? current : prev
+          return current.amount > prev.amount ? current : prev;
         }, pts[0]);
-        if(maxPt&&maxPt.amount>0){var valTxt=fmtShort(maxPt.amount),bx=maxPt.x-30,by=maxPt.y-26,labelGroup=document.createElementNS(ns,"g");labelGroup.setAttribute("mask","url(#lineEdgeFadeMask)");var peakMarker=document.createElementNS(ns,"circle");peakMarker.setAttribute("cx",maxPt.x),peakMarker.setAttribute("cy",maxPt.y),peakMarker.setAttribute("r","4"),peakMarker.setAttribute("fill","#0f172a"),peakMarker.setAttribute("stroke",mainColor),peakMarker.setAttribute("stroke-width","2"),labelGroup.appendChild(peakMarker);var rect=document.createElementNS(ns,"rect");rect.setAttribute("x",bx),rect.setAttribute("y",by),rect.setAttribute("width",60),rect.setAttribute("height",18),rect.setAttribute("rx","4"),rect.setAttribute("fill","#0f172a"),rect.setAttribute("stroke-width","1"),rect.setAttribute("opacity","0.9"),labelGroup.appendChild(rect);var txt=document.createElementNS(ns,"text");txt.setAttribute("x",maxPt.x),txt.setAttribute("y",by+18),txt.setAttribute("text-anchor","middle"),txt.setAttribute("font-size","14"),txt.setAttribute("font-weight","700"),txt.setAttribute("fill",mainColor),txt.textContent=valTxt,labelGroup.appendChild(txt),svg.appendChild(labelGroup)}
+
+        if (maxPt && maxPt.amount > 0) {
+          var valTxt = fmtShort(maxPt.amount),
+              bx = maxPt.x - 30,
+              by = maxPt.y - 26,
+              labelGroup = document.createElementNS(ns, "g");
+          
+          labelGroup.setAttribute("mask", "url(#lineEdgeFadeMask)");
+          
+          var peakMarker = document.createElementNS(ns, "circle");
+          peakMarker.setAttribute("cx", maxPt.x);
+          peakMarker.setAttribute("cy", maxPt.y);
+          peakMarker.setAttribute("r", "4");
+          peakMarker.setAttribute("fill", "#0f172a");
+          peakMarker.setAttribute("stroke", mainColor);
+          peakMarker.setAttribute("stroke-width", "2");
+          labelGroup.appendChild(peakMarker);
+
+          var rect = document.createElementNS(ns, "rect");
+          rect.setAttribute("x", bx);
+          rect.setAttribute("y", by);
+          rect.setAttribute("width", "60");
+          rect.setAttribute("height", "18");
+          rect.setAttribute("rx", "4");
+          rect.setAttribute("fill", "#0f172a");
+          rect.setAttribute("stroke-width", "1");
+          rect.setAttribute("opacity", "0.9");
+          labelGroup.appendChild(rect);
+
+          var txt = document.createElementNS(ns, "text");
+          txt.setAttribute("x", maxPt.x);
+          txt.setAttribute("y", by + 18);
+          txt.setAttribute("text-anchor", "middle");
+          txt.setAttribute("font-size", "14");
+          txt.setAttribute("font-weight", "700");
+          txt.setAttribute("fill", mainColor);
+          txt.textContent = valTxt;
+          labelGroup.appendChild(txt);
+          
+          svg.appendChild(labelGroup);
+        }
       }
     }
     function getCurrentMonthIndex(){if(!currentXY.length)return 0;for(var now=new Date,year=now.getFullYear(),month=now.getMonth(),idx=0,i=0;i<currentXY.length;i++){var d=currentXY[i].date;if(!(d.getFullYear()<year||d.getFullYear()===year&&d.getMonth()<=month))break;idx=i}return idx}
