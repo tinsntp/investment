@@ -2629,7 +2629,8 @@ lineVisibility.invest = false;
       var hoverDotExp=document.createElementNS(ns,"circle");hoverDotExp.setAttribute("id","hover-dot-expense"),hoverDotExp.setAttribute("r","5"),hoverDotExp.setAttribute("fill","#f472b6"),hoverDotExp.setAttribute("stroke","#191919"),hoverDotExp.setAttribute("stroke-width","2"),svg.appendChild(hoverDotExp);
       var hoverDotInc=document.createElementNS(ns,"circle");hoverDotInc.setAttribute("id","hover-dot-income"),hoverDotInc.setAttribute("r","5"),hoverDotInc.setAttribute("stroke","#191919"),hoverDotInc.setAttribute("stroke-width","2"),svg.appendChild(hoverDotInc);
       
-      var hoverIndex=getCurrentMonthIndex();
+      var hoverIndex = getDefaultHoverIndex();
+      showPointAt(hoverIndex);
       
       
       var origShowPointAt = window.showPointAt || showPointAt;
@@ -2899,10 +2900,14 @@ lineVisibility.invest = false;
     function getCurrentMonthIndex(){if(!currentXY.length)return 0;for(var now=new Date,year=now.getFullYear(),month=now.getMonth(),idx=0,i=0;i<currentXY.length;i++){var d=currentXY[i].date;if(!(d.getFullYear()<year||d.getFullYear()===year&&d.getMonth()<=month))break;idx=i}return idx}
     function getDefaultHoverIndex() {
       var currentIdx = getCurrentMonthIndex();
-      if (typeof lineVisibility !== 'undefined' && lineVisibility.invest) {
+      
+      // Invest & Expense: default to current month
+      if (typeof lineVisibility !== 'undefined' && (lineVisibility.invest || lineVisibility.expense)) {
         return Math.max(0, Math.min(currentXY.length - 1, currentIdx));
       }
-      return lineVisibility.expense && !lineVisibility.balance ? Math.min(currentXY.length - 1, currentIdx) : Math.min(currentXY.length - 1, currentIdx + 6);
+      
+      // Balance & Debt: default to current month + 6
+      return Math.min(currentXY.length - 1, currentIdx + 6);
     }
     function fmtShort(v) {
       var a = Math.abs(v), sign = v < 0 ? "-" : "";
