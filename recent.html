@@ -235,7 +235,7 @@ background:
 .ttl{display:flex;align-items:center;gap:1.5vw}
 .recent-badge{font-size:2.4vw;font-weight:700;color:#14b8a6;background:rgba(74,222,128,0.14);border-radius:99px;padding:0.4vw 1.2vw;white-space:nowrap}
 .recent-badge .bi,label .bi {font-size: 0.8rem!important;vertical-align: 0em;}
-@media screen and (max-width:400px){.recent-badge{font-size:3.4vw}.ico,.ico-fb {width:13vw!important; height:13vw!important;}}
+@media screen and (max-width:400px){.recent-badge{font-size:3.4vw}.ico,.ico-fb {width:14vw!important; height:14vw!important;}}
 .budget-bar-wrap { position: relative;}
 .budget-bar{width:100%;height:15px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.06)}
 #budget-fill-container{display:flex;width:100%;height:100%;gap:0}
@@ -2172,7 +2172,7 @@ to{transform:rotate(360deg)}
       svg.appendChild(colGroup);
     }
 
-    // Render Top 3 Peak Value Markers for Cashflow (Without outer circle markers, label box only)
+    // Render Top 3 Peak Value Markers for Cashflow (Teal for current month, Lemon for others)
     if (lineVisibility.expense && currentIncomeXY.length > 0) {
       var markerGroup = document.createElementNS(ns, "g");
       markerGroup.setAttribute("mask", "url(#lineEdgeFadeMask)");
@@ -2180,6 +2180,9 @@ to{transform:rotate(360deg)}
       top3Indices.forEach(function(idx) {
         var pt = currentIncomeXY[idx];
         if (pt && pt.amount > 0) {
+          var isCurrentMonth = (idx === currentIdx);
+          var markerColor = isCurrentMonth ? "#2dd4bf" : "#ccf244"; // Teal for current month, Lemon otherwise
+
           var bgRect = document.createElementNS(ns, "rect");
           bgRect.setAttribute("x", pt.x - 28);
           bgRect.setAttribute("y", pt.y - 28);
@@ -2194,9 +2197,9 @@ to{transform:rotate(360deg)}
           txtEl.setAttribute("x", pt.x);
           txtEl.setAttribute("y", pt.y - 14);
           txtEl.setAttribute("text-anchor", "middle");
-          txtEl.setAttribute("font-size", "14");
+          txtEl.setAttribute("font-size", "11");
           txtEl.setAttribute("font-weight", "700");
-          txtEl.setAttribute("fill", "#ccf244");
+          txtEl.setAttribute("fill", markerColor); // Applies teal or lemon dynamically
           txtEl.textContent = fmtShort(pt.amount);
           markerGroup.appendChild(txtEl);
         }
