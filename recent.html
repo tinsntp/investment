@@ -721,7 +721,7 @@ tbody tr.current-row td{font-weight:600;}
 .hero-balance-v2{font-size:16px!important;color:#fff!important;margin-bottom:3px;font-weight:700;}
 .hero-amount{font-size:16px;font-weight:600;margin-bottom:3px;padding-right:1px}
 .hero-amount-v2{font-size:14px;font-weight:600;margin-bottom:3px;padding-right:1px}
-#balance-val{font-size:36px}.badge-pill{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:12px;font-weight:700}.badge-teal{background:var(--teal-bg);color:var(--teal-primary)}.badge-pink{background:var(--pink-bg);color:var(--pink-primary)}.chart-container{width:100%;height:80px;margin-top:10px}.metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;border-top:0 solid var(--border-color)}
+#balance-val{font-size:32px;letter-spacing: -2.5px;}.badge-pill{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:12px;font-weight:700}.badge-teal{background:var(--teal-bg);color:var(--teal-primary)}.badge-pink{background:var(--pink-bg);color:var(--pink-primary)}.chart-container{width:100%;height:80px;margin-top:10px}.metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;border-top:0 solid var(--border-color)}
 .metric-card{background:rgba(255,255,255,.02);border-radius:16px;padding:12px;text-align:center;}
 .metric-card.nav-card{  background: 
     linear-gradient(135deg, rgba(30, 41, 59, 0.01) 0%, rgba(15, 23, 42, 0.1) 100%),
@@ -746,12 +746,25 @@ tbody tr.current-row td{font-weight:600;}
 .range-btn:hover{color:rgba(255,255,255,0.75)}
 .range-btn.active{background:rgba(255,255,255,0.1);color:#fff}
 .card-balance,.card-balance-usd{font-family:"JetBrains Mono";}
-.card-balance{font-size:39px;font-weight:700;color:#fff;letter-spacing:-0.02em;margin-bottom:5px;line-height:1}
+.card-balance{font-weight:700;color:#fff;letter-spacing:-0.02em;line-height:1;margin-bottom:-3px;}
 .card-balance .cents{color:rgba(255,255,255,0.4);font-weight:700}
+.balance-overlay-group {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.balance-overlay-group * {
+  pointer-events: auto;
+}
 .balance-group{display:inline-block}
-.card-balance-usd{width:auto;text-align:left;padding-right:45px;font-size:16px;margin-bottom:5px;color:rgba(255,255,255,.45)}
-.goal-ring-wrap{width:34px;height:34px;flex-shrink:0}
-.goal-ring-wrap svg{width:100%;height:100%}
+.card-balance-usd{width:auto;text-align:left;padding-right:45px;font-size:13px;color:rgba(255,255,255,.45)}
+.goal-ring-wrap{position: relative;width:34px;height:34px;bottom:3px;flex-shrink:0}
+.goal-ring-wrap svg{width:100%;height:100%;}
 .usd-row{display:flex;justify-content:flex-end;align-items:center;gap:5px;width:100%}
 .usd-flag-wrap{width:15px;height:15px;flex-shrink:0;border-radius:50%;margin-top:-5px}
 .usd-flag-wrap img{width:100%;height:100%;display:block}
@@ -776,10 +789,9 @@ tbody tr.current-row td{font-weight:600;}
 .tooltip .tt-delta.pos{color:#2dd4bf}
 .tooltip .tt-delta.neg{color:#f87171}
 
-.refresh-row{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin:10px 0 10px 0}
-.countdown-text{font-size:12px;color:rgba(255,255,255,0.35);white-space:nowrap;font-weight:300;}
-.last-updated{font-size:12px;color:rgba(255,255,255,0.35);font-weight:300;}
-.refresh-btn{border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.6);font-size:11px;font-weight:500;padding:4px 5px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:background 0.15s,color 0.15s;margin-right:5px;font-family:Lexend}
+.countdown-text{font-size:11.5px;color:rgba(255,255,255,0.35);white-space:nowrap;font-weight:300;text-align:right;margin-bottom:-5px!important;}
+.last-updated{font-size:11.5px;color:rgba(255,255,255,0.35);font-weight:300;}
+.refresh-btn{border:0px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.6);font-size:11px;font-weight:500;padding:4px 5px;border-radius:50%;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:background 0.15s,color 0.15s;margin-right:5px;font-family:Lexend}
 .refresh-btn:hover{background:rgba(255,255,255,0.09);color:#fff}
 .refresh-btn.spinning svg{animation:refreshSpin 0.6s linear}
 @keyframes refreshSpin{from{transform:rotate(0deg)}
@@ -1127,32 +1139,15 @@ to{transform:rotate(360deg)}
       <button class="range-btn" data-range="-1y">-1y</button>
       <button class="range-btn" data-range="-6m">-6m</button>
       <button class="range-btn" data-range="-3m">-3m</button>
-
       <button class="range-btn active" data-range="today">Today</button>
-
       <button class="range-btn" data-range="+3m">+3m</button>
       <button class="range-btn" data-range="+6m">+6m</button>
       <button class="range-btn" data-range="+1y">+1y</button>
       <button class="range-btn" data-range="+2y">+2y</button>
-
       <button class="range-btn" data-range="max">Max</button>
-    </div>
-  
+    </div>  
   </div>
-  
-  <div class="balance-group">
-    <div class="balance-toggle-area" id="balance-toggle-area" style="display:flex; align-items:center; gap:10px;">
-      <div class="card-balance" id="balance-val">&#x2014;</div>
-      <div class="goal-ring-wrap" id="goal-ring-wrap">
-        <svg id="goal-ring-svg" viewBox="0 0 80 80"></svg>
-      </div>
-    </div>
-    <div class="usd-row">
-      <div class="usd-flag-wrap" id="usd-flag-wrap"><img src="https://github.com/tinsntp/investment/blob/main/icon/usdflag.png?raw=true"></div>
-      <div class="card-balance-usd" id="balance-usd"></div>
-    </div> 
-      
-  </div>
+
   <div class="card-sub-row">
     <div style="display:flex; align-items:center; gap:8px;">
       <div class="card-sub-text" id="sub-text"></div>
@@ -1178,15 +1173,22 @@ to{transform:rotate(360deg)}
     <svg id="chart-svg" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
     <div class="tooltip" id="tooltip" style="display:none;"></div>
   </div>
-  <div class="refresh-row">
-    <span class="countdown-text" id="countdown-text"></span>
-    <span class="last-updated" id="last-updated"></span>
-    <button class="refresh-btn" id="refresh-btn">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
-      
-    </button>
+  <div class="balance-overlay-group" id="balance-overlay-group" style="display:none;">
+    <div class="balance-group">
+      <div class="usd-row">
+        <div class="usd-flag-wrap" id="usd-flag-wrap"><img src="https://github.com/tinsntp/investment/blob/main/icon/usdflag.png?raw=true"></div>
+        <div class="card-balance-usd" id="balance-usd"></div>
+      </div>
+      <div class="balance-toggle-area" id="balance-toggle-area" style="display:flex; align-items:center; gap:10px;">
+        <div class="card-balance" id="balance-val">&#x2014;</div>
+        <div class="goal-ring-wrap" id="goal-ring-wrap">
+          <svg id="goal-ring-svg" viewBox="0 0 80 80"></svg>
+        </div>
+      </div>
+      <span class="countdown-text" id="countdown-text"></span>
+    </div>
+    
   </div>
-  
 </div>
 
 <div class="slides-outer" id="slides-outer">
@@ -2036,7 +2038,7 @@ to{transform:rotate(360deg)}
     var RED = "#f87171";
     var USD_RATE = 26300;
 
-    var PAD_LEFT = 25, PAD_RIGHT = 8, PAD_TOP = 0, PAD_BOTTOM = 0;
+    var PAD_LEFT = 0, PAD_RIGHT = 0, PAD_TOP = 0, PAD_BOTTOM = 0;
     var VB_W = 640, VB_H = 300;
 
     window.innerWidth<=400&&(VB_H=300,document.getElementById("chart-svg").setAttribute("viewBox",`0 0 ${VB_W} ${VB_H}`));
@@ -2048,12 +2050,12 @@ to{transform:rotate(360deg)}
     var lastExpenseIndex = -1;
     var debtSeries = [];var incomeSeries = [];
     var investSeries = [];
-var currentInvestXY = [];
-var currentSavingXY = [], currentStockXY = [], currentForexXY = [], currentCryptoXY = [], currentGoldXY = [];
-lineVisibility.invest = false;
+    var currentInvestXY = [];
+    var currentSavingXY = [], currentStockXY = [], currentForexXY = [], currentCryptoXY = [], currentGoldXY = [];
+    lineVisibility.invest = false;
 
     function fmtUSDTC(v){return"$"+(v/USD_RATE).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}const today=new Date,date=today.toLocaleDateString("ja-JP",{month:"long",day:"numeric"}),weekday=today.toLocaleDateString("ja-JP",{weekday:"short"});function csvRowTopChart(line){for(var cols=[],cur="",inQ=!1,i=0;i<line.length;i++){var c=line[i];'"'===c?inQ=!inQ:","!==c||inQ?cur+=c:(cols.push(cur),cur="")}return cols.push(cur),cols.map(function(s){return s.replace(/^"|"$/g,"").trim()})}function parseAmtTopChart(raw){if(!raw)return NaN;var s=raw.trim(),neg=!1;if("("===s.charAt(0)&&")"===s.charAt(s.length-1)&&(neg=!0,s=s.slice(1,-1)),""===(s=s.replace(/[^\d,.\-]/g,""))||"-"===s)return NaN;"-"===s.charAt(0)&&(neg=!0,s=s.slice(1));var lastComma=s.lastIndexOf(","),lastDot=s.lastIndexOf(".");if(lastComma>-1&&lastDot>-1)s=lastComma>lastDot?s.replace(/\./g,"").replace(",","."):s.replace(/,/g,"");else if(lastComma>-1){var afterComma=s.length-lastComma-1,commaCount=(s.match(/,/g)||[]).length;s=1===commaCount&&afterComma<=2?s.replace(",","."):s.replace(/,/g,"")}else if(lastDot>-1){var afterDot=s.length-lastDot-1;1===(s.match(/\./g)||[]).length&&afterDot<=2||(s=s.replace(/\./g,""))}var v=parseFloat(s);return isNaN(v)?NaN:neg?-v:v}function parseSheetDateTopChart(raw){if(!raw)return null;var s=raw.trim(),iso=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);if(iso)return new Date(parseInt(iso[1]),parseInt(iso[2])-1,parseInt(iso[3]));var dmy=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);if(dmy){var a=parseInt(dmy[1]),b=parseInt(dmy[2]),y=parseInt(dmy[3]),day=a,month=b;return a<=12&&b>12&&(day=b,month=a),new Date(y,month-1,day)}var d=new Date(s);return isNaN(d.getTime())?null:d}function parseMonthYear(raw){if(!raw)return null;var m=raw.trim().match(/^(\d{1,2})[\/\-](\d{2,4})$/);if(!m)return null;var month=parseInt(m[1])-1;if(month<0||month>11)return null;var yearPart=m[2],year=yearPart.length<=2?2e3+parseInt(yearPart):parseInt(yearPart);return new Date(year,month,1)}function fmtFullTC(v){return(v<0?"−":"")+"₫"+Math.round(Math.abs(v)).toLocaleString("en-US")}function fmtAxis(v){var a=Math.abs(v),sign=v<0?"-":"";return a>=1e9?sign+(a/1e9).toFixed(1)+"B":a>=1e6?sign+(a/1e6).toFixed(1)+"M":a>=1e3?sign+Math.round(a/1e3)+"K":sign+Math.round(a)}function monthShort(d){return["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][d.getMonth()]}function monthYearLabel(d){return monthShort(d)+" "+d.getFullYear()}function updateGoalRing(balance){var svg=document.getElementById("goal-ring-svg");if(svg){svg.innerHTML="";var ns="http://www.w3.org/2000/svg",pct=goalTarget>0?balance/goalTarget*100:0,clampedPct=Math.max(0,Math.min(100,pct)),circ=2*Math.PI*32,dash=clampedPct/100*circ,gap=circ-dash,color=pct>=100?"#fbbf24":TEAL,bg=document.createElementNS(ns,"circle");bg.setAttribute("cx",40),bg.setAttribute("cy",40),bg.setAttribute("r",32),bg.setAttribute("fill","none"),bg.setAttribute("stroke","rgba(255,255,255,0.1)"),bg.setAttribute("stroke-width",9),svg.appendChild(bg);var fg=document.createElementNS(ns,"circle");fg.setAttribute("cx",40),fg.setAttribute("cy",40),fg.setAttribute("r",32),fg.setAttribute("fill","none"),fg.setAttribute("stroke",color),fg.setAttribute("stroke-width",9),fg.setAttribute("stroke-linecap","round"),fg.setAttribute("stroke-dasharray",dash+" "+gap),fg.setAttribute("stroke-dashoffset","0"),fg.setAttribute("transform","rotate(-90 40 40)"),svg.appendChild(fg);var txt=document.createElementNS(ns,"text");txt.setAttribute("x",40),txt.setAttribute("y",40),txt.setAttribute("text-anchor","middle"),txt.setAttribute("dominant-baseline","middle"),txt.setAttribute("fill","#fff"),txt.setAttribute("font-size","24"),txt.setAttribute("font-weight","700"),txt.textContent=Math.round(pct)+"%",svg.appendChild(txt)}}function diffYMD(from,to){var years=to.getFullYear()-from.getFullYear(),months=to.getMonth()-from.getMonth(),days=to.getDate()-from.getDate();return days<0&&(months--,days+=new Date(to.getFullYear(),to.getMonth(),0).getDate()),months<0&&(years--,months+=12),{years,months,days}}document.getElementById("today-jp").textContent=`${date} (${weekday})`;
-    function updateCountdown(){var el=document.getElementById("countdown-text");if(el&&fullSeries.length){var targetDate=fullSeries[fullSeries.length-1].date,now=new Date;if(targetDate<=now)el.textContent="";else{var diff=diffYMD(now,targetDate),partsTC=[];diff.years>0&&partsTC.push(diff.years+(1===diff.years?" year":" years")),diff.months>0&&partsTC.push(diff.months+(1===diff.months?" month":" months")),window.innerWidth>400&&window.innerWidth<=1024&&partsTC.push(diff.days+(1===diff.days?" day":" days")),el.textContent=partsTC.join(" ")+" left |"}}}
+    function updateCountdown(){var el=document.getElementById("countdown-text");if(el&&fullSeries.length){var targetDate=fullSeries[fullSeries.length-1].date,now=new Date;if(targetDate<=now)el.textContent="";else{var diff=diffYMD(now,targetDate),partsTC=[];diff.years>0&&partsTC.push(diff.years+(1===diff.years?" year":" years")),diff.months>0&&partsTC.push(diff.months+(1===diff.months?" month":" months")),window.innerWidth>400&&window.innerWidth<=1024&&partsTC.push(diff.days+(1===diff.days?" day":" days")),el.textContent=partsTC.join(" ")+" left"}}}
 
      function loadBalanceHistoryTC() {
    Promise.all([fetch(TOP_CHART_CSV_URL + "&t=" + Date.now(), {
@@ -2279,8 +2281,7 @@ lineVisibility.invest = false;
      var now2 = new Date,
        hh = String(now2.getHours()).padStart(2, "0"),
        mm = String(now2.getMinutes()).padStart(2, "0"),
-       ss = String(now2.getSeconds()).padStart(2, "0");
-     document.getElementById("last-updated").textContent = "Updated " + hh + ":" + mm + ":" + ss
+       ss = String(now2.getSeconds()).padStart(2, "0")
    }).catch(function(err) {
      document.getElementById("loading-msg-tc").textContent = "Error: " + err.message
    }), document.querySelector('.range-btn[data-range="today"]').scrollIntoView({
@@ -2327,13 +2328,11 @@ lineVisibility.invest = false;
         pts = investKeys.map(function(k) {
           var monthObj = investMonthObjs[k];
           
-          // Find matching invest data
           var foundInv = investSeries.find(function(inv) {
             return inv.date.getFullYear() === monthObj.getFullYear() && inv.date.getMonth() === monthObj.getMonth();
           });
           var invItem = foundInv || { saving: 0, stock: 0, forex: 0, crypto: 0, gold: 0, comp: 0, total: 0 };
           
-          // Find matching real balance from fullSeries if it exists
           var foundBal = fullSeries.find(function(b) {
             return b.date.getFullYear() === monthObj.getFullYear() && b.date.getMonth() === monthObj.getMonth();
           });
@@ -2382,10 +2381,26 @@ lineVisibility.invest = false;
       currentPts = pts;
 
       if(pts.length){var svg=document.getElementById("chart-svg");svg.innerHTML="";var ns="http://www.w3.org/2000/svg",values=[];
-      lineVisibility.balance&&(values=values.concat(pts.map(function(p){return p.balance}))),
-      lineVisibility.expense&&(values=(values=values.concat(pts.map(function(p){return expenseSeries[p.originalIndex].amount}))).concat(pts.map(function(p){return incomeSeries[p.originalIndex].amount}))),
-      lineVisibility.invest&&(values=values.concat(pts.map(function(p){return p.invest}))),
-      lineVisibility.debt&&(values=values.concat(pts.map(function(p){return p.debtTotal})).concat(pts.map(function(p){return p.debtShinhan})).concat(pts.map(function(p){return p.debtSC}))),values.length||(values=[0,1]);
+      
+      // ISOLATE SCALING: If balance is active, compute scale primarily using balance to prevent debt/expense from squishing it.
+      if (lineVisibility.balance) {
+        values = values.concat(pts.map(function(p){ return p.balance; }));
+      }
+      if (lineVisibility.expense) {
+        values = values.concat(pts.map(function(p){ return expenseSeries[p.originalIndex].amount; }))
+                       .concat(pts.map(function(p){ return incomeSeries[p.originalIndex].amount; }));
+      }
+      if (lineVisibility.invest) {
+        values = values.concat(pts.map(function(p){ return p.invest; }));
+      }
+      // If debt is active alone or with balance, include debt values safely without breaking balance scale bounds if balance is primary
+      if (lineVisibility.debt && !lineVisibility.balance) {
+        values = values.concat(pts.map(function(p){ return p.debtTotal; }))
+                       .concat(pts.map(function(p){ return p.debtShinhan; }))
+                       .concat(pts.map(function(p){ return p.debtSC; }));
+      }
+      
+      values.length || (values = [0, 1]);
       
       var minV = Math.min.apply(null, values), maxV = Math.max.apply(null, values), range_ = maxV - minV;
       if (0 === range_) { range_ = Math.abs(maxV) || 1; }
@@ -2424,14 +2439,44 @@ lineVisibility.invest = false;
         }
       });
 
-      currentDebtTotalXY=pts.map(function(p,i){return{x:PAD_LEFT+(1==pts.length?0:i/(pts.length-1)*plotW),y:PAD_TOP+(1-(p.debtTotal-minV)/(maxV-minV))*plotH,date:p.date,amount:p.debtTotal}});
-      currentDebtShinhanXY=pts.map(function(p,i){return{x:PAD_LEFT+(1==pts.length?0:i/(pts.length-1)*plotW),y:PAD_TOP+(1-(p.debtShinhan-minV)/(maxV-minV))*plotH,date:p.date,amount:p.debtShinhan}});
-      currentDebtSCXY=pts.map(function(p,i){return{x:PAD_LEFT+(1==pts.length?0:i/(pts.length-1)*plotW),y:PAD_TOP+(1-(p.debtSC-minV)/(maxV-minV))*plotH,date:p.date,amount:p.debtSC}});
+      // Separate Debt Scaling Mapping if Balance is present so Debt has its own coordinate calculation space if needed, or maps cleanly using current minV/maxV
+      var debtMinV = minV, debtMaxV = maxV;
+      if (lineVisibility.debt && lineVisibility.balance) {
+        var debtValues = pts.map(function(p){return p.debtTotal;}).concat(pts.map(function(p){return p.debtShinhan;})).concat(pts.map(function(p){return p.debtSC;}));
+        var dMin = Math.min.apply(null, debtValues), dMax = Math.max.apply(null, debtValues);
+        var dRange = dMax - dMin || 1;
+        debtMinV = dMin - (0.12 * dRange);
+        debtMaxV = dMax + (0.12 * dRange);
+      }
+
+      currentDebtTotalXY=pts.map(function(p,i){return{x:PAD_LEFT+(1==pts.length?0:i/(pts.length-1)*plotW),y:PAD_TOP+(1-(p.debtTotal-debtMinV)/(debtMaxV-debtMinV))*plotH,date:p.date,amount:p.debtTotal}});
+      currentDebtShinhanXY=pts.map(function(p,i){return{x:PAD_LEFT+(1==pts.length?0:i/(pts.length-1)*plotW),y:PAD_TOP+(1-(p.debtShinhan-debtMinV)/(debtMaxV-debtMinV))*plotH,date:p.date,amount:p.debtShinhan}});
+      currentDebtSCXY=pts.map(function(p,i){return{x:PAD_LEFT+(1==pts.length?0:i/(pts.length-1)*plotW),y:PAD_TOP+(1-(p.debtSC-debtMinV)/(debtMaxV-debtMinV))*plotH,date:p.date,amount:p.debtSC}});
 
       var defsTC = document.createElementNS(ns, "defs");
-      var grad = document.createElementNS(ns, "linearGradient");
-      grad.setAttribute("id","tealFill"), grad.setAttribute("x1","0"), grad.setAttribute("y1","0"), grad.setAttribute("x2","0"), grad.setAttribute("y2","1"), (s1=document.createElementNS(ns,"stop")).setAttribute("offset","0%"), s1.setAttribute("stop-color",TEAL), s1.setAttribute("stop-opacity","0.30"), (s2=document.createElementNS(ns,"stop")).setAttribute("offset","100%"), s2.setAttribute("stop-color",TEAL), s2.setAttribute("stop-opacity","0"), grad.appendChild(s1), grad.appendChild(s2), defsTC.appendChild(grad);
       
+      // Balance Gradient: Darker teal at the bottom, brighter teal at the top
+      var balanceGrad = document.createElementNS(ns, "linearGradient");
+      balanceGrad.setAttribute("id", "balanceGreenGrad");
+      balanceGrad.setAttribute("x1", "0"); balanceGrad.setAttribute("y1", "1");
+      balanceGrad.setAttribute("x2", "0"); balanceGrad.setAttribute("y2", "0");
+      
+      // Bottom (y1="1"): Rich, dark teal with strong opacity
+      var bs1 = document.createElementNS(ns, "stop");
+      bs1.setAttribute("offset", "0%"); 
+      bs1.setAttribute("stop-color", "#042f2e"); // Very dark teal (Teal 950)
+      bs1.setAttribute("stop-opacity", "0.95"); 
+
+      // Top (y2="0"): Vibrant, bright teal fading out cleanly
+      var bs2 = document.createElementNS(ns, "stop");
+      bs2.setAttribute("offset", "100%"); 
+      bs2.setAttribute("stop-color", "#14b8a6"); // Bright teal (Teal 500)
+      bs2.setAttribute("stop-opacity", "0.35"); 
+
+      balanceGrad.appendChild(bs1); 
+      balanceGrad.appendChild(bs2);
+      defsTC.appendChild(balanceGrad);
+
       var tealBlueColumnGrad = document.createElementNS(ns, "linearGradient");
       tealBlueColumnGrad.setAttribute("id", "tealBlueColumnFill");
       tealBlueColumnGrad.setAttribute("x1", "0"); tealBlueColumnGrad.setAttribute("y1", "0");
@@ -2454,28 +2499,92 @@ lineVisibility.invest = false;
       lemonColumnGrad.appendChild(lc1); lemonColumnGrad.appendChild(lc2);
       defsTC.appendChild(lemonColumnGrad);
 
-      var gradPink = document.createElementNS(ns,"linearGradient");gradPink.setAttribute("id","pinkFill"),gradPink.setAttribute("x1","0"),gradPink.setAttribute("y1","0"),gradPink.setAttribute("x2","0"),gradPink.setAttribute("y2","1");var p1=document.createElementNS(ns,"stop");p1.setAttribute("offset","0%"),p1.setAttribute("stop-color","#f472b6"),p1.setAttribute("stop-opacity","0.28");var p2=document.createElementNS(ns,"stop");p2.setAttribute("offset","100%"),p2.setAttribute("stop-color","#f472b6"),p2.setAttribute("stop-opacity","0"),gradPink.appendChild(p1),gradPink.appendChild(p2),defsTC.appendChild(gradPink);
+      var gradPink = document.createElementNS(ns,"linearGradient");
+      gradPink.setAttribute("id","pinkFill");
+      gradPink.setAttribute("x1","0"); gradPink.setAttribute("y1","0");
+      gradPink.setAttribute("x2","0"); gradPink.setAttribute("y2","1");
+      var p1=document.createElementNS(ns,"stop");
+      p1.setAttribute("offset","0%"); p1.setAttribute("stop-color","#f472b6"); p1.setAttribute("stop-opacity","0.28");
+      var p2=document.createElementNS(ns,"stop");
+      p2.setAttribute("offset","100%"), p2.setAttribute("stop-color","#f472b6"); p2.setAttribute("stop-opacity","0");
+      gradPink.appendChild(p1); gradPink.appendChild(p2);
+      defsTC.appendChild(gradPink);
       
-      var edgeMask = document.createElementNS(ns,"mask");edgeMask.setAttribute("id","lineEdgeFadeMask"),edgeMask.setAttribute("maskUnits","userSpaceOnUse");var maskRect = document.createElementNS(ns,"rect");maskRect.setAttribute("x","0"),maskRect.setAttribute("y","0"),maskRect.setAttribute("width","100%"),maskRect.setAttribute("height","100%"),maskRect.setAttribute("fill","url(#edgeFadeGrad)");var s1,s2,edgeGrad=document.createElementNS(ns,"linearGradient");edgeGrad.setAttribute("id","edgeFadeGrad"),edgeGrad.setAttribute("x1","0%"),edgeGrad.setAttribute("y1","0%"),edgeGrad.setAttribute("x2","100%"),edgeGrad.setAttribute("y2","0%"),(s1=document.createElementNS(ns,"stop")).setAttribute("offset","0%"),s1.setAttribute("stop-color","white"),s1.setAttribute("stop-opacity","0.1"),(s2=document.createElementNS(ns,"stop")).setAttribute("offset","10%"),s2.setAttribute("stop-color","white"),s2.setAttribute("stop-opacity","1");var s3=document.createElementNS(ns,"stop");s3.setAttribute("offset","90%"),s3.setAttribute("stop-color","white"),s3.setAttribute("stop-opacity","1");var s4=document.createElementNS(ns,"stop");if(s4.setAttribute("offset","100%"),s4.setAttribute("stop-color","white"),s4.setAttribute("stop-opacity","0.15"),edgeGrad.appendChild(s1),edgeGrad.appendChild(s2),edgeGrad.appendChild(s3),edgeGrad.appendChild(s4),defsTC.appendChild(edgeGrad),edgeMask.appendChild(maskRect),defsTC.appendChild(edgeMask),svg.appendChild(defsTC),lineVisibility.balance){var paths=buildSmoothPathTC(xy);(areaEl=document.createElementNS(ns,"path")).setAttribute("d",paths.area),areaEl.setAttribute("fill","url(#tealFill)"),areaEl.setAttribute("stroke","none"),svg.appendChild(areaEl),(lineEl=document.createElementNS(ns,"path")).setAttribute("d",paths.line),lineEl.setAttribute("fill","none"),lineEl.setAttribute("stroke",TEAL),lineEl.setAttribute("stroke-width","2.5"),lineEl.setAttribute("stroke-linecap","round"),lineEl.setAttribute("stroke-linejoin","round"),svg.appendChild(lineEl)}
+      var edgeMask = document.createElementNS(ns,"mask");
+      edgeMask.setAttribute("id","lineEdgeFadeMask");
+      edgeMask.setAttribute("maskUnits","userSpaceOnUse");
+      var maskRect = document.createElementNS(ns,"rect");
+      maskRect.setAttribute("x","0"); maskRect.setAttribute("y","0");
+      maskRect.setAttribute("width","100%"); maskRect.setAttribute("height","100%");
+      maskRect.setAttribute("fill","url(#edgeFadeGrad)");
       
-      // Render Pastel Gradient Stacked Columns Chart for Invest Mode
+      var edgeGrad = document.createElementNS(ns,"linearGradient");
+      edgeGrad.setAttribute("id","edgeFadeGrad");
+      edgeGrad.setAttribute("x1","0%"); edgeGrad.setAttribute("y1","0%");
+      edgeGrad.setAttribute("x2","100%"); edgeGrad.setAttribute("y2","0%");
+      var s1 = document.createElementNS(ns,"stop"); s1.setAttribute("offset","0%"); s1.setAttribute("stop-color","white"); s1.setAttribute("stop-opacity","0.1");
+      var s2 = document.createElementNS(ns,"stop"); s2.setAttribute("offset","10%"); s2.setAttribute("stop-color","white"); s2.setAttribute("stop-opacity","1");
+      var s3 = document.createElementNS(ns,"stop"); s3.setAttribute("offset","90%"); s3.setAttribute("stop-color","white"); s3.setAttribute("stop-opacity","1");
+      var s4 = document.createElementNS(ns,"stop"); s4.setAttribute("offset","100%"); s4.setAttribute("stop-color","white"); s4.setAttribute("stop-opacity","0.15");
+      edgeGrad.appendChild(s1); edgeGrad.appendChild(s2); edgeGrad.appendChild(s3); edgeGrad.appendChild(s4);
+      defsTC.appendChild(edgeGrad);
+      edgeMask.appendChild(maskRect);
+      defsTC.appendChild(edgeMask);
+      svg.appendChild(defsTC);
+      
+      // 1. Balance Chart Layer with Enhanced Shadow Line Effect
+      if (lineVisibility.balance && !lineVisibility.invest) {
+        var pathD = "M " + xy[0].x.toFixed(1) + " " + xy[0].y.toFixed(1);
+        for (var i = 1; i < xy.length; i++) {
+          pathD += " L " + xy[i].x.toFixed(1) + " " + xy[i].y.toFixed(1);
+        }
+
+        var areaD = pathD + " L " + xy[xy.length - 1].x.toFixed(1) + " " + (VB_H - PAD_BOTTOM) + 
+                    " L " + xy[0].x.toFixed(1) + " " + (VB_H - PAD_BOTTOM) + " Z";
+        
+        var areaPath = document.createElementNS(ns, "path");
+        areaPath.setAttribute("d", areaD);
+        areaPath.setAttribute("fill", "url(#balanceGreenGrad)");
+        svg.appendChild(areaPath);
+
+        // Enhanced Dark Shadow Stroke (Heavier width & higher opacity)
+        var shadowLinePath = document.createElementNS(ns, "path");
+        shadowLinePath.setAttribute("d", pathD);
+        shadowLinePath.setAttribute("fill", "none");
+        shadowLinePath.setAttribute("stroke", "rgba(0, 0, 0, 0.75)"); // Darker/stronger shadow
+        shadowLinePath.setAttribute("stroke-width", "8"); // Thicker stroke to make it pop
+        shadowLinePath.setAttribute("stroke-linecap", "round");
+        shadowLinePath.setAttribute("stroke-linejoin", "round");
+        shadowLinePath.setAttribute("transform", "translate(0, 2)"); // Shift down slightly more
+        svg.appendChild(shadowLinePath);
+
+        // Main Crisp White Line on Top
+        var linePath = document.createElementNS(ns, "path");
+        linePath.setAttribute("d", pathD);
+        linePath.setAttribute("fill", "none");
+        linePath.setAttribute("stroke", "#ffffff");
+        linePath.setAttribute("stroke-width", "2");
+        linePath.setAttribute("stroke-linecap", "round");
+        linePath.setAttribute("stroke-linejoin", "round");
+        svg.appendChild(linePath);
+      }
+      
+      // 2. Invest Mode Layer
       if (lineVisibility.invest && pts.length > 0) {
         var stackGroup = document.createElementNS(ns, "g");
         stackGroup.setAttribute("mask", "url(#lineEdgeFadeMask)");
 
-        // Define pastel color stops for each category {topColor, bottomColor}
         var pastelCategories = [
-          {key: "saving", top: "#f3e8ff", bottom: "#d8b4fe"}, // Bright Pastel Purple
-          {key: "stock", top: "#99f6e4", bottom: "#14b8a6"},  // Bright Pastel Teal
-          {key: "forex", top: "#fef9c3", bottom: "#eab308"},  // Bright Pastel Yellow
-          {key: "crypto", top: "#fef08a", bottom: "#ca8a04"}, // Bright Pastel Amber
-          {key: "gold", top: "#ffedd5", bottom: "#f97316"},   // Bright Pastel Orange
-          {key: "comp", top: "#e0f2fe", bottom: "#38bdf8"}    // Bright Pastel Blue
+          {key: "saving", top: "#f3e8ff", bottom: "#d8b4fe"},
+          {key: "stock", top: "#99f6e4", bottom: "#14b8a6"},
+          {key: "forex", top: "#fef9c3", bottom: "#eab308"},
+          {key: "crypto", top: "#fef08a", bottom: "#ca8a04"},
+          {key: "gold", top: "#ffedd5", bottom: "#f97316"},
+          {key: "comp", top: "#e0f2fe", bottom: "#38bdf8"}
         ];
 
-        // Create and append unique gradient definitions if not already present
         var defs = svg.querySelector("defs") || svg;
-        pastelCategories.forEach(function(cat, idx) {
+        pastelCategories.forEach(function(cat) {
           var gradId = "pastelGrad_" + cat.key;
           if (!document.getElementById(gradId)) {
             var grad = document.createElementNS(ns, "linearGradient");
@@ -2486,12 +2595,12 @@ lineVisibility.invest = false;
             var stop1 = document.createElementNS(ns, "stop");
             stop1.setAttribute("offset", "0%");
             stop1.setAttribute("stop-color", cat.top);
-            stop1.setAttribute("stop-opacity", "1"); // Full brightness at the top
+            stop1.setAttribute("stop-opacity", "1");
 
             var stop2 = document.createElementNS(ns, "stop");
             stop2.setAttribute("offset", "100%");
             stop2.setAttribute("stop-color", cat.bottom);
-            stop2.setAttribute("stop-opacity", "0.75"); // Higher opacity at the bottom
+            stop2.setAttribute("stop-opacity", "0.75");
 
             grad.appendChild(stop1);
             grad.appendChild(stop2);
@@ -2499,9 +2608,7 @@ lineVisibility.invest = false;
           }
         });
 
-        var baselineY = PAD_TOP + (1 - (0 - minV) / (maxV - minV)) * plotH;
         var colWidth = Math.max(6, Math.min(28, (plotW / pts.length) * 0.9));
-        
         var lowerCumulative = pts.map(function() { return 0; });
         var upperCumulative = pts.map(function() { return 0; });
 
@@ -2550,6 +2657,7 @@ lineVisibility.invest = false;
         svg.appendChild(stackGroup);
       }
 
+      // 3. Expense / Income Layer
       if (!lineVisibility.invest) {
         var top3Indices = [];
         if (currentIncomeXY.length > 0) {
@@ -2673,20 +2781,30 @@ lineVisibility.invest = false;
         }
 
         lineVisibility.expense && drawSegmentedExpenseLine(currentExpenseXY,"#f472b6","rgba(244, 114, 182, 0.45)","url(#pinkFill)","pinkGlow",svg,ns,!0);
-        lineVisibility.debt && (drawDebtLine(currentDebtTotalXY,"#ffffff",3,null,"url(#debtTotalFill)"),drawDebtLine(currentDebtShinhanXY,"#60a5fa",2,"6 4","url(#debtShinhanFill)"),drawDebtLine(currentDebtSCXY,"#fbbf24",2,"2 2","url(#debtSCFill)"));
+      }
+      
+      // 4. Debt Layer (Completely Independent Toggle and Scale)
+      if (lineVisibility.debt) {
+        drawDebtLine(currentDebtTotalXY,"#ffffff",3,null,"url(#debtTotalFill)");
+        drawDebtLine(currentDebtShinhanXY,"#60a5fa",2,"6 4","url(#debtShinhanFill)");
+        drawDebtLine(currentDebtSCXY,"#fbbf24",2,"2 2","url(#debtSCFill)");
       }
       
       var lastLabelX=-1e3,prevQuarter=null;
-      for(i=0;i<xy.length;i++){
-        var d=xy[i].date,x=xy[i].x,year=d.getFullYear(),month=d.getMonth(),quarter=Math.floor(month/3),text="",important=!1;
-        if(lineVisibility.invest) {
-          text=monthShort(d),important=!0;
-        } else {
-          0===month?(text=year,important=!0):quarter!==prevQuarter&&(text=monthShort(d),important=!0);
-        }
-        if(important&&!(x-lastLabelX<45)){
-          var lbl=document.createElementNS(ns,"text");
-          lbl.setAttribute("x",x),lbl.setAttribute("y",VB_H-10),lbl.setAttribute("text-anchor","middle"),lbl.setAttribute("font-size",0===month&&!lineVisibility.invest?"12":"11"),lbl.setAttribute("font-weight",0===month&&!lineVisibility.invest?"700":"500"),lbl.setAttribute("fill",0===month&&!lineVisibility.invest?"rgba(255,255,255,0.85)":"rgba(255,255,255,0.45)"),lbl.textContent=text,svg.appendChild(lbl),lastLabelX=x,prevQuarter=quarter;
+      if (!lineVisibility.balance) {
+        for(i=0;i<xy.length;i++){
+          var d=xy[i].date,x=xy[i].x,year=d.getFullYear(),month=d.getMonth(),quarter=Math.floor(month/3),text="",important=!1;
+          
+          if (lineVisibility.invest) {
+            text=monthShort(d),important=!0;
+          } else {
+            0===month?(text=year,important=!0):quarter!==prevQuarter&&(text=monthShort(d),important=!0);
+          }
+
+          if(important&&!(x-lastLabelX<45)){
+            var lbl=document.createElementNS(ns,"text");
+            lbl.setAttribute("x",x),lbl.setAttribute("y",VB_H-10),lbl.setAttribute("text-anchor","middle"),lbl.setAttribute("font-size",0===month&&!lineVisibility.invest?"12":"11"),lbl.setAttribute("font-weight",0===month&&!lineVisibility.invest?"700":"500"),lbl.setAttribute("fill",0===month&&!lineVisibility.invest?"rgba(255,255,255,0.85)":"rgba(255,255,255,0.45)"),lbl.textContent=text,svg.appendChild(lbl),lastLabelX=x,prevQuarter=quarter;
+          }
         }
       }
 
@@ -2696,7 +2814,7 @@ lineVisibility.invest = false;
       
       var gradDebtSC=document.createElementNS(ns,"linearGradient");gradDebtSC.setAttribute("id","debtSCFill"),gradDebtSC.setAttribute("x1","0"),gradDebtSC.setAttribute("y1","0"),gradDebtSC.setAttribute("x2","0"),gradDebtSC.setAttribute("y2","1");var dc1=document.createElementNS(ns,"stop");dc1.setAttribute("offset","0%"),dc1.setAttribute("stop-color","#fbbf24"),dc1.setAttribute("stop-opacity","0.20");var dc2=document.createElementNS(ns,"stop");dc2.setAttribute("offset","100%"),dc2.setAttribute("stop-color","#fbbf24"),dc2.setAttribute("stop-opacity","0"),gradDebtSC.appendChild(dc1),gradDebtSC.appendChild(dc2),defsTC.appendChild(gradDebtSC);
       
-      var hoverLine=document.createElementNS(ns,"line");hoverLine.setAttribute("id","hover-line"),hoverLine.setAttribute("y1",PAD_TOP+lineVisibility.debt?155:85),hoverLine.setAttribute("y2",VB_H-PAD_BOTTOM),hoverLine.setAttribute("stroke","rgba(255,255,255,0.35)"),hoverLine.setAttribute("stroke-width","1.3"),hoverLine.setAttribute("stroke-dasharray","4 4"),svg.appendChild(hoverLine);
+      var hoverLine=document.createElementNS(ns,"line");hoverLine.setAttribute("id","hover-line"),hoverLine.setAttribute("y1",PAD_TOP+(lineVisibility.debt?155:85)),hoverLine.setAttribute("y2",VB_H-PAD_BOTTOM),hoverLine.setAttribute("stroke","rgba(255,255,255,0.35)"),hoverLine.setAttribute("stroke-width","1.3"),hoverLine.setAttribute("stroke-dasharray","4 4"),svg.appendChild(hoverLine);
       var hoverDot=document.createElementNS(ns,"circle");hoverDot.setAttribute("id","hover-dot"),hoverDot.setAttribute("r","5"),hoverDot.setAttribute("fill",TEAL),hoverDot.setAttribute("stroke","#191919"),hoverDot.setAttribute("stroke-width","2"),svg.appendChild(hoverDot);
       var hoverDotExp=document.createElementNS(ns,"circle");hoverDotExp.setAttribute("id","hover-dot-expense"),hoverDotExp.setAttribute("r","5"),hoverDotExp.setAttribute("fill","#f472b6"),hoverDotExp.setAttribute("stroke","#191919"),hoverDotExp.setAttribute("stroke-width","2"),svg.appendChild(hoverDotExp);
       var hoverDotInc=document.createElementNS(ns,"circle");hoverDotInc.setAttribute("id","hover-dot-income"),hoverDotInc.setAttribute("r","5"),hoverDotInc.setAttribute("stroke","#191919"),hoverDotInc.setAttribute("stroke-width","2"),svg.appendChild(hoverDotInc);
@@ -2726,6 +2844,18 @@ lineVisibility.invest = false;
       pill.style.display="inline-flex",pill.className="pill "+(isPos?"pos":"neg"),pill.innerHTML=(isPos?"&#9650;":"&#9660;")+Math.abs(pct).toFixed(1)+"%";
       var existingDirSpan=document.getElementById("pill-direction-text");
       if(existingDirSpan&&existingDirSpan.remove(),window.matchMedia("(min-width: 401px)").matches){var dirSpan=document.createElement("span");dirSpan.id="pill-direction-text",dirSpan.textContent=directionText,dirSpan.className="card-sub-text",dirSpan.style.marginLeft="6px",pill.parentNode.insertBefore(dirSpan,pill.nextSibling)}
+
+      // --- OVERLAY CONTROLS VISIBILITY (Balance Chart Only) ---
+      var balanceOverlayGroup = document.getElementById('balance-overlay-group');
+      var refreshRowEl = document.querySelector('.refresh-row');
+      
+      if (lineVisibility.balance && !lineVisibility.invest) {
+        if (balanceOverlayGroup) balanceOverlayGroup.style.display = "flex";
+        if (refreshRowEl) refreshRowEl.style.display = "flex";
+      } else {
+        if (balanceOverlayGroup) balanceOverlayGroup.style.display = "none";
+        if (refreshRowEl) refreshRowEl.style.display = "none";
+      }
     }
 
       function drawDebtLine(points, color, width, dash, fillUrl) {
@@ -3039,6 +3169,7 @@ lineVisibility.invest = false;
               '<span>' + fmtFullTC(pt.balance) + '</span>' +
               '<span class="tt-delta ' + (deltaIsPos ? "pos" : "neg") + '" style="margin-left:3px;">' + " " + deltaTxt + '</span>' +
               '</div>';
+              
     }
 
     if (lineVisibility.invest) {
@@ -3091,6 +3222,27 @@ var inv = (originalIdx !== -1) ? investSeries[originalIdx] : { saving: 0, stock:
       0 !== currentDebtSCXY[idx].amount && partsTC.push('<span id="tooltip-debt" style="color:#fbbf24;font-weight:600;font-size:11px">' + fmtShort(currentDebtSCXY[idx].amount) + "</span>");
       partsTC.length > 1 && partsTC.push("= " + fmtShort(currentDebtTotalXY[idx].amount));
       partsTC.length && (html += '<div id="tooltip-debt" style="margin-top:6px;font-weight:700;color:#fff;font-size:11px">' + partsTC.join("  ") + "</div>");
+    }
+
+    // Show balance-overlay-group and refresh-row only when Balance chart is active
+      var balanceOverlayGroup = document.getElementById('balance-overlay-group');
+      var refreshRowEl = document.querySelector('.refresh-row');
+      
+      if (lineVisibility.balance && !lineVisibility.invest) {
+        if (balanceOverlayGroup) balanceOverlayGroup.style.display = "flex";
+        if (refreshRowEl) refreshRowEl.style.display = "flex";
+      } else {
+        if (balanceOverlayGroup) balanceOverlayGroup.style.display = "none";
+        if (refreshRowEl) refreshRowEl.style.display = "none";
+      }
+
+    var refreshRowEl = document.querySelector('.refresh-row');
+    if (refreshRowEl) {
+      if (lineVisibility.balance && !lineVisibility.invest) {
+        refreshRowEl.style.display = "flex";
+      } else {
+        refreshRowEl.style.display = "none";
+      }
     }
     
     tooltip.innerHTML = html;
@@ -6919,7 +7071,6 @@ var inv = (originalIdx !== -1) ? investSeries[originalIdx] : { saving: 0, stock:
     document.getElementById('days-until-display').innerText = data.until + " days";
     document.addEventListener("DOMContentLoaded",()=>{const historyBtn=document.getElementById("btn-square-history"),historyPanel=document.getElementById("walletHistorySection"),donutSection=document.getElementById("ca-section-expense"),colRight=document.getElementById("ca-col-right"),colLeft=document.getElementById("ca-col-left"),caWrap=document.getElementById("ca-wrap");let isHistoryActive=window.innerWidth>=401;historyBtn&&historyPanel&&donutSection&&(historyBtn.addEventListener("click",function(e){e.stopPropagation();if(window.innerWidth<401){const isOpen=historyPanel.classList.toggle("is-expanded");this.classList.toggle("is-active",isOpen),isHistoryActive=isOpen,isOpen?(colLeft&&colLeft.insertAdjacentElement("afterend",historyPanel),historyPanel.appendChild(donutSection),historyPanel.offsetHeight,setTimeout(()=>{historyPanel.scrollIntoView({behavior:"smooth",block:"nearest"})},300)):(historyPanel.classList.remove("is-expanded"),setTimeout(()=>{colRight&&colRight.appendChild(donutSection),caWrap&&caWrap.appendChild(historyPanel)},350))}else isHistoryActive=!isHistoryActive,this.classList.toggle("is-active",isHistoryActive),historyPanel.classList.toggle("is-hidden-ipad",!isHistoryActive)}),window.addEventListener("resize",()=>{window.innerWidth<401||(colRight&&!colRight.contains(donutSection)&&colRight.appendChild(donutSection),caWrap&&caWrap.lastElementChild!==historyPanel&&caWrap.appendChild(historyPanel),historyBtn.classList.toggle("is-active",isHistoryActive),historyPanel.classList.toggle("is-hidden-ipad",!isHistoryActive))}))});
     document.addEventListener("click",function(e){const labelBtn=document.getElementById("currentFilterLabel");labelBtn&&labelBtn.contains(e.target)||window.closeAllFilterDropdowns()});
-    document.getElementById("refresh-btn").addEventListener("click",function(){var btn=this;btn.classList.add("spinning"),loadBalanceHistoryTC(),setTimeout(function(){btn.classList.remove("spinning")},650)});
 
     const riskDisplay = document.getElementById('risk-status-display');riskDisplay.innerText = riskStatus;riskDisplay.style.color = riskColor;
     window.addEventListener("load",function(){//positionTabLine();
