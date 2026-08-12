@@ -789,7 +789,7 @@ tbody tr.current-row td{font-weight:600;}
 .tooltip .tt-delta.pos{color:#2dd4bf}
 .tooltip .tt-delta.neg{color:#f87171}
 
-.countdown-text{font-size:11.5px;color:rgba(255,255,255,0.35);font-weight:300;}
+.countdown-text{font-size:11px;color:rgba(255,255,255,0.35);font-weight:300;}
 .last-updated{font-size:11.5px;color:rgba(255,255,255,0.35);font-weight:300;}
 .refresh-btn{border:0px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.6);font-size:11px;font-weight:500;padding:4px 5px;border-radius:50%;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:background 0.15s,color 0.15s;margin-right:5px;font-family:Lexend}
 .refresh-btn:hover{background:rgba(255,255,255,0.09);color:#fff}
@@ -2633,6 +2633,89 @@ to{transform:rotate(360deg)}
       } else {
         if (balanceOverlayGroup) balanceOverlayGroup.style.display = "none";
         if (refreshRowEl) refreshRowEl.style.display = "none";
+      }
+
+      // --- INVEST MODE ITEM & YEARLY SUMMARY LEGEND ON CANVAS (Stacked Rows) ---
+      if (typeof lineVisibility !== 'undefined' && lineVisibility.invest && typeof pts !== 'undefined' && pts.length > 0) {
+        var currYearNum = new Date().getFullYear();
+        var prevYearNum = currYearNum - 1;
+        var sumCurrYear = 0;
+        var sumPrevYear = 0;
+
+        var catTotals = { saving: 0, stock: 0, forex: 0, crypto: 0, gold: 0, comp: 0 };
+
+        if (typeof investSeries !== 'undefined' && investSeries.length) {
+          investSeries.forEach(function(item) {
+            if (item && item.date) {
+              var itemYr = item.date.getFullYear();
+              var itemTotal = item.total || 0;
+              if (itemYr === currYearNum) sumCurrYear += itemTotal;
+              else if (itemYr === prevYearNum) sumPrevYear += itemTotal;
+
+              catTotals.saving += (item.saving || 0);
+              catTotals.stock += (item.stock || 0);
+              catTotals.forex += (item.forex || 0);
+              catTotals.crypto += (item.crypto || 0);
+              catTotals.gold += (item.gold || 0);
+              catTotals.comp += (item.comp || 0);
+            }
+          });
+        }
+
+        var legendItems = [];
+        if (catTotals.saving !== 0) legendItems.push({icon: "bi-piggy-bank", label: "Saving", val: fmtShort(catTotals.saving)});
+        if (catTotals.stock !== 0) legendItems.push({icon: "bi-graph-up-arrow", label: "Stock", val: fmtShort(catTotals.stock)});
+        if (catTotals.forex !== 0) legendItems.push({icon: "bi-currency-exchange", label: "Forex", val: fmtShort(catTotals.forex)});
+        if (catTotals.crypto !== 0) legendItems.push({icon: "bi-coin", label: "Crypto", val: fmtShort(catTotals.crypto)});
+        if (catTotals.gold !== 0) legendItems.push({icon: "bi-gem", label: "Gold", val: fmtShort(catTotals.gold)});
+        if (catTotals.comp !== 0) legendItems.push({icon: "bi-briefcase", label: "Comp", val: fmtShort(catTotals.comp)});
+
+        if (sumPrevYear !== 0) legendItems.push({icon: "bi-calendar-event", label: prevYearNum, val: fmtShort(sumPrevYear)});
+        if (sumCurrYear !== 0) legendItems.push({icon: "bi-calendar-check", label: currYearNum, val: fmtShort(sumCurrYear)});
+
+        if (legendItems.length > 0) {
+          var legendGroup = document.createElementNS(ns, "g");
+          legendGroup.setAttribute("mask", "url(#lineEdgeFadeMask)");
+
+          var boxWidth = 165;
+          var rowHeight = 30;
+          var boxHeight = legendItems.length * rowHeight + 10;
+
+          var offsetX = PAD_LEFT + 20; // Moved more to the right
+          var offsetY = PAD_TOP + 35;  // Moved lower down
+
+          var legBg = document.createElementNS(ns, "rect");
+          legBg.setAttribute("x", offsetX);
+          legBg.setAttribute("y", offsetY);
+          legBg.setAttribute("width", boxWidth);
+          legBg.setAttribute("height", boxHeight);
+          legBg.setAttribute("rx", "6");
+          legBg.setAttribute("fill", "transparent");
+          legBg.setAttribute("opacity", "0.9");
+          legBg.setAttribute("stroke", "rgba(255,255,255,0.15)");
+          legBg.setAttribute("stroke-width", "1");
+          legendGroup.appendChild(legBg);
+
+          var foreignObj = document.createElementNS(ns, "foreignObject");
+          foreignObj.setAttribute("x", offsetX + 8);
+          foreignObj.setAttribute("y", offsetY + 5);
+          foreignObj.setAttribute("width", boxWidth - 10);
+          foreignObj.setAttribute("height", boxHeight + 20);
+
+          var containerDiv = document.createElement("div");
+          containerDiv.style.cssText = "display: flex; flex-direction: column; gap: 4px; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 600; color: #94a3b8;";
+
+          legendItems.forEach(function(item) {
+            var itemRow = document.createElement("div");
+            itemRow.style.cssText = "display: flex; align-items: center; justify-content: space-between;";
+            itemRow.innerHTML = '<span style="display: flex; align-items: center; gap: 6px;"><i class="bi ' + item.icon + '" style="font-size: 20px!important; opacity: 0.8;"></i> ' + item.label + ':</span> <span>' + item.val + '</span>';
+            containerDiv.appendChild(itemRow);
+          });
+
+          foreignObj.appendChild(containerDiv);
+          legendGroup.appendChild(foreignObj);
+          svg.appendChild(legendGroup);
+        }
       }
     }
 
