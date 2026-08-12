@@ -2635,7 +2635,7 @@ to{transform:rotate(360deg)}
         if (refreshRowEl) refreshRowEl.style.display = "none";
       }
 
-      // --- INVEST MODE ITEM & YEARLY SUMMARY LEGEND ON CANVAS (Stacked Rows) ---
+      // --- INVEST MODE ITEM & YEARLY SUMMARY LEGEND ON CANVAS (With Divider) ---
       if (typeof lineVisibility !== 'undefined' && lineVisibility.invest && typeof pts !== 'undefined' && pts.length > 0) {
         var currYearNum = new Date().getFullYear();
         var prevYearNum = currYearNum - 1;
@@ -2662,27 +2662,30 @@ to{transform:rotate(360deg)}
           });
         }
 
-        var legendItems = [];
-        if (catTotals.saving !== 0) legendItems.push({icon: "bi-piggy-bank", label: "Saving", val: fmtShort(catTotals.saving)});
-        if (catTotals.stock !== 0) legendItems.push({icon: "bi-graph-up-arrow", label: "Stock", val: fmtShort(catTotals.stock)});
-        if (catTotals.forex !== 0) legendItems.push({icon: "bi-currency-exchange", label: "Forex", val: fmtShort(catTotals.forex)});
-        if (catTotals.crypto !== 0) legendItems.push({icon: "bi-coin", label: "Crypto", val: fmtShort(catTotals.crypto)});
-        if (catTotals.gold !== 0) legendItems.push({icon: "bi-gem", label: "Gold", val: fmtShort(catTotals.gold)});
-        if (catTotals.comp !== 0) legendItems.push({icon: "bi-briefcase", label: "Comp", val: fmtShort(catTotals.comp)});
+        var assetItems = [];
+        if (catTotals.saving !== 0) assetItems.push({icon: "bi-piggy-bank", label: "Saving", val: fmtShort(catTotals.saving), color: "#d8b4fe"});
+        if (catTotals.stock !== 0) assetItems.push({icon: "bi-graph-up-arrow", label: "Stock", val: fmtShort(catTotals.stock), color: "#14b8a6"});
+        if (catTotals.forex !== 0) assetItems.push({icon: "bi-currency-exchange", label: "Forex", val: fmtShort(catTotals.forex), color: "#eab308"});
+        if (catTotals.crypto !== 0) assetItems.push({icon: "bi-coin", label: "Crypto", val: fmtShort(catTotals.crypto), color: "#ca8a04"});
+        if (catTotals.gold !== 0) assetItems.push({icon: "bi-gem", label: "Gold", val: fmtShort(catTotals.gold), color: "#f97316"});
+        if (catTotals.comp !== 0) assetItems.push({icon: "bi-briefcase", label: "Comp", val: fmtShort(catTotals.comp), color: "#38bdf8"});
 
-        if (sumPrevYear !== 0) legendItems.push({icon: "bi-calendar-event", label: prevYearNum, val: fmtShort(sumPrevYear)});
-        if (sumCurrYear !== 0) legendItems.push({icon: "bi-calendar-check", label: currYearNum, val: fmtShort(sumCurrYear)});
+        var yearItems = [];
+        if (sumPrevYear !== 0) yearItems.push({icon: "bi-calendar-event", label: prevYearNum, val: fmtShort(sumPrevYear), color: "#94a3b8"});
+        if (sumCurrYear !== 0) yearItems.push({icon: "bi-calendar-check", label: currYearNum, val: fmtShort(sumCurrYear), color: "#94a3b8"});
 
-        if (legendItems.length > 0) {
+        var totalRows = assetItems.length + yearItems.length + (assetItems.length > 0 && yearItems.length > 0 ? 1 : 0);
+
+        if (totalRows > 0) {
           var legendGroup = document.createElementNS(ns, "g");
           legendGroup.setAttribute("mask", "url(#lineEdgeFadeMask)");
 
           var boxWidth = 165;
           var rowHeight = 30;
-          var boxHeight = legendItems.length * rowHeight + 10;
-
-          var offsetX = PAD_LEFT + 20; // Moved more to the right
-          var offsetY = PAD_TOP + 35;  // Moved lower down
+          var boxHeight = totalRows * rowHeight + 16;
+          
+          var offsetX = PAD_LEFT + 20; 
+          var offsetY = PAD_TOP + 35;  
 
           var legBg = document.createElementNS(ns, "rect");
           legBg.setAttribute("x", offsetX);
@@ -2692,23 +2695,34 @@ to{transform:rotate(360deg)}
           legBg.setAttribute("rx", "6");
           legBg.setAttribute("fill", "transparent");
           legBg.setAttribute("opacity", "0.9");
-          legBg.setAttribute("stroke", "rgba(255,255,255,0.15)");
-          legBg.setAttribute("stroke-width", "1");
           legendGroup.appendChild(legBg);
 
           var foreignObj = document.createElementNS(ns, "foreignObject");
           foreignObj.setAttribute("x", offsetX + 8);
-          foreignObj.setAttribute("y", offsetY + 5);
-          foreignObj.setAttribute("width", boxWidth - 10);
-          foreignObj.setAttribute("height", boxHeight + 20);
+          foreignObj.setAttribute("y", offsetY + 8);
+          foreignObj.setAttribute("width", boxWidth - 16);
+          foreignObj.setAttribute("height", boxHeight - 12);
 
           var containerDiv = document.createElement("div");
-          containerDiv.style.cssText = "display: flex; flex-direction: column; gap: 4px; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 600; color: #94a3b8;";
+          containerDiv.style.cssText = "display: flex; flex-direction: column; gap: 6px; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 600;";
 
-          legendItems.forEach(function(item) {
+          assetItems.forEach(function(item) {
             var itemRow = document.createElement("div");
-            itemRow.style.cssText = "display: flex; align-items: center; justify-content: space-between;";
-            itemRow.innerHTML = '<span style="display: flex; align-items: center; gap: 6px;"><i class="bi ' + item.icon + '" style="font-size: 20px!important; opacity: 0.8;"></i> ' + item.label + ':</span> <span>' + item.val + '</span>';
+            itemRow.style.cssText = "display: flex; align-items: center; justify-content: space-between; color: " + item.color + "; height: 24px;";
+            itemRow.innerHTML = '<span style="display: flex; align-items: center; gap: 6px;"><i class="bi ' + item.icon + '" style="font-size: 20px!important; opacity: 0.9;"></i> ' + item.label + ':</span> <span>' + item.val + '</span>';
+            containerDiv.appendChild(itemRow);
+          });
+
+          if (assetItems.length > 0 && yearItems.length > 0) {
+            var divider = document.createElement("div");
+            divider.style.cssText = "height: 1px; background: rgba(255,255,255,0.2); margin: 4px 0;";
+            containerDiv.appendChild(divider);
+          }
+
+          yearItems.forEach(function(item) {
+            var itemRow = document.createElement("div");
+            itemRow.style.cssText = "display: flex; align-items: center; justify-content: space-between; color: " + item.color + "; height: 24px;";
+            itemRow.innerHTML = '<span style="display: flex; align-items: center; gap: 6px;"><i class="bi ' + item.icon + '" style="font-size: 20px!important; opacity: 0.9;"></i> ' + item.label + ':</span> <span>' + item.val + '</span>';
             containerDiv.appendChild(itemRow);
           });
 
