@@ -721,7 +721,7 @@ tbody tr.current-row td{font-weight:600;}
 .hero-balance-v2{font-size:16px!important;color:#fff!important;margin-bottom:3px;font-weight:700;}
 .hero-amount{font-size:16px;font-weight:600;margin-bottom:3px;padding-right:1px}
 .hero-amount-v2{font-size:14px;font-weight:600;margin-bottom:3px;padding-right:1px}
-#balance-val{font-size:32px;letter-spacing: -2.5px;}.badge-pill{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:12px;font-weight:700}.badge-teal{background:var(--teal-bg);color:var(--teal-primary)}.badge-pink{background:var(--pink-bg);color:var(--pink-primary)}.chart-container{width:100%;height:80px;margin-top:10px}.metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;border-top:0 solid var(--border-color)}
+#balance-val{font-size:32px;letter-spacing: -2.5px;margin-right:10px;}.badge-pill{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:12px;font-weight:700}.badge-teal{background:var(--teal-bg);color:var(--teal-primary)}.badge-pink{background:var(--pink-bg);color:var(--pink-primary)}.chart-container{width:100%;height:80px;margin-top:10px}.metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;border-top:0 solid var(--border-color)}
 .metric-card{background:rgba(255,255,255,.02);border-radius:16px;padding:12px;text-align:center;}
 .metric-card.nav-card{  background: 
     linear-gradient(135deg, rgba(30, 41, 59, 0.01) 0%, rgba(15, 23, 42, 0.1) 100%),
@@ -763,9 +763,9 @@ tbody tr.current-row td{font-weight:600;}
 }
 .balance-group{display:inline-block}
 .card-balance-usd{width:auto;text-align:left;padding-right:45px;font-size:13px;color:rgba(255,255,255,.45)}
-.goal-ring-wrap{position: relative;width:34px;height:34px;bottom:3px;flex-shrink:0}
+.goal-ring-wrap{position: relative;width:34px;height:34px;bottom:7px;flex-shrink:0;}
 .goal-ring-wrap svg{width:100%;height:100%;}
-.usd-row{display:flex;justify-content:flex-end;align-items:center;gap:5px;width:100%}
+.usd-row,.countdown-text{display:flex;justify-content:flex-end;align-items:center;gap:5px;width:100%}
 .usd-flag-wrap{width:15px;height:15px;flex-shrink:0;border-radius:50%;margin-top:-5px}
 .usd-flag-wrap img{width:100%;height:100%;display:block}
 .card-sub-row{display:flex;background:transparent;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
@@ -789,7 +789,7 @@ tbody tr.current-row td{font-weight:600;}
 .tooltip .tt-delta.pos{color:#2dd4bf}
 .tooltip .tt-delta.neg{color:#f87171}
 
-.countdown-text{font-size:11.5px;color:rgba(255,255,255,0.35);white-space:nowrap;font-weight:300;text-align:right;margin-bottom:-5px!important;}
+.countdown-text{font-size:11.5px;color:rgba(255,255,255,0.35);font-weight:300;}
 .last-updated{font-size:11.5px;color:rgba(255,255,255,0.35);font-weight:300;}
 .refresh-btn{border:0px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.6);font-size:11px;font-weight:500;padding:4px 5px;border-radius:50%;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:background 0.15s,color 0.15s;margin-right:5px;font-family:Lexend}
 .refresh-btn:hover{background:rgba(255,255,255,0.09);color:#fff}
@@ -1179,15 +1179,17 @@ to{transform:rotate(360deg)}
         <div class="usd-flag-wrap" id="usd-flag-wrap"><img src="https://github.com/tinsntp/investment/blob/main/icon/usdflag.png?raw=true"></div>
         <div class="card-balance-usd" id="balance-usd"></div>
       </div>
-      <div class="balance-toggle-area" id="balance-toggle-area" style="display:flex; align-items:center; gap:10px;">
-        <div class="card-balance" id="balance-val">&#x2014;</div>
-        <div class="goal-ring-wrap" id="goal-ring-wrap">
+      <div class="balance-toggle-area" id="balance-toggle-area" style="display:flex; align-items:center; justify-content:space-between; width:100%;">
+        <div style="display:flex; flex-direction:column;">
+          <div class="card-balance" id="balance-val">&#x2014;</div>
+          <div class="countdown-text" id="countdown-text" style="opacity: 0.7; margin-top: 2px;padding-right:10px;"></div>
+        </div>
+        <div class="goal-ring-wrap" id="goal-ring-wrap" style="flex-shrink:0;">
           <svg id="goal-ring-svg" viewBox="0 0 80 80"></svg>
         </div>
+
       </div>
-      <span class="countdown-text" id="countdown-text"></span>
     </div>
-    
   </div>
 </div>
 
@@ -2056,240 +2058,7 @@ to{transform:rotate(360deg)}
 
     function fmtUSDTC(v){return"$"+(v/USD_RATE).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}const today=new Date,date=today.toLocaleDateString("ja-JP",{month:"long",day:"numeric"}),weekday=today.toLocaleDateString("ja-JP",{weekday:"short"});function csvRowTopChart(line){for(var cols=[],cur="",inQ=!1,i=0;i<line.length;i++){var c=line[i];'"'===c?inQ=!inQ:","!==c||inQ?cur+=c:(cols.push(cur),cur="")}return cols.push(cur),cols.map(function(s){return s.replace(/^"|"$/g,"").trim()})}function parseAmtTopChart(raw){if(!raw)return NaN;var s=raw.trim(),neg=!1;if("("===s.charAt(0)&&")"===s.charAt(s.length-1)&&(neg=!0,s=s.slice(1,-1)),""===(s=s.replace(/[^\d,.\-]/g,""))||"-"===s)return NaN;"-"===s.charAt(0)&&(neg=!0,s=s.slice(1));var lastComma=s.lastIndexOf(","),lastDot=s.lastIndexOf(".");if(lastComma>-1&&lastDot>-1)s=lastComma>lastDot?s.replace(/\./g,"").replace(",","."):s.replace(/,/g,"");else if(lastComma>-1){var afterComma=s.length-lastComma-1,commaCount=(s.match(/,/g)||[]).length;s=1===commaCount&&afterComma<=2?s.replace(",","."):s.replace(/,/g,"")}else if(lastDot>-1){var afterDot=s.length-lastDot-1;1===(s.match(/\./g)||[]).length&&afterDot<=2||(s=s.replace(/\./g,""))}var v=parseFloat(s);return isNaN(v)?NaN:neg?-v:v}function parseSheetDateTopChart(raw){if(!raw)return null;var s=raw.trim(),iso=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);if(iso)return new Date(parseInt(iso[1]),parseInt(iso[2])-1,parseInt(iso[3]));var dmy=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);if(dmy){var a=parseInt(dmy[1]),b=parseInt(dmy[2]),y=parseInt(dmy[3]),day=a,month=b;return a<=12&&b>12&&(day=b,month=a),new Date(y,month-1,day)}var d=new Date(s);return isNaN(d.getTime())?null:d}function parseMonthYear(raw){if(!raw)return null;var m=raw.trim().match(/^(\d{1,2})[\/\-](\d{2,4})$/);if(!m)return null;var month=parseInt(m[1])-1;if(month<0||month>11)return null;var yearPart=m[2],year=yearPart.length<=2?2e3+parseInt(yearPart):parseInt(yearPart);return new Date(year,month,1)}function fmtFullTC(v){return(v<0?"−":"")+"₫"+Math.round(Math.abs(v)).toLocaleString("en-US")}function fmtAxis(v){var a=Math.abs(v),sign=v<0?"-":"";return a>=1e9?sign+(a/1e9).toFixed(1)+"B":a>=1e6?sign+(a/1e6).toFixed(1)+"M":a>=1e3?sign+Math.round(a/1e3)+"K":sign+Math.round(a)}function monthShort(d){return["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][d.getMonth()]}function monthYearLabel(d){return monthShort(d)+" "+d.getFullYear()}function updateGoalRing(balance){var svg=document.getElementById("goal-ring-svg");if(svg){svg.innerHTML="";var ns="http://www.w3.org/2000/svg",pct=goalTarget>0?balance/goalTarget*100:0,clampedPct=Math.max(0,Math.min(100,pct)),circ=2*Math.PI*32,dash=clampedPct/100*circ,gap=circ-dash,color=pct>=100?"#fbbf24":TEAL,bg=document.createElementNS(ns,"circle");bg.setAttribute("cx",40),bg.setAttribute("cy",40),bg.setAttribute("r",32),bg.setAttribute("fill","none"),bg.setAttribute("stroke","rgba(255,255,255,0.1)"),bg.setAttribute("stroke-width",9),svg.appendChild(bg);var fg=document.createElementNS(ns,"circle");fg.setAttribute("cx",40),fg.setAttribute("cy",40),fg.setAttribute("r",32),fg.setAttribute("fill","none"),fg.setAttribute("stroke",color),fg.setAttribute("stroke-width",9),fg.setAttribute("stroke-linecap","round"),fg.setAttribute("stroke-dasharray",dash+" "+gap),fg.setAttribute("stroke-dashoffset","0"),fg.setAttribute("transform","rotate(-90 40 40)"),svg.appendChild(fg);var txt=document.createElementNS(ns,"text");txt.setAttribute("x",40),txt.setAttribute("y",40),txt.setAttribute("text-anchor","middle"),txt.setAttribute("dominant-baseline","middle"),txt.setAttribute("fill","#fff"),txt.setAttribute("font-size","24"),txt.setAttribute("font-weight","700"),txt.textContent=Math.round(pct)+"%",svg.appendChild(txt)}}function diffYMD(from,to){var years=to.getFullYear()-from.getFullYear(),months=to.getMonth()-from.getMonth(),days=to.getDate()-from.getDate();return days<0&&(months--,days+=new Date(to.getFullYear(),to.getMonth(),0).getDate()),months<0&&(years--,months+=12),{years,months,days}}document.getElementById("today-jp").textContent=`${date} (${weekday})`;
     function updateCountdown(){var el=document.getElementById("countdown-text");if(el&&fullSeries.length){var targetDate=fullSeries[fullSeries.length-1].date,now=new Date;if(targetDate<=now)el.textContent="";else{var diff=diffYMD(now,targetDate),partsTC=[];diff.years>0&&partsTC.push(diff.years+(1===diff.years?" year":" years")),diff.months>0&&partsTC.push(diff.months+(1===diff.months?" month":" months")),window.innerWidth>400&&window.innerWidth<=1024&&partsTC.push(diff.days+(1===diff.days?" day":" days")),el.textContent=partsTC.join(" ")+" left"}}}
-
-     function loadBalanceHistoryTC() {
-   Promise.all([fetch(TOP_CHART_CSV_URL + "&t=" + Date.now(), {
-     cache: "no-store"
-   }).then(function(r) {
-     if (!r.ok) throw new Error("HTTP " + r.status);
-     return r.text()
-   }), fetch(DEBT_CSV_URL + "&t=" + Date.now(), {
-     cache: "no-store"
-   }).then(r => {
-     if (!r.ok) throw new Error("HTTP " + r.status);
-     return r.text()
-   }), fetch(GOAL_CSV_URL + "&t=" + Date.now(), {
-     cache: "no-store"
-   }).then(r => {
-     if (!r.ok) throw new Error("HTTP " + r.status);
-     return r.text()
-   })]).then(function(results) {
-     var balanceText = results[0],
-       debtText = results[1],
-       goalText = results[2],
-       rows = balanceText.split("\n").filter(function(l) {
-         return l.trim()
-       }).map(csvRowTopChart),
-       excluded = {};
-     rows.forEach(function(cols) {
-       var v = (cols[8] || "").trim();
-       v && (excluded[v.toLowerCase()] = !0)
-     });
-
-     // 1. Find the latest date present in the dataset
-     var maxDate = new Date(2026, 1, 1); // Default minimum start
-     rows.forEach(function(cols) {
-       var dateStr = cols[10] || "";
-       if (dateStr) {
-         var d = parseSheetDateTopChart(dateStr);
-         if (d && d > maxDate) maxDate = new Date(d);
-       }
-       var qStr = cols[16] || "";
-       if (qStr) {
-         var qd = parseMonthYear(qStr);
-         if (qd && qd > maxDate) maxDate = new Date(qd);
-       }
-     });
-
-     // 2. Invest Timeline: starts from March 2026 (Month index 2) to include Mar & Apr
-     var investStartMonth = new Date(2026, 2, 1); // March 2026
-     var endMonth = new Date(maxDate.getFullYear(), maxDate.getMonth(), 1);
-     
-     var investKeys = [];
-     var monthObjs = {};
-     var curr = new Date(investStartMonth);
-     while (curr <= endMonth) {
-       var k = curr.getFullYear() + "-" + curr.getMonth();
-       investKeys.push(k);
-       monthObjs[k] = new Date(curr);
-       curr.setMonth(curr.getMonth() + 1);
-     }
-
-     // 3. Balance/Expense Timeline: starts from May 2026 (Month index 4)
-     var balanceStartMonth = new Date(2026, 4, 1); // May 2026
-     var balanceKeys = investKeys.filter(function(k) {
-       return monthObjs[k] >= balanceStartMonth;
-     });
-
-     var byMonth = {};
-     investKeys.forEach(function(k) { byMonth[k] = 0; });
-
-     rows.forEach(function(cols) {
-       var dateStr = cols[10] || "",
-         group = (cols[11] || "").trim(),
-         amt = parseAmtTopChart(cols[12] || "");
-       if (dateStr) {
-         var d = parseSheetDateTopChart(dateStr);
-         if (d && !(isNaN(amt) || group && excluded[group.toLowerCase()])) {
-           var key = d.getFullYear() + "-" + d.getMonth();
-           byMonth[key] !== undefined && (byMonth[key] += amt);
-         }
-       }
-     });
-
-     rows.forEach(function(cols) {
-       var qStr = cols[16] || "";
-       if (qStr) {
-         var qd = parseMonthYear(qStr);
-         if (qd) {
-           var key = qd.getFullYear() + "-" + qd.getMonth(),
-             rAmt = parseAmtTopChart(cols[17] || "");
-           isNaN(rAmt) || (byMonth[key] !== undefined && (byMonth[key] += rAmt));
-         }
-       }
-     });
-
-     var byMonthSaving = {}, byMonthStock = {}, byMonthForex = {}, byMonthCrypto = {}, byMonthGold = {}, byMonthComp = {};
-     var byMonthExpense = {}, byMonthIncome = {};
-
-     rows.forEach(function(cols) {
-       var qStr = cols[16] || ""; // Column Q
-       if (qStr) {
-         var qd = parseMonthYear(qStr);
-         if (qd) {
-           var key = qd.getFullYear() + "-" + qd.getMonth();
-           
-           var savingAmt = parseAmtTopChart(cols[24] || ""); // Column Y
-           var stockAmt  = parseAmtTopChart(cols[25] || ""); // Column Z
-           var forexAmt  = parseAmtTopChart(cols[26] || ""); // Column AA
-           var cryptoAmt = parseAmtTopChart(cols[27] || ""); // Column AB
-           var goldAmt   = parseAmtTopChart(cols[28] || ""); // Column AC
-           var compAmt   = parseAmtTopChart(cols[21] || ""); // Column V (Comp)
-           var rAmt      = parseAmtTopChart(cols[17] || ""); // Expense
-           var sAmt      = parseAmtTopChart(cols[18] || ""); // Income
-
-           isNaN(savingAmt) || (byMonthSaving[key] = (byMonthSaving[key] || 0) + savingAmt);
-           isNaN(stockAmt)  || (byMonthStock[key]  = (byMonthStock[key]  || 0) + stockAmt);
-           isNaN(forexAmt)  || (byMonthForex[key]  = (byMonthForex[key]  || 0) + forexAmt); 
-           isNaN(cryptoAmt) || (byMonthCrypto[key] = (byMonthCrypto[key] || 0) + cryptoAmt);
-           isNaN(goldAmt)   || (byMonthGold[key]   = (byMonthGold[key]   || 0) + goldAmt);
-           isNaN(compAmt)   || (byMonthComp[key]   = (byMonthComp[key]   || 0) + compAmt);
-           isNaN(rAmt)      || (byMonthExpense[key] = (byMonthExpense[key] || 0) + rAmt);
-           isNaN(sAmt)      || (byMonthIncome[key]  = (byMonthIncome[key]  || 0) + sAmt);
-         }
-       }
-     });
-
-     // Invest series uses the full range starting from March 2026
-     investSeries = investKeys && investKeys.length ? investKeys.map(function(k) {
-       var saving = byMonthSaving[k] || 0;
-       var stock = byMonthStock[k] || 0;
-       var forex = byMonthForex[k] || 0;
-       var crypto = byMonthCrypto[k] || 0;
-       var gold = byMonthGold[k] || 0;
-       var comp = byMonthComp[k] || 0;
-       return {
-         date: monthObjs[k],
-         saving: saving,
-         stock: stock,
-         forex: forex,
-         crypto: crypto,
-         gold: gold,
-         comp: comp,
-         total: saving + stock + forex + crypto + gold + comp
-       };
-     }) : [];
-
-     // Balance, Expense, Income use balanceKeys starting from May 2026
-     var running = 0;
-     fullSeries = balanceKeys.map(function(k) {
-       var mVal = byMonth[k] || 0;
-       running += mVal;
-       return {
-         date: monthObjs[k],
-         balance: running,
-         delta: mVal
-       };
-     });
-
-     expenseSeries = balanceKeys.map(function(k) {
-       return {
-         date: monthObjs[k],
-         amount: Math.abs(byMonthExpense[k] || 0)
-       };
-     });
-
-     lastExpenseIndex = -1;
-     for (let i = expenseSeries.length - 1; i >= 0; i--)
-       if (expenseSeries[i].amount > 0) {
-         lastExpenseIndex = i;
-         break
-       }
-
-     incomeSeries = balanceKeys.map(function(k) {
-       return {
-         date: monthObjs[k],
-         amount: Math.abs(byMonthIncome[k] || 0)
-       };
-     });
-
-     var debtRows = debtText.split("\n").filter(function(l) {
-         return l.trim()
-       }).map(csvRowTopChart);
-     debtRows = debtRows.slice(1);
-     var debtByMonth = {};
-     debtRows.forEach(function(cols) {
-       var m = cols[0].trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-       if (m) {
-         var month = parseInt(m[1], 10),
-           day = parseInt(m[2], 10),
-           year = parseInt(m[3], 10),
-           d = new Date(year, month - 1, day);
-         if (d) {
-           var key = d.getFullYear() + "-" + d.getMonth(),
-             shinhan = parseAmtTopChart(cols[2]),
-             sc = parseAmtTopChart(cols[1]);
-           isNaN(shinhan) && (shinhan = 0), isNaN(sc) && (sc = 0), debtByMonth[key] = {
-             sc,
-             shinhan
-           }
-         }
-       }
-     });
-
-     debtSeries = balanceKeys.map(function(k) {
-       var debt = debtByMonth[k] || {
-         sc: 0,
-         shinhan: 0
-       };
-       return {
-         date: monthObjs[k],
-         total: debt.shinhan + debt.sc,
-         sc: debt.sc,
-         shinhan: debt.shinhan
-       }
-     });
-
-     var goalRows = goalText.split("\n").filter(function(l) {
-         return l.trim()
-       }).map(csvRowTopChart),
-       b2raw = goalRows[1] ? goalRows[1][1] : "",
-       b3raw = goalRows[2] ? goalRows[2][1] : "",
-       b2val = parseAmtTopChart(b2raw || ""),
-       b3val = parseAmtTopChart(b3raw || "");
-     isNaN(b2val) && (b2val = 0), isNaN(b3val) && (b3val = 0), monthlyExpenseGoal = b2val, goalTarget = 12 * monthlyExpenseGoal * 15, document.getElementById("loading-msg-tc").style.display = "none", document.getElementById("chart-wrap").style.display = "block", renderChartTC(currentRangeTC);
-     var now2 = new Date,
-       hh = String(now2.getHours()).padStart(2, "0"),
-       mm = String(now2.getMinutes()).padStart(2, "0"),
-       ss = String(now2.getSeconds()).padStart(2, "0")
-   }).catch(function(err) {
-     document.getElementById("loading-msg-tc").textContent = "Error: " + err.message
-   }), document.querySelector('.range-btn[data-range="today"]').scrollIntoView({
-     behavior: "auto",
-     inline: "center",
-     block: "nearest"
-   })
- }
+    function loadBalanceHistoryTC(){Promise.all([fetch(TOP_CHART_CSV_URL+"&t="+Date.now(),{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.text()}),fetch(DEBT_CSV_URL+"&t="+Date.now(),{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error("HTTP "+r.status);return r.text()}),fetch(GOAL_CSV_URL+"&t="+Date.now(),{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error("HTTP "+r.status);return r.text()})]).then(function(results){var balanceText=results[0],debtText=results[1],goalText=results[2],rows=balanceText.split("\n").filter(function(l){return l.trim()}).map(csvRowTopChart),excluded={};rows.forEach(function(cols){var v=(cols[8]||"").trim();v&&(excluded[v.toLowerCase()]=!0)});var maxDate=new Date(2026,1,1);rows.forEach(function(cols){var dateStr=cols[10]||"";if(dateStr){var d=parseSheetDateTopChart(dateStr);d&&d>maxDate&&(maxDate=new Date(d))}var qStr=cols[16]||"";if(qStr){var qd=parseMonthYear(qStr);qd&&qd>maxDate&&(maxDate=new Date(qd))}});for(var investStartMonth=new Date(2026,2,1),endMonth=new Date(maxDate.getFullYear(),maxDate.getMonth(),1),investKeys=[],monthObjs={},curr=new Date(investStartMonth);curr<=endMonth;){var k=curr.getFullYear()+"-"+curr.getMonth();investKeys.push(k),monthObjs[k]=new Date(curr),curr.setMonth(curr.getMonth()+1)}var balanceStartMonth=new Date(2026,4,1),balanceKeys=investKeys.filter(function(k){return monthObjs[k]>=balanceStartMonth}),byMonth={};investKeys.forEach(function(k){byMonth[k]=0}),rows.forEach(function(cols){var dateStr=cols[10]||"",group=(cols[11]||"").trim(),amt=parseAmtTopChart(cols[12]||"");if(dateStr){var d=parseSheetDateTopChart(dateStr);if(d&&!(isNaN(amt)||group&&excluded[group.toLowerCase()])){var key=d.getFullYear()+"-"+d.getMonth();void 0!==byMonth[key]&&(byMonth[key]+=amt)}}}),rows.forEach(function(cols){var qStr=cols[16]||"";if(qStr){var qd=parseMonthYear(qStr);if(qd){var key=qd.getFullYear()+"-"+qd.getMonth(),rAmt=parseAmtTopChart(cols[17]||"");isNaN(rAmt)||void 0!==byMonth[key]&&(byMonth[key]+=rAmt)}}});var byMonthSaving={},byMonthStock={},byMonthForex={},byMonthCrypto={},byMonthGold={},byMonthComp={},byMonthExpense={},byMonthIncome={};rows.forEach(function(cols){var qStr=cols[16]||"";if(qStr){var qd=parseMonthYear(qStr);if(qd){var key=qd.getFullYear()+"-"+qd.getMonth(),savingAmt=parseAmtTopChart(cols[24]||""),stockAmt=parseAmtTopChart(cols[25]||""),forexAmt=parseAmtTopChart(cols[26]||""),cryptoAmt=parseAmtTopChart(cols[27]||""),goldAmt=parseAmtTopChart(cols[28]||""),compAmt=parseAmtTopChart(cols[21]||""),rAmt=parseAmtTopChart(cols[17]||""),sAmt=parseAmtTopChart(cols[18]||"");isNaN(savingAmt)||(byMonthSaving[key]=(byMonthSaving[key]||0)+savingAmt),isNaN(stockAmt)||(byMonthStock[key]=(byMonthStock[key]||0)+stockAmt),isNaN(forexAmt)||(byMonthForex[key]=(byMonthForex[key]||0)+forexAmt),isNaN(cryptoAmt)||(byMonthCrypto[key]=(byMonthCrypto[key]||0)+cryptoAmt),isNaN(goldAmt)||(byMonthGold[key]=(byMonthGold[key]||0)+goldAmt),isNaN(compAmt)||(byMonthComp[key]=(byMonthComp[key]||0)+compAmt),isNaN(rAmt)||(byMonthExpense[key]=(byMonthExpense[key]||0)+rAmt),isNaN(sAmt)||(byMonthIncome[key]=(byMonthIncome[key]||0)+sAmt)}}}),investSeries=investKeys&&investKeys.length?investKeys.map(function(k){var saving=byMonthSaving[k]||0,stock=byMonthStock[k]||0,forex=byMonthForex[k]||0,crypto=byMonthCrypto[k]||0,gold=byMonthGold[k]||0,comp=byMonthComp[k]||0;return{date:monthObjs[k],saving,stock,forex,crypto,gold,comp,total:saving+stock+forex+crypto+gold+comp}}):[];var running=0;fullSeries=balanceKeys.map(function(k){var mVal=byMonth[k]||0;return running+=mVal,{date:monthObjs[k],balance:running,delta:mVal}}),expenseSeries=balanceKeys.map(function(k){return{date:monthObjs[k],amount:Math.abs(byMonthExpense[k]||0)}}),lastExpenseIndex=-1;for(let i=expenseSeries.length-1;i>=0;i--)if(expenseSeries[i].amount>0){lastExpenseIndex=i;break}incomeSeries=balanceKeys.map(function(k){return{date:monthObjs[k],amount:Math.abs(byMonthIncome[k]||0)}});var debtRows=debtText.split("\n").filter(function(l){return l.trim()}).map(csvRowTopChart);debtRows=debtRows.slice(1);var debtByMonth={};debtRows.forEach(function(cols){var m=cols[0].trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);if(m){var month=parseInt(m[1],10),day=parseInt(m[2],10),year=parseInt(m[3],10),d=new Date(year,month-1,day);if(d){var key=d.getFullYear()+"-"+d.getMonth(),shinhan=parseAmtTopChart(cols[2]),sc=parseAmtTopChart(cols[1]);isNaN(shinhan)&&(shinhan=0),isNaN(sc)&&(sc=0),debtByMonth[key]={sc,shinhan}}}}),debtSeries=balanceKeys.map(function(k){var debt=debtByMonth[k]||{sc:0,shinhan:0};return{date:monthObjs[k],total:debt.shinhan+debt.sc,sc:debt.sc,shinhan:debt.shinhan}});var goalRows=goalText.split("\n").filter(function(l){return l.trim()}).map(csvRowTopChart),b2raw=goalRows[1]?goalRows[1][1]:"",b3raw=goalRows[2]?goalRows[2][1]:"",b2val=parseAmtTopChart(b2raw||""),b3val=parseAmtTopChart(b3raw||"");isNaN(b2val)&&(b2val=0),isNaN(b3val)&&(b3val=0),monthlyExpenseGoal=b2val,goalTarget=12*monthlyExpenseGoal*15,document.getElementById("loading-msg-tc").style.display="none",document.getElementById("chart-wrap").style.display="block",renderChartTC(currentRangeTC);var now2=new Date;String(now2.getHours()).padStart(2,"0"),String(now2.getMinutes()).padStart(2,"0"),String(now2.getSeconds()).padStart(2,"0")}).catch(function(err){document.getElementById("loading-msg-tc").textContent="Error: "+err.message}),document.querySelector('.range-btn[data-range="today"]').scrollIntoView({behavior:"auto",inline:"center",block:"nearest"})}
 
     /* ══ RANGE FILTERING (by month-count, since points are now one-per-month) ══ */
     var RANGE_MONTHS = { "-2y": -24,"-1y": -12,"-6m": -6,"-3m": -3,"today": 0,"+3m":3, "+6m":6, "+1y":12, "+2y":24, "max":null };
@@ -2499,15 +2268,24 @@ to{transform:rotate(360deg)}
       lemonColumnGrad.appendChild(lc1); lemonColumnGrad.appendChild(lc2);
       defsTC.appendChild(lemonColumnGrad);
 
+      // Update Expense Gradient to 100% opacity
       var gradPink = document.createElementNS(ns,"linearGradient");
       gradPink.setAttribute("id","pinkFill");
       gradPink.setAttribute("x1","0"); gradPink.setAttribute("y1","0");
       gradPink.setAttribute("x2","0"); gradPink.setAttribute("y2","1");
-      var p1=document.createElementNS(ns,"stop");
-      p1.setAttribute("offset","0%"); p1.setAttribute("stop-color","#f472b6"); p1.setAttribute("stop-opacity","0.28");
-      var p2=document.createElementNS(ns,"stop");
-      p2.setAttribute("offset","100%"), p2.setAttribute("stop-color","#f472b6"); p2.setAttribute("stop-opacity","0");
-      gradPink.appendChild(p1); gradPink.appendChild(p2);
+      
+      var p1 = document.createElementNS(ns,"stop");
+      p1.setAttribute("offset","0%"); 
+      p1.setAttribute("stop-color","#f472b6"); 
+      p1.setAttribute("stop-opacity","1"); // Changed to full opacity
+      
+      var p2 = document.createElementNS(ns,"stop");
+      p2.setAttribute("offset","100%"); 
+      p2.setAttribute("stop-color","#f472b6"); 
+      p2.setAttribute("stop-opacity","0.95"); // Changed from 0 to a solid opaque tone
+      
+      gradPink.appendChild(p1); 
+      gradPink.appendChild(p2);
       defsTC.appendChild(gradPink);
       
       var edgeMask = document.createElementNS(ns,"mask");
@@ -2780,7 +2558,7 @@ to{transform:rotate(360deg)}
           }
         }
 
-        lineVisibility.expense && drawSegmentedExpenseLine(currentExpenseXY,"#f472b6","rgba(244, 114, 182, 0.45)","url(#pinkFill)","pinkGlow",svg,ns,!0);
+        lineVisibility.expense && drawSegmentedExpenseLine(currentExpenseXY,"#000000","rgba(244, 114, 182, 0.45)","url(#pinkFill)","pinkGlow",svg,ns,!0);
       }
       
       // 4. Debt Layer (Completely Independent Toggle and Scale)
@@ -2989,7 +2767,7 @@ to{transform:rotate(360deg)}
           
           futureAreaEl.setAttribute("d", futurePaths.area);
           futureAreaEl.setAttribute("fill", fillUrl);
-          futureAreaEl.setAttribute("opacity", "0");
+          futureAreaEl.setAttribute("opacity", "1");
           futureAreaEl.setAttribute("mask", "url(#lineEdgeFadeMask)");
           svg.appendChild(futureAreaEl);
 
@@ -2997,7 +2775,7 @@ to{transform:rotate(360deg)}
           futureLineEl.setAttribute("d", futurePaths.line);
           futureLineEl.setAttribute("fill", "none");
           futureLineEl.setAttribute("stroke", mainColor);
-          futureLineEl.setAttribute("stroke-width", "0");
+          futureLineEl.setAttribute("stroke-width", "3.5");
           futureLineEl.setAttribute("stroke-linecap", "round");
           futureLineEl.setAttribute("stroke-linejoin", "round");
           futureLineEl.setAttribute("mask", "url(#lineEdgeFadeMask)");
@@ -3013,7 +2791,7 @@ to{transform:rotate(360deg)}
           pulseRing.setAttribute("cy", lastPastPt.y);
           pulseRing.setAttribute("r", "10");
           pulseRing.setAttribute("fill", "none");
-          pulseRing.setAttribute("stroke", mainColor);
+          pulseRing.setAttribute("stroke", "#f472b6"); // Force pink
           pulseRing.setAttribute("stroke-width", "1.5");
           pulseRing.setAttribute("opacity", "0.8");
           
@@ -3037,7 +2815,7 @@ to{transform:rotate(360deg)}
           dotGlow.setAttribute("cx", lastPastPt.x);
           dotGlow.setAttribute("cy", lastPastPt.y);
           dotGlow.setAttribute("r", "8");
-          dotGlow.setAttribute("fill", mainColor);
+          dotGlow.setAttribute("fill", "#f472b6"); // Force pink
           dotGlow.setAttribute("opacity", "0.35");
           glowFilterId && dotGlow.setAttribute("filter", "url(#" + glowFilterId + ")");
           svg.appendChild(dotGlow);
@@ -3046,7 +2824,7 @@ to{transform:rotate(360deg)}
           dotCore.setAttribute("cx", lastPastPt.x);
           dotCore.setAttribute("cy", lastPastPt.y);
           dotCore.setAttribute("r", "5");
-          dotCore.setAttribute("fill", mainColor);
+          dotCore.setAttribute("fill", "#f472b6"); // <--- FORCE PINK HERE INSTEAD OF mainColor
           dotCore.setAttribute("stroke", "#0f172a");
           dotCore.setAttribute("stroke-width", "1.5");
           svg.appendChild(dotCore);
@@ -3130,7 +2908,7 @@ to{transform:rotate(360deg)}
     
     hoverLine && (hoverLine.setAttribute("x1", pt.x), hoverLine.setAttribute("x2", pt.x));
     hoverDot && (lineVisibility.balance ? (hoverDot.setAttribute("cx", pt.x), hoverDot.setAttribute("cy", pt.y), hoverDot.style.display = "") : hoverDot.style.display = "none");
-    hoverDotExp && (lineVisibility.expense && ptExp ? (hoverDotExp.setAttribute("cx", ptExp.x), hoverDotExp.setAttribute("cy", ptExp.y), hoverDotExp.style.display = "") : hoverDotExp.style.display = "none");
+    hoverDotExp && (lineVisibility.expense && ptExp ? (hoverDotExp.setAttribute("cx", ptExp.x), hoverDotExp.setAttribute("cy", ptExp.y), hoverDotExp.setAttribute("fill", "#f472b6"), hoverDotExp.style.display = "") : hoverDotExp.style.display = "none");
     hoverDotInc && (lineVisibility.expense && ptInc ? (hoverDotInc.setAttribute("cx", ptInc.x), hoverDotInc.setAttribute("cy", ptInc.y), hoverDotInc.style.display = "") : hoverDotInc.style.display = "none");
     
     var anchorY, tooltip = document.getElementById("tooltip"),
