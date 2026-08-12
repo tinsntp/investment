@@ -790,6 +790,7 @@ to{transform:rotate(360deg)}
 .line-toggle-btn:hover{opacity:0.75}
 .line-toggle-btn.active{opacity:1}
 .line-toggle-btn.active[data-line="balance"]{border-color:#2dd4bf;background:rgba(45,212,191,0.12)}
+.line-toggle-btn.active[data-line="invest"]{border-color:#2dd4bf;background:rgba(45,212,191,0.12)}
 .line-toggle-btn.active[data-line="expense"]{border-color:#f472b6;background:rgba(244,114,182,0.12)}
 .line-toggle-btn.active[data-line="debt"]{border-color:#fff;background:rgba(244,114,182,0.12)}
 .balance-toggle-area{cursor:pointer;user-select:none}
@@ -1160,7 +1161,7 @@ to{transform:rotate(360deg)}
         <button class="line-toggle-btn active" data-line="balance" title="Balance">
           <img src="https://github.com/tinsntp/investment/blob/main/icon/cash.png?raw=true" />
         </button>
-        <button class="line-toggle-btn active" data-line="invest" title="Invest">
+        <button class="line-toggle-btn" data-line="invest" title="Invest">
           <img src="https://github.com/tinsntp/investment/blob/main/icon/stock.png?raw=true" />
         </button>
         <button class="line-toggle-btn" data-line="expense" title="Expense">
@@ -2082,8 +2083,45 @@ lineVisibility.invest = false;
        var v = (cols[8] || "").trim();
        v && (excluded[v.toLowerCase()] = !0)
      });
-     var byMonth = {},
-       monthObjs = {};
+
+     // 1. Find the latest date present in the dataset
+     var maxDate = new Date(2026, 1, 1); // Default minimum start
+     rows.forEach(function(cols) {
+       var dateStr = cols[10] || "";
+       if (dateStr) {
+         var d = parseSheetDateTopChart(dateStr);
+         if (d && d > maxDate) maxDate = new Date(d);
+       }
+       var qStr = cols[16] || "";
+       if (qStr) {
+         var qd = parseMonthYear(qStr);
+         if (qd && qd > maxDate) maxDate = new Date(qd);
+       }
+     });
+
+     // 2. Invest Timeline: starts from March 2026 (Month index 2) to include Mar & Apr
+     var investStartMonth = new Date(2026, 2, 1); // March 2026
+     var endMonth = new Date(maxDate.getFullYear(), maxDate.getMonth(), 1);
+     
+     var investKeys = [];
+     var monthObjs = {};
+     var curr = new Date(investStartMonth);
+     while (curr <= endMonth) {
+       var k = curr.getFullYear() + "-" + curr.getMonth();
+       investKeys.push(k);
+       monthObjs[k] = new Date(curr);
+       curr.setMonth(curr.getMonth() + 1);
+     }
+
+     // 3. Balance/Expense Timeline: starts from May 2026 (Month index 4)
+     var balanceStartMonth = new Date(2026, 4, 1); // May 2026
+     var balanceKeys = investKeys.filter(function(k) {
+       return monthObjs[k] >= balanceStartMonth;
+     });
+
+     var byMonth = {};
+     investKeys.forEach(function(k) { byMonth[k] = 0; });
+
      rows.forEach(function(cols) {
        var dateStr = cols[10] || "",
          group = (cols[11] || "").trim(),
@@ -2092,26 +2130,26 @@ lineVisibility.invest = false;
          var d = parseSheetDateTopChart(dateStr);
          if (d && !(isNaN(amt) || group && excluded[group.toLowerCase()])) {
            var key = d.getFullYear() + "-" + d.getMonth();
-           byMonth[key] || (byMonth[key] = 0, monthObjs[key] = new Date(d.getFullYear(), d.getMonth(), 1)), byMonth[key] += amt
+           byMonth[key] !== undefined && (byMonth[key] += amt);
          }
        }
-     }), rows.forEach(function(cols) {
+     });
+
+     rows.forEach(function(cols) {
        var qStr = cols[16] || "";
        if (qStr) {
          var qd = parseMonthYear(qStr);
          if (qd) {
            var key = qd.getFullYear() + "-" + qd.getMonth(),
              rAmt = parseAmtTopChart(cols[17] || "");
-           isNaN(rAmt) || (byMonth[key] || (byMonth[key] = 0, monthObjs[key] = new Date(qd.getFullYear(), qd.getMonth(), 1)), byMonth[key] += rAmt)
+           isNaN(rAmt) || (byMonth[key] !== undefined && (byMonth[key] += rAmt));
          }
        }
      });
 
-     var keys = Object.keys(byMonth).sort(function(a, b) {
-         return monthObjs[a] - monthObjs[b]
-     });
-
      var byMonthSaving = {}, byMonthStock = {}, byMonthForex = {}, byMonthCrypto = {}, byMonthGold = {}, byMonthComp = {};
+     var byMonthExpense = {}, byMonthIncome = {};
+
      rows.forEach(function(cols) {
        var qStr = cols[16] || ""; // Column Q
        if (qStr) {
@@ -2125,18 +2163,23 @@ lineVisibility.invest = false;
            var cryptoAmt = parseAmtTopChart(cols[27] || ""); // Column AB
            var goldAmt   = parseAmtTopChart(cols[28] || ""); // Column AC
            var compAmt   = parseAmtTopChart(cols[21] || ""); // Column V (Comp)
-           
+           var rAmt      = parseAmtTopChart(cols[17] || ""); // Expense
+           var sAmt      = parseAmtTopChart(cols[18] || ""); // Income
+
            isNaN(savingAmt) || (byMonthSaving[key] = (byMonthSaving[key] || 0) + savingAmt);
            isNaN(stockAmt)  || (byMonthStock[key]  = (byMonthStock[key]  || 0) + stockAmt);
            isNaN(forexAmt)  || (byMonthForex[key]  = (byMonthForex[key]  || 0) + forexAmt); 
            isNaN(cryptoAmt) || (byMonthCrypto[key] = (byMonthCrypto[key] || 0) + cryptoAmt);
            isNaN(goldAmt)   || (byMonthGold[key]   = (byMonthGold[key]   || 0) + goldAmt);
            isNaN(compAmt)   || (byMonthComp[key]   = (byMonthComp[key]   || 0) + compAmt);
+           isNaN(rAmt)      || (byMonthExpense[key] = (byMonthExpense[key] || 0) + rAmt);
+           isNaN(sAmt)      || (byMonthIncome[key]  = (byMonthIncome[key]  || 0) + sAmt);
          }
        }
      });
 
-     investSeries = keys && keys.length ? keys.map(function(k) {
+     // Invest series uses the full range starting from March 2026
+     investSeries = investKeys && investKeys.length ? investKeys.map(function(k) {
        var saving = byMonthSaving[k] || 0;
        var stock = byMonthStock[k] || 0;
        var forex = byMonthForex[k] || 0;
@@ -2155,60 +2198,43 @@ lineVisibility.invest = false;
        };
      }) : [];
 
-     var byMonthExpense = {};
-     rows.forEach(function(cols) {
-       var qStr = cols[16] || "";
-       if (qStr) {
-         var qd = parseMonthYear(qStr);
-         if (qd) {
-           var rAmt = parseAmtTopChart(cols[17] || "");
-           if (!isNaN(rAmt)) {
-             var key = qd.getFullYear() + "-" + qd.getMonth();
-             byMonthExpense[key] || (byMonthExpense[key] = 0), byMonthExpense[key] += rAmt
-           }
-         }
-       }
-     });
-
+     // Balance, Expense, Income use balanceKeys starting from May 2026
      var running = 0;
-     fullSeries = keys.map(function(k) {
-       return running += byMonth[k], {
+     fullSeries = balanceKeys.map(function(k) {
+       var mVal = byMonth[k] || 0;
+       running += mVal;
+       return {
          date: monthObjs[k],
          balance: running,
-         delta: byMonth[k]
-       }
-     }), expenseSeries = keys.map(function(k) {
+         delta: mVal
+       };
+     });
+
+     expenseSeries = balanceKeys.map(function(k) {
        return {
          date: monthObjs[k],
          amount: Math.abs(byMonthExpense[k] || 0)
-       }
-     }), lastExpenseIndex = -1;
+       };
+     });
+
+     lastExpenseIndex = -1;
      for (let i = expenseSeries.length - 1; i >= 0; i--)
        if (expenseSeries[i].amount > 0) {
          lastExpenseIndex = i;
          break
-       } var debtRows = debtText.split("\n").filter(function(l) {
-         return l.trim()
-       }).map(csvRowTopChart),
-       byMonthIncome = (byMonthExpense = {}, {});
-     rows.forEach(function(cols) {
-       var qStr = cols[16] || "";
-       if (qStr) {
-         var qd = parseMonthYear(qStr);
-         if (qd) {
-           var key = qd.getFullYear() + "-" + qd.getMonth(),
-             rAmt = parseAmtTopChart(cols[17] || "");
-           isNaN(rAmt) || (byMonthExpense[key] || (byMonthExpense[key] = 0), byMonthExpense[key] += rAmt);
-           var sAmt = parseAmtTopChart(cols[18] || "");
-           isNaN(sAmt) || (byMonthIncome[key] || (byMonthIncome[key] = 0), byMonthIncome[key] += sAmt)
-         }
        }
-     }), incomeSeries = keys.map(function(k) {
+
+     incomeSeries = balanceKeys.map(function(k) {
        return {
          date: monthObjs[k],
          amount: Math.abs(byMonthIncome[k] || 0)
-       }
-     }), debtRows = debtRows.slice(1);
+       };
+     });
+
+     var debtRows = debtText.split("\n").filter(function(l) {
+         return l.trim()
+       }).map(csvRowTopChart);
+     debtRows = debtRows.slice(1);
      var debtByMonth = {};
      debtRows.forEach(function(cols) {
        var m = cols[0].trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
@@ -2227,7 +2253,9 @@ lineVisibility.invest = false;
            }
          }
        }
-     }), debtSeries = keys.map(function(k) {
+     });
+
+     debtSeries = balanceKeys.map(function(k) {
        var debt = debtByMonth[k] || {
          sc: 0,
          shinhan: 0
@@ -2239,6 +2267,7 @@ lineVisibility.invest = false;
          shinhan: debt.shinhan
        }
      });
+
      var goalRows = goalText.split("\n").filter(function(l) {
          return l.trim()
        }).map(csvRowTopChart),
@@ -2279,17 +2308,44 @@ lineVisibility.invest = false;
       var pts;
       var currentYear = new Date().getFullYear();
       
+      // Invest Mode: 12 months past to 12 months future (-12m to +12m)
       if (currentRangeTC = range, lineVisibility.invest) {
-        pts = fullSeries.map(function(p, i) {
+        var now = new Date();
+        var past12M = new Date(now.getFullYear(), now.getMonth() - 12, 1);
+        var future12M = new Date(now.getFullYear(), now.getMonth() + 6, 1);
+
+        var investKeys = [];
+        var investMonthObjs = {};
+        var curr = new Date(past12M);
+        while (curr <= future12M) {
+          var k = curr.getFullYear() + "-" + curr.getMonth();
+          investKeys.push(k);
+          investMonthObjs[k] = new Date(curr);
+          curr.setMonth(curr.getMonth() + 1);
+        }
+
+        pts = investKeys.map(function(k) {
+          var monthObj = investMonthObjs[k];
+          
+          // Find matching invest data
+          var foundInv = investSeries.find(function(inv) {
+            return inv.date.getFullYear() === monthObj.getFullYear() && inv.date.getMonth() === monthObj.getMonth();
+          });
+          var invItem = foundInv || { saving: 0, stock: 0, forex: 0, crypto: 0, gold: 0, comp: 0, total: 0 };
+          
+          // Find matching real balance from fullSeries if it exists
+          var foundBal = fullSeries.find(function(b) {
+            return b.date.getFullYear() === monthObj.getFullYear() && b.date.getMonth() === monthObj.getMonth();
+          });
+
           return {
-            balance: p.balance,
-            expense: expenseSeries[i] ? expenseSeries[i].amount : 0,
-            invest: investSeries[i] ? investSeries[i].total : 0,
-            date: p.date,
-            originalIndex: i
+            balance: foundBal ? foundBal.balance : (fullSeries.length > 0 ? fullSeries[fullSeries.length - 1].balance : 0),
+            expense: 0,
+            invest: invItem.total,
+            date: monthObj,
+            originalIndex: foundInv ? investSeries.indexOf(foundInv) : -1,
+            investData: invItem
           };
-        }).filter(function(p) {
-          return p.date.getFullYear() === currentYear;
         });
       } else if (lineVisibility.expense && !lineVisibility.balance) {
         pts = [];
@@ -2328,7 +2384,7 @@ lineVisibility.invest = false;
       if(pts.length){var svg=document.getElementById("chart-svg");svg.innerHTML="";var ns="http://www.w3.org/2000/svg",values=[];
       lineVisibility.balance&&(values=values.concat(pts.map(function(p){return p.balance}))),
       lineVisibility.expense&&(values=(values=values.concat(pts.map(function(p){return expenseSeries[p.originalIndex].amount}))).concat(pts.map(function(p){return incomeSeries[p.originalIndex].amount}))),
-      lineVisibility.invest&&(values=values.concat(pts.map(function(p){return investSeries[p.originalIndex] ? investSeries[p.originalIndex].total : 0}))),
+      lineVisibility.invest&&(values=values.concat(pts.map(function(p){return p.invest}))),
       lineVisibility.debt&&(values=values.concat(pts.map(function(p){return p.debtTotal})).concat(pts.map(function(p){return p.debtShinhan})).concat(pts.map(function(p){return p.debtSC}))),values.length||(values=[0,1]);
       
       var minV = Math.min.apply(null, values), maxV = Math.max.apply(null, values), range_ = maxV - minV;
@@ -2346,7 +2402,7 @@ lineVisibility.invest = false;
         maxV += padV;
       }
       var plotW=VB_W-PAD_LEFT-PAD_RIGHT,plotH=VB_H-PAD_TOP-PAD_BOTTOM,
-          xy=pts.map(function(p,i){var x=PAD_LEFT+(1===pts.length?0:i/(pts.length-1)*plotW),y=PAD_TOP+(1-(p.balance-minV)/(maxV-minV))*plotH,fullIdx=p.originalIndex,prevBalance=fullIdx>0?fullSeries[fullIdx-1].balance:p.balance;return{x,y,date:p.date,balance:p.balance,momDelta:p.balance-prevBalance}});
+          xy=pts.map(function(p,i){var x=PAD_LEFT+(1===pts.length?0:i/(pts.length-1)*plotW),y=PAD_TOP+(1-(p.balance-minV)/(maxV-minV))*plotH,fullIdx=p.originalIndex,prevBalance=fullIdx>0&&fullIdx<fullSeries.length?fullSeries[fullIdx-1].balance:p.balance;return{x,y,date:p.date,balance:p.balance,momDelta:p.balance-prevBalance}});
       
       currentXY=xy,currentExpenseXY=[],currentIncomeXY=[],currentInvestXY=[],currentSavingXY=[],currentStockXY=[],currentForexXY=[],currentCryptoXY=[],currentGoldXY=[];
       
@@ -2356,7 +2412,7 @@ lineVisibility.invest = false;
         if(expense){var expY=PAD_TOP+(1-(expense.amount-minV)/(maxV-minV))*plotH,prevExpAmount=origIdx>0?expenseSeries[origIdx-1].amount:expense.amount;currentExpenseXY.push({x:balancePoint.x,y:expY,date:expense.date,amount:expense.amount,momDelta:expense.amount-prevExpAmount})}
         var income=incomeSeries[origIdx];
         if(income){var incY=PAD_TOP+(1-(income.amount-minV)/(maxV-minV))*plotH,prevIncAmount=origIdx>0?incomeSeries[origIdx-1].amount:income.amount;currentIncomeXY.push({x:balancePoint.x,y:incY,date:income.date,amount:income.amount,momDelta:income.amount-prevIncAmount})}
-        var inv=investSeries[origIdx];
+        var inv=p.investData || (origIdx !== -1 ? investSeries[origIdx] : null);
         if(inv){
           var baseValY = PAD_TOP+(1-(0-minV)/(maxV-minV))*plotH;
           currentInvestXY.push({x:balancePoint.x, y:baseValY, date:inv.date, amount:inv.total});
@@ -2402,80 +2458,95 @@ lineVisibility.invest = false;
       
       var edgeMask = document.createElementNS(ns,"mask");edgeMask.setAttribute("id","lineEdgeFadeMask"),edgeMask.setAttribute("maskUnits","userSpaceOnUse");var maskRect = document.createElementNS(ns,"rect");maskRect.setAttribute("x","0"),maskRect.setAttribute("y","0"),maskRect.setAttribute("width","100%"),maskRect.setAttribute("height","100%"),maskRect.setAttribute("fill","url(#edgeFadeGrad)");var s1,s2,edgeGrad=document.createElementNS(ns,"linearGradient");edgeGrad.setAttribute("id","edgeFadeGrad"),edgeGrad.setAttribute("x1","0%"),edgeGrad.setAttribute("y1","0%"),edgeGrad.setAttribute("x2","100%"),edgeGrad.setAttribute("y2","0%"),(s1=document.createElementNS(ns,"stop")).setAttribute("offset","0%"),s1.setAttribute("stop-color","white"),s1.setAttribute("stop-opacity","0.1"),(s2=document.createElementNS(ns,"stop")).setAttribute("offset","10%"),s2.setAttribute("stop-color","white"),s2.setAttribute("stop-opacity","1");var s3=document.createElementNS(ns,"stop");s3.setAttribute("offset","90%"),s3.setAttribute("stop-color","white"),s3.setAttribute("stop-opacity","1");var s4=document.createElementNS(ns,"stop");if(s4.setAttribute("offset","100%"),s4.setAttribute("stop-color","white"),s4.setAttribute("stop-opacity","0.15"),edgeGrad.appendChild(s1),edgeGrad.appendChild(s2),edgeGrad.appendChild(s3),edgeGrad.appendChild(s4),defsTC.appendChild(edgeGrad),edgeMask.appendChild(maskRect),defsTC.appendChild(edgeMask),svg.appendChild(defsTC),lineVisibility.balance){var paths=buildSmoothPathTC(xy);(areaEl=document.createElementNS(ns,"path")).setAttribute("d",paths.area),areaEl.setAttribute("fill","url(#tealFill)"),areaEl.setAttribute("stroke","none"),svg.appendChild(areaEl),(lineEl=document.createElementNS(ns,"path")).setAttribute("d",paths.line),lineEl.setAttribute("fill","none"),lineEl.setAttribute("stroke",TEAL),lineEl.setAttribute("stroke-width","2.5"),lineEl.setAttribute("stroke-linecap","round"),lineEl.setAttribute("stroke-linejoin","round"),svg.appendChild(lineEl)}
       
-      // Render Pill-Style Stacked Column Chart for Invest Mode with Grouped Category Colors
+      // Render Pastel Gradient Stacked Columns Chart for Invest Mode
       if (lineVisibility.invest && pts.length > 0) {
         var stackGroup = document.createElementNS(ns, "g");
         stackGroup.setAttribute("mask", "url(#lineEdgeFadeMask)");
-        var colWidth = Math.max(10, Math.min(32, (plotW / pts.length) * 0.65));
-        var pillRadius = (colWidth / 2).toFixed(1);
 
-        for (var ci = 0; ci < pts.length; ci++) {
-          var xPos = PAD_LEFT + (1 === pts.length ? 0 : ci / (pts.length - 1) * plotW);
-          var invItem = investSeries[pts[ci].originalIndex];
-          if(!invItem) continue;
+        // Define pastel color stops for each category {topColor, bottomColor}
+        var pastelCategories = [
+          {key: "saving", top: "#f3e8ff", bottom: "#d8b4fe"}, // Bright Pastel Purple
+          {key: "stock", top: "#99f6e4", bottom: "#14b8a6"},  // Bright Pastel Teal
+          {key: "forex", top: "#fef9c3", bottom: "#eab308"},  // Bright Pastel Yellow
+          {key: "crypto", top: "#fef08a", bottom: "#ca8a04"}, // Bright Pastel Amber
+          {key: "gold", top: "#ffedd5", bottom: "#f97316"},   // Bright Pastel Orange
+          {key: "comp", top: "#e0f2fe", bottom: "#38bdf8"}    // Bright Pastel Blue
+        ];
 
-          var posSegs = [
-            {name: "Saving", val: invItem.saving > 0 ? invItem.saving : 0, color: "#c084fc"},
-            {name: "Stock", val: invItem.stock > 0 ? invItem.stock : 0, color: "#2dd4bf"},
-            {name: "Forex", val: invItem.forex > 0 ? invItem.forex : 0, color: "#facc15"},
-            {name: "Crypto", val: invItem.crypto > 0 ? invItem.crypto : 0, color: "#fbbf24"},
-            {name: "Gold", val: invItem.gold > 0 ? invItem.gold : 0, color: "#f97316"},
-            {name: "Comp", val: invItem.comp > 0 ? invItem.comp : 0, color: "#60a5fa"}
-          ];
-          
-          var negSegs = [
-            {name: "Saving", val: invItem.saving < 0 ? Math.abs(invItem.saving) : 0, color: "#c084fc"},
-            {name: "Stock", val: invItem.stock < 0 ? Math.abs(invItem.stock) : 0, color: "#2dd4bf"},
-            {name: "Forex", val: invItem.forex < 0 ? Math.abs(invItem.forex) : 0, color: "#facc15"},
-            {name: "Crypto", val: invItem.crypto < 0 ? Math.abs(invItem.crypto) : 0, color: "#fbbf24"},
-            {name: "Gold", val: invItem.gold < 0 ? Math.abs(invItem.gold) : 0, color: "#f97316"},
-            {name: "Comp", val: invItem.comp < 0 ? Math.abs(invItem.comp) : 0, color: "#60a5fa"}
-          ];
+        // Create and append unique gradient definitions if not already present
+        var defs = svg.querySelector("defs") || svg;
+        pastelCategories.forEach(function(cat, idx) {
+          var gradId = "pastelGrad_" + cat.key;
+          if (!document.getElementById(gradId)) {
+            var grad = document.createElementNS(ns, "linearGradient");
+            grad.setAttribute("id", gradId);
+            grad.setAttribute("x1", "0"); grad.setAttribute("y1", "0");
+            grad.setAttribute("x2", "0"); grad.setAttribute("y2", "1");
 
-          // Stack Positive Segments Upward
-          var accumulatedPos = 0;
-          posSegs.forEach(function(seg) {
-            if(seg.val <= 0) return;
-            var bottomVal = accumulatedPos;
-            accumulatedPos += seg.val;
+            var stop1 = document.createElementNS(ns, "stop");
+            stop1.setAttribute("offset", "0%");
+            stop1.setAttribute("stop-color", cat.top);
+            stop1.setAttribute("stop-opacity", "1"); // Full brightness at the top
+
+            var stop2 = document.createElementNS(ns, "stop");
+            stop2.setAttribute("offset", "100%");
+            stop2.setAttribute("stop-color", cat.bottom);
+            stop2.setAttribute("stop-opacity", "0.75"); // Higher opacity at the bottom
+
+            grad.appendChild(stop1);
+            grad.appendChild(stop2);
+            defs.appendChild(grad);
+          }
+        });
+
+        var baselineY = PAD_TOP + (1 - (0 - minV) / (maxV - minV)) * plotH;
+        var colWidth = Math.max(6, Math.min(28, (plotW / pts.length) * 0.9));
+        
+        var lowerCumulative = pts.map(function() { return 0; });
+        var upperCumulative = pts.map(function() { return 0; });
+
+        pastelCategories.forEach(function(cat) {
+          var nextLower = [];
+          var nextUpper = [];
+
+          pts.forEach(function(p, i) {
+            var invItem = p.investData || (p.originalIndex !== -1 ? investSeries[p.originalIndex] : { saving: 0, stock: 0, forex: 0, crypto: 0, gold: 0, comp: 0, total: 0 });
+            var val = invItem ? (invItem[cat.key] || 0) : 0;
             
-            var yBottom = PAD_TOP + (1 - (bottomVal - minV) / (maxV - minV)) * plotH;
-            var yTop = PAD_TOP + (1 - (accumulatedPos - minV) / (maxV - minV)) * plotH;
-            var segHeight = Math.max(2, yBottom - yTop);
-            var colX = xPos - colWidth / 2;
+            var lowVal = lowerCumulative[i];
+            var upVal = upperCumulative[i];
+            
+            if (val >= 0) {
+              nextLower[i] = upVal;
+              nextUpper[i] = upVal + val;
+            } else {
+              nextLower[i] = lowVal + val;
+              nextUpper[i] = lowVal;
+            }
 
-            var rectSeg = document.createElementNS(ns, "rect");
-            rectSeg.setAttribute("x", colX.toFixed(1));
-            rectSeg.setAttribute("y", yTop.toFixed(1));
-            rectSeg.setAttribute("width", colWidth.toFixed(1));
-            rectSeg.setAttribute("height", segHeight.toFixed(1));
-            rectSeg.setAttribute("rx", pillRadius);
-            rectSeg.setAttribute("fill", seg.color);
-            stackGroup.appendChild(rectSeg);
+            var yLow = PAD_TOP + (1 - (nextLower[i] - minV) / (maxV - minV)) * plotH;
+            var yUp = PAD_TOP + (1 - (nextUpper[i] - minV) / (maxV - minV)) * plotH;
+            
+            var colHeight = Math.abs(yLow - yUp);
+            var colY = Math.min(yLow, yUp);
+            var colX = xy[i].x - colWidth / 2;
+
+            if (colHeight > 0.5 && val !== 0) {
+              var rect = document.createElementNS(ns, "rect");
+              rect.setAttribute("x", colX.toFixed(1));
+              rect.setAttribute("y", colY.toFixed(1));
+              rect.setAttribute("width", colWidth.toFixed(1));
+              rect.setAttribute("height", colHeight.toFixed(1));
+              rect.setAttribute("rx", "3");
+              rect.setAttribute("fill", "url(#pastelGrad_" + cat.key + ")");
+              stackGroup.appendChild(rect);
+            }
           });
 
-          // Stack Negative Segments Downward Below Baseline (0)
-          var accumulatedNeg = 0;
-          negSegs.forEach(function(seg) {
-            if(seg.val <= 0) return;
-            var topVal = accumulatedNeg;
-            accumulatedNeg += seg.val;
-            
-            var yTop = PAD_TOP + (1 - (-topVal - minV) / (maxV - minV)) * plotH;
-            var yBottom = PAD_TOP + (1 - (-accumulatedNeg - minV) / (maxV - minV)) * plotH;
-            var segHeight = Math.max(2, yBottom - yTop);
-            var colX = xPos - colWidth / 2;
+          lowerCumulative = nextLower;
+          upperCumulative = nextUpper;
+        });
 
-            var rectSeg = document.createElementNS(ns, "rect");
-            rectSeg.setAttribute("x", colX.toFixed(1));
-            rectSeg.setAttribute("y", yTop.toFixed(1));
-            rectSeg.setAttribute("width", colWidth.toFixed(1));
-            rectSeg.setAttribute("height", segHeight.toFixed(1));
-            rectSeg.setAttribute("rx", pillRadius);
-            rectSeg.setAttribute("fill", seg.color);
-            stackGroup.appendChild(rectSeg);
-          });
-        }
         svg.appendChild(stackGroup);
       }
 
@@ -2632,7 +2703,6 @@ lineVisibility.invest = false;
       
       var hoverIndex = getDefaultHoverIndex();
       showPointAt(hoverIndex);
-      
       
       var origShowPointAt = window.showPointAt || showPointAt;
       window.showPointAt = function(idx) {
@@ -2973,8 +3043,9 @@ lineVisibility.invest = false;
 
     if (lineVisibility.invest) {
       if (typeof currentPts !== 'undefined' && currentPts[idx]) {
-        var originalIdx = currentPts[idx].originalIndex;
-        var inv = investSeries[originalIdx];
+        // Inside showPointAt function where investSeries is read:
+var originalIdx = currentPts[idx].originalIndex;
+var inv = (originalIdx !== -1) ? investSeries[originalIdx] : { saving: 0, stock: 0, forex: 0, crypto: 0, gold: 0, comp: 0, total: 0 };
         
         if (inv) {
           var items = [];
