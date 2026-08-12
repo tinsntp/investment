@@ -2709,7 +2709,7 @@ to{transform:rotate(360deg)}
           assetItems.forEach(function(item) {
             var itemRow = document.createElement("div");
             itemRow.style.cssText = "display: flex; align-items: center; justify-content: space-between; color: " + item.color + ";";
-            itemRow.innerHTML = '<span style="display: flex; align-items: center; gap: 6px;"><i class="bi ' + item.icon + '" style="opacity: 0.9;"></i> ' + item.label + ':</span> <span>' + item.val + '</span>';
+            itemRow.innerHTML = '<span style="display: flex; align-items: center; gap: 6px;">' + item.label + ':</span> <span>' + item.val + '</span>';
             containerDiv.appendChild(itemRow);
           });
 
