@@ -2663,16 +2663,17 @@ to{transform:rotate(360deg)}
         }
 
         var assetItems = [];
-        if (catTotals.saving !== 0) assetItems.push({icon: "savings", label: "Saving", val: fmtShort(catTotals.saving), color: "#d8b4fe"});
-        if (catTotals.stock !== 0) assetItems.push({icon: "trending_up", label: "Stock", val: fmtShort(catTotals.stock), color: "#14b8a6"});
-        if (catTotals.forex !== 0) assetItems.push({icon: "currency_exchange", label: "Forex", val: fmtShort(catTotals.forex), color: "#eab308"});
-        if (catTotals.crypto !== 0) assetItems.push({icon: "toll", label: "Crypto", val: fmtShort(catTotals.crypto), color: "#ca8a04"});
-        if (catTotals.gold !== 0) assetItems.push({icon: "diamond", label: "Gold", val: fmtShort(catTotals.gold), color: "#f97316"});
-        if (catTotals.comp !== 0) assetItems.push({icon: "work", label: "Comp", val: fmtShort(catTotals.comp), color: "#38bdf8"});
+        if (catTotals.saving !== 0) assetItems.push({icon: "bi-piggy-bank", label: "Saving", val: fmtShort(catTotals.saving), color: "#d8b4fe"});
+        if (catTotals.stock !== 0) assetItems.push({icon: "bi-graph-up-arrow", label: "Stock", val: fmtShort(catTotals.stock), color: "#14b8a6"});
+        if (catTotals.forex !== 0) assetItems.push({icon: "bi-currency-exchange", label: "Forex", val: fmtShort(catTotals.forex), color: "#eab308"});
+        if (catTotals.crypto !== 0) assetItems.push({icon: "bi-coin", label: "Crypto", val: fmtShort(catTotals.crypto), color: "#ca8a04"});
+        if (catTotals.gold !== 0) assetItems.push({icon: "bi-gem", label: "Gold", val: fmtShort(catTotals.gold), color: "#f97316"});
+        if (catTotals.comp !== 0) assetItems.push({icon: "bi-briefcase", label: "Comp", val: fmtShort(catTotals.comp), color: "#38bdf8"});
 
         var yearItems = [];
-        if (sumPrevYear !== 0) yearItems.push({icon: "event", label: prevYearNum, val: fmtShort(sumPrevYear), color: "#94a3b8"});
-        if (sumCurrYear !== 0) yearItems.push({icon: "event_available", label: currYearNum, val: fmtShort(sumCurrYear), color: "#94a3b8"});
+        if (sumPrevYear !== 0) yearItems.push({icon: "bi-calendar-event", label: prevYearNum, val: fmtShort(sumPrevYear), color: "#94a3b8"});
+        if (sumCurrYear !== 0) yearItems.push({icon: "bi-calendar-check", label: currYearNum, val: fmtShort(sumCurrYear), color: "#94a3b8"});
+
         var totalRows = assetItems.length + yearItems.length + (assetItems.length > 0 && yearItems.length > 0 ? 1 : 0);
 
         if (totalRows > 0) {
@@ -2708,7 +2709,7 @@ to{transform:rotate(360deg)}
           assetItems.forEach(function(item) {
             var itemRow = document.createElement("div");
             itemRow.style.cssText = "display: flex; align-items: center; justify-content: space-between; color: " + item.color + "; height: 24px;";
-            itemRow.innerHTML = '<span style="display: flex; align-items: center; gap: 6px;"><span class="material-icons-round" style="font-size: 16px; opacity: 0.9;">' + item.icon + '</span> ' + item.label + ':</span> <span>' + item.val + '</span>';
+            itemRow.innerHTML = '<span style="display: flex; align-items: center; gap: 6px;">' + item.label + ':</span> <span>' + item.val + '</span>';
             containerDiv.appendChild(itemRow);
           });
 
@@ -2720,8 +2721,8 @@ to{transform:rotate(360deg)}
 
           yearItems.forEach(function(item) {
             var itemRow = document.createElement("div");
-            itemRow.style.cssText = "display: flex; align-items: center; justify-content: space-between; color: " + item.color + "; ";
-            itemRow.innerHTML = '<span style="display: flex; align-items: center; gap: 6px;"><span class="material-icons-round" style="font-size: 16px; opacity: 0.9;">' + item.icon + '</span> ' + item.label + ':</span> <span>' + item.val + '</span>';
+            itemRow.style.cssText = "display: flex; align-items: center; justify-content: space-between; color: " + item.color + "; height: 24px;";
+            itemRow.innerHTML = '<span style="display: flex; align-items: center; gap: 6px;"><i class="bi ' + item.icon + '" style="opacity: 0.9;"></i> ' + item.label + ':</span> <span>' + item.val + '</span>';
             containerDiv.appendChild(itemRow);
           });
 
