@@ -2310,7 +2310,7 @@ to{transform:rotate(360deg)}
       defsTC.appendChild(edgeMask);
       svg.appendChild(defsTC);
       
-      // 1. Balance Chart Layer with Enhanced Shadow Line Effect
+      // 1. Balance Chart Layer with Background Image Clipped to Area Gradient
       if (lineVisibility.balance && !lineVisibility.invest) {
         var pathD = "M " + xy[0].x.toFixed(1) + " " + xy[0].y.toFixed(1);
         for (var i = 1; i < xy.length; i++) {
@@ -2320,20 +2320,43 @@ to{transform:rotate(360deg)}
         var areaD = pathD + " L " + xy[xy.length - 1].x.toFixed(1) + " " + (VB_H - PAD_BOTTOM) + 
                     " L " + xy[0].x.toFixed(1) + " " + (VB_H - PAD_BOTTOM) + " Z";
         
+        // 1. Create a unique clip path matching the area shape
+        var clipId = "balanceAreaClip";
+        var clipPath = document.createElementNS(ns, "clipPath");
+        clipPath.setAttribute("id", clipId);
+        
+        var clipRectPath = document.createElementNS(ns, "path");
+        clipRectPath.setAttribute("d", areaD);
+        clipPath.appendChild(clipRectPath);
+        defsTC.appendChild(clipPath);
+
+        // 2. Base Area Gradient Fill
         var areaPath = document.createElementNS(ns, "path");
         areaPath.setAttribute("d", areaD);
         areaPath.setAttribute("fill", "url(#balanceGreenGrad)");
         svg.appendChild(areaPath);
 
-        // Enhanced Dark Shadow Stroke (Heavier width & higher opacity)
+        // 3. Background Image restricted ONLY to the area polygon via clip-path
+        var bgImage = document.createElementNS(ns, "image");
+        bgImage.setAttribute("x", PAD_LEFT);
+        bgImage.setAttribute("y", PAD_TOP);
+        bgImage.setAttribute("width", plotW);
+        bgImage.setAttribute("height", plotH);
+        bgImage.setAttribute("preserveAspectRatio", "none");
+        bgImage.setAttribute("href", "https://i.pinimg.com/736x/a8/21/78/a82178a0e28273558cdf3b2a76dbd7f4.jpg");
+        bgImage.setAttribute("opacity", "0.35"); // Adjust blending opacity
+        bgImage.setAttribute("clip-path", "url(#" + clipId + ")");
+        svg.appendChild(bgImage);
+
+        // Enhanced Dark Shadow Stroke
         var shadowLinePath = document.createElementNS(ns, "path");
         shadowLinePath.setAttribute("d", pathD);
         shadowLinePath.setAttribute("fill", "none");
-        shadowLinePath.setAttribute("stroke", "rgba(0, 0, 0, 0.75)"); // Darker/stronger shadow
-        shadowLinePath.setAttribute("stroke-width", "8"); // Thicker stroke to make it pop
+        shadowLinePath.setAttribute("stroke", "rgba(0, 0, 0, 0.75)");
+        shadowLinePath.setAttribute("stroke-width", "8");
         shadowLinePath.setAttribute("stroke-linecap", "round");
         shadowLinePath.setAttribute("stroke-linejoin", "round");
-        shadowLinePath.setAttribute("transform", "translate(0, 2)"); // Shift down slightly more
+        shadowLinePath.setAttribute("transform", "translate(0, 2)");
         svg.appendChild(shadowLinePath);
 
         // Main Crisp White Line on Top
