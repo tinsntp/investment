@@ -3227,17 +3227,7 @@ to{transform:rotate(360deg)}
       }
     }
     function getCurrentMonthIndex(){if(!currentXY.length)return 0;for(var now=new Date,year=now.getFullYear(),month=now.getMonth(),idx=0,i=0;i<currentXY.length;i++){var d=currentXY[i].date;if(!(d.getFullYear()<year||d.getFullYear()===year&&d.getMonth()<=month))break;idx=i}return idx}
-    function getDefaultHoverIndex() {
-      var currentIdx = getCurrentMonthIndex();
-      
-      // Invest & Expense: default to current month
-      if (typeof lineVisibility !== 'undefined' && (lineVisibility.invest || lineVisibility.expense)) {
-        return Math.max(0, Math.min(currentXY.length - 1, currentIdx));
-      }
-      
-      // Balance & Debt: default to current month + 6
-      return Math.min(currentXY.length - 1, currentIdx + 6);
-    }
+    function getDefaultHoverIndex(){var currentIdx=getCurrentMonthIndex();return"undefined"!=typeof lineVisibility&&(lineVisibility.invest||lineVisibility.expense)?Math.max(0,Math.min(currentXY.length-1,currentIdx)):Math.min(currentXY.length-1,currentIdx+6)}
     function fmtShort(v) {
       var a = Math.abs(v), sign = v < 0 ? "-" : "";
       return a >= 1e9 ? sign + (a / 1e9).toFixed(1).replace(/\.0$/, "") + "B" : 
@@ -3786,7 +3776,7 @@ to{transform:rotate(360deg)}
                 var overAmount = lastMonthExpense - averageExpense;
                 var overEl = document.getElementById("budget-over-indicator");
                 if(overEl)if(overAmount>0){var budgetPct=Math.min(averageExpense/scaleMax*usableWidth,usableWidth),overWidthPct=Math.min(lastMonthExpense/scaleMax*usableWidth,usableWidth)-budgetPct;overEl.style.display="flex",overEl.style.left=budgetPct+"%",overEl.style.width=overWidthPct+"%",overEl.title="Last month exceeded budget by "+fmtAxis(overAmount)}else overEl.style.display="none";
-                for(var c=0;c<cats.length;c++){var g=gradients[c%gradients.length],pct=cats[c].curr/total*100,seg=document.createElement("div");if(seg.className="budget-fill-seg",seg.style.flexGrow=pct,seg.style.background="linear-gradient(90deg, "+g[0]+" 0%, "+g[1]+" 100%)",pct>=5){var label=document.createElement("span");label.textContent=pct.toFixed(0)+"%",pct<8&&(label.style.fontSize="10px"),seg.appendChild(label)}barEl.appendChild(seg);var item=document.createElement("span");item.className="legend-item";var rawName=cats[c].name,shortName=rawName;isMobile?rawName.includes("Family")?shortName="Family":rawName.includes("Bills")?shortName="Bills":rawName.includes("Rental")?shortName="Rental":rawName.includes("Food")?shortName="Groceries":rawName.includes("Shop")&&(shortName="Shop/Travel"):shortName=rawName.length>12?rawName.slice(0,10)+"…":rawName,item.innerHTML='<span class="legend-dot" style="background:'+g[1]+'"></span>'+shortName,legendEl.appendChild(item)}
+                for(var c=0;c<cats.length;c++){var g=gradients[c%gradients.length],pct=cats[c].curr/total*100,seg=document.createElement("div");if(seg.className="budget-fill-seg",seg.style.flexGrow=pct,seg.style.background="linear-gradient(90deg, "+g[0]+" 0%, "+g[1]+" 100%)",pct>=1){var label=document.createElement("span");label.textContent=pct.toFixed(0)+"%",pct<8&&(label.style.fontSize="10px"),seg.appendChild(label)}barEl.appendChild(seg);var item=document.createElement("span");item.className="legend-item";var rawName=cats[c].name,shortName=rawName;isMobile?rawName.includes("Family")?shortName="Family":rawName.includes("Bills")?shortName="Bills":rawName.includes("Rental")?shortName="Rental":rawName.includes("Food")?shortName="Groceries":rawName.includes("Shop")&&(shortName="Shop/Travel"):shortName=rawName.length>12?rawName.slice(0,10)+"…":rawName,item.innerHTML='<span class="legend-dot" style="background:'+g[1]+'"></span>'+shortName,legendEl.appendChild(item)}
                 var markerPercent = Math.min(lastMonthExpense / scaleMax, 1);
                 var marker = document.getElementById("last-month-marker");
                 marker.style.left = (markerPercent * 100) + "%";
