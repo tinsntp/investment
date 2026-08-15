@@ -88,7 +88,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 #chart-micro{height:340px !important}
 
 /* ══ DETAIL STYLES ══ */
-#rings-wrap{display:flex;flex-wrap:wrap;gap:1.5vw;justify-content:space-around;margin-bottom:1.5vw;border-radius:15px; 
+#rings-wrap{display:flex;flex-wrap:wrap;gap:1.5vw;justify-content:space-around;margin-bottom:1.5vw;border-radius:20px;margin:0 5px 0 5px;
 background: 
     linear-gradient(135deg, rgba(30, 41, 59, 0.2) 0%, rgba(15, 23, 42, 0.2) 100%),
     url('https://i.pinimg.com/1200x/75/ab/b1/75abb1ed3cc7e63dc9161635c015e925.jpg');
@@ -355,9 +355,7 @@ background:
   }
   #walletHistorySection:not(.is-hidden-ipad){
     opacity:1;
-    max-height:1000px;
-    margin-top:20px;
-    padding-top:16px;
+    max-height:380px;
     padding-bottom:16px;
     pointer-events:auto;
   }
@@ -568,7 +566,7 @@ Object.assign(modalOverlay.style{position:"fixed",top:"0",left:"0",width:"100%",
 .subtitle { font-size:11px; color:#787b86;margin-top:5px}
 .subtitle .now-pill { color:#2dd4bf; font-weight:700; margin-left:2px; }
 
-.chart-wrap-tc{position:relative;width:100%;background:#191919;border-radius:24px;margin-bottom:14px;overflow:hidden;user-select:none}
+.chart-wrap-tc{position:relative;width:100%;background:#191919;border-radius:24px;margin-bottom:14px;overflow:hidden;user-select:none;}
 #wave-svg { width:100%; height:200px; display:block; overflow:visible; }
 @media only screen and (min-width: 401px) {#wave-svg {height: 240px!important}}
 #hover-dot{fill:#0d9488;stroke:#10b981;stroke-width:2px;r:5px;transition:cx .1s ease,cy .1s ease;animation:pulse-dot 4.5s infinite}@keyframes pulse-dot{0%{r:4px;opacity:1}50%{r:8px;opacity:.6;fill:#14b8a6}to{r:4px;opacity:1;fill:#0d9488}}
@@ -1332,7 +1330,7 @@ to{transform:rotate(360deg)}
 /* ══ iPad Expense split layout (min-width:401px, Expense tab active) ══ */
 @media (min-width:401px){
   .big-wrap.expense-split{display:grid;grid-template-columns:1fr 1.1fr;grid-template-rows:auto 1fr;gap:6px;overflow:visible;}
-  .big-wrap.expense-split #card{grid-column:1;grid-row:1;margin:0;}
+  .big-wrap.expense-split #card{grid-column:1;grid-row:1;margin:0;margin:0 5px 0 5px;}
   .big-wrap.expense-split #slides-outer{grid-column:1;grid-row:2;overflow-x:hidden;}
   .big-wrap.expense-split #exp-split-right{display:block;grid-column:2;grid-row:1 / 3;overflow-y:auto;overflow-x:hidden;}
   .big-wrap.expense-split .budget-subtabs .budget-subtab:first-child{display:none!important;}
@@ -1342,7 +1340,7 @@ to{transform:rotate(360deg)}
 
 @media (min-width:401px){
   .big-wrap.wallet-split{display:grid;grid-template-columns:1fr 1.1fr;grid-template-rows:auto 1fr;gap:6px;overflow:visible;}
-  .big-wrap.wallet-split #card{grid-column:1;grid-row:1;margin:0;}
+  .big-wrap.wallet-split #card{grid-column:1;grid-row:1;margin:0;margin:0 5px 0 5px;}
   .big-wrap.wallet-split #slides-outer{grid-column:1;grid-row:2;overflow-x:hidden;min-height:0;}
   .big-wrap.wallet-split #ovw-split-right{display:block;grid-column:2;grid-row:1 / 3;overflow-y:auto;overflow-x:hidden;}
   .big-wrap.wallet-split #ca-wrap [data-tabgroup="wallet-fire"] .budget-subtab-v2:first-child{display:none!important;}
@@ -1351,7 +1349,7 @@ to{transform:rotate(360deg)}
 #ovw-split-right #budget-view-wallet{display:block!important;}
 @media (min-width:401px){
   .big-wrap.portfolio-split{display:grid;grid-template-columns:1fr 1.1fr;grid-template-rows:auto 1fr;gap:6px;overflow:visible;}
-  .big-wrap.portfolio-split #card{grid-column:1;grid-row:1;margin:0;}
+  .big-wrap.portfolio-split #card{grid-column:1;grid-row:1;margin:0;margin:0 5px 0 5px;}
   .big-wrap.portfolio-split #slides-outer{grid-column:1;grid-row:2;overflow-x:hidden;min-height:0;}
   .big-wrap.portfolio-split #port-split-right{display:block;grid-column:2;grid-row:1 / 3;overflow-y:auto;overflow-x:hidden;}
   .big-wrap.portfolio-split #slide-2 [data-tabgroup="portfolio-btc"] .budget-subtab-v2:first-child{display:none!important;}
@@ -3671,7 +3669,7 @@ function fetchTransactionDetails(subCatName,containerEl){cachedTxData?renderTxRo
     }
 
     var cachedBudgetMap = null;
-    function fetchBudgetMap(callback){cachedBudgetMap?callback(cachedBudgetMap):fetch(CSV_EXPENSE+"&t="+Date.now(),{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.text()}).then(function(text){for(var lines=text.split("\n"),rows=[],i=0;i<lines.length;i++)rows.push(parseCsvRow(lines[i]));function g(ri,col){var ci=col.toUpperCase().charCodeAt(0)-65;return rows[ri]&&rows[ri][ci]||""}function n(ri,col){return parseNum(g(ri,col))}for(var budgetMap={},bi=1;bi<=8;bi++){var bn=g(bi,"B"),bv=n(bi,"C");bn&&(budgetMap[bn.toLowerCase().trim()]=bv)}cachedBudgetMap=budgetMap,callback(budgetMap)}).catch(function(err){console.error("Budget fetch error:",err),callback({})})}function buildRingsForMonth(mains){fetchBudgetMap(function(budgetMap){mains.forEach(function(m){var key=m.name.toLowerCase().trim();if(void 0!==budgetMap[key])m.budget=budgetMap[key];else for(var bk in budgetMap)if(key.indexOf(bk)>=0||bk.indexOf(key)>=0){m.budget=budgetMap[bk];break}void 0===m.budget&&(m.budget=0)});var ringsWrap=document.getElementById("rings-wrap");if(ringsWrap){ringsWrap.innerHTML="",ringsWrap.style.marginTop="5px";var billsSpent=0,billsBudget=0,billsIcon="",billsGids=[];if(mains.forEach(function(m,i){var gid="cm"+i,mn=m.name.toLowerCase(),isRental=mn.indexOf("rental")>=0||mn.indexOf("rent")>=0;if(mn.indexOf("bill")>=0||mn.indexOf("insurance")>=0||mn.indexOf("health")>=0)return billsSpent+=m.curr,billsBudget+=m.budget,billsGids.push(gid),void(billsIcon||(billsIcon=m.icon));if(m.budget>0){var ringEl=buildRing(m.name,m.curr,m.budget,m.icon,isRental,[gid]);ringEl.addEventListener("click",function(){var matchedIdx=headers.findIndex(function(h){return h&&h.trim().toLowerCase()===m.name.trim().toLowerCase()});matchedIdx>=0&&"function"==typeof selectCategory&&selectCategory(matchedIdx,m.name,m.icon,!0)}),ringsWrap.appendChild(ringEl)}}),billsBudget>0||billsSpent>0){var billsRingEl=buildRing("Bills & Insurance",billsSpent,billsBudget,billsIcon,!1,billsGids);billsRingEl.addEventListener("click",function(){var matchedIdx=headers.findIndex(function(h){if(!h)return!1;var hl=h.trim().toLowerCase();return hl.indexOf("bill")>=0||hl.indexOf("insurance")>=0||hl.indexOf("health")>=0});matchedIdx>=0&&"function"==typeof selectCategory&&selectCategory(matchedIdx,"Bills & Insurance",billsIcon,!0)}),ringsWrap.appendChild(billsRingEl)}"function"==typeof applyLayout&&applyLayout()}})}function loadCatListForMonth(){if("undefined"!=typeof sheetData&&sheetData&&sheetData.length>0)renderCatListForMonth();else{fetchSheetCSV();var checkInterval=setInterval(function(){"undefined"!=typeof sheetData&&sheetData&&sheetData.length>0&&(clearInterval(checkInterval),renderCatListForMonth())},100)}}function closeAllTxDetails(){document.querySelectorAll(".tx-details-container.visible").forEach(function(container){container.classList.remove("visible");var prevSibling=container.previousElementSibling;prevSibling&&prevSibling.classList.remove("visible-tx")})}function filterCatListByMonth(){closeAllTxDetails(),loadCatListForMonth()}
+    function fetchBudgetMap(callback){cachedBudgetMap?callback(cachedBudgetMap):fetch(CSV_EXPENSE+"&t="+Date.now(),{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.text()}).then(function(text){for(var lines=text.split("\n"),rows=[],i=0;i<lines.length;i++)rows.push(parseCsvRow(lines[i]));function g(ri,col){var ci=col.toUpperCase().charCodeAt(0)-65;return rows[ri]&&rows[ri][ci]||""}function n(ri,col){return parseNum(g(ri,col))}for(var budgetMap={},bi=1;bi<=8;bi++){var bn=g(bi,"B"),bv=n(bi,"C");bn&&(budgetMap[bn.toLowerCase().trim()]=bv)}cachedBudgetMap=budgetMap,callback(budgetMap)}).catch(function(err){console.error("Budget fetch error:",err),callback({})})}function buildRingsForMonth(mains){fetchBudgetMap(function(budgetMap){mains.forEach(function(m){var key=m.name.toLowerCase().trim();if(void 0!==budgetMap[key])m.budget=budgetMap[key];else for(var bk in budgetMap)if(key.indexOf(bk)>=0||bk.indexOf(key)>=0){m.budget=budgetMap[bk];break}void 0===m.budget&&(m.budget=0)});var ringsWrap=document.getElementById("rings-wrap");if(ringsWrap){ringsWrap.innerHTML="";var billsSpent=0,billsBudget=0,billsIcon="",billsGids=[];if(mains.forEach(function(m,i){var gid="cm"+i,mn=m.name.toLowerCase(),isRental=mn.indexOf("rental")>=0||mn.indexOf("rent")>=0;if(mn.indexOf("bill")>=0||mn.indexOf("insurance")>=0||mn.indexOf("health")>=0)return billsSpent+=m.curr,billsBudget+=m.budget,billsGids.push(gid),void(billsIcon||(billsIcon=m.icon));if(m.budget>0){var ringEl=buildRing(m.name,m.curr,m.budget,m.icon,isRental,[gid]);ringEl.addEventListener("click",function(){var matchedIdx=headers.findIndex(function(h){return h&&h.trim().toLowerCase()===m.name.trim().toLowerCase()});matchedIdx>=0&&"function"==typeof selectCategory&&selectCategory(matchedIdx,m.name,m.icon,!0)}),ringsWrap.appendChild(ringEl)}}),billsBudget>0||billsSpent>0){var billsRingEl=buildRing("Bills & Insurance",billsSpent,billsBudget,billsIcon,!1,billsGids);billsRingEl.addEventListener("click",function(){var matchedIdx=headers.findIndex(function(h){if(!h)return!1;var hl=h.trim().toLowerCase();return hl.indexOf("bill")>=0||hl.indexOf("insurance")>=0||hl.indexOf("health")>=0});matchedIdx>=0&&"function"==typeof selectCategory&&selectCategory(matchedIdx,"Bills & Insurance",billsIcon,!0)}),ringsWrap.appendChild(billsRingEl)}"function"==typeof applyLayout&&applyLayout()}})}function loadCatListForMonth(){if("undefined"!=typeof sheetData&&sheetData&&sheetData.length>0)renderCatListForMonth();else{fetchSheetCSV();var checkInterval=setInterval(function(){"undefined"!=typeof sheetData&&sheetData&&sheetData.length>0&&(clearInterval(checkInterval),renderCatListForMonth())},100)}}function closeAllTxDetails(){document.querySelectorAll(".tx-details-container.visible").forEach(function(container){container.classList.remove("visible");var prevSibling=container.previousElementSibling;prevSibling&&prevSibling.classList.remove("visible-tx")})}function filterCatListByMonth(){closeAllTxDetails(),loadCatListForMonth()}
     var monthPickerState = {
         selectedYear: new Date().getFullYear(),
         selectedMonth: new Date().getMonth(), // 0-indexed
@@ -5679,8 +5677,8 @@ function fetchTransactionDetails(subCatName,containerEl){cachedTxData?renderTxRo
             .ca-history-ico { width: 3vw !important; height: 3vw !important;  }
             .ca-history-fb { width: 3vw !important; height: 3vw !important; font-size: 2.4vw !important; }
             
-            .ca-history-ttl { font-size: 1.8vw !important; }
-            .ca-history-dtl { font-size: 1.8vw !important; }
+            .ca-history-ttl { font-size: 1.6vw !important; }
+            .ca-history-dtl { font-size: 1.6vw !important; }
             .ca-history-badge-txt { font-size: 1.6vw !important; }
             .ca-history-dte, .tx-group-hdr { font-size: 1.6vw !important; }
             
