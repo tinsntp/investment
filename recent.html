@@ -5672,7 +5672,7 @@ function fetchTransactionDetails(subCatName,containerEl){cachedTxData?renderTxRo
             }
 
             @media (min-width: 401px) {
-            .ca-history-row { display: flex; align-items: center;padding: 10px 10px !important; gap: 2vw !important; }
+            .ca-history-row { display: flex; align-items: center;padding: 5px 5px !important; gap: 2vw !important; }
             .ca-history-icon-wrap { width: 1.5vw !important; }
             .ca-history-ico { width: 3vw !important; height: 3vw !important;  }
             .ca-history-fb { width: 3vw !important; height: 3vw !important; font-size: 2.4vw !important; }
@@ -7706,10 +7706,28 @@ function fetchWatchlistData() {
     function forceDefaultRecentTabIfNotSplit(){
   var tabBtn0 = document.getElementById('tab-btn-0');
   var isExpenseSplitActive = window.innerWidth > 400 && !!tabBtn0 && tabBtn0.classList.contains('active');
-  if (isExpenseSplitActive) return; // split mode already handles its own default (Detail) — don't fight it
+  if (isExpenseSplitActive) return; // split mode owns its own default (Detail) — don't fight it
+
   var recentBtn = document.querySelector('.budget-subtabs .budget-subtab:first-child');
-  if (recentBtn) recentBtn.click();
+  if (!recentBtn) return;
+  recentBtn.click();
+
+  // loadRecent() depends on data that may not have arrived yet at this
+  // point — keep re-clicking (the one thing we've confirmed actually works)
+  // until #tx-list actually has content, then stop.
+  var txList = document.getElementById('tx-list');
+  var attempts = 0;
+  var retryTimer = setInterval(function(){
+    attempts++;
+    var hasContent = txList && txList.children && txList.children.length > 0;
+    if (hasContent || attempts > 20) { // give up after ~10s
+      clearInterval(retryTimer);
+      return;
+    }
+    recentBtn.click();
+  }, 500);
 }
+
 document.addEventListener('DOMContentLoaded', forceDefaultRecentTabIfNotSplit);
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
   forceDefaultRecentTabIfNotSplit();
