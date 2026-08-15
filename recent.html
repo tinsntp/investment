@@ -1461,11 +1461,11 @@ to{transform:rotate(360deg)}
       <div class="budget-card">
         <!-- Sub-Tab Switcher Header (Placed at top) -->
         <div class="budget-subtabs" style="display: flex; align-items: center; justify-content: space-between; margin: 10px;">
-          <button type="button" class="budget-subtab" onclick="switchBudgetTab(this, 'subcategory')">
+          <button type="button" class="budget-subtab active" onclick="switchBudgetTab(this, 'subcategory')">
             <span class="material-icons-round" style="font-size: 14px;">timelapse</span>
             <span>Detail</span>
           </button>
-          <button type="button" class="budget-subtab active" onclick="switchBudgetTab(this, 'spending')">
+          <button type="button" class="budget-subtab" onclick="switchBudgetTab(this, 'spending')">
             <span class="material-icons-round" style="font-size: 14px;">history</span>
             <span>Recent</span>
           </button>
@@ -7702,9 +7702,98 @@ function fetchWatchlistData() {
     window.addEventListener("DOMContentLoaded",async()=>{try{await Promise.all([loadBalanceHistoryTC(),loadRecent()])}catch(error){console.error("Failed to load data:",error)}setTimeout(()=>{const loader=document.getElementById("loader-overlay");loader&&loader.classList.add("fade-out")},1500)});  
     document.getElementById('watchlist-modal').addEventListener('click', function(event) {if (event.target === this) {closeWatchlistModal();}});
     
-  !function(){function applyExpSplitLayout(){var bigWrap=document.querySelector(".big-wrap"),rightSlot=document.getElementById("exp-split-right"),spendingView=document.getElementById("budget-view-spending"),budgetCard=document.querySelector(".budget-card");if(bigWrap&&rightSlot&&spendingView&&budgetCard){var tabBtn,shouldSplit=(tabBtn=document.getElementById("tab-btn-0"),window.innerWidth>400&&!!tabBtn&&tabBtn.classList.contains("active")),isSplit=bigWrap.classList.contains("expense-split");if(shouldSplit&&!isSplit){bigWrap.classList.add("expense-split"),rightSlot.appendChild(spendingView);var recentBtn=budgetCard.querySelector(".budget-subtabs .budget-subtab:nth-child(2)");if(recentBtn&&recentBtn.classList.contains("active")){var detailBtn=budgetCard.querySelector(".budget-subtabs .budget-subtab:first-child");detailBtn&&detailBtn.click()}}else if(!shouldSplit&&isSplit){bigWrap.classList.remove("expense-split");var subcategoryView=document.getElementById("budget-view-subcategory");subcategoryView&&subcategoryView.parentNode===budgetCard?budgetCard.insertBefore(spendingView,subcategoryView):budgetCard.insertBefore(spendingView,budgetCard.firstChild?budgetCard.firstChild.nextSibling:null);var detailBtnBack=budgetCard.querySelector(".budget-subtabs .budget-subtab:first-child");if(detailBtnBack&&detailBtnBack.classList.contains("active")){var recentBtnBack=budgetCard.querySelector(".budget-subtabs .budget-subtab:nth-child(2)");recentBtnBack&&recentBtnBack.click()}}}}function applyWalletSplitLayout(){var bigWrap=document.querySelector(".big-wrap"),rightSlot=document.getElementById("ovw-split-right"),walletView=document.getElementById("budget-view-wallet"),budgetCard=document.querySelector("#ca-wrap .budget-card");if(bigWrap&&rightSlot&&walletView&&budgetCard){var tabBtn,shouldSplit=(tabBtn=document.getElementById("tab-btn-1"),window.innerWidth>400&&!!tabBtn&&tabBtn.classList.contains("active")),isSplit=bigWrap.classList.contains("wallet-split");if(shouldSplit&&!isSplit){bigWrap.classList.add("wallet-split"),rightSlot.appendChild(walletView);var walletBtn=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:first-child');if(walletBtn&&walletBtn.classList.contains("active")){var fireBtn=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:last-child');fireBtn&&fireBtn.click()}}else if(!shouldSplit&&isSplit){bigWrap.classList.remove("wallet-split"),budgetCard.insertBefore(walletView,budgetCard.querySelector("#budget-view-fire")||null);var fireBtnBack=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:last-child');if(fireBtnBack&&fireBtnBack.classList.contains("active")){var walletBtnBack=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:first-child');walletBtnBack&&walletBtnBack.click()}}}}function applyPortfolioSplitLayout(){var bigWrap=document.querySelector(".big-wrap"),rightSlot=document.getElementById("port-split-right"),portfolioView=document.getElementById("budget-view-portfolio"),budgetCard=document.querySelector("#slide-2 .budget-card");if(bigWrap&&rightSlot&&portfolioView&&budgetCard){var tabBtn,shouldSplit=(tabBtn=document.getElementById("tab-btn-2"),window.innerWidth>400&&!!tabBtn&&tabBtn.classList.contains("active")),isSplit=bigWrap.classList.contains("portfolio-split");if(shouldSplit&&!isSplit){bigWrap.classList.add("portfolio-split"),rightSlot.appendChild(portfolioView);var portfolioBtn=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:first-child');if(portfolioBtn&&portfolioBtn.classList.contains("active")){var btcBtn=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:last-child');btcBtn&&btcBtn.click()}}else if(!shouldSplit&&isSplit){bigWrap.classList.remove("portfolio-split");var btcView=document.getElementById("budget-view-btc");btcView&&btcView.parentNode===budgetCard?budgetCard.insertBefore(portfolioView,btcView):budgetCard.appendChild(portfolioView);var btcBtnBack=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:last-child');if(btcBtnBack&&btcBtnBack.classList.contains("active")){var portfolioBtnBack=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:first-child');portfolioBtnBack&&portfolioBtnBack.click()}}}}function applyAllSplitLayouts(){applyExpSplitLayout(),applyWalletSplitLayout(),applyPortfolioSplitLayout()}
-function applyDefaultRecentTab(){var tabBtn0=document.getElementById("tab-btn-0"),isExpenseSplitActive=window.innerWidth>400&&!!tabBtn0&&tabBtn0.classList.contains("active");if(isExpenseSplitActive)return;var recentBtn=document.querySelector(".budget-subtabs .budget-subtab:nth-child(2)");if(!recentBtn||recentBtn.classList.contains("active"))return;recentBtn.click()}
-var applyTimer,resizeTimer,tabBarObserverTarget=document.getElementById("tab-bar")||document.getElementById("tab-btn-group")||document.body;new MutationObserver(function(){clearTimeout(applyTimer),applyTimer=setTimeout(applyAllSplitLayouts,0)}).observe(tabBarObserverTarget,{attributes:!0,attributeFilter:["class"],subtree:!0}),window.addEventListener("resize",function(){clearTimeout(resizeTimer),resizeTimer=setTimeout(applyAllSplitLayouts,100)}),document.addEventListener("DOMContentLoaded",function(){applyAllSplitLayouts(),applyDefaultRecentTab()}),applyAllSplitLayouts(),applyDefaultRecentTab()}();
+    ! function() {
+  function applyExpSplitLayout() {
+    var bigWrap = document.querySelector(".big-wrap"),
+      rightSlot = document.getElementById("exp-split-right"),
+      spendingView = document.getElementById("budget-view-spending"),
+      budgetCard = document.querySelector(".budget-card");
+    if (bigWrap && rightSlot && spendingView && budgetCard) {
+      var tabBtn, shouldSplit = (tabBtn = document.getElementById("tab-btn-0"), window.innerWidth > 400 && !!tabBtn && tabBtn.classList.contains("active")),
+        isSplit = bigWrap.classList.contains("expense-split");
+      if (shouldSplit && !isSplit) {
+        bigWrap.classList.add("expense-split"), rightSlot.appendChild(spendingView);
+        var recentBtn = budgetCard.querySelector(".budget-subtabs .budget-subtab:first-child");
+        if (recentBtn && recentBtn.classList.contains("active")) {
+          var detailBtn = budgetCard.querySelector(".budget-subtabs .budget-subtab:nth-child(2)");
+          detailBtn && detailBtn.click()
+        }
+      } else if (!shouldSplit && isSplit) {
+        bigWrap.classList.remove("expense-split");
+        var subcategoryView = document.getElementById("budget-view-subcategory");
+        subcategoryView && subcategoryView.parentNode === budgetCard ? budgetCard.insertBefore(spendingView, subcategoryView) : budgetCard.insertBefore(spendingView, budgetCard.firstChild ? budgetCard.firstChild.nextSibling : null)
+      }
+    }
+  }
+
+  function applyWalletSplitLayout() {
+    var bigWrap = document.querySelector(".big-wrap"),
+      rightSlot = document.getElementById("ovw-split-right"),
+      walletView = document.getElementById("budget-view-wallet"),
+      budgetCard = document.querySelector("#ca-wrap .budget-card");
+    if (bigWrap && rightSlot && walletView && budgetCard) {
+      var tabBtn, shouldSplit = (tabBtn = document.getElementById("tab-btn-1"), window.innerWidth > 400 && !!tabBtn && tabBtn.classList.contains("active")),
+        isSplit = bigWrap.classList.contains("wallet-split");
+      if (shouldSplit && !isSplit) {
+        bigWrap.classList.add("wallet-split"), rightSlot.appendChild(walletView);
+        var walletBtn = budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:first-child');
+        if (walletBtn && walletBtn.classList.contains("active")) {
+          var fireBtn = budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:last-child');
+          fireBtn && fireBtn.click()
+        }
+      } else if (!shouldSplit && isSplit) {
+        bigWrap.classList.remove("wallet-split"), budgetCard.insertBefore(walletView, budgetCard.querySelector("#budget-view-fire") || null);
+        var fireBtnBack = budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:last-child');
+        if (fireBtnBack && fireBtnBack.classList.contains("active")) {
+          var walletBtnBack = budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:first-child');
+          walletBtnBack && walletBtnBack.click()
+        }
+      }
+    }
+  }
+
+  function applyPortfolioSplitLayout() {
+    var bigWrap = document.querySelector(".big-wrap"),
+      rightSlot = document.getElementById("port-split-right"),
+      portfolioView = document.getElementById("budget-view-portfolio"),
+      budgetCard = document.querySelector("#slide-2 .budget-card");
+    if (bigWrap && rightSlot && portfolioView && budgetCard) {
+      var tabBtn, shouldSplit = (tabBtn = document.getElementById("tab-btn-2"), window.innerWidth > 400 && !!tabBtn && tabBtn.classList.contains("active")),
+        isSplit = bigWrap.classList.contains("portfolio-split");
+      if (shouldSplit && !isSplit) {
+        bigWrap.classList.add("portfolio-split"), rightSlot.appendChild(portfolioView);
+        var portfolioBtn = budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:first-child');
+        if (portfolioBtn && portfolioBtn.classList.contains("active")) {
+          var btcBtn = budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:last-child');
+          btcBtn && btcBtn.click()
+        }
+      } else if (!shouldSplit && isSplit) {
+        bigWrap.classList.remove("portfolio-split");
+        var btcView = document.getElementById("budget-view-btc");
+        btcView && btcView.parentNode === budgetCard ? budgetCard.insertBefore(portfolioView, btcView) : budgetCard.appendChild(portfolioView);
+        var btcBtnBack = budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:last-child');
+        if (btcBtnBack && btcBtnBack.classList.contains("active")) {
+          var portfolioBtnBack = budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:first-child');
+          portfolioBtnBack && portfolioBtnBack.click()
+        }
+      }
+    }
+  }
+
+  function applyAllSplitLayouts() {
+    applyExpSplitLayout(), applyWalletSplitLayout(), applyPortfolioSplitLayout()
+  }
+  var applyTimer, resizeTimer, tabBarObserverTarget = document.getElementById("tab-bar") || document.getElementById("tab-btn-group") || document.body;
+  new MutationObserver(function() {
+    clearTimeout(applyTimer), applyTimer = setTimeout(applyAllSplitLayouts, 0)
+  }).observe(tabBarObserverTarget, {
+    attributes: !0,
+    attributeFilter: ["class"],
+    subtree: !0
+  }), window.addEventListener("resize", function() {
+    clearTimeout(resizeTimer), resizeTimer = setTimeout(applyAllSplitLayouts, 100)
+  }), document.addEventListener("DOMContentLoaded", applyAllSplitLayouts), applyAllSplitLayouts()
+}();
 
     updateMarketStatusDot();
 
