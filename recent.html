@@ -7728,9 +7728,11 @@ function fetchWatchlistData() {
   }, 500);
 }
 
-document.addEventListener('DOMContentLoaded', forceDefaultRecentTabIfNotSplit);
+document.addEventListener('DOMContentLoaded', function(){
+  setTimeout(forceDefaultRecentTabIfNotSplit, 50);
+});
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
-  forceDefaultRecentTabIfNotSplit();
+  setTimeout(forceDefaultRecentTabIfNotSplit, 50);
 }
 
     updateMarketStatusDot();
