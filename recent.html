@@ -154,7 +154,7 @@ background:
 .pct-val.flat { color:rgba(255,255,255,0.3); }
 #det-msg { font-size:3vw; color:rgba(255,255,255,0.4); text-align:center; padding:5vw; }
 
-.budget-card{padding:0 5px 0 0px;touch-action: pan-y;}
+.budget-card{padding:0 5px 0 0px;touch-action: pan-y;overflow-y: auto;}
 .budget-subtabs{background: 
     linear-gradient(135deg, rgba(30, 41, 59, 0.2) 0%, rgba(15, 23, 42, 0.2) 100%),
     url('https://i.pinimg.com/736x/51/b7/0d/51b70d9cbb138f7db3b95eeba6d4753c.jpg');border-radius:13px;padding:3px;gap:4px}.budget-subtab{flex:1;font-family:Lexend;display:flex;align-items:center;justify-content:center;gap:5px;background:0 0;border:0;color:rgba(255,255,255,.5);padding:4px 10px;font-size:12px;font-weight:400;border-radius:10px;cursor:pointer;transition:all .2s ease-in-out;outline:0;}
@@ -218,7 +218,7 @@ background:
 .dropdown-menu::-webkit-scrollbar{width:5px}.dropdown-menu::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:10px}.dropdown-divider{height:1px;background:rgba(255,255,255,.12);margin:6px 4px;border:0}
 
 /*RECENT */
-#tx-list{display:flex;flex-direction:column;margin:0 auto;padding:0 5px 0 5px;}
+#tx-list{display:flex;flex-direction:column;margin:0 auto;padding:0 5px 0 5px;overflow-y: auto!important;}
 .tx-group-hdr{font-size:2.3vw;font-weight:300;color:rgba(255,255,255,0.45);letter-spacing:0.05em;padding:2.5vw 0 1vw 2vw;margin-top:0.5vw}
 .tx-group-hdr:first-child{padding-top:0.5vw}
 .row{display:flex;align-items:center;padding:2vw 0;border-bottom:1px solid rgba(255,255,255,0.08);gap:3vw;cursor:pointer;transition:background 0.2s ease,border-radius 0.2s ease,padding 0.2s ease}
@@ -233,7 +233,7 @@ background:
 .amt { font-family:DM Sans;opacity:0.95;font-weight:500; color:#fff; white-space:nowrap;}
 .dte { font-size:1.9vw; color:rgba(255,255,255,0.4); white-space:nowrap; }
 .ttl{display:flex;align-items:center;gap:1.5vw}
-.recent-badge{font-size:2.4vw;font-weight:700;color:#14b8a6;background:rgba(74,222,128,0.14);border-radius:99px;padding:0.4vw 1.2vw;white-space:nowrap}
+.recent-badge{font-size:1.6vw;font-weight:700;color:#14b8a6;background:rgba(74,222,128,0.14);border-radius:99px;padding:0.4vw 1.2vw;white-space:nowrap}
 .recent-badge .bi,label .bi {font-size: 0.8rem!important;vertical-align: 0em;}
 @media screen and (max-width:400px){.recent-badge{font-size:3.4vw}.ico,.ico-fb {width:14vw!important; height:14vw!important;}}
 .budget-bar-wrap { position: relative;}
@@ -259,7 +259,7 @@ background:
 #add-cash.success-confirm{background-color:#10b981 !important;color:#ffffff !important;font-size:15px;font-weight:500;display:flex;align-items:center;justify-content:center;transition:background-color 0.3s ease}
 
 @keyframes spinCircle{to{transform:rotate(360deg)}}
-@media screen and (min-width:401px){#add-cash{width:6vw;height:6vw;font-size:5vw;} #add-cash.success-confirm{font-size:3.4vw;} .btn-spinner{width:20px;height:20px;}}
+@media screen and (min-width:401px){#add-cash{width:3vw;height:3vw;font-size:2.4vw;} #add-cash.success-confirm{font-size:3.4vw;} .btn-spinner{width:20px;height:20px;}}
 
 /* ══ WALLET SLIDE ══ */
 .wallet-widget{width:100%;padding:10px;overflow:hidden;display:flex;flex-direction:column;gap:16px}
@@ -1305,6 +1305,35 @@ to{transform:rotate(360deg)}
       opacity: 0;
     }
   }
+/* ══ iPad Expense split layout (min-width:401px, Expense tab active) ══ */
+@media (min-width:401px){
+  .big-wrap.expense-split{display:grid;grid-template-columns:1fr 1.1fr;grid-template-rows:auto 1fr;gap:12px;overflow:visible;}
+  .big-wrap.expense-split #card{grid-column:1;grid-row:1;margin:0;}
+  .big-wrap.expense-split #slides-outer{grid-column:1;grid-row:2;overflow-y:auto;overflow-x:hidden;min-height:0;}
+  .big-wrap.expense-split #exp-split-right{display:block;grid-column:2;grid-row:1 / 3;overflow-y:auto;min-height:0;background:var(--surface-card,rgba(22,28,45,.75));border-radius:20px;padding:10px 5px;}
+  .big-wrap.expense-split .budget-subtabs .budget-subtab:first-child{display:none!important;}
+}
+#exp-split-right{display:none;}
+#exp-split-right #budget-view-spending{display:block!important;}
+
+@media (min-width:401px){
+  .big-wrap.wallet-split{display:grid;grid-template-columns:1fr 1.1fr;grid-template-rows:auto 1fr;gap:12px;overflow:visible;}
+  .big-wrap.wallet-split #card{grid-column:1;grid-row:1;margin:0;}
+  .big-wrap.wallet-split #slides-outer{grid-column:1;grid-row:2;overflow-y:auto;overflow-x:hidden;min-height:0;}
+  .big-wrap.wallet-split #ovw-split-right{display:block;grid-column:2;grid-row:1 / 3;overflow-y:auto;min-height:0;background:var(--surface-card,rgba(22,28,45,.75));border-radius:20px;padding:10px 5px;}
+  .big-wrap.wallet-split #ca-wrap [data-tabgroup="wallet-fire"] .budget-subtab-v2:first-child{display:none!important;}
+}
+#ovw-split-right{display:none;}
+#ovw-split-right #budget-view-wallet{display:block!important;}
+@media (min-width:401px){
+  .big-wrap.portfolio-split{display:grid;grid-template-columns:1fr 1.1fr;grid-template-rows:auto 1fr;gap:12px;overflow:visible;}
+  .big-wrap.portfolio-split #card{grid-column:1;grid-row:1;margin:0;}
+  .big-wrap.portfolio-split #slides-outer{grid-column:1;grid-row:2;overflow-y:auto;overflow-x:hidden;min-height:0;}
+  .big-wrap.portfolio-split #port-split-right{display:block;grid-column:2;grid-row:1 / 3;overflow-y:auto;min-height:0;background:var(--surface-card,rgba(22,28,45,.75));border-radius:20px;padding:10px 5px;}
+  .big-wrap.portfolio-split #slide-2 [data-tabgroup="portfolio-btc"] .budget-subtab-v2:first-child{display:none!important;}
+}
+#port-split-right{display:none;}
+#port-split-right #budget-view-portfolio{display:block!important;}
 
 </style>
 </head>
@@ -1341,67 +1370,67 @@ to{transform:rotate(360deg)}
   </div>
 </div>
 <div class="big-wrap">
-<div class="card" id="card">
-  <div class="card-top">
-    <div class="range-selector" id="range-selector">
-      <button class="range-btn" data-range="-2y">-2y</button>
-      <button class="range-btn" data-range="-1y">-1y</button>
-      <button class="range-btn" data-range="-6m">-6m</button>
-      <button class="range-btn" data-range="-3m">-3m</button>
-      <button class="range-btn active" data-range="today">Today</button>
-      <button class="range-btn" data-range="+3m">+3m</button>
-      <button class="range-btn" data-range="+6m">+6m</button>
-      <button class="range-btn" data-range="+1y">+1y</button>
-      <button class="range-btn" data-range="+2y">+2y</button>
-      <button class="range-btn" data-range="max">Max</button>
-    </div>  
-  </div>
+  <div class="card" id="card">
+    <div class="card-top">
+      <div class="range-selector" id="range-selector">
+        <button class="range-btn" data-range="-2y">-2y</button>
+        <button class="range-btn" data-range="-1y">-1y</button>
+        <button class="range-btn" data-range="-6m">-6m</button>
+        <button class="range-btn" data-range="-3m">-3m</button>
+        <button class="range-btn active" data-range="today">Today</button>
+        <button class="range-btn" data-range="+3m">+3m</button>
+        <button class="range-btn" data-range="+6m">+6m</button>
+        <button class="range-btn" data-range="+1y">+1y</button>
+        <button class="range-btn" data-range="+2y">+2y</button>
+        <button class="range-btn" data-range="max">Max</button>
+      </div>  
+    </div>
 
-  <div class="card-sub-row">
-    <div style="display:flex; align-items:center; gap:8px;">
-      <div class="card-sub-text" id="sub-text"></div>
-      <div class="pill" id="change-pill" style="display:none;"></div>
-      <div class="line-toggle-group" id="line-toggle-group">
-        <button class="line-toggle-btn active" data-line="balance" title="Balance">
-          <img src="https://github.com/tinsntp/investment/blob/main/icon/cash.png?raw=true" />
-        </button>
-        <button class="line-toggle-btn" data-line="invest" title="Invest">
-          <img src="https://github.com/tinsntp/investment/blob/main/icon/stock.png?raw=true" />
-        </button>
-        <button class="line-toggle-btn" data-line="expense" title="Expense">
-          <img src="https://github.com/tinsntp/investment/blob/main/icon/expense.png?raw=true" />
-        </button>
-        <button class="line-toggle-btn" data-line="debt" title="Debt">
-          <img src="https://github.com/tinsntp/investment/blob/main/icon/bank%20loan.png?raw=true" />
-        </button>
+    <div class="card-sub-row">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div class="card-sub-text" id="sub-text"></div>
+        <div class="pill" id="change-pill" style="display:none;"></div>
+        <div class="line-toggle-group" id="line-toggle-group">
+          <button class="line-toggle-btn active" data-line="balance" title="Balance">
+            <img src="https://github.com/tinsntp/investment/blob/main/icon/cash.png?raw=true" />
+          </button>
+          <button class="line-toggle-btn" data-line="invest" title="Invest">
+            <img src="https://github.com/tinsntp/investment/blob/main/icon/stock.png?raw=true" />
+          </button>
+          <button class="line-toggle-btn" data-line="expense" title="Expense">
+            <img src="https://github.com/tinsntp/investment/blob/main/icon/expense.png?raw=true" />
+          </button>
+          <button class="line-toggle-btn" data-line="debt" title="Debt">
+            <img src="https://github.com/tinsntp/investment/blob/main/icon/bank%20loan.png?raw=true" />
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="loading-msg-tc"></div>
+    <div class="chart-wrap-tc" id="chart-wrap" style="display:none;">
+      <svg id="chart-svg" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
+      <div class="tooltip" id="tooltip" style="display:none;"></div>
+    </div>
+    <div class="balance-overlay-group" id="balance-overlay-group" style="display:none;">
+      <div class="balance-group">
+        <div class="usd-row">
+          <div class="usd-flag-wrap" id="usd-flag-wrap"><img src="https://github.com/tinsntp/investment/blob/main/icon/usdflag.png?raw=true"></div>
+          <div class="card-balance-usd" id="balance-usd"></div>
+        </div>
+        <div class="balance-toggle-area" id="balance-toggle-area" style="display:flex; align-items:center; justify-content:space-between; width:100%;">
+          <div style="display:flex; flex-direction:column;">
+            <div class="card-balance" id="balance-val">&#x2014;</div>
+            <div class="countdown-text" id="countdown-text" style="opacity: 0.7; margin-top: 2px;padding-right:10px;"></div>
+          </div>
+          <div class="goal-ring-wrap" id="goal-ring-wrap" style="flex-shrink:0;">
+            <svg id="goal-ring-svg" viewBox="0 0 80 80"></svg>
+          </div>
+
+        </div>
       </div>
     </div>
   </div>
-  <div id="loading-msg-tc"></div>
-  <div class="chart-wrap-tc" id="chart-wrap" style="display:none;">
-    <svg id="chart-svg" viewBox="0 0 640 300" preserveAspectRatio="none"></svg>
-    <div class="tooltip" id="tooltip" style="display:none;"></div>
-  </div>
-  <div class="balance-overlay-group" id="balance-overlay-group" style="display:none;">
-    <div class="balance-group">
-      <div class="usd-row">
-        <div class="usd-flag-wrap" id="usd-flag-wrap"><img src="https://github.com/tinsntp/investment/blob/main/icon/usdflag.png?raw=true"></div>
-        <div class="card-balance-usd" id="balance-usd"></div>
-      </div>
-      <div class="balance-toggle-area" id="balance-toggle-area" style="display:flex; align-items:center; justify-content:space-between; width:100%;">
-        <div style="display:flex; flex-direction:column;">
-          <div class="card-balance" id="balance-val">&#x2014;</div>
-          <div class="countdown-text" id="countdown-text" style="opacity: 0.7; margin-top: 2px;padding-right:10px;"></div>
-        </div>
-        <div class="goal-ring-wrap" id="goal-ring-wrap" style="flex-shrink:0;">
-          <svg id="goal-ring-svg" viewBox="0 0 80 80"></svg>
-        </div>
-
-      </div>
-    </div>
-  </div>
-</div>
-
+<div id="exp-split-right"></div><div id="ovw-split-right"></div><div id="port-split-right"></div>
 <div class="slides-outer" id="slides-outer">
   <div class="slides-wrap" id="slides-wrap">
     <!-- EXPENSE SLIDE -->
@@ -3388,7 +3417,77 @@ to{transform:rotate(360deg)}
     var CSV_EXPENSE = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1324702331";
     var allExpanded=!1,monthlyBudget=0,currentExpense=0,lastExpense=0;
 
-    function buildRing(label,spent,budget,iconUrl,hideOnMobile,gids){var item=document.createElement("div");item.className="ring-item",hideOnMobile&&(item.dataset.hideOnMobile="1"),item.dataset.gids=gids.join(",");var isMobile=window.innerWidth<400,displayLabel=label;isMobile&&(label.includes("Family")?displayLabel="Family":label.includes("Bills")?displayLabel="Bills & Ins.":label.includes("Rental")?displayLabel="Rental":label.includes("Food")&&(displayLabel="Groceries"));var pct=budget>0?Math.min(100,spent/budget*100):0,displayPct=budget>0?spent/budget*100:0,ringPct=Math.min(displayPct,100),circ=2*Math.PI*28,dash=ringPct/100*circ,gap=circ-dash,baseColor=ringColor(pct),remain=budget-spent,remCls=remain<0?"over":remain<.2*budget?"low":"ok",remText=remain>=0?fmtK(remain)+" left":fmtK(Math.abs(remain))+" over",ringIcoEl=null;iconUrl&&0===iconUrl.indexOf("http")&&((ringIcoEl=document.createElement("img")).className="ring-icon",ringIcoEl.src=iconUrl,ringIcoEl.onerror=function(){this.style.display="none"});var ns="http://www.w3.org/2000/svg",svg=document.createElementNS(ns,"svg");svg.setAttribute("viewBox","0 0 80 80"),svg.className="ring-svg";var initRingSz=isMobile?"13vw":"10vw";svg.style.width=initRingSz,svg.style.height=initRingSz;var gradId="grad-"+Math.random().toString(36).substr(2,9),defs=document.createElementNS(ns,"defs"),realPct=budget>0?spent/budget*100:0,gradColors="";gradColors=realPct>100?'<stop offset="0%" stop-color="#fff" /><stop offset="100%" stop-color="#ff0055" />':realPct>90?'<stop offset="0%" stop-color="#14b8a6" /><stop offset="50%" stop-color="#f97316" />':realPct>80?'<stop offset="0%" stop-color="#14b8a6" /><stop offset="70%" stop-color="#eab308" />':`<stop offset="0%" stop-color="#008080" /><stop offset="100%" stop-color="${baseColor}" />`,defs.innerHTML=`<linearGradient id="${gradId}" x1="0%" y1="100%" x2="100%" y2="0%">${gradColors}</linearGradient>`,svg.appendChild(defs);var bg=document.createElementNS(ns,"circle");bg.setAttribute("cx",40),bg.setAttribute("cy",40),bg.setAttribute("r",28),bg.setAttribute("fill","rgba(0, 0, 0, 0.1)"),bg.setAttribute("stroke","rgba(255,255,255,0.08)"),bg.setAttribute("stroke-width",8),svg.appendChild(bg);var fg=document.createElementNS(ns,"circle");fg.setAttribute("cx",40),fg.setAttribute("cy",40),fg.setAttribute("r",28),fg.setAttribute("fill","none"),fg.setAttribute("stroke",`url(#${gradId})`),fg.setAttribute("stroke-width",8),fg.setAttribute("stroke-linecap","round"),fg.setAttribute("stroke-dasharray",dash+" "+gap),fg.setAttribute("stroke-dashoffset","0"),fg.setAttribute("transform","rotate(-90 40 40)"),svg.appendChild(fg);var pctTxt=document.createElementNS(ns,"text");pctTxt.setAttribute("x","40"),pctTxt.setAttribute("y","41"),pctTxt.setAttribute("text-anchor","middle"),pctTxt.setAttribute("dominant-baseline","middle"),pctTxt.setAttribute("fill","#fff"),pctTxt.setAttribute("font-size","18"),pctTxt.setAttribute("font-family","JetBrains Mono"),pctTxt.setAttribute("font-weight","600"),pctTxt.textContent=Math.round(displayPct)+"%",svg.appendChild(pctTxt);var lblEl=document.createElement("div");lblEl.className="ring-label",lblEl.textContent=displayLabel;var remEl=document.createElement("div");return remEl.className="ring-remain "+remCls,remEl.textContent=remText,item.appendChild(svg),ringIcoEl&&item.appendChild(ringIcoEl),item.appendChild(lblEl),item.appendChild(remEl),item.addEventListener("click",function(){var alreadySel=this.classList.contains("selected"),gids2=(this.dataset.gids||"").split(",").filter(function(g){return g});document.querySelectorAll(".ring-item.selected").forEach(function(r2){r2.classList.remove("selected")}),alreadySel?(document.querySelectorAll(".main-row.ring-highlighted").forEach(function(r){r.classList.remove("ring-highlighted")}),gids2.forEach(function(gid){var mainRow=document.querySelector(".main-row[data-id='"+gid+"']");if(mainRow){mainRow.dataset.open="0";var chev2=document.getElementById("chev-"+gid);chev2&&(chev2.className="chevron bi bi-chevron-right"),document.querySelectorAll(".sub-row[data-group='"+gid+"']").forEach(function(s){s.classList.remove("visible")})}})):(this.classList.add("selected"),document.querySelectorAll(".main-row.ring-highlighted").forEach(function(r){r.classList.remove("ring-highlighted")}),gids2.forEach(function(gid){var mainRow=document.querySelector(".main-row[data-id='"+gid+"']");if(mainRow){mainRow.classList.add("ring-highlighted"),mainRow.dataset.open="1";var chev2=document.getElementById("chev-"+gid);chev2&&(chev2.className="chevron bi bi-chevron-down"),document.querySelectorAll(".sub-row[data-group='"+gid+"']").forEach(function(s){s.classList.add("visible")})}}))}),item}
+    function buildRing(label, spent, budget, iconUrl, hideOnMobile, gids) {
+  var item = document.createElement("div");
+  item.className = "ring-item", hideOnMobile && (item.dataset.hideOnMobile = "1"), item.dataset.gids = gids.join(",");
+  var isMobile = window.innerWidth < 401,
+    displayLabel = label;
+  (label.includes("Family") ? displayLabel = "Family" : label.includes("Bills") ? displayLabel = "Bills & Ins." : label.includes("Rental") ? displayLabel = "Rental" : label.includes("Food") && (displayLabel = "Groceries"));
+  var pct = budget > 0 ? Math.min(100, spent / budget * 100) : 0,
+    displayPct = budget > 0 ? spent / budget * 100 : 0,
+    ringPct = Math.min(displayPct, 100),
+    circ = 2 * Math.PI * 28,
+    dash = ringPct / 100 * circ,
+    gap = circ - dash,
+    baseColor = ringColor(pct),
+    remain = budget - spent,
+    remCls = remain < 0 ? "over" : remain < .2 * budget ? "low" : "ok",
+    remText = remain >= 0 ? fmtK(remain) + " left" : fmtK(Math.abs(remain)) + " over",
+    ringIcoEl = null;
+  iconUrl && 0 === iconUrl.indexOf("http") && ((ringIcoEl = document.createElement("img")).className = "ring-icon", ringIcoEl.src = iconUrl, ringIcoEl.onerror = function() {
+    this.style.display = "none"
+  });
+  var ns = "http://www.w3.org/2000/svg",
+    svg = document.createElementNS(ns, "svg");
+  svg.setAttribute("viewBox", "0 0 80 80"), svg.className = "ring-svg";
+  var initRingSz = isMobile ? "13vw" : "6vw";
+  svg.style.width = initRingSz, svg.style.height = initRingSz;
+  var gradId = "grad-" + Math.random().toString(36).substr(2, 9),
+    defs = document.createElementNS(ns, "defs"),
+    realPct = budget > 0 ? spent / budget * 100 : 0,
+    gradColors = "";
+  gradColors = realPct > 100 ? '<stop offset="0%" stop-color="#fff" /><stop offset="100%" stop-color="#ff0055" />' : realPct > 90 ? '<stop offset="0%" stop-color="#14b8a6" /><stop offset="50%" stop-color="#f97316" />' : realPct > 80 ? '<stop offset="0%" stop-color="#14b8a6" /><stop offset="70%" stop-color="#eab308" />' : `<stop offset="0%" stop-color="#008080" /><stop offset="100%" stop-color="${baseColor}" />`, defs.innerHTML = `<linearGradient id="${gradId}" x1="0%" y1="100%" x2="100%" y2="0%">${gradColors}</linearGradient>`, svg.appendChild(defs);
+  var bg = document.createElementNS(ns, "circle");
+  bg.setAttribute("cx", 40), bg.setAttribute("cy", 40), bg.setAttribute("r", 28), bg.setAttribute("fill", "rgba(0, 0, 0, 0.1)"), bg.setAttribute("stroke", "rgba(255,255,255,0.08)"), bg.setAttribute("stroke-width", 8), svg.appendChild(bg);
+  var fg = document.createElementNS(ns, "circle");
+  fg.setAttribute("cx", 40), fg.setAttribute("cy", 40), fg.setAttribute("r", 28), fg.setAttribute("fill", "none"), fg.setAttribute("stroke", `url(#${gradId})`), fg.setAttribute("stroke-width", 8), fg.setAttribute("stroke-linecap", "round"), fg.setAttribute("stroke-dasharray", dash + " " + gap), fg.setAttribute("stroke-dashoffset", "0"), fg.setAttribute("transform", "rotate(-90 40 40)"), svg.appendChild(fg);
+  var pctTxt = document.createElementNS(ns, "text");
+  pctTxt.setAttribute("x", "40"), pctTxt.setAttribute("y", "41"), pctTxt.setAttribute("text-anchor", "middle"), pctTxt.setAttribute("dominant-baseline", "middle"), pctTxt.setAttribute("fill", "#fff"), pctTxt.setAttribute("font-size", "18"), pctTxt.setAttribute("font-family", "JetBrains Mono"), pctTxt.setAttribute("font-weight", "600"), pctTxt.textContent = Math.round(displayPct) + "%", svg.appendChild(pctTxt);
+  var lblEl = document.createElement("div");
+  lblEl.className = "ring-label", lblEl.textContent = displayLabel;
+  var remEl = document.createElement("div");
+  return remEl.className = "ring-remain " + remCls, remEl.textContent = remText, item.appendChild(svg), ringIcoEl && item.appendChild(ringIcoEl), item.appendChild(lblEl), item.appendChild(remEl), item.addEventListener("click", function() {
+    var alreadySel = this.classList.contains("selected"),
+      gids2 = (this.dataset.gids || "").split(",").filter(function(g) {
+        return g
+      });
+    document.querySelectorAll(".ring-item.selected").forEach(function(r2) {
+      r2.classList.remove("selected")
+    }), alreadySel ? (document.querySelectorAll(".main-row.ring-highlighted").forEach(function(r) {
+      r.classList.remove("ring-highlighted")
+    }), gids2.forEach(function(gid) {
+      var mainRow = document.querySelector(".main-row[data-id='" + gid + "']");
+      if (mainRow) {
+        mainRow.dataset.open = "0";
+        var chev2 = document.getElementById("chev-" + gid);
+        chev2 && (chev2.className = "chevron bi bi-chevron-right"), document.querySelectorAll(".sub-row[data-group='" + gid + "']").forEach(function(s) {
+          s.classList.remove("visible")
+        })
+      }
+    })) : (this.classList.add("selected"), document.querySelectorAll(".main-row.ring-highlighted").forEach(function(r) {
+      r.classList.remove("ring-highlighted")
+    }), gids2.forEach(function(gid) {
+      var mainRow = document.querySelector(".main-row[data-id='" + gid + "']");
+      if (mainRow) {
+        mainRow.classList.add("ring-highlighted"), mainRow.dataset.open = "1";
+        var chev2 = document.getElementById("chev-" + gid);
+        chev2 && (chev2.className = "chevron bi bi-chevron-down"), document.querySelectorAll(".sub-row[data-group='" + gid + "']").forEach(function(s) {
+          s.classList.add("visible")
+        })
+      }
+    }))
+  }), item
+}
     var DETAIL_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1492221762";
     var cachedTxData = null; 
     
@@ -3817,20 +3916,20 @@ to{transform:rotate(360deg)}
         document.querySelectorAll(".tab-btn").forEach(function(el){el.style.padding=isMobile?"2.4vw 0":"1.5vw 0";});
         document.querySelectorAll(".tab-btn img").forEach(function(el){el.style.width=isMobile?"5.5vw":"4vw";el.style.height=isMobile?"5.5vw":"4vw";});
 
-        var ringSz=isMobile?"20vw":"10vw";
+        var ringSz=isMobile?"20vw":"7vw";
         document.querySelectorAll(".ring-svg").forEach(function(el){el.style.width=ringSz;el.style.height=ringSz;});
-        document.querySelectorAll(".ring-label").forEach(function(el){el.style.fontSize=isMobile?"3.3vw":"2.4vw";});
-        document.querySelectorAll(".ring-remain").forEach(function(el){el.style.fontSize=isMobile?"3.1vw":"2.2vw";});
-        document.querySelectorAll(".ring-icon").forEach(function(el){el.style.width=isMobile?"7vw":"4vw";el.style.height=isMobile?"7vw":"4vw";});
+        document.querySelectorAll(".ring-label").forEach(function(el){el.style.fontSize=isMobile?"3.3vw":"1.6vw";});
+        document.querySelectorAll(".ring-remain").forEach(function(el){el.style.fontSize=isMobile?"3.1vw":"1.4vw";});
+        document.querySelectorAll(".ring-icon").forEach(function(el){el.style.width=isMobile?"7vw":"4vw";el.style.height=isMobile?"7vw":"2vw";});
         document.querySelectorAll(".ring-item[data-hide-on-mobile]").forEach(function(el){el.style.display=isMobile?"none":"flex";});
         document.getElementById("expand-btn").style.fontSize=isMobile?"3.6vw":"2.4vw";
 
         var gridCols=isMobile?"5.8fr 1.6fr 1.6fr":"5.8fr 1.6fr 1.6fr 1.6fr";
-        var mainNmFs=isMobile?"4vw":"2.7vw",subNmFs=isMobile?"3.8vw":"2.6vw";
-        var amtFs=isMobile?"4vw":"2.7vw",subAmtFs=isMobile?"4vw":"2.6vw";
-        var lastFs=isMobile?"4vw":"2.7vw",pctFs=isMobile?"3.9vw":"2.6vw";
-        var catIcoSz=isMobile?"8vw":"7vw",subIcoSz=isMobile?"7vw":"5.5vw";
-        var chevFs=isMobile?"5.5vw":"4.5vw",rowPad=isMobile?"1vw 0.5vw":"0.5vw 0.5vw";
+        var mainNmFs=isMobile?"4vw":"2.3vw",subNmFs=isMobile?"3.8vw":"2.2vw";
+        var amtFs=isMobile?"4vw":"2.3vw",subAmtFs=isMobile?"4vw":"2.2vw";
+        var lastFs=isMobile?"4vw":"2.3vw",pctFs=isMobile?"3.9vw":"2.2vw";
+        var catIcoSz=isMobile?"8vw":"5vw",subIcoSz=isMobile?"7vw":"5vw";
+        var chevFs=isMobile?"5.5vw":"3.5vw",rowPad=isMobile?"1vw 0.5vw":"0.5vw 0.5vw";
 
         document.querySelectorAll(".chevron").forEach(function(el){el.style.fontSize=chevFs;});
         document.querySelectorAll(".main-row,.sub-row.visible").forEach(function(el){el.style.gridTemplateColumns=gridCols;el.style.padding=rowPad;});
@@ -3851,13 +3950,13 @@ to{transform:rotate(360deg)}
         });
 
         //RECENT
-        var txIcoSz=isMobile?"12vw":"9vw";
-        document.querySelectorAll(".td-detail").forEach(function(el){el.style.fontSize=isMobile?"4vw":"2.6vw";});
-        document.querySelectorAll(".ttl").forEach(function(el){el.style.fontSize=isMobile?"3.9vw":"2.7vw";});
-        document.querySelectorAll(".dtl").forEach(function(el){el.style.fontSize=isMobile?"3.6vw":"2.4vw";});
-        document.querySelectorAll(".amt").forEach(function(el){el.style.fontSize=isMobile?"4.1vw":"2.8vw";});
-        document.querySelectorAll(".dte").forEach(function(el){el.style.fontSize=isMobile?"3.6vw":"2.4vw";});
-        document.querySelectorAll(".tx-group-hdr").forEach(function(el){el.style.fontSize=isMobile?"3.6vw":"2.3vw";});
+        var txIcoSz=isMobile?"12vw":"7vw";
+        document.querySelectorAll(".td-detail").forEach(function(el){el.style.fontSize=isMobile?"4vw":"2.0vw";});
+        document.querySelectorAll(".ttl").forEach(function(el){el.style.fontSize=isMobile?"3.9vw":"1.9vw";});
+        document.querySelectorAll(".dtl").forEach(function(el){el.style.fontSize=isMobile?"3.6vw":"1.6vw";});
+        document.querySelectorAll(".amt").forEach(function(el){el.style.fontSize=isMobile?"4.1vw":"2.0vw";});
+        document.querySelectorAll(".dte").forEach(function(el){el.style.fontSize=isMobile?"3.6vw":"1.6vw";});
+        document.querySelectorAll(".tx-group-hdr").forEach(function(el){el.style.fontSize=isMobile?"3.6vw":"1.6vw";});
         document.querySelectorAll(".ico").forEach(function(el){el.style.width=txIcoSz;el.style.height=txIcoSz;});
         document.querySelectorAll(".ico-fb").forEach(function(el){el.style.width=txIcoSz;el.style.height=txIcoSz;el.style.fontSize=isMobile?"7vw":"4vw";});
         document.querySelectorAll(".row").forEach(function(el){el.style.padding=isMobile?"3.3vw 0":"2vw 0";});
@@ -5431,7 +5530,7 @@ to{transform:rotate(360deg)}
             .ca-history-ttl { font-size: 2.6vw !important; }
             .ca-history-dtl { font-size: 2.6vw !important; }
             .ca-history-badge-txt { font-size: 2.2vw !important; }
-            .ca-history-dte, .tx-group-hdr { font-size: 2.5vw !important; }
+            .ca-history-dte, .tx-group-hdr { font-size: 1.8vw !important; }
             
             .ca-history-rgt-wrap { display: flex; flex-direction: row; align-items: center; gap: 2vw; flex-shrink: 0; min-width: max-content; }
             .ca-history-amt { font-family:DM Sans;font-size: 2.6vw !important; min-width: 100px;text-align: right; font-weight: 600; white-space: nowrap; }
@@ -7457,6 +7556,129 @@ function fetchWatchlistData() {
         closeWatchlistModal();
     }
 });
+(function(){
+  function isSplitActive(){
+    var tabBtn = document.getElementById('tab-btn-0');
+    return window.innerWidth > 400 && !!tabBtn && tabBtn.classList.contains('active');
+  }
+  function applyExpSplitLayout(){
+    var bigWrap = document.querySelector('.big-wrap');
+    var rightSlot = document.getElementById('exp-split-right');
+    var spendingView = document.getElementById('budget-view-spending');
+    var budgetCard = document.querySelector('.budget-card');
+    if(!bigWrap || !rightSlot || !spendingView || !budgetCard) return;
+
+    var shouldSplit = isSplitActive();
+    var isSplit = bigWrap.classList.contains('expense-split');
+
+    if(shouldSplit && !isSplit){
+      bigWrap.classList.add('expense-split');
+      rightSlot.appendChild(spendingView);
+      var recentBtn = budgetCard.querySelector('.budget-subtabs .budget-subtab:first-child');
+      if(recentBtn && recentBtn.classList.contains('active')){
+        var detailBtn = budgetCard.querySelector('.budget-subtabs .budget-subtab:nth-child(2)');
+        if(detailBtn) detailBtn.click();
+      }
+    } else if(!shouldSplit && isSplit){
+      bigWrap.classList.remove('expense-split');
+      var subcategoryView = document.getElementById('budget-view-subcategory');
+      if(subcategoryView && subcategoryView.parentNode === budgetCard){
+        budgetCard.insertBefore(spendingView, subcategoryView);
+      } else {
+        budgetCard.insertBefore(spendingView, budgetCard.firstChild ? budgetCard.firstChild.nextSibling : null);
+      }
+    }
+  }
+
+  function isWalletSplitActive(){
+    var tabBtn = document.getElementById('tab-btn-1');
+    return window.innerWidth > 400 && !!tabBtn && tabBtn.classList.contains('active');
+  }
+function applyWalletSplitLayout(){
+  var bigWrap = document.querySelector('.big-wrap');
+  var rightSlot = document.getElementById('ovw-split-right');
+  var walletView = document.getElementById('budget-view-wallet');
+  var budgetCard = document.querySelector('#ca-wrap .budget-card');
+  if(!bigWrap || !rightSlot || !walletView || !budgetCard) return;
+
+  var shouldSplit = isWalletSplitActive();
+  var isSplit = bigWrap.classList.contains('wallet-split');
+
+  if(shouldSplit && !isSplit){
+    bigWrap.classList.add('wallet-split');
+    rightSlot.appendChild(walletView);
+    var walletBtn = budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:first-child');
+    if(walletBtn && walletBtn.classList.contains('active')){
+      var fireBtn = budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:last-child');
+      if(fireBtn) fireBtn.click();
+    }
+  } else if(!shouldSplit && isSplit){
+    bigWrap.classList.remove('wallet-split');
+    budgetCard.insertBefore(walletView, budgetCard.querySelector('#budget-view-fire') || null);
+  }
+}
+function isPortfolioSplitActive(){
+  var tabBtn = document.getElementById('tab-btn-2');
+  return window.innerWidth > 400 && !!tabBtn && tabBtn.classList.contains('active');
+}
+function applyPortfolioSplitLayout(){
+  var bigWrap = document.querySelector('.big-wrap');
+  var rightSlot = document.getElementById('port-split-right');
+  var portfolioView = document.getElementById('budget-view-portfolio');
+  var budgetCard = document.querySelector('#slide-2 .budget-card');
+  if(!bigWrap || !rightSlot || !portfolioView || !budgetCard) return;
+
+  var shouldSplit = isPortfolioSplitActive();
+  var isSplit = bigWrap.classList.contains('portfolio-split');
+
+  if(shouldSplit && !isSplit){
+    bigWrap.classList.add('portfolio-split');
+    rightSlot.appendChild(portfolioView);
+    var portfolioBtn = budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:first-child');
+    if(portfolioBtn && portfolioBtn.classList.contains('active')){
+      var btcBtn = budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:last-child');
+      if(btcBtn) btcBtn.click();
+    }
+  } else if(!shouldSplit && isSplit){
+    bigWrap.classList.remove('portfolio-split');
+    var btcView = document.getElementById('budget-view-btc');
+    if(btcView && btcView.parentNode === budgetCard){
+      budgetCard.insertBefore(portfolioView, btcView);
+    } else {
+      budgetCard.appendChild(portfolioView);
+    }
+  }
+}
+  
+
+function applyAllSplitLayouts(){
+  applyExpSplitLayout();
+  applyWalletSplitLayout();
+  applyPortfolioSplitLayout();
+}
+
+  var tabBarObserverTarget = document.getElementById('tab-bar') || document.getElementById('tab-btn-group') || document.body;
+  var applyTimer;
+  var tabObserver = new MutationObserver(function(){
+    clearTimeout(applyTimer);
+    applyTimer = setTimeout(applyAllSplitLayouts, 0);
+  });
+  tabObserver.observe(tabBarObserverTarget, {
+    attributes: true,
+    attributeFilter: ['class'],
+    subtree: true
+  });
+
+  var resizeTimer;
+  window.addEventListener('resize', function(){
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(applyAllSplitLayouts, 100);
+  });
+  document.addEventListener('DOMContentLoaded', applyAllSplitLayouts);
+  applyAllSplitLayouts();
+})();
+
+
     updateMarketStatusDot();
 
     loadBalanceHistoryTC();restoreBudgetSubtab();
