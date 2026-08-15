@@ -7703,47 +7703,13 @@ function fetchWatchlistData() {
     document.getElementById('watchlist-modal').addEventListener('click', function(event) {if (event.target === this) {closeWatchlistModal();}});
     
     !function(){function applyExpSplitLayout(){var bigWrap=document.querySelector(".big-wrap"),rightSlot=document.getElementById("exp-split-right"),spendingView=document.getElementById("budget-view-spending"),budgetCard=document.querySelector(".budget-card");if(bigWrap&&rightSlot&&spendingView&&budgetCard){var tabBtn,shouldSplit=(tabBtn=document.getElementById("tab-btn-0"),window.innerWidth>400&&!!tabBtn&&tabBtn.classList.contains("active")),isSplit=bigWrap.classList.contains("expense-split");if(shouldSplit&&!isSplit){bigWrap.classList.add("expense-split"),rightSlot.appendChild(spendingView);var recentBtn=budgetCard.querySelector(".budget-subtabs .budget-subtab:first-child");if(recentBtn&&recentBtn.classList.contains("active")){var detailBtn=budgetCard.querySelector(".budget-subtabs .budget-subtab:nth-child(2)");detailBtn&&detailBtn.click()}}else if(!shouldSplit&&isSplit){bigWrap.classList.remove("expense-split");var subcategoryView=document.getElementById("budget-view-subcategory");subcategoryView&&subcategoryView.parentNode===budgetCard?budgetCard.insertBefore(spendingView,subcategoryView):budgetCard.insertBefore(spendingView,budgetCard.firstChild?budgetCard.firstChild.nextSibling:null)}}}function applyWalletSplitLayout(){var bigWrap=document.querySelector(".big-wrap"),rightSlot=document.getElementById("ovw-split-right"),walletView=document.getElementById("budget-view-wallet"),budgetCard=document.querySelector("#ca-wrap .budget-card");if(bigWrap&&rightSlot&&walletView&&budgetCard){var tabBtn,shouldSplit=(tabBtn=document.getElementById("tab-btn-1"),window.innerWidth>400&&!!tabBtn&&tabBtn.classList.contains("active")),isSplit=bigWrap.classList.contains("wallet-split");if(shouldSplit&&!isSplit){bigWrap.classList.add("wallet-split"),rightSlot.appendChild(walletView);var walletBtn=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:first-child');if(walletBtn&&walletBtn.classList.contains("active")){var fireBtn=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:last-child');fireBtn&&fireBtn.click()}}else if(!shouldSplit&&isSplit){bigWrap.classList.remove("wallet-split"),budgetCard.insertBefore(walletView,budgetCard.querySelector("#budget-view-fire")||null);var fireBtnBack=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:last-child');if(fireBtnBack&&fireBtnBack.classList.contains("active")){var walletBtnBack=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:first-child');walletBtnBack&&walletBtnBack.click()}}}}function applyPortfolioSplitLayout(){var bigWrap=document.querySelector(".big-wrap"),rightSlot=document.getElementById("port-split-right"),portfolioView=document.getElementById("budget-view-portfolio"),budgetCard=document.querySelector("#slide-2 .budget-card");if(bigWrap&&rightSlot&&portfolioView&&budgetCard){var tabBtn,shouldSplit=(tabBtn=document.getElementById("tab-btn-2"),window.innerWidth>400&&!!tabBtn&&tabBtn.classList.contains("active")),isSplit=bigWrap.classList.contains("portfolio-split");if(shouldSplit&&!isSplit){bigWrap.classList.add("portfolio-split"),rightSlot.appendChild(portfolioView);var portfolioBtn=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:first-child');if(portfolioBtn&&portfolioBtn.classList.contains("active")){var btcBtn=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:last-child');btcBtn&&btcBtn.click()}}else if(!shouldSplit&&isSplit){bigWrap.classList.remove("portfolio-split");var btcView=document.getElementById("budget-view-btc");btcView&&btcView.parentNode===budgetCard?budgetCard.insertBefore(portfolioView,btcView):budgetCard.appendChild(portfolioView);var btcBtnBack=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:last-child');if(btcBtnBack&&btcBtnBack.classList.contains("active")){var portfolioBtnBack=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:first-child');portfolioBtnBack&&portfolioBtnBack.click()}}}}function applyAllSplitLayouts(){applyExpSplitLayout(),applyWalletSplitLayout(),applyPortfolioSplitLayout()}var applyTimer,resizeTimer,tabBarObserverTarget=document.getElementById("tab-bar")||document.getElementById("tab-btn-group")||document.body;new MutationObserver(function(){clearTimeout(applyTimer),applyTimer=setTimeout(applyAllSplitLayouts,0)}).observe(tabBarObserverTarget,{attributes:!0,attributeFilter:["class"],subtree:!0}),window.addEventListener("resize",function(){clearTimeout(resizeTimer),resizeTimer=setTimeout(applyAllSplitLayouts,100)}),document.addEventListener("DOMContentLoaded",applyAllSplitLayouts),applyAllSplitLayouts()}();
-    function forceDefaultRecentTab(){
+    document.addEventListener('DOMContentLoaded', function(){
   var recentBtn = document.querySelector('.budget-subtabs .budget-subtab:first-child');
-  var spendingView = document.getElementById('budget-view-spending');
-  if (!recentBtn || !spendingView) return;
-
-  try { localStorage.setItem('active_budget_subtab', 'spending'); } catch(e){}
-
-  var budgetCard = recentBtn.closest('.budget-card') || document;
-  budgetCard.querySelectorAll('.budget-subtab, .budget-subtab-v2, .tab-btn:not(#tab-btn-x)').forEach(function(el){
-    el.classList.remove('active');
-  });
-  recentBtn.classList.add('active');
-  budgetCard.querySelectorAll('.budget-tab-content').forEach(function(el){
-    el.style.display = 'none';
-  });
-  spendingView.style.display = 'block';
-
-  if (typeof window.loadExpense === 'function') window.loadExpense();
-  if (typeof window.loadRecent === 'function') window.loadRecent();
-  if (typeof window.loadSubscriptions === 'function') window.loadSubscriptions();
-}
-
-function forceDefaultRecentTabWithRetry(){
-  forceDefaultRecentTab();
-  var txList = document.getElementById('tx-list');
-  var attempts = 0;
-  var retryTimer = setInterval(function(){
-    attempts++;
-    var hasContent = txList && txList.children && txList.children.length > 0;
-    if (hasContent || attempts > 20) { // gives up after ~10s
-      clearInterval(retryTimer);
-      return;
-    }
-    if (typeof window.loadRecent === 'function') window.loadRecent();
-    if (typeof window.loadExpense === 'function') window.loadExpense();
-  }, 500);
-}
-
-document.addEventListener('DOMContentLoaded', forceDefaultRecentTabWithRetry);
+  if (recentBtn) recentBtn.click();
+});
 if (document.readyState === 'complete' || document.readyState === 'interactive') {
-  forceDefaultRecentTabWithRetry();
+  var recentBtnNow = document.querySelector('.budget-subtabs .budget-subtab:first-child');
+  if (recentBtnNow) recentBtnNow.click();
 }
 
     updateMarketStatusDot();
