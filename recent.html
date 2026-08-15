@@ -7720,16 +7720,30 @@ function fetchWatchlistData() {
   });
   spendingView.style.display = 'block';
 
-  // switchBudgetTab() only toggles visibility — it doesn't fetch data.
-  // Call the loaders directly so the content actually populates.
   if (typeof window.loadExpense === 'function') window.loadExpense();
   if (typeof window.loadRecent === 'function') window.loadRecent();
   if (typeof window.loadSubscriptions === 'function') window.loadSubscriptions();
 }
 
-document.addEventListener('DOMContentLoaded', forceDefaultRecentTab);
-if (document.readyState === 'complete' || document.readyState === 'interactive') {
+function forceDefaultRecentTabWithRetry(){
   forceDefaultRecentTab();
+  var txList = document.getElementById('tx-list');
+  var attempts = 0;
+  var retryTimer = setInterval(function(){
+    attempts++;
+    var hasContent = txList && txList.children && txList.children.length > 0;
+    if (hasContent || attempts > 20) { // gives up after ~10s
+      clearInterval(retryTimer);
+      return;
+    }
+    if (typeof window.loadRecent === 'function') window.loadRecent();
+    if (typeof window.loadExpense === 'function') window.loadExpense();
+  }, 500);
+}
+
+document.addEventListener('DOMContentLoaded', forceDefaultRecentTabWithRetry);
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  forceDefaultRecentTabWithRetry();
 }
 
     updateMarketStatusDot();
