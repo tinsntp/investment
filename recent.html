@@ -338,9 +338,30 @@ background:
 .status-pending{background:rgba(255,255,255,.05);color:rgba(255,255,255,.5)}
 @media (max-width:400px){.history-panel{display:block!important;max-height:0;opacity:0;overflow:hidden;margin-top:0;transform:translateY(-8px);will-change:max-height,opacity,transform;transition:max-height .35s cubic-bezier(.4,0,.2,1),opacity .25s ease-out,transform .3s cubic-bezier(.4,0,.2,1),margin-top .3s ease}
 .history-panel.is-expanded{max-height:1000px;opacity:1;transform:translateY(-12px);margin-top:16px;border:0px solid rgba(255,255,255,.05)}}
-@media (min-width:401px){.main-dashboard-container,.ca-col-left{display:block}.history-panel{height:100%;opacity:1!important;margin-top:20px;order:initial}}
-@media (min-width:401px){#walletHistorySection{transition:max-height .35s cubic-bezier(.4,0,.2,1),opacity .25s ease,margin-top .3s ease,padding .3s ease;overflow:hidden}
-#walletHistorySection.is-hidden-ipad{display:block!important;max-height:0!important;opacity:0!important;margin-top:0!important;padding-top:0!important;padding-bottom:0!important;border:0!important;pointer-events:none!important}}
+@media (min-width:401px){
+  .main-dashboard-container,.ca-col-left{display:block}
+  #walletHistorySection{
+    height:auto;
+    opacity:0;
+    max-height:0;
+    overflow:hidden;
+    margin-top:0;
+    padding-top:0;
+    padding-bottom:0;
+    border:0;
+    pointer-events:none;
+    order:initial;
+    transition:max-height .35s cubic-bezier(.4,0,.2,1),opacity .25s ease,margin-top .3s ease,padding .3s ease;
+  }
+  #walletHistorySection:not(.is-hidden-ipad){
+    opacity:1;
+    max-height:1000px;
+    margin-top:20px;
+    padding-top:16px;
+    padding-bottom:16px;
+    pointer-events:auto;
+  }
+}
 .modal-backdrop{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);z-index:9999;justify-content:center;align-items:flex-start;padding-top:40px}
 .modal-backdrop.active{display:flex !important}
 .modal-box{width:340px;background:#1c1e24;border-radius:20px;padding:24px;border:1px solid #2d313c;opacity:0;transform:translateY(20px);transition:transform 0.3s ease,opacity 0.3s ease}
@@ -7552,7 +7573,7 @@ function fetchWatchlistData() {
 
     document.addEventListener("DOMContentLoaded", initFullyAutomatedTimeline);
     document.getElementById('days-until-display').innerText = data.until + " days";
-    document.addEventListener("DOMContentLoaded",()=>{const historyBtn=document.getElementById("btn-square-history"),historyPanel=document.getElementById("walletHistorySection"),donutSection=document.getElementById("ca-section-expense"),colRight=document.getElementById("ca-col-right"),colLeft=document.getElementById("ca-col-left"),caWrap=document.getElementById("ca-wrap");let isHistoryActive=window.innerWidth>=401;historyBtn&&historyPanel&&donutSection&&(historyBtn.addEventListener("click",function(e){e.stopPropagation();if(window.innerWidth<401){const isOpen=historyPanel.classList.toggle("is-expanded");this.classList.toggle("is-active",isOpen),isHistoryActive=isOpen,isOpen?(colLeft&&colLeft.insertAdjacentElement("afterend",historyPanel),historyPanel.appendChild(donutSection),historyPanel.offsetHeight,setTimeout(()=>{historyPanel.scrollIntoView({behavior:"smooth",block:"nearest"})},300)):(historyPanel.classList.remove("is-expanded"),setTimeout(()=>{colRight&&colRight.appendChild(donutSection),caWrap&&caWrap.appendChild(historyPanel)},350))}else isHistoryActive=!isHistoryActive,this.classList.toggle("is-active",isHistoryActive),historyPanel.classList.toggle("is-hidden-ipad",!isHistoryActive)}),window.addEventListener("resize",()=>{window.innerWidth<401||(colRight&&!colRight.contains(donutSection)&&colRight.appendChild(donutSection),caWrap&&caWrap.lastElementChild!==historyPanel&&caWrap.appendChild(historyPanel),historyBtn.classList.toggle("is-active",isHistoryActive),historyPanel.classList.toggle("is-hidden-ipad",!isHistoryActive))}))});
+    document.addEventListener("DOMContentLoaded",()=>{const historyBtn=document.getElementById("btn-square-history"),historyPanel=document.getElementById("walletHistorySection"),donutSection=document.getElementById("ca-section-expense"),colRight=document.getElementById("ca-col-right"),colLeft=document.getElementById("ca-col-left"),caWrap=document.getElementById("ca-wrap");let isHistoryActive=!1;function positionHistoryPanelUnderButton(){colLeft&&historyPanel&&historyPanel.previousElementSibling!==colLeft&&colLeft.insertAdjacentElement("afterend",historyPanel)}historyPanel&&(positionHistoryPanelUnderButton(),historyBtn&&historyBtn.classList.toggle("is-active",isHistoryActive),historyPanel.classList.toggle("is-hidden-ipad",!isHistoryActive)),historyBtn&&historyPanel&&donutSection&&(historyBtn.addEventListener("click",function(e){if(e.stopPropagation(),window.innerWidth<401){const isOpen=historyPanel.classList.toggle("is-expanded");this.classList.toggle("is-active",isOpen),isHistoryActive=isOpen,isOpen?(colLeft&&colLeft.insertAdjacentElement("afterend",historyPanel),historyPanel.appendChild(donutSection),historyPanel.offsetHeight,setTimeout(()=>{historyPanel.scrollIntoView({behavior:"smooth",block:"nearest"})},300)):(historyPanel.classList.remove("is-expanded"),setTimeout(()=>{colRight&&colRight.appendChild(donutSection),caWrap&&caWrap.appendChild(historyPanel)},350))}else isHistoryActive=!isHistoryActive,this.classList.toggle("is-active",isHistoryActive),positionHistoryPanelUnderButton(),historyPanel.classList.toggle("is-hidden-ipad",!isHistoryActive)}),window.addEventListener("resize",()=>{window.innerWidth<401||(colRight&&!colRight.contains(donutSection)&&colRight.appendChild(donutSection),positionHistoryPanelUnderButton(),historyBtn.classList.toggle("is-active",isHistoryActive),historyPanel.classList.toggle("is-hidden-ipad",!isHistoryActive))}))});
     document.addEventListener("click",function(e){const labelBtn=document.getElementById("currentFilterLabel");labelBtn&&labelBtn.contains(e.target)||window.closeAllFilterDropdowns()});
 
     const riskDisplay = document.getElementById('risk-status-display');riskDisplay.innerText = riskStatus;riskDisplay.style.color = riskColor;
@@ -7681,146 +7702,8 @@ function fetchWatchlistData() {
     document.getElementById("vnindex-reload-btn").addEventListener("click", function() {fetchVnIndexData(true);});
     window.addEventListener("resize", function() {if (typeof buildColHdr === "function") buildColHdr(); if (typeof applyLayout === "function") applyLayout();});
     window.addEventListener("DOMContentLoaded",async()=>{try{await Promise.all([loadBalanceHistoryTC(),loadRecent()])}catch(error){console.error("Failed to load data:",error)}setTimeout(()=>{const loader=document.getElementById("loader-overlay");loader&&loader.classList.add("fade-out")},1500)});  
-    document.getElementById('watchlist-modal').addEventListener('click', function(event) {
-    // Check if the click was directly on the overlay background, not inside the modal content box
-    if (event.target === this) {
-        closeWatchlistModal();
-    }
-});
-(function(){
-  function isSplitActive(){
-    var tabBtn = document.getElementById('tab-btn-0');
-    return window.innerWidth > 400 && !!tabBtn && tabBtn.classList.contains('active');
-  }
-  function applyExpSplitLayout(){
-    var bigWrap = document.querySelector('.big-wrap');
-    var rightSlot = document.getElementById('exp-split-right');
-    var spendingView = document.getElementById('budget-view-spending');
-    var budgetCard = document.querySelector('.budget-card');
-    if(!bigWrap || !rightSlot || !spendingView || !budgetCard) return;
-
-    var shouldSplit = isSplitActive();
-    var isSplit = bigWrap.classList.contains('expense-split');
-
-    if(shouldSplit && !isSplit){
-      bigWrap.classList.add('expense-split');
-      rightSlot.appendChild(spendingView);
-      var recentBtn = budgetCard.querySelector('.budget-subtabs .budget-subtab:first-child');
-      if(recentBtn && recentBtn.classList.contains('active')){
-        var detailBtn = budgetCard.querySelector('.budget-subtabs .budget-subtab:nth-child(2)');
-        if(detailBtn) detailBtn.click();
-      }
-    } else if(!shouldSplit && isSplit){
-      bigWrap.classList.remove('expense-split');
-      var subcategoryView = document.getElementById('budget-view-subcategory');
-      if(subcategoryView && subcategoryView.parentNode === budgetCard){
-        budgetCard.insertBefore(spendingView, subcategoryView);
-      } else {
-        budgetCard.insertBefore(spendingView, budgetCard.firstChild ? budgetCard.firstChild.nextSibling : null);
-      }
-    }
-  }
-
-  function isWalletSplitActive(){
-    var tabBtn = document.getElementById('tab-btn-1');
-    return window.innerWidth > 400 && !!tabBtn && tabBtn.classList.contains('active');
-  }
-function applyWalletSplitLayout(){
-  var bigWrap = document.querySelector('.big-wrap');
-  var rightSlot = document.getElementById('ovw-split-right');
-  var walletView = document.getElementById('budget-view-wallet');
-  var budgetCard = document.querySelector('#ca-wrap .budget-card');
-  if(!bigWrap || !rightSlot || !walletView || !budgetCard) return;
-
-  var shouldSplit = isWalletSplitActive();
-  var isSplit = bigWrap.classList.contains('wallet-split');
-
-  if(shouldSplit && !isSplit){
-    bigWrap.classList.add('wallet-split');
-    rightSlot.appendChild(walletView);
-    var walletBtn = budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:first-child');
-    if(walletBtn && walletBtn.classList.contains('active')){
-      var fireBtn = budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:last-child');
-      if(fireBtn) fireBtn.click();
-    }
-  } else if(!shouldSplit && isSplit){
-    bigWrap.classList.remove('wallet-split');
-    budgetCard.insertBefore(walletView, budgetCard.querySelector('#budget-view-fire') || null);
-    var fireBtnBack = budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:last-child');
-if(fireBtnBack && fireBtnBack.classList.contains('active')){
-  var walletBtnBack = budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:first-child');
-  if(walletBtnBack) walletBtnBack.click();
-}
-  }
-  
-}
-
-function isPortfolioSplitActive(){
-  var tabBtn = document.getElementById('tab-btn-2');
-  return window.innerWidth > 400 && !!tabBtn && tabBtn.classList.contains('active');
-}
-function applyPortfolioSplitLayout(){
-  var bigWrap = document.querySelector('.big-wrap');
-  var rightSlot = document.getElementById('port-split-right');
-  var portfolioView = document.getElementById('budget-view-portfolio');
-  var budgetCard = document.querySelector('#slide-2 .budget-card');
-  if(!bigWrap || !rightSlot || !portfolioView || !budgetCard) return;
-
-  var shouldSplit = isPortfolioSplitActive();
-  var isSplit = bigWrap.classList.contains('portfolio-split');
-
-  if(shouldSplit && !isSplit){
-    bigWrap.classList.add('portfolio-split');
-    rightSlot.appendChild(portfolioView);
-    var portfolioBtn = budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:first-child');
-    if(portfolioBtn && portfolioBtn.classList.contains('active')){
-      var btcBtn = budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:last-child');
-      if(btcBtn) btcBtn.click();
-    }
-  } else if(!shouldSplit && isSplit){
-    bigWrap.classList.remove('portfolio-split');
-    var btcView = document.getElementById('budget-view-btc');
-    if(btcView && btcView.parentNode === budgetCard){
-      budgetCard.insertBefore(portfolioView, btcView);
-    } else {
-      budgetCard.appendChild(portfolioView);
-    }
-    var btcBtnBack = budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:last-child');
-if(btcBtnBack && btcBtnBack.classList.contains('active')){
-  var portfolioBtnBack = budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:first-child');
-  if(portfolioBtnBack) portfolioBtnBack.click();
-}
-  }
-  
-}
-  
-
-function applyAllSplitLayouts(){
-  applyExpSplitLayout();
-  applyWalletSplitLayout();
-  applyPortfolioSplitLayout();
-}
-
-  var tabBarObserverTarget = document.getElementById('tab-bar') || document.getElementById('tab-btn-group') || document.body;
-  var applyTimer;
-  var tabObserver = new MutationObserver(function(){
-    clearTimeout(applyTimer);
-    applyTimer = setTimeout(applyAllSplitLayouts, 0);
-  });
-  tabObserver.observe(tabBarObserverTarget, {
-    attributes: true,
-    attributeFilter: ['class'],
-    subtree: true
-  });
-
-  var resizeTimer;
-  window.addEventListener('resize', function(){
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(applyAllSplitLayouts, 100);
-  });
-  document.addEventListener('DOMContentLoaded', applyAllSplitLayouts);
-  applyAllSplitLayouts();
-})();
+    document.getElementById('watchlist-modal').addEventListener('click', function(event) {if (event.target === this) {closeWatchlistModal();}});
+    !function(){function applyExpSplitLayout(){var bigWrap=document.querySelector(".big-wrap"),rightSlot=document.getElementById("exp-split-right"),spendingView=document.getElementById("budget-view-spending"),budgetCard=document.querySelector(".budget-card");if(bigWrap&&rightSlot&&spendingView&&budgetCard){var tabBtn,shouldSplit=(tabBtn=document.getElementById("tab-btn-0"),window.innerWidth>400&&!!tabBtn&&tabBtn.classList.contains("active")),isSplit=bigWrap.classList.contains("expense-split");if(shouldSplit&&!isSplit){bigWrap.classList.add("expense-split"),rightSlot.appendChild(spendingView);var recentBtn=budgetCard.querySelector(".budget-subtabs .budget-subtab:first-child");if(recentBtn&&recentBtn.classList.contains("active")){var detailBtn=budgetCard.querySelector(".budget-subtabs .budget-subtab:nth-child(2)");detailBtn&&detailBtn.click()}}else if(!shouldSplit&&isSplit){bigWrap.classList.remove("expense-split");var subcategoryView=document.getElementById("budget-view-subcategory");subcategoryView&&subcategoryView.parentNode===budgetCard?budgetCard.insertBefore(spendingView,subcategoryView):budgetCard.insertBefore(spendingView,budgetCard.firstChild?budgetCard.firstChild.nextSibling:null)}}}function applyWalletSplitLayout(){var bigWrap=document.querySelector(".big-wrap"),rightSlot=document.getElementById("ovw-split-right"),walletView=document.getElementById("budget-view-wallet"),budgetCard=document.querySelector("#ca-wrap .budget-card");if(bigWrap&&rightSlot&&walletView&&budgetCard){var tabBtn,shouldSplit=(tabBtn=document.getElementById("tab-btn-1"),window.innerWidth>400&&!!tabBtn&&tabBtn.classList.contains("active")),isSplit=bigWrap.classList.contains("wallet-split");if(shouldSplit&&!isSplit){bigWrap.classList.add("wallet-split"),rightSlot.appendChild(walletView);var walletBtn=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:first-child');if(walletBtn&&walletBtn.classList.contains("active")){var fireBtn=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:last-child');fireBtn&&fireBtn.click()}}else if(!shouldSplit&&isSplit){bigWrap.classList.remove("wallet-split"),budgetCard.insertBefore(walletView,budgetCard.querySelector("#budget-view-fire")||null);var fireBtnBack=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:last-child');if(fireBtnBack&&fireBtnBack.classList.contains("active")){var walletBtnBack=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:first-child');walletBtnBack&&walletBtnBack.click()}}}}function applyPortfolioSplitLayout(){var bigWrap=document.querySelector(".big-wrap"),rightSlot=document.getElementById("port-split-right"),portfolioView=document.getElementById("budget-view-portfolio"),budgetCard=document.querySelector("#slide-2 .budget-card");if(bigWrap&&rightSlot&&portfolioView&&budgetCard){var tabBtn,shouldSplit=(tabBtn=document.getElementById("tab-btn-2"),window.innerWidth>400&&!!tabBtn&&tabBtn.classList.contains("active")),isSplit=bigWrap.classList.contains("portfolio-split");if(shouldSplit&&!isSplit){bigWrap.classList.add("portfolio-split"),rightSlot.appendChild(portfolioView);var portfolioBtn=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:first-child');if(portfolioBtn&&portfolioBtn.classList.contains("active")){var btcBtn=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:last-child');btcBtn&&btcBtn.click()}}else if(!shouldSplit&&isSplit){bigWrap.classList.remove("portfolio-split");var btcView=document.getElementById("budget-view-btc");btcView&&btcView.parentNode===budgetCard?budgetCard.insertBefore(portfolioView,btcView):budgetCard.appendChild(portfolioView);var btcBtnBack=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:last-child');if(btcBtnBack&&btcBtnBack.classList.contains("active")){var portfolioBtnBack=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:first-child');portfolioBtnBack&&portfolioBtnBack.click()}}}}function applyAllSplitLayouts(){applyExpSplitLayout(),applyWalletSplitLayout(),applyPortfolioSplitLayout()}var applyTimer,resizeTimer,tabBarObserverTarget=document.getElementById("tab-bar")||document.getElementById("tab-btn-group")||document.body;new MutationObserver(function(){clearTimeout(applyTimer),applyTimer=setTimeout(applyAllSplitLayouts,0)}).observe(tabBarObserverTarget,{attributes:!0,attributeFilter:["class"],subtree:!0}),window.addEventListener("resize",function(){clearTimeout(resizeTimer),resizeTimer=setTimeout(applyAllSplitLayouts,100)}),document.addEventListener("DOMContentLoaded",applyAllSplitLayouts),applyAllSplitLayouts()}();
 
 
     updateMarketStatusDot();
