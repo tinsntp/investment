@@ -470,7 +470,7 @@ to{transform:rotate(360deg)}
 .sub-list-title{display:flex;align-items:center;justify-content:left;gap:2vw;width:100%;font-size:14.5px;font-weight:300;color:rgba(255,255,255,0.75);margin-bottom:12px;margin-left:2vw;}
 .add-inline-btn{width:7vw;height:7vw;padding-bottom:0px;max-width:7vw;max-height:7vw;font-family:monospace!important;font-size:5vw;font-weight:500;border-radius:50%;background:#14b8a6;border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:opacity 0.2s}
 .add-inline-btn:active{opacity:0.8}
-@media (max-width:400px){.add-inline-btn{width:8vw;height:8vw;}}
+@media (max-width:400px){.add-inline-btn{width:8vw;height:8vw;}.sub-icon{width:12vw!important;height:12vw!important;}}
 #sub-list{display:flex;flex-direction:column}
 #sub-loading,#sub-empty{font-size:13px;color:rgba(255,255,255,0.4);padding:24px 0;text-align:center}
 .subs-row{display:flex;align-items:center;border-bottom:0px solid rgba(255,255,255,0.08);cursor:pointer;transition:background 0.2s ease}
@@ -479,12 +479,12 @@ to{transform:rotate(360deg)}
 .sub-mid{flex:1;min-width:0;margin:10px}
 .sub-name-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;flex-wrap:wrap}
 .sub-name-left{display:flex;align-items:center;gap:8px;min-width:0;flex-wrap:wrap}
-.sub-name{opacity:0.9;font-size:18px;font-weight:400;color:rgba(255,255,255,0.95);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sub-badge{font-size:14px;font-weight:700;color:#14b8a6;background:rgba(74,222,128,0.14);border-radius:99px;padding:2px 9px;white-space:nowrap}
+.sub-name{opacity:0.9;font-size:16px;font-weight:400;color:rgba(255,255,255,0.95);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sub-badge{font-size:13px;font-weight:700;color:#14b8a6;background:rgba(74,222,128,0.14);border-radius:99px;padding:2px 9px;white-space:nowrap}
 .sub-expiry{display:flex;align-items:center;gap:5px;font-size:14px;color:rgba(255,255,255,0.45);white-space:nowrap}
 .sub-expiry svg{flex-shrink:0;opacity:0.6}
-.sub-price{opacity:0.9;font-size:18px;font-family:DM Sans;font-weight:600;color:rgba(255,255,255,0.95);text-align:right;white-space:nowrap;flex-shrink:0}
-.sub-price-unit{font-size:14px;font-weight:500;color:rgba(255,255,255,0.4);margin-left:2px}
+.sub-price{opacity:0.9;font-size:16px;font-family:DM Sans;font-weight:600;color:rgba(255,255,255,0.95);text-align:right;white-space:nowrap;flex-shrink:0}
+.sub-price-unit{font-size:13px;font-weight:500;color:rgba(255,255,255,0.4);margin-left:2px}
 
 .add-modal h3{font-size: 16px;margin-bottom:4vw;text-align:center;}
 .add-modal,.add-modal-expense, .expense-edit-modal {
@@ -1792,7 +1792,7 @@ to{transform:rotate(360deg)}
     </div>
 
     <!-- PORTFOLIO SLIDE -->
-    <div class="slide" id="slide-2" data-idx="2">
+    <div class="slide" id="slide-2" data-idx="2" style="overflow-y:auto;overflow-x:hidden;">
       <div class="budget-card" >
         <div class="
         budget-subtabs-v2" data-tabgroup="portfolio-btc" style="display:flex!important;align-items:center;justify-content:center;gap:8px;position:relative;width:100%;">
@@ -5450,7 +5450,7 @@ function fetchTransactionDetails(subCatName,containerEl){cachedTxData?renderTxRo
     var CHART_COLORS = ['#ec4899','#06b6d4', '#f59e0b','#8b5cf6', '#3b82f6', '#10b981'];
 
     function parseCSVLine(line){for(var cols=[],cur="",inQ=!1,i=0;i<line.length;i++){var c=line[i];'"'===c?inQ=!inQ:","!==c||inQ?cur+=c:(cols.push(cur),cur="")}return cols.push(cur),cols.map(function(s){return s.replace(/^"|"$/g,"")})}function parseMAmt(raw){if(!raw)return null;var m=raw.trim().match(/([+\-]?[\d,]+(?:\.\d+)?)\s*M/i);return m?parseFloat(m[1].replace(/,/g,"")):null}function parsePct(raw){if(!raw)return null;var m=raw.trim().match(/([+\-]?[\d.]+)\s*%/);return m?parseFloat(m[1]):null}
-    function fmtM(v,forcePlus){if(null==v)return null;var sign=v>0&&forcePlus?"+":v<0?"−":"",absoluteVal=Math.abs(v);if(!(window.innerWidth<=400))return sign+(1e6*absoluteVal).toLocaleString("en-US",{maximumFractionDigits:0})+" đ";if(absoluteVal<1&&absoluteVal>0){var kVal=1e3*absoluteVal;return sign+(kVal%1==0?kVal.toLocaleString("en-US"):kVal.toLocaleString("en-US",{minimumFractionDigits:1,maximumFractionDigits:1}))+"K đ"}return sign+(absoluteVal%1==0?absoluteVal.toLocaleString("en-US"):absoluteVal.toLocaleString("en-US",{minimumFractionDigits:1,maximumFractionDigits:1}))+"M đ"}function fmtPct(v){return null==v?null:(v>0?"+":v<0?"−":"")+Math.abs(v).toFixed(v%1==0?0:1)+"%"}function parseTitleDesc(rawStr){if(!rawStr)return{title:"",desc:""};var str=rawStr.trim(),parts=[];return{title:(parts=-1!==str.indexOf("+")?str.split("+"):-1!==str.indexOf(":")?str.split(":"):-1!==str.indexOf(" - ")?str.split(" - "):[str])[0].trim(),desc:parts.length>1?parts.slice(1).join(" ").trim():""}}
+    function fmtM(v,forcePlus){if(null==v)return null;var sign=v>0&&forcePlus?"+":v<0?"−":"",absoluteVal=Math.abs(v);if(!(window.innerWidth<=1024))return sign+(1e6*absoluteVal).toLocaleString("en-US",{maximumFractionDigits:0})+" đ";if(absoluteVal<1&&absoluteVal>0){var kVal=1e3*absoluteVal;return sign+(kVal%1==0?kVal.toLocaleString("en-US"):kVal.toLocaleString("en-US",{minimumFractionDigits:1,maximumFractionDigits:1}))+"K đ"}return sign+(absoluteVal%1==0?absoluteVal.toLocaleString("en-US"):absoluteVal.toLocaleString("en-US",{minimumFractionDigits:1,maximumFractionDigits:1}))+"M đ"}function fmtPct(v){return null==v?null:(v>0?"+":v<0?"−":"")+Math.abs(v).toFixed(v%1==0?0:1)+"%"}function parseTitleDesc(rawStr){if(!rawStr)return{title:"",desc:""};var str=rawStr.trim(),parts=[];return{title:(parts=-1!==str.indexOf("+")?str.split("+"):-1!==str.indexOf(":")?str.split(":"):-1!==str.indexOf(" - ")?str.split(" - "):[str])[0].trim(),desc:parts.length>1?parts.slice(1).join(" ").trim():""}}
     function extractAndCleanBadge(titleText){var badgeType=null,badgeLabel="",clean=titleText;return/core/i.test(clean)?(badgeType="badge-core",badgeLabel="Core",clean=clean.replace(/\s*\(?\s*Core\s*\)?/gi,"")):/growth/i.test(clean)?(badgeType="badge-growth",badgeLabel="Growth",clean=clean.replace(/\s*\(?\s*Growth\s*\)?/gi,"")):/high\s*risk/i.test(clean)?(badgeType="badge-highrisk",badgeLabel="High Risk",clean=clean.replace(/\s*\(?\s*High\s*Risk\s*\)?/gi,"")):/medium\s*risk|med\s*risk/i.test(clean)&&(badgeType="badge-medrisk",badgeLabel="Medium Risk",clean=clean.replace(/\s*\(?\s*(Medium|Med)\s*Risk\s*\)?/gi,"")),{cleanTitle:(clean=clean.replace(/^[\s\-–—:]+|[\s\-–—:]+$/g,"").trim())||titleText,badgeType,badgeLabel}}
     function loadFIRE() {
         fetch(FIRE_CSV_URL + "&t=" + Date.now(), { cache: "no-store" })
@@ -5684,8 +5684,8 @@ function fetchTransactionDetails(subCatName,containerEl){cachedTxData?renderTxRo
             .ca-history-badge-txt { font-size: 1.6vw !important; }
             .ca-history-dte, .tx-group-hdr { font-size: 1.6vw !important; }
             
-            .ca-history-rgt-wrap { display: flex; flex-direction: row; align-items: center; gap: 2vw; flex-shrink: 0; min-width: max-content; }
-            .ca-history-amt { font-family:DM Sans;font-size: 1.8vw !important; min-width: 100px;text-align: right; font-weight: 600; white-space: nowrap; }
+            .ca-history-rgt-wrap { display: flex; flex-direction: row; align-items: center; gap: 1vw; flex-shrink: 0; min-width: max-content; }
+            .ca-history-amt { font-family:DM Sans;font-size: 1.8vw !important; min-width: 70px;text-align: right; font-weight: 600; white-space: nowrap; }
             
             .ca-display-desktop { display: inline !important; }
             .ca-display-mobile { display: none !important; }
@@ -5777,7 +5777,7 @@ function fetchTransactionDetails(subCatName,containerEl){cachedTxData?renderTxRo
                         ${iconHtml}
                     </div>
                     
-                    <div class="mid" style="display: flex; align-items: center; justify-content: space-between; gap: 1.2vw; min-width: 0;">
+                    <div class="mid" style="display: flex; align-items: center; justify-content: space-between; gap: 1.2vw; min-width: 140px;">
                         <div style="display: flex; align-items: center; gap: 0.8vw; min-width: 0; flex: 1;">
                         <span class="ttl ca-history-ttl" style="margin-bottom: 0; flex-shrink: 0;">${typeVal}</span>
                         <span class="dtl ca-history-dtl" style="color: rgba(255,255,255,0.35); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;">
@@ -5791,7 +5791,7 @@ function fetchTransactionDetails(subCatName,containerEl){cachedTxData?renderTxRo
                         ${formattedDateStr}
                         </div>
                         <div class="amt ca-history-amt" style="color: ${themeColor};">
-                        <span class="ca-display-desktop">${amountPrefix}${fullAmountText}</span>
+                        <span class="ca-display-desktop">${amountPrefix}${shortAmountText}</span>
                         <span class="ca-display-mobile">${amountPrefix}${shortAmountText}</span>
                         </div>
                         ${accountBadgeHtml}
