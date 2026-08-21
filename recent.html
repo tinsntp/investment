@@ -1000,7 +1000,7 @@ tbody tr.current-row td{font-weight:600;}
 .usd-row,.countdown-text{display:flex;justify-content:flex-end;align-items:center;gap:5px;width:100%}
 .usd-flag-wrap{width:15px;height:15px;flex-shrink:0;border-radius:50%;margin-top:-5px}
 .usd-flag-wrap img{width:100%;height:100%;display:block}
-.card-sub-row{display:flex;background:transparent;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.card-sub-row{display:flex;background:transparent;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap}
 .card-sub-text{font-size:13px;color:rgba(255,255,255,0.45);line-height:1.5;max-width:390px;margin-bottom:0px}
 .card-sub-text .amt-hl{font-family:DM Sans;font-weight:700}
 .card-sub-text .amt-hl.pos{color:#2dd4bf}
@@ -4341,6 +4341,7 @@ function fetchTransactionDetails(subCatName,containerEl){cachedTxData?renderTxRo
         })
         .then(function(){
         showStatusInPlace("Saved!", false);
+        triggerPaperFirework(null);
         setTimeout(function(){
             addOverlay.classList.remove("open");
             addSubmitBtn.disabled = false;
@@ -4412,6 +4413,7 @@ function fetchTransactionDetails(subCatName,containerEl){cachedTxData?renderTxRo
             body: JSON.stringify(deletePayload)
         })
         .then(function() {
+          triggerPaperFirework(null);
             setTimeout(function() { loadSubscriptions(); }, 300);
         })
         .catch(function(err) {
@@ -4601,74 +4603,82 @@ function fetchTransactionDetails(subCatName,containerEl){cachedTxData?renderTxRo
             resetRowInterface();
         });
 
+        // Pass your subscription modal container here so it renders directly inside it
+
         document.getElementById("sub-edit-save-btn").addEventListener("click", function(e) {
-            e.preventDefault();
+      e.preventDefault();
 
-            var titleEl = document.getElementById("edit-sub-title");
-            var monthlyEl = document.getElementById("edit-sub-amount");
-            var yearlyEl = document.getElementById("edit-sub-total-amount");
-            var startDateEl = document.getElementById("edit-sub-start-date");
-            var endDateEl = document.getElementById("edit-sub-end-date");
-            var statusEl = document.getElementById("edit-sub-status");
+      var titleEl = document.getElementById("edit-sub-title");
+      var monthlyEl = document.getElementById("edit-sub-amount");
+      var yearlyEl = document.getElementById("edit-sub-total-amount");
+      var startDateEl = document.getElementById("edit-sub-start-date");
+      var endDateEl = document.getElementById("edit-sub-end-date");
+      var statusEl = document.getElementById("edit-sub-status");
 
-            var updatedTitle = titleEl ? titleEl.value.trim() : "";
-            var updatedMonthly = monthlyEl ? Number(monthlyEl.value.replace(/,/g, "")) || 0 : 0;
-            var updatedYearly = yearlyEl ? Number(yearlyEl.value.replace(/,/g, "")) || 0 : 0;
-            var updatedStart = startDateEl ? startDateEl.value : "";
-            var updatedEnd = endDateEl ? endDateEl.value : "";
+      var updatedTitle = titleEl ? titleEl.value.trim() : "";
+      var updatedMonthly = monthlyEl ? Number(monthlyEl.value.replace(/,/g, "")) || 0 : 0;
+      var updatedYearly = yearlyEl ? Number(yearlyEl.value.replace(/,/g, "")) || 0 : 0;
+      var updatedStart = startDateEl ? startDateEl.value : "";
+      var updatedEnd = endDateEl ? endDateEl.value : "";
 
-            if (!updatedTitle) {
-                if (statusEl) {
-                    statusEl.textContent = "Service name cannot be empty.";
-                    statusEl.style.color = "#ea868f";
-                }
-                return;
-            }
+      if (!updatedTitle) {
+          if (statusEl) {
+              statusEl.textContent = "Service name cannot be empty.";
+              statusEl.style.color = "#ea868f";
+          }
+          return;
+      }
 
-            var finalMonthly = updatedMonthly > 0 ? updatedMonthly : (updatedYearly > 0 ? updatedYearly / 12 : 0);
-            var finalTotal = updatedYearly > 0 ? updatedYearly : (updatedMonthly > 0 ? updatedMonthly * 12 : 0);
+      var finalMonthly = updatedMonthly > 0 ? updatedMonthly : (updatedYearly > 0 ? updatedYearly / 12 : 0);
+      var finalTotal = updatedYearly > 0 ? updatedYearly : (updatedMonthly > 0 ? updatedMonthly * 12 : 0);
 
-            var updatePayload = {
-                action: "edit",
-                oldTitle: targetItem.name,
-                title: updatedTitle,
-                amount: finalMonthly,
-                totalamount: finalTotal,
-                startdate: updatedStart,
-                enddate: updatedEnd
-            };
+      var updatePayload = {
+          action: "edit",
+          oldTitle: targetItem.name,
+          title: updatedTitle,
+          amount: finalMonthly,
+          totalamount: finalTotal,
+          startdate: updatedStart,
+          enddate: updatedEnd
+      };
 
-            if (statusEl) {
-                statusEl.textContent = "Processing...";
-                statusEl.style.color = "#f8f9fa";
-            }
+      if (statusEl) {
+          statusEl.textContent = "Processing...";
+          statusEl.style.color = "#f8f9fa";
+      }
 
-            fetch(APPS_SCRIPT_URL, {
-                method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "text/plain" },
-                body: JSON.stringify(updatePayload)
-            })
-            .then(function() {
-                if (statusEl) {
-                    statusEl.textContent = "Successfully updated!";
-                    statusEl.style.color = "#75b798";
-                }
-                setTimeout(function() {
-                    cleanupModal();
-                    resetRowInterface();
-                    if (typeof loadSubscriptions === "function") {
-                        loadSubscriptions();
-                    }
-                }, 1000);
-            })
-            .catch(function(err) {
-                if (statusEl) {
-                    statusEl.textContent = "Failed: " + err.message;
-                    statusEl.style.color = "#ea868f";
-                }
-            });
-        });
+      fetch(APPS_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain" },
+          body: JSON.stringify(updatePayload)
+      })
+      .then(function() {
+          if (statusEl) {
+              statusEl.textContent = "Successfully updated!";
+              statusEl.style.color = "#75b798";
+          }
+          
+          // 1. Trigger the firework instantly
+          triggerPaperFirework(null);
+
+          // 2. DELAY the cleanup/closing so the animation is fully visible
+          setTimeout(function() {
+              cleanupModal();
+              resetRowInterface();
+              if (typeof loadSubscriptions === "function") {
+                  loadSubscriptions();
+              }
+          }, 1200); // 1.2 seconds delay allows the 1s animation to finish smoothly
+      })
+      .catch(function(err) {
+          if (statusEl) {
+              statusEl.textContent = "Failed: " + err.message;
+              statusEl.style.color = "#ea868f";
+          }
+      });
+  });
+      
     }
     
     function handleAddSubAmountInput(el){var raw=el.value.replace(/[^\d]/g,"");el.value=""===raw?"":parseInt(raw,10).toLocaleString("en-US");var isEdit=0===el.id.indexOf("edit-"),monthlyId=isEdit?"edit-sub-amount":"add-amount",totalId=isEdit?"edit-sub-total-amount":"add-total-amount",monthlyInput=document.getElementById(monthlyId),yearlyInput=document.getElementById(totalId);if(el.id===totalId){var yearlyVal=""===raw?0:parseInt(raw,10);if(monthlyInput)if(yearlyVal>0){var calculatedMonthly=Math.round(yearlyVal/12);monthlyInput.value=calculatedMonthly.toLocaleString("en-US"),monthlyInput.dataset.autoCalculated="true"}else monthlyInput.value="",delete monthlyInput.dataset.autoCalculated}else if(el.id===monthlyId){var monthlyVal=""===raw?0:parseInt(raw,10);if(yearlyInput)if(monthlyVal>0){var calculatedYearly=12*monthlyVal;yearlyInput.value=calculatedYearly.toLocaleString("en-US"),yearlyInput.dataset.autoCalculated="true"}else yearlyInput.value="",delete yearlyInput.dataset.autoCalculated;delete el.dataset.autoCalculated}}function selectPriceMode(mode){currentPriceMode=mode;var monthlyCard=document.getElementById("monthly-price-card");monthlyCard&&monthlyCard.classList.toggle("selected","monthly"===mode);var totalCard=document.getElementById("total-price-card");totalCard&&totalCard.classList.toggle("selected","total"===mode);var editMonthlyCard=document.getElementById("edit-monthly-price-card");editMonthlyCard&&editMonthlyCard.classList.toggle("selected","monthly"===mode);var editTotalCard=document.getElementById("edit-total-price-card");editTotalCard&&editTotalCard.classList.toggle("selected","total"===mode)}var FULL_MONTH_NAMES=["January","February","March","April","May","June","July","August","September","October","November","December"];function formatDateLong(d){return d?FULL_MONTH_NAMES[d.getMonth()]+" "+String(d.getDate()).padStart(2,"0")+", "+d.getFullYear():""}
@@ -4692,46 +4702,98 @@ function fetchTransactionDetails(subCatName,containerEl){cachedTxData?renderTxRo
 
         var actionContainer = (cashCancel && cashCancel.parentElement) || (cashSubmit && cashSubmit.parentElement);
         actionContainer&&(actionContainer.style.display="flex",actionContainer.style.gap="12px"),addCashBtn.addEventListener("click",function(){cashInput.value="",cashStatus&&(cashStatus.className="add-status",cashStatus.innerText=""),cashOverlay.style.display="flex",setTimeout(function(){cashInput.focus()},50)}),cashCancel&&cashCancel.addEventListener("click",function(){cashOverlay.style.display="none"});
+        
         cashSubmit.addEventListener("click", function() {
-        var rawText = cashInput.value.trim();
-        if (rawText) {
-            cashSubmit.disabled = !0;
-            var d = new Date();
-            var formatter=new Intl.DateTimeFormat("sv-SE",{timeZone:"Asia/Ho_Chi_Minh",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:!1});
-            var todayStr = formatter.format(d).replace(' ', ' ');
-            for(var items=rawText.split(";"),payloadBatch=[],i=0;i<items.length;i++){var item=items[i].trim();if(item){var parts=item.split("-");if(!(parts.length<2)){var detail=parts[0].trim(),rawAmount=parseFloat(parts[1].trim());isNaN(rawAmount)||(payloadBatch.push({type:"Cash",date:todayStr,detail,amount:1e3*rawAmount}),console.log(payloadBatch))}}}
-            if (payloadBatch.length > 0) {
-                fetch(CASH_APPS_SCRIPT_URL, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "text/plain"
-                    },
-                    body: JSON.stringify(payloadBatch)
-                }).catch(function(err) {
-                    console.error("Background transmission failed:", err);
-                });
-
-                cashOverlay.style.display = "none";
-                cashSubmit.disabled = !1;
-                cashStatus && (cashStatus.className = "add-status", cashStatus.innerText = "Processing...");
-                addCashBtn && (addCashBtn.classList.add("loading"), addCashBtn.innerHTML = '<span class="btn-spinner"></span>');
+            var rawText = cashInput.value.trim();
+            if (rawText) {
+                cashSubmit.disabled = !0;
+                var d = new Date();
+                var formatter=new Intl.DateTimeFormat("sv-SE",{timeZone:"Asia/Ho_Chi_Minh",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:!1});
+                var todayStr = formatter.format(d).replace(' ', ' ');
+                for(var items=rawText.split(";"),payloadBatch=[],i=0;i<items.length;i++){var item=items[i].trim();if(item){var parts=item.split("-");if(!(parts.length<2)){var detail=parts[0].trim(),rawAmount=parseFloat(parts[1].trim());isNaN(rawAmount)||(payloadBatch.push({type:"Cash",date:todayStr,detail,amount:1e3*rawAmount}),console.log(payloadBatch))}}}
                 
-                setTimeout(function() {
-                    "function" == typeof loadRecent && loadRecent();
-                    cashStatus && (cashStatus.innerText = "Successfully added!");
-                    addCashBtn && (addCashBtn.classList.remove("loading"), addCashBtn.classList.add("success-confirm"), addCashBtn.innerHTML = "&#10003;");
+                if (payloadBatch.length > 0) {
+                    fetch(CASH_APPS_SCRIPT_URL, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "text/plain"
+                        },
+                        body: JSON.stringify(payloadBatch)
+                    }).catch(function(err) {
+                        console.error("Background transmission failed:", err);
+                    });
+
+                    cashOverlay.style.display = "none";
+                    cashSubmit.disabled = !1;
+                    cashStatus && (cashStatus.className = "add-status", cashStatus.innerText = "Processing...");
+                    addCashBtn && (addCashBtn.classList.add("loading"), addCashBtn.innerHTML = '<span class="btn-spinner"></span>');
                     
+                    // Trigger paper firework effect right when successfully processed
+                    triggerPaperFirework(null);
+
                     setTimeout(function() {
-                        addCashBtn && (addCashBtn.classList.remove("success-confirm"), addCashBtn.innerHTML = "+");
-                    }, 1500);
-                }, 11e3);
-            } else {
-                cashStatus && (cashStatus.className = "add-status error", cashStatus.innerText = "Error: Input formatting issue.");
-                cashSubmit.disabled = !1;
+                        "function" == typeof loadRecent && loadRecent();
+                        cashStatus && (cashStatus.innerText = "Successfully added!");
+                        addCashBtn && (addCashBtn.classList.remove("loading"), addCashBtn.classList.add("success-confirm"), addCashBtn.innerHTML = "&#10003;");
+                        
+                        setTimeout(function() {
+                            addCashBtn && (addCashBtn.classList.remove("success-confirm"), addCashBtn.innerHTML = "+");
+                        }, 1500);
+                    }, 11e3);
+                } else {
+                    cashStatus && (cashStatus.className = "add-status error", cashStatus.innerText = "Error: Input formatting issue.");
+                    cashSubmit.disabled = !1;
+                }
             }
+        });
+  }
+
+    // Define it globally in your script
+    window.triggerPaperFirework = function(containerElement) {
+        let targetParent = containerElement && containerElement.nodeType ? containerElement : document.body;
+        
+        let startX = window.innerWidth / 2;
+        let startY = window.innerHeight / 2;
+
+        const overlay = document.createElement("div");
+        overlay.style.position = "fixed";
+        overlay.style.top = "0";
+        overlay.style.left = "0";
+        overlay.style.width = "100vw";
+        overlay.style.height = "100vh";
+        overlay.style.pointerEvents = "none";
+        overlay.style.zIndex = "2147483647";
+        targetParent.appendChild(overlay);
+
+        const colors = ["#75b798", "#0ea5e9", "#f59e0b", "#f43f5e", "#a855f7", "#ec4899", "#10b981"];
+
+        for (let i = 0; i < 60; i++) {
+            const piece = document.createElement("div");
+            piece.style.position = "absolute";
+            piece.style.left = startX + "px";
+            piece.style.top = startY + "px";
+            piece.style.width = (8 + Math.random() * 6) + "px";
+            piece.style.height = (8 + Math.random() * 6) + "px";
+            piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            piece.style.borderRadius = Math.random() > 0.5 ? "50%" : "3px";
+            piece.style.transition = "transform 1s cubic-bezier(0.1, 1, 0.3, 1), opacity 1s ease-in";
+            overlay.appendChild(piece);
+
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = 90 + Math.random() * 180;
+            const targetX = Math.cos(angle) * velocity;
+            const targetY = Math.sin(angle) * velocity - 60;
+
+            requestAnimationFrame(() => {
+                piece.style.transform = `translate(${targetX}px, ${targetY}px) rotate(${Math.random() * 720}deg) scale(${0.5 + Math.random()})`;
+                piece.style.opacity = "0";
+            });
         }
-    });
-    }
+
+        setTimeout(() => {
+            overlay.remove();
+        }, 1200);
+    };
 
     function deleteTx(elementOrItem) {
         var targetItem = null;
@@ -4786,7 +4848,7 @@ function fetchTransactionDetails(subCatName,containerEl){cachedTxData?renderTxRo
         `;
         document.body.insertAdjacentElement("beforeend",modalOverlay);var cleanupModal=function(){modalOverlay.remove(),document.querySelectorAll(".sub-swipe-container.swiped").forEach(function(item){item.classList.remove("swiped")})};
         document.getElementById("expense-del-cancel").addEventListener("click",function(e){e.preventDefault(),cleanupModal();["#tx-list .sub-swipe-container","#tx-list .subs-row","#tx-list .sub-swipe-row",'[class*="swipe"]','[class*="row"]'].forEach(selector=>{document.querySelectorAll(selector).forEach(el=>{el.style.opacity="1",el.style.display="",el.style.visibility="visible",el.style.pointerEvents="auto",el.style.transition="transform 0.2s ease, opacity 0.2s ease",el.style.transform="translateX(0px)",el.classList.remove("swiped","active","open","deleting")})}),document.querySelectorAll('.delete-btn, .swipe-delete-btn, [class*="del-btn"]').forEach(btn=>{btn.style.opacity="0",btn.style.pointerEvents="none"})});
-        document.getElementById("expense-del-confirm").addEventListener("click",function(e){e.preventDefault(),rowContainer&&(rowContainer.style.opacity="0.3",rowContainer.style.pointerEvents="none"),cleanupModal();var addCashBtn=document.getElementById("add-cash"),deletePayload={action:"delete",date:targetItem.date,detail:targetItem.detail,amount:targetItem.amount};fetch(EXPENSE_APPS_SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify(deletePayload)}).then(function(){addCashBtn&&(addCashBtn.classList.add("loading"),addCashBtn.innerHTML='<span class="btn-spinner"></span>'),setTimeout(function(){"function"==typeof loadExpenses?loadExpenses():"function"==typeof loadTransactions&&loadTransactions(),setTimeout(function(){addCashBtn&&(addCashBtn.classList.remove("loading"),addCashBtn.classList.add("success-confirm"),addCashBtn.innerHTML="&#10003;"),setTimeout(function(){addCashBtn&&(addCashBtn.classList.remove("success-confirm"),addCashBtn.innerHTML="+");var listContainer=document.getElementById("tx-list");listContainer&&listContainer.classList.add("data-refreshing"),"function"==typeof loadRecent&&loadRecent(),setTimeout(function(){listContainer&&(listContainer.classList.remove("data-refreshing"),listContainer.classList.add("data-refreshed"),setTimeout(function(){listContainer.classList.remove("data-refreshed")},600))},400)},500)},500)},300)}).catch(function(err){alert("Failed to delete transaction: "+err.message),"function"==typeof loadExpenses&&loadExpenses()})});
+        document.getElementById("expense-del-confirm").addEventListener("click",function(e){e.preventDefault(),rowContainer&&(rowContainer.style.opacity="0.3",rowContainer.style.pointerEvents="none"),cleanupModal();var addCashBtn=document.getElementById("add-cash"),deletePayload={action:"delete",date:targetItem.date,detail:targetItem.detail,amount:targetItem.amount};fetch(EXPENSE_APPS_SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify(deletePayload)}).then(function(){addCashBtn&&(addCashBtn.classList.add("loading"),addCashBtn.innerHTML='<span class="btn-spinner"></span>'),setTimeout(function(){"function"==typeof loadExpenses?loadExpenses():"function"==typeof loadTransactions&&loadTransactions(),setTimeout(function(){addCashBtn&&(addCashBtn.classList.remove("loading"),addCashBtn.classList.add("success-confirm"),addCashBtn.innerHTML="&#10003;"),setTimeout(function(){addCashBtn&&(addCashBtn.classList.remove("success-confirm"),addCashBtn.innerHTML="+");var listContainer=document.getElementById("tx-list");triggerPaperFirework(null);listContainer&&listContainer.classList.add("data-refreshing"),"function"==typeof loadRecent&&loadRecent(),setTimeout(function(){listContainer&&(listContainer.classList.remove("data-refreshing"),listContainer.classList.add("data-refreshed"),setTimeout(function(){listContainer.classList.remove("data-refreshed")},600))},400)},500)},500)},300)}).catch(function(err){alert("Failed to delete transaction: "+err.message),"function"==typeof loadExpenses&&loadExpenses()})});
     }
 
     function editTx(elementOrItem) {
@@ -4922,9 +4984,9 @@ function fetchTransactionDetails(subCatName,containerEl){cachedTxData?renderTxRo
             if (buttonsContainer) buttonsContainer.style.display = "none";
             if (errorEl) errorEl.style.display = "none";
             
-            if (successTextEl) successTextEl.textContent = "Transaction updated!";
+            if (successTextEl) successTextEl.textContent = "Expense updated!";
             if (successEl) successEl.style.display = "flex";
-
+            triggerPaperFirework(null);
             setTimeout(function() { 
             cleanupModal();
             if("undefined"!=typeof rowContainer&&rowContainer){rowContainer.style.opacity="1",rowContainer.style.pointerEvents="auto",rowContainer.style.transform="";var targetInner=rowContainer.querySelector(".subs-row, .row, [style*='transform']");targetInner&&(targetInner.style.transform="")}
@@ -5113,6 +5175,7 @@ function fetchTransactionDetails(subCatName,containerEl){cachedTxData?renderTxRo
         .then(() => {
             if (rowContainer) rowContainer.remove();
             if (typeof loadHistoryTransactions === "function") {
+            triggerPaperFirework(null);
             loadHistoryTransactions();
             } else if (typeof loadTransactions === "function") {
             loadTransactions();
@@ -5371,6 +5434,7 @@ function fetchTransactionDetails(subCatName,containerEl){cachedTxData?renderTxRo
             if (cleanupModal(), rowContainer) {
                 rowContainer.style.opacity = "1", rowContainer.style.pointerEvents = "auto", rowContainer.style.transform = "";
                 var targetInner = rowContainer.querySelector(".ca-history-row, .subs-row, .row, [style*='transform']");
+                triggerPaperFirework(null);
                 targetInner && (targetInner.style.transform = "")
             }
             document.querySelectorAll(".sub-swipe-container, .swiped").forEach(function(item) {
