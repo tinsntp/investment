@@ -821,7 +821,7 @@ tbody tr.current-row td{font-weight:600;}
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 16px;
+    padding: 10px 8px;
     background: #191919;
     border: none !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important; /* Subtle separator line */
@@ -6318,20 +6318,20 @@ function fetchWatchlistData() {
                 var formattedChange = Math.round(Math.abs(changeVal)).toLocaleString("en-US");
 
                 html += `
-                    <div class="tv-item-row">
-                        <div class="tv-item-left">
-                            <img class="tv-item-icon" src="${iconUrl}" onerror="this.src='https://via.placeholder.com/32'" />
-                            <div class="tv-item-symbol-wrap">
-                                <div class="tv-symbol-title">
+                    <div class="tv-item-row" style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+                        <div class="tv-item-left" style="display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1;">
+                            <img class="tv-item-icon" src="${iconUrl}" onerror="this.src='https://via.placeholder.com/32'" style="flex-shrink: 0;" />
+                            <div class="tv-item-symbol-wrap" style="min-width: 0; flex: 1;">
+                                <div class="tv-symbol-title" style="display: flex; align-items: center; gap: 6px; white-space: nowrap;">
                                     ${symbol} 
                                     ${liveIndicatorHtml}
                                 </div>
-                                <div class="tv-symbol-desc" title="${desc}">${desc}</div>
+                                <div class="tv-symbol-desc" title="${desc}" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${desc}</div>
                             </div>
                         </div>
-                        <div class="tv-item-right">
+                        <div class="tv-item-right" style="display: flex; flex-direction: column; align-items: flex-end; text-align: right; flex-shrink: 0; white-space: nowrap;">
                             <div class="tv-item-price">${formattedPrice}</div>
-                            <div class="tv-item-changes ${colorClass}">
+                            <div class="tv-item-changes ${colorClass}" style="display: flex; gap: 6px; justify-content: flex-end;">
                                 <span>${changeSign}${formattedChange}</span>
                                 <span>${changeSign}${pctVal.toFixed(2)}%</span>
                             </div>
