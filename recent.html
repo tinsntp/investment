@@ -6628,6 +6628,7 @@ function fetchWatchlistData() {
         let totalPnlVnd = 0;
         let totalMarketValVnd = 0;
         let totalCostVnd = 0;
+        let activeMarketValVnd = 0;
         let activePositions = 0;
         const activeIcons = [];
         const now = new Date();
@@ -6727,6 +6728,7 @@ function fetchWatchlistData() {
 
             const isOngoing = group.status.toLowerCase().includes('on-going');
             if (isOngoing) {
+                activeMarketValVnd += sumMarketValue;
                 activePositions++;
                 const hasIconUrlForStack = group.iconUrl && group.iconUrl.trim().startsWith("http");
                 activeIcons.push({
@@ -6921,9 +6923,12 @@ function fetchWatchlistData() {
                 });
             }
         });
-        const totalBalanceVnd = totalCostVnd + totalPnlVnd;
+        // Balance shown to the user should reflect only active/on-going positions,
+        // same rule as the per-category "cat.value" balance in the donut stat list.
+        const totalBalanceVnd = activeMarketValVnd;
 
         document.getElementById('total-profit-bal').textContent = totalBalanceVnd.toLocaleString() + "₫";
+        // P/L stays based on full history (active + closed) so closed gains/losses aren't dropped
         document.getElementById('total-profit-val').textContent = (totalPnlVnd > 0 ? '+' : '') + totalPnlVnd.toLocaleString() + "₫";
         const overallPct = totalCostVnd > 0 ? (totalPnlVnd / totalCostVnd) * 100 : 0;
         const badgeEl = document.getElementById('total-profit-badge');
