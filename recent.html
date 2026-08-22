@@ -7102,6 +7102,9 @@ function fetchWatchlistData() {
         });
         svg.appendChild(defs);
 
+        // Pass 1: compute arc geometry/appearance per category, keyed by name,
+        // using the value-desc + arrangeMiddle order (this controls pie layout only).
+        var arcInfoByName = {};
         categories.forEach(function(cat, i) {
             var pct = (totalValue > 0 && cat.value > 0) ? (cat.value / totalValue) : 0;
             var sweep = pct * 180;
@@ -7137,6 +7140,23 @@ function fetchWatchlistData() {
                     svg.appendChild(text);
                 }
             }
+
+            arcInfoByName[cat.name] = { segIdx: i, pct: pct, hasArc: hasArc, color: color };
+        });
+
+        // Pass 2: render the sidebar stat list — active categories first, then
+        // closed-only categories at the bottom, each sorted by value within its group.
+        var displayCategories = categories.slice().sort(function(a, b) {
+            if (a.hasActive !== b.hasActive) return a.hasActive ? -1 : 1;
+            return b.value - a.value;
+        });
+
+        displayCategories.forEach(function(cat) {
+            var info = arcInfoByName[cat.name];
+            var i = info.segIdx;
+            var pct = info.pct;
+            var hasArc = info.hasArc;
+            var color = info.color;
 
             var pnlPos = cat.pnl > 0, pnlZero = cat.pnl === 0;
             var pnlColor = pnlZero ? 'rgba(255,255,255,0.5)' : (pnlPos ? '#14b8a6' : '#f472b6');
