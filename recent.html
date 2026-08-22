@@ -4262,7 +4262,7 @@ function fetchTransactionDetails(subCatName,containerEl){cachedTxData?renderTxRo
 
     /* ══ ADD RECORD (writes to the sheet via Apps Script Web App) ══ */
     var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbylW9rWUDL6OkPqJhS4zIiK-tJgN_apQZGs-KuuX3Pv2cmQEe8q__BtAWve4pb8toqG/exec";
-    var EXPENSE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwufdrqTF7ErACV5DIBQYavcC8W0JbXHOnUjNVhaPim0Yrl_bTiptS0rngLyXYEc_lz6Q/exec";
+    var EXPENSE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzrNJavcDfv0mUwDOaEolzSYCoAgF9WWj_mxXwPzNfzjMcD1CUQYihsT-3y1C3oRKqK2Q/exec";
 
     var addOverlay = document.getElementById("add-modal-overlay");
     var addStatusEl = document.getElementById("add-status");
@@ -7611,7 +7611,7 @@ function fetchWatchlistData() {
             successEl.style.display = "flex";
             if (submitBtn) submitBtn.style.display = "none";
             if (cancelBtn) cancelBtn.style.display = "none";
-
+            triggerPaperFirework(null);
             setTimeout(function() {
                 if (typeof closeModal === "function") closeModal();
             }, 1200);
