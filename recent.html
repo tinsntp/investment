@@ -2525,7 +2525,7 @@ to{transform:rotate(360deg)}
       var bs2 = document.createElementNS(ns, "stop");
       bs2.setAttribute("offset", "100%"); 
       bs2.setAttribute("stop-color", "#14b8a6"); // Bright teal (Teal 500)
-      bs2.setAttribute("stop-opacity", "0.35"); 
+      bs2.setAttribute("stop-opacity", "0.55"); 
 
       balanceGrad.appendChild(bs1); 
       balanceGrad.appendChild(bs2);
@@ -2538,7 +2538,7 @@ to{transform:rotate(360deg)}
       var tbc1 = document.createElementNS(ns, "stop");
       tbc1.setAttribute("offset", "0%"); tbc1.setAttribute("stop-color", "#2dd4bf"); tbc1.setAttribute("stop-opacity", "0.85");
       var tbc2 = document.createElementNS(ns, "stop");
-      tbc2.setAttribute("offset", "100%"); tbc2.setAttribute("stop-color", "#014f56"); tbc2.setAttribute("stop-opacity", "0.25");
+      tbc2.setAttribute("offset", "100%"); tbc2.setAttribute("stop-color", "#014f56"); tbc2.setAttribute("stop-opacity", "0.45");
       tealBlueColumnGrad.appendChild(tbc1); tealBlueColumnGrad.appendChild(tbc2);
       defsTC.appendChild(tealBlueColumnGrad);
 
@@ -2547,9 +2547,9 @@ to{transform:rotate(360deg)}
       lemonColumnGrad.setAttribute("x1", "0"); lemonColumnGrad.setAttribute("y1", "0");
       lemonColumnGrad.setAttribute("x2", "0"); lemonColumnGrad.setAttribute("y2", "1");
       var lc1 = document.createElementNS(ns, "stop");
-      lc1.setAttribute("offset", "0%"); lc1.setAttribute("stop-color", "#ccf244"); lc1.setAttribute("stop-opacity", "0.75");
+      lc1.setAttribute("offset", "0%"); lc1.setAttribute("stop-color", "#ccf244"); lc1.setAttribute("stop-opacity", "0.85");
       var lc2 = document.createElementNS(ns, "stop");
-      lc2.setAttribute("offset", "100%"); lc2.setAttribute("stop-color", "#a3e635"); lc2.setAttribute("stop-opacity", "0.20");
+      lc2.setAttribute("offset", "100%"); lc2.setAttribute("stop-color", "#a3e635"); lc2.setAttribute("stop-opacity", "0.50");
       lemonColumnGrad.appendChild(lc1); lemonColumnGrad.appendChild(lc2);
       defsTC.appendChild(lemonColumnGrad);
 
@@ -7347,149 +7347,155 @@ function fetchWatchlistData() {
 
     function togglePortfolioAccountDropdown(e){e.stopPropagation();var options=document.getElementById("portfolioSelectAccountOptions"),isOpen="block"===options.style.display;options.style.display=isOpen?"none":"block"}function handlePortfolioAccountSelect(el){var selectedValue=el.getAttribute("data-value"),selectedInnerHtml=el.innerHTML;document.getElementById("portfolioTargetAccount").value=selectedValue,document.getElementById("portfolioSelectAccountTrigger").innerHTML=selectedInnerHtml,document.getElementById("portfolioSelectAccountOptions").style.display="none"}function togglePortfolioTypeDropdown(e){e.stopPropagation();var options=document.getElementById("portfolioTypeOptions"),isOpen="block"===options.style.display;options.style.display=isOpen?"none":"block"}function handlePortfolioTypeSelect(el){var value=el.getAttribute("data-value"),icon=el.getAttribute("data-icon");document.getElementById("portfolioAccountType").value=value;var triggerIcon=document.getElementById("portfolioTypeTriggerIcon");triggerIcon.src=icon,triggerIcon.style.display="inline-block";var titleIcon=document.getElementById("portfolioModalIcon");titleIcon&&(titleIcon.src=icon),document.getElementById("portfolioTypeTriggerText").textContent=value,document.getElementById("portfolioTypeOptions").style.display="none";var isSaving="Saving"===value;window.portfolioIsSavingMode=isSaving,applyPortfolioModalMode(isSaving)}function handlePortfolioEntryPriceInput(el){var cleaned=el.value.replace(/[^\d.]/g,""),parts=cleaned.split(".");parts.length>2&&(cleaned=parts[0]+"."+parts.slice(1).join("")),el.value=cleaned,el.dataset.rawValue=cleaned}function handlePortfolioEntryPriceBlur(el){var raw=el.dataset.rawValue||el.value,num=parseFloat(raw);if(""===raw||isNaN(num))return el.value="",void delete el.dataset.computedValue;var computed=Math.round(1e3*num);el.dataset.computedValue=computed,el.value=computed.toLocaleString("en-US")}function handlePortfolioEntryPriceFocus(el){el.dataset.rawValue&&(el.value=el.dataset.rawValue)}document.addEventListener("click",function(e){var options=document.getElementById("portfolioSelectAccountOptions"),trigger=document.getElementById("portfolioSelectAccountTrigger");options&&trigger&&!trigger.contains(e.target)&&!options.contains(e.target)&&(options.style.display="none")}),document.addEventListener("click",function(e){var options=document.getElementById("portfolioTypeOptions"),trigger=document.getElementById("portfolioTypeTrigger");options&&trigger&&!trigger.contains(e.target)&&!options.contains(e.target)&&(options.style.display="none")});
     function applyPortfolioModalMode(isSaving) {
-        var titleText = document.getElementById('portfolioModalTitleText');
-        var icon = document.getElementById('portfolioModalIcon');
-        var label1 = document.getElementById('portfolioField1Label');
-        var label2 = document.getElementById('portfolioField2Label');
-        var label3 = document.getElementById('portfolioField3Label');
-        var submitBtn = document.getElementById('portfolioSubmitBtn');
-        var field3Wrapper = document.getElementById('portfolioField3Wrapper');
-        var chipsContainer = document.getElementById('portfolioAmountChips');
-        var field2 = document.getElementById('portfolioField2');
-        var dateNoteRow = document.getElementById('portfolioDateNoteRow');
-        var field3Col = document.getElementById('portfolioField3Col');
-        var noteCol = document.getElementById('portfolioNoteCol');
-        var topRow = document.getElementById('portfolioTopRow');
-        var symbolWrapper = document.getElementById('portfolioSymbolWrapper');
-        var accountTypeWrapper = document.getElementById('portfolioAccountTypeWrapper');
-        var selectAccountWrapper = document.getElementById('portfolioSelectAccountWrapper');
-        var symbolLabel = document.getElementById('portfolioSymbolLabel');
+      var titleText = document.getElementById('portfolioModalTitleText');
+      var icon = document.getElementById('portfolioModalIcon');
+      var label1 = document.getElementById('portfolioField1Label');
+      var label2 = document.getElementById('portfolioField2Label');
+      var label3 = document.getElementById('portfolioField3Label');
+      var submitBtn = document.getElementById('portfolioSubmitBtn');
+      var field3Wrapper = document.getElementById('portfolioField3Wrapper');
+      var chipsContainer = document.getElementById('portfolioAmountChips');
+      var field2 = document.getElementById('portfolioField2');
+      var dateNoteRow = document.getElementById('portfolioDateNoteRow');
+      var field3Col = document.getElementById('portfolioField3Col');
+      var noteCol = document.getElementById('portfolioNoteCol');
+      var topRow = document.getElementById('portfolioTopRow');
+      var symbolWrapper = document.getElementById('portfolioSymbolWrapper');
+      var accountTypeWrapper = document.getElementById('portfolioAccountTypeWrapper');
+      var selectAccountWrapper = document.getElementById('portfolioSelectAccountWrapper');
+      var symbolLabel = document.getElementById('portfolioSymbolLabel');
 
-        if (isSaving) {
-            titleText.textContent = "Open Saving Account";
-            icon.textContent = "savings";
-            icon.style.color = "#f59e0b";
-            label1.textContent = "# of Months:";
-            label2.textContent = "Rate:";
-            label3.textContent = "Amount:";
-            submitBtn.textContent = "Open Saving";
-            field2.setAttribute('oninput', "handlePortfolioRateInput(this)");
-            field2.setAttribute('onblur', "handlePortfolioRateBlur(this)");
-            field2.setAttribute('onfocus', "handlePortfolioRateFocus(this)");
-            field2.value = '';
-            delete field2.dataset.rawValue;
-            selectAccountWrapper.style.display = "block";
-            topRow.style.display = "flex";
-            topRow.style.gap = "12px";
-            symbolWrapper.style.flex = "1";
-            accountTypeWrapper.style.flex = "1";
-            symbolLabel.textContent = "Bank:";
-
-            // Saving branch:
-            var field1Wrapper = document.getElementById('portfolioField1OuterWrapper');
-            field1Wrapper.style.minWidth = "0";
-            field1Wrapper.innerHTML = `
-                <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioField1Label"># of Months:</label>
-                <div style="display: flex; align-items: center; gap: 6px; background: #111216; border-radius: 12px; padding: 0; box-sizing: border-box; height: 52px; width: 100%; overflow: hidden;">
-                    <button type="button" onclick="window.adjustPortfolioMonths(-1)" style="width: 36px; height: 100%; flex-shrink: 0; border-radius: 12px 0 0 12px; border: none; background: #1e222b; color: #f8f9fa; font-size: 18px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center;">−</button>
-                    <input type="text"
-                        id="portfolioField1" inputmode="numeric"
-                        value="6"
-                        oninput="window.handlePortfolioMonthsInput(this)"
-                        onblur="window.handlePortfolioMonthsBlur(this)"
-                        style="flex: 1; min-width: 0; width: 0; text-align: center; padding: 0; background: transparent; border: none; color: #f8f9fa; font-family:DM Sans; font-size: 18px; box-sizing: border-box; outline: none;" />
-                    <button type="button" onclick="window.adjustPortfolioMonths(1)" style="width: 36px; height: 100%; flex-shrink: 0; border-radius: 0 12px 12px 0; border: none; background: #1e222b; color: #f8f9fa; font-size: 18px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center;">+</button>
-                </div>
-            `;
-
-            // Field3 becomes Amount input (full width) — Note is hidden entirely in Saving mode
-            field3Wrapper.innerHTML = `
-            <div style="position: relative; display: flex; align-items: center;">
-                <input type="text"
-                    id="portfolioField3" inputmode="decimal"
-                    placeholder="0"
-                    oninput="handleAmountInput(this, 'portfolioClearAmountBtn', 'portfolioAmountChips')"
-                    style="width: 100%; padding: 14px 32px 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:DM Sans; font-size: 20px; box-sizing: border-box; outline: none;" />
-                    <span class="material-icons-round"
-                        id="portfolioClearAmountBtn"
-                        onclick="window.clearAmountField('portfolioField3', 'portfolioClearAmountBtn', 'portfolioAmountChips')"
-                        style="display: none; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #6c757d; font-size: 20px; cursor: pointer; user-select: none;">
-                    cancel
-                    </span>
-            </div>
-            `;
-
-            chipsContainer.style.display = "flex";
-            window.generateDynamicChips("", "portfolioAmountChips", "portfolioField3");
-
-            // Layout: Amount takes full width, Note column is hidden entirely
-            dateNoteRow.style.display = "block";
-            field3Col.style.width = "100%";
-            noteCol.style.display = "none";
-
-        } else {
-            titleText.textContent = "Add Position";
-            icon.textContent = "add_chart";
-            icon.style.color = "#14b8a6";
-            label1.textContent = "Entry Price:";
-            label2.textContent = "Volume:";
-            label3.textContent = "Entry Date:";
-            submitBtn.textContent = "Add Position";
-            field2.setAttribute('oninput', "handleAmountInput(this)");
-            field2.removeAttribute('onblur');
-            field2.removeAttribute('onfocus');
-            field2.value = '';
-            selectAccountWrapper.style.display = "none";
-            topRow.style.display = "flex";
-            topRow.style.gap = "12px";
-            symbolWrapper.style.flex = "1";
-            accountTypeWrapper.style.flex = "1";
-            symbolLabel.textContent = "Symbol:";
-
-            // Else (normal) branch:
-            var field1Wrapper = document.getElementById('portfolioField1OuterWrapper'); // FIXED: same stable ID, no more conditional lookup
-            field1Wrapper.innerHTML = `
-                <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioField1Label">Entry Price:</label>
-                <input type="text"
-                    id="portfolioField1" inputmode="decimal"
-                    placeholder="35.45"
-                    oninput="handlePortfolioEntryPriceInput(this)"
-                    onblur="handlePortfolioEntryPriceBlur(this)"
-                    onfocus="handlePortfolioEntryPriceFocus(this)"
-                    style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:DM Sans; font-size: 20px; box-sizing: border-box; outline: none;" />
-            `;
-
-            // Restore Field3 back to date picker
-            field3Wrapper.innerHTML = `
-                <div class="th-filter-wrap" onclick="togglePortfolioDatePicker(event)" style="position: relative; width: 100%;">
-                    <div id="portfolioDateTrigger" style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; box-sizing: border-box; cursor: pointer; display:flex; align-items:center; justify-content: space-between;">
-                        <span id="portfolioDateTriggerText">${portfolioCalState.selectedDate ? formatDateShort(portfolioCalState.selectedDate) : "Select date"}</span>
-                        <i class="bi bi-calendar" style="color: var(--text-secondary); font-size: 14px!important;"></i>
-                    </div>
-                    <div class="col-menu col-menu-date-single" id="portfolio-cal-menu">
-                        <div class="cal-header">
-                            <button type="button" class="cal-nav-btn" onclick="portfolioCalNavigate(event, -1)"><i class="bi bi-chevron-left"></i></button>
-                            <div class="cal-month-label" id="portfolio-cal-month-label">—</div>
-                            <button type="button" class="cal-nav-btn" onclick="portfolioCalNavigate(event, 1)"><i class="bi bi-chevron-right"></i></button>
-                        </div>
-                        <div class="cal-weekdays">
-                            <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
-                        </div>
-                        <div class="cal-grid" id="portfolio-cal-grid"></div>
-                    </div>
-                </div>
-            `;
-
-            chipsContainer.style.display = "none";
-            chipsContainer.innerHTML = "";
-
-            // Layout: Entry Date + Note side-by-side
-            dateNoteRow.style.display = "flex";
-            field3Col.style.width = "auto";
-            noteCol.style.display = "block";
-            noteCol.style.width = "auto";
+      if (isSaving) {
+        if (titleText) titleText.textContent = "Open Saving Account";
+        if (icon) {
+          icon.textContent = "savings";
+          icon.style.color = "#f59e0b";
         }
+        if (label2) label2.textContent = "Rate:";
+        if (label3) label3.textContent = "Amount:";
+        if (submitBtn) submitBtn.textContent = "Open Saving"; 
+        
+        if (field2) {
+          field2.setAttribute('oninput', "handlePortfolioRateInput(this)");
+          field2.setAttribute('onblur', "handlePortfolioRateBlur(this)");
+          field2.setAttribute('onfocus', "handlePortfolioRateFocus(this)"); 
+          field2.value = ''; 
+          delete field2.dataset.rawValue; 
+        }
+        
+        if (selectAccountWrapper) selectAccountWrapper.style.display = "block";
+        if (topRow) {
+          topRow.style.display = "flex"; 
+          topRow.style.gap = "12px";
+        }
+        if (symbolWrapper) symbolWrapper.style.flex = "1"; 
+        if (accountTypeWrapper) accountTypeWrapper.style.flex = "1";
+        if (symbolLabel) symbolLabel.textContent = "Bank:"; 
+
+        var field1Wrapper = document.getElementById('portfolioField1OuterWrapper');
+        if (field1Wrapper) {
+          field1Wrapper.style.minWidth = "0"; 
+          field1Wrapper.innerHTML = `
+            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px" id="portfolioField1Label"># of Months:</label>
+            <div style="display: flex; align-items: center; gap: 6px; background: #111216; border-radius: 12px; padding: 0; box-sizing: border-box; height: 52px; width: 100%; overflow: hidden;">
+              <button type="button" onclick="window.adjustPortfolioMonths(-1)" style="width: 36px; height: 100%; flex-shrink: 0; border-radius: 12px 0 0 12px; border: none; background: #1e222b; color: #f8f9fa; font-size: 18px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center;">−</button>
+              <input type="text" id="portfolioField1" inputmode="numeric" value="6" oninput="window.handlePortfolioMonthsInput(this)" onblur="window.handlePortfolioMonthsBlur(this)" style="flex: 1; min-width: 0; width: 0; text-align: center; padding: 0; background: transparent; border: none; color: #f8f9fa; font-family: DM Sans; font-size: 18px; box-sizing: border-box; outline: none;" />
+              <button type="button" onclick="window.adjustPortfolioMonths(1)" style="width: 36px; height: 100%; flex-shrink: 0; border-radius: 0 12px 12px 0; border: none; background: #1e222b; color: #f8f9fa; font-size: 18px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center;">+</button>
+            </div>
+          `; 
+        }
+
+        if (field3Wrapper) {
+          field3Wrapper.innerHTML = `
+            <div style="position: relative; display: flex; align-items: center">
+              <input type="text" id="portfolioField3" inputmode="decimal" placeholder="0" oninput="handleAmountInput(this, 'portfolioClearAmountBtn', 'portfolioAmountChips')" style="width: 100%; padding: 14px 32px 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family: DM Sans; font-size: 20px; box-sizing: border-box; outline: none;" />
+              <span class="material-icons-round" id="portfolioClearAmountBtn" onclick="window.clearAmountField('portfolioField3', 'portfolioClearAmountBtn', 'portfolioAmountChips')" style="display: none; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #6c757d; font-size: 20px; cursor: pointer; user-select: none;">cancel</span>
+            </div>
+          `; 
+        }
+        if (chipsContainer) {
+          chipsContainer.style.display = "flex"; 
+          window.generateDynamicChips("", "portfolioAmountChips", "portfolioField3"); 
+        }
+        if (dateNoteRow) dateNoteRow.style.display = "block";
+        if (field3Col) field3Col.style.width = "100%"; 
+        if (noteCol) noteCol.style.display = "none"; 
+      } else {
+        if (titleText) titleText.textContent = "Add Position"; 
+        if (icon) {
+          icon.textContent = "add_chart";
+          icon.style.color = "#14b8a6";
+        }
+        if (label2) label2.textContent = "Volume:"; 
+        if (label3) label3.textContent = "Entry Date:";
+        if (submitBtn) submitBtn.textContent = "Add Position"; 
+        
+        if (field2) {
+          field2.setAttribute('oninput', "handleAmountInput(this)");
+          field2.removeAttribute('onblur');
+          field2.removeAttribute('onfocus'); 
+          field2.value = '';
+        }
+        if (selectAccountWrapper) selectAccountWrapper.style.display = "none"; 
+        if (topRow) {
+          topRow.style.display = "flex";
+          topRow.style.gap = "12px"; 
+        }
+        if (symbolWrapper) symbolWrapper.style.flex = "1";
+        if (accountTypeWrapper) accountTypeWrapper.style.flex = "1"; 
+        if (symbolLabel) symbolLabel.textContent = "Symbol:"; 
+
+        var field1Wrapper = document.getElementById('portfolioField1OuterWrapper');
+        if (field1Wrapper) {
+          field1Wrapper.innerHTML = `
+            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px" id="portfolioField1Label">Entry Price:</label>
+            <input type="text" id="portfolioField1" inputmode="decimal" placeholder="35.45" oninput="handlePortfolioEntryPriceInput(this)" onblur="handlePortfolioEntryPriceBlur(this)" onfocus="handlePortfolioEntryPriceFocus(this)" style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family: DM Sans; font-size: 20px; box-sizing: border-box; outline: none;" />
+          `; 
+        }
+
+        if (field3Wrapper) {
+          field3Wrapper.innerHTML = `
+            <div class="th-filter-wrap" onclick="togglePortfolioDatePicker(event)" style="position: relative; width: 100%">
+              <div id="portfolioDateTrigger" style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family: Lexend; font-size: 14px; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; justify-content: space-between;">
+                <span id="portfolioDateTriggerText">${typeof portfolioCalState !== 'undefined' && portfolioCalState.selectedDate ? formatDateShort(portfolioCalState.selectedDate) : "Select date"}</span>
+                <i class="bi bi-calendar" style="color: var(--text-secondary); font-size: 14px !important"></i>
+              </div>
+              <div class="col-menu col-menu-date-single" id="portfolio-cal-menu">
+                <div class="cal-header">
+                  <button type="button" class="cal-nav-btn" onclick="portfolioCalNavigate(event, -1)"><i class="bi bi-chevron-left"></i></button>
+                  <div class="cal-month-label" id="portfolio-cal-month-label">—</div>
+                  <button type="button" class="cal-nav-btn" onclick="portfolioCalNavigate(event, 1)"><i class="bi bi-chevron-right"></i></button>
+                </div>
+                <div class="cal-weekdays"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+                <div class="cal-grid" id="portfolio-cal-grid"></div>
+              </div>
+            </div>
+          `; 
+        }
+        if (chipsContainer) {
+          chipsContainer.style.display = "none"; 
+          chipsContainer.innerHTML = ""; 
+        }
+
+        if (dateNoteRow) dateNoteRow.style.display = "flex";
+        if (field3Col) field3Col.style.width = "auto"; 
+        if (noteCol) {
+          noteCol.style.display = "block";
+          noteCol.style.width = "auto";
+          noteCol.innerHTML = `
+            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px">Action:</label>
+            <div style="display: flex; background: #111216; border-radius: 12px; padding: 3px; height: 50px; box-sizing: border-box; align-items: center;">
+              <!-- Buy defaults to Teal: #14b8a6 -->
+              <button type="button" id="portfolioBuyBtn" onclick="setPortfolioAction('BUY')" style="flex: 1; height: 100%; border: none; border-radius: 10px; background: #14b8a6; color: #ffffff; font-family: Lexend; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;">Buy</button>
+              <!-- Sell defaults to inactive -->
+              <button type="button" id="portfolioSellBtn" onclick="setPortfolioAction('SELL')" style="flex: 1; height: 100%; border: none; border-radius: 10px; background: transparent; color: #94a3b8; font-family: Lexend; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;">Sell</button>
+            </div>
+            <input type="hidden" id="portfolioActionType" value="BUY" />
+          `;
+        }
+      }
     }
+    window.setPortfolioAction=function(action){const buyBtn=document.getElementById("portfolioBuyBtn"),sellBtn=document.getElementById("portfolioSellBtn"),hiddenInput=document.getElementById("portfolioActionType");buyBtn&&sellBtn&&("BUY"===action?(buyBtn.style.background="#14b8a6",buyBtn.style.color="#ffffff",sellBtn.style.background="transparent",sellBtn.style.color="#94a3b8",hiddenInput&&(hiddenInput.value="BUY")):(sellBtn.style.background="#ec4899",sellBtn.style.color="#ffffff",buyBtn.style.background="transparent",buyBtn.style.color="#94a3b8",hiddenInput&&(hiddenInput.value="SELL")))};
     function processPortfolioAdd() {
         const symbol = document.getElementById('portfolioSymbol').value.trim().toUpperCase();
         const accountType = document.getElementById('portfolioAccountType').value;
@@ -7511,7 +7517,12 @@ function fetchWatchlistData() {
             ? parseFloat(field2El.dataset.rawValue || field2El.value.replace('%', '')) || 0
             : parseFloat(field2El.value.replace(/,/g, '')) || 0;
 
-        const note = document.getElementById('portfolioNote').value.trim();
+        // Retrieve action value for normal mode from the hidden input, or note for saving mode
+        const actionTypeEl = document.getElementById('portfolioActionType');
+        const actionValue = actionTypeEl ? actionTypeEl.value : "BUY";
+        const note = window.portfolioIsSavingMode 
+            ? (document.getElementById('portfolioNote') ? document.getElementById('portfolioNote').value.trim() : "") 
+            : actionValue;
 
         // NEW: capture selected bank account when in Saving mode
         const savingTargetAccount = window.portfolioIsSavingMode
@@ -7577,7 +7588,7 @@ function fetchWatchlistData() {
                 entryPrice: field1,
                 volume: field2,
                 entryDate: field3Value,
-                note: note
+                note: note // Passes BUY or SELL from the hidden input field
             };
         }
 
@@ -7621,6 +7632,8 @@ function fetchWatchlistData() {
             }
         });
     }
+
+    
     window.adjustPortfolioMonths=function(delta){var input=document.getElementById("portfolioField1");if(input){var next=(parseInt(input.value,10)||0)+delta;next<1&&(next=1),next>60&&(next=60),input.value=next}},window.handlePortfolioMonthsInput=function(el){var cleaned=el.value.replace(/[^\d]/g,"");el.value=cleaned},window.handlePortfolioMonthsBlur=function(el){var val=parseInt(el.value,10);isNaN(val)||val<1?el.value=1:el.value=val>60?60:val};
     var portfolioCalState={viewYear:(new Date).getFullYear(),viewMonth:(new Date).getMonth(),selectedDate:null};
     function togglePortfolioDatePicker(e){e.stopPropagation();var menu=document.getElementById("portfolio-cal-menu"),isOpen=menu.classList.contains("open");if(document.querySelectorAll(".col-menu").forEach(function(m){m.classList.remove("open")}),!isOpen){document.querySelectorAll('[id="portfolio-cal-menu"]').forEach(function(el){el!==menu&&el.remove()}),document.body.appendChild(menu);var rect=e.currentTarget.getBoundingClientRect();window.innerWidth<=400?(menu.style.position="fixed",menu.style.top=rect.bottom+6+"px",menu.style.left="50%",menu.style.right="auto",menu.style.transform="translateX(-50%)",menu.style.margin="0"):(menu.style.position="fixed",menu.style.top=rect.bottom+6+"px",menu.style.left=rect.left+"px",menu.style.transform="none"),menu.classList.add("open"),renderPortfolioCalendar()}}function renderPortfolioCalendar(){var label=document.getElementById("portfolio-cal-month-label"),grid=document.getElementById("portfolio-cal-grid");if(label&&grid){label.textContent=MONTH_NAMES[portfolioCalState.viewMonth]+" "+portfolioCalState.viewYear,grid.innerHTML="";for(var startDow=new Date(portfolioCalState.viewYear,portfolioCalState.viewMonth,1).getDay(),daysInMonth=new Date(portfolioCalState.viewYear,portfolioCalState.viewMonth+1,0).getDate(),daysInPrevMonth=new Date(portfolioCalState.viewYear,portfolioCalState.viewMonth,0).getDate(),today=new Date,i=0;i<42;i++){var cellDate,isOtherMonth=!1,dayNum=i-startDow+1;dayNum<1?(cellDate=new Date(portfolioCalState.viewYear,portfolioCalState.viewMonth-1,daysInPrevMonth+dayNum),isOtherMonth=!0):dayNum>daysInMonth?(cellDate=new Date(portfolioCalState.viewYear,portfolioCalState.viewMonth+1,dayNum-daysInMonth),isOtherMonth=!0):cellDate=new Date(portfolioCalState.viewYear,portfolioCalState.viewMonth,dayNum);var cellEl=document.createElement("div");cellEl.className="cal-day"+(isOtherMonth?" other-month":""),isSameDay(cellDate,today)&&cellEl.classList.add("today"),portfolioCalState.selectedDate&&isSameDay(cellDate,portfolioCalState.selectedDate)&&cellEl.classList.add("range-start","range-end"),cellEl.textContent=cellDate.getDate(),function(d){cellEl.addEventListener("click",function(e){e.stopPropagation(),portfolioCalState.selectedDate=d;var triggerText=document.getElementById("portfolioDateTriggerText");triggerText&&(triggerText.textContent=formatDateShort(d)),document.getElementById("portfolio-cal-menu").classList.remove("open")})}(cellDate),grid.appendChild(cellEl)}}}function portfolioCalNavigate(e,dir){e.stopPropagation(),portfolioCalState.viewMonth+=dir,portfolioCalState.viewMonth>11&&(portfolioCalState.viewMonth=0,portfolioCalState.viewYear++),portfolioCalState.viewMonth<0&&(portfolioCalState.viewMonth=11,portfolioCalState.viewYear--),renderPortfolioCalendar()}
@@ -7767,119 +7780,8 @@ function fetchWatchlistData() {
     window.addEventListener("DOMContentLoaded",async()=>{try{await Promise.all([loadBalanceHistoryTC(),loadRecent()])}catch(error){console.error("Failed to load data:",error)}setTimeout(()=>{const loader=document.getElementById("loader-overlay");loader&&loader.classList.add("fade-out")},1500)});  
     document.getElementById('watchlist-modal').addEventListener('click', function(event) {if (event.target === this) {closeWatchlistModal();}});
     
-    ! function() {
-  function applyExpSplitLayout() {
-    var bigWrap = document.querySelector(".big-wrap"),
-      rightSlot = document.getElementById("exp-split-right"),
-      ringsWrap = document.getElementById("rings-wrap"),
-      //spendingSection = document.getElementById("spending-budget-section"),
-      spendingView = document.getElementById("budget-view-subcategory"),
-      budgetCard = document.querySelector(".budget-card"),
-      slideZero = document.getElementById("slide-0");
-
-    if (bigWrap && rightSlot && spendingView && slideZero) {
-      var tabBtn, shouldSplit = (tabBtn = document.getElementById("tab-btn-0"), window.innerWidth > 400 && !!tabBtn && tabBtn.classList.contains("active")),
-        isSplit = bigWrap.classList.contains("expense-split");
-      
-      if (shouldSplit && !isSplit) {
-        bigWrap.classList.add("expense-split");
-        
-        // Move rings, spending section, and subcategory view into the right column
-        if (ringsWrap) rightSlot.appendChild(ringsWrap);
-        //if (spendingSection) rightSlot.appendChild(spendingSection);
-        rightSlot.appendChild(spendingView);
-
-        var recentBtn = budgetCard && budgetCard.querySelector(".budget-subtabs .budget-subtab:first-child");
-        if (recentBtn && recentBtn.classList.contains("active")) {
-          var detailBtn = budgetCard.querySelector(".budget-subtabs .budget-subtab:nth-child(1)");
-          detailBtn && detailBtn.click();
-        }
-      } else if (!shouldSplit && isSplit) {
-        bigWrap.classList.remove("expense-split");
-        
-        // Restore elements back to slide-0 for iPhone view
-        if (slideZero) {
-          if (ringsWrap) slideZero.insertBefore(ringsWrap, slideZero.firstChild);
-          //if (spendingSection) slideZero.insertBefore(spendingSection, budgetCard);
-        }
-        
-        // Restore spendingView back inside budgetCard
-        if (spendingView && budgetCard) {
-          budgetCard.appendChild(spendingView);
-        }
-      }
-    }
-  }
-
-  function applyWalletSplitLayout() {
-    var bigWrap = document.querySelector(".big-wrap"),
-      rightSlot = document.getElementById("ovw-split-right"),
-      walletView = document.getElementById("budget-view-wallet"),
-      budgetCard = document.querySelector("#ca-wrap .budget-card");
-    if (bigWrap && rightSlot && walletView && budgetCard) {
-      var tabBtn, shouldSplit = (tabBtn = document.getElementById("tab-btn-1"), window.innerWidth > 400 && !!tabBtn && tabBtn.classList.contains("active")),
-        isSplit = bigWrap.classList.contains("wallet-split");
-      if (shouldSplit && !isSplit) {
-        bigWrap.classList.add("wallet-split"), rightSlot.appendChild(walletView);
-        var walletBtn = budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:first-child');
-        if (walletBtn && walletBtn.classList.contains("active")) {
-          var fireBtn = budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:last-child');
-          fireBtn && fireBtn.click()
-        }
-      } else if (!shouldSplit && isSplit) {
-        bigWrap.classList.remove("wallet-split"), budgetCard.insertBefore(walletView, budgetCard.querySelector("#budget-view-fire") || null);
-        var fireBtnBack = budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:last-child');
-        if (fireBtnBack && fireBtnBack.classList.contains("active")) {
-          var walletBtnBack = budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:first-child');
-          walletBtnBack && walletBtnBack.click()
-        }
-      }
-    }
-  }
-
-  function applyPortfolioSplitLayout() {
-    var bigWrap = document.querySelector(".big-wrap"),
-      rightSlot = document.getElementById("port-split-right"),
-      portfolioView = document.getElementById("budget-view-portfolio"),
-      budgetCard = document.querySelector("#slide-2 .budget-card");
-    if (bigWrap && rightSlot && portfolioView && budgetCard) {
-      var tabBtn, shouldSplit = (tabBtn = document.getElementById("tab-btn-2"), window.innerWidth > 400 && !!tabBtn && tabBtn.classList.contains("active")),
-        isSplit = bigWrap.classList.contains("portfolio-split");
-      if (shouldSplit && !isSplit) {
-        bigWrap.classList.add("portfolio-split"), rightSlot.appendChild(portfolioView);
-        var portfolioBtn = budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:first-child');
-        if (portfolioBtn && portfolioBtn.classList.contains("active")) {
-          var btcBtn = budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:last-child');
-          btcBtn && btcBtn.click()
-        }
-      } else if (!shouldSplit && isSplit) {
-        bigWrap.classList.remove("portfolio-split");
-        var btcView = document.getElementById("budget-view-btc");
-        btcView && btcView.parentNode === budgetCard ? budgetCard.insertBefore(portfolioView, btcView) : budgetCard.appendChild(portfolioView);
-        var btcBtnBack = budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:last-child');
-        if (btcBtnBack && btcBtnBack.classList.contains("active")) {
-          var portfolioBtnBack = budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:first-child');
-          portfolioBtnBack && portfolioBtnBack.click()
-        }
-      }
-    }
-  }
-
-  function applyAllSplitLayouts() {
-    applyExpSplitLayout(), applyWalletSplitLayout(), applyPortfolioSplitLayout()
-  }
-  var applyTimer, resizeTimer, tabBarObserverTarget = document.getElementById("tab-bar") || document.getElementById("tab-btn-group") || document.body;
-  new MutationObserver(function() {
-    clearTimeout(applyTimer), applyTimer = setTimeout(applyAllSplitLayouts, 0)
-  }).observe(tabBarObserverTarget, {
-    attributes: !0,
-    attributeFilter: ["class"],
-    subtree: !0
-  }), window.addEventListener("resize", function() {
-    clearTimeout(resizeTimer), resizeTimer = setTimeout(applyAllSplitLayouts, 100)
-  }), document.addEventListener("DOMContentLoaded", applyAllSplitLayouts), applyAllSplitLayouts()
-}();
-function switchBudgetTab(e,t){var a=e.closest(".budget-card")||document,group=e.closest("[data-tabgroup]"),groupKey=group?group.getAttribute("data-tabgroup"):null;a.querySelectorAll(".budget-subtab, .budget-subtab-v2, .tab-btn:not(#tab-btn-x)").forEach(function(el){el.classList.remove("active")}),e.classList.add("active"),a.querySelectorAll(".budget-tab-content").forEach(function(el){el.style.display="none"});var c=a.querySelector("#budget-view-"+t);c&&(c.style.display="block"),groupKey?localStorage.setItem("active_budget_subtab_"+groupKey,t):localStorage.setItem("active_budget_subtab",t),e.id&&localStorage.setItem("active_regular_tab_id",e.id);var card=document.getElementById("card"),chartBtn=document.getElementById("tab-btn-x");card&&chartBtn&&("none"!==card.style.display&&"none"!==getComputedStyle(card).display&&"0px"!==card.style.maxHeight?chartBtn.classList.add("active"):chartBtn.classList.remove("active")),"subcategory"===t&&"function"==typeof renderSubcategoryBreakdown&&renderSubcategoryBreakdown()}
+    !function(){function applyAllSplitLayouts(){(function(){var bigWrap=document.querySelector(".big-wrap"),rightSlot=document.getElementById("exp-split-right"),ringsWrap=document.getElementById("rings-wrap"),spendingView=document.getElementById("budget-view-subcategory"),budgetCard=document.querySelector(".budget-card"),slideZero=document.getElementById("slide-0");if(bigWrap&&rightSlot&&spendingView&&slideZero){var tabBtn,shouldSplit=(tabBtn=document.getElementById("tab-btn-0"),window.innerWidth>400&&!!tabBtn&&tabBtn.classList.contains("active")),isSplit=bigWrap.classList.contains("expense-split");if(shouldSplit&&!isSplit){bigWrap.classList.add("expense-split"),ringsWrap&&rightSlot.appendChild(ringsWrap),rightSlot.appendChild(spendingView);var recentBtn=budgetCard&&budgetCard.querySelector(".budget-subtabs .budget-subtab:first-child");if(recentBtn&&recentBtn.classList.contains("active")){var detailBtn=budgetCard.querySelector(".budget-subtabs .budget-subtab:nth-child(1)");detailBtn&&detailBtn.click()}}else!shouldSplit&&isSplit&&(bigWrap.classList.remove("expense-split"),slideZero&&ringsWrap&&slideZero.insertBefore(ringsWrap,slideZero.firstChild),spendingView&&budgetCard&&budgetCard.appendChild(spendingView))}})(),function(){var bigWrap=document.querySelector(".big-wrap"),rightSlot=document.getElementById("ovw-split-right"),walletView=document.getElementById("budget-view-wallet"),budgetCard=document.querySelector("#ca-wrap .budget-card");if(bigWrap&&rightSlot&&walletView&&budgetCard){var tabBtn,shouldSplit=(tabBtn=document.getElementById("tab-btn-1"),window.innerWidth>400&&!!tabBtn&&tabBtn.classList.contains("active")),isSplit=bigWrap.classList.contains("wallet-split");if(shouldSplit&&!isSplit){bigWrap.classList.add("wallet-split"),rightSlot.appendChild(walletView);var walletBtn=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:first-child');if(walletBtn&&walletBtn.classList.contains("active")){var fireBtn=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:last-child');fireBtn&&fireBtn.click()}}else if(!shouldSplit&&isSplit){bigWrap.classList.remove("wallet-split"),budgetCard.insertBefore(walletView,budgetCard.querySelector("#budget-view-fire")||null);var fireBtnBack=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:last-child');if(fireBtnBack&&fireBtnBack.classList.contains("active")){var walletBtnBack=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:first-child');walletBtnBack&&walletBtnBack.click()}}}}(),function(){var bigWrap=document.querySelector(".big-wrap"),rightSlot=document.getElementById("port-split-right"),portfolioView=document.getElementById("budget-view-portfolio"),budgetCard=document.querySelector("#slide-2 .budget-card");if(bigWrap&&rightSlot&&portfolioView&&budgetCard){var tabBtn,shouldSplit=(tabBtn=document.getElementById("tab-btn-2"),window.innerWidth>400&&!!tabBtn&&tabBtn.classList.contains("active")),isSplit=bigWrap.classList.contains("portfolio-split");if(shouldSplit&&!isSplit){bigWrap.classList.add("portfolio-split"),rightSlot.appendChild(portfolioView);var portfolioBtn=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:first-child');if(portfolioBtn&&portfolioBtn.classList.contains("active")){var btcBtn=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:last-child');btcBtn&&btcBtn.click()}}else if(!shouldSplit&&isSplit){bigWrap.classList.remove("portfolio-split");var btcView=document.getElementById("budget-view-btc");btcView&&btcView.parentNode===budgetCard?budgetCard.insertBefore(portfolioView,btcView):budgetCard.appendChild(portfolioView);var btcBtnBack=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:last-child');if(btcBtnBack&&btcBtnBack.classList.contains("active")){var portfolioBtnBack=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:first-child');portfolioBtnBack&&portfolioBtnBack.click()}}}}()}var applyTimer,resizeTimer,tabBarObserverTarget=document.getElementById("tab-bar")||document.getElementById("tab-btn-group")||document.body;new MutationObserver(function(){clearTimeout(applyTimer),applyTimer=setTimeout(applyAllSplitLayouts,0)}).observe(tabBarObserverTarget,{attributes:!0,attributeFilter:["class"],subtree:!0}),window.addEventListener("resize",function(){clearTimeout(resizeTimer),resizeTimer=setTimeout(applyAllSplitLayouts,100)}),document.addEventListener("DOMContentLoaded",applyAllSplitLayouts),applyAllSplitLayouts()}();
+    function switchBudgetTab(e,t){var a=e.closest(".budget-card")||document,group=e.closest("[data-tabgroup]"),groupKey=group?group.getAttribute("data-tabgroup"):null;a.querySelectorAll(".budget-subtab, .budget-subtab-v2, .tab-btn:not(#tab-btn-x)").forEach(function(el){el.classList.remove("active")}),e.classList.add("active"),a.querySelectorAll(".budget-tab-content").forEach(function(el){el.style.display="none"});var c=a.querySelector("#budget-view-"+t);c&&(c.style.display="block"),groupKey?localStorage.setItem("active_budget_subtab_"+groupKey,t):localStorage.setItem("active_budget_subtab",t),e.id&&localStorage.setItem("active_regular_tab_id",e.id);var card=document.getElementById("card"),chartBtn=document.getElementById("tab-btn-x");card&&chartBtn&&("none"!==card.style.display&&"none"!==getComputedStyle(card).display&&"0px"!==card.style.maxHeight?chartBtn.classList.add("active"):chartBtn.classList.remove("active")),"subcategory"===t&&"function"==typeof renderSubcategoryBreakdown&&renderSubcategoryBreakdown()}
     document.addEventListener("DOMContentLoaded",function(){var savedSubtabV1=localStorage.getItem("active_budget_subtab")||"spending",targetBtnV1=document.querySelector(`.budget-subtab[onclick*="'${savedSubtabV1}'"]`);if(targetBtnV1)switchBudgetTab(targetBtnV1,savedSubtabV1);else{var defaultBtn=document.querySelector(".budget-subtab");defaultBtn&&switchBudgetTab(defaultBtn,"spending")}var groupEl=document.querySelector('[data-tabgroup="wallet-fire"]');if(groupEl){var savedSubtabV2=localStorage.getItem("active_budget_subtab_wallet-fire")||"wallet",targetBtnV2=groupEl.querySelector(`.budget-subtab-v2[onclick*="'${savedSubtabV2}'"]`);targetBtnV2&&switchBudgetTab(targetBtnV2,savedSubtabV2)}var groupEl3=document.querySelector('[data-tabgroup="portfolio-btc"]');if(groupEl3){var savedSubtabV4=localStorage.getItem("active_budget_subtab_portfolio-btc")||"portfolio",targetBtnV4=groupEl3.querySelector(`.budget-subtab-v2[onclick*="'${savedSubtabV4}'"]`);targetBtnV4&&switchBudgetTab(targetBtnV4,savedSubtabV4)}var chartBtn=document.getElementById("tab-btn-x"),card=document.getElementById("card");chartBtn&&card&&(card.style.overflow="hidden",card.style.transition="max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease-in-out, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)","shown"===(localStorage.getItem("tab-btn-x-card-state")||"shown")?(chartBtn.classList.add("active"),card.style.display="block",card.style.maxHeight="1000px",card.style.opacity="1",card.style.transform="translateY(0)"):(chartBtn.classList.remove("active"),card.style.display="none",card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)"),chartBtn.addEventListener("click",function(e){e.stopPropagation(),"none"===card.style.display||"none"===getComputedStyle(card).display||"0px"===card.style.maxHeight?(card.style.display="block",card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)",card.offsetHeight,card.style.maxHeight="1000px",card.style.opacity="1",card.style.transform="translateY(0)",this.classList.add("active"),localStorage.setItem("tab-btn-x-card-state","shown")):(card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)",this.classList.remove("active"),setTimeout(function(){"0px"===card.style.maxHeight&&(card.style.display="none")},400),localStorage.setItem("tab-btn-x-card-state","hidden"));var savedId=localStorage.getItem("active_regular_tab_id"),activeBtn=(savedId?document.getElementById(savedId):null)||targetBtnV1||document.querySelector(".budget-subtab, .budget-subtab-v2, .tab-btn:not(#tab-btn-x)");activeBtn&&activeBtn.classList.add("active"),"block"===card.style.display&&"function"==typeof loadBalanceHistoryTC&&loadBalanceHistoryTC()})),document.querySelectorAll(".tab-btn").forEach(function(btn){btn.addEventListener("click",function(){"tab-btn-x"!==this.id&&(document.querySelectorAll(".tab-btn:not(#tab-btn-x)").forEach(function(otherBtn){otherBtn.classList.remove("active")}),this.classList.add("active"),this.id&&localStorage.setItem("active_regular_tab_id",this.id),card&&chartBtn&&("none"!==card.style.display&&"none"!==getComputedStyle(card).display&&"0px"!==card.style.maxHeight?chartBtn.classList.add("active"):chartBtn.classList.remove("active")))})})});
     !function(){var tabOrdersByGroup={"wallet-fire":["wallet","fire"],"portfolio-btc":["portfolio","btc"]},startX=0,startY=0,isSwiping=!1,mouseDown=!1,activeCard=null,activeGroup=null;function goToTab(card,tabName){var btn=card.querySelector(".budget-subtab-v2[onclick*=\"'"+tabName+"'\"]");btn&&switchBudgetTab(btn,tabName)}
     function handleSwipeEnd(card,groupEl,dx){var groupKey=groupEl.getAttribute("data-tabgroup"),tabOrder=tabOrdersByGroup[groupKey];if(tabOrder){var currentTab=function(card){var activeBtn=card.querySelector(".budget-subtab-v2.active");if(!activeBtn)return null;var match=activeBtn.getAttribute("onclick").match(/'([^']+)'/);return match?match[1]:null}(groupEl)||tabOrder[0],currentIndex=tabOrder.indexOf(currentTab),len=tabOrder.length;currentIndex<0||(dx<-50?goToTab(card,tabOrder[(currentIndex+1)%len]):dx>50&&goToTab(card,tabOrder[(currentIndex-1+len)%len]))}}function findTabGroupEl(card){return card.querySelector("[data-tabgroup]")}document.addEventListener("touchstart",function(e){var card=e.target.closest(".budget-card");if(card){var groupEl=findTabGroupEl(card);groupEl&&(activeCard=card,activeGroup=groupEl,startX=e.touches[0].clientX,startY=e.touches[0].clientY,isSwiping=!0)}},{passive:!0}),document.addEventListener("touchmove",function(e){if(isSwiping&&activeCard){var dx=e.touches[0].clientX-startX,dy=e.touches[0].clientY-startY;Math.abs(dy)>Math.abs(dx)&&(isSwiping=!1)}},{passive:!0}),document.addEventListener("touchend",function(e){if(isSwiping&&activeCard&&activeGroup){var dx=e.changedTouches[0].clientX-startX;handleSwipeEnd(activeCard,activeGroup,dx),isSwiping=!1,activeCard=null,activeGroup=null}}),document.addEventListener("mousedown",function(e){var card=e.target.closest(".budget-card");if(card){var groupEl=findTabGroupEl(card);groupEl&&(activeCard=card,activeGroup=groupEl,startX=e.clientX,startY=e.clientY,mouseDown=!0,isSwiping=!0)}}),document.addEventListener("mousemove",function(e){if(mouseDown&&isSwiping&&activeCard){var dx=e.clientX-startX,dy=e.clientY-startY;Math.abs(dy)>Math.abs(dx)&&(isSwiping=!1)}}),document.addEventListener("mouseup",function(e){if(mouseDown){if(isSwiping&&activeCard&&activeGroup){var dx=e.clientX-startX;handleSwipeEnd(activeCard,activeGroup,dx)}mouseDown=!1,isSwiping=!1,activeCard=null,activeGroup=null}})}();
@@ -7887,17 +7789,12 @@ function switchBudgetTab(e,t){var a=e.closest(".budget-card")||document,group=e.
     
 
     updateMarketStatusDot();
+    loadBalanceHistoryTC();restoreBudgetSubtab();updateBalanceVisibility();
 
-    loadBalanceHistoryTC();restoreBudgetSubtab();
-    updateBalanceVisibility();
-
-    fetchOrderSheetCSV();
-    loadTransactionHistory();
-    loadSubscriptions();
+    fetchOrderSheetCSV();loadTransactionHistory();loadSubscriptions();
 
     loadRecent();fetchSheetCSV();
-    loadCycles();initFullyAutomatedTimeline();
-    loadFIRE();
+    loadCycles();initFullyAutomatedTimeline();loadFIRE();
     setInterval(loadRecent,60000);
     setInterval(loadTransactionHistory,60000);
     setInterval(loadBalanceHistoryTC,60000);
