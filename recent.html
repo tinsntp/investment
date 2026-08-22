@@ -6932,7 +6932,7 @@ function fetchWatchlistData() {
 
         renderActivePositionsStat(activePositions, activeIcons);
 
-        var donutValues = {}, donutPnls = {}, donutIcons = {};
+        var donutValues = {}, donutPnls = {}, donutCosts = {}, donutIcons = {}, donutHasActive = {};
         var CAT_ICONS = {
             "Stock":  "https://github.com/tinsntp/investment/blob/main/stock.png?raw=true",
             "Saving": "https://github.com/tinsntp/investment/blob/main/saving.png?raw=true",
@@ -6943,6 +6943,7 @@ function fetchWatchlistData() {
             var cat = group.accountType || "Other";
             var isStock  = cat.toLowerCase() === "stock";
             var isCrypto = cat.toLowerCase() === "crypto";
+            var isOngoing = group.status.toLowerCase().includes('on-going');
             var mainRec  = (isStock || isCrypto) ? group.mainRecord : null;
             var val = mainRec ? mainRec.marketValue
                 : (group.records || []).reduce(function(a, r) { return a + (r.marketValue || 0); }, 0)
@@ -6950,22 +6951,35 @@ function fetchWatchlistData() {
             var pnl = mainRec ? mainRec.actualPnl
                 : (group.records || []).reduce(function(a, r) { return a + (r.actualPnl || 0); }, 0)
                 + (group.mainRecord ? (group.mainRecord.actualPnl || 0) : 0);
-            donutValues[cat] = (donutValues[cat] || 0) + val;
-            donutPnls[cat]   = (donutPnls[cat]   || 0) + pnl;
+            var cost = mainRec ? mainRec.costValue
+                : (group.records || []).reduce(function(a, r) { return a + (r.costValue || 0); }, 0)
+                + (group.mainRecord ? (group.mainRecord.costValue || 0) : 0);
+
+            // Balance (cat.value) only reflects on-going/active positions
+            if (isOngoing) {
+                donutValues[cat] = (donutValues[cat] || 0) + val;
+                donutHasActive[cat] = true;
+            } else if (!(cat in donutHasActive)) {
+                donutHasActive[cat] = false;
+            }
+            // P/L and its cost basis still reflect the full history (active + closed) for the category
+            donutPnls[cat]  = (donutPnls[cat]  || 0) + pnl;
+            donutCosts[cat] = (donutCosts[cat] || 0) + cost;
             if (!donutIcons[cat]) donutIcons[cat] = CAT_ICONS[cat] || "";
         });
         var donutTotal = Object.values(donutValues).reduce(function(s, v) { return s + v; }, 0);
-        renderNavDonut(donutValues, donutPnls, donutIcons, donutTotal);
+        renderNavDonut(donutValues, donutPnls, donutIcons, donutTotal, donutHasActive, donutCosts);
     }
 
-    function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap, totalValue) {
+    function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap, totalValue, categoryHasActiveMap, categoryCostTotals) {
         var statList = document.getElementById('nav-stat-list');
         var svg = document.getElementById('nav-donut-svg');
         if (!statList || !svg) return;
 
         statList.innerHTML = "";
         svg.innerHTML = "";
-        if (totalValue <= 0) return;
+        categoryHasActiveMap = categoryHasActiveMap || {};
+        categoryCostTotals = categoryCostTotals || {};
 
         var categoryColorMap = {
             "saving": "#f472b6",
@@ -6987,17 +7001,26 @@ function fetchWatchlistData() {
             return palette[index % palette.length];
         }
 
-        var categories = Object.keys(categoryValueTotals)
+        var categoryKeySet = {};
+        Object.keys(categoryValueTotals).forEach(function(cat) { categoryKeySet[cat] = true; });
+        Object.keys(categoryPnlTotals).forEach(function(cat) { categoryKeySet[cat] = true; });
+
+        var categories = Object.keys(categoryKeySet)
             .map(function(cat) {
                 return {
                     name: cat,
-                    value: categoryValueTotals[cat],
+                    value: categoryValueTotals[cat] || 0,
                     pnl: categoryPnlTotals[cat] || 0,
-                    icon: categoryIconMap[cat] || ""
+                    cost: categoryCostTotals[cat] || 0,
+                    icon: categoryIconMap[cat] || "",
+                    hasActive: !!categoryHasActiveMap[cat]
                 };
             })
-            .filter(function(c) { return c.value > 0; })
+            // Keep a category if it has an active balance OR any P/L to report (closed-only history)
+            .filter(function(c) { return c.value > 0 || c.pnl !== 0; })
             .sort(function(a, b) { return b.value - a.value; });
+
+        if (categories.length === 0) return;
 
         // Rearrange: largest in middle, others alternating on each side
         function arrangeMiddle(arr) {
@@ -7080,47 +7103,53 @@ function fetchWatchlistData() {
         svg.appendChild(defs);
 
         categories.forEach(function(cat, i) {
-            var pct = cat.value / totalValue;
+            var pct = (totalValue > 0 && cat.value > 0) ? (cat.value / totalValue) : 0;
             var sweep = pct * 180;
             var d0 = currentDeg - GAP / 2;
             var d1 = currentDeg - sweep + GAP / 2;
             currentDeg -= sweep;
 
-            if (d1 >= d0) return;
-
-            // FIXED: Use cat.color directly
             var color = cat.color;
+            var hasArc = cat.value > 0 && d1 < d0;
 
-            var isLargest = (i === maxIdx);
-            var rOut = isLargest ? rOuter - 5 : rOuter;
+            if (hasArc) {
+                var isLargest = (i === maxIdx);
+                var rOut = isLargest ? rOuter - 5 : rOuter;
 
-            var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-            path.setAttribute("d", arc(d0, d1, rOut));
-            path.setAttribute("fill", isLargest ? "url(#" + uid + i + ")" : color);
-            path.setAttribute("stroke", color);
-            path.setAttribute("stroke-width", "1");
-            path.setAttribute('data-seg', i);
-            svg.appendChild(path);
+                var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                path.setAttribute("d", arc(d0, d1, rOut));
+                path.setAttribute("fill", isLargest ? "url(#" + uid + i + ")" : color);
+                path.setAttribute("stroke", color);
+                path.setAttribute("stroke-width", "1");
+                path.setAttribute('data-seg', i);
+                svg.appendChild(path);
 
-            if (pct >= 0.05) {
-                var mid = (d0 + d1) / 2;
-                var lr = (rOuter + rInner) / 2;
-                var lp = pt(lr, mid);
-                var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-                text.setAttribute("x", lp.x.toFixed(1));
-                text.setAttribute("y", lp.y.toFixed(1));
-                text.setAttribute("class", "nav-donut-label");
-                text.setAttribute("font-size", "13");
-                text.textContent = "(" + Math.round(pct * 100) + "%)";
-                svg.appendChild(text);
+                if (pct >= 0.05) {
+                    var mid = (d0 + d1) / 2;
+                    var lr = (rOuter + rInner) / 2;
+                    var lp = pt(lr, mid);
+                    var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    text.setAttribute("x", lp.x.toFixed(1));
+                    text.setAttribute("y", lp.y.toFixed(1));
+                    text.setAttribute("class", "nav-donut-label");
+                    text.setAttribute("font-size", "13");
+                    text.textContent = "(" + Math.round(pct * 100) + "%)";
+                    svg.appendChild(text);
+                }
             }
 
             var pnlPos = cat.pnl > 0, pnlZero = cat.pnl === 0;
             var pnlColor = pnlZero ? 'rgba(255,255,255,0.5)' : (pnlPos ? '#14b8a6' : '#f472b6');
             var pnlFmt = fmtPnl(cat.pnl);
-            var basis = cat.value - cat.pnl;
+            // Use full-history cost basis (not the active-only balance) so closed
+            // categories still get a meaningful P/L percent instead of a bogus one.
+            var basis = cat.cost;
             var pnlPct = basis > 0 ? (cat.pnl / basis) * 100 : 0;
             var pnlPctFmt = (pnlPos ? '+' : '') + pnlPct.toFixed(1) + '%';
+
+            // No active/on-going positions in this category → show P/L only, no balance
+            var pctLabelHtml = hasArc ? `<span class="nav-stat-pct"> (${Math.round(pct * 100)}%)</span>` : '';
+            var balanceHtml = cat.hasActive ? `<div class="nav-stat-value">${fmtBalance(cat.value)}</div>` : '';
 
             var item = document.createElement("div");
             item.className = "nav-stat-item";
@@ -7130,8 +7159,8 @@ function fetchWatchlistData() {
             item.innerHTML = `${iconHtml}
                 <div class="nav-stat-info">
                     <div class="nav-stat-label-row">
-                        <div class="nav-stat-label">${cat.name}<span class="nav-stat-pct"> (${Math.round(pct * 100)}%)</span></div>
-                        <div class="nav-stat-value">${fmtBalance(cat.value)}</div>
+                        <div class="nav-stat-label">${cat.name}${pctLabelHtml}</div>
+                        ${balanceHtml}
                     </div>
                     <div class="nav-stat-pnl" style="color:${pnlColor};">${pnlFmt} (${pnlPctFmt})</div>
                 </div>`;
