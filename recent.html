@@ -226,7 +226,7 @@ background:
 #tx-list{display:flex;flex-direction:column;margin:0 auto;padding:0 5px 0 5px;overflow-y: auto!important;}
 .tx-group-hdr{font-size:2.3vw;font-weight:300;color:rgba(255,255,255,0.45);letter-spacing:0.05em;padding:2.5vw 0 1vw 2vw;margin-top:0.5vw}
 .tx-group-hdr:first-child{padding-top:0.5vw}
-.row{display:flex;align-items:center;padding:2vw 0;border-bottom:1px solid rgba(255,255,255,0.08);gap:2vw;cursor:pointer;transition:background 0.2s ease,border-radius 0.2s ease,padding 0.2s ease}
+.row{display:flex;align-items:center;padding:2vw 0;border-bottom:1px solid rgba(255,255,255,0.08);gap:1.5vw;cursor:pointer;transition:background 0.2s ease,border-radius 0.2s ease,padding 0.2s ease}
 .row:last-child { border-bottom:none; }
 .row:hover { background:rgba(255,255,255,0.04);}
 .ico { width:10vw; height:10vw; border-radius:50%; object-fit:cover; flex-shrink:0; background:rgba(255,255,255,0.08); padding:0vw; margin-left:2vw;}
@@ -240,7 +240,7 @@ background:
 .ttl{display:flex;align-items:center;gap:1.5vw}
 .recent-badge{font-size:1.6vw;font-weight:700;color:#14b8a6;background:rgba(74,222,128,0.14);border-radius:99px;padding:0.4vw 1.2vw;white-space:nowrap}
 .recent-badge .bi,label .bi {font-size: 0.8rem!important;vertical-align: 0em;}
-@media screen and (max-width:400px){.recent-badge{font-size:3.4vw}.ico,.ico-fb {width:14vw!important; height:14vw!important;}}
+@media screen and (max-width:400px){row{gap:2.5vw;} .recent-badge{font-size:3.4vw}.ico,.ico-fb {width:14vw!important; height:14vw!important;}}
 .budget-bar-wrap { position: relative;}
 .budget-bar{width:100%;height:15px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.06)}
 #budget-fill-container{display:flex;width:100%;height:100%;gap:0}
