@@ -6482,24 +6482,41 @@ function fetchWatchlistData() {
         });
         
 
-        // NEW: sort by status first (on-going before close), then by date ascending within each group
+        // Find the most recent transaction date across a group's MAIN row and all its
+        // log rows (initial buy, DCA buy, partial sell, close, etc.) — whichever
+        // transaction happened most recently in real time.
+        function latestGroupDate(group) {
+            var latest = null;
+            function consider(dateStr) {
+                if (!dateStr) return;
+                var d = new Date(dateStr);
+                if (!isNaN(d) && (!latest || d > latest)) latest = d;
+            }
+            if (group.mainRecord) {
+                consider(group.mainRecord.entryDate);
+                consider(group.mainRecord.exitDate);
+            }
+            (group.records || []).forEach(function(r) {
+                consider(r.entryDate);
+                consider(r.exitDate);
+            });
+            return latest || new Date(0);
+        }
+
+        // Sort by accountType group first, then on-going before closed, then latest date first
         filtered.sort(function(a, b) {
-            // NEW: primary sort — group by accountType first
+            // Primary sort — group by accountType first
             var catCompare = a.accountType.localeCompare(b.accountType);
             if (catCompare !== 0) return catCompare;
 
-            // Existing secondary sort — status (on-going first), then date descending
+            // Secondary sort — on-going positions before closed ones
             var aOngoing = a.status.toLowerCase().includes('on-going');
             var bOngoing = b.status.toLowerCase().includes('on-going');
-
             if (aOngoing && !bOngoing) return -1;
             if (!aOngoing && bOngoing) return 1;
 
-            var aRec = a.mainRecord || (a.records && a.records[0]);
-            var bRec = b.mainRecord || (b.records && b.records[0]);
-            var aDate = aRec ? new Date(aRec.entryDate) : new Date(0);
-            var bDate = bRec ? new Date(bRec.entryDate) : new Date(0);
-            return bDate - aDate;
+            // Tertiary sort — most recent transaction (log row) date first within each status group
+            return latestGroupDate(b) - latestGroupDate(a);
         });
 
         renderAccordion(filtered);
