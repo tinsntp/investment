@@ -226,7 +226,7 @@ background:
 #tx-list{display:flex;flex-direction:column;margin:0 auto;padding:0 5px 0 5px;overflow-y: auto!important;}
 .tx-group-hdr{font-size:2.3vw;font-weight:300;color:rgba(255,255,255,0.45);letter-spacing:0.05em;padding:2.5vw 0 1vw 2vw;margin-top:0.5vw}
 .tx-group-hdr:first-child{padding-top:0.5vw}
-.row{display:flex;align-items:center;padding:2vw 0;border-bottom:1px solid rgba(255,255,255,0.08);gap:1.5vw;cursor:pointer;transition:background 0.2s ease,border-radius 0.2s ease,padding 0.2s ease}
+.row{display:flex;align-items:center;padding:2vw 0;border-bottom:1px solid rgba(255,255,255,0.08);gap:2vw;cursor:pointer;transition:background 0.2s ease,border-radius 0.2s ease,padding 0.2s ease}
 .row:last-child { border-bottom:none; }
 .row:hover { background:rgba(255,255,255,0.04);}
 .ico { width:10vw; height:10vw; border-radius:50%; object-fit:cover; flex-shrink:0; background:rgba(255,255,255,0.08); padding:0vw; margin-left:2vw;}
@@ -1459,7 +1459,7 @@ to{transform:rotate(360deg)}
     <!-- EXPENSE SLIDE -->
     <div class="slide" id="slide-0" data-idx="0">
       <div id="rings-wrap"></div>
-      <div id="spending-budget-section" style="padding:0px 15px 0 15px;">
+      <div style="padding:0px 15px 0 15px;">
             <div class="budget-label" style="font-size:11px;margin-bottom:3px">Spending Budget</div>
             <div class="budget-total" id="budget-average"></div>
             <div class="budget-bar-wrap" style="padding-right: 0%; box-sizing: border-box; position: relative;">
@@ -3668,7 +3668,7 @@ function fetchTransactionDetails(subCatName,containerEl){cachedTxData?renderTxRo
         var prevRow = findSheetRowForMonth(prevYear, prevMonth);
         for(var mains=[],idx=3;idx<=9;idx++){var label=headers[idx];label&&!isExcludedLabel(label)&&mains.push({idx,name:label,icon:iconURLs[idx]||"",curr:Math.abs(currentRow[idx]||0),last:prevRow?Math.abs(prevRow[idx]||0):0,subs:[]})}
         for(var idx2=10;idx2<=36;idx2++){var label2=headers[idx2];if(label2&&!isExcludedLabel(label2)){var subItem={idx:idx2,name:label2,icon:iconURLs[idx2]||"",curr:Math.abs(currentRow[idx2]||0),last:prevRow?Math.abs(prevRow[idx2]||0):0},parentName=SUB_TO_MAIN_MAP[label2],parentMain=mains.find(function(m){return m.name===parentName});parentMain?parentMain.subs.push(subItem):mains.length>0&&mains[mains.length-1].subs.push(subItem)}}
-        mains.forEach(function(m,i){if(0!==m.curr){var gid="cm"+i,mainRowEl=buildCatRow(m,!1,gid),chevEl=mainRowEl.querySelector(".chevron:not(.sub-chev)");chevEl&&(chevEl.id="chev-"+gid),list.appendChild(mainRowEl),m.subs.forEach(function(s){0!==s.curr&&list.appendChild(buildCatRow(s,!0,gid))})}}),mains.forEach(function(m,i){var mn=m.name.toLowerCase();if(mn.indexOf("food")>=0||mn.indexOf("shop")>=0||mn.indexOf("travel")>=0){var gid="cm"+i,mRow=document.querySelector(".main-row[data-id='"+gid+"']");if(mRow){mRow.dataset.open="1";var chev=document.getElementById("chev-"+gid);chev&&(chev.className="chevron bi bi-chevron-down"),document.querySelectorAll(".sub-row[data-group='"+gid+"']").forEach(function(s){s.classList.add("visible")}),mRow.classList.add("ring-highlighted")}}});
+        mains.forEach(function(m,i){if(0!==m.curr){var gid="cm"+i,mainRowEl=buildCatRow(m,!1,gid),chevEl=mainRowEl.querySelector(".chevron:not(.sub-chev)");chevEl&&(chevEl.id="chev-"+gid),list.appendChild(mainRowEl),m.subs.forEach(function(s){0!==s.curr&&list.appendChild(buildCatRow(s,!0,gid))})}}),mains.forEach(function(m,i){var mn=m.name.toLowerCase();if(mn.indexOf("food")>=0||mn.indexOf("shop")>=0||mn.indexOf("travel")>=0||mn.indexOf("bill")>=0||mn.indexOf("insurance")>=0){var gid="cm"+i,mRow=document.querySelector(".main-row[data-id='"+gid+"']");if(mRow){mRow.dataset.open="1";var chev=document.getElementById("chev-"+gid);chev&&(chev.className="chevron bi bi-chevron-down"),document.querySelectorAll(".sub-row[data-group='"+gid+"']").forEach(function(s){s.classList.add("visible")}),mRow.classList.add("ring-highlighted")}}});
         buildColHdr();buildRingsForMonth(mains);
         if (typeof applyLayout === "function") applyLayout();
     }
@@ -7772,7 +7772,7 @@ function fetchWatchlistData() {
     var bigWrap = document.querySelector(".big-wrap"),
       rightSlot = document.getElementById("exp-split-right"),
       ringsWrap = document.getElementById("rings-wrap"),
-      spendingSection = document.getElementById("spending-budget-section"),
+      //spendingSection = document.getElementById("spending-budget-section"),
       spendingView = document.getElementById("budget-view-subcategory"),
       budgetCard = document.querySelector(".budget-card"),
       slideZero = document.getElementById("slide-0");
@@ -7786,7 +7786,7 @@ function fetchWatchlistData() {
         
         // Move rings, spending section, and subcategory view into the right column
         if (ringsWrap) rightSlot.appendChild(ringsWrap);
-        if (spendingSection) rightSlot.appendChild(spendingSection);
+        //if (spendingSection) rightSlot.appendChild(spendingSection);
         rightSlot.appendChild(spendingView);
 
         var recentBtn = budgetCard && budgetCard.querySelector(".budget-subtabs .budget-subtab:first-child");
@@ -7800,7 +7800,7 @@ function fetchWatchlistData() {
         // Restore elements back to slide-0 for iPhone view
         if (slideZero) {
           if (ringsWrap) slideZero.insertBefore(ringsWrap, slideZero.firstChild);
-          if (spendingSection) slideZero.insertBefore(spendingSection, budgetCard);
+          //if (spendingSection) slideZero.insertBefore(spendingSection, budgetCard);
         }
         
         // Restore spendingView back inside budgetCard
