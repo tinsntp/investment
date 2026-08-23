@@ -138,7 +138,7 @@ background:
 .cat-row.sub-row.visible { display:grid; }
 
 .name-cell { display:flex; align-items:center; gap:1.5vw; min-width:0; overflow:hidden; }
-.sub-row .name-cell { padding-left:6vw; }
+.sub-row .name-cell { padding-left:5vw; }
 .chevron { font-size:3.5vw; color:rgba(255,255,255,0.45); flex-shrink:0; user-select:none; line-height:1; font-family: "FontAwesome", "Bootstrap Icons", sans-serif;}
 .bi {font-size: 0.6rem!important;vertical-align: middle; }
 .cat-ico { width:5vw; height:5vw; border-radius:0%; object-fit:contain; flex-shrink:0; padding:0.5vw; }
@@ -185,13 +185,13 @@ background:
 .month-picker-compact{display:flex;align-items:center;gap:6px;position:relative}.month-nav-btn{width:24px;height:24px;border-radius:50%;border:0;background:rgba(255,255,255,.06);color:var(--text-secondary, #8e90a6);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;transition:background .15s}.month-nav-btn:hover{background:rgba(255,255,255,.12);color:#fff}.month-picker-label{font-size:13px;font-weight:700;color:var(--text-primary, #fff);cursor:pointer;padding:4px 8px;border-radius:6px;transition:background .15s;user-select:none}.month-picker-label:hover{background:rgba(255,255,255,.06)}.month-picker-full{display:none;position:fixed;background:rgba(22,27,34,.85);-webkit-backdrop-filter:blur(12px) saturate(180%);backdrop-filter:blur(12px) saturate(180%);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:16px;width:220px;box-shadow:0 12px 32px rgba(0,0,0,.5);z-index:10000}.month-picker-full.open{display:block}.mpf-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.mpf-nav-btn{width:26px;height:26px;border-radius:50%;border:0;background:rgba(255,255,255,.06);color:var(--text-secondary, #8e90a6);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;transition:background .15s}.mpf-nav-btn:hover{background:rgba(255,255,255,.12);color:#fff}.mpf-year-label{font-size:14px;font-weight:700;color:#fff}.mpf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.mpf-month-cell{padding:10px 0;text-align:center;border-radius:10px;font-size:13px;font-weight:600;color:var(--text-secondary, #8e90a6);cursor:pointer;transition:background .15s,color .15s}.mpf-month-cell:hover{background:rgba(255,255,255,.08);color:#fff}.mpf-month-cell.selected{background:#ff528e;color:#fff}.mpf-month-cell.current-month{color:#ff528e;font-weight:700}.mpf-month-cell.selected.current-month{color:#fff}.mpf-month-cell.disabled{color:rgba(255,255,255,.2);cursor:not-allowed;pointer-events:none}.mpf-month-cell.disabled:hover{background:0 0}
 .tx-detail-row{font-family:DM Sans;display:grid !important;grid-template-columns:5fr 1.6fr 1.6fr;align-items:center;font-size:1.6vw;border-bottom:1px solid rgba(255,255,255,0.03);width:100%;box-sizing:border-box;cursor:pointer;transition:background 0.15s}
 .tx-detail-row:hover{background:rgba(255,255,255,0.04);}
-.tx-detail-row .td-desc{color:rgba(255,255,255,0.85);font-weight:300;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0.5vw;padding-left:11vw;display:flex;align-items:center;min-width:0}
+.tx-detail-row .td-desc{color:rgba(255,255,255,0.85);font-weight:300;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0.5vw;padding-left:10vw;display:flex;align-items:center;min-width:0}
 .tx-detail-row .td-desc span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tx-detail-row .td-amt{font-family:"DM Sans";text-align:right;color:rgba(255,255,255,0.85);font-weight:300;}
 .tx-detail-row .td-empty{display:block}
 .tx-detail-row .td-date{text-align:right;color:rgba(255,255,255,0.85);white-space:nowrap}
 @media (max-width:400px){.tx-detail-row{display:flex !important;flex-direction:row;justify-content:space-between;font-size:3.7vw;padding:1vw}
-.tx-detail-row .td-desc{flex:1;padding-left:14vw}
+.tx-detail-row .td-desc{flex:1;padding-left:10vw}
 .tx-detail-row .cat-ico,.tx-detail-row .cat-ico-fb{width:6vw !important;height:6vw !important;flex-shrink:0}
 .tx-detail-row .td-amt{width:auto;padding-right:10vw;flex-shrink:0}
 .tx-detail-row .td-date{width:6vw;text-align:right;flex-shrink:0}
@@ -226,7 +226,7 @@ background:
 #tx-list{display:flex;flex-direction:column;margin:0 auto;padding:0 5px 0 5px;overflow-y: auto!important;}
 .tx-group-hdr{font-size:2.3vw;font-weight:300;color:rgba(255,255,255,0.45);letter-spacing:0.05em;padding:2.5vw 0 1vw 2vw;margin-top:0.5vw}
 .tx-group-hdr:first-child{padding-top:0.5vw}
-.row{display:flex;align-items:center;padding:2vw 0;border-bottom:1px solid rgba(255,255,255,0.08);gap:1vw;cursor:pointer;transition:background 0.2s ease,border-radius 0.2s ease,padding 0.2s ease}
+.row{display:flex;align-items:center;padding:2vw 0;border-bottom:1px solid rgba(255,255,255,0.08);gap:1.2vw;cursor:pointer;transition:background 0.2s ease,border-radius 0.2s ease,padding 0.2s ease}
 .row:last-child { border-bottom:none; }
 .row:hover { background:rgba(255,255,255,0.04);}
 .ico { width:10vw; height:10vw; border-radius:50%; object-fit:cover; flex-shrink:0; background:rgba(255,255,255,0.08); padding:0vw; margin-left:2vw;}
@@ -1459,39 +1459,6 @@ to{transform:rotate(360deg)}
     <!-- EXPENSE SLIDE -->
     <div class="slide" id="slide-0" data-idx="0">
       <div id="rings-wrap"></div>
-      <div style="padding:0px 15px 0 15px;">
-            <div class="budget-label" style="font-size:11px;margin-bottom:3px">Spending Budget</div>
-            <div class="budget-total" id="budget-average"></div>
-            <div class="budget-bar-wrap" style="padding-right: 0%; box-sizing: border-box; position: relative;">
-                <div id="last-month-marker"></div>
-                <div class="budget-bar" id="budget-fill-track">
-                    <div id="budget-fill-container"></div>
-                    <div id="budget-over-indicator"></div>
-                </div>
-            </div>
-            <div id="budget-fill-legend"></div>
-            <div class="budget-bottom">
-                <!-- Spent Column -->
-                <div class="budget-col">
-                    <div class="budget-inline-row">
-                    <span class="budget-label">Spent:</span>
-                    <div class="budget-values">
-                        <span id="budget-spent"></span>
-                        <span id="budget-percent"></span>
-                    </div>
-                    </div>
-                </div>
-
-                <!-- Remaining Column -->
-                <div class="budget-col" style="text-align: right;">
-                    <div class="budget-inline-row right">
-                    <span class="budget-label">Remain:</span>
-                    <span id="budget-remaining"></span>
-                    </div>
-                </div>
-            </div>
-            
-          </div>
       <div class="budget-card">
         <!-- Sub-Tab Switcher Header (Placed at top) -->
         <div class="budget-subtabs" style="display: flex; align-items: center; justify-content: space-between; margin: 10px;">
@@ -1509,16 +1476,44 @@ to{transform:rotate(360deg)}
             <span>Subscription</span>
           </button>
         </div>
-
+        <div style="padding:0px 15px 0 15px;">
+          <div class="budget-label" style="font-size:11px;margin-bottom:3px">Spending Budget</div>
+          <div class="budget-total" id="budget-average"></div>
+          <div class="budget-bar-wrap" style="padding-right: 0%; box-sizing: border-box; position: relative;">
+              <div id="last-month-marker"></div>
+              <div class="budget-bar" id="budget-fill-track">
+                  <div id="budget-fill-container"></div>
+                  <div id="budget-over-indicator"></div>
+              </div>
+          </div>
+          <div id="budget-fill-legend"></div>
+          <div class="budget-bottom">
+              <!-- Spent Column -->
+              <div class="budget-col">
+                  <div class="budget-inline-row">
+                  <span class="budget-label">Spent:</span>
+                  <div class="budget-values">
+                      <span id="budget-spent"></span>
+                      <span id="budget-percent"></span>
+                  </div>
+                  </div>
+              </div>
+              <!-- Remaining Column -->
+              <div class="budget-col" style="text-align: right;">
+                  <div class="budget-inline-row right">
+                  <span class="budget-label">Remain:</span>
+                  <span id="budget-remaining"></span>
+                  </div>
+              </div>
+          </div>
+        </div>
         <!-- Tab 1: Spending Budget View -->
         <div class="budget-tab-content" id="budget-view-spending">
-          
           <div id="rec-msg"></div>
           <div class="tab-header">
             <button id="add-cash" class="action-btn">+</button></div>
           <div id="tx-list"></div>
         </div>
-
         <!-- Tab 2: Sub-category View -->
         <div class="budget-tab-content" id="budget-view-subcategory" style="display: none;">
           <div id="subcategory-list" class="subcategory-list">
@@ -3545,7 +3540,7 @@ to{transform:rotate(360deg)}
     iconHtml = tx.iconUrl && 0 === tx.iconUrl.indexOf("http") ? `<img src="${tx.iconUrl}" class="cat-ico" style="width:3vw; height:3vw; margin-right:1vw; border-radius:50%; object-fit:cover; flex-shrink:0;" onerror="this.outerHTML='<div class=&quot;cat-ico-fb&quot; style=&quot;width:3vw; height:3vw; font-size:1.6vw; margin-right:1vw; flex-shrink:0;&quot;>&bull;</div>'">` : '<div class="cat-ico-fb" style="width:3vw; height:3vw; font-size:1.6vw; margin-right:1vw; flex-shrink:0;">&bull;</div>', row.innerHTML = `\n            <div class="td-desc">\n                ${iconHtml}\n                <span class="td-detail">${tx.detail?cleanDetail(tx.detail):"—"}</span>\n            </div>\n            <div class="td-amt">${fmtK(tx.amount)}</div>\n            <div class="td-date">\n                ${shortDay?`<span class="tx-date-badge">${shortDay}</span>`:"—"}\n            </div>\n            `, containerEl.appendChild(row)
   }) : containerEl.innerHTML = "<div class='tx-detail-row'><div class='td-desc' style='color:rgba(255,255,255,0.4)'>No transactions found</div></div>"
 }
-function fetchTransactionDetails(subCatName,containerEl){cachedTxData?renderTxRows(subCatName,containerEl):(containerEl.innerHTML="<div class='tx-detail-row'><div class='td-desc'>Loading details...</div></div>",fetch(DETAIL_SHEET_URL).then(res=>res.text()).then(text=>{var lines=text.split(/\r?\n/);cachedTxData=[];for(var skippedRows=0,i=1;i<lines.length;i++)if(lines[i].trim()){var cols=parseCsvRow(lines[i]);cols.length>=9?cachedTxData.push({date:cols[2],subCat:cols[4],detail:cols[6],cleanDetail:cols[6]||"",amount:parseNum(cols[5]),iconUrl:cols[8]}):skippedRows++}console.log("Total rows fetched:",cachedTxData.length),console.log("Rows skipped (cols.length < 9):",skippedRows),console.log("Date range in data:",cachedTxData.map(t=>t.date).sort()[0],"to",cachedTxData.map(t=>t.date).sort().slice(-1)[0]),console.log("Sample rows:",cachedTxData.slice(0,5)),renderTxRows(subCatName,containerEl)}).catch(err=>{containerEl.innerHTML="<div class='tx-detail-row'><div class='td-desc'>Error loading data</div></div>",console.error("Fetch error:",err)}))}
+    function fetchTransactionDetails(subCatName,containerEl){cachedTxData?renderTxRows(subCatName,containerEl):(containerEl.innerHTML="<div class='tx-detail-row'><div class='td-desc'>Loading details...</div></div>",fetch(DETAIL_SHEET_URL).then(res=>res.text()).then(text=>{var lines=text.split(/\r?\n/);cachedTxData=[];for(var skippedRows=0,i=1;i<lines.length;i++)if(lines[i].trim()){var cols=parseCsvRow(lines[i]);cols.length>=9?cachedTxData.push({date:cols[2],subCat:cols[4],detail:cols[6],cleanDetail:cols[6]||"",amount:parseNum(cols[5]),iconUrl:cols[8]}):skippedRows++}console.log("Total rows fetched:",cachedTxData.length),console.log("Rows skipped (cols.length < 9):",skippedRows),console.log("Date range in data:",cachedTxData.map(t=>t.date).sort()[0],"to",cachedTxData.map(t=>t.date).sort().slice(-1)[0]),console.log("Sample rows:",cachedTxData.slice(0,5)),renderTxRows(subCatName,containerEl)}).catch(err=>{containerEl.innerHTML="<div class='tx-detail-row'><div class='td-desc'>Error loading data</div></div>",console.error("Fetch error:",err)}))}
     function toggleSubCategoryTx(subRowEl,subCatName){var nextEl=subRowEl.nextSibling;if(!(nextEl&&nextEl.classList&&nextEl.classList.contains("tx-details-container"))){var container=document.createElement("div");container.className="tx-details-container",subRowEl.parentNode.insertBefore(container,nextEl),nextEl=container}nextEl.classList.contains("visible")?(nextEl.classList.remove("visible"),subRowEl.classList.remove("visible-tx")):(nextEl.classList.add("visible"),subRowEl.classList.add("visible-tx"),fetchTransactionDetails(subCatName,nextEl))}
     function makeIcon(iconUrl,fallback){if(iconUrl&&0===iconUrl.indexOf("http")){var img=document.createElement("img");return img.className="cat-ico",img.src=iconUrl,img.onerror=(fb=fallback,function(){var d=document.createElement("div");d.className="cat-ico-fb",d.textContent=fb||"•",this.parentNode.replaceChild(d,this)}),img}var fb,d=document.createElement("div");return d.className="cat-ico-fb",d.textContent=iconUrl||fallback||"•",d}
     function buildCatRow(item, isSub, gid) {
@@ -4076,7 +4071,7 @@ function fetchTransactionDetails(subCatName,containerEl){cachedTxData?renderTxRo
         document.getElementById("expand-btn").style.fontSize=isMobile?"3.6vw":"13px";
 
         var gridCols=isMobile?"5.8fr 1.6fr 1.6fr":"5.8fr 1.6fr 1.6fr";
-        var mainNmFs=isMobile?"4vw":"1.8vw",subNmFs=isMobile?"3.8vw":"1.6vw";
+        var mainNmFs=isMobile?"4vw":"1.8vw",subNmFs=isMobile?"3.8vw":"1.7vw";
         var amtFs=isMobile?"4vw":"1.8vw",subAmtFs=isMobile?"4vw":"1.6vw";
         var lastFs=isMobile?"4vw":"1.8vw",pctFs=isMobile?"3.9vw":"1.6vw";
         var catIcoSz=isMobile?"8vw":"4vw",subIcoSz=isMobile?"7vw":"3vw";
@@ -4101,9 +4096,9 @@ function fetchTransactionDetails(subCatName,containerEl){cachedTxData?renderTxRo
         });
 
         //RECENT
-        var txIcoSz=isMobile?"12vw":"6vw";
+        var txIcoSz=isMobile?"12vw":"5vw";
         document.querySelectorAll(".td-detail").forEach(function(el){el.style.fontSize=isMobile?"4vw":"2.0vw";});
-        document.querySelectorAll(".ttl").forEach(function(el){el.style.fontSize=isMobile?"3.9vw":"1.9vw";});
+        document.querySelectorAll(".ttl").forEach(function(el){el.style.fontSize=isMobile?"3.9vw":"1.8vw";});
         document.querySelectorAll(".dtl").forEach(function(el){el.style.fontSize=isMobile?"3.6vw":"1.6vw";});
         document.querySelectorAll(".amt").forEach(function(el){el.style.fontSize=isMobile?"4.1vw":"2.0vw";});
         document.querySelectorAll(".dte").forEach(function(el){el.style.fontSize=isMobile?"3.6vw":"1.6vw";});
@@ -4750,52 +4745,7 @@ function fetchTransactionDetails(subCatName,containerEl){cachedTxData?renderTxRo
         });
   }
 
-    // Define it globally in your script
-    window.triggerPaperFirework = function(containerElement) {
-        let targetParent = containerElement && containerElement.nodeType ? containerElement : document.body;
-        
-        let startX = window.innerWidth / 2;
-        let startY = window.innerHeight / 2;
-
-        const overlay = document.createElement("div");
-        overlay.style.position = "fixed";
-        overlay.style.top = "0";
-        overlay.style.left = "0";
-        overlay.style.width = "100vw";
-        overlay.style.height = "100vh";
-        overlay.style.pointerEvents = "none";
-        overlay.style.zIndex = "2147483647";
-        targetParent.appendChild(overlay);
-
-        const colors = ["#75b798", "#0ea5e9", "#f59e0b", "#f43f5e", "#a855f7", "#ec4899", "#10b981"];
-
-        for (let i = 0; i < 60; i++) {
-            const piece = document.createElement("div");
-            piece.style.position = "absolute";
-            piece.style.left = startX + "px";
-            piece.style.top = startY + "px";
-            piece.style.width = (8 + Math.random() * 6) + "px";
-            piece.style.height = (8 + Math.random() * 6) + "px";
-            piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-            piece.style.borderRadius = Math.random() > 0.5 ? "50%" : "3px";
-            piece.style.transition = "transform 1s cubic-bezier(0.1, 1, 0.3, 1), opacity 1s ease-in";
-            overlay.appendChild(piece);
-
-            const angle = Math.random() * Math.PI * 2;
-            const velocity = 90 + Math.random() * 180;
-            const targetX = Math.cos(angle) * velocity;
-            const targetY = Math.sin(angle) * velocity - 60;
-
-            requestAnimationFrame(() => {
-                piece.style.transform = `translate(${targetX}px, ${targetY}px) rotate(${Math.random() * 720}deg) scale(${0.5 + Math.random()})`;
-                piece.style.opacity = "0";
-            });
-        }
-
-        setTimeout(() => {
-            overlay.remove();
-        }, 1200);
-    };
+    window.triggerPaperFirework=function(containerElement){let targetParent=containerElement&&containerElement.nodeType?containerElement:document.body,startX=window.innerWidth/2,startY=window.innerHeight/2;const overlay=document.createElement("div");overlay.style.position="fixed",overlay.style.top="0",overlay.style.left="0",overlay.style.width="100vw",overlay.style.height="100vh",overlay.style.pointerEvents="none",overlay.style.zIndex="2147483647",targetParent.appendChild(overlay);const colors=["#75b798","#0ea5e9","#f59e0b","#f43f5e","#a855f7","#ec4899","#10b981"];for(let i=0;i<60;i++){const piece=document.createElement("div");piece.style.position="absolute",piece.style.left=startX+"px",piece.style.top=startY+"px",piece.style.width=4+4*Math.random()+"px",piece.style.height=10+8*Math.random()+"px",piece.style.backgroundColor=colors[Math.floor(Math.random()*colors.length)],piece.style.borderRadius="0px",piece.style.transition="transform 1s cubic-bezier(0.15, 0.85, 0.35, 1), opacity 1s ease-in",overlay.appendChild(piece);const angle=Math.random()*Math.PI*2,velocity=90+180*Math.random(),targetX=Math.cos(angle)*velocity,targetY=Math.sin(angle)*velocity-60;requestAnimationFrame(()=>{piece.style.transform=`\n                translate(${targetX}px, ${targetY}px) \n                rotateX(${360*Math.random()}deg) \n                rotateY(${360*Math.random()}deg) \n                rotateZ(${720*Math.random()}deg) \n                scale(${.6+.4*Math.random()})\n            `,piece.style.opacity="0"})}setTimeout(()=>{overlay.remove()},1200)};
 
     function deleteTx(elementOrItem) {
         var targetItem = null;
@@ -7864,7 +7814,6 @@ function fetchWatchlistData() {
 
     updateMarketStatusDot();
     loadBalanceHistoryTC();restoreBudgetSubtab();updateBalanceVisibility();
-
     fetchOrderSheetCSV();loadTransactionHistory();loadSubscriptions();
 
     loadRecent();fetchSheetCSV();
