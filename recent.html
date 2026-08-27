@@ -4257,7 +4257,7 @@ to{transform:rotate(360deg)}
 
     /* ══ ADD RECORD (writes to the sheet via Apps Script Web App) ══ */
     var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbylW9rWUDL6OkPqJhS4zIiK-tJgN_apQZGs-KuuX3Pv2cmQEe8q__BtAWve4pb8toqG/exec";
-    var EXPENSE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx7Iaxgfo0rALwKHsWamDXepk2iy7Qe2ay8WUMQnY_JRV5TZ3W-0_Tip0tWwzREnQTb4Q/exec";
+    var EXPENSE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbykkhE0gmItZO7QIm1R41w4orNfJjIp_3n20qv3e_iymPBbijTCqeOIpezIkYC3dwH1wA/exec";
 
     var addOverlay = document.getElementById("add-modal-overlay");
     var addStatusEl = document.getElementById("add-status");
@@ -6328,7 +6328,7 @@ function fetchWatchlistData() {
                 var isPositive = changeVal > 0;
                 var isZero = changeVal === 0;
                 var colorClass = isZero || isPositive ? "text-teal" : "text-pink";
-                var changeSign = isZero ? "" : isPositive ? "+" : "";
+                var changeSign = isZero ? "" : isPositive ? "+" : "-";
 
                 var formattedPrice = Math.round(priceVal).toLocaleString("en-US");
                 var formattedChange = Math.round(Math.abs(changeVal)).toLocaleString("en-US");
@@ -6349,7 +6349,7 @@ function fetchWatchlistData() {
                             <div class="tv-item-price">${formattedPrice}</div>
                             <div class="tv-item-changes ${colorClass}" style="display: flex; gap: 6px; justify-content: flex-end;">
                                 <span>${changeSign}${formattedChange}</span>
-                                <span>${changeSign}${pctVal.toFixed(2)}%</span>
+                                <span>${changeSign}${Math.abs(pctVal).toFixed(2)}%</span>
                             </div>
                         </div>
                     </div>
@@ -6487,70 +6487,62 @@ function fetchWatchlistData() {
         const groupsMap = {};
 
         rows.forEach(row => {
-            if (!row || row.length < 4) return;
+          if (!row || row.length < 4) return;
 
-            const symbol = (row[1] || "").trim().toUpperCase();
-            if (!symbol) return;
+          const symbol = (row[1] || "").trim().toUpperCase();
+          if (!symbol) return;
 
-            const colCPnlPct = cleanNum(row[2]);
-            const actualPnl = cleanNum(row[3]);
-            const livePrice = cleanNum(row[4]);
-            const execPrice = cleanNum(row[5]);
-            const entryPrice = cleanNum(row[6]);
-            const volume = cleanNum(row[7]);
-            const entryDate = row[8] || "";
-            const exitDate = row[9] || "";
-            const accountType = (row[10] || "Stock").trim();
-            const status = (row[11] || "On-going").trim();
-            const note = (row[12] || "").trim();
-            const costValue = cleanNum(row[14]);
-            const marketValue = cleanNum(row[15]);
-            const totalFee = cleanNum(row[17]);
-            const iconUrl = row[22] || "";
+          const colCPnlPct = cleanNum(row[2]);
+          const actualPnl = cleanNum(row[3]);
+          const livePrice = cleanNum(row[4]);
+          const execPrice = cleanNum(row[5]);
+          const entryPrice = cleanNum(row[6]);
+          const volume = cleanNum(row[7]);
+          const entryDate = row[8] || "";
+          const exitDate = row[9] || "";
+          const accountType = (row[10] || "Stock").trim();   // Col K — authoritative
+          const status = (row[11] || "On-going").trim();
+          const note = (row[12] || "").trim();
+          const costValue = cleanNum(row[14]);
+          const marketValue = cleanNum(row[15]);
+          const totalFee = cleanNum(row[17]);
+          const iconUrl = row[22] || "";
 
-            if (!groupsMap[symbol]) {
-                groupsMap[symbol] = {
-                    symbol: symbol,
-                    accountType: accountType,
-                    status: status,
-                    iconUrl: iconUrl,
-                    livePrice: livePrice,
-                    records: [],
-                    mainRecord: null
-                };
-            }
+          // KEY FIX: separate groups per symbol+accountType, not symbol alone
+          const groupKey = symbol + "||" + accountType;
 
-            const recordObj = {
-                symbol,
-                colCPnlPct,
-                entryDate,
-                exitDate,
-                volume,
-                costValue,
-                marketValue,
-                actualPnl,
-                execPrice,
-                entryPrice,
-                livePrice,
-                totalFee,
-                status,
-                note,
-                accountType
-            };
+          if (!groupsMap[groupKey]) {
+              groupsMap[groupKey] = {
+                  symbol: symbol,
+                  accountType: accountType,
+                  status: status,
+                  iconUrl: iconUrl,
+                  livePrice: livePrice,
+                  records: [],
+                  mainRecord: null
+              };
+          }
 
-            const isSavingRecord = accountType.toLowerCase() === "saving";
-            const isOnGoing = status.toLowerCase() === "on-going";
+          const recordObj = {
+              symbol, colCPnlPct, entryDate, exitDate, volume, costValue, marketValue,
+              actualPnl, execPrice, entryPrice, livePrice, totalFee, status, note, accountType
+          };
 
-            if (note.toUpperCase() === "MAIN") {
-                groupsMap[symbol].mainRecord = recordObj;
-            } else if (isSavingRecord) {
-                if (isOnGoing) {
-                    groupsMap[symbol].records.push(recordObj);
-                }
-            } else {
-                groupsMap[symbol].records.push(recordObj);
-            }
-        });
+          const isSavingRecord = accountType.toLowerCase() === "saving";
+          const isOnGoing = status.toLowerCase() === "on-going";
+
+          if (note.toUpperCase() === "MAIN") {
+              groupsMap[groupKey].mainRecord = recordObj;
+              // MAIN row is authoritative for header display — keep it in sync
+              groupsMap[groupKey].status = status;
+              groupsMap[groupKey].livePrice = livePrice;
+              if (iconUrl) groupsMap[groupKey].iconUrl = iconUrl;
+          } else if (isSavingRecord) {
+              if (isOnGoing) groupsMap[groupKey].records.push(recordObj);
+          } else {
+              groupsMap[groupKey].records.push(recordObj);
+          }
+      });
 
         // Store raw, unfiltered groups globally so filters always reset from full data
         window.currentPortfolioGroups = Object.values(groupsMap);
@@ -7250,8 +7242,10 @@ function fetchWatchlistData() {
             <div class="modal-field-group" style="margin-bottom: 16px;" id="portfolioSymbolWrapper">
                 <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioSymbolLabel">Symbol:</label>
                 <input type="text"
-                    id="portfolioSymbol" placeholder="MBB"
-                    style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; font-weight:300!important; box-sizing: border-box; outline: none; text-transform: uppercase;" />
+                  id="portfolioSymbol" placeholder="MBB"
+                  oninput="handlePortfolioSymbolInput(this)"
+                  onblur="handlePortfolioSymbolBlur(this)"
+                  style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; font-weight:300!important; box-sizing: border-box; outline: none; text-transform: uppercase;" />
             </div>
             <div class="modal-field-group" style="margin-bottom: 16px;" id="portfolioAccountTypeWrapper">
                 <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Account Type:</label>
@@ -7298,7 +7292,7 @@ function fetchWatchlistData() {
                 <input type="text"
                     id="portfolioField2" inputmode="decimal"
                     placeholder="0"
-                    oninput="handlePortfolioRateInput(this)"
+                    oninput="handlePortfolioVolumeInput(this)"
                     onblur="handlePortfolioRateBlur(this)"
                     onfocus="handlePortfolioRateFocus(this)"
                     style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:DM Sans; font-size: 20px; box-sizing: border-box; outline: none;" />
@@ -7350,6 +7344,8 @@ function fetchWatchlistData() {
         </div>
         `;
 
+        
+
         backdrop.classList.add('active');
         backdrop.style.pointerEvents = 'auto';
 
@@ -7364,6 +7360,88 @@ function fetchWatchlistData() {
             const symbolInput = document.getElementById('portfolioSymbol');
             if (symbolInput) symbolInput.focus();
         }, 50);
+        
+    }
+
+        var portfolioSymbolIconCache = null; // { "MBB": "https://...", "BTCUSD": "https://...", ... }
+    var portfolioSymbolIconCacheLoading = false;
+
+    function handlePortfolioSymbolInput(el) {
+        // If user is actively editing/clearing the symbol, revert icon to Account Type's icon
+        // until they finish typing again (blur will re-check).
+        if (!el.value || !el.value.trim()) {
+            resetPortfolioModalIconToAccountType();
+        }
+    }
+
+    function resetPortfolioModalIconToAccountType() {
+        var titleIcon = document.getElementById('portfolioModalIcon');
+        var typeIcon = document.getElementById('portfolioTypeTriggerIcon');
+        if (titleIcon && typeIcon && typeIcon.src) {
+            titleIcon.src = typeIcon.src;
+        }
+    }
+
+    function loadPortfolioSymbolIconCache(callback) {
+        if (portfolioSymbolIconCache) {
+            callback(portfolioSymbolIconCache);
+            return;
+        }
+        if (portfolioSymbolIconCacheLoading) {
+            // Avoid duplicate fetches if user blurs multiple times quickly; retry shortly.
+            setTimeout(function() { loadPortfolioSymbolIconCache(callback); }, 200);
+            return;
+        }
+        portfolioSymbolIconCacheLoading = true;
+
+        fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1012065455", { cache: "no-store" })
+            .then(function(res) {
+                if (!res.ok) throw new Error("HTTP " + res.status);
+                return res.text();
+            })
+            .then(function(csvText) {
+                var lines = csvText.trim().split(/\r?\n/);
+                var map = {};
+                for (var i = 1; i < lines.length; i++) { // skip header row
+                    var cols = parseCSVLine(lines[i]);
+                    if (!cols || cols.length < 2) continue;
+                    var sym = (cols[0] || "").trim().toUpperCase();
+                    var url = (cols[1] || "").trim();
+                    if (sym && url) map[sym] = url;
+                }
+                portfolioSymbolIconCache = map;
+                portfolioSymbolIconCacheLoading = false;
+                callback(map);
+            })
+            .catch(function(err) {
+                console.error("Symbol icon cache load error:", err);
+                portfolioSymbolIconCacheLoading = false;
+                callback({}); // fail silently, fall back to Account Type icon
+            });
+    }
+
+    function handlePortfolioSymbolBlur(el) {
+        var symbol = (el.value || "").trim().toUpperCase();
+        var titleIcon = document.getElementById('portfolioModalIcon');
+        if (!titleIcon) return;
+
+        if (!symbol) {
+            resetPortfolioModalIconToAccountType();
+            return;
+        }
+
+        loadPortfolioSymbolIconCache(function(map) {
+            // Guard: only apply if the symbol field still holds the same value
+            // the user finished typing (avoids race if they changed it again fast).
+            var currentSymbol = (document.getElementById('portfolioSymbol').value || "").trim().toUpperCase();
+            if (currentSymbol !== symbol) return;
+
+            if (map[symbol]) {
+                titleIcon.src = map[symbol];
+            } else {
+                resetPortfolioModalIconToAccountType();
+            }
+        });
     }
 
     function togglePortfolioAccountDropdown(e){e.stopPropagation();var options=document.getElementById("portfolioSelectAccountOptions"),isOpen="block"===options.style.display;options.style.display=isOpen?"none":"block"}function handlePortfolioAccountSelect(el){var selectedValue=el.getAttribute("data-value"),selectedInnerHtml=el.innerHTML;document.getElementById("portfolioTargetAccount").value=selectedValue,document.getElementById("portfolioSelectAccountTrigger").innerHTML=selectedInnerHtml,document.getElementById("portfolioSelectAccountOptions").style.display="none"}function togglePortfolioTypeDropdown(e){e.stopPropagation();var options=document.getElementById("portfolioTypeOptions"),isOpen="block"===options.style.display;options.style.display=isOpen?"none":"block"}function handlePortfolioTypeSelect(el){var value=el.getAttribute("data-value"),icon=el.getAttribute("data-icon");document.getElementById("portfolioAccountType").value=value;var triggerIcon=document.getElementById("portfolioTypeTriggerIcon");triggerIcon.src=icon,triggerIcon.style.display="inline-block";var titleIcon=document.getElementById("portfolioModalIcon");titleIcon&&(titleIcon.src=icon),document.getElementById("portfolioTypeTriggerText").textContent=value,document.getElementById("portfolioTypeOptions").style.display="none";var isSaving="Saving"===value;window.portfolioIsSavingMode=isSaving,applyPortfolioModalMode(isSaving)}
@@ -7455,7 +7533,7 @@ function fetchWatchlistData() {
         if (submitBtn) submitBtn.textContent = "Add Position"; 
         
         if (field2) {
-          field2.setAttribute('oninput', "handleAmountInput(this)");
+          field2.setAttribute('oninput', "handlePortfolioVolumeInput(this)");
           field2.removeAttribute('onblur');
           field2.removeAttribute('onfocus'); 
           field2.value = '';
@@ -7506,13 +7584,16 @@ function fetchWatchlistData() {
         if (noteCol) {
           noteCol.style.display = "block";
           noteCol.style.width = "auto";
+          var isForex = (document.getElementById('portfolioAccountType').value === "Forex");
+          var buyLabel = isForex ? "Long" : "Buy";
+          var sellLabel = isForex ? "Short" : "Sell";
           noteCol.innerHTML = `
             <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px">Action:</label>
             <div style="display: flex; background: #111216; border-radius: 12px; padding: 3px; height: 50px; box-sizing: border-box; align-items: center;">
-              <!-- Buy defaults to Teal: #14b8a6 -->
-              <button type="button" id="portfolioBuyBtn" onclick="setPortfolioAction('BUY')" style="flex: 1; height: 100%; border: none; border-radius: 10px; background: #14b8a6; color: #ffffff; font-family: Lexend; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;">Buy</button>
-              <!-- Sell defaults to inactive -->
-              <button type="button" id="portfolioSellBtn" onclick="setPortfolioAction('SELL')" style="flex: 1; height: 100%; border: none; border-radius: 10px; background: transparent; color: #94a3b8; font-family: Lexend; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;">Sell</button>
+              <!-- Buy/Long defaults to Teal: #14b8a6 -->
+              <button type="button" id="portfolioBuyBtn" onclick="setPortfolioAction('BUY')" style="flex: 1; height: 100%; border: none; border-radius: 10px; background: #14b8a6; color: #ffffff; font-family: Lexend; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;">${buyLabel}</button>
+              <!-- Sell/Short defaults to inactive -->
+              <button type="button" id="portfolioSellBtn" onclick="setPortfolioAction('SELL')" style="flex: 1; height: 100%; border: none; border-radius: 10px; background: transparent; color: #94a3b8; font-family: Lexend; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;">${sellLabel}</button>
             </div>
             <input type="hidden" id="portfolioActionType" value="BUY" />
           `;
@@ -7538,8 +7619,8 @@ function fetchWatchlistData() {
         // Field2: Rate (Saving) or Volume (normal) — use rawValue for Rate since it's stored without the % sign
         var field2El = document.getElementById('portfolioField2');
         var field2 = window.portfolioIsSavingMode
-            ? parseFloat(field2El.dataset.rawValue || field2El.value.replace('%', '')) || 0
-            : parseFloat(field2El.value.replace(/,/g, '')) || 0;
+          ? parseFloat(field2El.dataset.rawValue || field2El.value.replace('%', '')) || 0
+          : parseFloat(field2El.value.replace(/,/g, '')) || 0;
 
         // Retrieve action value for normal mode from the hidden input, or note for saving mode
         const actionTypeEl = document.getElementById('portfolioActionType');
@@ -7606,7 +7687,7 @@ function fetchWatchlistData() {
             };
         } else {
             payload = {
-                action: "portfolio_add_position",
+                action: (accountType === "Forex") ? "portfolio_add_position_forex" : "portfolio_add_position",
                 symbol: symbol,
                 accountType: accountType,
                 entryPrice: field1,
@@ -7664,6 +7745,19 @@ function fetchWatchlistData() {
     function handlePortfolioRateInput(el){var cleaned=el.value.replace(/,/g,'.').replace(/[^\d.]/g,""),parts=cleaned.split(".");parts.length>2&&(cleaned=parts[0]+"."+parts.slice(1).join("")),el.value=cleaned,el.dataset.rawValue=cleaned}
     function handlePortfolioRateBlur(el){var val=el.dataset.rawValue||el.value.replace("%","").replace(/,/g,'.');""===val||isNaN(parseFloat(val))?el.value="":el.value=val+"%"}
     function handlePortfolioRateFocus(el){el.value=el.dataset.rawValue||el.value.replace("%","")}
+    function handlePortfolioVolumeInput(el) {
+    // Treat comma as decimal separator, strip everything else non-numeric/non-dot
+    var cleaned = el.value.replace(/,/g, '.').replace(/[^\d.]/g, '');
+
+    // Collapse multiple dots into one (keep first, treat rest as noise)
+    var parts = cleaned.split('.');
+    if (parts.length > 2) {
+        cleaned = parts[0] + '.' + parts.slice(1).join('');
+    }
+
+    el.value = cleaned;
+    el.dataset.rawValue = cleaned; // used by processPortfolioAdd's parseFloat
+}
     function renderActivePositionsStat(count,icons){const statEl=document.getElementById("stat-cycles");if(!statEl)return;const shownIcons=icons.slice(0,4),remaining=icons.length-shownIcons.length;let stackHTML='<div class="stat-icon-stack">';shownIcons.forEach(function(ic){ic.iconUrl?stackHTML+=`<div class="stat-stack-icon" style="background-image:url('${ic.iconUrl}');"></div>`:stackHTML+=`<div class="stat-stack-icon stat-stack-icon-text">${ic.symbol.slice(0,2)}</div>`}),remaining>0&&(stackHTML+=`<div class="stat-stack-icon stat-stack-icon-more">+${remaining}</div>`),stackHTML+="</div>",statEl.innerHTML=`\n        <div class="stat-cycles-row">\n            <span class="stat-cycles-num">${count}</span>\n            ${stackHTML}\n        </div>`}
     function toggleGroup(groupId,mainRowEl){const logRows=document.querySelectorAll(`.${groupId}`);if(0===logRows.length)return;mainRowEl.classList.contains("expanded")?(mainRowEl.classList.remove("expanded"),logRows.forEach(row=>row.classList.remove("visible"))):(mainRowEl.classList.add("expanded"),logRows.forEach(row=>row.classList.add("visible")))}
     function closeModal(){const backdrop=document.getElementById("modalBackdrop");backdrop.style.pointerEvents="none",backdrop.classList.remove("active"),document.querySelectorAll('[id="portfolio-cal-menu"]').forEach(function(el){el.remove()})}
