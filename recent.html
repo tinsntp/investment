@@ -4257,7 +4257,7 @@ to{transform:rotate(360deg)}
 
     /* ══ ADD RECORD (writes to the sheet via Apps Script Web App) ══ */
     var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbylW9rWUDL6OkPqJhS4zIiK-tJgN_apQZGs-KuuX3Pv2cmQEe8q__BtAWve4pb8toqG/exec";
-    var EXPENSE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbykkhE0gmItZO7QIm1R41w4orNfJjIp_3n20qv3e_iymPBbijTCqeOIpezIkYC3dwH1wA/exec";
+    var EXPENSE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby0ExWcH83A_WZTJ3OV1JDn-oTfrAOr3yf98VH1ojqdKWJT8M8jy_ej8nmZhQQqf7cPTw/exec";
 
     var addOverlay = document.getElementById("add-modal-overlay");
     var addStatusEl = document.getElementById("add-status");
@@ -6560,7 +6560,8 @@ function fetchWatchlistData() {
         window.currentPortfolioGroups.forEach(function(group) {
             var isStock  = group.accountType.toLowerCase() === "stock";
             var isCrypto = group.accountType.toLowerCase() === "crypto";
-            var mainRec  = ((isStock || isCrypto) && group.mainRecord) ? group.mainRecord : null;
+            var isForex  = group.accountType.toLowerCase() === "forex";
+            var mainRec  = ((isStock || isCrypto || isForex) && group.mainRecord) ? group.mainRecord : null;
             var sumPnl   = mainRec ? mainRec.actualPnl
                 : ((group.records || []).reduce(function(a, r) { return a + r.actualPnl; }, 0)
                 + (group.mainRecord ? group.mainRecord.actualPnl : 0));
@@ -6610,7 +6611,8 @@ function fetchWatchlistData() {
             const records = group.records || [];
             const isStock = group.accountType.toLowerCase() === "stock";
             const isCrypto = group.accountType.toLowerCase() === "crypto";
-            const mainRec = ( (isStock || isCrypto) && group.mainRecord ) ? group.mainRecord : null;
+            const isForex = group.accountType.toLowerCase() === "forex";
+            const mainRec = ( (isStock || isCrypto || isForex) && group.mainRecord ) ? group.mainRecord : null;
 
             const sumPnl = mainRec
                 ? mainRec.actualPnl
@@ -6638,7 +6640,35 @@ function fetchWatchlistData() {
             const isSaving = group.accountType.toLowerCase() === "saving";
             const isStock = group.accountType.toLowerCase() === "stock";
             const isCrypto = group.accountType.toLowerCase() === "crypto";
-            
+            const isForex = group.accountType.toLowerCase() === "forex";   
+
+            // Forex: hide the terminal "Close" log row from the sub-row list, but keep
+            // it in `records` for P&L/aggregate math — only the display list is filtered.
+            const visibleRecords = isForex
+                ? records.filter(r => (r.status || "").toLowerCase() !== "close")
+                : records;
+
+            // Forex direction: derived from whichever log row opened the cycle.
+            const isForexShort = isForex && records.some(r => (r.note || "").toUpperCase().indexOf("INITIAL SELL") !== -1);
+
+            function getForexOrderType(note) {
+                const n = (note || "").toUpperCase();
+                if (n.indexOf("SELL") !== -1) return "SELL";      // INITIAL SELL / DCA SELL
+                if (n.indexOf("BUY") !== -1) return "BUY";        // INITIAL BUY / DCA BUY
+                // PARTIAL CLOSE / CLOSE — actual executed side is opposite of the opening direction
+                return isForexShort ? "BUY" : "SELL";
+            }
+
+            function forexPrice(v) {
+                return "$" + Number(v || 0).toLocaleString(undefined, { maximumFractionDigits: 2 });
+            }
+
+            function orderTypeBadge(type) {
+                const isBuy = type === "BUY";
+                const bg = isBuy ? "rgba(20,184,166,0.15)" : "rgba(236,72,153,0.15)";
+                const fg = isBuy ? "var(--teal-primary)" : "var(--pink-primary)";
+                return `<span style="display:inline-block; padding:2px 8px; border-radius:6px; font-size:10px; font-weight:700; background:${bg}; color:${fg}; letter-spacing:0.3px;">${type}</span>`;
+            }
 
             // Category header row, now with PnL total
             const categoryLabel = group.accountType || "Other";
@@ -6670,7 +6700,7 @@ function fetchWatchlistData() {
             }
 
 
-                const mainRec = ( (isStock || isCrypto) && group.mainRecord ) ? group.mainRecord : null;
+                const mainRec = ( (isStock || isCrypto || isForex) && group.mainRecord ) ? group.mainRecord : null;
 
                 const sumMarketValue = mainRec ? mainRec.marketValue : (records.reduce((acc, r) => acc + r.marketValue, 0) + (group.mainRecord ? group.mainRecord.marketValue : 0));
                 const sumCost = mainRec ? mainRec.costValue : (records.reduce((acc, r) => acc + r.costValue, 0) + (group.mainRecord ? group.mainRecord.costValue : 0));
@@ -6763,6 +6793,13 @@ function fetchWatchlistData() {
                 volumePriceHTML = `
                     <div class="val-primary">${displayVol.toLocaleString()}</div>
                     <div class="val-secondary">${displayPriceCombined}</div>`;
+            } else if (isForex) {
+                const mainOrderType = isForexShort ? "SELL" : "BUY";
+                const mainVolume = group.mainRecord ? group.mainRecord.volume : 0;
+
+                volumePriceHTML = `
+                    <div class="val-primary">${orderTypeBadge(mainOrderType)}</div>
+                    <div class="val-secondary">${mainVolume.toLocaleString()}</div>`;
             } else {
                 const totalVol = records.reduce((acc, r) => acc + r.volume, 0);
                 const avgPrice = records[0]?.entryPrice || records[0]?.execPrice || 0;
@@ -6789,7 +6826,7 @@ function fetchWatchlistData() {
                 <td>
                     <div class="asset-cell">
                         <span class="chevron-icon">
-                            ${records.length > 0 ? '<i class="bi bi-chevron-right"></i>' : '<i class="bi bi-dot"></i>'}
+                            ${visibleRecords.length > 0 ? '<i class="bi bi-chevron-right"></i>' : '<i class="bi bi-dot"></i>'}
                         </span>
                         <div class="asset-icon-wrapper">
                             <div class="asset-icon" style="${iconStyle}">${iconText}</div>
@@ -6816,19 +6853,24 @@ function fetchWatchlistData() {
                     </div>
                 </td>
                 <td>
-                    <div class="val-primary">${formatShortNumber(sumCost)}</div>
-                    <div class="val-secondary">${formatShortNumber(sumMarketValue)}</div>
+                    ${isForex ? `
+                        <div class="val-primary">${forexPrice(group.mainRecord?.entryPrice)}</div>
+                        <div class="val-secondary">${forexPrice(isOngoing ? group.mainRecord?.livePrice : group.mainRecord?.execPrice)}</div>
+                    ` : `
+                        <div class="val-primary">${formatShortNumber(sumCost)}</div>
+                        <div class="val-secondary">${formatShortNumber(sumMarketValue)}</div>
+                    `}
                 </td>
             `;
             tbody.appendChild(mainTr);
 
-            if (records.length > 0) {
-                records.forEach(r => {
+            if (visibleRecords.length > 0) {
+                visibleRecords.forEach(r => {
                     const logTr = document.createElement('tr');
                     logTr.className = `log-row ${groupGroupId}`;
                     logTr.setAttribute('data-category-key', categoryKey);
                     
-                    const subPnlPct = (isSaving || isStock || isCrypto) ? r.colCPnlPct : (r.costValue > 0 ? (r.actualPnl / r.costValue) * 100 : 0);
+                    const subPnlPct = (isSaving || isStock || isCrypto || isForex) ? r.colCPnlPct : (r.costValue > 0 ? (r.actualPnl / r.costValue) * 100 : 0);
                     const isSubPositive = r.actualPnl > 0;
                     const isSubZero = r.actualPnl === 0;
 
@@ -6843,6 +6885,11 @@ function fetchWatchlistData() {
                     if (isSaving) {
                         subVolumePriceHTML = `
                             <div class="val-primary">${r.volume} Mos</div>`;
+                    } else if (isForex) {
+                        const rowOrderType = getForexOrderType(r.note);
+                        subVolumePriceHTML = `
+                            <div class="val-primary">${orderTypeBadge(rowOrderType)}</div>
+                            <div class="val-secondary">${r.volume.toLocaleString()}</div>`;
                     } else {
                         const rawPrice = r.execPrice || r.entryPrice || 0;
                         const subPriceDisplay = isCrypto ? ("$" + formatCryptoPrice(rawPrice)) : (isStock ? formatStockPrice(rawPrice) : rawPrice.toLocaleString());
@@ -6877,8 +6924,13 @@ function fetchWatchlistData() {
                             </div>
                         </td>
                         <td>
-                            <div class="val-secondary" style="font-weight: 700; color: var(--text-primary);">${formatShortNumber(r.costValue)}</div>
-                            <div class="val-secondary">${formatShortNumber(r.marketValue)}</div>
+                            ${isForex ? `
+                                <div class="val-secondary" style="font-weight: 700; color: var(--text-primary);">${forexPrice(r.entryPrice)}</div>
+                                <div class="val-secondary">${forexPrice(r.execPrice || r.entryPrice)}</div>
+                            ` : `
+                                <div class="val-secondary" style="font-weight: 700; color: var(--text-primary);">${formatShortNumber(r.costValue)}</div>
+                                <div class="val-secondary">${formatShortNumber(r.marketValue)}</div>
+                            `}
                         </td>
                     `;
                     tbody.appendChild(logTr);
@@ -6910,8 +6962,9 @@ function fetchWatchlistData() {
             var cat = group.accountType || "Other";
             var isStock  = cat.toLowerCase() === "stock";
             var isCrypto = cat.toLowerCase() === "crypto";
+            var isForex  = cat.toLowerCase() === "forex";
             var isOngoing = group.status.toLowerCase().includes('on-going');
-            var mainRec  = (isStock || isCrypto) ? group.mainRecord : null;
+            var mainRec  = (isStock || isCrypto || isForex) ? group.mainRecord : null;
             var val = mainRec ? mainRec.marketValue
                 : (group.records || []).reduce(function(a, r) { return a + (r.marketValue || 0); }, 0)
                 + (group.mainRecord ? (group.mainRecord.marketValue || 0) : 0);
