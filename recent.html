@@ -6544,13 +6544,6 @@ to{transform:rotate(360deg)}
                 return "$" + Number(v || 0).toLocaleString(undefined, { maximumFractionDigits: 2 });
             }
 
-            function orderTypeBadge(type) {
-                const isBuy = type === "BUY";
-                const bg = isBuy ? "rgba(20,184,166,0.15)" : "rgba(236,72,153,0.15)";
-                const fg = isBuy ? "var(--teal-primary)" : "var(--pink-primary)";
-                return `<span style="display:inline-block; padding:2px 8px; border-radius:6px; font-size:10px; font-weight:700; background:${bg}; color:${fg}; letter-spacing:0.3px;">${type}</span>`;
-            }
-
             // Category header row, now with PnL total
             const categoryLabel = group.accountType || "Other";
             const categoryKey = categoryLabel.toLowerCase().replace(/\s+/g, '-');
@@ -6675,12 +6668,10 @@ to{transform:rotate(360deg)}
                     <div class="val-primary">${displayVol.toLocaleString()}</div>
                     <div class="val-secondary">${displayPriceCombined}</div>`;
             } else if (isForex) {
-                const mainOrderType = isForexShort ? "SELL" : "BUY";
-                const mainVolume = group.mainRecord ? group.mainRecord.volume : 0;
-
+                // MAIN row: display nothing in VAL/PRICE column, no BUY/SELL badge
                 volumePriceHTML = `
-                    <div class="val-primary">${orderTypeBadge(mainOrderType)}</div>
-                    <div class="val-secondary">${mainVolume.toLocaleString()}</div>`;
+                    <div class="val-primary"></div>
+                    <div class="val-secondary"></div>`;
             } else {
                 const totalVol = records.reduce((acc, r) => acc + r.volume, 0);
                 const avgPrice = records[0]?.entryPrice || records[0]?.execPrice || 0;
@@ -6735,8 +6726,8 @@ to{transform:rotate(360deg)}
                 </td>
                 <td>
                     ${isForex ? `
-                        <div class="val-primary">${forexPrice(group.mainRecord?.entryPrice)}</div>
-                        <div class="val-secondary">${forexPrice(isOngoing ? group.mainRecord?.livePrice : group.mainRecord?.execPrice)}</div>
+                        <div class="val-primary">${group.mainRecord?.entryPrice ? forexPrice(group.mainRecord.entryPrice) : ''}</div>
+                        <div class="val-secondary">${(isOngoing ? group.mainRecord?.livePrice : group.mainRecord?.execPrice) ? forexPrice(isOngoing ? group.mainRecord?.livePrice : group.mainRecord?.execPrice) : ''}</div>
                     ` : `
                         <div class="val-primary">${formatShortNumber(sumCost)}</div>
                         <div class="val-secondary">${formatShortNumber(sumMarketValue)}</div>
@@ -6763,15 +6754,18 @@ to{transform:rotate(360deg)}
                     const subAssetLabel = isSaving ? r.symbol : cleanedDetailNote;
 
                     let subVolumePriceHTML = "";
+                    let formattedSubAssetLabel = subAssetLabel;
                     if (isSaving) {
                         subVolumePriceHTML = `
                             <div class="val-primary">${r.volume} Mos</div>`;
                     } else if (isForex) {
-                        const rowOrderType = getForexOrderType(r.note);
-                        subVolumePriceHTML = `
-                            <div class="val-primary">${orderTypeBadge(rowOrderType)}</div>
-                            <div class="val-secondary">${r.volume.toLocaleString()}</div>`;
-                    } else {
+                        const lowerLabel = (subAssetLabel || "").toLowerCase();
+                        if (lowerLabel === "buy") {
+                            formattedSubAssetLabel = "Long";
+                        } else if (lowerLabel === "sell") {
+                            formattedSubAssetLabel = "Short";
+                        }
+                    }else {
                         const rawPrice = r.execPrice || r.entryPrice || 0;
                         const subPriceDisplay = isCrypto ? ("$" + formatCryptoPrice(rawPrice)) : (isStock ? formatStockPrice(rawPrice) : rawPrice.toLocaleString());
 
@@ -6780,13 +6774,18 @@ to{transform:rotate(360deg)}
                             <div class="val-secondary">${subPriceDisplay}</div>`;
                     }
 
+                    const assetBadgeText = isForex ? subAssetLabel : (isSaving ? r.symbol : shortKeyword);
+                    const normalizedLabel = (subAssetLabel || "").trim().toLowerCase();
+                    const displayAssetLabel = isForex ? (normalizedLabel === "sell" ? "Short" : (normalizedLabel === "buy" ? "Long" : subAssetLabel)) : subAssetLabel;
+                    const badgeHtml = isForex ? orderTypeBadge(displayAssetLabel) + " " : orderTypeBadge(assetBadgeText) + " ";
+
                     logTr.innerHTML = `
                         <td class="sub-indent" style="padding-left: 28px;">
                             <div class="asset-cell">
                                 <span style="color: var(--text-muted); flex-shrink: 0;"><i class="bi bi-arrow-return-right"></i></span>
-                                <span class="val-primary" style="font-size: 11px;">
+                                <span class="val-primary" style="font-size: 11px; display: flex; align-items: center; gap: 6px;">
+                                    ${badgeHtml}
                                     <span class="full-log-text">${subAssetLabel}</span>
-                                    <span class="short-log-text">${isSaving ? r.symbol : shortKeyword}</span>
                                 </span>
                             </div>
                         </td>
@@ -6798,19 +6797,19 @@ to{transform:rotate(360deg)}
                         </td>
                         <td>
                             <div class="val-secondary" style="color: ${isSubZero ? 'var(--text-secondary)' : (isSubPositive ? 'var(--teal-primary)' : 'var(--pink-primary)')}; font-weight: 700;">
-                                ${formatPnlValue(r.actualPnl)}
+                                ${r.actualPnl ? formatPnlValue(r.actualPnl) : ''}
                             </div>
                             <div class="val-secondary" style="color: ${isSubZero ? 'var(--text-secondary)' : (isSubPositive ? 'var(--teal-primary)' : 'var(--pink-primary)')};">
-                                ${formatPnlPct(subPnlPct)}
+                                ${subPnlPct ? formatPnlPct(subPnlPct) : ''}
                             </div>
                         </td>
                         <td>
                             ${isForex ? `
-                                <div class="val-secondary" style="font-weight: 700; color: var(--text-primary);">${forexPrice(r.entryPrice)}</div>
-                                <div class="val-secondary">${forexPrice(r.execPrice || r.entryPrice)}</div>
+                                <div class="val-secondary" style="font-weight: 700; color: var(--text-primary);">${r.entryPrice ? forexPrice(r.entryPrice) : ''}</div>
+                                <div class="val-secondary">${(r.execPrice || r.entryPrice) ? forexPrice(r.execPrice || r.entryPrice) : ''}</div>
                             ` : `
-                                <div class="val-secondary" style="font-weight: 700; color: var(--text-primary);">${formatShortNumber(r.costValue)}</div>
-                                <div class="val-secondary">${formatShortNumber(r.marketValue)}</div>
+                                <div class="val-secondary" style="font-weight: 700; color: var(--text-primary);">${r.costValue ? formatShortNumber(r.costValue) : ''}</div>
+                                <div class="val-secondary">${r.marketValue ? formatShortNumber(r.marketValue) : ''}</div>
                             `}
                         </td>
                     `;
@@ -6870,6 +6869,28 @@ to{transform:rotate(360deg)}
         });
         var donutTotal = Object.values(donutValues).reduce(function(s, v) { return s + v; }, 0);
         renderNavDonut(donutValues, donutPnls, donutIcons, donutTotal, donutHasActive, donutCosts);
+    }
+
+    function orderTypeBadge(orderType) {
+        const type = (orderType || "").toLowerCase();
+        let bg = "var(--bg-secondary)";
+        let color = "var(--text-main)";
+
+        if (type.includes("buy") || type.includes("long")) {
+            bg = "rgba(0, 150, 136, 0.15)"; // Teal tint
+            color = "#009688";             // Teal
+        } else if (type.includes("sell") || type.includes("short")) {
+            bg = "rgba(236, 64, 122, 0.12);"; // Softer pink tint
+            color = "#ec407a";              // Softer pink (less red)
+        } else if (type.includes("dca")) {
+            bg = "rgba(3, 169, 244, 0.15)";  // Baby blue tint
+            color = "#03a9f4";             // Baby blue
+        } else if (type.includes("close")) {
+            bg = "rgba(158, 158, 158, 0.15)"; // Grey tint
+            color = "#9e9e9e";             // Grey
+        }
+
+        return `<span style="background: ${bg}; color: ${color}; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; text-transform: uppercase;">${orderType}</span>`;
     }
 
     function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap, totalValue, categoryHasActiveMap, categoryCostTotals) {
