@@ -6253,7 +6253,8 @@ to{transform:rotate(360deg)}
     function updateMarketStatusDot(){const now=new Date,utc=now.getTime()+6e4*now.getTimezoneOffset(),vnTime=new Date(utc+252e5),day=vnTime.getDay(),currentTimeMinutes=60*vnTime.getHours()+vnTime.getMinutes(),isMarketHours=day>=1&&day<=5&&currentTimeMinutes>=540&&currentTimeMinutes<=900,dot=document.getElementById("market-live-dot");dot&&(isMarketHours?(dot.style.backgroundColor="#2dd4bf",dot.style.boxShadow="0 0 6px #2dd4bf",dot.title="Market is Open"):(dot.style.backgroundColor="#64748b",dot.style.boxShadow="none",dot.title="Market is Closed"))}function openWatchlistModal(){var modal=document.getElementById("watchlist-modal");modal?(modal.style.setProperty("display","flex","important"),fetchWatchlistData()):console.error("Error: #watchlist-modal element not found in DOM!")}function closeWatchlistModal(){var modal=document.getElementById("watchlist-modal");modal&&modal.style.setProperty("display","none","important")}function fetchWatchlistData(){var csvUrl="https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=523826078&t="+Date.now(),container=document.getElementById("watchlist-items-container");container&&(container.innerHTML='<div id="loading-msg" style="text-align:center; color: #94a3b8; padding: 20px;"></div>');var now=new Date,day=now.getDay(),currentTimeVal=100*now.getHours()+now.getMinutes(),isMarketOpen=day>=1&&day<=5&&currentTimeVal>=900&&currentTimeVal<=1500,liveIndicatorHtml=`<span class="${isMarketOpen?"tv-live-dot active":"tv-live-dot closed"}" title="${isMarketOpen?"Market Live":"Market Closed"}"></span>`;fetch(csvUrl,{cache:"no-store"}).then(function(response){if(!response.ok)throw new Error("HTTP "+response.status);return response.text()}).then(function(text){var lines=text.split(/\r?\n/);if(container){container.innerHTML="";for(var html="",i=0;i<lines.length;i++){var line=lines[i].trim();if(line){var cols="function"==typeof parseCsvRow?parseCsvRow(line):line.split(","),symbol=(cols[15]||"").replace(/["']/g,"").trim(),priceRaw=(cols[16]||"").replace(/["']/g,"").trim(),changeRaw=(cols[17]||"").replace(/["']/g,"").trim(),pctRaw=(cols[18]||"").replace(/["']/g,"").trim(),desc=(cols[19]||"").replace(/["']/g,"").trim(),iconUrl=(cols[20]||"").replace(/["']/g,"").trim();if(symbol&&priceRaw){var rawPriceNum="function"==typeof cleanNum?cleanNum(priceRaw):parseFloat(priceRaw)||0,rawChangeNum="function"==typeof cleanNum?cleanNum(changeRaw):parseFloat(changeRaw)||0,pctVal="function"==typeof cleanNum?cleanNum(pctRaw):parseFloat(pctRaw)||0,priceVal=1e3*rawPriceNum,changeVal=1e3*rawChangeNum,isPositive=changeVal>0,isZero=0===changeVal,colorClass=isZero||isPositive?"text-teal":"text-pink",changeSign=isZero?"":isPositive?"+":"-",formattedPrice=Math.round(priceVal).toLocaleString("en-US"),formattedChange=Math.round(Math.abs(changeVal)).toLocaleString("en-US");html+=`\n                    <div class="tv-item-row" style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">\n                        <div class="tv-item-left" style="display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1;">\n                            <img class="tv-item-icon" src="${iconUrl}" onerror="this.src='https://via.placeholder.com/32'" style="flex-shrink: 0;" />\n                            <div class="tv-item-symbol-wrap" style="min-width: 0; flex: 1;">\n                                <div class="tv-symbol-title" style="display: flex; align-items: center; gap: 6px; white-space: nowrap;">\n                                    ${symbol} \n                                    ${liveIndicatorHtml}\n                                </div>\n                                <div class="tv-symbol-desc" title="${desc}" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${desc}</div>\n                            </div>\n                        </div>\n                        <div class="tv-item-right" style="display: flex; flex-direction: column; align-items: flex-end; text-align: right; flex-shrink: 0; white-space: nowrap;">\n                            <div class="tv-item-price">${formattedPrice}</div>\n                            <div class="tv-item-changes ${colorClass}" style="display: flex; gap: 6px; justify-content: flex-end;">\n                                <span>${changeSign}${formattedChange}</span>\n                                <span>${changeSign}${Math.abs(pctVal).toFixed(2)}%</span>\n                            </div>\n                        </div>\n                    </div>\n                `}}}container.innerHTML=html||'<div style="text-align:center; color: #94a3b8; padding: 20px;">No watchlist items found.</div>'}}).catch(function(err){console.error("Watchlist fetch error:",err),container&&(container.innerHTML='<div style="text-align:center; color: #f43f5e; padding: 20px;">Failed to load watchlist. Check console.</div>')})}
     var navSelectedCatIdx = null;function navUpdateHighlight(){var svg=document.getElementById("nav-donut-svg"),statList=document.getElementById("nav-stat-list");svg&&statList&&(svg.querySelectorAll("path[data-seg]").forEach(function(p){var idx=parseInt(p.getAttribute("data-seg"));p.style.opacity=null===navSelectedCatIdx||navSelectedCatIdx===idx?"1":"0.2"}),statList.querySelectorAll(".nav-stat-item").forEach(function(el){var idx=parseInt(el.getAttribute("data-seg"));el.style.opacity=null===navSelectedCatIdx||navSelectedCatIdx===idx?"1":"0.35"}))}
     function cleanNum(val){if(!val)return 0;let c=val.toString().replace(/[\$,%\s]/g,"");c.startsWith("(")&&c.endsWith(")")&&(c="-"+c.slice(1,-1));const n=parseFloat(c);return isNaN(n)?0:n}function formatShortNumber(val){if(null==val||isNaN(val))return"-";if(0===val)return"0";const absNum=Math.abs(val),sign=val<0?"-":"",decimals=window.innerWidth>400?3:1;let formatted="";return formatted=absNum>=1e9?(absNum/1e9).toFixed(decimals)+"B":absNum>=1e6?(absNum/1e6).toFixed(decimals)+"M":absNum>=1e3?(absNum/1e3).toFixed(decimals)+"K":absNum.toLocaleString(void 0,{minimumFractionDigits:0,maximumFractionDigits:decimals}),`${sign}${formatted}`}function formatStockPrice(price){if(!price||isNaN(price))return"0.0";let formatted=(price>1e3?price/1e3:price).toFixed(2);return(formatted.endsWith("0")&&!formatted.endsWith(".00")||formatted.endsWith(".00"))&&(formatted=formatted.slice(0,-1)),formatted}function formatCryptoPrice(price){return!price||isNaN(price)?"0.000":price.toLocaleString(void 0,{minimumFractionDigits:0,maximumFractionDigits:0})}function formatPnlValue(num){if(0===num||null==num)return"-";return(num>0?"+":"")+formatShortNumber(num)}function formatPnlPct(pctVal){if(0===pctVal||null==pctVal||isNaN(pctVal))return"-";return`${pctVal>0?"+":""}${pctVal.toFixed(2)}%`}function parseDate(dateStr){if(!dateStr)return null;if(dateStr.includes("-")){const parts=dateStr.split("-");return new Date(parseInt(parts[0],10),parseInt(parts[1],10)-1,parseInt(parts[2],10))}if(dateStr.includes("/")){const parts=dateStr.split("/");return new Date(parseInt(parts[2],10),parseInt(parts[1],10)-1,parseInt(parts[0],10))}return new Date(dateStr)}function formatNoYearDate(dateObj){if(!dateObj)return"-";return`${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][dateObj.getMonth()]} ${String(dateObj.getDate()).padStart(2,"0")}`}
-    function formatDateRangeTwoLinesNoYear(startDateStr,exitDateStr,isSaving=!1,volumeMonths=0){const sDate=parseDate(startDateStr);let eDate=null;isSaving&&volumeMonths>0&&sDate?(eDate=new Date(sDate),eDate.setMonth(eDate.getMonth()+parseInt(volumeMonths,10))):exitDateStr&&""!==exitDateStr.trim()&&(eDate=parseDate(exitDateStr));return`<div class="val-primary">${sDate?formatNoYearDate(sDate):"-"}</div><div class="val-secondary">${eDate?formatNoYearDate(eDate):"Present"}</div>`}function cleanNoteText(noteStr,statusStr){if(!noteStr||""===noteStr.trim())return statusStr||"";let cleaned=noteStr.replace(/MAIN\b/gi,"").replace(/LOG\b/gi,"").replace(/\bC\d+\b/gi,"").replace(/[\+\-]/g,"").trim();return""===cleaned?statusStr:cleaned}function getShortLogKeyword(text){if(!text)return"Log";const lower=text.toLowerCase();return lower.includes("dca")?"DCA":lower.includes("buy")?"Buy":lower.includes("sell")?"Sell":lower.includes("close")?"Close":lower.includes("deposit")||lower.includes("saving")?"Deposit":text.split(" ")[0].slice(0,5)}function parseCSVLine(line){for(var values=[],currentVal="",inQuotes=!1,i=0;i<line.length;i++){var char=line.charAt(i);'"'===char&&'"'===line.charAt(i+1)?(currentVal+='"',i++):'"'===char?inQuotes=!inQuotes:","!==char||inQuotes?currentVal+=char:(values.push(currentVal.trim()),currentVal="")}return values.push(currentVal.trim()),values}
+    function formatDateRangeTwoLinesNoYear(startDateStr,exitDateStr,isSaving=!1,volumeMonths=0){const sDate=parseDate(startDateStr);let eDate=null;isSaving&&volumeMonths>0&&sDate?(eDate=new Date(sDate),eDate.setMonth(eDate.getMonth()+parseInt(volumeMonths,10))):exitDateStr&&""!==exitDateStr.trim()&&(eDate=parseDate(exitDateStr));return`<div class="val-primary">${sDate?formatNoYearDate(sDate):"-"}</div><div class="val-secondary">${eDate?formatNoYearDate(eDate):"Present"}</div>`}
+    function cleanNoteText(noteStr,statusStr){if(!noteStr||""===noteStr.trim())return statusStr||"";let cleaned=noteStr.replace(/MAIN\b/gi,"").replace(/LOG\b/gi,"").replace(/\bC\d+\b/gi,"").replace(/[\+\-]/g,"").trim();return""===cleaned?statusStr:cleaned}function getShortLogKeyword(text){if(!text)return"Log";const lower=text.toLowerCase();return lower.includes("dca")?"DCA":lower.includes("buy")?"Buy":lower.includes("sell")?"Sell":lower.includes("close")?"Close":lower.includes("deposit")||lower.includes("saving")?"Deposit":text.split(" ")[0].slice(0,5)}function parseCSVLine(line){for(var values=[],currentVal="",inQuotes=!1,i=0;i<line.length;i++){var char=line.charAt(i);'"'===char&&'"'===line.charAt(i+1)?(currentVal+='"',i++):'"'===char?inQuotes=!inQuotes:","!==char||inQuotes?currentVal+=char:(values.push(currentVal.trim()),currentVal="")}return values.push(currentVal.trim()),values}
     function fetchOrderSheetCSV(){const addOrderBtn=document.getElementById("add-order");addOrderBtn&&(addOrderBtn.classList.add("loading"),addOrderBtn.innerHTML='<span class="btn-spinner"></span>'),fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=488369714",{cache:"no-store"}).then(res=>{if(!res.ok)throw new Error("HTTP "+res.status);return res.text()}).then(csvText=>{processAndRenderData(csvText),addOrderBtn&&(addOrderBtn.classList.remove("loading"),addOrderBtn.classList.add("success-confirm")),setTimeout(function(){addOrderBtn&&(addOrderBtn.classList.remove("success-confirm"),addOrderBtn.innerHTML="+")},500)}).catch(err=>{console.error("Widget load error:",err);var msgEl=document.getElementById("det-msg");msgEl&&(msgEl.style.display="block",msgEl.textContent="CSV Fetch Error: "+err.message),addOrderBtn&&(addOrderBtn.classList.remove("loading","success-confirm"),addOrderBtn.innerHTML="+")})}
     var portfolioFilters = {
         asset: "all",
@@ -6527,7 +6528,7 @@ to{transform:rotate(360deg)}
             // Forex: hide the terminal "Close" log row from the sub-row list, but keep
             // it in `records` for P&L/aggregate math — only the display list is filtered.
             const visibleRecords = isForex
-                ? records.filter(r => (r.status || "").toLowerCase() !== "close")
+                ? records.filter(r => (r.status || "").toLowerCase() !== "")
                 : records;
 
             // Forex direction: derived from whichever log row opened the cycle.
@@ -6863,260 +6864,318 @@ to{transform:rotate(360deg)}
         renderNavDonut(donutValues, donutPnls, donutIcons, donutTotal, donutHasActive, donutCosts);
     }
 
-    function orderTypeBadge(orderType) {
-        const type = (orderType || "").toLowerCase();
-        let bg = "var(--bg-secondary)";
-        let color = "var(--text-main)";
+    function orderTypeBadge(orderType){const type=(orderType||"").toLowerCase();let bg="var(--bg-secondary)",color="var(--text-main)";return type.includes("buy")||type.includes("long")?(bg="rgba(0, 150, 136, 0.15)",color="#009688"):type.includes("sell")||type.includes("short")?(bg="rgba(236, 64, 122, 0.12);",color="#ec407a"):type.includes("dca")?(bg="rgba(3, 169, 244, 0.15)",color="#03a9f4"):type.includes("close")&&(bg="rgba(158, 158, 158, 0.15)",color="#9e9e9e"),`<span style="background: ${bg}; color: ${color}; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; text-transform: uppercase;">${orderType}</span>`}
+    function fetchForexNavBalance() {
+    var csvUrl = GOOGLE_SHEET_CSV_URL + "311369594";
+    
+    fetch(csvUrl, { cache: "no-store" })
+        .then(function(response) {
+            if (!response.ok) throw new Error("HTTP " + response.status);
+            return response.text();
+        })
+        .then(function(text) {
+            if (!text || text.trim().startsWith("<!DOCTYPE html>")) {
+                throw new Error("Received HTML instead of CSV. Check sheet permissions or URL.");
+            }
+            
+            var lines = text.split(/\r?\n/);
+            var forexBalance = 0;
+            
+            for (var i = 0; i < lines.length; i++) {
+                var currentLine = lines[i];
+                if (!currentLine || typeof currentLine !== 'string' || !currentLine.trim()) continue;
+                
+                var cols = currentLine.split(",");
+                var label = (cols[1] || "").trim().toUpperCase();
+                
+                if (label === "FOREX") {
+                    forexBalance = parseFloat((cols[2] || "").replace(/[^0-9.-]+/g,"")) || 0;
+                    break;
+                }
+            }
+            
+            if (typeof window.navFullCategoryValueTotals === "undefined") {
+                window.navFullCategoryValueTotals = {};
+            }
+            window.navFullCategoryValueTotals["Forex"] = forexBalance;
+            
+            if (typeof window.navLastDataArgs !== "undefined" && typeof renderNavDonut === "function") {
+                renderNavDonut(
+                    window.navLastDataArgs.categoryValueTotals,
+                    window.navLastDataArgs.categoryPnlTotals,
+                    window.navLastDataArgs.categoryIconMap,
+                    window.navLastDataArgs.totalValue,
+                    window.navLastDataArgs.categoryHasActiveMap,
+                    window.navLastDataArgs.categoryCostTotals
+                );
+            }
+        })
+        .catch(function(err) {
+            console.error("Forex NAV balance fetch error:", err);
+        });
+}
 
-        if (type.includes("buy") || type.includes("long")) {
-            bg = "rgba(0, 150, 136, 0.15)"; // Teal tint
-            color = "#009688";             // Teal
-        } else if (type.includes("sell") || type.includes("short")) {
-            bg = "rgba(236, 64, 122, 0.12);"; // Softer pink tint
-            color = "#ec407a";              // Softer pink (less red)
-        } else if (type.includes("dca")) {
-            bg = "rgba(3, 169, 244, 0.15)";  // Baby blue tint
-            color = "#03a9f4";             // Baby blue
-        } else if (type.includes("close")) {
-            bg = "rgba(158, 158, 158, 0.15)"; // Grey tint
-            color = "#9e9e9e";             // Grey
+document.addEventListener("DOMContentLoaded", function() {
+    fetchForexNavBalance();
+});
+
+
+function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap, totalValue, categoryHasActiveMap, categoryCostTotals) {
+    window.navLastDataArgs = {
+        categoryValueTotals: categoryValueTotals,
+        categoryPnlTotals: categoryPnlTotals,
+        categoryIconMap: categoryIconMap,
+        totalValue: totalValue,
+        categoryHasActiveMap: categoryHasActiveMap,
+        categoryCostTotals: categoryCostTotals
+    };
+
+    var statList = document.getElementById('nav-stat-list');
+    var svg = document.getElementById('nav-donut-svg');
+    if (!statList || !svg) return;
+
+    statList.innerHTML = "";
+    svg.innerHTML = "";
+    categoryHasActiveMap = categoryHasActiveMap || {};
+    categoryCostTotals = categoryCostTotals || {};
+
+    if (window.navFullCategoryValueTotals && window.navFullCategoryValueTotals["Forex"] !== undefined) {
+        categoryValueTotals = Object.assign({}, categoryValueTotals);
+        categoryValueTotals["Forex"] = window.navFullCategoryValueTotals["Forex"];
+        categoryHasActiveMap["Forex"] = true;
+
+        if (totalValue > 0) {
+            var oldForex = categoryValueTotals["Forex"] || 0;
+            totalValue = totalValue - oldForex + window.navFullCategoryValueTotals["Forex"];
         }
-
-        return `<span style="background: ${bg}; color: ${color}; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; text-transform: uppercase;">${orderType}</span>`;
     }
 
-    function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap, totalValue, categoryHasActiveMap, categoryCostTotals) {
-        var statList = document.getElementById('nav-stat-list');
-        var svg = document.getElementById('nav-donut-svg');
-        if (!statList || !svg) return;
+    var categoryColorMap = {
+        "saving": "#f472b6",
+        "savings": "#f472b6",
+        "crypto": "#facc15",
+        "forex": "#fff",
+        "stock": "#7ee8a8",
+    };
 
-        statList.innerHTML = "";
-        svg.innerHTML = "";
-        categoryHasActiveMap = categoryHasActiveMap || {};
-        categoryCostTotals = categoryCostTotals || {};
+    var palette = ["#facc15", "#7ee8a8", "#f472b6", "#a5c8f0", "#c084fc", "#38bdf8"];
 
-        var categoryColorMap = {
-            "saving": "#f472b6",
-            "savings": "#f472b6",
-            "crypto": "#facc15",
-            "forex": "#fff",
-            "stock": "#7ee8a8",
-        };
+    function getCategoryColor(catName, index) {
+        var key = (catName || "").toString().trim().toLowerCase();
+        if (categoryColorMap.hasOwnProperty(key)) {
+            return categoryColorMap[key];
+        }
+        return palette[index % palette.length];
+    }
 
-        var palette = ["#facc15", "#7ee8a8", "#f472b6", "#a5c8f0", "#c084fc", "#38bdf8"];
+    var categoryKeySet = {};
+    Object.keys(categoryValueTotals).forEach(function(cat) { categoryKeySet[cat] = true; });
+    Object.keys(categoryPnlTotals).forEach(function(cat) { categoryKeySet[cat] = true; });
 
-        function getCategoryColor(catName, index) {
-            var key = (catName || "").toString().trim().toLowerCase();
-            if (categoryColorMap.hasOwnProperty(key)) {
-                return categoryColorMap[key];
+    var categories = Object.keys(categoryKeySet)
+        .map(function(cat) {
+            return {
+                name: cat,
+                value: categoryValueTotals[cat] || 0,
+                pnl: categoryPnlTotals[cat] || 0,
+                cost: categoryCostTotals[cat] || 0,
+                icon: categoryIconMap[cat] || "",
+                hasActive: !!categoryHasActiveMap[cat]
+            };
+        })
+        .filter(function(c) { return c.value > 0 || c.pnl !== 0; })
+        .sort(function(a, b) { return b.value - a.value; });
+
+    if (categories.length === 0) return;
+
+    function arrangeMiddle(arr) {
+        if (!arr.length) return [];
+        var n = arr.length;
+        var result = new Array(n);
+        var mid = Math.floor(n / 2);
+        result[mid] = arr[0];
+        var l = mid - 1, r = mid + 1;
+        for (var i = 1; i < n; i++) {
+            if (r < n && (l < 0 || i % 2 === 1)) {
+                result[r++] = arr[i];
+            } else {
+                result[l--] = arr[i];
             }
-            return palette[index % palette.length];
+        }
+        return result;
+    }
+
+    categories = arrangeMiddle(categories);
+    
+    categories.forEach(function(c, idx) {
+        c.color = getCategoryColor(c.name, idx);
+    });
+
+    var cx = 100, cy = 100, rOuter = 90, rInner = 45;
+    var GAP = 0;
+
+    function pt(r, deg) {
+        var rad = deg * Math.PI / 180;
+        return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+    }
+
+    function arc(d0, d1, rOut) {
+        rOut = rOut || rOuter;
+        var o0 = pt(rOut, d0), o1 = pt(rOut, d1);
+        var i1 = pt(rInner, d1), i0 = pt(rInner, d0);
+        var la = (d0 - d1) > 180 ? 1 : 0;
+        return ["M", o0.x.toFixed(2), o0.y.toFixed(2),
+                "A", rOut, rOut, 0, la, 0, o1.x.toFixed(2), o1.y.toFixed(2),
+                "L", i1.x.toFixed(2), i1.y.toFixed(2),
+                "A", rInner, rInner, 0, la, 1, i0.x.toFixed(2), i0.y.toFixed(2),
+                "Z"].join(" ");
+    }
+
+    var currentDeg = 270;
+    var uid = "p" + Math.random().toString(36).slice(2, 8);
+    var defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+    
+    var maxIdx = 0;
+    categories.forEach(function(c, i) {
+        if (c.value > categories[maxIdx].value) maxIdx = i;
+    });
+
+    categories.forEach(function(cat, idx) {
+        var pat = document.createElementNS("http://www.w3.org/2000/svg", "pattern");
+        pat.setAttribute("id", uid + idx);
+        pat.setAttribute("patternUnits", "userSpaceOnUse");
+        pat.setAttribute("width", "8");
+        pat.setAttribute("height", "8");
+        pat.setAttribute("patternTransform", "rotate(-45 0 0)");
+        pat.setAttribute("overflow", "visible");
+
+        var bg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        bg.setAttribute("x", "-1"); bg.setAttribute("y", "-1");
+        bg.setAttribute("width", "10"); bg.setAttribute("height", "10");
+        bg.setAttribute("fill", cat.color); bg.setAttribute("opacity", "0.18");
+        pat.appendChild(bg);
+
+        var stripe = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        stripe.setAttribute("x", "0"); stripe.setAttribute("y", "0");
+        stripe.setAttribute("width", "5"); stripe.setAttribute("height", "8");
+        stripe.setAttribute("fill", cat.color); stripe.setAttribute("opacity", "0.75");
+        pat.appendChild(stripe);
+
+        defs.appendChild(pat);
+    });
+    svg.appendChild(defs);
+
+    var arcInfoByName = {};
+    categories.forEach(function(cat, i) {
+        var pct = (totalValue > 0 && cat.value > 0) ? (cat.value / totalValue) : 0;
+        var sweep = pct * 180;
+        var d0 = currentDeg - GAP / 2;
+        var d1 = currentDeg - sweep + GAP / 2;
+        currentDeg -= sweep;
+
+        var color = cat.color;
+        var hasArc = cat.value > 0 && d1 < d0;
+
+        if (hasArc) {
+            var isLargest = (i === maxIdx);
+            var rOut = isLargest ? rOuter - 5 : rOuter;
+
+            var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            path.setAttribute("d", arc(d0, d1, rOut));
+            path.setAttribute("fill", isLargest ? "url(#" + uid + i + ")" : color);
+            path.setAttribute("stroke", color);
+            path.setAttribute("stroke-width", "1");
+            path.setAttribute('data-seg', i);
+            svg.appendChild(path);
+
+            if (pct >= 0.05) {
+                var mid = (d0 + d1) / 2;
+                var lr = (rOuter + rInner) / 2;
+                var lp = pt(lr, mid);
+                var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                text.setAttribute("x", lp.x.toFixed(1));
+                text.setAttribute("y", lp.y.toFixed(1));
+                text.setAttribute("class", "nav-donut-label");
+                text.setAttribute("font-size", "13");
+                text.textContent = "(" + Math.round(pct * 100) + "%)";
+                svg.appendChild(text);
+            }
         }
 
-        var categoryKeySet = {};
-        Object.keys(categoryValueTotals).forEach(function(cat) { categoryKeySet[cat] = true; });
-        Object.keys(categoryPnlTotals).forEach(function(cat) { categoryKeySet[cat] = true; });
+        arcInfoByName[cat.name] = { segIdx: i, pct: pct, hasArc: hasArc, color: color };
+    });
 
-        var categories = Object.keys(categoryKeySet)
-            .map(function(cat) {
-                return {
-                    name: cat,
-                    value: categoryValueTotals[cat] || 0,
-                    pnl: categoryPnlTotals[cat] || 0,
-                    cost: categoryCostTotals[cat] || 0,
-                    icon: categoryIconMap[cat] || "",
-                    hasActive: !!categoryHasActiveMap[cat]
-                };
-            })
-            // Keep a category if it has an active balance OR any P/L to report (closed-only history)
-            .filter(function(c) { return c.value > 0 || c.pnl !== 0; })
-            .sort(function(a, b) { return b.value - a.value; });
+    var displayCategories = categories.slice().sort(function(a, b) {
+        if (a.hasActive !== b.hasActive) return a.hasActive ? -1 : 1;
+        return b.value - a.value;
+    });
 
-        if (categories.length === 0) return;
+    displayCategories.forEach(function(cat) {
+        var info = arcInfoByName[cat.name];
+        var i = info.segIdx;
+        var pct = info.pct;
+        var hasArc = info.hasArc;
+        var color = info.color;
 
-        // Rearrange: largest in middle, others alternating on each side
-        function arrangeMiddle(arr) {
-            if (!arr.length) return [];
-            var n = arr.length;
-            var result = new Array(n);
-            var mid = Math.floor(n / 2);
-            result[mid] = arr[0]; // largest goes to center position
-            var l = mid - 1, r = mid + 1;
-            for (var i = 1; i < n; i++) {
-                if (r < n && (l < 0 || i % 2 === 1)) {
-                    result[r++] = arr[i];
-                } else {
-                    result[l--] = arr[i];
-                }
-            }
-            return result;
-        }
+        var pnlPos = cat.pnl > 0, pnlZero = cat.pnl === 0;
+        var pnlColor = pnlZero ? 'rgba(255,255,255,0.5)' : (pnlPos ? '#14b8a6' : '#f472b6');
+        var pnlFmt = fmtPnl(cat.pnl);
+        var basis = cat.cost;
+        var pnlPct = basis > 0 ? (cat.pnl / basis) * 100 : 0;
+        var pnlPctFmt = (pnlPos ? '+' : '') + pnlPct.toFixed(1) + '%';
 
-        categories = arrangeMiddle(categories);
+        var pctLabelHtml = hasArc ? `<span class="nav-stat-pct"> (${Math.round(pct * 100)}%)</span>` : '';
         
-        // Assign the specific category color to each category object
-        categories.forEach(function(c, idx) {
-            c.color = getCategoryColor(c.name, idx);
-        });
+        var catNameLower = (cat.name || "").toLowerCase();
+        var catVal = (catNameLower === "forex" && window.navFullCategoryValueTotals && window.navFullCategoryValueTotals["Forex"] !== undefined) 
+            ? window.navFullCategoryValueTotals["Forex"] 
+            : cat.value;
 
-        var cx = 100, cy = 100, rOuter = 90, rInner = 45;
-        var GAP = 0;
+        var balanceHtml = cat.hasActive ? `<div class="nav-stat-value">${fmtBalance(catVal)}</div>` : '';
 
-        function pt(r, deg) {
-            var rad = deg * Math.PI / 180;
-            return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
-        }
-
-        function arc(d0, d1, rOut) {
-            rOut = rOut || rOuter;
-            var o0 = pt(rOut, d0), o1 = pt(rOut, d1);
-            var i1 = pt(rInner, d1), i0 = pt(rInner, d0);
-            var la = (d0 - d1) > 180 ? 1 : 0;
-            return ["M", o0.x.toFixed(2), o0.y.toFixed(2),
-                    "A", rOut, rOut, 0, la, 0, o1.x.toFixed(2), o1.y.toFixed(2),
-                    "L", i1.x.toFixed(2), i1.y.toFixed(2),
-                    "A", rInner, rInner, 0, la, 1, i0.x.toFixed(2), i0.y.toFixed(2),
-                    "Z"].join(" ");
-        }
-
-        var currentDeg = 270;
-        var uid = "p" + Math.random().toString(36).slice(2, 8);
-        var defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+        var item = document.createElement("div");
+        item.className = "nav-stat-item";
         
-        var maxIdx = 0;
-        categories.forEach(function(c, i) {
-            if (c.value > categories[maxIdx].value) maxIdx = i;
-        });
+        var iconHtml = cat.icon
+            ? `<div class="nav-stat-icon" style="background-image:url('${cat.icon}');"></div>`
+            : `<div class="nav-stat-icon" style="background:${color};color:#111;font-weight:700;font-size:12px;">${cat.name.charAt(0)}</div>`;
+            
+        item.innerHTML = `${iconHtml}
+            <div class="nav-stat-info">
+                <div class="nav-stat-label-row">
+                    <div class="nav-stat-label">${cat.name}${pctLabelHtml}</div>
+                    ${balanceHtml}
+                </div>
+                <div class="nav-stat-pnl" style="color:${pnlColor};">${pnlFmt} (${pnlPctFmt})</div>
+            </div>`;
+            
+        item.setAttribute('data-seg', i);
+        item.style.cursor = 'pointer';
 
-        // Create striped pattern defs dynamically from assigned cat.color
-        categories.forEach(function(cat, idx) {
-            var pat = document.createElementNS("http://www.w3.org/2000/svg", "pattern");
-            pat.setAttribute("id", uid + idx);
-            pat.setAttribute("patternUnits", "userSpaceOnUse");
-            pat.setAttribute("width", "8");
-            pat.setAttribute("height", "8");
-            pat.setAttribute("patternTransform", "rotate(-45 0 0)");
-            pat.setAttribute("overflow", "visible");
+        item.addEventListener('click', (function(catName, segIdx) {
+            return function() {
+                var isSelected = window.navSelectedCatIdx === segIdx;
+                window.navSelectedCatIdx = isSelected ? null : segIdx;
 
-            var bg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-            bg.setAttribute("x", "-1"); bg.setAttribute("y", "-1");
-            bg.setAttribute("width", "10"); bg.setAttribute("height", "10");
-            bg.setAttribute("fill", cat.color); bg.setAttribute("opacity", "0.18");
-            pat.appendChild(bg);
-
-            var stripe = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-            stripe.setAttribute("x", "0"); stripe.setAttribute("y", "0");
-            stripe.setAttribute("width", "5"); stripe.setAttribute("height", "8");
-            stripe.setAttribute("fill", cat.color); stripe.setAttribute("opacity", "0.75");
-            pat.appendChild(stripe);
-
-            defs.appendChild(pat);
-        });
-        svg.appendChild(defs);
-
-        // Pass 1: compute arc geometry/appearance per category, keyed by name,
-        // using the value-desc + arrangeMiddle order (this controls pie layout only).
-        var arcInfoByName = {};
-        categories.forEach(function(cat, i) {
-            var pct = (totalValue > 0 && cat.value > 0) ? (cat.value / totalValue) : 0;
-            var sweep = pct * 180;
-            var d0 = currentDeg - GAP / 2;
-            var d1 = currentDeg - sweep + GAP / 2;
-            currentDeg -= sweep;
-
-            var color = cat.color;
-            var hasArc = cat.value > 0 && d1 < d0;
-
-            if (hasArc) {
-                var isLargest = (i === maxIdx);
-                var rOut = isLargest ? rOuter - 5 : rOuter;
-
-                var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-                path.setAttribute("d", arc(d0, d1, rOut));
-                path.setAttribute("fill", isLargest ? "url(#" + uid + i + ")" : color);
-                path.setAttribute("stroke", color);
-                path.setAttribute("stroke-width", "1");
-                path.setAttribute('data-seg', i);
-                svg.appendChild(path);
-
-                if (pct >= 0.05) {
-                    var mid = (d0 + d1) / 2;
-                    var lr = (rOuter + rInner) / 2;
-                    var lp = pt(lr, mid);
-                    var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-                    text.setAttribute("x", lp.x.toFixed(1));
-                    text.setAttribute("y", lp.y.toFixed(1));
-                    text.setAttribute("class", "nav-donut-label");
-                    text.setAttribute("font-size", "13");
-                    text.textContent = "(" + Math.round(pct * 100) + "%)";
-                    svg.appendChild(text);
-                }
-            }
-
-            arcInfoByName[cat.name] = { segIdx: i, pct: pct, hasArc: hasArc, color: color };
-        });
-
-        // Pass 2: render the sidebar stat list — active categories first, then
-        // closed-only categories at the bottom, each sorted by value within its group.
-        var displayCategories = categories.slice().sort(function(a, b) {
-            if (a.hasActive !== b.hasActive) return a.hasActive ? -1 : 1;
-            return b.value - a.value;
-        });
-
-        displayCategories.forEach(function(cat) {
-            var info = arcInfoByName[cat.name];
-            var i = info.segIdx;
-            var pct = info.pct;
-            var hasArc = info.hasArc;
-            var color = info.color;
-
-            var pnlPos = cat.pnl > 0, pnlZero = cat.pnl === 0;
-            var pnlColor = pnlZero ? 'rgba(255,255,255,0.5)' : (pnlPos ? '#14b8a6' : '#f472b6');
-            var pnlFmt = fmtPnl(cat.pnl);
-            // Use full-history cost basis (not the active-only balance) so closed
-            // categories still get a meaningful P/L percent instead of a bogus one.
-            var basis = cat.cost;
-            var pnlPct = basis > 0 ? (cat.pnl / basis) * 100 : 0;
-            var pnlPctFmt = (pnlPos ? '+' : '') + pnlPct.toFixed(1) + '%';
-
-            // No active/on-going positions in this category → show P/L only, no balance
-            var pctLabelHtml = hasArc ? `<span class="nav-stat-pct"> (${Math.round(pct * 100)}%)</span>` : '';
-            var balanceHtml = cat.hasActive ? `<div class="nav-stat-value">${fmtBalance(cat.value)}</div>` : '';
-
-            var item = document.createElement("div");
-            item.className = "nav-stat-item";
-            var iconHtml = cat.icon
-                ? `<div class="nav-stat-icon" style="background-image:url('${cat.icon}');"></div>`
-                : `<div class="nav-stat-icon" style="background:${color};color:#111;font-weight:700;font-size:12px;">${cat.name.charAt(0)}</div>`;
-            item.innerHTML = `${iconHtml}
-                <div class="nav-stat-info">
-                    <div class="nav-stat-label-row">
-                        <div class="nav-stat-label">${cat.name}${pctLabelHtml}</div>
-                        ${balanceHtml}
-                    </div>
-                    <div class="nav-stat-pnl" style="color:${pnlColor};">${pnlFmt} (${pnlPctFmt})</div>
-                </div>`;
-            item.setAttribute('data-seg', i);
-            item.style.cursor = 'pointer';
-
-            item.addEventListener('click', (function(catName, segIdx) {
-                return function() {
-                    var isSelected = navSelectedCatIdx === segIdx;
-                    navSelectedCatIdx = isSelected ? null : segIdx;
-
+                if (typeof portfolioFilters !== "undefined") {
                     portfolioFilters.asset = isSelected ? 'all' : catName.toLowerCase();
+                }
+                if (typeof applyPortfolioFiltersAndRender === "function") {
                     applyPortfolioFiltersAndRender();
+                }
 
-                    var icon = document.getElementById('asset-filter-icon');
-                    if (icon) icon.classList.toggle('active-filter', !isSelected);
+                var icon = document.getElementById('asset-filter-icon');
+                if (icon) icon.classList.toggle('active-filter', !isSelected);
 
+                if (typeof navUpdateHighlight === "function") {
                     navUpdateHighlight();
-                };
-            })(cat.name, i));
+                }
+            };
+        })(cat.name, i));
 
-            statList.appendChild(item);
-        });
-    }
+        statList.appendChild(item);
+    });
+}
     function toggleCategoryGroup(categoryKey,headerRowEl){var isCollapsed=headerRowEl.classList.toggle("collapsed");document.querySelectorAll(`tr[data-category-key="${categoryKey}"]:not(.portfolio-group-hdr-row)`).forEach(function(row){isCollapsed?(row.dataset.prevDisplay=row.style.display||"",row.style.display="none"):row.classList.contains("log-row")?row.style.display=row.classList.contains("visible")?"table-row":"none":row.style.display=""})}
     function openPortfolioModal() {
         document.querySelectorAll('[id="portfolio-cal-menu"]').forEach(function(el) { el.remove(); });
@@ -7311,7 +7370,7 @@ to{transform:rotate(360deg)}
         
     }
 
-    var portfolioSymbolIconCache = null; // { "MBB": "https://...", "BTCUSD": "https://...", ... }
+    var portfolioSymbolIconCache = null;
     var portfolioSymbolIconCacheLoading = false;
     function handlePortfolioSymbolInput(el){el.value&&el.value.trim()||resetPortfolioModalIconToAccountType()}function resetPortfolioModalIconToAccountType(){var titleIcon=document.getElementById("portfolioModalIcon"),typeIcon=document.getElementById("portfolioTypeTriggerIcon");titleIcon&&typeIcon&&typeIcon.src&&(titleIcon.src=typeIcon.src)}
     function loadPortfolioSymbolIconCache(callback) {
