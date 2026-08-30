@@ -6288,6 +6288,12 @@ to{transform:rotate(360deg)}
                 var isOngoing = group.status.toLowerCase().includes('on-going');
                 if (portfolioFilters.asset === "on-going" && !isOngoing) return false;
                 if (portfolioFilters.asset === "close" && isOngoing) return false;
+                
+                // Case-insensitive match for category/asset types
+                if (portfolioFilters.asset !== "on-going" && portfolioFilters.asset !== "close") {
+                    var groupType = (group.accountType || "").trim().toLowerCase();
+                    if (groupType !== portfolioFilters.asset.trim().toLowerCase()) return false;
+                }
             }
 
             if (portfolioFilters.pnl !== "all") {
@@ -6316,6 +6322,15 @@ to{transform:rotate(360deg)}
 
             return true;
         });
+
+        if (portfolioFilters.asset === 'forex' && filtered.length === 0) {
+            filtered = [{
+                accountType: 'Forex',
+                status: 'on-going',
+                mainRecord: { actualPnl: 0, entryDate: new Date().toISOString() },
+                records: []
+            }];
+        }
         
 
         // Find the most recent transaction date across a group's MAIN row and all its
@@ -6341,27 +6356,61 @@ to{transform:rotate(360deg)}
 
         // Sort by accountType group first, then on-going before closed, then latest date first
         filtered.sort(function(a, b) {
-            // Primary sort — group by accountType first
             var catCompare = a.accountType.localeCompare(b.accountType);
             if (catCompare !== 0) return catCompare;
 
-            // Secondary sort — on-going positions before closed ones
             var aOngoing = a.status.toLowerCase().includes('on-going');
             var bOngoing = b.status.toLowerCase().includes('on-going');
             if (aOngoing && !bOngoing) return -1;
             if (!aOngoing && bOngoing) return 1;
 
-            // Tertiary sort — most recent transaction (log row) date first within each status group
             return latestGroupDate(b) - latestGroupDate(a);
         });
 
+        /// FOREX OVERRIDE WITH ASYNC FALLBACK
+        if (portfolioFilters.asset === 'forex') {
+            var hasCachedForex = window.navFullCategoryValueTotals && window.navFullCategoryValueTotals["Forex"] !== undefined;
+            var forexVal = hasCachedForex ? window.navFullCategoryValueTotals["Forex"] : 0;
+            
+            var liveForexStr = fmtBalance(forexVal);
+            if (navVal) navVal.innerHTML = liveForexStr;
+            snapVal = liveForexStr;
+            
+            var accordionContainer = document.getElementById('portfolio-accordion');
+            if (accordionContainer) {
+                accordionContainer.innerHTML = `<div class="accordion-item" style="padding: 16px; text-align: center; color: #fff;">
+                    <div style="font-size: 14px; opacity: 0.7; margin-bottom: 4px;">Forex Live Balance (Google Sheet)</div>
+                    <div style="font-size: 24px; font-weight: 700;">${hasCachedForex ? liveForexStr : "Loading..."}</div>
+                </div>`;
+            }
+
+            // If data isn't loaded yet, trigger a background fetch so it updates automatically when resolved
+            if (!hasCachedForex && typeof fetchForexNavBalance === "function") {
+                fetchForexNavBalance();
+            }
+            return;
+        }
+
         renderAccordion(filtered);
+        
         if (portfolioFilters.asset && portfolioFilters.asset !== 'all') {
-            if (navBal   && snapBal   !== null) navBal.innerHTML   = snapBal;
-            if (navVal   && snapVal   !== null) navVal.innerHTML   = snapVal;
+            if (portfolioFilters.asset === 'forex' && window.navFullCategoryValueTotals) {
+                if (navVal) navVal.innerHTML = fmtBalance(window.navFullCategoryValueTotals["Forex"] || 0);
+            } else {
+                if (navBal && snapBal !== null) navBal.innerHTML = snapBal;
+                if (navVal && snapVal !== null) navVal.innerHTML = snapVal;
+                if (navBadge && snapBadge !== null) {
+                    navBadge.innerHTML = snapBadge;
+                    navBadge.className = snapBadgeClass;
+                }
+            }
+        } else {
+            // Restore standard defaults when 'all' is selected
+            if (navBal && snapBal !== null) navBal.innerHTML = snapBal;
+            if (navVal && snapVal !== null) navVal.innerHTML = snapVal;
             if (navBadge && snapBadge !== null) {
-                navBadge.innerHTML  = snapBadge;
-                navBadge.className  = snapBadgeClass;
+                navBadge.innerHTML = snapBadge;
+                navBadge.className = snapBadgeClass;
             }
         }
     }
@@ -6865,10 +6914,20 @@ to{transform:rotate(360deg)}
     }
 
     function orderTypeBadge(orderType){const type=(orderType||"").toLowerCase();let bg="var(--bg-secondary)",color="var(--text-main)";return type.includes("buy")||type.includes("long")?(bg="rgba(0, 150, 136, 0.15)",color="#009688"):type.includes("sell")||type.includes("short")?(bg="rgba(236, 64, 122, 0.12);",color="#ec407a"):type.includes("dca")?(bg="rgba(3, 169, 244, 0.15)",color="#03a9f4"):type.includes("close")&&(bg="rgba(158, 158, 158, 0.15)",color="#9e9e9e"),`<span style="background: ${bg}; color: ${color}; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; text-transform: uppercase;">${orderType}</span>`}
-    function fetchForexNavBalance() {
+    // Global cache definition (ensure this is declared globally in your app)
+if (typeof window.navFullCategoryValueTotals === "undefined") {
+    window.navFullCategoryValueTotals = {};
+}
+
+/**
+ * Fetches the latest Forex NAV balance from the Google Sheet CSV,
+ * updates the global store, triggers a donut chart re-render, 
+ * and reactively updates active filters if Forex is selected.
+ */
+function fetchForexNavBalance() {
     var csvUrl = GOOGLE_SHEET_CSV_URL + "311369594";
     
-    fetch(csvUrl, { cache: "no-store" })
+    return fetch(csvUrl, { cache: "no-store" })
         .then(function(response) {
             if (!response.ok) throw new Error("HTTP " + response.status);
             return response.text();
@@ -6894,11 +6953,10 @@ to{transform:rotate(360deg)}
                 }
             }
             
-            if (typeof window.navFullCategoryValueTotals === "undefined") {
-                window.navFullCategoryValueTotals = {};
-            }
+            // Update global cache reliably
             window.navFullCategoryValueTotals["Forex"] = forexBalance;
             
+            // Re-render the donut chart if data args exist
             if (typeof window.navLastDataArgs !== "undefined" && typeof renderNavDonut === "function") {
                 renderNavDonut(
                     window.navLastDataArgs.categoryValueTotals,
@@ -6909,15 +6967,21 @@ to{transform:rotate(360deg)}
                     window.navLastDataArgs.categoryCostTotals
                 );
             }
+
+            // Reactively re-apply filters if the user is currently viewing Forex
+            if (typeof portfolioFilters !== 'undefined' && portfolioFilters.asset === 'forex' && typeof applyPortfolioFiltersAndRender === 'function') {
+                applyPortfolioFiltersAndRender();
+            }
+
+            return forexBalance;
         })
         .catch(function(err) {
             console.error("Forex NAV balance fetch error:", err);
+            return 0;
         });
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-    fetchForexNavBalance();
-});
+
 
 
 function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap, totalValue, categoryHasActiveMap, categoryCostTotals) {
@@ -7157,8 +7221,18 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
                 var isSelected = window.navSelectedCatIdx === segIdx;
                 window.navSelectedCatIdx = isSelected ? null : segIdx;
 
+                // Inside your item click event listener where you update portfolioFilters.asset:
                 if (typeof portfolioFilters !== "undefined") {
                     portfolioFilters.asset = isSelected ? 'all' : catName.toLowerCase();
+                    
+                    // Update snapshot variables globally so they don't restore old zero values
+                    var liveForexVal = (window.navFullCategoryValueTotals && window.navFullCategoryValueTotals["Forex"] !== undefined) 
+                        ? fmtBalance(window.navFullCategoryValueTotals["Forex"]) 
+                        : null;
+                        
+                    if (portfolioFilters.asset === 'forex' && liveForexVal) {
+                        snapVal = liveForexVal;
+                    }
                 }
                 if (typeof applyPortfolioFiltersAndRender === "function") {
                     applyPortfolioFiltersAndRender();
@@ -8149,7 +8223,9 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
     window.addEventListener("resize", function() {if (typeof buildColHdr === "function") buildColHdr(); if (typeof applyLayout === "function") applyLayout();});
     window.addEventListener("DOMContentLoaded",async()=>{try{await Promise.all([loadBalanceHistoryTC(),loadRecent()])}catch(error){console.error("Failed to load data:",error)}setTimeout(()=>{const loader=document.getElementById("loader-overlay");loader&&loader.classList.add("fade-out")},1500)});  
     document.getElementById('watchlist-modal').addEventListener('click', function(event) {if (event.target === this) {closeWatchlistModal();}});
-    
+    document.addEventListener("DOMContentLoaded", function() {
+    fetchForexNavBalance();
+});
     !function(){function applyAllSplitLayouts(){(function(){var bigWrap=document.querySelector(".big-wrap"),rightSlot=document.getElementById("exp-split-right"),ringsWrap=document.getElementById("rings-wrap"),spendingView=document.getElementById("budget-view-subcategory"),budgetCard=document.querySelector(".budget-card"),slideZero=document.getElementById("slide-0");if(bigWrap&&rightSlot&&spendingView&&slideZero){var tabBtn,shouldSplit=(tabBtn=document.getElementById("tab-btn-0"),window.innerWidth>400&&!!tabBtn&&tabBtn.classList.contains("active")),isSplit=bigWrap.classList.contains("expense-split");if(shouldSplit&&!isSplit){bigWrap.classList.add("expense-split"),ringsWrap&&rightSlot.appendChild(ringsWrap),rightSlot.appendChild(spendingView);var recentBtn=budgetCard&&budgetCard.querySelector(".budget-subtabs .budget-subtab:first-child");if(recentBtn&&recentBtn.classList.contains("active")){var detailBtn=budgetCard.querySelector(".budget-subtabs .budget-subtab:nth-child(1)");detailBtn&&detailBtn.click()}}else!shouldSplit&&isSplit&&(bigWrap.classList.remove("expense-split"),slideZero&&ringsWrap&&slideZero.insertBefore(ringsWrap,slideZero.firstChild),spendingView&&budgetCard&&budgetCard.appendChild(spendingView))}})(),function(){var bigWrap=document.querySelector(".big-wrap"),rightSlot=document.getElementById("ovw-split-right"),walletView=document.getElementById("budget-view-wallet"),budgetCard=document.querySelector("#ca-wrap .budget-card");if(bigWrap&&rightSlot&&walletView&&budgetCard){var tabBtn,shouldSplit=(tabBtn=document.getElementById("tab-btn-1"),window.innerWidth>400&&!!tabBtn&&tabBtn.classList.contains("active")),isSplit=bigWrap.classList.contains("wallet-split");if(shouldSplit&&!isSplit){bigWrap.classList.add("wallet-split"),rightSlot.appendChild(walletView);var walletBtn=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:first-child');if(walletBtn&&walletBtn.classList.contains("active")){var fireBtn=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:last-child');fireBtn&&fireBtn.click()}}else if(!shouldSplit&&isSplit){bigWrap.classList.remove("wallet-split"),budgetCard.insertBefore(walletView,budgetCard.querySelector("#budget-view-fire")||null);var fireBtnBack=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:last-child');if(fireBtnBack&&fireBtnBack.classList.contains("active")){var walletBtnBack=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:first-child');walletBtnBack&&walletBtnBack.click()}}}}(),function(){var bigWrap=document.querySelector(".big-wrap"),rightSlot=document.getElementById("port-split-right"),portfolioView=document.getElementById("budget-view-portfolio"),budgetCard=document.querySelector("#slide-2 .budget-card");if(bigWrap&&rightSlot&&portfolioView&&budgetCard){var tabBtn,shouldSplit=(tabBtn=document.getElementById("tab-btn-2"),window.innerWidth>400&&!!tabBtn&&tabBtn.classList.contains("active")),isSplit=bigWrap.classList.contains("portfolio-split");if(shouldSplit&&!isSplit){bigWrap.classList.add("portfolio-split"),rightSlot.appendChild(portfolioView);var portfolioBtn=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:first-child');if(portfolioBtn&&portfolioBtn.classList.contains("active")){var btcBtn=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:last-child');btcBtn&&btcBtn.click()}}else if(!shouldSplit&&isSplit){bigWrap.classList.remove("portfolio-split");var btcView=document.getElementById("budget-view-btc");btcView&&btcView.parentNode===budgetCard?budgetCard.insertBefore(portfolioView,btcView):budgetCard.appendChild(portfolioView);var btcBtnBack=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:last-child');if(btcBtnBack&&btcBtnBack.classList.contains("active")){var portfolioBtnBack=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:first-child');portfolioBtnBack&&portfolioBtnBack.click()}}}}()}var applyTimer,resizeTimer,tabBarObserverTarget=document.getElementById("tab-bar")||document.getElementById("tab-btn-group")||document.body;new MutationObserver(function(){clearTimeout(applyTimer),applyTimer=setTimeout(applyAllSplitLayouts,0)}).observe(tabBarObserverTarget,{attributes:!0,attributeFilter:["class"],subtree:!0}),window.addEventListener("resize",function(){clearTimeout(resizeTimer),resizeTimer=setTimeout(applyAllSplitLayouts,100)}),document.addEventListener("DOMContentLoaded",applyAllSplitLayouts),applyAllSplitLayouts()}();
     function switchBudgetTab(e,t){var a=e.closest(".budget-card")||document,group=e.closest("[data-tabgroup]"),groupKey=group?group.getAttribute("data-tabgroup"):null;a.querySelectorAll(".budget-subtab, .budget-subtab-v2, .tab-btn:not(#tab-btn-x)").forEach(function(el){el.classList.remove("active")}),e.classList.add("active"),a.querySelectorAll(".budget-tab-content").forEach(function(el){el.style.display="none"});var c=a.querySelector("#budget-view-"+t);c&&(c.style.display="block"),groupKey?localStorage.setItem("active_budget_subtab_"+groupKey,t):localStorage.setItem("active_budget_subtab",t),e.id&&localStorage.setItem("active_regular_tab_id",e.id);var card=document.getElementById("card"),chartBtn=document.getElementById("tab-btn-x");card&&chartBtn&&("none"!==card.style.display&&"none"!==getComputedStyle(card).display&&"0px"!==card.style.maxHeight?chartBtn.classList.add("active"):chartBtn.classList.remove("active")),"subcategory"===t&&"function"==typeof renderSubcategoryBreakdown&&renderSubcategoryBreakdown()}
     document.addEventListener("DOMContentLoaded",function(){var savedSubtabV1=localStorage.getItem("active_budget_subtab")||"spending",targetBtnV1=document.querySelector(`.budget-subtab[onclick*="'${savedSubtabV1}'"]`);if(targetBtnV1)switchBudgetTab(targetBtnV1,savedSubtabV1);else{var defaultBtn=document.querySelector(".budget-subtab");defaultBtn&&switchBudgetTab(defaultBtn,"spending")}var groupEl=document.querySelector('[data-tabgroup="wallet-fire"]');if(groupEl){var savedSubtabV2=localStorage.getItem("active_budget_subtab_wallet-fire")||"wallet",targetBtnV2=groupEl.querySelector(`.budget-subtab-v2[onclick*="'${savedSubtabV2}'"]`);targetBtnV2&&switchBudgetTab(targetBtnV2,savedSubtabV2)}var groupEl3=document.querySelector('[data-tabgroup="portfolio-btc"]');if(groupEl3){var savedSubtabV4=localStorage.getItem("active_budget_subtab_portfolio-btc")||"portfolio",targetBtnV4=groupEl3.querySelector(`.budget-subtab-v2[onclick*="'${savedSubtabV4}'"]`);targetBtnV4&&switchBudgetTab(targetBtnV4,savedSubtabV4)}var chartBtn=document.getElementById("tab-btn-x"),card=document.getElementById("card");chartBtn&&card&&(card.style.overflow="hidden",card.style.transition="max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease-in-out, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)","shown"===(localStorage.getItem("tab-btn-x-card-state")||"shown")?(chartBtn.classList.add("active"),card.style.display="block",card.style.maxHeight="1000px",card.style.opacity="1",card.style.transform="translateY(0)"):(chartBtn.classList.remove("active"),card.style.display="none",card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)"),chartBtn.addEventListener("click",function(e){e.stopPropagation(),"none"===card.style.display||"none"===getComputedStyle(card).display||"0px"===card.style.maxHeight?(card.style.display="block",card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)",card.offsetHeight,card.style.maxHeight="1000px",card.style.opacity="1",card.style.transform="translateY(0)",this.classList.add("active"),localStorage.setItem("tab-btn-x-card-state","shown")):(card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)",this.classList.remove("active"),setTimeout(function(){"0px"===card.style.maxHeight&&(card.style.display="none")},400),localStorage.setItem("tab-btn-x-card-state","hidden"));var savedId=localStorage.getItem("active_regular_tab_id"),activeBtn=(savedId?document.getElementById(savedId):null)||targetBtnV1||document.querySelector(".budget-subtab, .budget-subtab-v2, .tab-btn:not(#tab-btn-x)");activeBtn&&activeBtn.classList.add("active"),"block"===card.style.display&&"function"==typeof loadBalanceHistoryTC&&loadBalanceHistoryTC()})),document.querySelectorAll(".tab-btn").forEach(function(btn){btn.addEventListener("click",function(){"tab-btn-x"!==this.id&&(document.querySelectorAll(".tab-btn:not(#tab-btn-x)").forEach(function(otherBtn){otherBtn.classList.remove("active")}),this.classList.add("active"),this.id&&localStorage.setItem("active_regular_tab_id",this.id),card&&chartBtn&&("none"!==card.style.display&&"none"!==getComputedStyle(card).display&&"0px"!==card.style.maxHeight?chartBtn.classList.add("active"):chartBtn.classList.remove("active")))})})});
