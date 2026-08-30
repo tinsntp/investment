@@ -737,7 +737,7 @@ tbody tr.current-row td{font-weight:600;}
 .neutral{color:var(--text-muted)}
 
 .nav-card{grid-column:1/-1;font-family:DM Sans;padding:0;margin-bottom:10px;text-align:left}.nav-card-body{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start}.nav-card-left{display:flex;flex-direction:column;gap:12px;min-width:0}.nav-stat-list{display:flex;flex-direction:column;margin-left:5px;gap:14px;flex:1;min-width:0}.nav-stat-item{display:flex;align-items:center;gap:10px}.nav-stat-icon{width:25px;height:25px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background-size:cover;background-position:center}.nav-stat-info{display:flex;flex-direction:column;min-width:0}.nav-stat-label-row{display:flex;align-items:baseline;justify-content:space-between;gap:8px}.nav-stat-label{font-size:12px;color:rgba(255,255,255,.5)}.nav-stat-pct{color:rgba(255,255,255,.35);font-weight:500}.nav-stat-value{font-size:12px;font-weight:700;color:#fff}.nav-stat-pnl{font-size:11px;text-align:left;font-weight:600}.nav-donut-wrap{position:relative;width:90px;height:180px;flex-shrink:0;margin-right:21px;margin-top:-15px;overflow:visible}
-#nav-donut-svg{width:120px;height:238px;position:static;top:auto;left:auto}.nav-donut-label{font-family:"DM Sans",sans-serif;font-weight:700;fill:#fff;text-anchor:middle;dominant-baseline:middle}@media (max-width:400px){.nav-stat-icon{width:20px;height:20px}.nav-stat-item{gap:8px}}.dashboard-grid{display:flex;flex-direction:column}.hero-card-port{background:0 0;margin:10px;position:relative;overflow:hidden}.hero-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}.hero-title-group h2{font-size:13px;font-weight:700;color:var(--teal-primary);text-transform:uppercase;letter-spacing:1px}.hero-title-group .date-range{font-size:12px;color:var(--text-secondary);margin-top:2px}.hero-main-stat{display:flex;align-items:baseline;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+#nav-donut-svg{width:120px;height:278px;position:static;top:auto;left:auto}.nav-donut-label{font-family:"DM Sans",sans-serif;font-weight:700;fill:#fff;text-anchor:middle;dominant-baseline:middle}@media (max-width:400px){.nav-stat-icon{width:20px;height:20px}.nav-stat-item{gap:8px}}.dashboard-grid{display:flex;flex-direction:column}.hero-card-port{background:0 0;margin:10px;position:relative;overflow:hidden}.hero-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}.hero-title-group h2{font-size:13px;font-weight:700;color:var(--teal-primary);text-transform:uppercase;letter-spacing:1px}.hero-title-group .date-range{font-size:12px;color:var(--text-secondary);margin-top:2px}.hero-main-stat{display:flex;align-items:baseline;gap:12px;margin-bottom:12px;flex-wrap:wrap}
 .hero-amount{font-weight:800;letter-spacing:-1px;background:linear-gradient(90deg,#fff 0,#14b8a6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .hero-balance{font-size:23px!important;font-family:"JetBrains Mono";letter-spacing: -2.5px!important;color:#fff!important;margin-bottom:3px;font-weight:400!important;}
 .hero-balance-v2{font-size:16px!important;color:#fff!important;margin-bottom:3px;font-weight:700;}
@@ -6242,143 +6242,7 @@ to{transform:rotate(360deg)}
     function fetchVnIndexData(isUserRefresh){var now=new Date,vnTime=new Date(now.toLocaleString("en-US",{timeZone:"Asia/Ho_Chi_Minh"})),day=vnTime.getDay(),totalMins=60*vnTime.getHours()+vnTime.getMinutes();if(day>=1&&day<=5&&totalMins>=555&&totalMins<=900){var reloadBtn=document.getElementById("vnindex-reload-btn");reloadBtn&&reloadBtn.classList.add("spinning"),fetch(EXPENSE_APPS_SCRIPT_URL+"?action=vnindex&t="+Date.now(),{cache:"no-store"}).then(function(response){if(!response.ok)throw new Error("HTTP "+response.status);return response.json()}).then(function(result){if("success"!==result.status)throw new Error(result.message||"Failed");var vnindexVal=Number(result.data.close)||0,changeVal=Number(result.data.change)||0,pctChangeVal=Number(result.data.pctChange)||0,isPositive=changeVal>0,isZero=0===changeVal;document.getElementById("vnindex-bal").textContent=vnindexVal.toLocaleString("en-US");var changeSign=isZero?"":isPositive?"+":"",valEl=document.getElementById("vnindex-val");valEl.textContent=changeSign+changeVal.toLocaleString("en-US"),valEl.className=isZero||isPositive?"text-teal":"text-pink";var badgeEl=document.getElementById("vnindex-badge"),pctSign=isZero?"":isPositive?"+":"";badgeEl.textContent=pctSign+pctChangeVal.toFixed(2)+"%",badgeEl.className="badge-pill "+(isZero||isPositive?"badge-teal":"badge-pink")}).catch(function(err){console.warn("VNINDEX realtime failed, falling back to CSV:",err.message),fetchVnIndexData2()}).finally(function(){reloadBtn&&reloadBtn.classList.remove("spinning")})}else fetchVnIndexData2()}
     document.addEventListener("DOMContentLoaded", function(){ fetchVnIndexData(true); });
     function fetchVnIndexData2(){var csvUrl="https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=523826078&t="+Date.now();fetch(csvUrl,{cache:"no-store"}).then(function(response){if(!response.ok)throw new Error("HTTP "+response.status);return response.text()}).then(function(text){var targetLine=text.split(/\r?\n/)[12];if(targetLine){var cols=parseCsvRow(targetLine),vnindexRaw=cols[10]||"",changeRaw=cols[11]||"",pctChangeRaw=cols[12]||"",vnindexVal=cleanNum(vnindexRaw),changeVal=cleanNum(changeRaw),pctChangeVal=cleanNum(pctChangeRaw),isPositive=changeVal>0,isZero=0===changeVal;document.getElementById("vnindex-bal").textContent=vnindexVal.toLocaleString("en-US");var changeSign=isZero?"":isPositive?"+":"",valEl=document.getElementById("vnindex-val");valEl.textContent=changeSign+changeVal.toLocaleString("en-US"),valEl.className=isZero||isPositive?"text-teal":"text-pink";var badgeEl=document.getElementById("vnindex-badge"),pctSign=isZero?"":isPositive?"+":"";badgeEl.textContent=pctSign+pctChangeVal.toFixed(2)+"%",badgeEl.className="badge-pill "+(isZero||isPositive?"badge-teal":"badge-pink")}function cleanNum(val){if(!val)return 0;var c=val.toString().replace(/[\$,%\s]/g,"");c.startsWith("(")&&c.endsWith(")")&&(c="-"+c.slice(1,-1));var n=parseFloat(c);return isNaN(n)?0:n}}).catch(function(err){console.error("VNINDEX fetch error:",err)})}
-    function updateMarketStatusDot() {
-    const now = new Date();
-    const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-    const vnTime = new Date(utc + (3600000 * 7));
-    
-    const day = vnTime.getDay();
-    const hours = vnTime.getHours();
-    const minutes = vnTime.getMinutes();
-    const currentTimeMinutes = hours * 60 + minutes;
-
-    const isWeekday = day >= 1 && day <= 5;
-    const isMarketHours = isWeekday && currentTimeMinutes >= 540 && currentTimeMinutes <= 900;
-
-    const dot = document.getElementById('market-live-dot');
-    if (dot) {
-        if (isMarketHours) {
-            dot.style.backgroundColor = '#2dd4bf';
-            dot.style.boxShadow = '0 0 6px #2dd4bf';
-            dot.title = 'Market is Open';
-        } else {
-            dot.style.backgroundColor = '#64748b';
-            dot.style.boxShadow = 'none';
-            dot.title = 'Market is Closed';
-        }
-    }
-}
-function openWatchlistModal() {
-    var modal = document.getElementById('watchlist-modal');
-    if (modal) {
-        modal.style.setProperty('display', 'flex', 'important');
-        fetchWatchlistData();
-    } else {
-        console.error("Error: #watchlist-modal element not found in DOM!");
-    }
-}
-
-function closeWatchlistModal() {
-    var modal = document.getElementById('watchlist-modal');
-    if (modal) {
-        modal.style.setProperty('display', 'none', 'important');
-    }
-}
-
-function fetchWatchlistData() {
-    var csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=523826078&t=" + Date.now();
-    
-    var container = document.getElementById('watchlist-items-container');
-    if (container) container.innerHTML = '<div id="loading-msg" style="text-align:center; color: #94a3b8; padding: 20px;"></div>';
-
-    // Check if market is currently live/open (Mon–Fri, 09:00–15:00 ICT)
-    var now = new Date();
-    var day = now.getDay(); // 0 is Sunday, 6 is Saturday
-    var hours = now.getHours();
-    var minutes = now.getMinutes();
-    var currentTimeVal = hours * 100 + minutes;
-    var isMarketOpen = (day >= 1 && day <= 5) && (currentTimeVal >= 900 && currentTimeVal <= 1500);
-
-    // Always show the dot; apply active pulse animation if open, or static muted style if closed
-    var dotClass = isMarketOpen ? "tv-live-dot active" : "tv-live-dot closed";
-    var dotTitle = isMarketOpen ? "Market Live" : "Market Closed";
-    var liveIndicatorHtml = `<span class="${dotClass}" title="${dotTitle}"></span>`;
-
-    fetch(csvUrl, { cache: "no-store" })
-        .then(function(response) {
-            if (!response.ok) throw new Error("HTTP " + response.status);
-            return response.text();
-        })
-        .then(function(text) {
-            var lines = text.split(/\r?\n/);
-            if (!container) return;
-            container.innerHTML = "";
-
-            var html = "";
-            for (var i = 0; i < lines.length; i++) {
-                var line = lines[i].trim();
-                if (!line) continue;
-                
-                var cols = typeof parseCsvRow === 'function' ? parseCsvRow(line) : line.split(',');
-
-                var symbol = (cols[15] || "").replace(/["']/g, "").trim();
-                var priceRaw = (cols[16] || "").replace(/["']/g, "").trim();
-                var changeRaw = (cols[17] || "").replace(/["']/g, "").trim();
-                var pctRaw = (cols[18] || "").replace(/["']/g, "").trim();
-                var desc = (cols[19] || "").replace(/["']/g, "").trim();
-                var iconUrl = (cols[20] || "").replace(/["']/g, "").trim();
-
-                if (!symbol || !priceRaw) continue;
-
-                var rawPriceNum = typeof cleanNum === 'function' ? cleanNum(priceRaw) : parseFloat(priceRaw) || 0;
-                var rawChangeNum = typeof cleanNum === 'function' ? cleanNum(changeRaw) : parseFloat(changeRaw) || 0;
-                var pctVal = typeof cleanNum === 'function' ? cleanNum(pctRaw) : parseFloat(pctRaw) || 0;
-
-                var priceVal = rawPriceNum * 1000;
-                var changeVal = rawChangeNum * 1000;
-
-                var isPositive = changeVal > 0;
-                var isZero = changeVal === 0;
-                var colorClass = isZero || isPositive ? "text-teal" : "text-pink";
-                var changeSign = isZero ? "" : isPositive ? "+" : "-";
-
-                var formattedPrice = Math.round(priceVal).toLocaleString("en-US");
-                var formattedChange = Math.round(Math.abs(changeVal)).toLocaleString("en-US");
-
-                html += `
-                    <div class="tv-item-row" style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
-                        <div class="tv-item-left" style="display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1;">
-                            <img class="tv-item-icon" src="${iconUrl}" onerror="this.src='https://via.placeholder.com/32'" style="flex-shrink: 0;" />
-                            <div class="tv-item-symbol-wrap" style="min-width: 0; flex: 1;">
-                                <div class="tv-symbol-title" style="display: flex; align-items: center; gap: 6px; white-space: nowrap;">
-                                    ${symbol} 
-                                    ${liveIndicatorHtml}
-                                </div>
-                                <div class="tv-symbol-desc" title="${desc}" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${desc}</div>
-                            </div>
-                        </div>
-                        <div class="tv-item-right" style="display: flex; flex-direction: column; align-items: flex-end; text-align: right; flex-shrink: 0; white-space: nowrap;">
-                            <div class="tv-item-price">${formattedPrice}</div>
-                            <div class="tv-item-changes ${colorClass}" style="display: flex; gap: 6px; justify-content: flex-end;">
-                                <span>${changeSign}${formattedChange}</span>
-                                <span>${changeSign}${Math.abs(pctVal).toFixed(2)}%</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            container.innerHTML = html || '<div style="text-align:center; color: #94a3b8; padding: 20px;">No watchlist items found.</div>';
-        })
-        .catch(function(err) {
-            console.error("Watchlist fetch error:", err);
-            if (container) {
-                container.innerHTML = '<div style="text-align:center; color: #f43f5e; padding: 20px;">Failed to load watchlist. Check console.</div>';
-            }
-        });
-}
-
-
+    function updateMarketStatusDot(){const now=new Date,utc=now.getTime()+6e4*now.getTimezoneOffset(),vnTime=new Date(utc+252e5),day=vnTime.getDay(),currentTimeMinutes=60*vnTime.getHours()+vnTime.getMinutes(),isMarketHours=day>=1&&day<=5&&currentTimeMinutes>=540&&currentTimeMinutes<=900,dot=document.getElementById("market-live-dot");dot&&(isMarketHours?(dot.style.backgroundColor="#2dd4bf",dot.style.boxShadow="0 0 6px #2dd4bf",dot.title="Market is Open"):(dot.style.backgroundColor="#64748b",dot.style.boxShadow="none",dot.title="Market is Closed"))}function openWatchlistModal(){var modal=document.getElementById("watchlist-modal");modal?(modal.style.setProperty("display","flex","important"),fetchWatchlistData()):console.error("Error: #watchlist-modal element not found in DOM!")}function closeWatchlistModal(){var modal=document.getElementById("watchlist-modal");modal&&modal.style.setProperty("display","none","important")}function fetchWatchlistData(){var csvUrl="https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=523826078&t="+Date.now(),container=document.getElementById("watchlist-items-container");container&&(container.innerHTML='<div id="loading-msg" style="text-align:center; color: #94a3b8; padding: 20px;"></div>');var now=new Date,day=now.getDay(),currentTimeVal=100*now.getHours()+now.getMinutes(),isMarketOpen=day>=1&&day<=5&&currentTimeVal>=900&&currentTimeVal<=1500,liveIndicatorHtml=`<span class="${isMarketOpen?"tv-live-dot active":"tv-live-dot closed"}" title="${isMarketOpen?"Market Live":"Market Closed"}"></span>`;fetch(csvUrl,{cache:"no-store"}).then(function(response){if(!response.ok)throw new Error("HTTP "+response.status);return response.text()}).then(function(text){var lines=text.split(/\r?\n/);if(container){container.innerHTML="";for(var html="",i=0;i<lines.length;i++){var line=lines[i].trim();if(line){var cols="function"==typeof parseCsvRow?parseCsvRow(line):line.split(","),symbol=(cols[15]||"").replace(/["']/g,"").trim(),priceRaw=(cols[16]||"").replace(/["']/g,"").trim(),changeRaw=(cols[17]||"").replace(/["']/g,"").trim(),pctRaw=(cols[18]||"").replace(/["']/g,"").trim(),desc=(cols[19]||"").replace(/["']/g,"").trim(),iconUrl=(cols[20]||"").replace(/["']/g,"").trim();if(symbol&&priceRaw){var rawPriceNum="function"==typeof cleanNum?cleanNum(priceRaw):parseFloat(priceRaw)||0,rawChangeNum="function"==typeof cleanNum?cleanNum(changeRaw):parseFloat(changeRaw)||0,pctVal="function"==typeof cleanNum?cleanNum(pctRaw):parseFloat(pctRaw)||0,priceVal=1e3*rawPriceNum,changeVal=1e3*rawChangeNum,isPositive=changeVal>0,isZero=0===changeVal,colorClass=isZero||isPositive?"text-teal":"text-pink",changeSign=isZero?"":isPositive?"+":"-",formattedPrice=Math.round(priceVal).toLocaleString("en-US"),formattedChange=Math.round(Math.abs(changeVal)).toLocaleString("en-US");html+=`\n                    <div class="tv-item-row" style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">\n                        <div class="tv-item-left" style="display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1;">\n                            <img class="tv-item-icon" src="${iconUrl}" onerror="this.src='https://via.placeholder.com/32'" style="flex-shrink: 0;" />\n                            <div class="tv-item-symbol-wrap" style="min-width: 0; flex: 1;">\n                                <div class="tv-symbol-title" style="display: flex; align-items: center; gap: 6px; white-space: nowrap;">\n                                    ${symbol} \n                                    ${liveIndicatorHtml}\n                                </div>\n                                <div class="tv-symbol-desc" title="${desc}" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${desc}</div>\n                            </div>\n                        </div>\n                        <div class="tv-item-right" style="display: flex; flex-direction: column; align-items: flex-end; text-align: right; flex-shrink: 0; white-space: nowrap;">\n                            <div class="tv-item-price">${formattedPrice}</div>\n                            <div class="tv-item-changes ${colorClass}" style="display: flex; gap: 6px; justify-content: flex-end;">\n                                <span>${changeSign}${formattedChange}</span>\n                                <span>${changeSign}${Math.abs(pctVal).toFixed(2)}%</span>\n                            </div>\n                        </div>\n                    </div>\n                `}}}container.innerHTML=html||'<div style="text-align:center; color: #94a3b8; padding: 20px;">No watchlist items found.</div>'}}).catch(function(err){console.error("Watchlist fetch error:",err),container&&(container.innerHTML='<div style="text-align:center; color: #f43f5e; padding: 20px;">Failed to load watchlist. Check console.</div>')})}
     var navSelectedCatIdx = null;function navUpdateHighlight(){var svg=document.getElementById("nav-donut-svg"),statList=document.getElementById("nav-stat-list");svg&&statList&&(svg.querySelectorAll("path[data-seg]").forEach(function(p){var idx=parseInt(p.getAttribute("data-seg"));p.style.opacity=null===navSelectedCatIdx||navSelectedCatIdx===idx?"1":"0.2"}),statList.querySelectorAll(".nav-stat-item").forEach(function(el){var idx=parseInt(el.getAttribute("data-seg"));el.style.opacity=null===navSelectedCatIdx||navSelectedCatIdx===idx?"1":"0.35"}))}
     function cleanNum(val){if(!val)return 0;let c=val.toString().replace(/[\$,%\s]/g,"");c.startsWith("(")&&c.endsWith(")")&&(c="-"+c.slice(1,-1));const n=parseFloat(c);return isNaN(n)?0:n}function formatShortNumber(val){if(null==val||isNaN(val))return"-";if(0===val)return"0";const absNum=Math.abs(val),sign=val<0?"-":"",decimals=window.innerWidth>400?3:1;let formatted="";return formatted=absNum>=1e9?(absNum/1e9).toFixed(decimals)+"B":absNum>=1e6?(absNum/1e6).toFixed(decimals)+"M":absNum>=1e3?(absNum/1e3).toFixed(decimals)+"K":absNum.toLocaleString(void 0,{minimumFractionDigits:0,maximumFractionDigits:decimals}),`${sign}${formatted}`}function formatStockPrice(price){if(!price||isNaN(price))return"0.0";let formatted=(price>1e3?price/1e3:price).toFixed(2);return(formatted.endsWith("0")&&!formatted.endsWith(".00")||formatted.endsWith(".00"))&&(formatted=formatted.slice(0,-1)),formatted}function formatCryptoPrice(price){return!price||isNaN(price)?"0.000":price.toLocaleString(void 0,{minimumFractionDigits:0,maximumFractionDigits:0})}function formatPnlValue(num){if(0===num||null==num)return"-";return(num>0?"+":"")+formatShortNumber(num)}function formatPnlPct(pctVal){if(0===pctVal||null==pctVal||isNaN(pctVal))return"-";return`${pctVal>0?"+":""}${pctVal.toFixed(2)}%`}function parseDate(dateStr){if(!dateStr)return null;if(dateStr.includes("-")){const parts=dateStr.split("-");return new Date(parseInt(parts[0],10),parseInt(parts[1],10)-1,parseInt(parts[2],10))}if(dateStr.includes("/")){const parts=dateStr.split("/");return new Date(parseInt(parts[2],10),parseInt(parts[1],10)-1,parseInt(parts[0],10))}return new Date(dateStr)}function formatNoYearDate(dateObj){if(!dateObj)return"-";return`${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][dateObj.getMonth()]} ${String(dateObj.getDate()).padStart(2,"0")}`}function formatDateRangeTwoLinesNoYear(startDateStr,exitDateStr,isSaving=!1,volumeMonths=0){const sDate=parseDate(startDateStr);let eDate=null;isSaving&&volumeMonths>0&&sDate?(eDate=new Date(sDate),eDate.setMonth(eDate.getMonth()+parseInt(volumeMonths,10))):exitDateStr&&""!==exitDateStr.trim()&&(eDate=parseDate(exitDateStr));return`<div class="val-primary">${sDate?formatNoYearDate(sDate):"-"}</div><div class="val-secondary">${eDate?formatNoYearDate(eDate):"Present"}</div>`}function cleanNoteText(noteStr,statusStr){if(!noteStr||""===noteStr.trim())return statusStr||"";let cleaned=noteStr.replace(/MAIN\b/gi,"").replace(/LOG\b/gi,"").replace(/\bC\d+\b/gi,"").replace(/[\+\-]/g,"").trim();return""===cleaned?statusStr:cleaned}function getShortLogKeyword(text){if(!text)return"Log";const lower=text.toLowerCase();return lower.includes("dca")?"DCA":lower.includes("buy")?"Buy":lower.includes("sell")?"Sell":lower.includes("close")?"Close":lower.includes("deposit")||lower.includes("saving")?"Deposit":text.split(" ")[0].slice(0,5)}function parseCSVLine(line){for(var values=[],currentVal="",inQuotes=!1,i=0;i<line.length;i++){var char=line.charAt(i);'"'===char&&'"'===line.charAt(i+1)?(currentVal+='"',i++):'"'===char?inQuotes=!inQuotes:","!==char||inQuotes?currentVal+=char:(values.push(currentVal.trim()),currentVal="")}return values.push(currentVal.trim()),values}
     function fetchOrderSheetCSV(){const addOrderBtn=document.getElementById("add-order");addOrderBtn&&(addOrderBtn.classList.add("loading"),addOrderBtn.innerHTML='<span class="btn-spinner"></span>'),fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=488369714",{cache:"no-store"}).then(res=>{if(!res.ok)throw new Error("HTTP "+res.status);return res.text()}).then(csvText=>{processAndRenderData(csvText),addOrderBtn&&(addOrderBtn.classList.remove("loading"),addOrderBtn.classList.add("success-confirm")),setTimeout(function(){addOrderBtn&&(addOrderBtn.classList.remove("success-confirm"),addOrderBtn.innerHTML="+")},500)}).catch(err=>{console.error("Widget load error:",err);var msgEl=document.getElementById("det-msg");msgEl&&(msgEl.style.display="block",msgEl.textContent="CSV Fetch Error: "+err.message),addOrderBtn&&(addOrderBtn.classList.remove("loading","success-confirm"),addOrderBtn.innerHTML="+")})}
@@ -6563,7 +6427,7 @@ function fetchWatchlistData() {
         var ACCOUNT_TYPE_ICONS = {
             "Stock":  "https://github.com/tinsntp/investment/blob/main/stock.png?raw=true",
             "Saving": "https://github.com/tinsntp/investment/blob/main/saving.png?raw=true",
-            "Crypto": "https://github.com/tinsntp/investment/blob/main/bitcoin.png?raw=true",
+            "Crypto": "https://cdn-icons-png.flaticon.com/512/5968/5968260.png",
             "Forex":  "https://github.com/tinsntp/investment/blob/main/exness.png?raw=true"
         };
         window.currentPortfolioGroups.forEach(function(group) {
@@ -6609,7 +6473,7 @@ function fetchWatchlistData() {
         var ACCOUNT_TYPE_ICONS = {
         "Stock": "https://github.com/tinsntp/investment/blob/main/stock.png?raw=true",
         "Saving": "https://github.com/tinsntp/investment/blob/main/saving.png?raw=true",
-        "Crypto": "https://github.com/tinsntp/investment/blob/main/bitcoin.png?raw=true",
+        "Crypto": "https://cdn-icons-png.flaticon.com/512/5968/5968260.png",
         "Forex": "https://github.com/tinsntp/investment/blob/main/exness.png?raw=true"
         };
         const categoryPnlTotals = {};
@@ -6964,7 +6828,7 @@ function fetchWatchlistData() {
         var CAT_ICONS = {
             "Stock":  "https://github.com/tinsntp/investment/blob/main/stock.png?raw=true",
             "Saving": "https://github.com/tinsntp/investment/blob/main/saving.png?raw=true",
-            "Crypto": "https://github.com/tinsntp/investment/blob/main/bitcoin.png?raw=true",
+            "Crypto": "https://cdn-icons-png.flaticon.com/512/5968/5968260.png",
             "Forex":  "https://github.com/tinsntp/investment/blob/main/exness.png?raw=true"
         };
         (window.currentPortfolioGroups || []).forEach(function(group) {
@@ -7014,10 +6878,8 @@ function fetchWatchlistData() {
             "saving": "#f472b6",
             "savings": "#f472b6",
             "crypto": "#facc15",
-            "cryptos": "#facc15",
-            "cryptocurrency": "#facc15",
+            "forex": "#fff",
             "stock": "#7ee8a8",
-            "stocks": "#7ee8a8"
         };
 
         var palette = ["#facc15", "#7ee8a8", "#f472b6", "#a5c8f0", "#c084fc", "#38bdf8"];
@@ -7428,25 +7290,9 @@ function fetchWatchlistData() {
         
     }
 
-        var portfolioSymbolIconCache = null; // { "MBB": "https://...", "BTCUSD": "https://...", ... }
+    var portfolioSymbolIconCache = null; // { "MBB": "https://...", "BTCUSD": "https://...", ... }
     var portfolioSymbolIconCacheLoading = false;
-
-    function handlePortfolioSymbolInput(el) {
-        // If user is actively editing/clearing the symbol, revert icon to Account Type's icon
-        // until they finish typing again (blur will re-check).
-        if (!el.value || !el.value.trim()) {
-            resetPortfolioModalIconToAccountType();
-        }
-    }
-
-    function resetPortfolioModalIconToAccountType() {
-        var titleIcon = document.getElementById('portfolioModalIcon');
-        var typeIcon = document.getElementById('portfolioTypeTriggerIcon');
-        if (titleIcon && typeIcon && typeIcon.src) {
-            titleIcon.src = typeIcon.src;
-        }
-    }
-
+    function handlePortfolioSymbolInput(el){el.value&&el.value.trim()||resetPortfolioModalIconToAccountType()}function resetPortfolioModalIconToAccountType(){var titleIcon=document.getElementById("portfolioModalIcon"),typeIcon=document.getElementById("portfolioTypeTriggerIcon");titleIcon&&typeIcon&&typeIcon.src&&(titleIcon.src=typeIcon.src)}
     function loadPortfolioSymbolIconCache(callback) {
         if (portfolioSymbolIconCache) {
             callback(portfolioSymbolIconCache);
@@ -7509,109 +7355,12 @@ function fetchWatchlistData() {
         });
     }
 
-    function togglePortfolioAccountDropdown(e){e.stopPropagation();var options=document.getElementById("portfolioSelectAccountOptions"),isOpen="block"===options.style.display;options.style.display=isOpen?"none":"block"}function handlePortfolioAccountSelect(el){var selectedValue=el.getAttribute("data-value"),selectedInnerHtml=el.innerHTML;document.getElementById("portfolioTargetAccount").value=selectedValue,document.getElementById("portfolioSelectAccountTrigger").innerHTML=selectedInnerHtml,document.getElementById("portfolioSelectAccountOptions").style.display="none"}function togglePortfolioTypeDropdown(e){e.stopPropagation();var options=document.getElementById("portfolioTypeOptions"),isOpen="block"===options.style.display;options.style.display=isOpen?"none":"block"}
-        function handlePortfolioTypeSelect(el){
-        var value=el.getAttribute("data-value"),icon=el.getAttribute("data-icon");
-        document.getElementById("portfolioAccountType").value=value;
-        var triggerIcon=document.getElementById("portfolioTypeTriggerIcon");
-        triggerIcon.src=icon,triggerIcon.style.display="inline-block";
-        var titleIcon=document.getElementById("portfolioModalIcon");
-        var symbolVal = (document.getElementById('portfolioSymbol') ? document.getElementById('portfolioSymbol').value : "").trim();
-        if (titleIcon && !symbolVal) {
-            titleIcon.src=icon;
-        }
-        document.getElementById("portfolioTypeTriggerText").textContent=value,document.getElementById("portfolioTypeOptions").style.display="none";
-        var isSaving="Saving"===value;
-        window.portfolioIsSavingMode=isSaving,applyPortfolioModalMode(isSaving);
-        updatePortfolioActionButtonLabels(value);
-        updatePortfolioPriceFieldHandlers(value);
-    }
-        function updatePortfolioActionButtonLabels(accountTypeValue) {
-        var buyBtn = document.getElementById('portfolioBuyBtn');
-        var sellBtn = document.getElementById('portfolioSellBtn');
-        if (!buyBtn || !sellBtn) return; // not in normal mode (e.g. Saving mode has no these buttons)
-
-        var isForex = (accountTypeValue === "Forex");
-        buyBtn.textContent = isForex ? "Long" : "Buy";
-        sellBtn.textContent = isForex ? "Short" : "Sell";
-    }
-
-    function updatePortfolioPriceFieldHandlers(accountTypeValue) {
-        if (window.portfolioIsSavingMode) return; // Saving mode uses field1 for months, untouched
-        var field1 = document.getElementById('portfolioField1');
-        if (!field1) return;
-
-        var isForexType = (accountTypeValue === "Forex");
-        if (isForexType) {
-            field1.setAttribute('oninput', "handlePortfolioForexPriceInput(this)");
-            field1.setAttribute('onblur', "handlePortfolioForexPriceBlur(this)");
-            field1.setAttribute('onfocus', "handlePortfolioForexPriceFocus(this)");
-            field1.placeholder = "4563.234";
-        } else {
-            field1.setAttribute('oninput', "handlePortfolioEntryPriceInput(this)");
-            field1.setAttribute('onblur', "handlePortfolioEntryPriceBlur(this)");
-            field1.setAttribute('onfocus', "handlePortfolioEntryPriceFocus(this)");
-            field1.placeholder = "35.45";
-        }
-        field1.value = '';
-        delete field1.dataset.rawValue;
-        delete field1.dataset.computedValue;
-    }
-
-    function handlePortfolioForexPriceInput(el) {
-        var cleaned = el.value.replace(/,/g, '.').replace(/[^\d.]/g, '');
-        var parts = cleaned.split('.');
-        if (parts.length > 2) {
-            cleaned = parts[0] + '.' + parts.slice(1).join('');
-        }
-        el.value = cleaned;
-        el.dataset.rawValue = cleaned;
-    }
-
-    function handlePortfolioForexPriceBlur(el) {
-        var raw = el.dataset.rawValue || el.value;
-        var num = parseFloat(raw);
-        if (raw === "" || isNaN(num)) {
-            el.value = "";
-            delete el.dataset.computedValue;
-            return;
-        }
-        el.dataset.computedValue = num;
-        el.value = num.toString();
-    }
-
-    function handlePortfolioForexPriceFocus(el) {
-        if (el.dataset.rawValue) el.value = el.dataset.rawValue;
-    }
+    function togglePortfolioAccountDropdown(e){e.stopPropagation();var options=document.getElementById("portfolioSelectAccountOptions"),isOpen="block"===options.style.display;options.style.display=isOpen?"none":"block"}function handlePortfolioAccountSelect(el){var selectedValue=el.getAttribute("data-value"),selectedInnerHtml=el.innerHTML;document.getElementById("portfolioTargetAccount").value=selectedValue,document.getElementById("portfolioSelectAccountTrigger").innerHTML=selectedInnerHtml,document.getElementById("portfolioSelectAccountOptions").style.display="none"}function togglePortfolioTypeDropdown(e){e.stopPropagation();var options=document.getElementById("portfolioTypeOptions"),isOpen="block"===options.style.display;options.style.display=isOpen?"none":"block"}function handlePortfolioTypeSelect(el){var value=el.getAttribute("data-value"),icon=el.getAttribute("data-icon");document.getElementById("portfolioAccountType").value=value;var triggerIcon=document.getElementById("portfolioTypeTriggerIcon");triggerIcon.src=icon,triggerIcon.style.display="inline-block";var titleIcon=document.getElementById("portfolioModalIcon"),symbolVal=(document.getElementById("portfolioSymbol")?document.getElementById("portfolioSymbol").value:"").trim();titleIcon&&!symbolVal&&(titleIcon.src=icon),document.getElementById("portfolioTypeTriggerText").textContent=value,document.getElementById("portfolioTypeOptions").style.display="none";var isSaving="Saving"===value;window.portfolioIsSavingMode=isSaving,applyPortfolioModalMode(isSaving),updatePortfolioActionButtonLabels(value),updatePortfolioPriceFieldHandlers(value)}function updatePortfolioActionButtonLabels(accountTypeValue){var buyBtn=document.getElementById("portfolioBuyBtn"),sellBtn=document.getElementById("portfolioSellBtn");if(buyBtn&&sellBtn){var isForex="Forex"===accountTypeValue;buyBtn.textContent=isForex?"Long":"Buy",sellBtn.textContent=isForex?"Short":"Sell"}}function updatePortfolioPriceFieldHandlers(accountTypeValue){if(!window.portfolioIsSavingMode){var field1=document.getElementById("portfolioField1");if(field1)"Forex"===accountTypeValue?(field1.setAttribute("oninput","handlePortfolioForexPriceInput(this)"),field1.setAttribute("onblur","handlePortfolioForexPriceBlur(this)"),field1.setAttribute("onfocus","handlePortfolioForexPriceFocus(this)"),field1.placeholder="4800.234"):(field1.setAttribute("oninput","handlePortfolioEntryPriceInput(this)"),field1.setAttribute("onblur","handlePortfolioEntryPriceBlur(this)"),field1.setAttribute("onfocus","handlePortfolioEntryPriceFocus(this)"),field1.placeholder="35.45"),field1.value="",delete field1.dataset.rawValue,delete field1.dataset.computedValue}}function handlePortfolioForexPriceInput(el){var cleaned=el.value.replace(/,/g,".").replace(/[^\d.]/g,""),parts=cleaned.split(".");parts.length>2&&(cleaned=parts[0]+"."+parts.slice(1).join("")),el.value=cleaned,el.dataset.rawValue=cleaned}function handlePortfolioForexPriceBlur(el){var raw=el.dataset.rawValue||el.value,num=parseFloat(raw);if(""===raw||isNaN(num))return el.value="",void delete el.dataset.computedValue;el.dataset.computedValue=num,el.value=num.toString()}
+    function handlePortfolioForexPriceFocus(el) {if (el.dataset.rawValue) el.value = el.dataset.rawValue;}
     function handlePortfolioEntryPriceInput(el){var cleaned = el.value.replace(/,/g, '.').replace(/[^\d.]/g, ""),parts=cleaned.split(".");parts.length>2&&(cleaned=parts[0]+"."+parts.slice(1).join("")),el.value=cleaned,el.dataset.rawValue=cleaned}
     function handlePortfolioEntryPriceBlur(el){var raw=el.dataset.rawValue||el.value,num=parseFloat(raw);if(""===raw||isNaN(num))return el.value="",void delete el.dataset.computedValue;var computed=Math.round(1e3*num);el.dataset.computedValue=computed,el.value=computed.toLocaleString("en-US")}
     function handlePortfolioEntryPriceFocus(el){el.dataset.rawValue&&(el.value=el.dataset.rawValue)}document.addEventListener("click",function(e){var options=document.getElementById("portfolioSelectAccountOptions"),trigger=document.getElementById("portfolioSelectAccountTrigger");options&&trigger&&!trigger.contains(e.target)&&!options.contains(e.target)&&(options.style.display="none")}),document.addEventListener("click",function(e){var options=document.getElementById("portfolioTypeOptions"),trigger=document.getElementById("portfolioTypeTrigger");options&&trigger&&!trigger.contains(e.target)&&!options.contains(e.target)&&(options.style.display="none")});
-        function handlePortfolioForexPriceInput(el) {
-        // Treat comma as decimal separator, strip everything else non-numeric/non-dot
-        var cleaned = el.value.replace(/,/g, '.').replace(/[^\d.]/g, '');
-        var parts = cleaned.split('.');
-        if (parts.length > 2) {
-            cleaned = parts[0] + '.' + parts.slice(1).join('');
-        }
-        el.value = cleaned;
-        el.dataset.rawValue = cleaned;
-    }
-
-    function handlePortfolioForexPriceBlur(el) {
-        var raw = el.dataset.rawValue || el.value;
-        var num = parseFloat(raw);
-        if (raw === "" || isNaN(num)) {
-            el.value = "";
-            delete el.dataset.computedValue;
-            return;
-        }
-        el.dataset.computedValue = num; // raw decimal, no ×1000 scaling
-        el.value = num.toString();      // keep exactly as typed, e.g. "4563.234"
-    }
-
-    function handlePortfolioForexPriceFocus(el) {
-        if (el.dataset.rawValue) el.value = el.dataset.rawValue;
-    }
+    function handlePortfolioForexPriceInput(el){var cleaned=el.value.replace(/,/g,".").replace(/[^\d.]/g,""),parts=cleaned.split(".");parts.length>2&&(cleaned=parts[0]+"."+parts.slice(1).join("")),el.value=cleaned,el.dataset.rawValue=cleaned}function handlePortfolioForexPriceBlur(el){var raw=el.dataset.rawValue||el.value,num=parseFloat(raw);if(""===raw||isNaN(num))return el.value="",void delete el.dataset.computedValue;el.dataset.computedValue=num,el.value=num.toString()}function handlePortfolioForexPriceFocus(el){el.dataset.rawValue&&(el.value=el.dataset.rawValue)}
     function applyPortfolioModalMode(isSaving) {
       var titleText = document.getElementById('portfolioModalTitleText');
       var icon = document.getElementById('portfolioModalIcon');
