@@ -7710,7 +7710,7 @@ to{transform:rotate(360deg)}
             <div id="pnl-input-dialog" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;z-index:10000;">
                 <div style="background:#1e222b;padding:20px;border-radius:12px;width:280px;color:#fff;">
                     <h3 id="pnl-input-date-title" style="margin:0 0 12px 0;font-size:14px;color:#94a3b8;">Input P/L</h3>
-                    <input type="number" id="pnl-amount-input" step="any" placeholder="Amount (e.g. 12.50 or -3.78)" style="width:100%;padding:10px;background:#14171f;border:1px solid #2a2e39;border-radius:8px;color:#fff;box-sizing:border-box;margin-bottom:14px;outline:none;" />
+                    <input type="number" id="pnl-amount-input" step="any" placeholder="Amount (e.g. 1.92 or -0.5)" style="width:100%;padding:10px;background:#14171f;border:1px solid #2a2e39;border-radius:8px;color:#fff;box-sizing:border-box;margin-bottom:14px;outline:none;" />
                     <div style="display:flex;justify-content:flex-end;gap:8px;">
                         <button id="pnl-cancel-input" style="padding:6px 12px;background:none;border:none;color:#94a3b8;cursor:pointer;">Cancel</button>
                         <button id="pnl-save-input" style="padding:6px 14px;background:#00bfa5;border:none;border-radius:6px;color:#000;font-weight:600;cursor:pointer;">Save</button>
@@ -7726,9 +7726,16 @@ to{transform:rotate(360deg)}
 
     modal.style.display = 'flex';
     let currentNavDate = new Date();
-    let currentView = 'daily'; // 'daily', 'monthly', 'yearly'
+    let currentView = 'daily';
     let pnlData = {};
     let selectedDateStr = '';
+
+    const formatVndShort = (val) => {
+        if (isNaN(val) || val === 0) return '+0.00M';
+        const absVal = Math.abs(val);
+        const formatted = absVal >= 1000 ? (absVal / 1000).toFixed(2) + 'B' : absVal.toFixed(2) + 'M';
+        return val >= 0 ? '+' + formatted : '-' + formatted;
+    };
 
     const setView = (view) => {
         currentView = view;
@@ -7755,11 +7762,15 @@ to{transform:rotate(360deg)}
             const res = await fetch(`${GOOGLE_SHEET_CSV_URL}1158462025`);
             const text = await res.text();
             text.split('\n').forEach(row => {
-                const cols = row.split(',');
+                if (!row.trim()) return;
+                const cols = row.split(',').map(col => col.trim().replace(/^["']|["']$/g, ''));
                 if (cols.length >= 2) {
-                    const dateKey = cols[0].trim().replace(/['"]+/g, '');
+                    const rawDate = cols[0];
                     const amountVal = parseFloat(cols[1]);
-                    if (dateKey && !isNaN(amountVal)) pnlData[dateKey] = amountVal;
+                    if (rawDate && !isNaN(amountVal)) {
+                        const dateKey = rawDate.split('T')[0].split(' ')[0];
+                        pnlData[dateKey] = amountVal;
+                    }
                 }
             });
         } catch (err) {
@@ -7790,13 +7801,13 @@ to{transform:rotate(360deg)}
                 const isNegative = hasData && amount < 0;
 
                 const cell = document.createElement('div');
-                cell.style.cssText = `aspect-ratio:1;background:${hasData ? (isNegative ? '#2d1519' : '#132c25') : '#1a1e29'};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
+                cell.style.cssText = `aspect-ratio:1;background:${hasData ? (isNegative ? '#2d1622' : '#112b26') : '#1a1e29'};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
                 cell.onmouseover = () => cell.style.background = '#222733';
-                cell.onmouseout = () => cell.style.background = hasData ? (isNegative ? '#2d1519' : '#132c25') : '#1a1e29';
+                cell.onmouseout = () => cell.style.background = hasData ? (isNegative ? '#2d1622' : '#112b26') : '#1a1e29';
 
                 cell.innerHTML = `
-                    <span style="font-size:12px;color:${hasData ? (isNegative ? '#f87171' : '#34d399') : '#94a3b8'};font-weight:600;">${day}</span>
-                    <span style="font-size:10px;color:${hasData ? (isNegative ? '#f87171' : '#34d399') : '#475569'};margin-top:2px;">${hasData ? (amount >= 0 ? '+' + amount.toFixed(2) : amount.toFixed(2)) : '+0.00'}</span>
+                    <span style="font-size:12px;color:${hasData ? (isNegative ? '#ec4899' : '#00bfa5') : '#94a3b8'};font-weight:600;">${day}</span>
+                    <span style="font-size:10px;color:${hasData ? (isNegative ? '#ec4899' : '#00bfa5') : '#475569'};margin-top:2px;">${hasData ? formatVndShort(amount) : '+0.00M'}</span>
                 `;
                 cell.onclick = () => {
                     selectedDateStr = dateStr;
@@ -7824,13 +7835,13 @@ to{transform:rotate(360deg)}
                 const isNegative = monthlyTotal < 0;
 
                 const cell = document.createElement('div');
-                cell.style.cssText = `padding:16px 8px;background:${hasData ? (isNegative ? '#2d1519' : '#132c25') : '#1a1e29'};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
+                cell.style.cssText = `padding:16px 8px;background:${hasData ? (isNegative ? '#2d1622' : '#112b26') : '#1a1e29'};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
                 cell.onmouseover = () => cell.style.background = '#222733';
-                cell.onmouseout = () => cell.style.background = hasData ? (isNegative ? '#2d1519' : '#132c25') : '#1a1e29';
+                cell.onmouseout = () => cell.style.background = hasData ? (isNegative ? '#2d1622' : '#112b26') : '#1a1e29';
 
                 cell.innerHTML = `
                     <span style="font-size:13px;color:#f8f9fa;font-weight:600;">${mName}</span>
-                    <span style="font-size:11px;color:${hasData ? (isNegative ? '#f87171' : '#34d399') : '#475569'};margin-top:4px;">${hasData ? (monthlyTotal >= 0 ? '+' + monthlyTotal.toFixed(2) : monthlyTotal.toFixed(2)) : '+0.00'}</span>
+                    <span style="font-size:11px;color:${hasData ? (isNegative ? '#ec4899' : '#00bfa5') : '#475569'};margin-top:4px;">${hasData ? formatVndShort(monthlyTotal) : '+0.00M'}</span>
                 `;
                 cell.onclick = () => {
                     currentNavDate.setMonth(mIdx);
@@ -7856,13 +7867,13 @@ to{transform:rotate(360deg)}
                 const isNegative = yearlyTotal < 0;
 
                 const cell = document.createElement('div');
-                cell.style.cssText = `padding:20px 8px;background:${hasData ? (isNegative ? '#2d1519' : '#132c25') : '#1a1e29'};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
+                cell.style.cssText = `padding:20px 8px;background:${hasData ? (isNegative ? '#2d1622' : '#112b26') : '#1a1e29'};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
                 cell.onmouseover = () => cell.style.background = '#222733';
-                cell.onmouseout = () => cell.style.background = hasData ? (isNegative ? '#2d1519' : '#132c25') : '#1a1e29';
+                cell.onmouseout = () => cell.style.background = hasData ? (isNegative ? '#2d1622' : '#112b26') : '#1a1e29';
 
                 cell.innerHTML = `
                     <span style="font-size:14px;color:#f8f9fa;font-weight:600;">${y}</span>
-                    <span style="font-size:11px;color:${hasData ? (isNegative ? '#f87171' : '#34d399') : '#475569'};margin-top:4px;">${hasData ? (yearlyTotal >= 0 ? '+' + yearlyTotal.toFixed(2) : yearlyTotal.toFixed(2)) : '+0.00'}</span>
+                    <span style="font-size:11px;color:${hasData ? (isNegative ? '#ec4899' : '#00bfa5') : '#475569'};margin-top:4px;">${hasData ? formatVndShort(yearlyTotal) : '+0.00M'}</span>
                 `;
                 cell.onclick = () => {
                     currentNavDate.setFullYear(y);
