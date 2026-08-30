@@ -7731,10 +7731,22 @@ to{transform:rotate(360deg)}
     let selectedDateStr = '';
 
     const formatVndShort = (val) => {
-        if (isNaN(val) || val === 0) return '+0.00M';
-        const absVal = Math.abs(val);
-        const formatted = absVal >= 1000 ? (absVal / 1000).toFixed(2) + 'B' : absVal.toFixed(2) + 'M';
-        return val >= 0 ? '+' + formatted : '-' + formatted;
+        const num = parseFloat(val);
+        if (isNaN(num) || num === 0) return '+0.00';
+        const absVal = Math.abs(num);
+        
+        let formatted = '';
+        if (absVal >= 1e9) {
+            formatted = (absVal / 1e9).toFixed(2) + 'B';
+        } else if (absVal >= 1e6) {
+            formatted = (absVal / 1e6).toFixed(2) + 'M';
+        } else if (absVal >= 1e3) {
+            formatted = (absVal / 1e3).toFixed(2) + 'K';
+        } else {
+            formatted = absVal.toFixed(2);
+        }
+        
+        return num >= 0 ? '+' + formatted : '-' + formatted;
     };
 
     const setView = (view) => {
@@ -7761,15 +7773,17 @@ to{transform:rotate(360deg)}
         try {
             const res = await fetch(`${GOOGLE_SHEET_CSV_URL}1158462025`);
             const text = await res.text();
+            
             text.split('\n').forEach(row => {
                 if (!row.trim()) return;
                 const cols = row.split(',').map(col => col.trim().replace(/^["']|["']$/g, ''));
                 if (cols.length >= 2) {
-                    const rawDate = cols[0];
-                    const amountVal = parseFloat(cols[1]);
-                    if (rawDate && !isNaN(amountVal)) {
-                        const dateKey = rawDate.split('T')[0].split(' ')[0];
-                        pnlData[dateKey] = amountVal;
+                    const dateKey = cols[0].split('T')[0].split(' ')[0];
+                    const cleanAmountStr = cols[1].replace(/,/g, '');
+                    const amountVal = parseFloat(cleanAmountStr);
+                    
+                    if (dateKey && !isNaN(amountVal)) {
+                        pnlData[dateKey] = (pnlData[dateKey] || 0) + amountVal;
                     }
                 }
             });
@@ -7835,13 +7849,13 @@ to{transform:rotate(360deg)}
                 const isNegative = monthlyTotal < 0;
 
                 const cell = document.createElement('div');
-                cell.style.cssText = `padding:16px 8px;background:${hasData ? (isNegative ? '#2d1622' : '#112b26') : '#1a1e29'};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
+                cell.style.cssText = `padding:20px 8px;background:${hasData ? (isNegative ? '#2d1622' : '#112b26') : '#1a1e29'};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
                 cell.onmouseover = () => cell.style.background = '#222733';
                 cell.onmouseout = () => cell.style.background = hasData ? (isNegative ? '#2d1622' : '#112b26') : '#1a1e29';
 
                 cell.innerHTML = `
-                    <span style="font-size:13px;color:#f8f9fa;font-weight:600;">${mName}</span>
-                    <span style="font-size:11px;color:${hasData ? (isNegative ? '#ec4899' : '#00bfa5') : '#475569'};margin-top:4px;">${hasData ? formatVndShort(monthlyTotal) : '+0.00M'}</span>
+                    <span style="font-size:14px;color:#f8f9fa;font-weight:600;">${mName}</span>
+                    <span style="font-size:13px;color:${hasData ? (isNegative ? '#ec4899' : '#00bfa5') : '#475569'};margin-top:6px;font-weight:600;">${hasData ? formatVndShort(monthlyTotal) : '+0.00M'}</span>
                 `;
                 cell.onclick = () => {
                     currentNavDate.setMonth(mIdx);
@@ -7867,13 +7881,13 @@ to{transform:rotate(360deg)}
                 const isNegative = yearlyTotal < 0;
 
                 const cell = document.createElement('div');
-                cell.style.cssText = `padding:20px 8px;background:${hasData ? (isNegative ? '#2d1622' : '#112b26') : '#1a1e29'};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
+                cell.style.cssText = `padding:24px 8px;background:${hasData ? (isNegative ? '#2d1622' : '#112b26') : '#1a1e29'};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
                 cell.onmouseover = () => cell.style.background = '#222733';
                 cell.onmouseout = () => cell.style.background = hasData ? (isNegative ? '#2d1622' : '#112b26') : '#1a1e29';
 
                 cell.innerHTML = `
-                    <span style="font-size:14px;color:#f8f9fa;font-weight:600;">${y}</span>
-                    <span style="font-size:11px;color:${hasData ? (isNegative ? '#ec4899' : '#00bfa5') : '#475569'};margin-top:4px;">${hasData ? formatVndShort(yearlyTotal) : '+0.00M'}</span>
+                    <span style="font-size:15px;color:#f8f9fa;font-weight:600;">${y}</span>
+                    <span style="font-size:13px;color:${hasData ? (isNegative ? '#ec4899' : '#00bfa5') : '#475569'};margin-top:6px;font-weight:600;">${hasData ? formatVndShort(yearlyTotal) : '+0.00M'}</span>
                 `;
                 cell.onclick = () => {
                     currentNavDate.setFullYear(y);
