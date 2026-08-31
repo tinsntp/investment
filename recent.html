@@ -238,9 +238,9 @@ background:
 .amt { font-family:DM Sans;opacity:0.95;font-weight:500; color:#fff; white-space:nowrap;}
 .dte { font-size:1.9vw; color:rgba(255,255,255,0.4); white-space:nowrap; }
 .ttl{display:flex;align-items:center;gap:1.5vw}
-.recent-badge{font-size:1.6vw;font-weight:700;color:#14b8a6;background:rgba(74,222,128,0.14);border-radius:99px;padding:0.4vw 1.2vw;white-space:nowrap}
+.recent-badge{font-size:1.4vw;font-weight:700;color:#14b8a6;background:rgba(74,222,128,0.14);border-radius:99px;padding:0vw 1vw 0.4vw;white-space:nowrap}
 .recent-badge .bi,label .bi {font-size: 0.8rem!important;vertical-align: 0em;}
-@media screen and (max-width:400px){.row{gap:2.5vw;} .recent-badge{font-size:3.4vw}.ico,.ico-fb {width:14vw!important; height:14vw!important;}}
+@media screen and (max-width:400px){.row{gap:2.5vw;} .recent-badge{font-size:3.2vw}.ico,.ico-fb {width:14vw!important; height:14vw!important;}}
 .budget-bar-wrap { position: relative;}
 .budget-bar{width:100%;height:15px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.06)}
 #budget-fill-container{display:flex;width:100%;height:100%;gap:0}
@@ -1344,7 +1344,7 @@ to{transform:rotate(360deg)}
   }
 /* ══ iPad Expense split layout (min-width:401px, Expense tab active) ══ */
 @media (min-width:401px){
-  .big-wrap.expense-split{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto 1fr;gap:6px;overflow:visible;}
+  .big-wrap.expense-split{display:grid;grid-template-columns:1fr 1.1fr;grid-template-rows:auto 1fr;gap:6px;overflow:visible;}
   .big-wrap.expense-split #card{grid-column:1;grid-row:1;margin:0;margin:0 5px 0 5px;}
   .big-wrap.expense-split #slides-outer{grid-column:1;grid-row:2;overflow-x:hidden;}
   .big-wrap.expense-split #exp-split-right{display:block;grid-column:2;grid-row:1 / 3;overflow-y:auto;overflow-x:hidden;}
@@ -1354,7 +1354,7 @@ to{transform:rotate(360deg)}
 #exp-split-right #budget-view-subcategory{display:block!important;}
 
 @media (min-width:401px){
-  .big-wrap.wallet-split{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto 1fr;gap:6px;overflow:visible;}
+  .big-wrap.wallet-split{display:grid;grid-template-columns:1fr 1.1fr;grid-template-rows:auto 1fr;gap:6px;overflow:visible;}
   .big-wrap.wallet-split #card{grid-column:1;grid-row:1;margin:0;margin:0 5px 0 5px;}
   .big-wrap.wallet-split #slides-outer{grid-column:1;grid-row:2;overflow-x:hidden;min-height:0;}
   .big-wrap.wallet-split #ovw-split-right{display:block;grid-column:2;grid-row:1 / 3;overflow-y:auto;overflow-x:hidden;}
@@ -1363,7 +1363,7 @@ to{transform:rotate(360deg)}
 #ovw-split-right{display:none;}
 #ovw-split-right #budget-view-wallet{display:block!important;}
 @media (min-width:401px){
-  .big-wrap.portfolio-split{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto 1fr;gap:6px;overflow:visible;}
+  .big-wrap.portfolio-split{display:grid;grid-template-columns:1fr 1.1fr;grid-template-rows:auto 1fr;gap:6px;overflow:visible;}
   .big-wrap.portfolio-split #card{grid-column:1;grid-row:1;margin:0;margin:0 5px 0 5px;}
   .big-wrap.portfolio-split #slides-outer{grid-column:1;grid-row:2;overflow-x:hidden;min-height:0;}
   .big-wrap.portfolio-split #port-split-right{display:block;grid-column:2;grid-row:1 / 3;overflow-y:auto;overflow-x:hidden;}
@@ -6273,245 +6273,7 @@ to{transform:rotate(360deg)}
     var origToggleColMenu=toggleColMenu;
     function toggleColMenu(e,colKey){e.stopPropagation();var menu=document.getElementById("col-menu-"+colKey),isOpen=menu.classList.contains("open");if(document.querySelectorAll(".col-menu").forEach(function(m){m.classList.remove("open")}),!isOpen){document.body.appendChild(menu);var rect=e.currentTarget.getBoundingClientRect();"asset"===colKey?(menu.style.position="fixed",menu.style.top=rect.bottom+6+"px",menu.style.left="20%",menu.style.right="auto",menu.style.transform="none",menu.style.margin="0"):window.innerWidth<=400?(menu.style.position="fixed",menu.style.top=rect.bottom+6+"px",menu.style.left="50%",menu.style.right="auto",menu.style.transform="translateX(-50%)",menu.style.margin="0"):(menu.style.position="fixed",menu.style.top=rect.bottom+6+"px",menu.style.left=rect.left+"px",menu.style.transform="none"),menu.classList.add("open"),"date"===colKey&&renderCalendar()}}
     document.addEventListener("DOMContentLoaded",function(){var dateMenu=document.getElementById("col-menu-date");dateMenu&&dateMenu.addEventListener("click",function(e){e.stopPropagation()})});
-    function applyPortfolioFiltersAndRender() {
-        var navBal   = document.getElementById('total-profit-bal');
-        var navVal   = document.getElementById('total-profit-val');
-        var navBadge = document.getElementById('total-profit-badge');
-        var snapBal   = navBal   ? navBal.innerHTML   : null;
-        var snapVal   = navVal   ? navVal.innerHTML   : null;
-        var snapBadge = navBadge ? navBadge.innerHTML : null;
-        var snapBadgeClass = navBadge ? navBadge.className : null;
-        if (typeof window.currentPortfolioGroups === "undefined") return;
-
-        var filtered = window.currentPortfolioGroups.filter(function(group) {
-            if (portfolioFilters.asset !== "all") {
-                var isOngoing = group.status.toLowerCase().includes('on-going');
-                if (portfolioFilters.asset === "on-going" && !isOngoing) return false;
-                if (portfolioFilters.asset === "close" && isOngoing) return false;
-                
-                // Case-insensitive match for category/asset types
-                if (portfolioFilters.asset !== "on-going" && portfolioFilters.asset !== "close") {
-                    var groupType = (group.accountType || "").trim().toLowerCase();
-                    if (groupType !== portfolioFilters.asset.trim().toLowerCase()) return false;
-                }
-            }
-
-            if (portfolioFilters.pnl !== "all") {
-                var records = group.records || [];
-                var mainRec = group.mainRecord;
-                var sumPnl = mainRec ? mainRec.actualPnl : records.reduce(function(acc, r) { return acc + r.actualPnl; }, 0);
-                if (portfolioFilters.pnl === "profited" && sumPnl <= 0) return false;
-                if (portfolioFilters.pnl === "lost" && sumPnl >= 0) return false;
-            }
-
-            if (portfolioFilters.dateFrom || portfolioFilters.dateTo) {
-                var refRec = group.mainRecord || (group.records && group.records[0]);
-                var refDate = refRec ? new Date(refRec.entryDate) : null;
-                if (!refDate || isNaN(refDate)) return false;
-
-                if (portfolioFilters.dateFrom) {
-                    var fromDate = new Date(portfolioFilters.dateFrom);
-                    if (refDate < fromDate) return false;
-                }
-                if (portfolioFilters.dateTo) {
-                    var toDate = new Date(portfolioFilters.dateTo);
-                    toDate.setHours(23, 59, 59, 999);
-                    if (refDate > toDate) return false;
-                }
-            }
-
-            return true;
-        });
-
-        if (portfolioFilters.asset === 'forex' && filtered.length === 0) {
-            filtered = [{
-                accountType: 'Forex',
-                status: 'on-going',
-                mainRecord: { actualPnl: 0, entryDate: new Date().toISOString() },
-                records: []
-            }];
-        }
-        
-
-        // Find the most recent transaction date across a group's MAIN row and all its
-        // log rows (initial buy, DCA buy, partial sell, close, etc.) — whichever
-        // transaction happened most recently in real time.
-        function latestGroupDate(group) {
-            var latest = null;
-            function consider(dateStr) {
-                if (!dateStr) return;
-                var d = new Date(dateStr);
-                if (!isNaN(d) && (!latest || d > latest)) latest = d;
-            }
-            if (group.mainRecord) {
-                consider(group.mainRecord.entryDate);
-                consider(group.mainRecord.exitDate);
-            }
-            (group.records || []).forEach(function(r) {
-                consider(r.entryDate);
-                consider(r.exitDate);
-            });
-            return latest || new Date(0);
-        }
-
-        // Sort by accountType group first, then on-going before closed, then latest date first
-        filtered.sort(function(a, b) {
-            var catCompare = a.accountType.localeCompare(b.accountType);
-            if (catCompare !== 0) return catCompare;
-
-            var aOngoing = a.status.toLowerCase().includes('on-going');
-            var bOngoing = b.status.toLowerCase().includes('on-going');
-            if (aOngoing && !bOngoing) return -1;
-            if (!aOngoing && bOngoing) return 1;
-
-            return latestGroupDate(b) - latestGroupDate(a);
-        });
-
-        /// FOREX OVERRIDE WITH ASYNC FALLBACK
-        if (portfolioFilters.asset === 'forex') {
-            var hasCachedForex = window.navFullCategoryValueTotals && window.navFullCategoryValueTotals["Forex"] !== undefined;
-            var forexVal = hasCachedForex ? window.navFullCategoryValueTotals["Forex"] : 0;
-            
-            var liveForexStr = fmtBalance(forexVal);
-            if (navVal) navVal.innerHTML = liveForexStr;
-            snapVal = liveForexStr;
-            
-            var accordionContainer = document.getElementById('portfolio-accordion');
-            if (accordionContainer) {
-                accordionContainer.innerHTML = `<div class="accordion-item" style="padding: 16px; text-align: center; color: #fff;">
-                    <div style="font-size: 14px; opacity: 0.7; margin-bottom: 4px;">Forex Live Balance (Google Sheet)</div>
-                    <div style="font-size: 24px; font-weight: 700;">${hasCachedForex ? liveForexStr : "Loading..."}</div>
-                </div>`;
-            }
-
-            // If data isn't loaded yet, trigger a background fetch so it updates automatically when resolved
-            if (!hasCachedForex && typeof fetchForexNavBalance === "function") {
-                fetchForexNavBalance();
-            }
-            return;
-        }
-
-        renderAccordion(filtered);
-        
-        if (portfolioFilters.asset && portfolioFilters.asset !== 'all') {
-            if (portfolioFilters.asset === 'forex' && window.navFullCategoryValueTotals) {
-                if (navVal) navVal.innerHTML = fmtBalance(window.navFullCategoryValueTotals["Forex"] || 0);
-            } else {
-                if (navBal && snapBal !== null) navBal.innerHTML = snapBal;
-                if (navVal && snapVal !== null) navVal.innerHTML = snapVal;
-                if (navBadge && snapBadge !== null) {
-                    navBadge.innerHTML = snapBadge;
-                    navBadge.className = snapBadgeClass;
-                }
-            }
-        } else {
-            // Restore standard defaults when 'all' is selected
-            if (navBal && snapBal !== null) navBal.innerHTML = snapBal;
-            if (navVal && snapVal !== null) navVal.innerHTML = snapVal;
-            if (navBadge && snapBadge !== null) {
-                navBadge.innerHTML = snapBadge;
-                navBadge.className = snapBadgeClass;
-            }
-        }
-    }
-    function processAndRenderData(csvText) {
-        const lines = csvText.trim().split(/\r?\n/);
-        if (lines.length < 2) return;
-
-        const rows = lines.slice(1).map(line => parseCSVLine(line));
-        const groupsMap = {};
-
-        rows.forEach(row => {
-          if (!row || row.length < 4) return;
-
-          const symbol = (row[1] || "").trim().toUpperCase();
-          if (!symbol) return;
-
-          const colCPnlPct = cleanNum(row[2]);
-          const actualPnl = cleanNum(row[3]);
-          const livePrice = cleanNum(row[4]);
-          const execPrice = cleanNum(row[5]);
-          const entryPrice = cleanNum(row[6]);
-          const volume = cleanNum(row[7]);
-          const entryDate = row[8] || "";
-          const exitDate = row[9] || "";
-          const accountType = (row[10] || "Stock").trim();   // Col K — authoritative
-          const status = (row[11] || "On-going").trim();
-          const note = (row[12] || "").trim();
-          const costValue = cleanNum(row[14]);
-          const marketValue = cleanNum(row[15]);
-          const totalFee = cleanNum(row[17]);
-          const iconUrl = row[22] || "";
-
-          // KEY FIX: separate groups per symbol+accountType, not symbol alone
-          const groupKey = symbol + "||" + accountType;
-
-          if (!groupsMap[groupKey]) {
-              groupsMap[groupKey] = {
-                  symbol: symbol,
-                  accountType: accountType,
-                  status: status,
-                  iconUrl: iconUrl,
-                  livePrice: livePrice,
-                  records: [],
-                  mainRecord: null
-              };
-          }
-
-          const recordObj = {
-              symbol, colCPnlPct, entryDate, exitDate, volume, costValue, marketValue,
-              actualPnl, execPrice, entryPrice, livePrice, totalFee, status, note, accountType
-          };
-
-          const isSavingRecord = accountType.toLowerCase() === "saving";
-          const isOnGoing = status.toLowerCase() === "on-going";
-
-          if (note.toUpperCase() === "MAIN") {
-              groupsMap[groupKey].mainRecord = recordObj;
-              // MAIN row is authoritative for header display — keep it in sync
-              groupsMap[groupKey].status = status;
-              groupsMap[groupKey].livePrice = livePrice;
-              if (iconUrl) groupsMap[groupKey].iconUrl = iconUrl;
-          } else if (isSavingRecord) {
-              if (isOnGoing) groupsMap[groupKey].records.push(recordObj);
-          } else {
-              groupsMap[groupKey].records.push(recordObj);
-          }
-      });
-
-        // Store raw, unfiltered groups globally so filters always reset from full data
-        window.currentPortfolioGroups = Object.values(groupsMap);
-        // In processAndRenderData, after window.currentPortfolioGroups is set:
-        var fullValues = {}, fullPnls = {}, fullIcons = {};
-        var ACCOUNT_TYPE_ICONS = {
-            "Stock":  "https://github.com/tinsntp/investment/blob/main/stock.png?raw=true",
-            "Saving": "https://github.com/tinsntp/investment/blob/main/saving.png?raw=true",
-            "Crypto": "https://cdn-icons-png.flaticon.com/512/5968/5968260.png",
-            "Forex":  "https://github.com/tinsntp/investment/blob/main/exness.png?raw=true"
-        };
-        window.currentPortfolioGroups.forEach(function(group) {
-            var isStock  = group.accountType.toLowerCase() === "stock";
-            var isCrypto = group.accountType.toLowerCase() === "crypto";
-            var isForex  = group.accountType.toLowerCase() === "forex";
-            var mainRec  = ((isStock || isCrypto || isForex) && group.mainRecord) ? group.mainRecord : null;
-            var sumPnl   = mainRec ? mainRec.actualPnl
-                : ((group.records || []).reduce(function(a, r) { return a + r.actualPnl; }, 0)
-                + (group.mainRecord ? group.mainRecord.actualPnl : 0));
-            var sumVal   = mainRec ? mainRec.marketValue
-                : ((group.records || []).reduce(function(a, r) { return a + r.marketValue; }, 0)
-                + (group.mainRecord ? group.mainRecord.marketValue : 0));
-            var cat = group.accountType || "Other";
-            fullValues[cat] = (fullValues[cat] || 0) + sumVal;
-            fullPnls[cat]   = (fullPnls[cat]   || 0) + sumPnl;
-            if (!fullIcons[cat]) fullIcons[cat] = ACCOUNT_TYPE_ICONS[cat] || "";
-        });
-        window.navFullCategoryValueTotals = fullValues;
-        window.navFullCategoryPnlTotals   = fullPnls;
-        window.navFullCategoryIconMap     = fullIcons;
-        window.navFullTotalValue = Object.values(fullValues).reduce(function(s, v) { return s + v; }, 0);
-        
-        applyPortfolioFiltersAndRender();
-    }
+    
 
     document.addEventListener("click",function(){document.querySelectorAll(".col-menu").forEach(function(m){m.classList.remove("open")})});
     document.addEventListener("click",function(e){var item=e.target.closest(".col-menu-item");if(item){e.stopPropagation();var filterType=item.getAttribute("data-filter-type"),filterValue=item.getAttribute("data-filter-value");portfolioFilters[filterType]=filterValue;var menu=item.closest(".col-menu");menu.querySelectorAll(".col-menu-item").forEach(function(el){el.classList.remove("selected")}),item.classList.add("selected");var icon=document.getElementById(filterType+"-filter-icon");if(icon){var isDefault="date"!==filterType&&"all"===filterValue;icon.classList.toggle("active-filter",!isDefault)}menu.classList.remove("open"),applyPortfolioFiltersAndRender()}});
@@ -7250,6 +7012,196 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
         statList.appendChild(item);
     });
 }
+function applyPortfolioFiltersAndRender() {
+        var navBal   = document.getElementById('total-profit-bal');
+        var navVal   = document.getElementById('total-profit-val');
+        var navBadge = document.getElementById('total-profit-badge');
+        var snapBal   = navBal   ? navBal.innerHTML   : null;
+        var snapVal   = navVal   ? navVal.innerHTML   : null;
+        var snapBadge = navBadge ? navBadge.innerHTML : null;
+        var snapBadgeClass = navBadge ? navBadge.className : null;
+        if (typeof window.currentPortfolioGroups === "undefined") return;
+
+        var filtered = window.currentPortfolioGroups.filter(function(group) {
+            if (portfolioFilters.asset !== "all") {
+                var isOngoing = group.status.toLowerCase().includes('on-going');
+                if (portfolioFilters.asset === "on-going" && !isOngoing) return false;
+                if (portfolioFilters.asset === "close" && isOngoing) return false;
+            }
+
+            if (portfolioFilters.pnl !== "all") {
+                var records = group.records || [];
+                var mainRec = group.mainRecord;
+                var sumPnl = mainRec ? mainRec.actualPnl : records.reduce(function(acc, r) { return acc + r.actualPnl; }, 0);
+                if (portfolioFilters.pnl === "profited" && sumPnl <= 0) return false;
+                if (portfolioFilters.pnl === "lost" && sumPnl >= 0) return false;
+            }
+
+            if (portfolioFilters.dateFrom || portfolioFilters.dateTo) {
+                var refRec = group.mainRecord || (group.records && group.records[0]);
+                var refDate = refRec ? new Date(refRec.entryDate) : null;
+                if (!refDate || isNaN(refDate)) return false;
+
+                if (portfolioFilters.dateFrom) {
+                    var fromDate = new Date(portfolioFilters.dateFrom);
+                    if (refDate < fromDate) return false;
+                }
+                if (portfolioFilters.dateTo) {
+                    var toDate = new Date(portfolioFilters.dateTo);
+                    toDate.setHours(23, 59, 59, 999);
+                    if (refDate > toDate) return false;
+                }
+            }
+
+            return true;
+        });
+        
+
+        // Find the most recent transaction date across a group's MAIN row and all its
+        // log rows (initial buy, DCA buy, partial sell, close, etc.) — whichever
+        // transaction happened most recently in real time.
+        function latestGroupDate(group) {
+            var latest = null;
+            function consider(dateStr) {
+                if (!dateStr) return;
+                var d = new Date(dateStr);
+                if (!isNaN(d) && (!latest || d > latest)) latest = d;
+            }
+            if (group.mainRecord) {
+                consider(group.mainRecord.entryDate);
+                consider(group.mainRecord.exitDate);
+            }
+            (group.records || []).forEach(function(r) {
+                consider(r.entryDate);
+                consider(r.exitDate);
+            });
+            return latest || new Date(0);
+        }
+
+        // Sort by accountType group first, then on-going before closed, then latest date first
+        filtered.sort(function(a, b) {
+            // Primary sort — group by accountType first
+            var catCompare = a.accountType.localeCompare(b.accountType);
+            if (catCompare !== 0) return catCompare;
+
+            // Secondary sort — on-going positions before closed ones
+            var aOngoing = a.status.toLowerCase().includes('on-going');
+            var bOngoing = b.status.toLowerCase().includes('on-going');
+            if (aOngoing && !bOngoing) return -1;
+            if (!aOngoing && bOngoing) return 1;
+
+            // Tertiary sort — most recent transaction (log row) date first within each status group
+            return latestGroupDate(b) - latestGroupDate(a);
+        });
+
+        renderAccordion(filtered);
+        if (portfolioFilters.asset && portfolioFilters.asset !== 'all') {
+            if (navBal   && snapBal   !== null) navBal.innerHTML   = snapBal;
+            if (navVal   && snapVal   !== null) navVal.innerHTML   = snapVal;
+            if (navBadge && snapBadge !== null) {
+                navBadge.innerHTML  = snapBadge;
+                navBadge.className  = snapBadgeClass;
+            }
+        }
+    }
+    function processAndRenderData(csvText) {
+        const lines = csvText.trim().split(/\r?\n/);
+        if (lines.length < 2) return;
+
+        const rows = lines.slice(1).map(line => parseCSVLine(line));
+        const groupsMap = {};
+
+        rows.forEach(row => {
+          if (!row || row.length < 4) return;
+
+          const symbol = (row[1] || "").trim().toUpperCase();
+          if (!symbol) return;
+
+          const colCPnlPct = cleanNum(row[2]);
+          const actualPnl = cleanNum(row[3]);
+          const livePrice = cleanNum(row[4]);
+          const execPrice = cleanNum(row[5]);
+          const entryPrice = cleanNum(row[6]);
+          const volume = cleanNum(row[7]);
+          const entryDate = row[8] || "";
+          const exitDate = row[9] || "";
+          const accountType = (row[10] || "Stock").trim();   // Col K — authoritative
+          const status = (row[11] || "On-going").trim();
+          const note = (row[12] || "").trim();
+          const costValue = cleanNum(row[14]);
+          const marketValue = cleanNum(row[15]);
+          const totalFee = cleanNum(row[17]);
+          const iconUrl = row[22] || "";
+
+          // KEY FIX: separate groups per symbol+accountType, not symbol alone
+          const groupKey = symbol + "||" + accountType;
+
+          if (!groupsMap[groupKey]) {
+              groupsMap[groupKey] = {
+                  symbol: symbol,
+                  accountType: accountType,
+                  status: status,
+                  iconUrl: iconUrl,
+                  livePrice: livePrice,
+                  records: [],
+                  mainRecord: null
+              };
+          }
+
+          const recordObj = {
+              symbol, colCPnlPct, entryDate, exitDate, volume, costValue, marketValue,
+              actualPnl, execPrice, entryPrice, livePrice, totalFee, status, note, accountType
+          };
+
+          const isSavingRecord = accountType.toLowerCase() === "saving";
+          const isOnGoing = status.toLowerCase() === "on-going";
+
+          if (note.toUpperCase() === "MAIN") {
+              groupsMap[groupKey].mainRecord = recordObj;
+              // MAIN row is authoritative for header display — keep it in sync
+              groupsMap[groupKey].status = status;
+              groupsMap[groupKey].livePrice = livePrice;
+              if (iconUrl) groupsMap[groupKey].iconUrl = iconUrl;
+          } else if (isSavingRecord) {
+              if (isOnGoing) groupsMap[groupKey].records.push(recordObj);
+          } else {
+              groupsMap[groupKey].records.push(recordObj);
+          }
+      });
+
+        // Store raw, unfiltered groups globally so filters always reset from full data
+        window.currentPortfolioGroups = Object.values(groupsMap);
+        // In processAndRenderData, after window.currentPortfolioGroups is set:
+        var fullValues = {}, fullPnls = {}, fullIcons = {};
+        var ACCOUNT_TYPE_ICONS = {
+            "Stock":  "https://github.com/tinsntp/investment/blob/main/stock.png?raw=true",
+            "Saving": "https://github.com/tinsntp/investment/blob/main/saving.png?raw=true",
+            "Crypto": "https://cdn-icons-png.flaticon.com/512/5968/5968260.png",
+            "Forex":  "https://github.com/tinsntp/investment/blob/main/exness.png?raw=true"
+        };
+        window.currentPortfolioGroups.forEach(function(group) {
+            var isStock  = group.accountType.toLowerCase() === "stock";
+            var isCrypto = group.accountType.toLowerCase() === "crypto";
+            var isForex  = group.accountType.toLowerCase() === "forex";
+            var mainRec  = ((isStock || isCrypto || isForex) && group.mainRecord) ? group.mainRecord : null;
+            var sumPnl   = mainRec ? mainRec.actualPnl
+                : ((group.records || []).reduce(function(a, r) { return a + r.actualPnl; }, 0)
+                + (group.mainRecord ? group.mainRecord.actualPnl : 0));
+            var sumVal   = mainRec ? mainRec.marketValue
+                : ((group.records || []).reduce(function(a, r) { return a + r.marketValue; }, 0)
+                + (group.mainRecord ? group.mainRecord.marketValue : 0));
+            var cat = group.accountType || "Other";
+            fullValues[cat] = (fullValues[cat] || 0) + sumVal;
+            fullPnls[cat]   = (fullPnls[cat]   || 0) + sumPnl;
+            if (!fullIcons[cat]) fullIcons[cat] = ACCOUNT_TYPE_ICONS[cat] || "";
+        });
+        window.navFullCategoryValueTotals = fullValues;
+        window.navFullCategoryPnlTotals   = fullPnls;
+        window.navFullCategoryIconMap     = fullIcons;
+        window.navFullTotalValue = Object.values(fullValues).reduce(function(s, v) { return s + v; }, 0);
+        
+        applyPortfolioFiltersAndRender();
+    }
     function toggleCategoryGroup(categoryKey,headerRowEl){var isCollapsed=headerRowEl.classList.toggle("collapsed");document.querySelectorAll(`tr[data-category-key="${categoryKey}"]:not(.portfolio-group-hdr-row)`).forEach(function(row){isCollapsed?(row.dataset.prevDisplay=row.style.display||"",row.style.display="none"):row.classList.contains("log-row")?row.style.display=row.classList.contains("visible")?"table-row":"none":row.style.display=""})}
     function openPortfolioModal() {
         document.querySelectorAll('[id="portfolio-cal-menu"]').forEach(function(el) { el.remove(); });
@@ -7832,7 +7784,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
         modal.id = 'pnl-calendar-modal';
         modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:9999;font-family:sans-serif;';
         modal.innerHTML = `
-            <div style="font-family:DM Sans;background:#14171f;color:#f8f9fa;padding:24px;border-radius:16px;width:440px;box-shadow:0 8px 32px rgba(0,0,0,0.5);">
+            <div style="font-family:DM Sans;background:#14171f;color:#f8f9fa;padding:24px;border-radius:16px;min-height:405px;width:440px;box-shadow:0 8px 32px rgba(0,0,0,0.5);">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
                     <div style="display:flex;align-items:center;gap:12px;">
                         <button id="pnl-prev-nav" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:16px;"><i class="bi bi-chevron-left"></i></button>
@@ -7995,13 +7947,13 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
                 const isNegative = monthlyTotal < 0;
 
                 const cell = document.createElement('div');
-                cell.style.cssText = `padding:20px 8px;background:${hasData ? (isNegative ? '#2d1622' : '#112b26') : '#1a1e29'};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
+                cell.style.cssText = `padding:15px 8px;background:${hasData ? (isNegative ? '#2d1622' : '#042f2e') : '#1a1e29'};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
                 cell.onmouseover = () => cell.style.background = '#222733';
-                cell.onmouseout = () => cell.style.background = hasData ? (isNegative ? '#2d1622' : '#112b26') : '#1a1e29';
+                cell.onmouseout = () => cell.style.background = hasData ? (isNegative ? '#2d1622' : '#042f2e') : '#1a1e29';
 
                 cell.innerHTML = `
                     <span style="font-size:14px;color:#f8f9fa;font-weight:600;">${mName}</span>
-                    <span style="font-size:13px;color:${hasData ? (isNegative ? '#ec4899' : '#00bfa5') : '#475569'};margin-top:6px;font-weight:600;">${hasData ? formatVndShort(monthlyTotal) : '+0.00M'}</span>
+                    <span style="font-size:13px;color:${hasData ? (isNegative ? '#ec4899' : '#2dd4bf') : '#475569'};margin-top:6px;font-weight:600;">${hasData ? formatVndShort(monthlyTotal) : '+0.00M'}</span>
                 `;
                 cell.onclick = () => {
                     currentNavDate.setMonth(mIdx);
@@ -8027,7 +7979,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
                 const isNegative = yearlyTotal < 0;
 
                 const cell = document.createElement('div');
-                cell.style.cssText = `padding:24px 8px;background:${hasData ? (isNegative ? '#2d1622' : '#112b26') : '#1a1e29'};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
+                cell.style.cssText = `padding:15px 8px;background:${hasData ? (isNegative ? '#2d1622' : '#112b26') : '#1a1e29'};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
                 cell.onmouseover = () => cell.style.background = '#222733';
                 cell.onmouseout = () => cell.style.background = hasData ? (isNegative ? '#2d1622' : '#112b26') : '#1a1e29';
 
