@@ -238,7 +238,7 @@ background:
 .amt { font-family:DM Sans;opacity:0.95;font-weight:500; color:#fff; white-space:nowrap;}
 .dte { font-size:1.9vw; color:rgba(255,255,255,0.4); white-space:nowrap; }
 .ttl{display:flex;align-items:center;gap:1.5vw}
-.recent-badge{font-size:1.4vw;font-weight:700;color:#14b8a6;background:rgba(74,222,128,0.14);border-radius:99px;padding:0vw 1vw 0.4vw;white-space:nowrap}
+.recent-badge{font-size:1.4vw;font-weight:700;color:#14b8a6;background:rgba(74,222,128,0.14);border-radius:99px;padding:0vw 1vw 0.3vw;white-space:nowrap}
 .recent-badge .bi,label .bi {font-size: 0.8rem!important;vertical-align: 0em;}
 @media screen and (max-width:400px){.row{gap:2.5vw;} .recent-badge{font-size:3.2vw}.ico,.ico-fb {width:14vw!important; height:14vw!important;}}
 .budget-bar-wrap { position: relative;}
@@ -247,18 +247,41 @@ background:
 .budget-fill-seg{height:100%;flex-basis:0;display:flex;align-items:center;justify-content:center;overflow:hidden;transition:flex-grow .4s ease;border-right:0 solid rgba(0,0,0,.35)}.budget-fill-seg:last-child{border-right:none}.budget-fill-seg span{font-size:10px;font-weight:600;color:rgba(255,255,255,.9);white-space:nowrap}#budget-fill-legend{margin-top:8px;display:flex;flex-wrap:nowrap;align-items:center;overflow:hidden;width:100%}.legend-item{display:flex;align-items:center;flex-shrink:0;margin-right:10px;font-size:clamp(10px,1.3vw,12px);color:#b4b4bd;white-space:nowrap}.legend-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:4px;flex-shrink:0}
 #budget-over-indicator{position:absolute;top:0;height:100%;display:none;align-items:center;justify-content:center;background:repeating-linear-gradient(45deg,rgba(248,113,113,.5),rgba(248,113,113,.5) 4px,rgba(248,113,113,.8) 4px,rgba(248,113,113,.8) 8px);border-radius:0 999px 999px 0;pointer-events:auto;cursor:help}
 #slide-1{position:relative}
-.tab-header{display:flex-end;justify-content:space-between;align-items:center;}
-#add-cash,#add-fab,#add-order{margin-left:auto;margin-right:10px;top:5px;right:10px;z-index:10;width:30px;height:30px;font-family:monospace!important;font-size:20px;font-weight:500;border-radius:50%;position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(45,212,191,.95)0,rgba(20,184,166,.9) 100%);color:#fff;border:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s cubic-bezier(.4,0,.2,1)}
-
+.tab-header{display:flex;justify-content:flex-end;align-items:center;}
+#add-cash, #add-fab, #add-order,#expense-calendar-btn {
+    margin-left: 0;
+    margin-right: 10px;
+    top: 5px;
+    right: 10px;
+    z-index: 10;
+    width: 30px;
+    height: 30px;
+    font-family: monospace !important;
+    font-size: 20px;
+    font-weight: 500;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(45, 212, 191, .95) 0, rgba(20, 184, 166, .9) 100%);
+    color: #fff;
+    border: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .25s cubic-bezier(.4, 0, .2, 1);
+}
 #add-cash::before,#add-fab::before,#add-order::before{content:"";position:absolute;top:-35%;left:-10%;width:120%;height:65%;background:linear-gradient(180deg,rgba(255,255,255,.75)0,rgba(255,255,255,0) 100%);border-radius:50%;pointer-events:none}
 #add-cash::before,#add-fab::before,#add-order::after{content:"";position:absolute;top:12%;left:18%;width:22%;height:22%;background:radial-gradient(circle,rgba(255,255,255,.9)0,rgba(255,255,255,0) 70%);border-radius:50%;pointer-events:none}
-#add-cash:hover ,#add-fab:hover ,#add-order:hover {
-    background: linear-gradient(135deg, rgba(94,234,212,0.98) 0%, rgba(20,184,166,0.92) 100%);}
+#add-cash:hover ,#add-fab:hover ,#add-order:hover{background: linear-gradient(135deg, rgba(94,234,212,0.98) 0%, rgba(20,184,166,0.92) 100%);}
 #add-cash:active,#add-fab:active,#add-order:active{background:linear-gradient(135deg,rgba(20,184,166,.95)0,rgba(13,148,136,.9) 100%)}.stat-cycles-row-wrap-v2{display:flex;gap:8px}.stat-cycles-row-wrap{display:flex;align-items:right;justify-content:space-between;gap:8px}
+#expense-calendar-btn::before { content: ""; position: absolute; top: -35%; left: -10%; width: 120%; height: 65%; background: linear-gradient(180deg, rgba(255,255,255,.75) 0, rgba(255,255,255,0) 100%); border-radius: 50%; pointer-events: none; }
+#expense-calendar-btn::after { content: ""; position: absolute; top: 12%; left: 18%; width: 22%; height: 22%; background: radial-gradient(circle, rgba(255,255,255,.9) 0, rgba(255,255,255,0) 70%); border-radius: 50%; pointer-events: none; }
+#expense-calendar-btn { background: linear-gradient(135deg, rgba(244,114,182,.95) 0, rgba(236,72,153,.9) 100%); margin-right:1px;}
+#expense-calendar-btn:hover { background: linear-gradient(135deg, rgba(247,141,196,0.98) 0%, rgba(236,72,153,0.92) 100%); }
+#expense-calendar-btn:active { background: linear-gradient(135deg, rgba(236,72,153,.95) 0, rgba(219,39,119,.9) 100%); }
+
 .stat-cycles-row-wrap #add-order{width:20px;height:20px;font-size:16px;margin-left:0;margin-right:0}
-
-#add-cash{margin-bottom:-20px}
-
 #add-cash.loading,#add-fab.loading{pointer-events:none;display:flex;align-items:center;justify-content:center}
 .cash-modal-overlay,.add-modal-overlay,.edit-subs-modal-overlay{-webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);display:none;position:fixed;inset:0; z-index:600;align-items:flex-start;justify-content:center;padding-top:10vh;overflow-y:auto;}
 .add-modal-overlay{padding-top:5vh;}
@@ -757,12 +780,13 @@ tbody tr.current-row td{font-weight:600;}
   background-repeat: no-repeat;filter: saturate(110%) contrast(1.1);}
 .metric-label,.hero-balance{font-size:10px;color:var(--text-secondary);font-weight:700;margin-bottom:4px;text-align:left;text-transform:uppercase;letter-spacing:.5px}.metric-value{font-size:16px;font-weight:700;color:var(--text-primary)}
 #vnindex-reload-btn,#vnindex-watchlist-btn,#pnl-calendar-btn{width:20px;height:20px;border-radius:50%;border:0;background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background .15s,transform .15s}
-#vnindex-reload-btn .bi,#vnindex-watchlist-btn .bi,#pnl-calendar-btn .bi{font-size:16px!important}
+#vnindex-reload-btn .bi,#vnindex-watchlist-btn .bi,#pnl-calendar-btn .bi,#expense-calendar-btn .bi{font-size:16px!important}
 .bi-arrow-clockwise{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;line-height:1}
 #vnindex-reload-btn:hover,#vnindex-watchlist-btn:hover{background:rgba(255,255,255,.15);color:#fff}
 #vnindex-reload-btn.spinning i{animation:spinCircle .8s linear infinite}
 #pnl-calendar-btn{color:#64ffda;width:23px;height:23px;margin-right:-15px;}
 #pnl-calendar-btn:hover{background:rgba(255,255,255,.15);color:#1de9b6}
+
 .portfolio-group-hdr{padding:10px 10px 6px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-secondary);background:0 0;border-bottom:none;text-align:left}.portfolio-group-hdr-pnl{margin-left:8px;font-weight:700;text-transform:none;letter-spacing:normal}.portfolio-group-hdr-row:first-child .portfolio-group-hdr{padding-top:10}.portfolio-group-hdr-row{cursor:pointer}.portfolio-group-hdr-inner{display:flex;align-items:center;justify-content:space-between}.portfolio-group-hdr-label{display:flex;align-items:center}.portfolio-group-hdr-chevron{font-size:12px;color:var(--text-secondary);transition:transform .2s ease;flex-shrink:0}.portfolio-group-hdr-row.collapsed .portfolio-group-hdr-chevron{transform:rotate(-90deg)}.portfolio-card{border-radius:24px;padding:24px}.portfolio-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.portfolio-title{font-size:18px;font-weight:700;color:var(--text-primary)}.interactive-hint{font-size:12px;color:var(--teal-primary);display:flex;align-items:center;gap:6px;background:var(--teal-bg);padding:6px 12px;border-radius:12px}
 .table-wrapper{overflow-x:auto;margin-top:10px!important}table{width:100%;border-collapse:collapse;text-align:left;table-layout:fixed}col.col-asset{width:27%}col.col-duration{width:17%}col.col-volprice{width:22%}col.col-pnl{width:18%}col.col-costmarket{width:16%}th{font-size:13px;text-transform:uppercase;letter-spacing:.8px;color:var(--text-secondary);padding:12px 10px;border-bottom:1px solid var(--border-color);font-weight:700;white-space:nowrap}thead{position:relative;z-index:10}td{padding:14px 10px;font-size:13px;vertical-align:middle;overflow:hidden}tr.main-row{cursor:pointer;transition:background .2s ease;border-bottom:1px solid var(--border-color)}tr.main-row:hover{background:var(--bg-card-hover)}tr.main-row.expanded{background:rgba(20,184,166,.04);border-bottom:none}tr.log-row{display:none;background:var(--bg-subrow);border-bottom:1px dashed rgba(255,255,255,.06);font-size:11px}tr.log-row td{padding:6px 10px}tr.log-row.visible{display:table-row}tr.log-row:last-child{border-bottom:1px solid var(--border-color)}.chevron-icon{display:inline-block;transition:transform .25s ease;font-size:12px;color:var(--text-secondary);margin-right:4px;flex-shrink:0}.expanded .chevron-icon{transform:rotate(90deg)}.asset-cell{display:flex;align-items:center;gap:8px;overflow:hidden}.asset-icon-wrapper{position:relative;display:inline-block;flex-shrink:0}.asset-icon{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:9px;color:#fff;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.3);object-fit:cover;background-color:#21262d;background-size:cover;background-position:center}.status-dot{position:absolute;bottom:1px;right:-1px;width:8px;height:8px;border-radius:50%;border:1.5px solid var(--bg-card)}.status-dot.ongoing{background-color:var(--status-ongoing);box-shadow:0 0 4px var(--status-ongoing)}.status-dot.close{background-color:var(--status-close)}.val-primary{font-weight:700;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.val-secondary{font-size:12px;padding-top:2px;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.full-log-text{display:inline}.short-log-text{display:none}#det-msg{display:none;padding:12px;margin-bottom:16px;background:rgba(255,105,180,.15);border-radius:12px;color:var(--pink-primary);font-size:13px}
 @media (max-width:400px){.portfolio-card,.hero-card-port{padding:2px}
@@ -1526,7 +1550,13 @@ to{transform:rotate(360deg)}
         <div class="budget-tab-content" id="budget-view-spending">
           <div id="rec-msg"></div>
           <div class="tab-header">
-            <button id="add-cash" class="action-btn">+</button></div>
+              <div style="display: flex; align-items: center; gap: 8px; margin-left: auto; margin-right: 10px;">
+                  <button type="button" id="expense-calendar-btn" onclick="openExpenseCalendarModal()">
+                      <i class="bi bi-calendar-range-fill"></i>
+                  </button>
+                  <button id="add-cash" class="action-btn">+</button>
+              </div>
+          </div>
           <div id="tx-list"></div>
         </div>
         <!-- Tab 2: Sub-category View -->
@@ -1873,7 +1903,7 @@ to{transform:rotate(360deg)}
                       <div class="stat-cycles-row-wrap">
                           <div class="metric-label" style="margin-top:4px">Active</div>
                           <button type="button" id="pnl-calendar-btn" onclick="openPnlCalendarModal()" title="PnL Calendar">
-                              <i class="bi bi-calendar-check-fill"></i>
+                              <i class="bi bi-calendar2-week-fill"></i>
                           </button>
                           <button type="button" id="add-order" onclick="openPortfolioModal()" style="margin-top:-4px">+</button>
                       </div>
@@ -3528,7 +3558,7 @@ to{transform:rotate(360deg)}
     }))
   }), item
 }
-    var DETAIL_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1492221762";
+    var DETAIL_SHEET_URL = GOOGLE_SHEET_CSV_URL + "1492221762";
     var cachedTxData = null; 
     
     function renderTxRows(subCatName, containerEl) {
@@ -7709,6 +7739,181 @@ function applyPortfolioFiltersAndRender() {
     function handlePortfolioRateFocus(el){el.value=el.dataset.rawValue||el.value.replace("%","")}
     function handlePortfolioVolumeInput(el){var cleaned=el.value.replace(/,/g,".").replace(/[^\d.]/g,""),parts=cleaned.split(".");parts.length>2&&(cleaned=parts[0]+"."+parts.slice(1).join("")),el.value=cleaned,el.dataset.rawValue=cleaned}
     function openPnlCalendarModal() {
+      let modal = document.getElementById('pnl-calendar-modal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'pnl-calendar-modal';
+        modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:9999;font-family:sans-serif;';
+        modal.innerHTML = `
+                  <div style="font-family:DM Sans;background:#14171f;color:#f8f9fa;padding:24px;border-radius:16px;min-height:415px;width:440px;box-shadow:0 8px 32px rgba(0,0,0,0.5);">
+                      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                          <div style="display:flex;align-items:center;gap:12px;">
+                              <button id="pnl-prev-nav" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:16px;"><i class="bi bi-chevron-left"></i></button>
+                              <span id="pnl-nav-title" style="font-weight:600;font-size:16px;cursor:pointer;"></span>
+                              <button id="pnl-next-nav" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:16px;"><i class="bi bi-chevron-right"></i></button>
+                          </div>
+                          <div style="display:flex;align-items:center;gap:10px;">
+                              <div style="background:#1e222b;padding:2px;border-radius:8px;display:flex;gap:2px;">
+                                  <button id="pnl-view-daily" style="background:#00bfa5;border:none;color:#000;font-weight:600;font-size:11px;padding:4px 8px;border-radius:6px;cursor:pointer;">Daily</button>
+                                  <button id="pnl-view-monthly" style="background:none;border:none;color:#94a3b8;font-weight:600;font-size:11px;padding:4px 8px;border-radius:6px;cursor:pointer;">Monthly</button>
+                                  <button id="pnl-view-yearly" style="background:none;border:none;color:#94a3b8;font-weight:600;font-size:11px;padding:4px 8px;border-radius:6px;cursor:pointer;">Yearly</button>
+                              </div>
+                              <button id="pnl-close-modal" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:18px;"><i class="bi bi-x-lg"></i></button>
+                          </div>
+                      </div>
+                      <div id="pnl-days-header" style="display:grid;grid-template-columns:repeat(7, 1fr);text-align:center;font-size:12px;color:#64748b;margin-bottom:8px;font-weight:600;">
+                          <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                      </div>
+                      <div id="pnl-calendar-grid" style="display:grid;grid-template-columns:repeat(7, 1fr);gap:6px;max-height:320px;overflow-y:auto;"></div>
+                  </div>
+                  <div id="pnl-input-dialog" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;z-index:10000;">
+                      <div style="background:#1e222b;padding:20px;border-radius:12px;width:280px;color:#fff;">
+                          <h3 id="pnl-input-date-title" style="margin:0 0 12px 0;font-size:14px;color:#94a3b8;">Input P/L</h3>
+                          <input type="number" id="pnl-amount-input" step="any" placeholder="Amount (e.g. 1.92 or -0.5)" style="width:100%;padding:10px;background:#14171f;border:1px solid #2a2e39;border-radius:8px;color:#fff;box-sizing:border-box;margin-bottom:14px;outline:none;" />
+                          <div style="display:flex;justify-content:flex-end;gap:8px;">
+                              <button id="pnl-cancel-input" style="padding:6px 12px;background:none;border:none;color:#94a3b8;cursor:pointer;">Cancel</button>
+                              <button id="pnl-save-input" style="padding:6px 14px;background:#00bfa5;border:none;border-radius:6px;color:#000;font-weight:600;cursor:pointer;">Save</button>
+                          </div>
+                      </div>
+                  </div>
+              `;
+        document.body.appendChild(modal);
+
+        document.getElementById('pnl-close-modal').onclick = () => modal.style.display = 'none';
+        modal.onclick = (e) => {
+          if (e.target === modal) modal.style.display = 'none';
+        };
+      }
+
+      modal.style.display = 'flex';
+      let currentNavDate = new Date();
+      let currentView = 'daily';
+      let pnlData = {};
+      let selectedDateStr = '';
+
+      const formatVndShort = val => {
+        const num = parseFloat(val);
+        if (isNaN(num) || 0 === num) return "+0.00";
+        const absVal = Math.abs(num);
+        let formatted = "";
+        return formatted = absVal >= 1e9 ? (absVal / 1e9).toFixed(2) + "B" : absVal >= 1e6 ? (absVal / 1e6).toFixed(2) + "M" : absVal >= 1e3 ? (absVal / 1e3).toFixed(2) + "K" : absVal.toFixed(2), num >= 0 ? "+" + formatted : "-" + formatted
+      };
+      const setView = view => {
+        currentView = view, ["daily", "monthly", "yearly"].forEach(v => {
+          const btn = document.getElementById(`pnl-view-${v}`);
+          v === view ? (btn.style.background = "#00bfa5", btn.style.color = "#000") : (btn.style.background = "none", btn.style.color = "#94a3b8")
+        }), document.getElementById("pnl-days-header").style.display = "daily" === view ? "grid" : "none", renderView()
+      };
+      document.getElementById('pnl-view-daily').onclick = () => setView('daily');
+      document.getElementById('pnl-view-monthly').onclick = () => setView('monthly');
+      document.getElementById('pnl-view-yearly').onclick = () => setView('yearly');
+      const fetchPnlData = async () => {
+        try {
+          const res = await fetch(`${GOOGLE_SHEET_CSV_URL}1158462025`);
+          (await res.text()).split("\n").forEach(row => {
+            if (!row.trim()) return;
+            const cols = row.split(",").map(col => col.trim().replace(/^["']|["']$/g, ""));
+            if (cols.length >= 2) {
+              const dateKey = cols[0].split("T")[0].split(" ")[0],
+                cleanAmountStr = cols[1].replace(/,/g, ""),
+                amountVal = parseFloat(cleanAmountStr);
+              dateKey && !isNaN(amountVal) && (pnlData[dateKey] = (pnlData[dateKey] || 0) + amountVal)
+            }
+          })
+        } catch (err) {
+          console.error("Error fetching PnL data", err)
+        }
+        renderView()
+      };
+      const renderView = () => {
+        const grid = document.getElementById("pnl-calendar-grid");
+        grid.innerHTML = "";
+        const year = currentNavDate.getFullYear(),
+          month = currentNavDate.getMonth();
+        if ("daily" === currentView) {
+          document.getElementById("pnl-nav-title").innerText = `${year}-${String(month+1).padStart(2,"0")}`, grid.style.gridTemplateColumns = "repeat(7, 1fr)";
+          const firstDayIndex = new Date(year, month, 1).getDay(),
+            totalDays = new Date(year, month + 1, 0).getDate();
+          for (let i = 0; i < firstDayIndex; i++) grid.appendChild(document.createElement("div"));
+          for (let day = 1; day <= totalDays; day++) {
+            const dateStr = `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`,
+              amount = pnlData[dateStr],
+              hasData = void 0 !== amount,
+              isNegative = hasData && amount < 0,
+              cell = document.createElement("div");
+            cell.style.cssText = `aspect-ratio:1;background:${hasData?isNegative?"#2d1622":"#042f2e":"#1a1e29"};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`, cell.onmouseover = () => cell.style.background = "#222733", cell.onmouseout = () => cell.style.background = hasData ? isNegative ? "#2d1622" : "#042f2e" : "#1a1e29", cell.innerHTML = `\n                      <span style="font-size:12px;color:${hasData?isNegative?"#ec4899":"#2dd4bf":"#94a3b8"};font-weight:600;">${day}</span>\n                      <span style="font-size:10px;color:${hasData?isNegative?"#ec4899":"#2dd4bf":"#475569"};margin-top:2px;">${hasData?formatVndShort(amount):"+0.00M"}</span>\n                  `, cell.onclick = () => {
+              selectedDateStr = dateStr, document.getElementById("pnl-input-date-title").innerText = `Input P/L for ${dateStr}`, document.getElementById("pnl-amount-input").value = hasData ? amount : "", document.getElementById("pnl-input-dialog").style.display = "flex"
+            }, grid.appendChild(cell)
+          }
+        } else if ("monthly" === currentView) {
+          document.getElementById("pnl-nav-title").innerText = `${year}`, grid.style.gridTemplateColumns = "repeat(3, 1fr)";
+          ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].forEach((mName, mIdx) => {
+            let monthlyTotal = 0,
+              count = 0;
+            Object.keys(pnlData).forEach(dKey => {
+              dKey.startsWith(`${year}-${String(mIdx+1).padStart(2,"0")}`) && (monthlyTotal += pnlData[dKey], count++)
+            });
+            const hasData = count > 0,
+              isNegative = monthlyTotal < 0,
+              cell = document.createElement("div");
+            cell.style.cssText = `padding:15px 8px;background:${hasData?isNegative?"#2d1622":"#042f2e":"#1a1e29"};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`, cell.onmouseover = () => cell.style.background = "#222733", cell.onmouseout = () => cell.style.background = hasData ? isNegative ? "#2d1622" : "#042f2e" : "#1a1e29", cell.innerHTML = `\n                      <span style="font-size:14px;color:#f8f9fa;font-weight:600;">${mName}</span>\n                      <span style="font-size:13px;color:${hasData?isNegative?"#ec4899":"#2dd4bf":"#475569"};margin-top:6px;font-weight:600;">${hasData?formatVndShort(monthlyTotal):"+0.00M"}</span>\n                  `, cell.onclick = () => {
+              currentNavDate.setMonth(mIdx), setView("daily")
+            }, grid.appendChild(cell)
+          })
+        } else if ("yearly" === currentView) {
+          document.getElementById("pnl-nav-title").innerText = `${year-4} - ${year+3}`, grid.style.gridTemplateColumns = "repeat(2, 1fr)";
+          const startYear = year - 4;
+          for (let y = startYear; y <= startYear + 7; y++) {
+            let yearlyTotal = 0,
+              count = 0;
+            Object.keys(pnlData).forEach(dKey => {
+              dKey.startsWith(`${y}`) && (yearlyTotal += pnlData[dKey], count++)
+            });
+            const hasData = count > 0,
+              isNegative = yearlyTotal < 0,
+              cell = document.createElement("div");
+            cell.style.cssText = `padding:15px 8px;background:${hasData?isNegative?"#2d1622":"#042f2e":"#1a1e29"};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`, cell.onmouseover = () => cell.style.background = "#222733", cell.onmouseout = () => cell.style.background = hasData ? isNegative ? "#2d1622" : "#042f2e" : "#1a1e29", cell.innerHTML = `\n                      <span style="font-size:15px;color:#f8f9fa;font-weight:600;">${y}</span>\n                      <span style="font-size:13px;color:${hasData?isNegative?"#ec4899":"#2dd4bf":"#475569"};margin-top:6px;font-weight:600;">${hasData?formatVndShort(yearlyTotal):"+0.00M"}</span>\n                  `, cell.onclick = () => {
+              currentNavDate.setFullYear(y), setView("monthly")
+            }, grid.appendChild(cell)
+          }
+        }
+      };
+      document.getElementById("pnl-prev-nav").onclick = () => {
+        "daily" === currentView ? currentNavDate.setMonth(currentNavDate.getMonth() - 1) : "monthly" === currentView ? currentNavDate.setFullYear(currentNavDate.getFullYear() - 1) : "yearly" === currentView && currentNavDate.setFullYear(currentNavDate.getFullYear() - 8), renderView()
+      };
+      document.getElementById("pnl-next-nav").onclick = () => {
+        "daily" === currentView ? currentNavDate.setMonth(currentNavDate.getMonth() + 1) : "monthly" === currentView ? currentNavDate.setFullYear(currentNavDate.getFullYear() + 1) : "yearly" === currentView && currentNavDate.setFullYear(currentNavDate.getFullYear() + 8), renderView()
+      };
+      document.getElementById("pnl-cancel-input").onclick = () => {
+        document.getElementById("pnl-input-dialog").style.display = "none"
+      };
+      document.getElementById("pnl-save-input").onclick = async () => {
+        const val = document.getElementById("pnl-amount-input").value;
+        if ("" !== val) {
+          document.getElementById("pnl-input-dialog").style.display = "none", pnlData[selectedDateStr] = parseFloat(val), renderView();
+          try {
+            await fetch(EXPENSE_APPS_SCRIPT_URL, {
+              method: "POST",
+              mode: "no-cors",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                gid: "1158462025",
+                date: selectedDateStr,
+                amount: val
+              })
+            })
+          } catch (err) {
+            console.error("Failed to sync with Apps Script", err)
+          }
+        }
+      };
+
+      fetchPnlData();
+    }
+
+    function openExpenseCalendarModal() {
     let modal = document.getElementById('pnl-calendar-modal');
     if (!modal) {
         modal = document.createElement('div');
@@ -7738,7 +7943,7 @@ function applyPortfolioFiltersAndRender() {
             </div>
             <div id="pnl-input-dialog" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;z-index:10000;">
                 <div style="background:#1e222b;padding:20px;border-radius:12px;width:280px;color:#fff;">
-                    <h3 id="pnl-input-date-title" style="margin:0 0 12px 0;font-size:14px;color:#94a3b8;">Input P/L</h3>
+                    <h3 id="pnl-input-date-title" style="margin:0 0 12px 0;font-size:14px;color:#94a3b8;">Input Expense</h3>
                     <input type="number" id="pnl-amount-input" step="any" placeholder="Amount (e.g. 1.92 or -0.5)" style="width:100%;padding:10px;background:#14171f;border:1px solid #2a2e39;border-radius:8px;color:#fff;box-sizing:border-box;margin-bottom:14px;outline:none;" />
                     <div style="display:flex;justify-content:flex-end;gap:8px;">
                         <button id="pnl-cancel-input" style="padding:6px 12px;background:none;border:none;color:#94a3b8;cursor:pointer;">Cancel</button>
@@ -7759,214 +7964,342 @@ function applyPortfolioFiltersAndRender() {
     let pnlData = {};
     let selectedDateStr = '';
 
-    const formatVndShort = (val) => {
-        const num = parseFloat(val);
-        if (isNaN(num) || num === 0) return '+0.00';
-        const absVal = Math.abs(num);
-        
-        let formatted = '';
-        if (absVal >= 1e9) {
-            formatted = (absVal / 1e9).toFixed(2) + 'B';
-        } else if (absVal >= 1e6) {
-            formatted = (absVal / 1e6).toFixed(2) + 'M';
-        } else if (absVal >= 1e3) {
-            formatted = (absVal / 1e3).toFixed(2) + 'K';
-        } else {
-            formatted = absVal.toFixed(2);
-        }
-        
-        return num >= 0 ? '+' + formatted : '-' + formatted;
-    };
+    const parseNum = val => { if (!val) return 0; const clean = String(val).replace(/,/g, "").trim(); const num = parseFloat(clean); return isNaN(num) ? 0 : num; };
+    const parseCsvRow = text => { var result = [], cell = "", insideQuotes = false; for (var i = 0; i < text.length; i++) { var c = text[i]; if (c === '"') { insideQuotes = !insideQuotes; } else if (c === ',' && !insideQuotes) { result.push(cell); cell = ""; } else { cell += c; } } result.push(cell); return result; };
 
-    const setView = (view) => {
-        currentView = view;
-        ['daily', 'monthly', 'yearly'].forEach(v => {
-            const btn = document.getElementById(`pnl-view-${v}`);
-            if (v === view) {
-                btn.style.background = '#00bfa5';
-                btn.style.color = '#000';
-            } else {
-                btn.style.background = 'none';
-                btn.style.color = '#94a3b8';
-            }
-        });
-        document.getElementById('pnl-days-header').style.display = (view === 'daily') ? 'grid' : 'none';
-        renderView();
-    };
-
+    const formatVndShort = val => { const num = parseFloat(val); if (isNaN(num) || 0 === num) return "+0.00"; const absVal = Math.abs(num); let formatted = ""; return formatted = absVal >= 1e9 ? (absVal / 1e9).toFixed(2) + "B" : absVal >= 1e6 ? (absVal / 1e6).toFixed(2) + "M" : absVal >= 1e3 ? (absVal / 1e3).toFixed(2) + "K" : absVal.toFixed(2), num >= 0 ? "+" + formatted : "-" + formatted };
+    const setView = view => { currentView = view, ["daily", "monthly", "yearly"].forEach(v => { const btn = document.getElementById(`pnl-view-${v}`); v === view ? (btn.style.background = "#00bfa5", btn.style.color = "#000") : (btn.style.background = "none", btn.style.color = "#94a3b8") }), document.getElementById("pnl-days-header").style.display = "daily" === view ? "grid" : "none", renderView() };
     document.getElementById('pnl-view-daily').onclick = () => setView('daily');
     document.getElementById('pnl-view-monthly').onclick = () => setView('monthly');
     document.getElementById('pnl-view-yearly').onclick = () => setView('yearly');
 
     const fetchPnlData = async () => {
         try {
-            const res = await fetch(`${GOOGLE_SHEET_CSV_URL}1158462025`);
+            const res = await fetch(`${GOOGLE_SHEET_CSV_URL}1492221762`);
             const text = await res.text();
-            
-            text.split('\n').forEach(row => {
-                if (!row.trim()) return;
-                const cols = row.split(',').map(col => col.trim().replace(/^["']|["']$/g, ''));
-                if (cols.length >= 2) {
-                    const dateKey = cols[0].split('T')[0].split(' ')[0];
-                    const cleanAmountStr = cols[1].replace(/,/g, '');
-                    const amountVal = parseFloat(cleanAmountStr);
-                    
+            const lines = text.split(/\r?\n/);
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                const cols = parseCsvRow(lines[i]);
+                if (cols.length >= 9) {
+                    const dateKey = (cols[2] || "").split("T")[0].split(" ")[0];
+                    const amountVal = parseNum(cols[5]);
                     if (dateKey && !isNaN(amountVal)) {
                         pnlData[dateKey] = (pnlData[dateKey] || 0) + amountVal;
                     }
                 }
-            });
-        } catch (err) {
-            console.error('Error fetching PnL data', err);
-        }
-        renderView();
+            }
+        } catch (err) { console.error("Error fetching expense data", err) }
+        renderView()
     };
 
     const renderView = () => {
-        const grid = document.getElementById('pnl-calendar-grid');
-        grid.innerHTML = '';
-        const year = currentNavDate.getFullYear();
-        const month = currentNavDate.getMonth();
-
-        if (currentView === 'daily') {
-            document.getElementById('pnl-nav-title').innerText = `${year}-${String(month + 1).padStart(2, '0')}`;
-            grid.style.gridTemplateColumns = 'repeat(7, 1fr)';
-            
-            const firstDayIndex = new Date(year, month, 1).getDay();
-            const totalDays = new Date(year, month + 1, 0).getDate();
-
-            for (let i = 0; i < firstDayIndex; i++) grid.appendChild(document.createElement('div'));
-
+        const grid = document.getElementById("pnl-calendar-grid");
+        grid.innerHTML = "";
+        const year = currentNavDate.getFullYear(), month = currentNavDate.getMonth();
+        if ("daily" === currentView) {
+            document.getElementById("pnl-nav-title").innerText = `${year}-${String(month + 1).padStart(2, "0")}`;
+            grid.style.gridTemplateColumns = "repeat(7, 1fr)";
+            const firstDayIndex = new Date(year, month, 1).getDay(), totalDays = new Date(year, month + 1, 0).getDate();
+            for (let i = 0; i < firstDayIndex; i++) grid.appendChild(document.createElement("div"));
             for (let day = 1; day <= totalDays; day++) {
-                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                const amount = pnlData[dateStr];
-                const hasData = amount !== undefined;
-                const isNegative = hasData && amount < 0;
-
-                const cell = document.createElement('div');
-                cell.style.cssText = `aspect-ratio:1;background:${hasData ? (isNegative ? '#2d1622' : '#112b26') : '#1a1e29'};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
-                cell.onmouseover = () => cell.style.background = '#222733';
-                cell.onmouseout = () => cell.style.background = hasData ? (isNegative ? '#2d1622' : '#112b26') : '#1a1e29';
-
+                const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`, amount = pnlData[dateStr], hasData = void 0 !== amount, isNegative = hasData && amount < 0, cell = document.createElement("div");
+                cell.style.cssText = `aspect-ratio:1;background:${hasData ? isNegative ? "#2d1622" : "#042f2e" : "#1a1e29"};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
+                cell.onmouseover = () => cell.style.background = "#0f3f3d";
+                cell.onmouseout = () => cell.style.background = hasData ? isNegative ? "#2d1622" : "#042f2e" : "#1a1e29";
                 cell.innerHTML = `
-                    <span style="font-size:12px;color:${hasData ? (isNegative ? '#ec4899' : '#00bfa5') : '#94a3b8'};font-weight:600;">${day}</span>
-                    <span style="font-size:10px;color:${hasData ? (isNegative ? '#ec4899' : '#00bfa5') : '#475569'};margin-top:2px;">${hasData ? formatVndShort(amount) : '+0.00M'}</span>
+                    <span style="font-size:12px;color:${hasData ? isNegative ? "#ec4899" : "#2dd4bf" : "#94a3b8"};font-weight:600;">${day}</span>
+                    <span style="font-size:10px;color:${hasData ? isNegative ? "#ec4899" : "#2dd4bf" : "#475569"};margin-top:2px;font-weight:600;">${hasData ? formatVndShort(amount) : "+0.00M"}</span>
                 `;
-                cell.onclick = () => {
-                    selectedDateStr = dateStr;
-                    document.getElementById('pnl-input-date-title').innerText = `Input P/L for ${dateStr}`;
-                    document.getElementById('pnl-amount-input').value = hasData ? amount : '';
-                    document.getElementById('pnl-input-dialog').style.display = 'flex';
-                };
-                grid.appendChild(cell);
+                cell.onclick = () => { selectedDateStr = dateStr, document.getElementById("pnl-input-date-title").innerText = `Input Expense for ${dateStr}`, document.getElementById("pnl-amount-input").value = hasData ? amount : "", document.getElementById("pnl-input-dialog").style.display = "flex" }, grid.appendChild(cell)
             }
-        } else if (currentView === 'monthly') {
-            document.getElementById('pnl-nav-title').innerText = `${year}`;
-            grid.style.gridTemplateColumns = 'repeat(3, 1fr)';
-            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-            months.forEach((mName, mIdx) => {
-                let monthlyTotal = 0;
-                let count = 0;
-                Object.keys(pnlData).forEach(dKey => {
-                    if (dKey.startsWith(`${year}-${String(mIdx + 1).padStart(2, '0')}`)) {
-                        monthlyTotal += pnlData[dKey];
-                        count++;
-                    }
-                });
-                const hasData = count > 0;
-                const isNegative = monthlyTotal < 0;
-
-                const cell = document.createElement('div');
-                cell.style.cssText = `padding:15px 8px;background:${hasData ? (isNegative ? '#2d1622' : '#042f2e') : '#1a1e29'};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
-                cell.onmouseover = () => cell.style.background = '#222733';
-                cell.onmouseout = () => cell.style.background = hasData ? (isNegative ? '#2d1622' : '#042f2e') : '#1a1e29';
-
+        } else if ("monthly" === currentView) {
+            document.getElementById("pnl-nav-title").innerText = `${year}`;
+            grid.style.gridTemplateColumns = "repeat(3, 1fr)";
+            ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].forEach((mName, mIdx) => {
+                let monthlyTotal = 0, count = 0;
+                Object.keys(pnlData).forEach(dKey => { dKey.startsWith(`${year}-${String(mIdx + 1).padStart(2, "0")}`) && (monthlyTotal += pnlData[dKey], count++) });
+                const hasData = count > 0, isNegative = monthlyTotal < 0, cell = document.createElement("div");
+                cell.style.cssText = `padding:15px 8px;background:${hasData ? isNegative ? "#2d1622" : "#042f2e" : "#1a1e29"};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
+                cell.onmouseover = () => cell.style.background = "#0f3f3d";
+                cell.onmouseout = () => cell.style.background = hasData ? isNegative ? "#2d1622" : "#042f2e" : "#1a1e29";
                 cell.innerHTML = `
                     <span style="font-size:14px;color:#f8f9fa;font-weight:600;">${mName}</span>
-                    <span style="font-size:13px;color:${hasData ? (isNegative ? '#ec4899' : '#2dd4bf') : '#475569'};margin-top:6px;font-weight:600;">${hasData ? formatVndShort(monthlyTotal) : '+0.00M'}</span>
+                    <span style="font-size:13px;color:${hasData ? isNegative ? "#ec4899" : "#2dd4bf" : "#475569"};margin-top:6px;font-weight:600;">${hasData ? formatVndShort(monthlyTotal) : "+0.00M"}</span>
                 `;
-                cell.onclick = () => {
-                    currentNavDate.setMonth(mIdx);
-                    setView('daily');
-                };
-                grid.appendChild(cell);
-            });
-        } else if (currentView === 'yearly') {
-            document.getElementById('pnl-nav-title').innerText = `${year - 4} - ${year + 3}`;
-            grid.style.gridTemplateColumns = 'repeat(2, 1fr)';
+                cell.onclick = () => { currentNavDate.setMonth(mIdx), setView("daily") }, grid.appendChild(cell)
+            })
+        } else if ("yearly" === currentView) {
+            document.getElementById("pnl-nav-title").innerText = `${year - 4} - ${year + 3}`;
+            grid.style.gridTemplateColumns = "repeat(2, 1fr)";
             const startYear = year - 4;
-
             for (let y = startYear; y <= startYear + 7; y++) {
-                let yearlyTotal = 0;
-                let count = 0;
-                Object.keys(pnlData).forEach(dKey => {
-                    if (dKey.startsWith(`${y}`)) {
-                        yearlyTotal += pnlData[dKey];
-                        count++;
-                    }
-                });
-                const hasData = count > 0;
-                const isNegative = yearlyTotal < 0;
-
-                const cell = document.createElement('div');
-                cell.style.cssText = `padding:15px 8px;background:${hasData ? (isNegative ? '#2d1622' : '#112b26') : '#1a1e29'};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
-                cell.onmouseover = () => cell.style.background = '#222733';
-                cell.onmouseout = () => cell.style.background = hasData ? (isNegative ? '#2d1622' : '#112b26') : '#1a1e29';
-
+                let yearlyTotal = 0, count = 0;
+                Object.keys(pnlData).forEach(dKey => { dKey.startsWith(`${y}`) && (yearlyTotal += pnlData[dKey], count++) });
+                const hasData = count > 0, isNegative = yearlyTotal < 0, cell = document.createElement("div");
+                cell.style.cssText = `padding:15px 8px;background:${hasData ? isNegative ? "#2d1622" : "#042f2e" : "#1a1e29"};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
+                cell.onmouseover = () => cell.style.background = "#0f3f3d";
+                cell.onmouseout = () => cell.style.background = hasData ? isNegative ? "#2d1622" : "#042f2e" : "#1a1e29";
                 cell.innerHTML = `
-                    <span style="font-size:15px;color:#f8f9fa;font-weight:600;">${y}</span>
-                    <span style="font-size:13px;color:${hasData ? (isNegative ? '#ec4899' : '#00bfa5') : '#475569'};margin-top:6px;font-weight:600;">${hasData ? formatVndShort(yearlyTotal) : '+0.00M'}</span>
+                    <span style="font-size:14px;color:#f8f9fa;font-weight:600;">${y}</span>
+                    <span style="font-size:13px;color:${hasData ? isNegative ? "#ec4899" : "#2dd4bf" : "#475569"};margin-top:6px;font-weight:600;">${hasData ? formatVndShort(yearlyTotal) : "+0.00M"}</span>
                 `;
-                cell.onclick = () => {
-                    currentNavDate.setFullYear(y);
-                    setView('monthly');
-                };
-                grid.appendChild(cell);
+                cell.onclick = () => { currentNavDate.setFullYear(y), setView("monthly") }, grid.appendChild(cell)
             }
         }
     };
 
-    document.getElementById('pnl-prev-nav').onclick = () => {
-        if (currentView === 'daily') currentNavDate.setMonth(currentNavDate.getMonth() - 1);
-        else if (currentView === 'monthly') currentNavDate.setFullYear(currentNavDate.getFullYear() - 1);
-        else if (currentView === 'yearly') currentNavDate.setFullYear(currentNavDate.getFullYear() - 8);
-        renderView();
-    };
-
-    document.getElementById('pnl-next-nav').onclick = () => {
-        if (currentView === 'daily') currentNavDate.setMonth(currentNavDate.getMonth() + 1);
-        else if (currentView === 'monthly') currentNavDate.setFullYear(currentNavDate.getFullYear() + 1);
-        else if (currentView === 'yearly') currentNavDate.setFullYear(currentNavDate.getFullYear() + 8);
-        renderView();
-    };
-
-    document.getElementById('pnl-cancel-input').onclick = () => {
-        document.getElementById('pnl-input-dialog').style.display = 'none';
-    };
-
-    document.getElementById('pnl-save-input').onclick = async () => {
-        const val = document.getElementById('pnl-amount-input').value;
-        if (val === '') return;
-        
-        document.getElementById('pnl-input-dialog').style.display = 'none';
-        pnlData[selectedDateStr] = parseFloat(val);
-        renderView();
-
-        try {
-            await fetch(EXPENSE_APPS_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ gid: '1158462025', date: selectedDateStr, amount: val })
-            });
-        } catch (err) {
-            console.error('Failed to sync with Apps Script', err);
+    document.getElementById("pnl-prev-nav").onclick = () => { "daily" === currentView ? currentNavDate.setMonth(currentNavDate.getMonth() - 1) : "monthly" === currentView ? currentNavDate.setFullYear(currentNavDate.getFullYear() - 1) : "yearly" === currentView && currentNavDate.setFullYear(currentNavDate.getFullYear() - 8), renderView() };
+    document.getElementById("pnl-next-nav").onclick = () => { "daily" === currentView ? currentNavDate.setMonth(currentNavDate.getMonth() + 1) : "monthly" === currentView ? currentNavDate.setFullYear(currentNavDate.getFullYear() + 1) : "yearly" === currentView && currentNavDate.setFullYear(currentNavDate.getFullYear() + 8), renderView() };
+    document.getElementById("pnl-cancel-input").onclick = () => { document.getElementById("pnl-input-dialog").style.display = "none" };
+    document.getElementById("pnl-save-input").onclick = async () => {
+        const val = document.getElementById("pnl-amount-input").value;
+        if ("" !== val) {
+            document.getElementById("pnl-input-dialog").style.display = "none", pnlData[selectedDateStr] = parseFloat(val), renderView();
+            try {
+                await fetch(EXPENSE_APPS_SCRIPT_URL, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ gid: "1492221762", date: selectedDateStr, amount: val }) })
+            } catch (err) { console.error("Failed to sync with Apps Script", err) }
         }
     };
 
     fetchPnlData();
+  }
+
+  
+  function openExpenseCalendarModal() {
+    let modal = document.getElementById('pnl-calendar-modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'pnl-calendar-modal';
+        modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:9999;font-family:sans-serif;';
+        modal.innerHTML = `
+            <div style="font-family:DM Sans;background:#14171f;color:#f8f9fa;padding:24px;border-radius:16px;min-height:415px;width:440px;box-shadow:0 8px 32px rgba(0,0,0,0.5);">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                    <div style="display:flex;align-items:center;gap:12px;">
+                        <button id="pnl-prev-nav" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:16px;"><i class="bi bi-chevron-left"></i></button>
+                        <span id="pnl-nav-title" style="font-weight:600;font-size:16px;cursor:pointer;"></span>
+                        <button id="pnl-next-nav" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:16px;"><i class="bi bi-chevron-right"></i></button>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <div style="background:#1e222b;padding:2px;border-radius:8px;display:flex;gap:2px;">
+                            <button id="pnl-view-daily" style="background:#ec4899;border:none;color:#000;font-weight:600;font-size:11px;padding:4px 8px;border-radius:6px;cursor:pointer;">Daily</button>
+                            <button id="pnl-view-monthly" style="background:none;border:none;color:#94a3b8;font-weight:600;font-size:11px;padding:4px 8px;border-radius:6px;cursor:pointer;">Monthly</button>
+                            <button id="pnl-view-yearly" style="background:none;border:none;color:#94a3b8;font-weight:600;font-size:11px;padding:4px 8px;border-radius:6px;cursor:pointer;">Yearly</button>
+                        </div>
+                        <button id="pnl-close-modal" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:18px;"><i class="bi bi-x-lg"></i></button>
+                    </div>
+                </div>
+                <div id="pnl-days-header" style="display:grid;grid-template-columns:repeat(7, 1fr);text-align:center;font-size:12px;color:#64748b;margin-bottom:8px;font-weight:600;">
+                    <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                </div>
+                <div id="pnl-calendar-grid" style="display:grid;grid-template-columns:repeat(7, 1fr);gap:6px;max-height:320px;overflow-y:auto;"></div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        document.getElementById('pnl-close-modal').onclick = () => modal.style.display = 'none';
+        modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+    }
+
+    modal.style.display = 'flex';
+    let currentNavDate = new Date();
+    let currentView = 'daily';
+    let pnlData = {};
+
+    const parseNum = val => { if (!val) return 0; const clean = String(val).replace(/,/g, "").trim(); const num = parseFloat(clean); return isNaN(num) ? 0 : num; };
+    const parseCsvRow = text => { var result = [], cell = "", insideQuotes = false; for (var i = 0; i < text.length; i++) { var c = text[i]; if (c === '"') { insideQuotes = !insideQuotes; } else if (c === ',' && !insideQuotes) { result.push(cell); cell = ""; } else { cell += c; } } result.push(cell); return result; };
+
+    const formatVndShort = val => { const num = parseFloat(val); if (isNaN(num) || 0 === num) return "-0.0"; const absVal = Math.abs(num); let formatted = ""; return formatted = absVal >= 1e9 ? (absVal / 1e9).toFixed(1) + "B" : absVal >= 1e6 ? (absVal / 1e6).toFixed(1) + "M" : absVal >= 1e3 ? (absVal / 1e3).toFixed(1) + "K" : absVal.toFixed(1), num >= 0 ? "+" + formatted : "-" + formatted };
+    const setView = view => { currentView = view, ["daily", "monthly", "yearly"].forEach(v => { const btn = document.getElementById(`pnl-view-${v}`); v === view ? (btn.style.background = "#ec4899", btn.style.color = "#000") : (btn.style.background = "none", btn.style.color = "#94a3b8") }), document.getElementById("pnl-days-header").style.display = "daily" === view ? "grid" : "none", renderView() };
+    document.getElementById('pnl-view-daily').onclick = () => setView('daily');
+    document.getElementById('pnl-view-monthly').onclick = () => setView('monthly');
+    document.getElementById('pnl-view-yearly').onclick = () => setView('yearly');
+
+    const fetchExpenseData = () => {
+        if (typeof cachedTxData !== 'undefined' && cachedTxData && cachedTxData.length > 0) {
+            processExpenseData(cachedTxData);
+            return;
+        }
+        
+        const grid = document.getElementById("pnl-calendar-grid");
+        if (grid) {
+            grid.innerHTML = "<div style='grid-column: span 7; text-align: center; color: #94a3b8; padding: 20px;'>Loading details...</div>";
+        }
+
+        const targetUrl = typeof DETAIL_SHEET_URL !== 'undefined' ? DETAIL_SHEET_URL : `${GOOGLE_SHEET_CSV_URL}1492221762`;
+
+        fetch(targetUrl)
+            .then(res => res.text())
+            .then(text => {
+                var lines = text.split(/\r?\n/);
+                var txs = [];
+                for (var i = 1; i < lines.length; i++) {
+                    if (lines[i].trim()) {
+                        var cols = parseCsvRow(lines[i]);
+                        if (cols.length >= 6) {
+                            txs.push({ 
+                                date: cols[2], 
+                                amount: parseNum(cols[5]), 
+                                category: cols[4] || "" 
+                            });
+                        }
+                    }
+                }
+                console.log("Parsed rows with category sample:", txs.slice(0, 3));
+                if (typeof cachedTxData !== 'undefined') {
+                    cachedTxData = txs;
+                }
+                processExpenseData(txs);
+            })
+            .catch(err => {
+                if (grid) {
+                    grid.innerHTML = "<div style='grid-column: span 7; text-align: center; color: #ec4899; padding: 20px;'>Error loading data</div>";
+                }
+                console.error("Fetch error details:", err);
+            });
+    };
+
+    const processExpenseData = (txs) => {
+        pnlData = {};
+        txs.forEach(t => {
+            const cat = (t.category || "").trim();
+            // Exclude rows where category is empty, Savings, or Bank Transfer
+            if (!cat || cat === "Savings" || cat === "Bank Transfer" || cat === "Bank Debts" ||cat === "e-Wallet") {
+                return;
+            }
+
+            let dateKey = "";
+            if (t.date) {
+                const parts = t.date.split(" ")[0].split("/");
+                if (parts.length === 3) {
+                    const [m, d, y] = parts;
+                    dateKey = `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+                } else {
+                    dateKey = t.date.split("T")[0].split(" ")[0];
+                }
+            }
+            
+            if (dateKey && !isNaN(t.amount)) {
+                const expenseVal = t.amount > 0 ? -t.amount : t.amount;
+                pnlData[dateKey] = (pnlData[dateKey] || 0) + expenseVal;
+            }
+        });
+        console.log("Processed pnlData keys count after exclusions:", Object.keys(pnlData).length);
+        renderView();
+    };
+    const renderView = () => {
+    const grid = document.getElementById("pnl-calendar-grid");
+    grid.innerHTML = "";
+    const year = currentNavDate.getFullYear(), month = currentNavDate.getMonth();
+    
+    // Helper to determine cell background and text styling based on absolute expense value (in thousands/millions depending on your scale, assuming absolute numerical value or scaled value)
+    const getStyleConfig = (amt) => {
+        const absVal = Math.abs(amt);
+        if (absVal >= 1000000) {
+            // >= 1M: Pink
+            return { bg: "#2d1622", text: "#ec4899", subText: "#ec4899" };
+        } else if (absVal >= 500000) {
+            // > 500K and < 1M (adjust unit threshold if your base values are in raw units like 500000 vs 500)
+            return { bg: "#2d2218", text: "#f59e0b", subText: "#f59e0b" }; // Amber/Orange tone
+        } else if (absVal >= 200000) {
+            // > 200K and < 500K
+            return { bg: "#1e222b", text: "#38bdf8", subText: "#38bdf8" }; // Soft blue tone
+        } else {
+            // < 200K: default light grey/standard
+            return { bg: "#1e222b", text: "#e2e8f0", subText: "#94a3b8" };
+        }
+    };
+
+    if ("daily" === currentView) {
+        document.getElementById("pnl-nav-title").innerText = `${year}-${String(month + 1).padStart(2, "0")}`;
+        grid.style.gridTemplateColumns = "repeat(7, 1fr)";
+        const firstDayIndex = new Date(year, month, 1).getDay(), totalDays = new Date(year, month + 1, 0).getDate();
+        for (let i = 0; i < firstDayIndex; i++) grid.appendChild(document.createElement("div"));
+        for (let day = 1; day <= totalDays; day++) {
+            const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+            const amount = pnlData[dateStr];
+            const hasData = void 0 !== amount;
+            const styleConf = hasData ? getStyleConfig(amount) : { bg: "#1a1e29", text: "#94a3b8", subText: "#475569" };
+            
+            const cell = document.createElement("div");
+            cell.style.cssText = `aspect-ratio:1;background:${styleConf.bg};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
+            
+            cell.onmouseover = () => cell.style.background = "#2a2e39";
+            cell.onmouseout = () => cell.style.background = styleConf.bg;
+            
+            cell.innerHTML = `
+                <span style="font-size:13px;color:${styleConf.text};font-weight:600;">${day}</span>
+                <span style="font-size:11.5px;color:${styleConf.subText};margin-top:2px;font-weight:600;">${hasData ? formatVndShort(amount) : "+0.00M"}</span>
+            `;
+
+            grid.appendChild(cell);
+        }
+    } else if ("monthly" === currentView) {
+        document.getElementById("pnl-nav-title").innerText = `${year}`;
+        grid.style.gridTemplateColumns = "repeat(3, 1fr)";
+        const getMonthlyStyleConfig = (monthlyTotal, avg) => {
+            const absVal = Math.abs(monthlyTotal);
+            if (absVal > avg * 1.15) {
+                return { bg: "#2d1622", text: "#ec4899", subText: "#ec4899" }; // Pink
+            } else if (absVal > avg) {
+                return { bg: "#2d2218", text: "#f59e0b", subText: "#f59e0b" }; // Orange/Yellow
+            } else {
+                return { bg: "#143242", text: "#38bdf8", subText: "#38bdf8" }; // Blue
+            }
+        };
+        ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].forEach((mName, mIdx) => {
+            let monthlyTotal = 0, count = 0;
+            Object.keys(pnlData).forEach(dKey => { dKey.startsWith(`${year}-${String(mIdx + 1).padStart(2, "0")}`) && (monthlyTotal += pnlData[dKey], count++) });
+            
+            const hasData = count > 0;
+            const avg = typeof averageExpense !== 'undefined' ? averageExpense : 0;
+            const styleConf = hasData ? getMonthlyStyleConfig(monthlyTotal, avg) : { bg: "#1a1e29", text: "#f8f9fa", subText: "#475569" };
+            
+            const cell = document.createElement("div");
+            cell.style.cssText = `padding:15px 8px;background:${styleConf.bg};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
+            
+            cell.onmouseover = () => cell.style.background = "#2a2e39";
+            cell.onmouseout = () => cell.style.background = styleConf.bg;
+            
+            cell.innerHTML = `
+                <span style="font-size:15px;color:#f8f9fa;font-weight:600;">${mName}</span>
+                <span style="font-size:14px;color:${styleConf.text};margin-top:6px;font-weight:600;">${hasData ? formatVndShort(monthlyTotal) : "+0.00M"}</span>
+            `;
+            cell.onclick = () => { currentNavDate.setMonth(mIdx), setView("daily") }, grid.appendChild(cell);
+        });
+    } else if ("yearly" === currentView) {
+        document.getElementById("pnl-nav-title").innerText = `${year - 4} - ${year + 3}`;
+        grid.style.gridTemplateColumns = "repeat(2, 1fr)";
+        const startYear = year - 4;
+        for (let y = startYear; y <= startYear + 7; y++) {
+            let yearlyTotal = 0, count = 0;
+            Object.keys(pnlData).forEach(dKey => { dKey.startsWith(`${y}`) && (yearlyTotal += pnlData[dKey], count++) });
+            const hasData = count > 0;
+            const styleConf = hasData ? getStyleConfig(yearlyTotal) : { bg: "#1a1e29", text: "#f8f9fa", subText: "#475569" };
+            
+            const cell = document.createElement("div");
+            cell.style.cssText = `padding:15px 8px;background:${styleConf.bg};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
+            
+            cell.onmouseover = () => cell.style.background = "#2a2e39";
+            cell.onmouseout = () => cell.style.background = styleConf.bg;
+            
+            cell.innerHTML = `
+                <span style="font-size:15px;color:#f8f9fa;font-weight:600;">${y}</span>
+                <span style="font-size:14px;color:${styleConf.text};margin-top:6px;font-weight:600;">${hasData ? formatVndShort(yearlyTotal) : "+0.00M"}</span>
+            `;
+            cell.onclick = () => { currentNavDate.setFullYear(y), setView("monthly") }, grid.appendChild(cell);
+        }
+    }
+};
+
+    document.getElementById("pnl-prev-nav").onclick = () => { "daily" === currentView ? currentNavDate.setMonth(currentNavDate.getMonth() - 1) : "monthly" === currentView ? currentNavDate.setFullYear(currentNavDate.getFullYear() - 1) : "yearly" === currentView && currentNavDate.setFullYear(currentNavDate.getFullYear() - 8), renderView() };
+    document.getElementById("pnl-next-nav").onclick = () => { "daily" === currentView ? currentNavDate.setMonth(currentNavDate.getMonth() + 1) : "monthly" === currentView ? currentNavDate.setFullYear(currentNavDate.getFullYear() + 1) : "yearly" === currentView && currentNavDate.setFullYear(currentNavDate.getFullYear() + 8), renderView() };
+
+    fetchExpenseData();
 }
+
+  
+
     function renderActivePositionsStat(count,icons){const statEl=document.getElementById("stat-cycles");if(!statEl)return;const shownIcons=icons.slice(0,4),remaining=icons.length-shownIcons.length;let stackHTML='<div class="stat-icon-stack">';shownIcons.forEach(function(ic){ic.iconUrl?stackHTML+=`<div class="stat-stack-icon" style="background-image:url('${ic.iconUrl}');"></div>`:stackHTML+=`<div class="stat-stack-icon stat-stack-icon-text">${ic.symbol.slice(0,2)}</div>`}),remaining>0&&(stackHTML+=`<div class="stat-stack-icon stat-stack-icon-more">+${remaining}</div>`),stackHTML+="</div>",statEl.innerHTML=`\n        <div class="stat-cycles-row">\n            <span class="stat-cycles-num">${count}</span>\n            ${stackHTML}\n        </div>`}
     function toggleGroup(groupId,mainRowEl){const logRows=document.querySelectorAll(`.${groupId}`);if(0===logRows.length)return;mainRowEl.classList.contains("expanded")?(mainRowEl.classList.remove("expanded"),logRows.forEach(row=>row.classList.remove("visible"))):(mainRowEl.classList.add("expanded"),logRows.forEach(row=>row.classList.add("visible")))}
     function closeModal(){const backdrop=document.getElementById("modalBackdrop");backdrop.style.pointerEvents="none",backdrop.classList.remove("active"),document.querySelectorAll('[id="portfolio-cal-menu"]').forEach(function(el){el.remove()})}
