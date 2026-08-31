@@ -762,8 +762,9 @@ tbody tr.current-row td{font-weight:600;}
 .neg{color:var(--accent-rose);font-weight:600}
 .neutral{color:var(--text-muted)}
 
-.nav-card{grid-column:1/-1;font-family:DM Sans;padding:0;margin-bottom:10px;text-align:left}.nav-card-body{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start}.nav-card-left{display:flex;flex-direction:column;gap:12px;min-width:0}.nav-stat-list{display:flex;flex-direction:column;margin-left:5px;gap:14px;flex:1;min-width:0}.nav-stat-item{display:flex;align-items:center;gap:10px}.nav-stat-icon{width:25px;height:25px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background-size:cover;background-position:center}.nav-stat-info{display:flex;flex-direction:column;min-width:0}.nav-stat-label-row{display:flex;align-items:baseline;justify-content:space-between;gap:8px}.nav-stat-label{font-size:12px;color:rgba(255,255,255,.5)}.nav-stat-pct{color:rgba(255,255,255,.35);font-weight:500}.nav-stat-value{font-size:12px;font-weight:700;color:#fff}.nav-stat-pnl{font-size:11px;text-align:left;font-weight:600}
-.nav-donut-wrap{position:relative;width:90px;height:180px;flex-shrink:0;margin-right:28px;margin-top:-15px;overflow:visible}
+.nav-card{grid-column:1/-1;font-family:DM Sans;padding:0;margin-bottom:10px;text-align:left}
+.nav-card-body{display:grid;grid-template-columns:1fr auto;gap:0px;align-items:start}.nav-card-left{display:flex;flex-direction:column;gap:12px;min-width:0}.nav-stat-list{display:flex;flex-direction:column;margin-left:5px;gap:14px;flex:1;min-width:0}.nav-stat-item{display:flex;align-items:center;gap:10px}.nav-stat-icon{width:25px;height:25px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background-size:cover;background-position:center}.nav-stat-info{display:flex;flex-direction:column;min-width:0}.nav-stat-label-row{display:flex;align-items:baseline;justify-content:space-between;gap:8px}.nav-stat-label{font-size:12px;color:rgba(255,255,255,.5)}.nav-stat-pct{color:rgba(255,255,255,.35);font-weight:500}.nav-stat-value{font-size:12px;font-weight:700;color:#fff}.nav-stat-pnl{font-size:11px;text-align:left;font-weight:600}
+.nav-donut-wrap{position:relative;width:90px;height:180px;flex-shrink:0;margin-right:32px;margin-top:-15px;overflow:visible}
 #nav-donut-svg{width:130px;height:288px;position:static;top:auto;left:auto}.nav-donut-label{font-family:"DM Sans",sans-serif;font-weight:700;fill:#fff;text-anchor:middle;dominant-baseline:middle}@media (max-width:400px){.nav-stat-icon{width:20px;height:20px}.nav-stat-item{gap:8px}}.dashboard-grid{display:flex;flex-direction:column}.hero-card-port{background:0 0;margin:10px;position:relative;overflow:hidden}.hero-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}.hero-title-group h2{font-size:13px;font-weight:700;color:var(--teal-primary);text-transform:uppercase;letter-spacing:1px}.hero-title-group .date-range{font-size:12px;color:var(--text-secondary);margin-top:2px}.hero-main-stat{display:flex;align-items:baseline;gap:12px;margin-bottom:12px;flex-wrap:wrap}
 .hero-amount{font-weight:800;letter-spacing:-1px;background:linear-gradient(90deg,#fff 0,#14b8a6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .hero-balance{font-size:23px!important;font-family:"JetBrains Mono";letter-spacing: -2.5px!important;color:#fff!important;margin-bottom:3px;font-weight:400!important;}
@@ -7745,7 +7746,7 @@ function applyPortfolioFiltersAndRender() {
         modal.id = 'pnl-calendar-modal';
         modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:9999;font-family:sans-serif;';
         modal.innerHTML = `
-                  <div style="font-family:DM Sans;background:#14171f;color:#f8f9fa;padding:24px;border-radius:16px;min-height:415px;width:440px;box-shadow:0 8px 32px rgba(0,0,0,0.5);">
+                  <div style="font-family:DM Sans;background:#14171f;color:#f8f9fa;padding:14px;border-radius:16px;min-height:415px;width:440px;box-shadow:0 8px 32px rgba(0,0,0,0.5);">
                       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
                           <div style="display:flex;align-items:center;gap:12px;">
                               <button id="pnl-prev-nav" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:16px;"><i class="bi bi-chevron-left"></i></button>
@@ -7844,7 +7845,7 @@ function applyPortfolioFiltersAndRender() {
               hasData = void 0 !== amount,
               isNegative = hasData && amount < 0,
               cell = document.createElement("div");
-            cell.style.cssText = `aspect-ratio:1;background:${hasData?isNegative?"#2d1622":"#042f2e":"#1a1e29"};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`, cell.onmouseover = () => cell.style.background = "#222733", cell.onmouseout = () => cell.style.background = hasData ? isNegative ? "#2d1622" : "#042f2e" : "#1a1e29", cell.innerHTML = `\n                      <span style="font-size:12px;color:${hasData?isNegative?"#ec4899":"#2dd4bf":"#94a3b8"};font-weight:600;">${day}</span>\n                      <span style="font-size:10px;color:${hasData?isNegative?"#ec4899":"#2dd4bf":"#475569"};margin-top:2px;">${hasData?formatVndShort(amount):"+0.00M"}</span>\n                  `, cell.onclick = () => {
+            cell.style.cssText = `aspect-ratio:1;background:${hasData?isNegative?"#2d1622":"#042f2e":"#1a1e29"};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`, cell.onmouseover = () => cell.style.background = "#222733", cell.onmouseout = () => cell.style.background = hasData ? isNegative ? "#2d1622" : "#042f2e" : "#1a1e29", cell.innerHTML = `\n                      <span style="font-size:13px;color:${hasData?isNegative?"#ec4899":"#2dd4bf":"#94a3b8"};font-weight:600;">${day}</span>\n                      <span style="font-size:11px;color:${hasData?isNegative?"#ec4899":"#2dd4bf":"#475569"};margin-top:2px;">${hasData?formatVndShort(amount):"+0.00M"}</span>\n                  `, cell.onclick = () => {
               selectedDateStr = dateStr, document.getElementById("pnl-input-date-title").innerText = `Input P/L for ${dateStr}`, document.getElementById("pnl-amount-input").value = hasData ? amount : "", document.getElementById("pnl-input-dialog").style.display = "flex"
             }, grid.appendChild(cell)
           }
@@ -7859,7 +7860,7 @@ function applyPortfolioFiltersAndRender() {
             const hasData = count > 0,
               isNegative = monthlyTotal < 0,
               cell = document.createElement("div");
-            cell.style.cssText = `padding:15px 8px;background:${hasData?isNegative?"#2d1622":"#042f2e":"#1a1e29"};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`, cell.onmouseover = () => cell.style.background = "#222733", cell.onmouseout = () => cell.style.background = hasData ? isNegative ? "#2d1622" : "#042f2e" : "#1a1e29", cell.innerHTML = `\n                      <span style="font-size:14px;color:#f8f9fa;font-weight:600;">${mName}</span>\n                      <span style="font-size:13px;color:${hasData?isNegative?"#ec4899":"#2dd4bf":"#475569"};margin-top:6px;font-weight:600;">${hasData?formatVndShort(monthlyTotal):"+0.00M"}</span>\n                  `, cell.onclick = () => {
+            cell.style.cssText = `padding:15px 8px;background:${hasData?isNegative?"#2d1622":"#042f2e":"#1a1e29"};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`, cell.onmouseover = () => cell.style.background = "#222733", cell.onmouseout = () => cell.style.background = hasData ? isNegative ? "#2d1622" : "#042f2e" : "#1a1e29", cell.innerHTML = `\n                      <span style="font-size:15px;color:#f8f9fa;font-weight:600;">${mName}</span>\n                      <span style="font-size:14px;color:${hasData?isNegative?"#ec4899":"#2dd4bf":"#475569"};margin-top:6px;font-weight:600;">${hasData?formatVndShort(monthlyTotal):"+0.00M"}</span>\n                  `, cell.onclick = () => {
               currentNavDate.setMonth(mIdx), setView("daily")
             }, grid.appendChild(cell)
           })
@@ -7875,7 +7876,7 @@ function applyPortfolioFiltersAndRender() {
             const hasData = count > 0,
               isNegative = yearlyTotal < 0,
               cell = document.createElement("div");
-            cell.style.cssText = `padding:15px 8px;background:${hasData?isNegative?"#2d1622":"#042f2e":"#1a1e29"};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`, cell.onmouseover = () => cell.style.background = "#222733", cell.onmouseout = () => cell.style.background = hasData ? isNegative ? "#2d1622" : "#042f2e" : "#1a1e29", cell.innerHTML = `\n                      <span style="font-size:15px;color:#f8f9fa;font-weight:600;">${y}</span>\n                      <span style="font-size:13px;color:${hasData?isNegative?"#ec4899":"#2dd4bf":"#475569"};margin-top:6px;font-weight:600;">${hasData?formatVndShort(yearlyTotal):"+0.00M"}</span>\n                  `, cell.onclick = () => {
+            cell.style.cssText = `padding:15px 8px;background:${hasData?isNegative?"#2d1622":"#042f2e":"#1a1e29"};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`, cell.onmouseover = () => cell.style.background = "#222733", cell.onmouseout = () => cell.style.background = hasData ? isNegative ? "#2d1622" : "#042f2e" : "#1a1e29", cell.innerHTML = `\n                      <span style="font-size:15px;color:#f8f9fa;font-weight:600;">${y}</span>\n                      <span style="font-size:14px;color:${hasData?isNegative?"#ec4899":"#2dd4bf":"#475569"};margin-top:6px;font-weight:600;">${hasData?formatVndShort(yearlyTotal):"+0.00M"}</span>\n                  `, cell.onclick = () => {
               currentNavDate.setFullYear(y), setView("monthly")
             }, grid.appendChild(cell)
           }
@@ -7923,7 +7924,7 @@ function applyPortfolioFiltersAndRender() {
         modal.id = 'expense-calendar-modal';
         modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:9999;font-family:sans-serif;';
         modal.innerHTML = `
-            <div style="font-family:DM Sans;background:#14171f;color:#f8f9fa;padding:24px;border-radius:16px;min-height:415px;width:440px;box-shadow:0 8px 32px rgba(0,0,0,0.5);">
+            <div style="font-family:DM Sans;background:#14171f;color:#f8f9fa;padding:14px;border-radius:16px;min-height:415px;width:440px;box-shadow:0 8px 32px rgba(0,0,0,0.5);">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
                     <div style="display:flex;align-items:center;gap:12px;">
                         <button id="expense-prev-nav" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:16px;"><i class="bi bi-chevron-left"></i></button>
@@ -8075,7 +8076,7 @@ function applyPortfolioFiltersAndRender() {
             
             cell.innerHTML = `
                 <span style="font-size:13px;color:${styleConf.text};font-weight:600;">${day}</span>
-                <span style="font-size:11.5px;color:${styleConf.subText};margin-top:2px;font-weight:600;">${hasData ? formatVndShort(amount) : "+0.00M"}</span>
+                <span style="font-size:11px;color:${styleConf.subText};margin-top:2px;font-weight:600;">${hasData ? formatVndShort(amount) : "-0.0M"}</span>
             `;
 
             grid.appendChild(cell);
