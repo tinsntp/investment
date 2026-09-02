@@ -4311,7 +4311,7 @@ to{transform:rotate(360deg)}
 
     /* ══ ADD RECORD (writes to the sheet via Apps Script Web App) ══ */
     var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbylW9rWUDL6OkPqJhS4zIiK-tJgN_apQZGs-KuuX3Pv2cmQEe8q__BtAWve4pb8toqG/exec";
-    var EXPENSE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby0ExWcH83A_WZTJ3OV1JDn-oTfrAOr3yf98VH1ojqdKWJT8M8jy_ej8nmZhQQqf7cPTw/exec";
+    var EXPENSE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxwgsd_LncNbxYeFXADoCkht4bpYv6til9QcKB_9QV4d0BB5jdpsR5fuoUkhH9WtmmInA/exec";
 
     var addOverlay = document.getElementById("add-modal-overlay");
     var addStatusEl = document.getElementById("add-status");
@@ -7704,9 +7704,9 @@ function applyPortfolioFiltersAndRender() {
       if (!modal) {
         modal = document.createElement('div');
         modal.id = 'pnl-calendar-modal';
-        modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:9999;font-family:sans-serif;';
+        modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:9999;font-family:"DM Sans",sans-serif;';
         modal.innerHTML = `
-                  <div style="font-family:DM Sans;background:#14171f;color:#f8f9fa;padding:14px;border-radius:16px;min-height:420px;width:440px;box-shadow:0 8px 32px rgba(0,0,0,0.5);">
+                  <div style="font-family:'DM Sans',sans-serif;background:#14171f;color:#f8f9fa;padding:14px;border-radius:16px;min-height:420px;width:440px;box-shadow:0 8px 32px rgba(0,0,0,0.5);">
                       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
                           <div style="display:flex;align-items:center;gap:12px;">
                               <button id="pnl-prev-nav" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:16px;"><i class="bi bi-chevron-left"></i></button>
@@ -7715,9 +7715,9 @@ function applyPortfolioFiltersAndRender() {
                           </div>
                           <div style="display:flex;align-items:center;gap:10px;">
                               <div style="background:#1e222b;padding:2px;border-radius:8px;display:flex;gap:2px;">
-                                  <button id="pnl-view-daily" style="background:#00bfa5;border:none;color:#000;font-weight:600;font-size:11px;padding:4px 8px;border-radius:6px;cursor:pointer;">Daily</button>
-                                  <button id="pnl-view-monthly" style="background:none;border:none;color:#94a3b8;font-weight:600;font-size:11px;padding:4px 8px;border-radius:6px;cursor:pointer;">Monthly</button>
-                                  <button id="pnl-view-yearly" style="background:none;border:none;color:#94a3b8;font-weight:600;font-size:11px;padding:4px 8px;border-radius:6px;cursor:pointer;">Yearly</button>
+                                  <button id="pnl-view-daily" style="background:#00bfa5;border:none;color:#000;font-weight:600;font-size:11px;padding:4px 8px;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif;">Daily</button>
+                                  <button id="pnl-view-monthly" style="background:none;border:none;color:#94a3b8;font-weight:600;font-size:11px;padding:4px 8px;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif;">Monthly</button>
+                                  <button id="pnl-view-yearly" style="background:none;border:none;color:#94a3b8;font-weight:600;font-size:11px;padding:4px 8px;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif;">Yearly</button>
                               </div>
                               <button id="pnl-close-modal" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:18px;"><i class="bi bi-x-lg"></i></button>
                           </div>
@@ -7727,22 +7727,78 @@ function applyPortfolioFiltersAndRender() {
                       </div>
                       <div id="pnl-calendar-grid" style="display:grid;grid-template-columns:repeat(7, 1fr);gap:6px;max-height:320px;overflow-y:auto;"></div>
                   </div>
-                  <div id="pnl-input-dialog" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;z-index:10000;">
-                      <div style="background:#1e222b;padding:20px;border-radius:12px;width:280px;color:#fff;">
-                          <h3 id="pnl-input-date-title" style="margin:0 0 12px 0;font-size:14px;color:#94a3b8;">Input P/L</h3>
-                          <input type="number" id="pnl-amount-input" step="any" placeholder="Amount (e.g. 1.92 or -0.5)" style="width:100%;padding:10px;background:#14171f;border:1px solid #2a2e39;border-radius:8px;color:#fff;box-sizing:border-box;margin-bottom:14px;outline:none;" />
+                  <div id="pnl-input-dialog" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;z-index:10000;font-family:'DM Sans',sans-serif;">
+                      <div style="background:#1e222b;padding:20px;border-radius:16px;width:380px;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,0.5);">
+                          <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+                              <img id="pnl-modal-icon" src="https://github.com/tinsntp/investment/blob/main/stock.png?raw=true" style="width:24px;height:24px;border-radius:6px;object-fit:cover;" />
+                              <h3 id="pnl-input-date-title" style="margin:0;font-size:15px;color:#f8f9fa;font-weight:600;">Add P/L</h3>
+                          </div>
+                          
+                          <!-- Row 1: Symbol & Volume -->
+                          <div style="display:flex;gap:12px;margin-bottom:12px;">
+                              <div style="flex:1;position:relative;">
+                                  <label style="display:block;color:#94a3b8;font-size:12px;margin-bottom:6px;">Symbol</label>
+                                  <div style="position:relative;display:flex;align-items:center;">
+                                      <input type="text" id="pnl-symbol-input" placeholder="XAUUSD" autocomplete="off" style="width:100%;padding:10px 30px 10px 12px;background:#14171f;border:none;border-radius:8px;color:#fff;box-sizing:border-box;outline:none;text-transform:uppercase;font-size:15px;font-family:'DM Sans',sans-serif;" />
+                                      <span id="pnl-clear-symbol-btn" onclick="document.getElementById('pnl-symbol-input').value=''; updateSymbolIcon(''); document.getElementById('pnl-symbol-dropdown').style.display='none'; document.getElementById('pnl-symbol-input').focus();" style="position:absolute;right:10px;cursor:pointer;color:#94a3b8;font-size:14px;user-select:none;">&times;</span>
+                                  </div>
+                                  <div id="pnl-symbol-dropdown" style="display:none;position:absolute;top:100%;left:0;width:100%;background:#14171f;border-radius:8px;margin-top:4px;max-height:150px;overflow-y:auto;z-index:10001;box-shadow:0 4px 12px rgba(0,0,0,0.3);"></div>
+                              </div>
+                              <div style="flex:1;position:relative;">
+                                  <label style="display:block;color:#94a3b8;font-size:12px;margin-bottom:6px;">Vol</label>
+                                  <div style="position:relative;display:flex;align-items:center;">
+                                      <input type="text" id="pnl-vol-input" value="0.05" style="width:100%;padding:10px 30px 10px 12px;background:#14171f;border:none;border-radius:8px;color:#fff;box-sizing:border-box;outline:none;font-size:15px;font-family:'DM Sans',sans-serif;" />
+                                      <span id="pnl-clear-vol-btn" onclick="document.getElementById('pnl-vol-input').value='';" style="position:absolute;right:10px;cursor:pointer;color:#94a3b8;font-size:14px;user-select:none;">&times;</span>
+                                  </div>
+                              </div>
+                          </div>
+
+                          <!-- Row 2: Entry Price & Exit Price -->
+                          <div style="display:flex;gap:12px;margin-bottom:12px;">
+                              <div style="flex:1;">
+                                  <label style="display:block;color:#94a3b8;font-size:12px;margin-bottom:6px;">Entry Price</label>
+                                  <input type="text" id="pnl-entry-price-input" placeholder="0.00" style="width:100%;padding:10px 12px;background:#14171f;border:none;border-radius:8px;color:#fff;box-sizing:border-box;outline:none;font-size:13px;font-family:'DM Sans',sans-serif;" />
+                              </div>
+                              <div style="flex:1;">
+                                  <label style="display:block;color:#94a3b8;font-size:12px;margin-bottom:6px;">Exit Price</label>
+                                  <input type="text" id="pnl-exit-price-input" placeholder="0.00" style="width:100%;padding:10px 12px;background:#14171f;border:none;border-radius:8px;color:#fff;box-sizing:border-box;outline:none;font-size:15px;font-family:'DM Sans',sans-serif;" />
+                              </div>
+                          </div>
+
+                          <!-- Row 3: P/L Amount & Action (Long/Short) -->
+                          <div style="display:flex;gap:12px;margin-bottom:20px;">
+                              <div style="flex:1;">
+                                  <label style="display:block;color:#94a3b8;font-size:12px;margin-bottom:6px;">P/L Amount (₫):</label>
+                                  <input type="text" id="pnl-amount-input" placeholder="0" style="width:100%;padding:10px 12px;background:#14171f;border:none;border-radius:8px;color:#fff;box-sizing:border-box;outline:none;font-size:15px;font-family:'DM Sans',sans-serif;" />
+                              </div>
+                              <div style="flex:1;">
+                                  <label style="display:block;color:#94a3b8;font-size:15px;margin-bottom:6px;">Action</label>
+                                  <div style="display:flex;background:#14171f;border-radius:8px;padding:2px;height:39px;box-sizing:border-box;align-items:center;">
+                                      <button type="button" id="pnl-action-long" onclick="setPnLAction('LONG')" style="flex:1;height:100%;border:none;border-radius:6px;background:#14b8a6;color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Long</button>
+                                      <button type="button" id="pnl-action-short" onclick="setPnLAction('SHORT')" style="flex:1;height:100%;border:none;border-radius:6px;background:transparent;color:#94a3b8;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Short</button>
+                                  </div>
+                                  <input type="hidden" id="pnl-action-type" value="LONG" />
+                              </div>
+                          </div>
+
+                          <div id="pnl-error-message" style="display:none;padding:10px 12px;margin-bottom:12px;background:rgba(220,53,69,0.1);color:#ea868f;border-radius:8px;font-size:12px;font-weight:500;"></div>
                           <div style="display:flex;justify-content:flex-end;gap:8px;">
-                              <button id="pnl-cancel-input" style="padding:6px 12px;background:none;border:none;color:#94a3b8;cursor:pointer;">Cancel</button>
-                              <button id="pnl-save-input" style="padding:6px 14px;background:#00bfa5;border:none;border-radius:6px;color:#000;font-weight:600;cursor:pointer;">Save</button>
+                              <button id="pnl-cancel-input" style="padding:8px 14px;background:none;border:none;color:#94a3b8;cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;">Cancel</button>
+                              <button id="pnl-save-input" style="padding:8px 16px;background:#00bfa5;border:none;border-radius:6px;color:#000;font-weight:600;cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;">Save</button>
                           </div>
                       </div>
                   </div>
               `;
         document.body.appendChild(modal);
 
-        document.getElementById('pnl-close-modal').onclick = () => modal.style.display = 'none';
+        const closeBtn = document.getElementById('pnl-close-modal');
+        if (closeBtn) closeBtn.onclick = () => modal.style.display = 'none';
         modal.onclick = (e) => {
-          if (e.target === modal) modal.style.display = 'none';
+          if (e.target === modal) {
+              modal.style.display = 'none';
+              const dropdown = document.getElementById('pnl-symbol-dropdown');
+              if (dropdown) dropdown.style.display = 'none';
+          }
         };
       }
 
@@ -7751,6 +7807,127 @@ function applyPortfolioFiltersAndRender() {
       let currentView = 'daily';
       let pnlData = {};
       let selectedDateStr = '';
+      let symbolIconMap = {};
+      const defaultSymbols = ["BTCUSD", "XAUUSD", "XAGUSD", "ETHUSD", "USDJPY"];
+
+      const fetchSymbolIcons = async () => {
+          try {
+              const res = await fetch(`${GOOGLE_SHEET_CSV_URL}1012065455`);
+              const text = await res.text();
+              text.split("\n").forEach(row => {
+                  if (!row.trim()) return;
+                  const cols = row.split(",").map(col => col.trim().replace(/^["']|["']$/g, ""));
+                  if (cols.length >= 2) {
+                      const sym = cols[0].toUpperCase();
+                      const url = cols[1];
+                      if (sym && url) {
+                          symbolIconMap[sym] = url;
+                      }
+                  }
+              });
+          } catch (err) {
+              console.error("Error fetching symbol icons", err);
+          }
+      };
+
+      window.updateSymbolIcon = function(symbol) {
+          const iconEl = document.getElementById('pnl-modal-icon') || document.getElementById('portfolioModalIcon');
+          if (!iconEl) return;
+          const cleanSymbol = symbol.trim().toUpperCase();
+          if (symbolIconMap[cleanSymbol]) {
+              iconEl.src = symbolIconMap[cleanSymbol];
+          } else {
+              iconEl.src = 'https://github.com/tinsntp/investment/blob/main/stock.png?raw=true';
+          }
+      };
+
+      const symbolInput = document.getElementById('pnl-symbol-input');
+      const symbolDropdown = document.getElementById('pnl-symbol-dropdown');
+
+      if (symbolInput) {
+          symbolInput.oninput = (e) => {
+              const val = e.target.value.trim().toUpperCase();
+              updateSymbolIcon(val);
+              const filtered = defaultSymbols.filter(s => s.includes(val));
+              if (filtered.length > 0 && val.length > 0 && symbolDropdown) {
+                  symbolDropdown.innerHTML = filtered.map(s => `<div class="pnl-sym-option" style="padding:8px 12px;font-size:13px;cursor:pointer;color:#f8f9fa;" onmouseover="this.style.background='#1e222b'" onmouseout="this.style.background='transparent'">${s}</div>`).join('');
+                  symbolDropdown.style.display = 'block';
+                  
+                  symbolDropdown.querySelectorAll('.pnl-sym-option').forEach(opt => {
+                      opt.onclick = () => {
+                          symbolInput.value = opt.innerText;
+                          updateSymbolIcon(opt.innerText);
+                          symbolDropdown.style.display = 'none';
+                      };
+                  });
+              } else if (symbolDropdown) {
+                  symbolDropdown.style.display = 'none';
+              }
+          };
+
+          symbolInput.onfocus = () => {
+              const val = symbolInput.value.trim().toUpperCase();
+              const filtered = defaultSymbols.filter(s => s.includes(val));
+              if (filtered.length > 0 && symbolDropdown) {
+                  symbolDropdown.innerHTML = filtered.map(s => `<div class="pnl-sym-option" style="padding:8px 12px;font-size:13px;cursor:pointer;color:#f8f9fa;" onmouseover="this.style.background='#1e222b'" onmouseout="this.style.background='transparent'">${s}</div>`).join('');
+                  symbolDropdown.style.display = 'block';
+                  symbolDropdown.querySelectorAll('.pnl-sym-option').forEach(opt => {
+                      opt.onclick = () => {
+                          symbolInput.value = opt.innerText;
+                          updateSymbolIcon(opt.innerText);
+                          symbolDropdown.style.display = 'none';
+                      };
+                  });
+              }
+          };
+      }
+
+      // Entry/Exit price decimal handling: convert comma to dot
+      const entryPriceInput = document.getElementById('pnl-entry-price-input');
+      const exitPriceInput = document.getElementById('pnl-exit-price-input');
+      
+      if (entryPriceInput) {
+          entryPriceInput.oninput = (e) => {
+              e.target.value = e.target.value.replace(/,/g, '.');
+          };
+      }
+      if (exitPriceInput) {
+          exitPriceInput.oninput = (e) => {
+              e.target.value = e.target.value.replace(/,/g, '.');
+          };
+      }
+
+      // P/L Amount formatting: VND style comma division
+      const amountInput = document.getElementById('pnl-amount-input');
+      if (amountInput) {
+          amountInput.oninput = (e) => {
+              let val = e.target.value.replace(/[^0-9.-]/g, '');
+              let parts = val.split('.');
+              parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+              e.target.value = parts.join('.');
+          };
+      }
+
+      window.setPnLAction = function(action) {
+          const longBtn = document.getElementById("pnl-action-long");
+          const shortBtn = document.getElementById("pnl-action-short");
+          const hiddenInput = document.getElementById("pnl-action-type");
+          if (longBtn && shortBtn && hiddenInput) {
+              if (action === "LONG") {
+                  longBtn.style.background = "#14b8a6";
+                  longBtn.style.color = "#fff";
+                  shortBtn.style.background = "transparent";
+                  shortBtn.style.color = "#94a3b8";
+                  hiddenInput.value = "LONG";
+              } else {
+                  shortBtn.style.background = "#ec4899";
+                  shortBtn.style.color = "#fff";
+                  longBtn.style.background = "transparent";
+                  longBtn.style.color = "#94a3b8";
+                  hiddenInput.value = "SHORT";
+              }
+          }
+      };
 
       const formatVndShort = val => {
         const num = parseFloat(val);
@@ -7759,15 +7936,26 @@ function applyPortfolioFiltersAndRender() {
         let formatted = "";
         return formatted = absVal >= 1e9 ? (absVal / 1e9).toFixed(2) + "B" : absVal >= 1e6 ? (absVal / 1e6).toFixed(2) + "M" : absVal >= 1e3 ? (absVal / 1e3).toFixed(2) + "K" : absVal.toFixed(2), num >= 0 ? "+" + formatted : "-" + formatted
       };
+
       const setView = view => {
         currentView = view, ["daily", "monthly", "yearly"].forEach(v => {
           const btn = document.getElementById(`pnl-view-${v}`);
-          v === view ? (btn.style.background = "#00bfa5", btn.style.color = "#000") : (btn.style.background = "none", btn.style.color = "#94a3b8")
-        }), document.getElementById("pnl-days-header").style.display = "daily" === view ? "grid" : "none", renderView()
+          if (btn) {
+              v === view ? (btn.style.background = "#00bfa5", btn.style.color = "#000") : (btn.style.background = "none", btn.style.color = "#94a3b8");
+          }
+        });
+        const daysHeader = document.getElementById("pnl-days-header");
+        if (daysHeader) daysHeader.style.display = "daily" === view ? "grid" : "none";
+        renderView();
       };
-      document.getElementById('pnl-view-daily').onclick = () => setView('daily');
-      document.getElementById('pnl-view-monthly').onclick = () => setView('monthly');
-      document.getElementById('pnl-view-yearly').onclick = () => setView('yearly');
+
+      const viewDailyBtn = document.getElementById('pnl-view-daily');
+      if (viewDailyBtn) viewDailyBtn.onclick = () => setView('daily');
+      const viewMonthlyBtn = document.getElementById('pnl-view-monthly');
+      if (viewMonthlyBtn) viewMonthlyBtn.onclick = () => setView('monthly');
+      const viewYearlyBtn = document.getElementById('pnl-view-yearly');
+      if (viewYearlyBtn) viewYearlyBtn.onclick = () => setView('yearly');
+      
       const fetchPnlData = async () => {
         try {
           const res = await fetch(`${GOOGLE_SHEET_CSV_URL}1158462025`);
@@ -7786,16 +7974,18 @@ function applyPortfolioFiltersAndRender() {
         }
         renderView()
       };
+
       const renderView = () => {
         const grid = document.getElementById("pnl-calendar-grid");
-        if (grid) {
-            grid.innerHTML = "<div id='loading-msg' style='grid-column: span 7; text-align: center; color: #94a3b8; padding: 20px;'></div>";
-        }
+        if (!grid) return;
         grid.innerHTML = "";
         const year = currentNavDate.getFullYear(),
           month = currentNavDate.getMonth();
+        const navTitle = document.getElementById("pnl-nav-title");
+
         if ("daily" === currentView) {
-          document.getElementById("pnl-nav-title").innerText = `${year}-${String(month+1).padStart(2,"0")}`, grid.style.gridTemplateColumns = "repeat(7, 1fr)";
+          if (navTitle) navTitle.innerText = `${year}-${String(month+1).padStart(2,"0")}`;
+          grid.style.gridTemplateColumns = "repeat(7, 1fr)";
           const firstDayIndex = new Date(year, month, 1).getDay(),
             totalDays = new Date(year, month + 1, 0).getDate();
           for (let i = 0; i < firstDayIndex; i++) grid.appendChild(document.createElement("div"));
@@ -7806,11 +7996,27 @@ function applyPortfolioFiltersAndRender() {
               isNegative = hasData && amount < 0,
               cell = document.createElement("div");
             cell.style.cssText = `aspect-ratio:1;background:${hasData?isNegative?"#2d1622":"#042f2e":"#1a1e29"};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`, cell.onmouseover = () => cell.style.background = "#222733", cell.onmouseout = () => cell.style.background = hasData ? isNegative ? "#2d1622" : "#042f2e" : "#1a1e29", cell.innerHTML = `\n                      <span style="font-size:13px;color:${hasData?isNegative?"#ec4899":"#2dd4bf":"#94a3b8"};font-weight:600;">${day}</span>\n                      <span style="font-size:11px;color:${hasData?isNegative?"#ec4899":"#2dd4bf":"#475569"};margin-top:2px;">${hasData?formatVndShort(amount):"+0.00M"}</span>\n                  `, cell.onclick = () => {
-              selectedDateStr = dateStr, document.getElementById("pnl-input-date-title").innerText = `Input P/L for ${dateStr}`, document.getElementById("pnl-amount-input").value = hasData ? amount : "", document.getElementById("pnl-input-dialog").style.display = "flex"
+              selectedDateStr = dateStr;
+              const dateTitle = document.getElementById("pnl-input-date-title");
+              if (dateTitle) dateTitle.innerText = `Add P/L for ${dateStr}`;
+              const amtInput = document.getElementById("pnl-amount-input");
+              if (amtInput) amtInput.value = hasData ? amount : "";
+              const symInput = document.getElementById("pnl-symbol-input");
+              if (symInput) symInput.value = "";
+              updateSymbolIcon("");
+              const volInput = document.getElementById("pnl-vol-input");
+              if (volInput) volInput.value = "0.05";
+              const entryInput = document.getElementById("pnl-entry-price-input");
+              if (entryInput) entryInput.value = "";
+              const exitInput = document.getElementById("pnl-exit-price-input");
+              if (exitInput) exitInput.value = "";
+              const inputDlg = document.getElementById("pnl-input-dialog");
+              if (inputDlg) inputDlg.style.display = "flex";
             }, grid.appendChild(cell)
           }
         } else if ("monthly" === currentView) {
-          document.getElementById("pnl-nav-title").innerText = `${year}`, grid.style.gridTemplateColumns = "repeat(3, 1fr)";
+          if (navTitle) navTitle.innerText = `${year}`;
+          grid.style.gridTemplateColumns = "repeat(3, 1fr)";
           ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].forEach((mName, mIdx) => {
             let monthlyTotal = 0,
               count = 0;
@@ -7825,7 +8031,8 @@ function applyPortfolioFiltersAndRender() {
             }, grid.appendChild(cell)
           })
         } else if ("yearly" === currentView) {
-          document.getElementById("pnl-nav-title").innerText = `${year-4} - ${year+3}`, grid.style.gridTemplateColumns = "repeat(2, 1fr)";
+          if (navTitle) navTitle.innerText = `${year-4} - ${year+3}`;
+          grid.style.gridTemplateColumns = "repeat(2, 1fr)";
           const startYear = year - 4;
           for (let y = startYear; y <= startYear + 7; y++) {
             let yearlyTotal = 0,
@@ -7842,38 +8049,122 @@ function applyPortfolioFiltersAndRender() {
           }
         }
       };
-      document.getElementById("pnl-prev-nav").onclick = () => {
-        "daily" === currentView ? currentNavDate.setMonth(currentNavDate.getMonth() - 1) : "monthly" === currentView ? currentNavDate.setFullYear(currentNavDate.getFullYear() - 1) : "yearly" === currentView && currentNavDate.setFullYear(currentNavDate.getFullYear() - 8), renderView()
-      };
-      document.getElementById("pnl-next-nav").onclick = () => {
-        "daily" === currentView ? currentNavDate.setMonth(currentNavDate.getMonth() + 1) : "monthly" === currentView ? currentNavDate.setFullYear(currentNavDate.getFullYear() + 1) : "yearly" === currentView && currentNavDate.setFullYear(currentNavDate.getFullYear() + 8), renderView()
-      };
-      document.getElementById("pnl-cancel-input").onclick = () => {
-        document.getElementById("pnl-input-dialog").style.display = "none"
-      };
-      document.getElementById("pnl-save-input").onclick = async () => {
-        const val = document.getElementById("pnl-amount-input").value;
-        if ("" !== val) {
-          document.getElementById("pnl-input-dialog").style.display = "none", pnlData[selectedDateStr] = parseFloat(val), renderView();
-          try {
-            await fetch(EXPENSE_APPS_SCRIPT_URL, {
-              method: "POST",
-              mode: "no-cors",
-              headers: {
-                "Content-Type": "application/json"
-              },
-              body: JSON.stringify({
-                gid: "1158462025",
-                date: selectedDateStr,
-                amount: val
-              })
-            })
-          } catch (err) {
-            console.error("Failed to sync with Apps Script", err)
-          }
-        }
-      };
 
+      const prevNavBtn = document.getElementById("pnl-prev-nav");
+      if (prevNavBtn) {
+          prevNavBtn.onclick = () => {
+            "daily" === currentView ? currentNavDate.setMonth(currentNavDate.getMonth() - 1) : "monthly" === currentView ? currentNavDate.setFullYear(currentNavDate.getFullYear() - 1) : "yearly" === currentView && currentNavDate.setFullYear(currentNavDate.getFullYear() - 8), renderView()
+          };
+      }
+      const nextNavBtn = document.getElementById("pnl-next-nav");
+      if (nextNavBtn) {
+          nextNavBtn.onclick = () => {
+            "daily" === currentView ? currentNavDate.setMonth(currentNavDate.getMonth() + 1) : "monthly" === currentView ? currentNavDate.setFullYear(currentNavDate.getFullYear() + 1) : "yearly" === currentView && currentNavDate.setFullYear(currentNavDate.getFullYear() + 8), renderView()
+          };
+      }
+      const cancelInputBtn = document.getElementById("pnl-cancel-input");
+      if (cancelInputBtn) {
+          cancelInputBtn.onclick = () => {
+            const inputDlg = document.getElementById("pnl-input-dialog");
+            if (inputDlg) inputDlg.style.display = "none";
+            const dropdown = document.getElementById("pnl-symbol-dropdown");
+            if (dropdown) dropdown.style.display = "none";
+          };
+      }
+      const saveInputBtn = document.getElementById("pnl-save-input");
+      if (saveInputBtn) {
+          saveInputBtn.onclick = () => {
+            const rawAmountVal = document.getElementById("pnl-amount-input")?.value || "";
+            const cleanAmountVal = rawAmountVal.replace(/,/g, '');
+            const symbolVal = document.getElementById("pnl-symbol-input")?.value || "";
+            const volVal = document.getElementById("pnl-vol-input")?.value || "";
+            const entryPriceVal = document.getElementById("pnl-entry-price-input")?.value || "";
+            const exitPriceVal = document.getElementById("pnl-exit-price-input")?.value || "";
+            const actionVal = document.getElementById("pnl-action-type")?.value || "LONG";
+            const mappedTradeAction = actionVal === "LONG" ? "BUY" : "SELL";
+
+            const dropdown = document.getElementById("pnl-symbol-dropdown");
+            if (dropdown) dropdown.style.display = "none";
+
+            const errorEl = document.getElementById("pnl-error-message");
+            const cancelBtn = document.getElementById("pnl-cancel-input");
+
+            // Validation
+            if (cleanAmountVal === "" || isNaN(parseFloat(cleanAmountVal))) {
+                if (errorEl) {
+                    errorEl.textContent = "Please enter a P/L amount.";
+                    errorEl.style.display = "block";
+                }
+                return;
+            }
+
+            if (errorEl) errorEl.style.display = "none";
+
+            if (saveInputBtn) {
+                saveInputBtn.disabled = true;
+                saveInputBtn.style.opacity = "0.6";
+                saveInputBtn.textContent = "Saving...";
+            }
+            if (cancelBtn) {
+                cancelBtn.disabled = true;
+                cancelBtn.style.opacity = "0.5";
+            }
+
+            const payload = {
+                action: "portfolio_calendar_pnl_close_forex",
+                date: selectedDateStr,
+                amount: cleanAmountVal,
+                symbol: symbolVal,
+                volume: volVal,
+                entryPrice: entryPriceVal,
+                exitPrice: exitPriceVal,
+                tradeAction: mappedTradeAction
+            };
+
+            fetch(EXPENSE_APPS_SCRIPT_URL, {
+                method: "POST",
+                mode: "cors",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify(payload)
+            })
+            .then(function(response) {
+                if (!response.ok) throw new Error("Network response error: " + response.status);
+                return response.json();
+            })
+            .then(function(result) {
+                if (result.status !== "success") throw new Error(result.message || "Execution exception.");
+
+                // Only update local state and close the dialog once the server confirms.
+                pnlData[selectedDateStr] = parseFloat(cleanAmountVal) || 0;
+                renderView();
+
+                const inputDlg = document.getElementById("pnl-input-dialog");
+                if (inputDlg) inputDlg.style.display = "none";
+
+                triggerPaperFirework(null);
+            })
+            .catch(function(err) {
+                console.error("Failed to sync with Apps Script", err);
+                if (errorEl) {
+                    errorEl.textContent = "Server Error: " + err.message;
+                    errorEl.style.display = "block";
+                }
+            })
+            .finally(function() {
+                if (saveInputBtn) {
+                    saveInputBtn.disabled = false;
+                    saveInputBtn.style.opacity = "1";
+                    saveInputBtn.textContent = "Save";
+                }
+                if (cancelBtn) {
+                    cancelBtn.disabled = false;
+                    cancelBtn.style.opacity = "1";
+                }
+            });
+          };
+      }
+
+      fetchSymbolIcons();
       fetchPnlData();
     }
   
@@ -8102,9 +8393,7 @@ function applyPortfolioFiltersAndRender() {
 
     fetchExpenseData();
 }
-
-  
-
+    
     function renderActivePositionsStat(count,icons){const statEl=document.getElementById("stat-cycles");if(!statEl)return;const shownIcons=icons.slice(0,4),remaining=icons.length-shownIcons.length;let stackHTML='<div class="stat-icon-stack">';shownIcons.forEach(function(ic){ic.iconUrl?stackHTML+=`<div class="stat-stack-icon" style="background-image:url('${ic.iconUrl}');"></div>`:stackHTML+=`<div class="stat-stack-icon stat-stack-icon-text">${ic.symbol.slice(0,2)}</div>`}),remaining>0&&(stackHTML+=`<div class="stat-stack-icon stat-stack-icon-more">+${remaining}</div>`),stackHTML+="</div>",statEl.innerHTML=`\n        <div class="stat-cycles-row">\n            <span class="stat-cycles-num">${count}</span>\n            ${stackHTML}\n        </div>`}
     function toggleGroup(groupId,mainRowEl){const logRows=document.querySelectorAll(`.${groupId}`);if(0===logRows.length)return;mainRowEl.classList.contains("expanded")?(mainRowEl.classList.remove("expanded"),logRows.forEach(row=>row.classList.remove("visible"))):(mainRowEl.classList.add("expanded"),logRows.forEach(row=>row.classList.add("visible")))}
     function closeModal(){const backdrop=document.getElementById("modalBackdrop");backdrop.style.pointerEvents="none",backdrop.classList.remove("active"),document.querySelectorAll('[id="portfolio-cal-menu"]').forEach(function(el){el.remove()})}
