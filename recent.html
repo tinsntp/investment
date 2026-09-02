@@ -6292,7 +6292,7 @@ to{transform:rotate(360deg)}
     function cleanNum(val){if(!val)return 0;let c=val.toString().replace(/[\$,%\s]/g,"");c.startsWith("(")&&c.endsWith(")")&&(c="-"+c.slice(1,-1));const n=parseFloat(c);return isNaN(n)?0:n}function formatShortNumber(val){if(null==val||isNaN(val))return"-";if(0===val)return"0";const absNum=Math.abs(val),sign=val<0?"-":"",decimals=window.innerWidth>400?3:1;let formatted="";return formatted=absNum>=1e9?(absNum/1e9).toFixed(decimals)+"B":absNum>=1e6?(absNum/1e6).toFixed(decimals)+"M":absNum>=1e3?(absNum/1e3).toFixed(decimals)+"K":absNum.toLocaleString(void 0,{minimumFractionDigits:0,maximumFractionDigits:decimals}),`${sign}${formatted}`}function formatStockPrice(price){if(!price||isNaN(price))return"0.0";let formatted=(price>1e3?price/1e3:price).toFixed(2);return(formatted.endsWith("0")&&!formatted.endsWith(".00")||formatted.endsWith(".00"))&&(formatted=formatted.slice(0,-1)),formatted}function formatCryptoPrice(price){return!price||isNaN(price)?"0.000":price.toLocaleString(void 0,{minimumFractionDigits:0,maximumFractionDigits:0})}function formatPnlValue(num){if(0===num||null==num)return"-";return(num>0?"+":"")+formatShortNumber(num)}function formatPnlPct(pctVal){if(0===pctVal||null==pctVal||isNaN(pctVal))return"-";return`${pctVal>0?"+":""}${pctVal.toFixed(2)}%`}function parseDate(dateStr){if(!dateStr)return null;if(dateStr.includes("-")){const parts=dateStr.split("-");return new Date(parseInt(parts[0],10),parseInt(parts[1],10)-1,parseInt(parts[2],10))}if(dateStr.includes("/")){const parts=dateStr.split("/");return new Date(parseInt(parts[2],10),parseInt(parts[1],10)-1,parseInt(parts[0],10))}return new Date(dateStr)}function formatNoYearDate(dateObj){if(!dateObj)return"-";return`${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][dateObj.getMonth()]} ${String(dateObj.getDate()).padStart(2,"0")}`}
     function formatDateRangeTwoLinesNoYear(startDateStr,exitDateStr,isSaving=!1,volumeMonths=0){const sDate=parseDate(startDateStr);let eDate=null;isSaving&&volumeMonths>0&&sDate?(eDate=new Date(sDate),eDate.setMonth(eDate.getMonth()+parseInt(volumeMonths,10))):exitDateStr&&""!==exitDateStr.trim()&&(eDate=parseDate(exitDateStr));return`<div class="val-primary">${sDate?formatNoYearDate(sDate):"-"}</div><div class="val-secondary">${eDate?formatNoYearDate(eDate):"Present"}</div>`}
     function cleanNoteText(noteStr,statusStr){if(!noteStr||""===noteStr.trim())return statusStr||"";let cleaned=noteStr.replace(/MAIN\b/gi,"").replace(/LOG\b/gi,"").replace(/\bC\d+\b/gi,"").replace(/[\+\-]/g,"").trim();return""===cleaned?statusStr:cleaned}function getShortLogKeyword(text){if(!text)return"Log";const lower=text.toLowerCase();return lower.includes("dca")?"DCA":lower.includes("buy")?"Buy":lower.includes("sell")?"Sell":lower.includes("close")?"Close":lower.includes("deposit")||lower.includes("saving")?"Deposit":text.split(" ")[0].slice(0,5)}function parseCSVLine(line){for(var values=[],currentVal="",inQuotes=!1,i=0;i<line.length;i++){var char=line.charAt(i);'"'===char&&'"'===line.charAt(i+1)?(currentVal+='"',i++):'"'===char?inQuotes=!inQuotes:","!==char||inQuotes?currentVal+=char:(values.push(currentVal.trim()),currentVal="")}return values.push(currentVal.trim()),values}
-    function fetchOrderSheetCSV(){const addOrderBtn=document.getElementById("add-order");addOrderBtn&&(addOrderBtn.classList.add("loading"),addOrderBtn.innerHTML='<span class="btn-spinner"></span>'),fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=488369714",{cache:"no-store"}).then(res=>{if(!res.ok)throw new Error("HTTP "+res.status);return res.text()}).then(csvText=>{processAndRenderData(csvText),addOrderBtn&&(addOrderBtn.classList.remove("loading"),addOrderBtn.classList.add("success-confirm")),setTimeout(function(){addOrderBtn&&(addOrderBtn.classList.remove("success-confirm"),addOrderBtn.innerHTML="+")},500)}).catch(err=>{console.error("Widget load error:",err);var msgEl=document.getElementById("det-msg");msgEl&&(msgEl.style.display="block",msgEl.textContent="CSV Fetch Error: "+err.message),addOrderBtn&&(addOrderBtn.classList.remove("loading","success-confirm"),addOrderBtn.innerHTML="+")})}
+    function fetchOrderSheetCSV(){const addOrderBtn=document.getElementById("add-order");addOrderBtn&&(addOrderBtn.classList.add("loading"),addOrderBtn.innerHTML='<span class="btn-spinner"></span>'),fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=488369714",{cache:"no-store"}).then(res=>{if(!res.ok)throw new Error("HTTP "+res.status);return res.text()}).then(csvText=>{processAndRenderData(csvText);if(typeof fetchForexNavBalance==="function")fetchForexNavBalance();addOrderBtn&&(addOrderBtn.classList.remove("loading"),addOrderBtn.classList.add("success-confirm")),setTimeout(function(){addOrderBtn&&(addOrderBtn.classList.remove("success-confirm"),addOrderBtn.innerHTML="+")},500)}).catch(err=>{console.error("Widget load error:",err);var msgEl=document.getElementById("det-msg");msgEl&&(msgEl.style.display="block",msgEl.textContent="CSV Fetch Error: "+err.message),addOrderBtn&&(addOrderBtn.classList.remove("loading","success-confirm"),addOrderBtn.innerHTML="+")})}
     var portfolioFilters = {
         asset: "all",
         dateFrom: null,
@@ -6327,6 +6327,7 @@ to{transform:rotate(360deg)}
         const activeIcons = [];
         const now = new Date();
         let lastRenderedCategory = null;
+        const hasForexInView = portfolioGroups.some(function(g) { return (g.accountType || "").toLowerCase() === "forex"; });
 
         var ACCOUNT_TYPE_ICONS = {
         "Stock": "https://github.com/tinsntp/investment/blob/main/stock.png?raw=true",
@@ -6442,7 +6443,9 @@ to{transform:rotate(360deg)}
 
             const isOngoing = group.status.toLowerCase().includes('on-going');
             if (isOngoing) {
-                activeMarketValVnd += sumMarketValue;
+                if (!isForex) {
+                    activeMarketValVnd += sumMarketValue;
+                }
                 activePositions++;
                 const hasIconUrlForStack = group.iconUrl && group.iconUrl.trim().startsWith("http");
                 activeIcons.push({
@@ -6658,6 +6661,15 @@ to{transform:rotate(360deg)}
                 });
             }
         });
+        // Forex balance doesn't come from summing position MValue (unreliable/zeroed
+        // for forex rows) — it comes from the account NAV, fetched separately into
+        // window.forexNavBalance. Add it once here — but only if Forex is actually
+        // part of the currently filtered view, so a Stock-only or Crypto-only filter
+        // doesn't incorrectly pick up the Forex balance too.
+        if (hasForexInView && window.forexNavBalance !== null && window.forexNavBalance !== undefined) {
+            activeMarketValVnd += window.forexNavBalance;
+        }
+
         // Balance shown to the user should reflect only active/on-going positions,
         // same rule as the per-category "cat.value" balance in the donut stat list.
         const totalBalanceVnd = activeMarketValVnd;
@@ -6708,24 +6720,32 @@ to{transform:rotate(360deg)}
             donutCosts[cat] = (donutCosts[cat] || 0) + cost;
             if (!donutIcons[cat]) donutIcons[cat] = CAT_ICONS[cat] || "";
         });
+
+        // Forex balance doesn't come from summing position MValue (intentionally
+        // zeroed for forex rows) — it comes from the account's actual NAV, fetched
+        // separately into window.forexNavBalance. Inject it here, at the single
+        // source that builds donutValues, instead of patching it after the fact.
+        if (window.forexNavBalance !== null && window.forexNavBalance !== undefined) {
+            donutValues["Forex"] = window.forexNavBalance;
+            donutHasActive["Forex"] = true;
+        }
+
         var donutTotal = Object.values(donutValues).reduce(function(s, v) { return s + v; }, 0);
         renderNavDonut(donutValues, donutPnls, donutIcons, donutTotal, donutHasActive, donutCosts);
     }
 
     function orderTypeBadge(orderType){const type=(orderType||"").toLowerCase();let bg="var(--bg-secondary)",color="var(--text-main)";return type.includes("buy")||type.includes("long")?(bg="rgba(0, 150, 136, 0.15)",color="#009688"):type.includes("sell")||type.includes("short")?(bg="rgba(236, 64, 122, 0.12);",color="#ec407a"):type.includes("dca")?(bg="rgba(3, 169, 244, 0.15)",color="#03a9f4"):type.includes("close")&&(bg="rgba(158, 158, 158, 0.15)",color="#9e9e9e"),`<span style="background: ${bg}; color: ${color}; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; text-transform: uppercase;">${orderType}</span>`}
     // Global cache definition (ensure this is declared globally in your app)
-if (typeof window.navFullCategoryValueTotals === "undefined") {
-    window.navFullCategoryValueTotals = {};
-}
+    if (typeof window.navFullCategoryValueTotals === "undefined") {
+        window.navFullCategoryValueTotals = {};
+    }
+    if (typeof window.forexNavBalance === "undefined") {
+        window.forexNavBalance = null; // dedicated cache — only fetchForexNavBalance() writes here
+    }
 
-/**
- * Fetches the latest Forex NAV balance from the Google Sheet CSV,
- * updates the global store, triggers a donut chart re-render, 
- * and reactively updates active filters if Forex is selected.
- */
 function fetchForexNavBalance() {
-    var csvUrl = GOOGLE_SHEET_CSV_URL + "311369594";
-    
+    var csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=311369594&t=" + Date.now();
+
     return fetch(csvUrl, { cache: "no-store" })
         .then(function(response) {
             if (!response.ok) throw new Error("HTTP " + response.status);
@@ -6735,40 +6755,28 @@ function fetchForexNavBalance() {
             if (!text || text.trim().startsWith("<!DOCTYPE html>")) {
                 throw new Error("Received HTML instead of CSV. Check sheet permissions or URL.");
             }
-            
+
             var lines = text.split(/\r?\n/);
             var forexBalance = 0;
-            
+            var found = false;
+
             for (var i = 0; i < lines.length; i++) {
                 var currentLine = lines[i];
                 if (!currentLine || typeof currentLine !== 'string' || !currentLine.trim()) continue;
-                
+
                 var cols = currentLine.split(",");
                 var label = (cols[1] || "").trim().toUpperCase();
-                
+
                 if (label === "FOREX") {
                     forexBalance = parseFloat((cols[2] || "").replace(/[^0-9.-]+/g,"")) || 0;
+                    found = true;
                     break;
                 }
             }
-            
-            // Update global cache reliably
-            window.navFullCategoryValueTotals["Forex"] = forexBalance;
-            
-            // Re-render the donut chart if data args exist
-            if (typeof window.navLastDataArgs !== "undefined" && typeof renderNavDonut === "function") {
-                renderNavDonut(
-                    window.navLastDataArgs.categoryValueTotals,
-                    window.navLastDataArgs.categoryPnlTotals,
-                    window.navLastDataArgs.categoryIconMap,
-                    window.navLastDataArgs.totalValue,
-                    window.navLastDataArgs.categoryHasActiveMap,
-                    window.navLastDataArgs.categoryCostTotals
-                );
-            }
 
-            // Reactively re-apply filters if the user is currently viewing Forex
-            if (typeof portfolioFilters !== 'undefined' && portfolioFilters.asset === 'forex' && typeof applyPortfolioFiltersAndRender === 'function') {
+            window.forexNavBalance = forexBalance;
+
+            if (typeof applyPortfolioFiltersAndRender === 'function') {
                 applyPortfolioFiltersAndRender();
             }
 
@@ -6776,23 +6784,11 @@ function fetchForexNavBalance() {
         })
         .catch(function(err) {
             console.error("Forex NAV balance fetch error:", err);
-            return 0;
+            return null;
         });
 }
 
-
-
-
 function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap, totalValue, categoryHasActiveMap, categoryCostTotals) {
-    window.navLastDataArgs = {
-        categoryValueTotals: categoryValueTotals,
-        categoryPnlTotals: categoryPnlTotals,
-        categoryIconMap: categoryIconMap,
-        totalValue: totalValue,
-        categoryHasActiveMap: categoryHasActiveMap,
-        categoryCostTotals: categoryCostTotals
-    };
-
     var statList = document.getElementById('nav-stat-list');
     var svg = document.getElementById('nav-donut-svg');
     if (!statList || !svg) return;
@@ -6801,17 +6797,6 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
     svg.innerHTML = "";
     categoryHasActiveMap = categoryHasActiveMap || {};
     categoryCostTotals = categoryCostTotals || {};
-
-    if (window.navFullCategoryValueTotals && window.navFullCategoryValueTotals["Forex"] !== undefined) {
-        categoryValueTotals = Object.assign({}, categoryValueTotals);
-        categoryValueTotals["Forex"] = window.navFullCategoryValueTotals["Forex"];
-        categoryHasActiveMap["Forex"] = true;
-
-        if (totalValue > 0) {
-            var oldForex = categoryValueTotals["Forex"] || 0;
-            totalValue = totalValue - oldForex + window.navFullCategoryValueTotals["Forex"];
-        }
-    }
 
     var categoryColorMap = {
         "saving": "#f472b6",
@@ -6983,18 +6968,13 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
         var pnlPos = cat.pnl > 0, pnlZero = cat.pnl === 0;
         var pnlColor = pnlZero ? 'rgba(255,255,255,0.5)' : (pnlPos ? '#14b8a6' : '#f472b6');
         var pnlFmt = fmtPnl(cat.pnl);
-        var basis = cat.cost;
+        var basis = (cat.name === "Forex" && window.forexNavBalance) ? window.forexNavBalance : cat.cost;
         var pnlPct = basis > 0 ? (cat.pnl / basis) * 100 : 0;
         var pnlPctFmt = (pnlPos ? '+' : '') + pnlPct.toFixed(1) + '%';
 
         var pctLabelHtml = hasArc ? `<span class="nav-stat-pct"> (${Math.round(pct * 100)}%)</span>` : '';
-        
-        var catNameLower = (cat.name || "").toLowerCase();
-        var catVal = (catNameLower === "forex" && window.navFullCategoryValueTotals && window.navFullCategoryValueTotals["Forex"] !== undefined) 
-            ? window.navFullCategoryValueTotals["Forex"] 
-            : cat.value;
 
-        var balanceHtml = cat.hasActive ? `<div class="nav-stat-value">${fmtBalance(catVal)}</div>` : '';
+        var balanceHtml = cat.hasActive ? `<div class="nav-stat-value">${fmtBalance(cat.value)}</div>` : '';
 
         var item = document.createElement("div");
         item.className = "nav-stat-item";
@@ -7020,18 +7000,8 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
                 var isSelected = window.navSelectedCatIdx === segIdx;
                 window.navSelectedCatIdx = isSelected ? null : segIdx;
 
-                // Inside your item click event listener where you update portfolioFilters.asset:
                 if (typeof portfolioFilters !== "undefined") {
                     portfolioFilters.asset = isSelected ? 'all' : catName.toLowerCase();
-                    
-                    // Update snapshot variables globally so they don't restore old zero values
-                    var liveForexVal = (window.navFullCategoryValueTotals && window.navFullCategoryValueTotals["Forex"] !== undefined) 
-                        ? fmtBalance(window.navFullCategoryValueTotals["Forex"]) 
-                        : null;
-                        
-                    if (portfolioFilters.asset === 'forex' && liveForexVal) {
-                        snapVal = liveForexVal;
-                    }
                 }
                 if (typeof applyPortfolioFiltersAndRender === "function") {
                     applyPortfolioFiltersAndRender();
@@ -7050,13 +7020,6 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
     });
 }
 function applyPortfolioFiltersAndRender() {
-        var navBal   = document.getElementById('total-profit-bal');
-        var navVal   = document.getElementById('total-profit-val');
-        var navBadge = document.getElementById('total-profit-badge');
-        var snapBal   = navBal   ? navBal.innerHTML   : null;
-        var snapVal   = navVal   ? navVal.innerHTML   : null;
-        var snapBadge = navBadge ? navBadge.innerHTML : null;
-        var snapBadgeClass = navBadge ? navBadge.className : null;
         if (typeof window.currentPortfolioGroups === "undefined") return;
 
         var filtered = window.currentPortfolioGroups.filter(function(group) {
@@ -7134,14 +7097,6 @@ function applyPortfolioFiltersAndRender() {
         });
 
         renderAccordion(filtered);
-        if (portfolioFilters.asset && portfolioFilters.asset !== 'all') {
-            if (navBal   && snapBal   !== null) navBal.innerHTML   = snapBal;
-            if (navVal   && snapVal   !== null) navVal.innerHTML   = snapVal;
-            if (navBadge && snapBadge !== null) {
-                navBadge.innerHTML  = snapBadge;
-                navBadge.className  = snapBadgeClass;
-            }
-        }
     }
     function processAndRenderData(csvText) {
         const lines = csvText.trim().split(/\r?\n/);
@@ -8001,7 +7956,6 @@ function applyPortfolioFiltersAndRender() {
                         }
                     }
                 }
-                console.log("Parsed rows with category sample:", txs.slice(0, 3));
                 if (typeof cachedTxData !== 'undefined') {
                     cachedTxData = txs;
                 }
@@ -8040,7 +7994,6 @@ function applyPortfolioFiltersAndRender() {
                 expenseData[dateKey] = (expenseData[dateKey] || 0) + expenseVal;
             }
         });
-        console.log("Processed expenseData keys count after exclusions:", Object.keys(expenseData).length);
         renderView();
     };
     const renderView = () => {
@@ -8291,7 +8244,8 @@ function applyPortfolioFiltersAndRender() {
     window.addEventListener("resize", function() {if (typeof buildColHdr === "function") buildColHdr(); if (typeof applyLayout === "function") applyLayout();});
     window.addEventListener("DOMContentLoaded",async()=>{try{await Promise.all([loadBalanceHistoryTC(),loadRecent()])}catch(error){console.error("Failed to load data:",error)}setTimeout(()=>{const loader=document.getElementById("loader-overlay");loader&&loader.classList.add("fade-out")},1500)});  
     document.getElementById('watchlist-modal').addEventListener('click', function(event) {if (event.target === this) {closeWatchlistModal();}});
-    
+    document.addEventListener("DOMContentLoaded", function(){ if (typeof fetchForexNavBalance === "function") fetchForexNavBalance(); });
+
     !function(){function applyAllSplitLayouts(){(function(){var bigWrap=document.querySelector(".big-wrap"),rightSlot=document.getElementById("exp-split-right"),ringsWrap=document.getElementById("rings-wrap"),spendingView=document.getElementById("budget-view-subcategory"),budgetCard=document.querySelector(".budget-card"),slideZero=document.getElementById("slide-0");if(bigWrap&&rightSlot&&spendingView&&slideZero){var tabBtn,shouldSplit=(tabBtn=document.getElementById("tab-btn-0"),window.innerWidth>400&&!!tabBtn&&tabBtn.classList.contains("active")),isSplit=bigWrap.classList.contains("expense-split");if(shouldSplit&&!isSplit){bigWrap.classList.add("expense-split"),ringsWrap&&rightSlot.appendChild(ringsWrap),rightSlot.appendChild(spendingView);var recentBtn=budgetCard&&budgetCard.querySelector(".budget-subtabs .budget-subtab:first-child");if(recentBtn&&recentBtn.classList.contains("active")){var detailBtn=budgetCard.querySelector(".budget-subtabs .budget-subtab:nth-child(1)");detailBtn&&detailBtn.click()}}else!shouldSplit&&isSplit&&(bigWrap.classList.remove("expense-split"),slideZero&&ringsWrap&&slideZero.insertBefore(ringsWrap,slideZero.firstChild),spendingView&&budgetCard&&budgetCard.appendChild(spendingView))}})(),function(){var bigWrap=document.querySelector(".big-wrap"),rightSlot=document.getElementById("ovw-split-right"),walletView=document.getElementById("budget-view-wallet"),budgetCard=document.querySelector("#ca-wrap .budget-card");if(bigWrap&&rightSlot&&walletView&&budgetCard){var tabBtn,shouldSplit=(tabBtn=document.getElementById("tab-btn-1"),window.innerWidth>400&&!!tabBtn&&tabBtn.classList.contains("active")),isSplit=bigWrap.classList.contains("wallet-split");if(shouldSplit&&!isSplit){bigWrap.classList.add("wallet-split"),rightSlot.appendChild(walletView);var walletBtn=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:first-child');if(walletBtn&&walletBtn.classList.contains("active")){var fireBtn=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:last-child');fireBtn&&fireBtn.click()}}else if(!shouldSplit&&isSplit){bigWrap.classList.remove("wallet-split"),budgetCard.insertBefore(walletView,budgetCard.querySelector("#budget-view-fire")||null);var fireBtnBack=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:last-child');if(fireBtnBack&&fireBtnBack.classList.contains("active")){var walletBtnBack=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:first-child');walletBtnBack&&walletBtnBack.click()}}}}(),function(){var bigWrap=document.querySelector(".big-wrap"),rightSlot=document.getElementById("port-split-right"),portfolioView=document.getElementById("budget-view-portfolio"),budgetCard=document.querySelector("#slide-2 .budget-card");if(bigWrap&&rightSlot&&portfolioView&&budgetCard){var tabBtn,shouldSplit=(tabBtn=document.getElementById("tab-btn-2"),window.innerWidth>400&&!!tabBtn&&tabBtn.classList.contains("active")),isSplit=bigWrap.classList.contains("portfolio-split");if(shouldSplit&&!isSplit){bigWrap.classList.add("portfolio-split"),rightSlot.appendChild(portfolioView);var portfolioBtn=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:first-child');if(portfolioBtn&&portfolioBtn.classList.contains("active")){var btcBtn=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:last-child');btcBtn&&btcBtn.click()}}else if(!shouldSplit&&isSplit){bigWrap.classList.remove("portfolio-split");var btcView=document.getElementById("budget-view-btc");btcView&&btcView.parentNode===budgetCard?budgetCard.insertBefore(portfolioView,btcView):budgetCard.appendChild(portfolioView);var btcBtnBack=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:last-child');if(btcBtnBack&&btcBtnBack.classList.contains("active")){var portfolioBtnBack=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:first-child');portfolioBtnBack&&portfolioBtnBack.click()}}}}()}var applyTimer,resizeTimer,tabBarObserverTarget=document.getElementById("tab-bar")||document.getElementById("tab-btn-group")||document.body;new MutationObserver(function(){clearTimeout(applyTimer),applyTimer=setTimeout(applyAllSplitLayouts,0)}).observe(tabBarObserverTarget,{attributes:!0,attributeFilter:["class"],subtree:!0}),window.addEventListener("resize",function(){clearTimeout(resizeTimer),resizeTimer=setTimeout(applyAllSplitLayouts,100)}),document.addEventListener("DOMContentLoaded",applyAllSplitLayouts),applyAllSplitLayouts()}();
     function switchBudgetTab(e,t){var a=e.closest(".budget-card")||document,group=e.closest("[data-tabgroup]"),groupKey=group?group.getAttribute("data-tabgroup"):null;a.querySelectorAll(".budget-subtab, .budget-subtab-v2, .tab-btn:not(#tab-btn-x)").forEach(function(el){el.classList.remove("active")}),e.classList.add("active"),a.querySelectorAll(".budget-tab-content").forEach(function(el){el.style.display="none"});var c=a.querySelector("#budget-view-"+t);c&&(c.style.display="block"),groupKey?localStorage.setItem("active_budget_subtab_"+groupKey,t):localStorage.setItem("active_budget_subtab",t),e.id&&localStorage.setItem("active_regular_tab_id",e.id);var card=document.getElementById("card"),chartBtn=document.getElementById("tab-btn-x");card&&chartBtn&&("none"!==card.style.display&&"none"!==getComputedStyle(card).display&&"0px"!==card.style.maxHeight?chartBtn.classList.add("active"):chartBtn.classList.remove("active")),"subcategory"===t&&"function"==typeof renderSubcategoryBreakdown&&renderSubcategoryBreakdown()}
     document.addEventListener("DOMContentLoaded",function(){var savedSubtabV1=localStorage.getItem("active_budget_subtab")||"spending",targetBtnV1=document.querySelector(`.budget-subtab[onclick*="'${savedSubtabV1}'"]`);if(targetBtnV1)switchBudgetTab(targetBtnV1,savedSubtabV1);else{var defaultBtn=document.querySelector(".budget-subtab");defaultBtn&&switchBudgetTab(defaultBtn,"spending")}var groupEl=document.querySelector('[data-tabgroup="wallet-fire"]');if(groupEl){var savedSubtabV2=localStorage.getItem("active_budget_subtab_wallet-fire")||"wallet",targetBtnV2=groupEl.querySelector(`.budget-subtab-v2[onclick*="'${savedSubtabV2}'"]`);targetBtnV2&&switchBudgetTab(targetBtnV2,savedSubtabV2)}var groupEl3=document.querySelector('[data-tabgroup="portfolio-btc"]');if(groupEl3){var savedSubtabV4=localStorage.getItem("active_budget_subtab_portfolio-btc")||"portfolio",targetBtnV4=groupEl3.querySelector(`.budget-subtab-v2[onclick*="'${savedSubtabV4}'"]`);targetBtnV4&&switchBudgetTab(targetBtnV4,savedSubtabV4)}var chartBtn=document.getElementById("tab-btn-x"),card=document.getElementById("card");chartBtn&&card&&(card.style.overflow="hidden",card.style.transition="max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease-in-out, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)","shown"===(localStorage.getItem("tab-btn-x-card-state")||"shown")?(chartBtn.classList.add("active"),card.style.display="block",card.style.maxHeight="1000px",card.style.opacity="1",card.style.transform="translateY(0)"):(chartBtn.classList.remove("active"),card.style.display="none",card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)"),chartBtn.addEventListener("click",function(e){e.stopPropagation(),"none"===card.style.display||"none"===getComputedStyle(card).display||"0px"===card.style.maxHeight?(card.style.display="block",card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)",card.offsetHeight,card.style.maxHeight="1000px",card.style.opacity="1",card.style.transform="translateY(0)",this.classList.add("active"),localStorage.setItem("tab-btn-x-card-state","shown")):(card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)",this.classList.remove("active"),setTimeout(function(){"0px"===card.style.maxHeight&&(card.style.display="none")},400),localStorage.setItem("tab-btn-x-card-state","hidden"));var savedId=localStorage.getItem("active_regular_tab_id"),activeBtn=(savedId?document.getElementById(savedId):null)||targetBtnV1||document.querySelector(".budget-subtab, .budget-subtab-v2, .tab-btn:not(#tab-btn-x)");activeBtn&&activeBtn.classList.add("active"),"block"===card.style.display&&"function"==typeof loadBalanceHistoryTC&&loadBalanceHistoryTC()})),document.querySelectorAll(".tab-btn").forEach(function(btn){btn.addEventListener("click",function(){"tab-btn-x"!==this.id&&(document.querySelectorAll(".tab-btn:not(#tab-btn-x)").forEach(function(otherBtn){otherBtn.classList.remove("active")}),this.classList.add("active"),this.id&&localStorage.setItem("active_regular_tab_id",this.id),card&&chartBtn&&("none"!==card.style.display&&"none"!==getComputedStyle(card).display&&"0px"!==card.style.maxHeight?chartBtn.classList.add("active"):chartBtn.classList.remove("active")))})})});
