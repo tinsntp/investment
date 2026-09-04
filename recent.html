@@ -4423,7 +4423,7 @@ to{transform:rotate(360deg)}
 
     /* ══ ADD RECORD (writes to the sheet via Apps Script Web App) ══ */
     var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbylW9rWUDL6OkPqJhS4zIiK-tJgN_apQZGs-KuuX3Pv2cmQEe8q__BtAWve4pb8toqG/exec";
-    var EXPENSE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz7J8rtnfP14RGjc9MsYIIro7WCDkI9HzKBQqruN2hx4x4uL8j3f66nioCHcH2bjrQ1Dw/exec";
+    var EXPENSE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxpoRxQm-BNQtaz8wEKErfg2rAS0vyy8Nv16-3En3xYdMZGKjUu0O7u2qjKiX6nPAr5/exec";
 
     var addOverlay = document.getElementById("add-modal-overlay");
     var addStatusEl = document.getElementById("add-status");
@@ -4848,7 +4848,7 @@ to{transform:rotate(360deg)}
     function adjustUserCount(delta){var input=document.getElementById("add-user"),next=(parseInt(input.value,10)||1)+delta;next<1&&(next=1),next>999&&(next=999),input.value=next}var currentPriceMode="monthly";function selectPriceMode(mode){currentPriceMode=mode,document.getElementById("monthly-price-card").classList.toggle("selected","monthly"===mode),document.getElementById("total-price-card").classList.toggle("selected","total"===mode)}function syncPriceToggleDisplay(){}
     var addSubCalState={viewMonth:(new Date).getMonth(),viewYear:(new Date).getFullYear(),rangeStart:null,rangeEnd:null,hoverDate:null};function getActiveCalContext(e){var isEdit=!1;e&&e.currentTarget?(0===(e.currentTarget.id||"").indexOf("edit-")||e.currentTarget.closest("#edit-sub-modal-overlay"))&&(isEdit=!0):isEdit=!!document.getElementById("edit-sub-cal-menu")&&document.getElementById("edit-sub-cal-menu").classList.contains("open");return{isEdit,menuId:isEdit?"edit-sub-cal-menu":"add-sub-cal-menu",labelId:isEdit?"edit-sub-cal-month-label":"add-sub-cal-month-label",gridId:isEdit?"edit-sub-cal-grid":"add-sub-cal-grid",displayId:isEdit?"edit-sub-cal-range-display":"add-sub-cal-range-display",startDateId:isEdit?"edit-sub-start-date":"add-start-date",endDateId:isEdit?"edit-sub-end-date":"add-end-date",triggerTextId:isEdit?"edit-sub-date-trigger-text":"add-sub-date-trigger-text"}}function toggleAddSubDatePicker(e){e.stopPropagation();var ctx=getActiveCalContext(e),menu=document.getElementById(ctx.menuId);if(menu){var isOpen=menu.classList.contains("open");if(document.querySelectorAll(".col-menu").forEach(function(m){m.classList.remove("open")}),!isOpen){var rect=e.currentTarget.getBoundingClientRect();document.body.appendChild(menu),menu.style.position="fixed",menu.style.top=rect.bottom+6+"px",menu.style.left=rect.left+"px",menu.style.width=Math.max(rect.width,280)+"px",menu.style.zIndex="9999999",menu.style.transform="none",menu.style.margin="0",menu.classList.add("open"),renderAddSubCalendar(ctx)}}}function renderAddSubCalendar(ctx){ctx||(ctx=getActiveCalContext());var label=document.getElementById(ctx.labelId),grid=document.getElementById(ctx.gridId);if(label&&grid){label.textContent=FULL_MONTH_NAMES[addSubCalState.viewMonth]+" "+addSubCalState.viewYear,updateAddSubRangeDisplay(ctx),grid.innerHTML="";for(var startDow=new Date(addSubCalState.viewYear,addSubCalState.viewMonth,1).getDay(),daysInMonth=new Date(addSubCalState.viewYear,addSubCalState.viewMonth+1,0).getDate(),daysInPrevMonth=new Date(addSubCalState.viewYear,addSubCalState.viewMonth,0).getDate(),today=new Date,i=0;i<42;i++){var cellDate,isOtherMonth=!1,dayNum=i-startDow+1;dayNum<1?(cellDate=new Date(addSubCalState.viewYear,addSubCalState.viewMonth-1,daysInPrevMonth+dayNum),isOtherMonth=!0):dayNum>daysInMonth?(cellDate=new Date(addSubCalState.viewYear,addSubCalState.viewMonth+1,dayNum-daysInMonth),isOtherMonth=!0):cellDate=new Date(addSubCalState.viewYear,addSubCalState.viewMonth,dayNum);var cellEl=document.createElement("div");cellEl.className="cal-day"+(isOtherMonth?" other-month":""),cellEl.dataset.time=cellDate.getTime(),isSameDay(cellDate,today)&&cellEl.classList.add("today"),cellEl.textContent=cellDate.getDate(),function(d,el,currentCtx){el.addEventListener("click",function(e){e.stopPropagation(),addSubSelectDate(d,currentCtx)}),el.addEventListener("mouseenter",function(){addSubCalState.rangeStart&&!addSubCalState.rangeEnd&&(addSubCalState.hoverDate=d,updateAddSubRangeClassesOnly(currentCtx))})}(cellDate,cellEl,ctx),grid.appendChild(cellEl)}updateAddSubRangeClassesOnly(ctx)}}function updateAddSubRangeClassesOnly(ctx){ctx||(ctx=getActiveCalContext());var grid=document.getElementById(ctx.gridId);if(grid){var cells=grid.querySelectorAll(".cal-day"),effectiveEnd=addSubCalState.rangeEnd||addSubCalState.hoverDate;cells.forEach(function(cellEl){cellEl.classList.remove("in-range","range-start","range-end");var cellDate=new Date(parseInt(cellEl.dataset.time,10));if(addSubCalState.rangeStart&&effectiveEnd){var rs=addSubCalState.rangeStart<effectiveEnd?addSubCalState.rangeStart:effectiveEnd,re=addSubCalState.rangeStart<effectiveEnd?effectiveEnd:addSubCalState.rangeStart;cellDate>=rs&&cellDate<=re&&cellEl.classList.add("in-range"),isSameDay(cellDate,rs)&&cellEl.classList.add("range-start"),isSameDay(cellDate,re)&&cellEl.classList.add("range-end")}else addSubCalState.rangeStart&&isSameDay(cellDate,addSubCalState.rangeStart)&&cellEl.classList.add("range-start")}),updateAddSubRangeDisplay(ctx)}}function updateAddSubRangeDisplay(ctx){ctx||(ctx=getActiveCalContext());var display=document.getElementById(ctx.displayId);display&&(addSubCalState.rangeStart&&addSubCalState.rangeEnd?display.textContent=formatDateLong(addSubCalState.rangeStart)+" - "+formatDateLong(addSubCalState.rangeEnd):addSubCalState.rangeStart?display.textContent=formatDateLong(addSubCalState.rangeStart)+"  →  Select end date":display.textContent="Select a date range")}function addSubSelectDate(d,ctx){ctx||(ctx=getActiveCalContext()),!addSubCalState.rangeStart||addSubCalState.rangeStart&&addSubCalState.rangeEnd?(addSubCalState.rangeStart=d,addSubCalState.rangeEnd=null,addSubCalState.hoverDate=null):(d<addSubCalState.rangeStart?(addSubCalState.rangeEnd=addSubCalState.rangeStart,addSubCalState.rangeStart=d):addSubCalState.rangeEnd=d,addSubCalState.hoverDate=null),updateAddSubRangeClassesOnly(ctx)}function addSubCalNavigate(e,dir){e&&(e.stopPropagation(),e.preventDefault());var isEditMenu=document.getElementById("edit-sub-cal-menu")&&document.getElementById("edit-sub-cal-menu").classList.contains("open"),ctx={isEdit:isEditMenu,menuId:isEditMenu?"edit-sub-cal-menu":"add-sub-cal-menu",labelId:isEditMenu?"edit-sub-cal-month-label":"add-sub-cal-month-label",gridId:isEditMenu?"edit-sub-cal-grid":"add-sub-cal-grid",displayId:isEditMenu?"edit-sub-cal-range-display":"add-sub-cal-range-display",startDateId:isEditMenu?"edit-sub-start-date":"add-start-date",endDateId:isEditMenu?"edit-sub-end-date":"add-end-date",triggerTextId:isEditMenu?"edit-sub-date-trigger-text":"add-sub-date-trigger-text"};addSubCalState.viewMonth+=dir,addSubCalState.viewMonth>11?(addSubCalState.viewMonth=0,addSubCalState.viewYear++):addSubCalState.viewMonth<0&&(addSubCalState.viewMonth=11,addSubCalState.viewYear--),renderAddSubCalendar(ctx)}function applyAddSubDateRange(e){e&&(e.stopPropagation(),e.preventDefault());var isEditMenu=document.getElementById("edit-sub-cal-menu")&&document.getElementById("edit-sub-cal-menu").classList.contains("open"),ctx={menuId:isEditMenu?"edit-sub-cal-menu":"add-sub-cal-menu",startDateId:isEditMenu?"edit-sub-start-date":"add-start-date",endDateId:isEditMenu?"edit-sub-end-date":"add-end-date",triggerTextId:isEditMenu?"edit-sub-date-trigger-text":"add-sub-date-trigger-text"};if(addSubCalState.rangeStart&&addSubCalState.rangeEnd){var startISO=addSubCalState.rangeStart.toISOString().slice(0,10),endISO=addSubCalState.rangeEnd.toISOString().slice(0,10),startEl=document.getElementById(ctx.startDateId),endEl=document.getElementById(ctx.endDateId);startEl&&(startEl.value=startISO),endEl&&(endEl.value=endISO);var triggerText=document.getElementById(ctx.triggerTextId);triggerText&&(triggerText.textContent=formatDateLong(addSubCalState.rangeStart)+" - "+formatDateLong(addSubCalState.rangeEnd));var menu=document.getElementById(ctx.menuId);menu&&menu.classList.remove("open")}}function clearAddSubDateRange(e){e.stopPropagation();var ctx=getActiveCalContext(e);addSubCalState.rangeStart=null,addSubCalState.rangeEnd=null,addSubCalState.hoverDate=null;var startEl=document.getElementById(ctx.startDateId),endEl=document.getElementById(ctx.endDateId);startEl&&(startEl.value=""),endEl&&(endEl.value="");var triggerText=document.getElementById(ctx.triggerTextId);triggerText&&(triggerText.textContent="Select date range"),renderAddSubCalendar(ctx)}document.addEventListener("DOMContentLoaded",function(){["add-sub-cal-menu","edit-sub-cal-menu"].forEach(function(id){var menu=document.getElementById(id);menu&&menu.addEventListener("click",function(e){e.stopPropagation()})})});
     function initCashModal() {
-        var CASH_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbybMjy9UV5AeEgMULGe-RhBeqV2-vW6snqQcHWAZY_rxpI3aUretpPOP5y_kV4sbIw4/exec";
+        var CASH_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw0gHOLH6bNZSOxIsXHRlu7WbXa5e0hpAxwtNquiLBBl4_Lkf79BClUZuCgwgj7CGWO/exec";
 
         var addCashBtn = document.getElementById("add-cash");
         var cashOverlay = document.getElementById("cash-modal-overlay");
@@ -8186,93 +8186,78 @@ function applyPortfolioFiltersAndRender() {
       const saveInputBtn = document.getElementById("pnl-save-input");
       if (saveInputBtn) {
           saveInputBtn.onclick = () => {
-            const rawAmountVal = document.getElementById("pnl-amount-input")?.value || "";
-            const cleanAmountVal = rawAmountVal.replace(/,/g, '');
-            const symbolVal = document.getElementById("pnl-symbol-input")?.value || "";
-            const volVal = document.getElementById("pnl-vol-input")?.value || "";
-            const entryPriceVal = document.getElementById("pnl-entry-price-input")?.value || "";
-            const exitPriceVal = document.getElementById("pnl-exit-price-input")?.value || "";
-            const actionVal = document.getElementById("pnl-action-type")?.value || "LONG";
-            const mappedTradeAction = actionVal === "LONG" ? "BUY" : "SELL";
+              const rawAmountVal = document.getElementById("pnl-amount-input")?.value || "";
+              const cleanAmountVal = rawAmountVal.replace(/,/g, '');
+              const symbolVal = document.getElementById("pnl-symbol-input")?.value || "";
+              const volVal = document.getElementById("pnl-vol-input")?.value || "";
+              const entryPriceVal = document.getElementById("pnl-entry-price-input")?.value || "";
+              const exitPriceVal = document.getElementById("pnl-exit-price-input")?.value || "";
+              const actionVal = document.getElementById("pnl-action-type")?.value || "LONG";
+              const mappedTradeAction = actionVal === "LONG" ? "BUY" : "SELL";
 
-            const dropdown = document.getElementById("pnl-symbol-dropdown");
-            if (dropdown) dropdown.style.display = "none";
+              const dropdown = document.getElementById("pnl-symbol-dropdown");
+              if (dropdown) dropdown.style.display = "none";
 
-            const errorEl = document.getElementById("pnl-error-message");
-            const cancelBtn = document.getElementById("pnl-cancel-input");
+              const errorEl = document.getElementById("pnl-error-message");
+              const cancelBtn = document.getElementById("pnl-cancel-input");
 
-            // Validation
-            if (cleanAmountVal === "" || isNaN(parseFloat(cleanAmountVal))) {
-                if (errorEl) {
-                    errorEl.textContent = "Please enter a P/L amount.";
-                    errorEl.style.display = "block";
-                }
-                return;
-            }
+              // Validation
+              if (cleanAmountVal === "" || isNaN(parseFloat(cleanAmountVal))) {
+                  if (errorEl) {
+                      errorEl.textContent = "Please enter a P/L amount.";
+                      errorEl.style.display = "block";
+                  }
+                  return;
+              }
 
-            if (errorEl) errorEl.style.display = "none";
+              if (errorEl) errorEl.style.display = "none";
 
-            if (saveInputBtn) {
-                saveInputBtn.disabled = true;
-                saveInputBtn.style.opacity = "0.6";
-                saveInputBtn.textContent = "Saving...";
-            }
-            if (cancelBtn) {
-                cancelBtn.disabled = true;
-                cancelBtn.style.opacity = "0.5";
-            }
+              // 1. Immediately close the dialog and parent calendar modal to guarantee it disappears
+              const inputDlg = document.getElementById("pnl-input-dialog");
+              if (inputDlg) inputDlg.style.display = "none";
 
-            const payload = {
-                action: "portfolio_calendar_pnl_close_forex",
-                date: selectedDateStr,
-                amount: cleanAmountVal,
-                symbol: symbolVal,
-                volume: volVal,
-                entryPrice: entryPriceVal,
-                exitPrice: exitPriceVal,
-                tradeAction: mappedTradeAction
-            };
+              const calendarModal = document.getElementById('pnl-calendar-modal');
+              if (calendarModal) calendarModal.style.display = 'none';
 
-            fetch(EXPENSE_APPS_SCRIPT_URL, {
-                method: "POST",
-                mode: "cors",
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
-                body: JSON.stringify(payload)
-            })
-            .then(function(response) {
-                if (!response.ok) throw new Error("Network response error: " + response.status);
-                return response.json();
-            })
-            .then(function(result) {
-                if (result.status !== "success") throw new Error(result.message || "Execution exception.");
+              // 2. Update local state, re-render, and trigger firework effect
+              pnlData[selectedDateStr] = parseFloat(cleanAmountVal) || 0;
+              renderView();
+              if (typeof triggerPaperFirework === "function") {
+                  triggerPaperFirework(null);
+              }
 
-                // Only update local state and close the dialog once the server confirms.
-                pnlData[selectedDateStr] = parseFloat(cleanAmountVal) || 0;
-                renderView();
+              // 3. Reset buttons
+              if (saveInputBtn) {
+                  saveInputBtn.disabled = false;
+                  saveInputBtn.style.opacity = "1";
+                  saveInputBtn.textContent = "Save";
+              }
+              if (cancelBtn) {
+                  cancelBtn.disabled = false;
+                  cancelBtn.style.opacity = "1";
+              }
 
-                const inputDlg = document.getElementById("pnl-input-dialog");
-                if (inputDlg) inputDlg.style.display = "none";
+              // 4. Send payload to backend in the background using no-cors
+              const payload = {
+                  action: "portfolio_calendar_pnl_close_forex",
+                  date: selectedDateStr,
+                  amount: cleanAmountVal,
+                  symbol: symbolVal,
+                  volume: volVal,
+                  entryPrice: entryPriceVal,
+                  exitPrice: exitPriceVal,
+                  tradeAction: mappedTradeAction
+              };
 
-                triggerPaperFirework(null);
-            })
-            .catch(function(err) {
-                console.error("Failed to sync with Apps Script", err);
-                if (errorEl) {
-                    errorEl.textContent = "Server Error: " + err.message;
-                    errorEl.style.display = "block";
-                }
-            })
-            .finally(function() {
-                if (saveInputBtn) {
-                    saveInputBtn.disabled = false;
-                    saveInputBtn.style.opacity = "1";
-                    saveInputBtn.textContent = "Save";
-                }
-                if (cancelBtn) {
-                    cancelBtn.disabled = false;
-                    cancelBtn.style.opacity = "1";
-                }
-            });
+              fetch(EXPENSE_APPS_SCRIPT_URL, {
+                  method: "POST",
+                  mode: "no-cors",
+                  headers: { "Content-Type": "text/plain;charset=utf-8" },
+                  body: JSON.stringify(payload)
+              })
+              .catch(function(err) {
+                  console.error("Failed to sync with Apps Script", err);
+              });
           };
       }
 
