@@ -2811,46 +2811,72 @@ to{transform:rotate(360deg)}
           }
         });
 
-        var colWidth = Math.max(6, Math.min(28, (plotW / pts.length) * 0.9));
+        // Rounded-rect path with independent corner radii (<rect> rx applies to all four).
+        function roundedBoxPath(x, y, w, h, rTL, rTR, rBR, rBL) {
+          var maxR = Math.min(w, h) / 2;
+          rTL = Math.min(rTL, maxR); rTR = Math.min(rTR, maxR);
+          rBR = Math.min(rBR, maxR); rBL = Math.min(rBL, maxR);
+          return "M " + (x + rTL) + " " + y +
+                 " H " + (x + w - rTR) +
+                 (rTR ? " A " + rTR + " " + rTR + " 0 0 1 " + (x + w) + " " + (y + rTR) : "") +
+                 " V " + (y + h - rBR) +
+                 (rBR ? " A " + rBR + " " + rBR + " 0 0 1 " + (x + w - rBR) + " " + (y + h) : "") +
+                 " H " + (x + rBL) +
+                 (rBL ? " A " + rBL + " " + rBL + " 0 0 1 " + x + " " + (y + h - rBL) : "") +
+                 " V " + (y + rTL) +
+                 (rTL ? " A " + rTL + " " + rTL + " 0 0 1 " + (x + rTL) + " " + y : "") +
+                 " Z";
+        }
+
+        var colWidth = Math.max(18, Math.min(24, (plotW / pts.length) * 1)),
+            SEG_GAP  = 1.0,
+            capR     = colWidth / 2,
+            baseY    = PAD_TOP + (1 - (0 - minV) / (maxV - minV)) * plotH;
+
         var lowerCumulative = pts.map(function() { return 0; });
         var upperCumulative = pts.map(function() { return 0; });
 
         pastelCategories.forEach(function(cat) {
-          var nextLower = [];
-          var nextUpper = [];
+          var nextLower = [], nextUpper = [];
 
           pts.forEach(function(p, i) {
             var invItem = p.investData || (p.originalIndex !== -1 ? investSeries[p.originalIndex] : { saving: 0, stock: 0, forex: 0, crypto: 0, gold: 0, comp: 0, total: 0 });
             var val = invItem ? (invItem[cat.key] || 0) : 0;
-            
-            var lowVal = lowerCumulative[i];
-            var upVal = upperCumulative[i];
-            
+
+            var lowVal = lowerCumulative[i], upVal = upperCumulative[i];
             if (val >= 0) {
-              nextLower[i] = upVal;
-              nextUpper[i] = upVal + val;
+              nextLower[i] = upVal;         nextUpper[i] = upVal + val;
             } else {
-              nextLower[i] = lowVal + val;
-              nextUpper[i] = lowVal;
+              nextLower[i] = lowVal + val;  nextUpper[i] = lowVal;
             }
 
-            var yLow = PAD_TOP + (1 - (nextLower[i] - minV) / (maxV - minV)) * plotH;
-            var yUp = PAD_TOP + (1 - (nextUpper[i] - minV) / (maxV - minV)) * plotH;
-            
-            var colHeight = Math.abs(yLow - yUp);
-            var colY = Math.min(yLow, yUp);
-            var colX = xy[i].x - colWidth / 2;
+            var yLow = PAD_TOP + (1 - (nextLower[i] - minV) / (maxV - minV)) * plotH,
+                yUp  = PAD_TOP + (1 - (nextUpper[i] - minV) / (maxV - minV)) * plotH,
+                colY = Math.min(yLow, yUp),
+                colHeight = Math.abs(yLow - yUp);
 
-            if (colHeight > 0.5 && val !== 0) {
-              var rect = document.createElementNS(ns, "rect");
-              rect.setAttribute("x", colX.toFixed(1));
-              rect.setAttribute("y", colY.toFixed(1));
-              rect.setAttribute("width", colWidth.toFixed(1));
-              rect.setAttribute("height", colHeight.toFixed(1));
-              rect.setAttribute("rx", "8");
-              rect.setAttribute("fill", "url(#pastelGrad_" + cat.key + ")");
-              stackGroup.appendChild(rect);
-            }
+            if (colHeight <= 0.5 || val === 0) return;
+
+            var drawY = colY + SEG_GAP / 2,
+                drawH = colHeight - SEG_GAP;
+            if (drawH < 1) { drawH = colHeight; drawY = colY; }
+
+            var sitsOnBase    = Math.abs(colY + colHeight - baseY) < 1.5,
+                hangsFromBase = Math.abs(colY - baseY) < 1.5,
+                rTL = capR, rTR = capR, rBR = capR, rBL = capR;
+            if (sitsOnBase)    { rBR = 0; rBL = 0; }
+            if (hangsFromBase) { rTL = 0; rTR = 0; }
+
+            var path = document.createElementNS(ns, "path");
+            path.setAttribute("d", roundedBoxPath(
+              +(xy[i].x - colWidth / 2).toFixed(2), +drawY.toFixed(2),
+              +colWidth.toFixed(2), +drawH.toFixed(2),
+              rTL, rTR, rBR, rBL
+            ));
+            path.setAttribute("fill", "url(#pastelGrad_" + cat.key + ")");
+            path.setAttribute("data-index", i);
+            path.setAttribute("data-key", cat.key);
+            stackGroup.appendChild(path);
           });
 
           lowerCumulative = nextLower;
@@ -6379,7 +6405,7 @@ to{transform:rotate(360deg)}
         }
         fetch(EXPENSE_APPS_SCRIPT_URL, {
             method: "POST",
-            mode: "cors",
+            mode: "no-cors",
             headers: { "Content-Type": "text/plain;charset=utf-8" },
             body: JSON.stringify(payload)
         })
@@ -7764,7 +7790,7 @@ function applyPortfolioFiltersAndRender() {
 
         fetch(EXPENSE_APPS_SCRIPT_URL, {
             method: "POST",
-            mode: "cors",
+            mode: "no-cors",
             headers: { "Content-Type": "text/plain;charset=utf-8" },
             body: JSON.stringify(payload)
         })
