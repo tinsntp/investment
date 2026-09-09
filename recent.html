@@ -2778,12 +2778,12 @@ to{transform:rotate(360deg)}
         stackGroup.setAttribute("mask", "url(#lineEdgeFadeMask)");
 
         var pastelCategories = [
-          {key: "saving", top: "#f3e8ff", bottom: "#d8b4fe"},
-          {key: "stock", top: "#5eead4", bottom: "#a7f3d0"},
+          {key: "saving", top: "#e879f9", bottom: "#d8b4fe"},
+          {key: "stock", top: "#5eead4", bottom: "#34d399"},
           {key: "forex", top: "#fef9c3", bottom: "#eab308"},
           {key: "crypto", top: "#fef08a", bottom: "#ca8a04"},
           {key: "gold", top: "#ffedd5", bottom: "#f97316"},
-          {key: "comp", top: "#e0f2fe", bottom: "#7dd3fc"}
+          {key: "comp", top: "#7dd3fc", bottom: "#38bdf8"}
         ];
 
         var defs = svg.querySelector("defs") || svg;
@@ -2829,10 +2829,11 @@ to{transform:rotate(360deg)}
         }
 
         var colWidth = Math.max(18, Math.min(24, (plotW / pts.length) * 1)),
-            SEG_GAP  = 1.0,
-            capR     = colWidth / 2,
-            baseY    = PAD_TOP + (1 - (0 - minV) / (maxV - minV)) * plotH;
+            SEG_GAP  = 1.5,
+            capR     = 4;
 
+        // PASS 1: collect every segment, keyed by point index.
+        var segsByPoint = pts.map(function() { return []; });
         var lowerCumulative = pts.map(function() { return 0; });
         var upperCumulative = pts.map(function() { return 0; });
 
@@ -2855,17 +2856,36 @@ to{transform:rotate(360deg)}
                 colY = Math.min(yLow, yUp),
                 colHeight = Math.abs(yLow - yUp);
 
-            if (colHeight <= 0.5 || val === 0) return;
+            if (colHeight > 0.5 && val !== 0) {
+              segsByPoint[i].push({ key: cat.key, y: colY, h: colHeight });
+            }
+          });
 
-            var drawY = colY + SEG_GAP / 2,
-                drawH = colHeight - SEG_GAP;
-            if (drawH < 1) { drawH = colHeight; drawY = colY; }
+          lowerCumulative = nextLower;
+          upperCumulative = nextUpper;
+        });
 
-            var sitsOnBase    = Math.abs(colY + colHeight - baseY) < 1.5,
-                hangsFromBase = Math.abs(colY - baseY) < 1.5,
-                rTL = capR, rTR = capR, rBR = capR, rBL = capR;
-            if (sitsOnBase)    { rBR = 0; rBL = 0; }
-            if (hangsFromBase) { rTL = 0; rTR = 0; }
+        // PASS 2: round only the outer ends of each month's stack.
+        segsByPoint.forEach(function(segs, i) {
+          if (!segs.length) return;
+
+          // sort top-down so index 0 is the visually highest segment
+          segs.sort(function(a, b) { return a.y - b.y; });
+
+          var topMost = segs[0],
+              botMost = segs[segs.length - 1];
+
+          segs.forEach(function(s) {
+            var isTop = (s === topMost),
+                isBot = (s === botMost),
+                rTL = isTop ? capR : 0,
+                rTR = isTop ? capR : 0,
+                rBR = isBot ? capR : 0,
+                rBL = isBot ? capR : 0;
+
+            var drawY = s.y + SEG_GAP / 2,
+                drawH = s.h - SEG_GAP;
+            if (drawH < 1) { drawH = s.h; drawY = s.y; }
 
             var path = document.createElementNS(ns, "path");
             path.setAttribute("d", roundedBoxPath(
@@ -2873,14 +2893,11 @@ to{transform:rotate(360deg)}
               +colWidth.toFixed(2), +drawH.toFixed(2),
               rTL, rTR, rBR, rBL
             ));
-            path.setAttribute("fill", "url(#pastelGrad_" + cat.key + ")");
+            path.setAttribute("fill", "url(#pastelGrad_" + s.key + ")");
             path.setAttribute("data-index", i);
-            path.setAttribute("data-key", cat.key);
+            path.setAttribute("data-key", s.key);
             stackGroup.appendChild(path);
           });
-
-          lowerCumulative = nextLower;
-          upperCumulative = nextUpper;
         });
 
         svg.appendChild(stackGroup);
