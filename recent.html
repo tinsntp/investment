@@ -152,7 +152,7 @@ background:
   100% { transform: scale(1); opacity: 1; }
 }
 @keyframes walletCardFanIn {0% {opacity: 0;transform: translateY(30px) scale(0.93) rotateX(-10deg);}100% {opacity: 1;transform: translateY(0) scale(1) rotateX(0deg);}}
-@keyframes budgetSegLabelPop{0%{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
+
 #budget-over-indicator {
     /* Set size to match the pixel repeat interval of your existing hatch pattern */
     background-size: 20px 20px !important;
@@ -1616,7 +1616,11 @@ to{transform:rotate(360deg)}
             <span>Subscription</span>
           </button>
         </div>
-        <div style="padding:0px 15px 0 15px;">
+        
+        <!-- Tab 1: Spending Budget View -->
+        <div class="budget-tab-content" id="budget-view-spending">
+          <div id="rec-msg"></div>
+          <div style="padding:0px 15px 0 15px;">
           <div class="budget-label" style="font-size:11px;margin-bottom:3px">Spending Budget</div>
           <div class="budget-total" id="budget-average"></div>
           <div class="budget-bar-wrap" style="padding-right: 0%; box-sizing: border-box; position: relative;">
@@ -1647,9 +1651,6 @@ to{transform:rotate(360deg)}
               </div>
           </div>
         </div>
-        <!-- Tab 1: Spending Budget View -->
-        <div class="budget-tab-content" id="budget-view-spending">
-          <div id="rec-msg"></div>
           <div class="tab-header">
               <div style="display: flex; align-items: center; gap: 8px; margin-left: auto; margin-right: 10px;">
                   <button type="button" id="expense-calendar-btn" onclick="openExpenseCalendarModal()">
