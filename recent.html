@@ -151,37 +151,27 @@ background:
   60%  { transform: scale(1.03); opacity: 1; }
   100% { transform: scale(1); opacity: 1; }
 }
-
-@keyframes fbDonutLoad {
-  to {
-    stroke-dashoffset: 0;
-  }
+@keyframes walletCardFanIn {0% {opacity: 0;transform: translateY(30px) scale(0.93) rotateX(-10deg);}100% {opacity: 1;transform: translateY(0) scale(1) rotateX(0deg);}}
+@keyframes budgetSegLabelPop{0%{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
+#budget-over-indicator {
+    /* Set size to match the pixel repeat interval of your existing hatch pattern */
+    background-size: 20px 20px !important;
+    animation: animateExistingStrikeOut 1s linear infinite !important;
 }
-@keyframes drawDonutSegment {
-            from { stroke-dashoffset: 1000; }
-            to { stroke-dashoffset: 0; }
-        }
-        @keyframes fadeInDonutText {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        @keyframes stripeMove {
-            0% { transform: rotate(-45deg) translateX(0px); }
-            100% { transform: rotate(-45deg) translateX(8px); }
-        }
-        .nav-donut-segment {
-            stroke-dasharray: 1000;
-            stroke-dashoffset: 1000;
-            animation: drawDonutSegment 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            transform-origin: 100px 100px;
-        }
-        .nav-donut-stripe-pattern {
-            animation: stripeMove 1.5s linear infinite;
-        }
-        .nav-donut-label {
-            opacity: 0;
-            animation: fadeInDonutText 0.3s ease-out forwards;
-        }
+
+@keyframes animateExistingStrikeOut {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 20px 0;
+    }
+}
+@keyframes svgDrawLine {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
 
 .ring-item{display:flex;flex-direction:column;align-items:center;gap:.6vw;flex:1;cursor:pointer;border-radius:2vw;padding:1.5vw .5vw;transition:background .2s}@media (max-width:1024px){.ring-item[data-hide-on-mobile="1"]{display:none!important}}
 .ring-item:hover { background: rgba(255, 255, 255, 0.04); }
@@ -1470,27 +1460,7 @@ to{transform:rotate(360deg)}
 }
 #port-split-right{display:none;}
 #port-split-right #budget-view-portfolio{display:block!important;}
-@keyframes walletCardFanIn {0% {opacity: 0;transform: translateY(30px) scale(0.93) rotateX(-10deg);}100% {opacity: 1;transform: translateY(0) scale(1) rotateX(0deg);}}
-@keyframes budgetSegLabelPop{0%{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
-#budget-over-indicator {
-    /* Set size to match the pixel repeat interval of your existing hatch pattern */
-    background-size: 20px 20px !important;
-    animation: animateExistingStrikeOut 1s linear infinite !important;
-}
 
-@keyframes animateExistingStrikeOut {
-    0% {
-        background-position: 0 0;
-    }
-    100% {
-        background-position: 20px 0;
-    }
-}
-@keyframes svgDrawLine {
-    to {
-        stroke-dashoffset: 0;
-    }
-}
 </style>
 </head>
 <body>
@@ -2397,73 +2367,43 @@ to{transform:rotate(360deg)}
             var slide = slides.find(function(s) { return parseInt(s.dataset.idx) === idx; });
             if (slide) slidesWrap.appendChild(slide);
         });
-    } // Wrap your original renderNavDonut calls to save arguments globally
-    var originalRenderNavDonut = renderNavDonut;
-    renderNavDonut = function(categoryValueTotals, categoryPnlTotals, categoryIconMap, totalValue, categoryHasActiveMap, categoryCostTotals) {
-        window.lastNavDonutArgs = Array.prototype.slice.call(arguments);
-        return originalRenderNavDonut.apply(this, arguments);
-    };
-
-
-    function switchTab(idx) {
+    } function switchTab(idx) {
         currentTab = idx;
         var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab-btn"));
         tabs.forEach(function(btn) {
-            btn.classList.toggle("active", parseInt(btn.dataset.idx) === idx);
+        btn.classList.toggle("active", parseInt(btn.dataset.idx) === idx);
         });
-        
         var slides = Array.prototype.slice.call(document.querySelectorAll("#slides-wrap .slide"));
         var visualPos = slides.findIndex(function(s) { return parseInt(s.dataset.idx) === idx; });
         if (visualPos < 0) visualPos = idx;
 
         var pct = visualPos * (100 / numTabs);
-        var slidesWrap = document.getElementById("slides-wrap");
-        if (slidesWrap) slidesWrap.style.transform = "translateX(-" + pct + "%)";
-        if (typeof saveActiveTab === "function") saveActiveTab(idx); 
+        document.getElementById("slides-wrap").style.transform = "translateX(-" + pct + "%)";
+        //positionTabLine();
+        saveActiveTab(idx); 
 
-        // Reset SVG to trigger re-animation on tab change
-        var svg = document.getElementById('nav-donut-svg');
-        if (svg) svg.innerHTML = "";
-
-        // Clear FB breakdown container to force clean animation re-render
-        var fbContainer = document.getElementById('fb-content');
-        if (fbContainer) fbContainer.innerHTML = "";
-
+        // =========================================================================
+        //  0 Detail 1 Recent 5 Overview 3 Subs 4 BTC 2 Transaction 6 F.I.R.E.
+        // =========================================================================
         switch (parseInt(idx)) {
-            case 0:
-                if (typeof loadExpense === "function") { loadExpense(); }
-                if (typeof loadRecent === "function") { loadRecent(); }
-                if (typeof loadSubscriptions === "function") { loadSubscriptions(); }
-                break;
-            case 2:
-                if (typeof loadCycles === "function") loadCycles();
-                break;
-            case 1:
-                //if (typeof renderCards === "function") { renderCards(); }
-                if (typeof caLoadAccounts === "function") { caLoadAccounts(); }
-                if (typeof loadFIRE === "function") { loadFIRE(); }
-                if (typeof loadTransactionHistory === "function") {
-                    try { loadTransactionHistory(); } catch (error) {
-                        console.warn("Transaction history waiting on metrics data initialization:", error.message);
-                    }
-                }
-                break;
-            default:
-                break;
-        }
+        case 0:
+            if (typeof loadExpense === "function") {loadExpense();}
+            if (typeof loadRecent === "function") {loadRecent();}
+            if (typeof loadSubscriptions === "function") {loadSubscriptions();}break;
 
-        // Safely re-trigger Nav Donut
-        if (typeof renderNavDonut === "function" && window.lastNavDonutArgs) {
-            requestAnimationFrame(function() {
-                renderNavDonut.apply(null, window.lastNavDonutArgs);
-            });
-        }
+        case 2:
+            if (typeof loadCycles === "function") loadCycles();break;
+        case 1:
+            if (typeof renderCards === "function") {renderCards();}
+            if (typeof caLoadAccounts === "function") {caLoadAccounts(); }
+            if (typeof loadFIRE === "function") {loadFIRE(); }
+            if (typeof loadTransactionHistory === "function") {
+            try {loadTransactionHistory();} catch (error) {
+                console.warn("Transaction history waiting on metrics data initialization:", error.message);
+            }
+            } break;
 
-        // Safely re-trigger Financial Breakdown without throwing ReferenceError
-        if (typeof window.renderFBBreakdown === "function" && window.lastFBBreakdownArgs) {
-            requestAnimationFrame(function() {
-                window.renderFBBreakdown.apply(null, window.lastFBBreakdownArgs);
-            });
+        default:break;
         }
     }
     function positionTabLine(){var visibleBtns=Array.prototype.slice.call(document.querySelectorAll(".tab-btn")).filter(function(b){return window.getComputedStyle(b).display!=="none"});var line=document.getElementById("tab-line");var ab=visibleBtns.find(function(b){return parseInt(b.dataset.idx)===currentTab});if(!ab)return;line.style.left=ab.offsetLeft+"px";line.style.width=ab.offsetWidth+"px"}(function(){var tabBar=document.getElementById("tab-bar");var slidesWrap=document.getElementById("slides-wrap");var dragEl=null;var startX=0;var placeholder=null;var pointerId=null;var isDragging=false;var DRAG_THRESHOLD=6;function getTabs(){return Array.prototype.slice.call(tabBar.querySelectorAll(".tab-btn"))}function beginDragVisuals(){var rect=dragEl.getBoundingClientRect();placeholder=document.createElement("div");placeholder.className="tab-btn";placeholder.style.visibility="hidden";placeholder.style.flex=window.getComputedStyle(dragEl).flex;tabBar.insertBefore(placeholder,dragEl);dragEl.style.position="fixed";dragEl.style.left=rect.left+"px";dragEl.style.top=rect.top+"px";dragEl.style.width=rect.width+"px";dragEl.style.height=rect.height+"px";dragEl.style.zIndex="1000";dragEl.style.pointerEvents="none";dragEl.style.transition="none";document.getElementById("tab-line").style.display="none"}function onPointerDown(e){var btn=e.target.closest(".tab-btn");if(!btn)return;dragEl=btn;pointerId=e.pointerId;startX=e.clientX;isDragging=false;dragEl.setPointerCapture(pointerId);tabBar.addEventListener("pointermove",onPointerMove);tabBar.addEventListener("pointerup",onPointerUp);tabBar.addEventListener("pointercancel",onPointerCancel)}function onPointerMove(e){if(!dragEl)return;var dx=e.clientX-startX;if(!isDragging){if(Math.abs(dx)<DRAG_THRESHOLD)return;isDragging=true;beginDragVisuals()}var rect=placeholder.getBoundingClientRect();dragEl.style.left=(rect.left+dx)+"px";var dragCenter=e.clientX;var tabs=getTabs().filter(function(t){return t!==dragEl&&t!==placeholder});for(var i=0;i<tabs.length;i++){var r=tabs[i].getBoundingClientRect();var center=r.left+r.width/2;if(dragCenter<center){if(tabs[i]!==placeholder.nextSibling){tabBar.insertBefore(placeholder,tabs[i])}return}}tabBar.appendChild(placeholder)}function cleanupListeners(){tabBar.removeEventListener("pointermove",onPointerMove);tabBar.removeEventListener("pointerup",onPointerUp);tabBar.removeEventListener("pointercancel",onPointerCancel);if(dragEl&&pointerId!==null){try{dragEl.releasePointerCapture(pointerId)}catch(e){}}}function onPointerUp(e){if(!dragEl)return;if(!isDragging){var tappedIdx=parseInt(dragEl.dataset.idx);cleanupListeners();dragEl=null;placeholder=null;switchTab(tappedIdx);return}cleanupListeners();tabBar.insertBefore(dragEl,placeholder);placeholder.remove();placeholder=null;dragEl.style.position="";dragEl.style.left="";dragEl.style.top="";dragEl.style.width="";dragEl.style.height="";dragEl.style.zIndex="";dragEl.style.pointerEvents="";dragEl.style.transition="";document.getElementById("tab-line").style.display="";var droppedIdx=parseInt(dragEl.dataset.idx);dragEl=null;var newOrder=getTabs().map(function(b){return parseInt(b.dataset.idx)});var slides=Array.prototype.slice.call(slidesWrap.querySelectorAll(".slide"));newOrder.forEach(function(idx){var slide=slides.find(function(s){return parseInt(s.dataset.idx)===idx});if(slide)slidesWrap.appendChild(slide)});switchTab(droppedIdx);saveTabOrder(newOrder)}function onPointerCancel(){if(!dragEl)return;cleanupListeners();if(isDragging&&placeholder){tabBar.insertBefore(dragEl,placeholder);placeholder.remove();dragEl.style.position="";dragEl.style.left="";dragEl.style.top="";dragEl.style.width="";dragEl.style.height="";dragEl.style.zIndex="";dragEl.style.pointerEvents="";dragEl.style.transition="";document.getElementById("tab-line").style.display=""}placeholder=null;dragEl=null;isDragging=false;positionTabLine()}tabBar.addEventListener("pointerdown",onPointerDown)})(); 
@@ -2523,7 +2463,21 @@ to{transform:rotate(360deg)}
     var currentDebtTotalXY = []; 
     var currentDebtShinhanXY = []; 
     var currentDebtSCXY = []; var currentPts = [];
-    
+    function animateChartSwitchTC(renderFn) {
+        var svgEl = document.getElementById("chart-svg");
+        if (!svgEl) { renderFn(); return; }
+
+        svgEl.classList.add("tc-fading");
+        setTimeout(function() {
+            renderFn();
+            // One frame delay so the browser registers the freshly-rebuilt DOM before
+            // the fade-back-in starts — otherwise opacity:0 → opacity:1 can get
+            // coalesced into a single paint and the fade never visibly happens.
+            requestAnimationFrame(function() {
+            svgEl.classList.remove("tc-fading");
+            });
+        }, 180); // must match the CSS transition duration above
+        }
     function getMonthIndex(monthOffset){if(!currentXY.length)return 0;for(var currentIndex=getCurrentMonthIndex(),currentDate=currentXY[currentIndex].date,targetTC=new Date(currentDate.getFullYear(),currentDate.getMonth()+monthOffset,1),targetYear=targetTC.getFullYear(),targetMonth=targetTC.getMonth(),idx=currentIndex,i=0;i<currentXY.length;i++){var d=currentXY[i].date;d.getFullYear()===targetYear&&d.getMonth()===targetMonth&&(idx=i)}return idx}
     function renderChartTC(range) {
       var pts;
@@ -3862,7 +3816,7 @@ to{transform:rotate(360deg)}
         document.getElementById("balance-toggle-area").addEventListener("click",function(){balanceVisible=!balanceVisible,updateBalanceVisibility()});
         window.addEventListener("resize", function(){ if (fullSeries.length) renderChartTC(currentRangeTC); });
         window.addEventListener("load", function () { setTimeout(function () { const selector = document.getElementById("range-selector"); const btn = selector.querySelector('[data-range="-3m"]'); btn.scrollIntoView({ inline:"start",behavior:"instant"});}, 0);});
-        document.querySelectorAll(".line-toggle-btn").forEach(function(btn){btn.addEventListener("click",function(){var line=this.dataset.line;lineVisibility[line]=!lineVisibility[line],"expense"===line&&lineVisibility.expense?(lineVisibility.balance=!1,lineVisibility.debt=!1,lineVisibility.invest=!1):"invest"===line&&lineVisibility.invest?(lineVisibility.balance=!1,lineVisibility.expense=!1,lineVisibility.debt=!1):("balance"===line&&lineVisibility.balance||"debt"===line&&lineVisibility.debt)&&(lineVisibility.expense=!1,lineVisibility.invest=!1),lineVisibility.balance||lineVisibility.expense||lineVisibility.debt||lineVisibility.invest||(lineVisibility[line]=!0),document.querySelectorAll(".line-toggle-btn").forEach(function(b){var l=b.dataset.line;b.classList.toggle("active",!!lineVisibility[l])}),fullSeries.length&&renderChartTC(currentRangeTC)})});
+        document.querySelectorAll(".line-toggle-btn").forEach(function(btn){btn.addEventListener("click",function(){var line=this.dataset.line;lineVisibility[line]=!lineVisibility[line],"expense"===line&&lineVisibility.expense?(lineVisibility.balance=!1,lineVisibility.debt=!1,lineVisibility.invest=!1):"invest"===line&&lineVisibility.invest?(lineVisibility.balance=!1,lineVisibility.expense=!1,lineVisibility.debt=!1):("balance"===line&&lineVisibility.balance||"debt"===line&&lineVisibility.debt)&&(lineVisibility.expense=!1,lineVisibility.invest=!1),lineVisibility.balance||lineVisibility.expense||lineVisibility.debt||lineVisibility.invest||(lineVisibility[line]=!0),document.querySelectorAll(".line-toggle-btn").forEach(function(b){var l=b.dataset.line;b.classList.toggle("active",!!lineVisibility[l])}),fullSeries.length&&animateChartSwitchTC(function(){renderChartTC(currentRangeTC)})})});
         function animateLineReveal(pathEl,duration){if(duration=duration||700,pathEl.getAttribute("stroke-dasharray")){var targetOpacity=pathEl.getAttribute("opacity")||pathEl.style.opacity||"1";return pathEl.style.opacity="0",void requestAnimationFrame(function(){pathEl.style.transition="opacity "+duration+"ms ease-out",pathEl.style.opacity=targetOpacity})}try{var len=pathEl.getTotalLength();pathEl.style.transition="none",pathEl.setAttribute("stroke-dasharray",len),pathEl.setAttribute("stroke-dashoffset",len),pathEl.getBoundingClientRect(),pathEl.style.transition="stroke-dashoffset "+duration+"ms ease-out",pathEl.style.strokeDashoffset="0"}catch(e){}}
         function buildSharpPathTC(pts){if(!pts||!pts.length)return{line:"",area:""};for(var first=pts[0],last=pts[pts.length-1],lineCmds=["M",first.x.toFixed(2),first.y.toFixed(2)],i=1;i<pts.length;i++)lineCmds.push("L",pts[i].x.toFixed(2),pts[i].y.toFixed(2));var lineD=lineCmds.join(" "),bottomY=(VB_H-PAD_BOTTOM).toFixed(2);return{line:lineD,area:lineD+" L "+last.x.toFixed(2)+" "+bottomY+" L "+first.x.toFixed(2)+" "+bottomY+" Z"}}
         
@@ -4446,110 +4400,37 @@ to{transform:rotate(360deg)}
                 document.getElementById("budget-spent").innerHTML = fmtFull(currentExpense) + " <span class='budget-percent'>" + (percent * 100).toFixed(0) + "%</span>";
                 document.getElementById("budget-remaining").textContent = fmtFull(remaining);
                 function buildAllocationBar(mains, currentExpense, lastMonthExpense, averageExpense) {
-    var gradients = [
-        ["#f2545b", "#e63960"], // red-coral
-        ["#e63960", "#d6247d"], // coral-pink
-        ["#d6247d", "#b7299e"], // pink-magenta
-        ["#b7299e", "#8b3fd6"], // magenta-purple
-        ["#8b3fd6", "#6a5ce8"], // purple-indigo
-        ["#6a5ce8", "#5b8def"]  // indigo-blue
-    ];
+                var gradients = [
+                    ["#f2545b", "#e63960"], // red-coral
+                    ["#e63960", "#d6247d"], // coral-pink
+                    ["#d6247d", "#b7299e"], // pink-magenta
+                    ["#b7299e", "#8b3fd6"], // magenta-purple
+                    ["#8b3fd6", "#6a5ce8"], // purple-indigo
+                    ["#6a5ce8", "#5b8def"]  // indigo-blue
+                ];
 
-    for(var cats=[],total=0,i=0;i<mains.length;i++) mains[i].curr>0&&(cats.push(mains[i]),total+=mains[i].curr);
-    var barTrack = document.getElementById("budget-fill-track");
-    var barEl = document.getElementById("budget-fill-container");
-    var legendEl = document.getElementById("budget-fill-legend");
-    if (!barTrack || !barEl || !legendEl) return;
-    
-    barEl.innerHTML = "";
-    legendEl.innerHTML = "";
-    if (total <= 0) return;
-
-    var isMobile = window.innerWidth < 1024;
-    var scaleMax = Math.max(averageExpense, lastMonthExpense, currentExpense, 1);
-    var usableWidth = 100;
-    var barWidthPct = Math.min((currentExpense / scaleMax) * usableWidth, usableWidth);
-    
-    // Set track width and animate main bar width
-    barTrack.style.width = usableWidth + "%";
-    barEl.style.width = "0%";
-    barEl.style.transition = "width 0.8s cubic-bezier(0.16, 1, 0.3, 1)";
-    
-    requestAnimationFrame(function() {
-        barEl.style.width = barWidthPct + "%";
-    });
-
-    var markerPercent = Math.min(lastMonthExpense / scaleMax, 1);
-    var marker = document.getElementById("last-month-marker");
-    if (marker) {
-        marker.style.left = (markerPercent * usableWidth) + "%";
-        marker.innerHTML = '<div class="marker-label">Last month</div>' +
-            '<div class="marker-value" style="font-family:DM Sans">' + fmtFull(lastMonthExpense) + '</div>' +
-            '<i class="bi bi-caret-up Custom-triangle"></i>';
-    }
-
-    // STRIKE OUT / OVER-BUDGET INDICATOR
-    var overAmount = lastMonthExpense - averageExpense;
-    var overEl = document.getElementById("budget-over-indicator");
-    if (overEl) {
-        if (overAmount > 0) {
-            var budgetPct = Math.min(averageExpense / scaleMax * usableWidth, usableWidth);
-            var overWidthPct = Math.min(lastMonthExpense / scaleMax * usableWidth, usableWidth) - budgetPct;
-            overEl.style.display = "flex";
-            overEl.style.left = budgetPct + "%";
-            overEl.style.width = overWidthPct + "%";
-            overEl.title = "Last month exceeded budget by " + fmtAxis(overAmount);
-            
-            // Add continuous stripe animation class to the strike out indicator
-            overEl.classList.add("animated-strike-out");
-        } else {
-            overEl.style.display = "none";
-            overEl.classList.remove("animated-strike-out");
-        }
-    }
-
-    for (var c = 0; c < cats.length; c++) {
-        var g = gradients[c % gradients.length];
-        var pct = (cats[c].curr / total) * 100;
-        var seg = document.createElement("div");
-        
-        seg.className = "budget-fill-seg";
-        seg.style.flexGrow = pct;
-        seg.style.background = "linear-gradient(90deg, " + g[0] + " 0%, " + g[1] + " 100%)";
-
-        if (pct >= 1) {
-            var label = document.createElement("span");
-            label.textContent = pct.toFixed(0) + "%";
-            if (pct < 8) label.style.fontSize = "10px";
-            
-            label.style.opacity = "0";
-            label.style.transform = "scale(0.5)";
-            label.style.animation = "budgetSegLabelPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) " + (0.4 + (c * 0.08)) + "s forwards";
-            
-            seg.appendChild(label);
-        }
-        barEl.appendChild(seg);
-
-        var item = document.createElement("span");
-        item.className = "legend-item";
-        var rawName = cats[c].name;
-        var shortName = rawName;
-        
-        isMobile ? (
-            rawName.includes("Family") ? shortName = "Family" :
-            rawName.includes("Bills") ? shortName = "Bills" :
-            rawName.includes("Rental") ? shortName = "Rental" :
-            rawName.includes("Food") ? shortName = "Groceries" :
-            rawName.includes("Shop") && (shortName = "Shop/Travel")
-        ) : (
-            shortName = rawName.length > 12 ? rawName.slice(0, 10) + "…" : rawName
-        );
-
-        item.innerHTML = '<span class="legend-dot" style="background:' + g[1] + '"></span>' + shortName;
-        legendEl.appendChild(item);
-    }
-
-
+                for(var cats=[],total=0,i=0;i<mains.length;i++)mains[i].curr>0&&(cats.push(mains[i]),total+=mains[i].curr);
+                var barTrack = document.getElementById("budget-fill-track"); // NEW: outer track wrapper, full width
+                var barEl = document.getElementById("budget-fill-container"); // inner, now dynamically sized
+                var legendEl = document.getElementById("budget-fill-legend");
+                if (!barTrack || !barEl || !legendEl) return;
+                barEl.innerHTML = "";
+                legendEl.innerHTML = "";
+                if (total <= 0) return;
+                var isMobile = window.innerWidth < 1024;
+                var scaleMax = Math.max(averageExpense, lastMonthExpense, currentExpense, 1);
+                var usableWidth = 100; // reserve space on the right for marker label
+                var barWidthPct = Math.min((currentExpense / scaleMax) * usableWidth, usableWidth);
+                barEl.style.width = barWidthPct + "%";
+                var trackWidthPct = usableWidth;
+                document.getElementById("budget-fill-track").style.width = trackWidthPct + "%";
+                var markerPercent = Math.min(lastMonthExpense / scaleMax, 1);
+                var marker = document.getElementById("last-month-marker");
+                marker.style.left = (markerPercent * usableWidth) + "%";
+                var overAmount = lastMonthExpense - averageExpense;
+                var overEl = document.getElementById("budget-over-indicator");
+                if(overEl)if(overAmount>0){var budgetPct=Math.min(averageExpense/scaleMax*usableWidth,usableWidth),overWidthPct=Math.min(lastMonthExpense/scaleMax*usableWidth,usableWidth)-budgetPct;overEl.style.display="flex",overEl.style.left=budgetPct+"%",overEl.style.width=overWidthPct+"%",overEl.title="Last month exceeded budget by "+fmtAxis(overAmount)}else overEl.style.display="none";
+                for(var c=0;c<cats.length;c++){var g=gradients[c%gradients.length],pct=cats[c].curr/total*100,seg=document.createElement("div");if(seg.className="budget-fill-seg",seg.style.flexGrow=pct,seg.style.background="linear-gradient(90deg, "+g[0]+" 0%, "+g[1]+" 100%)",pct>=1){var label=document.createElement("span");label.textContent=pct.toFixed(0)+"%",pct<8&&(label.style.fontSize="10px"),seg.appendChild(label)}barEl.appendChild(seg);var item=document.createElement("span");item.className="legend-item";var rawName=cats[c].name,shortName=rawName;isMobile?rawName.includes("Family")?shortName="Family":rawName.includes("Bills")?shortName="Bills":rawName.includes("Rental")?shortName="Rental":rawName.includes("Food")?shortName="Groceries":rawName.includes("Shop")&&(shortName="Shop/Travel"):shortName=rawName.length>12?rawName.slice(0,10)+"…":rawName,item.innerHTML='<span class="legend-dot" style="background:'+g[1]+'"></span>'+shortName,legendEl.appendChild(item)}
                 var markerPercent = Math.min(lastMonthExpense / scaleMax, 1);
                 var marker = document.getElementById("last-month-marker");
                 marker.style.left = (markerPercent * 100) + "%";
@@ -7362,7 +7243,33 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
     
     // Dynamic CSS Animations for SVG segments and middle stripe patterns
     var style = document.createElementNS("http://www.w3.org/2000/svg", "style");
-
+    style.textContent = `
+        @keyframes drawDonutSegment {
+            from { stroke-dashoffset: 1000; }
+            to { stroke-dashoffset: 0; }
+        }
+        @keyframes fadeInDonutText {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes stripeMove {
+            0% { transform: rotate(-45deg) translateX(0px); }
+            100% { transform: rotate(-45deg) translateX(8px); }
+        }
+        .nav-donut-segment {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawDonutSegment 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transform-origin: 100px 100px;
+        }
+        .nav-donut-stripe-pattern {
+            animation: stripeMove 1.5s linear infinite;
+        }
+        .nav-donut-label {
+            opacity: 0;
+            animation: fadeInDonutText 0.3s ease-out forwards;
+        }
+    `;
     defs.appendChild(style);
 
     var maxIdx = 0;
@@ -8976,69 +8883,38 @@ function applyPortfolioFiltersAndRender() {
 
     /* ══ FINANCIAL BREAKDOWN MODULE WITH SINGLE UNIFIED DONUT CHART ══ */
     (function() {
-    var FB_BASE_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv";
-    var GIDS = { income: "311369594", expense: "1608160084", debt: "271989628" };
-    var rawData = { income: [], expense: [], debt: [] };
+        var FB_BASE_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv";
+        var GIDS = { income: "311369594", expense: "1608160084", debt: "271989628" };
+        var rawData = { income: [], expense: [], debt: [] };
 
-    var icons = {
-        income: {
+        var icons = {
+            income: {
             salary: "https://github.com/tinsntp/investment/blob/main/ces.png?raw=true",
             comp: "https://github.com/tinsntp/investment/blob/main/cash.png?raw=true",
             invest: "https://github.com/tinsntp/investment/blob/main/stock.png?raw=true"
-        },
-        expense: {},
-        debt: {}
-    };
+            },
+            expense: {},
+            debt: {}
+        };
 
-    var RANGES = ["-1y", "-6m", "-3m", "current", "current-year", "+3m", "+6m", "+1y"];
-    var currentRangeIndex = 3;
+        var RANGES = ["-1y", "-6m", "-3m", "current", "current-year", "+3m", "+6m", "+1y"];
+        var currentRangeIndex = 3;
 
-    var RANGE_LABELS = {
-        "-1y": "Past 1 Year",
-        "-6m": "Past 6 Months",
-        "-3m": "Past 3 Months",
-        "current": "Current Month",
-        "current-year": "Current Year",
-        "+3m": "+3 Months",
-        "+6m": "+6 Months",
-        "+1y": "Next Year (+1y)"
-    };
+        var RANGE_LABELS = {
+            "-1y": "Past 1 Year",
+            "-6m": "Past 6 Months",
+            "-3m": "Past 3 Months",
+            "current": "Current Month",
+            "current-year": "Current Year",
+            "+3m": "+3 Months",
+            "+6m": "+6 Months",
+            "+1y": "Next Year (+1y)"
+        };
 
-    function fmtShortDec(v){var a=Math.abs(v),sign=v<0?"-":"";return a>=1e9?sign+(a/1e9).toFixed(1)+"B":a>=1e6?sign+(a/1e6).toFixed(1)+"M":a>=1e3?sign+(a/1e3).toFixed(1)+"K":sign+Math.round(a)}
-    function caArc(x,y,radius,startAngle,endAngle){var start=polarToCartesian(x,y,radius,endAngle),end=polarToCartesian(x,y,radius,startAngle),arcSweep=endAngle-startAngle<=180?"0":"1";return["M",start.x,start.y,"A",radius,radius,0,arcSweep,0,end.x,end.y].join(" ")}
-    function polarToCartesian(centerX,centerY,radius,angleInDegrees){var angleInRadians=(angleInDegrees-90)*Math.PI/180;return{x:centerX+radius*Math.cos(angleInRadians),y:centerY+radius*Math.sin(angleInRadians)}}
-    
-    function initFinancialBreakdown(){
-        var now=Date.now();
-        Promise.all([
-            fetch(FB_BASE_URL+"&gid="+GIDS.income+"&t="+now).then(r=>r.text()),
-            fetch(FB_BASE_URL+"&gid="+GIDS.expense+"&t="+now).then(r=>r.text()),
-            fetch(FB_BASE_URL+"&gid="+GIDS.debt+"&t="+now).then(r=>r.text())
-        ]).then(function(results){
-            parseIncomeCSV(results[0]),
-            parseExpenseCSV(results[1]),
-            parseDebtCSV(results[2]),
-            window.renderFBBreakdown(RANGES[currentRangeIndex])
-        }).catch(function(err){console.error("FB Single Chart load error:",err)})
-    }
-
-    function parseIncomeCSV(csvText){var lines=csvText.trim().split(/\r?\n/);if(!(lines.length<2)){rawData.income=[];for(var i=1;i<lines.length;i++){var cols=parseCSVLine(lines[i]),qStr=(cols[16]||"").trim();if(qStr){var d=parseMonthYear?parseMonthYear(qStr):null;if(d){var salary=Math.abs(parseAmtTopChart(cols[19]||"0")),invest=Math.abs(parseAmtTopChart(cols[20]||"0")),comp=Math.abs(parseAmtTopChart(cols[21]||"0"));rawData.income.push({date:d,salary,invest,comp,total:salary+invest+comp})}}}}}
-    function parseExpenseCSV(csvText){var lines=csvText.trim().split(/\r?\n/);if(!(lines.length<3)){var iconRow=parseCSVLine(lines[0]);icons.expense={rental:iconRow[3]||"",bills:iconRow[6]||"",livingCost:iconRow[7]||iconRow[8]||"",family:iconRow[9]||""},rawData.expense=[];for(var i=2;i<lines.length;i++){var cols=parseCSVLine(lines[i]),parts=(cols[0]||"").split("/");if(!(parts.length<2)){var d=new Date(2e3+parseInt(parts[1],10),parseInt(parts[0],10)-1,1),rental=Math.abs(parseAmtTopChart(cols[3]||"0")),bills=Math.abs(parseAmtTopChart(cols[6]||"0")),living=Math.abs(parseAmtTopChart(cols[7]||"0"))+Math.abs(parseAmtTopChart(cols[8]||"0")),family=Math.abs(parseAmtTopChart(cols[9]||"0"));rawData.expense.push({date:d,rental,bills,livingCost:living,family,total:rental+bills+living+family})}}}}
-    function parseDebtCSV(csvText){var lines=csvText.trim().split(/\r?\n/);if(!(lines.length<2)){var iconRow=parseCSVLine(lines[0]);icons.debt={shinhan:iconRow[3]||"",sc:iconRow[4]||""},rawData.debt=[];for(var i=1;i<lines.length;i++){var cols=parseCSVLine(lines[i]),dateStr=(cols[0]||"").trim();if(dateStr){var m=dateStr.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);if(m){var month=parseInt(m[1],10)-1,day=parseInt(m[2],10),year=parseInt(m[3],10),d=new Date(year,month,day),shinhan=Math.abs(parseAmtTopChart(cols[3]||"0")),sc=Math.abs(parseAmtTopChart(cols[4]||"0"));rawData.debt.push({date:d,shinhan,sc,total:shinhan+sc})}}}}}
-    function getDateRange(rangeKey){var now=new Date,curYear=now.getFullYear(),curMonth=now.getMonth();if("current-year"===rangeKey)return{start:new Date(curYear,0,1),end:new Date(curYear,11,31),monthsCount:12,isCurrent:!1,isFuture:!1,isYearly:!0};var start,end,mCount,offsetMap={"-1y":-12,"-6m":-6,"-3m":-3,current:0,"+3m":3,"+6m":6,"+1y":12},months=void 0!==offsetMap[rangeKey]?offsetMap[rangeKey]:0;return months<0?(mCount=Math.abs(months),start=new Date(curYear,curMonth-mCount+1,1),end=new Date(curYear,curMonth+1,0)):months>0?(mCount=months,start=new Date(curYear,curMonth+1,1),end=new Date(curYear,curMonth+mCount+1,0)):(mCount=1,start=new Date(curYear,curMonth,1),end=new Date(curYear,curMonth+1,0)),{start,end,monthsCount:mCount,isCurrent:"current"===rangeKey,isFuture:rangeKey.startsWith("+")}}
-
-    function renderFBBreakdownImpl(rangeKey){
-        var expTotals,range=getDateRange(rangeKey),now=new Date,incFiltered=rawData.income.filter(r=>r.date>=range.start&&r.date<=range.end),activeIncomeRows=incFiltered.filter(r=>r.total>0),activeDates=new Set(activeIncomeRows.map(r=>r.date.getTime())),incActiveMonths=activeIncomeRows.length,incDivisor=range.isCurrent?1:incActiveMonths||range.monthsCount||1,incSums=incFiltered.reduce((acc,r)=>(acc.salary+=r.salary,acc.invest+=r.invest,acc.comp+=r.comp,acc.total+=r.total,acc),{salary:0,invest:0,comp:0,total:0}),incTotals={sum:incSums,avg:{salary:incSums.salary/incDivisor,invest:incSums.invest/incDivisor,comp:incSums.comp/incDivisor,total:incSums.total/incDivisor}},expFiltered=rawData.expense.filter(r=>r.date>=range.start&&r.date<=range.end),expActiveFiltered=range.isCurrent?expFiltered:expFiltered.filter(r=>activeDates.has(r.date.getTime())),expDivisor=range.isCurrent?1:incDivisor;if(range.isFuture){var currentYearExp=rawData.expense.filter(r=>r.date.getFullYear()===now.getFullYear()),divYear=currentYearExp.length||1,sumsYear=currentYearExp.reduce((acc,r)=>(acc.rental+=r.rental,acc.bills+=r.bills,acc.livingCost+=r.livingCost,acc.family+=r.family,acc.total+=r.total,acc),{rental:0,bills:0,livingCost:0,family:0,total:0}),avgYearMonthly={rental:sumsYear.rental/divYear,bills:sumsYear.bills/divYear,livingCost:sumsYear.livingCost/divYear,family:sumsYear.family/divYear,total:sumsYear.total/divYear},mCount=range.monthsCount||1;expTotals={avg:avgYearMonthly,sum:{rental:avgYearMonthly.rental*mCount,bills:avgYearMonthly.bills*mCount,livingCost:avgYearMonthly.livingCost*mCount,family:avgYearMonthly.family*mCount,total:avgYearMonthly.total*mCount}}}else{var expSums=expActiveFiltered.reduce((acc,r)=>(acc.rental+=r.rental,acc.bills+=r.bills,acc.livingCost+=r.livingCost,acc.family+=r.family,acc.total+=r.total,acc),{rental:0,bills:0,livingCost:0,family:0,total:0});expTotals={sum:expSums,avg:{rental:expSums.rental/expDivisor,bills:expSums.bills/expDivisor,livingCost:expSums.livingCost/expDivisor,family:expSums.family/expDivisor,total:expSums.total/expDivisor}}}var debtFiltered=rawData.debt.filter(r=>r.date>=range.start&&r.date<=range.end),debtActiveFiltered=range.isCurrent?debtFiltered:debtFiltered.filter(r=>activeDates.has(r.date.getTime())),debtDivisor=range.isCurrent?1:incDivisor,debtSums=debtActiveFiltered.reduce((acc,r)=>(acc.shinhan+=r.shinhan,acc.sc+=r.sc,acc.total+=r.total,acc),{shinhan:0,sc:0,total:0}),debtTotals={sum:debtSums,avg:{shinhan:debtSums.shinhan/debtDivisor,sc:debtSums.sc/debtDivisor,total:debtSums.total/debtDivisor}},cashflowSum=incTotals.sum.total-expTotals.sum.total-debtTotals.sum.total,cashflowAvg=cashflowSum/(range.isCurrent?1:range.isYearly?incActiveMonths:incActiveMonths||range.monthsCount||1),totalIncomeBasis=range.isCurrent?incTotals.avg.total:incTotals.sum.total,totalDenom=totalIncomeBasis>0?totalIncomeBasis:1;function fmtHeader(title,sumVal,avgVal){return"Expenses"===title&&range.isYearly||range.isCurrent||"Expenses"===title||"Debts"===title?title+" (₫"+fmtShortDec(avgVal)+")":title+" (∑₫"+fmtShortDec(sumVal)+" / ₫"+fmtShortDec(avgVal)+")"}var cashflowItem={id:"cashflow",title:"Cashflow",headerLabel:fmtHeader("Cashflow",cashflowSum,cashflowAvg),total:cashflowSum,pct:((range.isCurrent?cashflowAvg:cashflowSum)/totalDenom*100).toFixed(1),color:cashflowSum>=0?"#2dd4bf":"#f87171",children:[{name:"Salary",sumVal:incTotals.sum.salary,avgVal:incTotals.avg.salary,icon:icons.income.salary},{name:"Invest",sumVal:incTotals.sum.invest,avgVal:incTotals.avg.invest,icon:icons.income.invest},{name:"Comp.",sumVal:incTotals.sum.comp,avgVal:incTotals.avg.comp,icon:icons.income.comp}]},expenseItem={id:"expense",title:"Expenses",headerLabel:fmtHeader("Expenses",expTotals.sum.total,expTotals.avg.total),total:expTotals.avg.total,pct:((range.isCurrent?expTotals.avg.total:expTotals.sum.total)/totalDenom*100).toFixed(1),color:"#f472b6",isExpense:!0,children:[{name:"Rental",sumVal:expTotals.sum.rental,avgVal:expTotals.avg.rental,icon:icons.expense.rental},{name:"Bills & Ins.",sumVal:expTotals.sum.bills,avgVal:expTotals.avg.bills,icon:icons.expense.bills},{name:"Living Cost",sumVal:expTotals.sum.livingCost,avgVal:expTotals.avg.livingCost,icon:icons.expense.livingCost},{name:"Family",sumVal:expTotals.sum.family,avgVal:expTotals.avg.family,icon:icons.expense.family}]},debtItem={id:"debts",title:"Debts",headerLabel:fmtHeader("Debts",debtTotals.sum.total,debtTotals.avg.total),total:debtTotals.sum.total,pct:((range.isCurrent?debtTotals.avg.total:debtTotals.sum.total)/totalDenom*100).toFixed(1),color:"#60a5fa",isDebt:!0,children:[{name:"Shinhan",sumVal:debtTotals.sum.shinhan,avgVal:debtTotals.avg.shinhan,icon:icons.debt.shinhan},{name:"SC",sumVal:debtTotals.sum.sc,avgVal:debtTotals.avg.sc,icon:icons.debt.sc}]};function buildInlineChipsHtml(item){if(item.isDebt){var dHtml='<div class="fb-inline-chips fb-debt-chips-inline">';item.children.forEach(function(c){var avgV;c.sumVal&&!isNaN(c.sumVal)&&0!==Math.round(c.sumVal)&&(dHtml+='<span class="fb-chip-icon-only">',c.icon&&(dHtml+='<img class="fb-chip-icon" src="'+c.icon+'" alt="'+c.name+'" onerror="this.style.display=\'none\'" />'),dHtml+='<span class="fb-chip-val">'+(avgV=c.avgVal,range.isCurrent,"₫"+fmtShortDec(avgV)+"</span></span>"))});return dHtml+"</div>"}var html='<div class="fb-inline-chips">';item.children.forEach(function(c){var sumV,avgV;c.sumVal&&!isNaN(c.sumVal)&&0!==Math.round(c.sumVal)&&(html+='<span class="fb-chip">',c.icon&&(html+='<img class="fb-chip-icon" src="'+c.icon+'" onerror="this.style.display=\'none\'" />'),html+=c.name+': <span class="fb-chip-val">'+(sumV=c.sumVal,avgV=c.avgVal,(item.isExpense||range.isCurrent?"₫"+fmtShortDec(avgV):"∑₫"+fmtShortDec(sumV)+" / ₫"+fmtShortDec(avgV))+"</span></span>"))});return html+"</div>"}var html="";html+='<div class="fb-nav-bar">',html+='  <button class="fb-nav-btn" id="fb-prev-btn" aria-label="Previous filter"><i class="bi bi-chevron-left"></i></button>',html+='  <span class="fb-nav-label">'+RANGE_LABELS[rangeKey]+"</span>",html+='  <button class="fb-nav-btn" id="fb-next-btn" aria-label="Next filter"><i class="bi bi-chevron-right"></i></button>',html+="</div>",html+='<div class="fb-chart-layout" id="fb-chart-layout-canvas">',html+='  <div class="fb-top-right-metric fb-metric-block" data-index="0" style="cursor:pointer;">',html+='    <div class="fb-metric-header">'+cashflowItem.headerLabel+"</div>",html+='    <div class="fb-main-pct" style="color:'+cashflowItem.color+';">'+cashflowItem.pct+"%</div>",html+=buildInlineChipsHtml(cashflowItem),html+="  </div>",html+='  <div class="fb-left-top-metric fb-metric-block" data-index="2" style="cursor:pointer;">',html+='    <div class="fb-metric-header">'+expenseItem.headerLabel+"</div>",html+='    <div class="fb-sec-pct" style="color:'+expenseItem.color+';">'+expenseItem.pct+"%</div>",html+=buildInlineChipsHtml(expenseItem),html+="  </div>",html+='  <div class="fb-left-bottom-metric fb-metric-block" data-index="1" style="cursor:pointer;">',html+='    <div class="fb-metric-header">'+debtItem.headerLabel+"</div>",html+='    <div class="fb-sec-pct" style="color:'+debtItem.color+';">'+debtItem.pct+"%</div>",html+=buildInlineChipsHtml(debtItem),html+="  </div>",html+='  <div class="fb-center-donuts-container">',html+='    <div class="fb-unified-donut-wrapper" title="Portfolio Breakdown">'+function(cfVal,exVal,dbVal){var cf=Math.abs(cfVal||0),db=Math.abs(dbVal||0),ex=Math.abs(exVal||0),grandTotal=cf+db+ex||1,segments=[{name:"Cashflow",val:cf,id:"grad-cf",from:cfVal>=0?"#fff":"#f87171",to:cfVal>=0?"#028090":"#fff"},{name:"Debts",val:db,id:"grad-db",from:"#fff",to:"#0077b6"},{name:"Expenses",val:ex,id:"grad-ex",from:"#f472b6",to:"#fff"}],svgHtml='<svg class="fb-unified-donut" viewBox="0 0 100 100">';svgHtml+="<defs>",segments.forEach(function(seg){svgHtml+='<linearGradient id="'+seg.id+'" x1="0%" y1="0%" x2="100%" y2="100%">',svgHtml+='<stop offset="0%" stop-color="'+seg.from+'" />',svgHtml+='<stop offset="100%" stop-color="'+seg.to+'" />',svgHtml+="</linearGradient>"}),svgHtml+="</defs>",svgHtml+='<circle cx="50" cy="50" r="36" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="12"/>';var angle=0;return segments.forEach(function(seg,ii){var pct=seg.val/grandTotal,sweep=360*pct-3;if(sweep<=0)angle+=360*pct;else{var arcPath=caArc(50,50,31,angle,angle+sweep),pathLen=2*Math.PI*31*(sweep/360);svgHtml+='<path d="'+arcPath+'" fill="none" stroke="url(#'+seg.id+')" stroke-width="15" stroke-linecap="round" style="cursor:pointer;stroke-dasharray:'+pathLen+';stroke-dashoffset:'+pathLen+';animation:fbDonutLoad 0.8s ease-out forwards;animation-delay:'+(ii*0.12)+'s;" data-segment-index="'+ii+'" data-segment-name="'+seg.name+'" />',angle+=360*pct}}),svgHtml+='<text x="50" y="45" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="8" font-weight="600">Total</text>',svgHtml+='<text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="9" font-weight="700">₫'+fmtShortDec(grandTotal)+"</text>",svgHtml+="</svg>"}(cashflowSum,expTotals.sum.total,debtTotals.sum.total)+"</div>",html+="  </div>",html+="</div>",document.getElementById("fb-content").innerHTML=html;var canvasEl=document.getElementById("fb-chart-layout-canvas");canvasEl&&canvasEl.addEventListener("click",function(e){var targetMetric=e.target.closest(".fb-metric-block"),targetPath=e.target.closest("path");if(targetMetric){var idx=parseInt(targetMetric.getAttribute("data-index"),10);fbHighlight(idx)}else if(targetPath){var pIdx=parseInt(targetPath.getAttribute("data-segment-index"),10);fbHighlight(pIdx)}else fbHighlight(null)}),document.getElementById("fb-prev-btn").addEventListener("click",function(){currentRangeIndex>0&&(currentRangeIndex--,window.renderFBBreakdown(RANGES[currentRangeIndex]))}),document.getElementById("fb-next-btn").addEventListener("click",function(){currentRangeIndex<RANGES.length-1&&(currentRangeIndex++,window.renderFBBreakdown(RANGES[currentRangeIndex]))})
-    }
-
-    // Expose wrapper to global window object
-    window.renderFBBreakdown = function(rangeKey) {
-        window.lastFBBreakdownArgs = Array.prototype.slice.call(arguments);
-        return renderFBBreakdownImpl.apply(this, arguments);
-    };
-
-    "loading"===document.readyState?document.addEventListener("DOMContentLoaded",initFinancialBreakdown):initFinancialBreakdown();
-})();
+        function fmtShortDec(v){var a=Math.abs(v),sign=v<0?"-":"";return a>=1e9?sign+(a/1e9).toFixed(1)+"B":a>=1e6?sign+(a/1e6).toFixed(1)+"M":a>=1e3?sign+(a/1e3).toFixed(1)+"K":sign+Math.round(a)}function caArc(x,y,radius,startAngle,endAngle){var start=polarToCartesian(x,y,radius,endAngle),end=polarToCartesian(x,y,radius,startAngle),arcSweep=endAngle-startAngle<=180?"0":"1";return["M",start.x,start.y,"A",radius,radius,0,arcSweep,0,end.x,end.y].join(" ")}function polarToCartesian(centerX,centerY,radius,angleInDegrees){var angleInRadians=(angleInDegrees-90)*Math.PI/180;return{x:centerX+radius*Math.cos(angleInRadians),y:centerY+radius*Math.sin(angleInRadians)}}function initFinancialBreakdown(){var now=Date.now();Promise.all([fetch(FB_BASE_URL+"&gid="+GIDS.income+"&t="+now).then(r=>r.text()),fetch(FB_BASE_URL+"&gid="+GIDS.expense+"&t="+now).then(r=>r.text()),fetch(FB_BASE_URL+"&gid="+GIDS.debt+"&t="+now).then(r=>r.text())]).then(function(results){parseIncomeCSV(results[0]),parseExpenseCSV(results[1]),parseDebtCSV(results[2]),renderFBBreakdown(RANGES[currentRangeIndex])}).catch(function(err){console.error("FB Single Chart load error:",err)})}function parseIncomeCSV(csvText){var lines=csvText.trim().split(/\r?\n/);if(!(lines.length<2)){rawData.income=[];for(var i=1;i<lines.length;i++){var cols=parseCSVLine(lines[i]),qStr=(cols[16]||"").trim();if(qStr){var d=parseMonthYear?parseMonthYear(qStr):null;if(d){var salary=Math.abs(parseAmtTopChart(cols[19]||"0")),invest=Math.abs(parseAmtTopChart(cols[20]||"0")),comp=Math.abs(parseAmtTopChart(cols[21]||"0"));rawData.income.push({date:d,salary,invest,comp,total:salary+invest+comp})}}}}}function parseExpenseCSV(csvText){var lines=csvText.trim().split(/\r?\n/);if(!(lines.length<3)){var iconRow=parseCSVLine(lines[0]);icons.expense={rental:iconRow[3]||"",bills:iconRow[6]||"",livingCost:iconRow[7]||iconRow[8]||"",family:iconRow[9]||""},rawData.expense=[];for(var i=2;i<lines.length;i++){var cols=parseCSVLine(lines[i]),parts=(cols[0]||"").split("/");if(!(parts.length<2)){var d=new Date(2e3+parseInt(parts[1],10),parseInt(parts[0],10)-1,1),rental=Math.abs(parseAmtTopChart(cols[3]||"0")),bills=Math.abs(parseAmtTopChart(cols[6]||"0")),living=Math.abs(parseAmtTopChart(cols[7]||"0"))+Math.abs(parseAmtTopChart(cols[8]||"0")),family=Math.abs(parseAmtTopChart(cols[9]||"0"));rawData.expense.push({date:d,rental,bills,livingCost:living,family,total:rental+bills+living+family})}}}}function parseDebtCSV(csvText){var lines=csvText.trim().split(/\r?\n/);if(!(lines.length<2)){var iconRow=parseCSVLine(lines[0]);icons.debt={shinhan:iconRow[3]||"",sc:iconRow[4]||""},rawData.debt=[];for(var i=1;i<lines.length;i++){var cols=parseCSVLine(lines[i]),dateStr=(cols[0]||"").trim();if(dateStr){var m=dateStr.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);if(m){var month=parseInt(m[1],10)-1,day=parseInt(m[2],10),year=parseInt(m[3],10),d=new Date(year,month,day),shinhan=Math.abs(parseAmtTopChart(cols[3]||"0")),sc=Math.abs(parseAmtTopChart(cols[4]||"0"));rawData.debt.push({date:d,shinhan,sc,total:shinhan+sc})}}}}}function getDateRange(rangeKey){var now=new Date,curYear=now.getFullYear(),curMonth=now.getMonth();if("current-year"===rangeKey)return{start:new Date(curYear,0,1),end:new Date(curYear,11,31),monthsCount:12,isCurrent:!1,isFuture:!1,isYearly:!0};var start,end,mCount,offsetMap={"-1y":-12,"-6m":-6,"-3m":-3,current:0,"+3m":3,"+6m":6,"+1y":12},months=void 0!==offsetMap[rangeKey]?offsetMap[rangeKey]:0;return months<0?(mCount=Math.abs(months),start=new Date(curYear,curMonth-mCount+1,1),end=new Date(curYear,curMonth+1,0)):months>0?(mCount=months,start=new Date(curYear,curMonth+1,1),end=new Date(curYear,curMonth+mCount+1,0)):(mCount=1,start=new Date(curYear,curMonth,1),end=new Date(curYear,curMonth+1,0)),{start,end,monthsCount:mCount,isCurrent:"current"===rangeKey,isFuture:rangeKey.startsWith("+")}}
+        function renderFBBreakdown(rangeKey){var expTotals,range=getDateRange(rangeKey),now=new Date,incFiltered=rawData.income.filter(r=>r.date>=range.start&&r.date<=range.end),activeIncomeRows=incFiltered.filter(r=>r.total>0),activeDates=new Set(activeIncomeRows.map(r=>r.date.getTime())),incActiveMonths=activeIncomeRows.length,incDivisor=range.isCurrent?1:incActiveMonths||range.monthsCount||1,incSums=incFiltered.reduce((acc,r)=>(acc.salary+=r.salary,acc.invest+=r.invest,acc.comp+=r.comp,acc.total+=r.total,acc),{salary:0,invest:0,comp:0,total:0}),incTotals={sum:incSums,avg:{salary:incSums.salary/incDivisor,invest:incSums.invest/incDivisor,comp:incSums.comp/incDivisor,total:incSums.total/incDivisor}},expFiltered=rawData.expense.filter(r=>r.date>=range.start&&r.date<=range.end),expActiveFiltered=range.isCurrent?expFiltered:expFiltered.filter(r=>activeDates.has(r.date.getTime())),expDivisor=range.isCurrent?1:incDivisor;if(range.isFuture){var currentYearExp=rawData.expense.filter(r=>r.date.getFullYear()===now.getFullYear()),divYear=currentYearExp.length||1,sumsYear=currentYearExp.reduce((acc,r)=>(acc.rental+=r.rental,acc.bills+=r.bills,acc.livingCost+=r.livingCost,acc.family+=r.family,acc.total+=r.total,acc),{rental:0,bills:0,livingCost:0,family:0,total:0}),avgYearMonthly={rental:sumsYear.rental/divYear,bills:sumsYear.bills/divYear,livingCost:sumsYear.livingCost/divYear,family:sumsYear.family/divYear,total:sumsYear.total/divYear},mCount=range.monthsCount||1;expTotals={avg:avgYearMonthly,sum:{rental:avgYearMonthly.rental*mCount,bills:avgYearMonthly.bills*mCount,livingCost:avgYearMonthly.livingCost*mCount,family:avgYearMonthly.family*mCount,total:avgYearMonthly.total*mCount}}}else{var expSums=expActiveFiltered.reduce((acc,r)=>(acc.rental+=r.rental,acc.bills+=r.bills,acc.livingCost+=r.livingCost,acc.family+=r.family,acc.total+=r.total,acc),{rental:0,bills:0,livingCost:0,family:0,total:0});expTotals={sum:expSums,avg:{rental:expSums.rental/expDivisor,bills:expSums.bills/expDivisor,livingCost:expSums.livingCost/expDivisor,family:expSums.family/expDivisor,total:expSums.total/expDivisor}}}var debtFiltered=rawData.debt.filter(r=>r.date>=range.start&&r.date<=range.end),debtActiveFiltered=range.isCurrent?debtFiltered:debtFiltered.filter(r=>activeDates.has(r.date.getTime())),debtDivisor=range.isCurrent?1:incDivisor,debtSums=debtActiveFiltered.reduce((acc,r)=>(acc.shinhan+=r.shinhan,acc.sc+=r.sc,acc.total+=r.total,acc),{shinhan:0,sc:0,total:0}),debtTotals={sum:debtSums,avg:{shinhan:debtSums.shinhan/debtDivisor,sc:debtSums.sc/debtDivisor,total:debtSums.total/debtDivisor}},cashflowSum=incTotals.sum.total-expTotals.sum.total-debtTotals.sum.total,cashflowAvg=cashflowSum/(range.isCurrent?1:range.isYearly?incActiveMonths:incActiveMonths||range.monthsCount||1),totalIncomeBasis=range.isCurrent?incTotals.avg.total:incTotals.sum.total,totalDenom=totalIncomeBasis>0?totalIncomeBasis:1;function fmtHeader(title,sumVal,avgVal){return"Expenses"===title&&range.isYearly||range.isCurrent||"Expenses"===title||"Debts"===title?title+" (₫"+fmtShortDec(avgVal)+")":title+" (∑₫"+fmtShortDec(sumVal)+" / ₫"+fmtShortDec(avgVal)+")"}var cashflowItem={id:"cashflow",title:"Cashflow",headerLabel:fmtHeader("Cashflow",cashflowSum,cashflowAvg),total:cashflowSum,pct:((range.isCurrent?cashflowAvg:cashflowSum)/totalDenom*100).toFixed(1),color:cashflowSum>=0?"#2dd4bf":"#f87171",children:[{name:"Salary",sumVal:incTotals.sum.salary,avgVal:incTotals.avg.salary,icon:icons.income.salary},{name:"Invest",sumVal:incTotals.sum.invest,avgVal:incTotals.avg.invest,icon:icons.income.invest},{name:"Comp.",sumVal:incTotals.sum.comp,avgVal:incTotals.avg.comp,icon:icons.income.comp}]},expenseItem={id:"expense",title:"Expenses",headerLabel:fmtHeader("Expenses",expTotals.sum.total,expTotals.avg.total),total:expTotals.avg.total,pct:((range.isCurrent?expTotals.avg.total:expTotals.sum.total)/totalDenom*100).toFixed(1),color:"#f472b6",isExpense:!0,children:[{name:"Rental",sumVal:expTotals.sum.rental,avgVal:expTotals.avg.rental,icon:icons.expense.rental},{name:"Bills & Ins.",sumVal:expTotals.sum.bills,avgVal:expTotals.avg.bills,icon:icons.expense.bills},{name:"Living Cost",sumVal:expTotals.sum.livingCost,avgVal:expTotals.avg.livingCost,icon:icons.expense.livingCost},{name:"Family",sumVal:expTotals.sum.family,avgVal:expTotals.avg.family,icon:icons.expense.family}]},debtItem={id:"debts",title:"Debts",headerLabel:fmtHeader("Debts",debtTotals.sum.total,debtTotals.avg.total),total:debtTotals.sum.total,pct:((range.isCurrent?debtTotals.avg.total:debtTotals.sum.total)/totalDenom*100).toFixed(1),color:"#60a5fa",isDebt:!0,children:[{name:"Shinhan",sumVal:debtTotals.sum.shinhan,avgVal:debtTotals.avg.shinhan,icon:icons.debt.shinhan},{name:"SC",sumVal:debtTotals.sum.sc,avgVal:debtTotals.avg.sc,icon:icons.debt.sc}]};function buildInlineChipsHtml(item){if(item.isDebt){var dHtml='<div class="fb-inline-chips fb-debt-chips-inline">';return item.children.forEach(function(c){var avgV;c.sumVal&&!isNaN(c.sumVal)&&0!==Math.round(c.sumVal)&&(dHtml+='<span class="fb-chip-icon-only">',c.icon&&(dHtml+='<img class="fb-chip-icon" src="'+c.icon+'" alt="'+c.name+'" onerror="this.style.display=\'none\'" />'),dHtml+='<span class="fb-chip-val">'+(avgV=c.avgVal,range.isCurrent,"₫"+fmtShortDec(avgV)+"</span></span>"))}),dHtml+="</div>"}var html='<div class="fb-inline-chips">';return item.children.forEach(function(c){var sumV,avgV;c.sumVal&&!isNaN(c.sumVal)&&0!==Math.round(c.sumVal)&&(html+='<span class="fb-chip">',c.icon&&(html+='<img class="fb-chip-icon" src="'+c.icon+'" onerror="this.style.display=\'none\'" />'),html+=c.name+': <span class="fb-chip-val">'+(sumV=c.sumVal,avgV=c.avgVal,(item.isExpense||range.isCurrent?"₫"+fmtShortDec(avgV):"∑₫"+fmtShortDec(sumV)+" / ₫"+fmtShortDec(avgV))+"</span></span>"))}),html+="</div>"}var html="";html+='<div class="fb-nav-bar">',html+='  <button class="fb-nav-btn" id="fb-prev-btn" aria-label="Previous filter"><i class="bi bi-chevron-left"></i></button>',html+='  <span class="fb-nav-label">'+RANGE_LABELS[rangeKey]+"</span>",html+='  <button class="fb-nav-btn" id="fb-next-btn" aria-label="Next filter"><i class="bi bi-chevron-right"></i></button>',html+="</div>",html+='<div class="fb-chart-layout" id="fb-chart-layout-canvas">',html+='  <div class="fb-top-right-metric fb-metric-block" data-index="0" style="cursor:pointer;">',html+='    <div class="fb-metric-header">'+cashflowItem.headerLabel+"</div>",html+='    <div class="fb-main-pct" style="color:'+cashflowItem.color+';">'+cashflowItem.pct+"%</div>",html+=buildInlineChipsHtml(cashflowItem),html+="  </div>",html+='  <div class="fb-left-top-metric fb-metric-block" data-index="2" style="cursor:pointer;">',html+='    <div class="fb-metric-header">'+expenseItem.headerLabel+"</div>",html+='    <div class="fb-sec-pct" style="color:'+expenseItem.color+';">'+expenseItem.pct+"%</div>",html+=buildInlineChipsHtml(expenseItem),html+="  </div>",html+='  <div class="fb-left-bottom-metric fb-metric-block" data-index="1" style="cursor:pointer;">',html+='    <div class="fb-metric-header">'+debtItem.headerLabel+"</div>",html+='    <div class="fb-sec-pct" style="color:'+debtItem.color+';">'+debtItem.pct+"%</div>",html+=buildInlineChipsHtml(debtItem),html+="  </div>",html+='  <div class="fb-center-donuts-container">',html+='    <div class="fb-unified-donut-wrapper" title="Portfolio Breakdown">'+function(cfVal,exVal,dbVal){var cf=Math.abs(cfVal||0),db=Math.abs(dbVal||0),ex=Math.abs(exVal||0),grandTotal=cf+db+ex||1,segments=[{name:"Cashflow",val:cf,id:"grad-cf",from:cfVal>=0?"#fff":"#f87171",to:cfVal>=0?"#028090":"#fff"},{name:"Debts",val:db,id:"grad-db",from:"#fff",to:"#0077b6"},{name:"Expenses",val:ex,id:"grad-ex",from:"#f472b6",to:"#fff"}],svgHtml='<svg class="fb-unified-donut" viewBox="0 0 100 100">';svgHtml+="<defs>",segments.forEach(function(seg){svgHtml+='<linearGradient id="'+seg.id+'" x1="0%" y1="0%" x2="100%" y2="100%">',svgHtml+='<stop offset="0%" stop-color="'+seg.from+'" />',svgHtml+='<stop offset="100%" stop-color="'+seg.to+'" />',svgHtml+="</linearGradient>"}),svgHtml+="</defs>",svgHtml+='<circle cx="50" cy="50" r="36" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="12"/>';var angle=0;return segments.forEach(function(seg,ii){var pct=seg.val/grandTotal,sweep=360*pct-3;if(sweep<=0)angle+=360*pct;else{var arcPath=caArc(50,50,31,angle,angle+sweep);svgHtml+='<path d="'+arcPath+'" fill="none" stroke="url(#'+seg.id+')" stroke-width="15" stroke-linecap="round" style="cursor:pointer;" data-segment-index="'+ii+'" data-segment-name="'+seg.name+'" />',angle+=360*pct}}),svgHtml+='<text x="50" y="45" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="8" font-weight="600">Total</text>',svgHtml+='<text x="50" y="58" text-anchor="middle" fill="#ffffff" font-size="9" font-weight="700">₫'+fmtShortDec(grandTotal)+"</text>",svgHtml+="</svg>"}(cashflowSum,expTotals.sum.total,debtTotals.sum.total)+"</div>",html+="  </div>",html+="</div>",document.getElementById("fb-content").innerHTML=html;var canvasEl=document.getElementById("fb-chart-layout-canvas");canvasEl&&canvasEl.addEventListener("click",function(e){var targetMetric=e.target.closest(".fb-metric-block"),targetPath=e.target.closest("path");if(targetMetric){var idx=parseInt(targetMetric.getAttribute("data-index"),10);fbHighlight(idx)}else if(targetPath){var pIdx=parseInt(targetPath.getAttribute("data-segment-index"),10);fbHighlight(pIdx)}else fbHighlight(null)}),document.getElementById("fb-prev-btn").addEventListener("click",function(){currentRangeIndex>0&&(currentRangeIndex--,renderFBBreakdown(RANGES[currentRangeIndex]))}),document.getElementById("fb-next-btn").addEventListener("click",function(){currentRangeIndex<RANGES.length-1&&(currentRangeIndex++,renderFBBreakdown(RANGES[currentRangeIndex]))})}
+        "loading"===document.readyState?document.addEventListener("DOMContentLoaded",initFinancialBreakdown):initFinancialBreakdown();
+    })();
     var caActiveIdx=null;function fbHighlight(idx){caActiveIdx=caActiveIdx===idx?null:idx;var layoutEl=document.getElementById("fb-chart-layout-canvas");layoutEl&&(null===caActiveIdx?layoutEl.classList.remove("has-selection"):layoutEl.classList.add("has-selection"),layoutEl.querySelectorAll(".fb-metric-block").forEach(function(el){var elIdx=parseInt(el.getAttribute("data-index"),10);null===caActiveIdx||elIdx===caActiveIdx?(el.classList.add("fb-item-active"),el.classList.remove("fb-item-dimmed")):(el.classList.remove("fb-item-active"),el.classList.add("fb-item-dimmed"))}),layoutEl.querySelectorAll(".fb-unified-donut path").forEach(function(path,pIdx){null===caActiveIdx||pIdx===caActiveIdx?(path.classList.add("fb-path-active"),path.setAttribute("stroke-width","15")):(path.classList.remove("fb-path-active"),path.setAttribute("stroke-width","12"))}))}
 
     // Touch events
