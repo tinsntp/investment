@@ -114,6 +114,47 @@ background:
   background-repeat: no-repeat;
   filter: saturate(100%) contrast(1.1);
 }
+#chart-svg {
+  transition: opacity 0.18s ease;
+}
+#chart-svg.tc-fading {
+  opacity: 0;
+}
+@keyframes animBarGrow {
+  from { transform: scaleY(0); opacity: 0; }
+  to   { transform: scaleY(1); opacity: 1; }
+}
+.anim-bar {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: animBarGrow 0.45s ease-out both;
+}
+
+@keyframes animAreaFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.anim-area {
+  animation: animAreaFadeIn 0.5s ease-out both;
+}
+
+@keyframes animLineDraw {
+  to { stroke-dashoffset: 0; }
+}
+.anim-line {
+  stroke-dasharray: 4000;
+  stroke-dashoffset: 4000;
+  animation: animLineDraw 0.9s ease-out forwards;
+}
+@keyframes balanceValPop {
+  0%   { transform: scale(0.92); opacity: 0.4; }
+  60%  { transform: scale(1.03); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+#balance-val.val-pop {
+  display: inline-block;
+  animation: balanceValPop 0.28s ease-out;
+}
 
 .ring-item{display:flex;flex-direction:column;align-items:center;gap:.6vw;flex:1;cursor:pointer;border-radius:2vw;padding:1.5vw .5vw;transition:background .2s}@media (max-width:1024px){.ring-item[data-hide-on-mobile="1"]{display:none!important}}
 .ring-item:hover { background: rgba(255, 255, 255, 0.04); }
@@ -2392,199 +2433,7 @@ to{transform:rotate(360deg)}
       '<span style="font-size: 14px; font-weight: 600; color: #fff; line-height: 1;">' + dayNumber + '</span>' +
       '<span style="font-size: 10px; color: rgba(255,255,255,0.6); line-height: 1; margin-top: 2px;">（' + weekday + '）</span>';
     function updateCountdown(){var el=document.getElementById("countdown-text");if(el){var targetDate=new Date("2028-12-31T00:00:00"),now=new Date;if(targetDate<=now)el.textContent="";else{var diff=diffYMD(now,targetDate),partsTC=[];diff.years>0&&partsTC.push(diff.years+(1===diff.years?" year":" years")),diff.months>0&&partsTC.push(diff.months+(1===diff.months?" month":" months")),window.innerWidth>400&&window.innerWidth<=1024&&partsTC.push(diff.days+(1===diff.days?" day":" days")),el.textContent=partsTC.join(" ")+" left"}}}
-    function loadBalanceHistoryTC() {
-  Promise.all([fetch(TOP_CHART_CSV_URL + "&t=" + Date.now(), {
-    cache: "no-store"
-  }).then(function(r) {
-    if (!r.ok) throw new Error("HTTP " + r.status);
-    return r.text()
-  }), fetch(DEBT_CSV_URL + "&t=" + Date.now(), {
-    cache: "no-store"
-  }).then(r => {
-    if (!r.ok) throw new Error("HTTP " + r.status);
-    return r.text()
-  }), fetch(GOAL_CSV_URL + "&t=" + Date.now(), {
-    cache: "no-store"
-  }).then(r => {
-    if (!r.ok) throw new Error("HTTP " + r.status);
-    return r.text()
-  })]).then(function(results) {
-    var balanceText = results[0],
-      debtText = results[1],
-      goalText = results[2],
-      rows = balanceText.split("\n").filter(function(l) {
-        return l.trim()
-      }).map(csvRowTopChart),
-      excluded = {};
-    rows.forEach(function(cols) {
-      var v = (cols[8] || "").trim();
-      v && (excluded[v.toLowerCase()] = !0)
-    });
-    var maxDate = new Date(2026, 1, 1);
-    rows.forEach(function(cols) {
-      var dateStr = cols[10] || "";
-      if (dateStr) {
-        var d = parseSheetDateTopChart(dateStr);
-        d && d > maxDate && (maxDate = new Date(d))
-      }
-      var qStr = cols[16] || "";
-      if (qStr) {
-        var qd = parseMonthYear(qStr);
-        qd && qd > maxDate && (maxDate = new Date(qd))
-      }
-    });
-    for (var investStartMonth = new Date(2026, 2, 1), endMonth = new Date(maxDate.getFullYear(), maxDate.getMonth(), 1), investKeys = [], monthObjs = {}, curr = new Date(investStartMonth); curr <= endMonth;) {
-      var k = curr.getFullYear() + "-" + curr.getMonth();
-      investKeys.push(k), monthObjs[k] = new Date(curr), curr.setMonth(curr.getMonth() + 1)
-    }
-    var balanceStartMonth = new Date(2026, 4, 1),
-      balanceKeys = investKeys.filter(function(k) {
-        return monthObjs[k] >= balanceStartMonth
-      }),
-      byMonth = {};
-    investKeys.forEach(function(k) {
-      byMonth[k] = 0
-    }), rows.forEach(function(cols) {
-      var dateStr = cols[10] || "",
-        group = (cols[11] || "").trim(),
-        amt = parseAmtTopChart(cols[12] || "");
-      if (dateStr) {
-        var d = parseSheetDateTopChart(dateStr);
-        if (d && !(isNaN(amt) || group && excluded[group.toLowerCase()])) {
-          var key = d.getFullYear() + "-" + d.getMonth();
-          void 0 !== byMonth[key] && (byMonth[key] += amt)
-        }
-      }
-    }), rows.forEach(function(cols) {
-      var qStr = cols[16] || "";
-      if (qStr) {
-        var qd = parseMonthYear(qStr);
-        if (qd) {
-          var key = qd.getFullYear() + "-" + qd.getMonth(),
-            rAmt = parseAmtTopChart(cols[17] || "");
-          isNaN(rAmt) || void 0 !== byMonth[key] && (byMonth[key] += rAmt)
-        }
-      }
-    });
-    var byMonthSaving = {},
-      byMonthStock = {},
-      byMonthForex = {},
-      byMonthCrypto = {},
-      byMonthGold = {},
-      byMonthComp = {},
-      byMonthExpense = {},
-      byMonthIncome = {};
-    rows.forEach(function(cols) {
-      var qStr = cols[16] || "";
-      if (qStr) {
-        var qd = parseMonthYear(qStr);
-        if (qd) {
-          var key = qd.getFullYear() + "-" + qd.getMonth(),
-            savingAmt = parseAmtTopChart(cols[24] || ""),
-            stockAmt = parseAmtTopChart(cols[25] || ""),
-            forexAmt = parseAmtTopChart(cols[26] || ""),
-            cryptoAmt = parseAmtTopChart(cols[27] || ""),
-            goldAmt = parseAmtTopChart(cols[28] || ""),
-            compAmt = parseAmtTopChart(cols[21] || ""),
-            rAmt = parseAmtTopChart(cols[17] || ""),
-            sAmt = parseAmtTopChart(cols[18] || "");
-          isNaN(savingAmt) || (byMonthSaving[key] = (byMonthSaving[key] || 0) + savingAmt), isNaN(stockAmt) || (byMonthStock[key] = (byMonthStock[key] || 0) + stockAmt), isNaN(forexAmt) || (byMonthForex[key] = (byMonthForex[key] || 0) + forexAmt), isNaN(cryptoAmt) || (byMonthCrypto[key] = (byMonthCrypto[key] || 0) + cryptoAmt), isNaN(goldAmt) || (byMonthGold[key] = (byMonthGold[key] || 0) + goldAmt), isNaN(compAmt) || (byMonthComp[key] = (byMonthComp[key] || 0) + compAmt), isNaN(rAmt) || (byMonthExpense[key] = (byMonthExpense[key] || 0) + rAmt), isNaN(sAmt) || (byMonthIncome[key] = (byMonthIncome[key] || 0) + sAmt)
-        }
-      }
-    }), investSeries = investKeys && investKeys.length ? investKeys.map(function(k) {
-      var saving = byMonthSaving[k] || 0,
-        stock = byMonthStock[k] || 0,
-        forex = byMonthForex[k] || 0,
-        crypto = byMonthCrypto[k] || 0,
-        gold = byMonthGold[k] || 0,
-        comp = byMonthComp[k] || 0;
-      return {
-        date: monthObjs[k],
-        saving,
-        stock,
-        forex,
-        crypto,
-        gold,
-        comp,
-        total: saving + stock + forex + crypto + gold + comp
-      }
-    }) : [];
-    var running = 0;
-    fullSeries = balanceKeys.map(function(k) {
-      var mVal = byMonth[k] || 0;
-      return running += mVal, {
-        date: monthObjs[k],
-        balance: running,
-        delta: mVal
-      }
-    }), expenseSeries = balanceKeys.map(function(k) {
-      return {
-        date: monthObjs[k],
-        amount: Math.abs(byMonthExpense[k] || 0)
-      }
-    }), lastExpenseIndex = -1;
-    for (let i = expenseSeries.length - 1; i >= 0; i--)
-      if (expenseSeries[i].amount > 0) {
-        lastExpenseIndex = i;
-        break
-      } incomeSeries = balanceKeys.map(function(k) {
-      return {
-        date: monthObjs[k],
-        amount: Math.abs(byMonthIncome[k] || 0)
-      }
-    });
-    var debtRows = debtText.split("\n").filter(function(l) {
-      return l.trim()
-    }).map(csvRowTopChart);
-    debtRows = debtRows.slice(1);
-    var debtByMonth = {};
-    debtRows.forEach(function(cols) {
-      var m = cols[0].trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-      if (m) {
-        var month = parseInt(m[1], 10),
-          day = parseInt(m[2], 10),
-          year = parseInt(m[3], 10),
-          d = new Date(year, month - 1, day);
-        if (d) {
-          var key = d.getFullYear() + "-" + d.getMonth(),
-            shinhan = parseAmtTopChart(cols[2]),
-            sc = parseAmtTopChart(cols[1]);
-          isNaN(shinhan) && (shinhan = 0), isNaN(sc) && (sc = 0), debtByMonth[key] = {
-            sc,
-            shinhan
-          }
-        }
-      }
-    }), debtSeries = balanceKeys.map(function(k) {
-      var debt = debtByMonth[k] || {
-        sc: 0,
-        shinhan: 0
-      };
-      return {
-        date: monthObjs[k],
-        total: debt.shinhan + debt.sc,
-        sc: debt.sc,
-        shinhan: debt.shinhan
-      }
-    });
-    var goalRows = goalText.split("\n").filter(function(l) {
-        return l.trim()
-      }).map(csvRowTopChart),
-      b2raw = goalRows[1] ? goalRows[1][1] : "",
-      b3raw = goalRows[2] ? goalRows[2][1] : "",
-      b2val = parseAmtTopChart(b2raw || ""),
-      b3val = parseAmtTopChart(b3raw || "");
-    isNaN(b2val) && (b2val = 0), isNaN(b3val) && (b3val = 0), monthlyExpenseGoal = b2val, goalTarget = 12 * monthlyExpenseGoal * 15, document.getElementById("loading-msg-tc").style.display = "none", document.getElementById("chart-wrap").style.display = "block", renderChartTC(currentRangeTC);
-    var now2 = new Date;
-    String(now2.getHours()).padStart(2, "0"), String(now2.getMinutes()).padStart(2, "0"), String(now2.getSeconds()).padStart(2, "0")
-  }).catch(function(err) {
-    document.getElementById("loading-msg-tc").textContent = "Error: " + err.message
-  }), document.querySelector('.range-btn[data-range="today"]').scrollIntoView({
-    behavior: "auto",
-    inline: "center",
-    block: "nearest"
-  })
-}
+    function loadBalanceHistoryTC(){Promise.all([fetch(TOP_CHART_CSV_URL+"&t="+Date.now(),{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.text()}),fetch(DEBT_CSV_URL+"&t="+Date.now(),{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error("HTTP "+r.status);return r.text()}),fetch(GOAL_CSV_URL+"&t="+Date.now(),{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error("HTTP "+r.status);return r.text()})]).then(function(results){var balanceText=results[0],debtText=results[1],goalText=results[2],rows=balanceText.split("\n").filter(function(l){return l.trim()}).map(csvRowTopChart),excluded={};rows.forEach(function(cols){var v=(cols[8]||"").trim();v&&(excluded[v.toLowerCase()]=!0)});var maxDate=new Date(2026,1,1);rows.forEach(function(cols){var dateStr=cols[10]||"";if(dateStr){var d=parseSheetDateTopChart(dateStr);d&&d>maxDate&&(maxDate=new Date(d))}var qStr=cols[16]||"";if(qStr){var qd=parseMonthYear(qStr);qd&&qd>maxDate&&(maxDate=new Date(qd))}});for(var investStartMonth=new Date(2026,2,1),endMonth=new Date(maxDate.getFullYear(),maxDate.getMonth(),1),investKeys=[],monthObjs={},curr=new Date(investStartMonth);curr<=endMonth;){var k=curr.getFullYear()+"-"+curr.getMonth();investKeys.push(k),monthObjs[k]=new Date(curr),curr.setMonth(curr.getMonth()+1)}var balanceStartMonth=new Date(2026,4,1),balanceKeys=investKeys.filter(function(k){return monthObjs[k]>=balanceStartMonth}),byMonth={};investKeys.forEach(function(k){byMonth[k]=0}),rows.forEach(function(cols){var dateStr=cols[10]||"",group=(cols[11]||"").trim(),amt=parseAmtTopChart(cols[12]||"");if(dateStr){var d=parseSheetDateTopChart(dateStr);if(d&&!(isNaN(amt)||group&&excluded[group.toLowerCase()])){var key=d.getFullYear()+"-"+d.getMonth();void 0!==byMonth[key]&&(byMonth[key]+=amt)}}}),rows.forEach(function(cols){var qStr=cols[16]||"";if(qStr){var qd=parseMonthYear(qStr);if(qd){var key=qd.getFullYear()+"-"+qd.getMonth(),rAmt=parseAmtTopChart(cols[17]||"");isNaN(rAmt)||void 0!==byMonth[key]&&(byMonth[key]+=rAmt)}}});var byMonthSaving={},byMonthStock={},byMonthForex={},byMonthCrypto={},byMonthGold={},byMonthComp={},byMonthExpense={},byMonthIncome={};rows.forEach(function(cols){var qStr=cols[16]||"";if(qStr){var qd=parseMonthYear(qStr);if(qd){var key=qd.getFullYear()+"-"+qd.getMonth(),savingAmt=parseAmtTopChart(cols[24]||""),stockAmt=parseAmtTopChart(cols[25]||""),forexAmt=parseAmtTopChart(cols[26]||""),cryptoAmt=parseAmtTopChart(cols[27]||""),goldAmt=parseAmtTopChart(cols[28]||""),compAmt=parseAmtTopChart(cols[21]||""),rAmt=parseAmtTopChart(cols[17]||""),sAmt=parseAmtTopChart(cols[18]||"");isNaN(savingAmt)||(byMonthSaving[key]=(byMonthSaving[key]||0)+savingAmt),isNaN(stockAmt)||(byMonthStock[key]=(byMonthStock[key]||0)+stockAmt),isNaN(forexAmt)||(byMonthForex[key]=(byMonthForex[key]||0)+forexAmt),isNaN(cryptoAmt)||(byMonthCrypto[key]=(byMonthCrypto[key]||0)+cryptoAmt),isNaN(goldAmt)||(byMonthGold[key]=(byMonthGold[key]||0)+goldAmt),isNaN(compAmt)||(byMonthComp[key]=(byMonthComp[key]||0)+compAmt),isNaN(rAmt)||(byMonthExpense[key]=(byMonthExpense[key]||0)+rAmt),isNaN(sAmt)||(byMonthIncome[key]=(byMonthIncome[key]||0)+sAmt)}}}),investSeries=investKeys&&investKeys.length?investKeys.map(function(k){var saving=byMonthSaving[k]||0,stock=byMonthStock[k]||0,forex=byMonthForex[k]||0,crypto=byMonthCrypto[k]||0,gold=byMonthGold[k]||0,comp=byMonthComp[k]||0;return{date:monthObjs[k],saving,stock,forex,crypto,gold,comp,total:saving+stock+forex+crypto+gold+comp}}):[];var running=0;fullSeries=balanceKeys.map(function(k){var mVal=byMonth[k]||0;return running+=mVal,{date:monthObjs[k],balance:running,delta:mVal}}),expenseSeries=balanceKeys.map(function(k){return{date:monthObjs[k],amount:Math.abs(byMonthExpense[k]||0)}}),lastExpenseIndex=-1;for(let i=expenseSeries.length-1;i>=0;i--)if(expenseSeries[i].amount>0){lastExpenseIndex=i;break}incomeSeries=balanceKeys.map(function(k){return{date:monthObjs[k],amount:Math.abs(byMonthIncome[k]||0)}});var debtRows=debtText.split("\n").filter(function(l){return l.trim()}).map(csvRowTopChart);debtRows=debtRows.slice(1);var debtByMonth={};debtRows.forEach(function(cols){var m=cols[0].trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);if(m){var month=parseInt(m[1],10),day=parseInt(m[2],10),year=parseInt(m[3],10),d=new Date(year,month-1,day);if(d){var key=d.getFullYear()+"-"+d.getMonth(),shinhan=parseAmtTopChart(cols[2]),sc=parseAmtTopChart(cols[1]);isNaN(shinhan)&&(shinhan=0),isNaN(sc)&&(sc=0),debtByMonth[key]={sc,shinhan}}}}),debtSeries=balanceKeys.map(function(k){var debt=debtByMonth[k]||{sc:0,shinhan:0};return{date:monthObjs[k],total:debt.shinhan+debt.sc,sc:debt.sc,shinhan:debt.shinhan}});var goalRows=goalText.split("\n").filter(function(l){return l.trim()}).map(csvRowTopChart),b2raw=goalRows[1]?goalRows[1][1]:"",b3raw=goalRows[2]?goalRows[2][1]:"",b2val=parseAmtTopChart(b2raw||""),b3val=parseAmtTopChart(b3raw||"");isNaN(b2val)&&(b2val=0),isNaN(b3val)&&(b3val=0),monthlyExpenseGoal=b2val,goalTarget=12*monthlyExpenseGoal*15,document.getElementById("loading-msg-tc").style.display="none",document.getElementById("chart-wrap").style.display="block",renderChartTC(currentRangeTC);var now2=new Date;String(now2.getHours()).padStart(2,"0"),String(now2.getMinutes()).padStart(2,"0"),String(now2.getSeconds()).padStart(2,"0")}).catch(function(err){document.getElementById("loading-msg-tc").textContent="Error: "+err.message}),document.querySelector('.range-btn[data-range="today"]').scrollIntoView({behavior:"auto",inline:"center",block:"nearest"})}
     /* ══ RANGE FILTERING (by month-count, since points are now one-per-month) ══ */
     var RANGE_MONTHS = { "-2y": -24,"-1y": -12,"-6m": -6,"-3m": -3,"today": 0,"+3m":3, "+6m":6, "+1y":12, "+2y":24, "max":null };
     var RANGE_LABELS = { "-2y":"2 years","-1y":"1 year","-6m":"6 months","-3m":"3 months","+3m":"3 months", "+6m":"6 months", "+1y":"1 year", "+2y":"2 years", "max":"all time" };
@@ -2597,7 +2446,21 @@ to{transform:rotate(360deg)}
     var currentDebtTotalXY = []; 
     var currentDebtShinhanXY = []; 
     var currentDebtSCXY = []; var currentPts = [];
+    function animateChartSwitchTC(renderFn) {
+        var svgEl = document.getElementById("chart-svg");
+        if (!svgEl) { renderFn(); return; }
 
+        svgEl.classList.add("tc-fading");
+        setTimeout(function() {
+            renderFn();
+            // One frame delay so the browser registers the freshly-rebuilt DOM before
+            // the fade-back-in starts — otherwise opacity:0 → opacity:1 can get
+            // coalesced into a single paint and the fade never visibly happens.
+            requestAnimationFrame(function() {
+            svgEl.classList.remove("tc-fading");
+            });
+        }, 180); // must match the CSS transition duration above
+        }
     function getMonthIndex(monthOffset){if(!currentXY.length)return 0;for(var currentIndex=getCurrentMonthIndex(),currentDate=currentXY[currentIndex].date,targetTC=new Date(currentDate.getFullYear(),currentDate.getMonth()+monthOffset,1),targetYear=targetTC.getFullYear(),targetMonth=targetTC.getMonth(),idx=currentIndex,i=0;i<currentXY.length;i++){var d=currentXY[i].date;d.getFullYear()===targetYear&&d.getMonth()===targetMonth&&(idx=i)}return idx}
     function renderChartTC(range) {
       var pts;
@@ -2926,6 +2789,7 @@ to{transform:rotate(360deg)}
         var areaPath = document.createElementNS(ns, "path");
         areaPath.setAttribute("d", areaD);
         areaPath.setAttribute("fill", "url(#balanceGreenGrad)");
+        areaPath.setAttribute("class", "anim-area"); // <-- Added animation class
         svg.appendChild(areaPath);
 
         // 3. Background Image restricted ONLY to the area polygon via clip-path
@@ -2961,6 +2825,7 @@ to{transform:rotate(360deg)}
         linePath.setAttribute("stroke-linecap", "round");
         linePath.setAttribute("stroke-linejoin", "round");
         svg.appendChild(linePath);
+        animateLineReveal(linePath, 900);
       }
       
       // 2. Invest Mode Layer
@@ -3080,13 +2945,14 @@ to{transform:rotate(360deg)}
 
             var path = document.createElementNS(ns, "path");
             path.setAttribute("d", roundedBoxPath(
-              +(xy[i].x - colWidth / 2).toFixed(2), +drawY.toFixed(2),
-              +colWidth.toFixed(2), +drawH.toFixed(2),
-              rTL, rTR, rBR, rBL
+            +(xy[i].x - colWidth / 2).toFixed(2), +drawY.toFixed(2),
+            +colWidth.toFixed(2), +drawH.toFixed(2),
+            rTL, rTR, rBR, rBL
             ));
             path.setAttribute("fill", "url(#pastelGrad_" + s.key + ")");
-            path.setAttribute("data-index", i);
-            path.setAttribute("data-key", s.key);
+            path.setAttribute("class", "anim-bar"); // <-- Added bar grow animation class
+            // Optional staggered delay for each column bar:
+            path.style.animationDelay = (i * 0.04) + "s"; 
             stackGroup.appendChild(path);
           });
         });
@@ -3155,8 +3021,8 @@ to{transform:rotate(360deg)}
             return d;
           }
 
-          function addIncLine(arr, dash, opacity) {
-            if (arr.length < 2) return;
+           function addIncLine(arr, dash, opacity) {
+            if (arr.length < 2) return null;
             var p = document.createElementNS(ns, "path");
             p.setAttribute("d", incPathD(arr));
             p.setAttribute("fill", "none");
@@ -3167,12 +3033,16 @@ to{transform:rotate(360deg)}
             if (dash) p.setAttribute("stroke-dasharray", dash);
             if (opacity != null) p.setAttribute("opacity", opacity);
             incGroup.appendChild(p);
+            return p;
           }
 
-          addIncLine(incPast, null, null);
-          addIncLine(incFuture, "5 4", "0.5");
+          var incPastPathEl = addIncLine(incPast, null, null);
+          var incFuturePathEl = addIncLine(incFuture, "5 4", "0.5");
 
           svg.appendChild(incGroup);
+
+          if (incPastPathEl) animateLineReveal(incPastPathEl, 800);
+          if (incFuturePathEl) animateLineReveal(incFuturePathEl, 800);
         }
 
         if (lineVisibility.expense && currentIncomeXY.length > 0) {
@@ -3480,7 +3350,7 @@ to{transform:rotate(360deg)}
           var defs = svg.querySelector("defs") || svg;
           var clipPath = document.createElementNS(ns, "clipPath");
           clipPath.setAttribute("id", clipId);
-          var clipAreaPath = document.createElementNS(ns, "path");
+          var clipAreaPath = document.createElementNS(ns, "paaddIncLineth");
           clipAreaPath.setAttribute("d", paths.area);
           clipPath.appendChild(clipAreaPath);
           defs.appendChild(clipPath);
@@ -3543,6 +3413,7 @@ to{transform:rotate(360deg)}
         line.setAttribute("stroke-linejoin", "round");
         dash && line.setAttribute("stroke-dasharray", dash);
         svg.appendChild(line);
+        animateLineReveal(line, 800);
       }
     }
         // Builds the filled band between two aligned point series (same x per index),
@@ -3645,6 +3516,7 @@ to{transform:rotate(360deg)}
           glowFilterId && lineEl.setAttribute("filter", "url(#" + glowFilterId + ")");
           lineEl.setAttribute("mask", "url(#lineEdgeFadeMask)");
           svg.appendChild(lineEl);
+          animateLineReveal(lineEl, 800);
         }
 
         if (futurePts.length > 1) {
@@ -3666,6 +3538,7 @@ to{transform:rotate(360deg)}
           futureLineEl.setAttribute("stroke-linejoin", "round");
           futureLineEl.setAttribute("mask", "url(#lineEdgeFadeMask)");
           svg.appendChild(futureLineEl);
+          animateLineReveal(futureLineEl, 800);
         }
 
         if(showLiveDot && pastPts.length > 0) {
@@ -3772,367 +3645,367 @@ to{transform:rotate(360deg)}
              sign + Math.round(a);
     }
     function showPointAt(idx){
-  if(currentXY.length){
-    idx = Math.max(0, Math.min(currentXY.length - 1, idx));
-    var pt = currentXY[idx],
-        ptExp = currentExpenseXY && currentExpenseXY[idx] ? currentExpenseXY[idx] : null,
-        ptInc = currentIncomeXY && currentIncomeXY[idx] ? currentIncomeXY[idx] : null,
-        hoverLine = document.getElementById("hover-line"),
-        hoverDot = document.getElementById("hover-dot"),
-        hoverDotExp = document.getElementById("hover-dot-expense"),
-        hoverDotInc = document.getElementById("hover-dot-income");
-    
-    hoverLine && (hoverLine.setAttribute("x1", pt.x), hoverLine.setAttribute("x2", pt.x));
-    hoverDot && (lineVisibility.balance ? (hoverDot.setAttribute("cx", pt.x), hoverDot.setAttribute("cy", pt.y), hoverDot.style.display = "") : hoverDot.style.display = "none");
-    hoverDotExp && (lineVisibility.expense && ptExp ? (hoverDotExp.setAttribute("cx", ptExp.x), hoverDotExp.setAttribute("cy", ptExp.y), hoverDotExp.setAttribute("fill", "#f472b6"), hoverDotExp.style.display = "") : hoverDotExp.style.display = "none");
-    hoverDotInc && (lineVisibility.expense && ptInc ? (hoverDotInc.setAttribute("cx", ptInc.x), hoverDotInc.setAttribute("cy", ptInc.y), hoverDotInc.style.display = "") : hoverDotInc.style.display = "none");
-    
-    var anchorY, tooltip = document.getElementById("tooltip"),
-        wrapRect = document.getElementById("chart-wrap").getBoundingClientRect(),
-        scaleX = wrapRect.width / VB_W,
-        scaleY = wrapRect.height / VB_H;
-    
-    tooltip.style.display = "block";
-    !lineVisibility.expense || lineVisibility.balance || lineVisibility.debt ? !lineVisibility.debt || lineVisibility.balance || lineVisibility.expense ? (anchorY = pt.y, lineVisibility.expense && ptExp && (anchorY = Math.min(anchorY, ptExp.y)), lineVisibility.debt && (anchorY = Math.min(anchorY, currentDebtTotalXY[idx].y, currentDebtShinhanXY[idx].y, currentDebtSCXY[idx].y))) : anchorY = Math.min(currentDebtTotalXY[idx].y, currentDebtShinhanXY[idx].y, currentDebtSCXY[idx].y) : anchorY = ptExp ? ptExp.y : pt.y;
-    !lineVisibility.debt || lineVisibility.balance || lineVisibility.expense || (anchorY = currentDebtTotalXY[idx].y - 55);
-    lineVisibility.expense && (ptExp && ptInc ? anchorY = Math.min(ptExp.y, ptInc.y) : ptExp ? anchorY = ptExp.y : ptInc && (anchorY = ptInc.y));
-    
-    var monthLbl = monthYearLabel(pt.date);
-    var html = '';
-    
-    if (lineVisibility.expense && ptExp) {
-      var expDeltaIsPos = ptExp.momDelta >= 0;
-      var expDeltaVal = Math.abs(ptExp.momDelta);
-      var expDeltaStr = expDeltaVal >= 1e9 ? (expDeltaVal/1e9).toFixed(3)+"B" : expDeltaVal >= 1e6 ? (expDeltaVal/1e6).toFixed(3)+"M" : expDeltaVal >= 1e3 ? (expDeltaVal/1e3).toFixed(3)+"K" : expDeltaVal.toFixed(0);
-      var expDeltaText = (expDeltaIsPos ? "+" : "−") + expDeltaStr;
-      
-      html += '<div id="tooltip-month" class="tt-month" style="display:flex; justify-content:space-between; align-items:baseline;">' +
-              '<span>' + monthLbl + '</span>' +
-              '<span class="tt-delta" style="color:' + (expDeltaIsPos ? "#f87171" : "#2dd4bf") + '; font-size:11px; font-weight:500;"><i class="bi bi-basket"></i> ' + expDeltaText + '</span>' +
-              '</div>';
-    } else {
-      html += '<div id="tooltip-month" class="tt-month">' + monthLbl + '</div>';
-    }
-
-    if (lineVisibility.balance) {
-      var deltaIsPos = pt.momDelta >= 0;
-      var deltaVal = Math.abs(pt.momDelta);
-      var deltaStr = deltaVal >= 1e9 ? (deltaVal/1e9).toFixed(1)+"B" : deltaVal >= 1e6 ? (deltaVal/1e6).toFixed(1)+"M" : deltaVal >= 1e3 ? (deltaVal/1e3).toFixed(1)+"K" : deltaVal.toFixed(0);
-      var deltaTxt = (deltaIsPos ? "+" : "−") + deltaStr;
-      html += '<div id="tooltip-balance" style="display:flex; justify-content:space-between; align-items:baseline;">' +
-              '<span>' + fmtFullTC(pt.balance) + '</span>' +
-              '<span class="tt-delta ' + (deltaIsPos ? "pos" : "neg") + '" style="margin-left:3px;">' + " " + deltaTxt + '</span>' +
-              '</div>';
-              
-    }
-
-    if (lineVisibility.invest) {
-      if (typeof currentPts !== 'undefined' && currentPts[idx]) {
-        var originalIdx = currentPts[idx].originalIndex;
-        var inv = (originalIdx !== -1) ? investSeries[originalIdx] : { saving: 0, stock: 0, forex: 0, crypto: 0, gold: 0, comp: 0, total: 0 };
-        
-        if (inv) {
-          // Map colors to match the exact legend palette
-          var items = [];
-          if (inv.saving) items.push({name: "Saving", val: inv.saving, formatVal: (inv.saving >= 0 ? "" : "-") + fmtShort(Math.abs(inv.saving)), color: "#d8b4fe"});
-          if (inv.stock) items.push({name: "Stock", val: inv.stock, formatVal: (inv.stock >= 0 ? "" : "-") + fmtShort(Math.abs(inv.stock)), color: "#14b8a6"});
-          if (inv.forex) items.push({name: "Forex", val: inv.forex, formatVal: (inv.forex >= 0 ? "+" : "-") + fmtShort(Math.abs(inv.forex)), color: "#eab308"});
-          if (inv.crypto) items.push({name: "Crypto", val: inv.crypto, formatVal: (inv.crypto >= 0 ? "" : "-") + fmtShort(Math.abs(inv.crypto)), color: "#ca8a04"});
-          if (inv.gold) items.push({name: "Gold", val: inv.gold, formatVal: (inv.gold >= 0 ? "" : "-") + fmtShort(Math.abs(inv.gold)), color: "#f97316"});
-          if (inv.comp) items.push({name: "Comp", val: inv.comp, formatVal: (inv.comp >= 0 ? "" : "-") + fmtShort(Math.abs(inv.comp)), color: "#38bdf8"});
-
-          if (items.length > 0) {
-            html += '<div style="margin-top:2px; padding-bottom:3px; font-size:11px;">';
-            if (items.length === 1) {
-              html += '<div><span style="color:' + items[0].color + ';"><b>' + items[0].name + ':</b> ' + items[0].formatVal + '</span></div>';
+        if(currentXY.length){
+            idx = Math.max(0, Math.min(currentXY.length - 1, idx));
+            var pt = currentXY[idx],
+                ptExp = currentExpenseXY && currentExpenseXY[idx] ? currentExpenseXY[idx] : null,
+                ptInc = currentIncomeXY && currentIncomeXY[idx] ? currentIncomeXY[idx] : null,
+                hoverLine = document.getElementById("hover-line"),
+                hoverDot = document.getElementById("hover-dot"),
+                hoverDotExp = document.getElementById("hover-dot-expense"),
+                hoverDotInc = document.getElementById("hover-dot-income");
+            
+            hoverLine && (hoverLine.setAttribute("x1", pt.x), hoverLine.setAttribute("x2", pt.x));
+            hoverDot && (lineVisibility.balance ? (hoverDot.setAttribute("cx", pt.x), hoverDot.setAttribute("cy", pt.y), hoverDot.style.display = "") : hoverDot.style.display = "none");
+            hoverDotExp && (lineVisibility.expense && ptExp ? (hoverDotExp.setAttribute("cx", ptExp.x), hoverDotExp.setAttribute("cy", ptExp.y), hoverDotExp.setAttribute("fill", "#f472b6"), hoverDotExp.style.display = "") : hoverDotExp.style.display = "none");
+            hoverDotInc && (lineVisibility.expense && ptInc ? (hoverDotInc.setAttribute("cx", ptInc.x), hoverDotInc.setAttribute("cy", ptInc.y), hoverDotInc.style.display = "") : hoverDotInc.style.display = "none");
+            
+            var anchorY, tooltip = document.getElementById("tooltip"),
+                wrapRect = document.getElementById("chart-wrap").getBoundingClientRect(),
+                scaleX = wrapRect.width / VB_W,
+                scaleY = wrapRect.height / VB_H;
+            
+            tooltip.style.display = "block";
+            !lineVisibility.expense || lineVisibility.balance || lineVisibility.debt ? !lineVisibility.debt || lineVisibility.balance || lineVisibility.expense ? (anchorY = pt.y, lineVisibility.expense && ptExp && (anchorY = Math.min(anchorY, ptExp.y)), lineVisibility.debt && (anchorY = Math.min(anchorY, currentDebtTotalXY[idx].y, currentDebtShinhanXY[idx].y, currentDebtSCXY[idx].y))) : anchorY = Math.min(currentDebtTotalXY[idx].y, currentDebtShinhanXY[idx].y, currentDebtSCXY[idx].y) : anchorY = ptExp ? ptExp.y : pt.y;
+            !lineVisibility.debt || lineVisibility.balance || lineVisibility.expense || (anchorY = currentDebtTotalXY[idx].y - 55);
+            lineVisibility.expense && (ptExp && ptInc ? anchorY = Math.min(ptExp.y, ptInc.y) : ptExp ? anchorY = ptExp.y : ptInc && (anchorY = ptInc.y));
+            
+            var monthLbl = monthYearLabel(pt.date);
+            var html = '';
+            
+            if (lineVisibility.expense && ptExp) {
+            var expDeltaIsPos = ptExp.momDelta >= 0;
+            var expDeltaVal = Math.abs(ptExp.momDelta);
+            var expDeltaStr = expDeltaVal >= 1e9 ? (expDeltaVal/1e9).toFixed(3)+"B" : expDeltaVal >= 1e6 ? (expDeltaVal/1e6).toFixed(3)+"M" : expDeltaVal >= 1e3 ? (expDeltaVal/1e3).toFixed(3)+"K" : expDeltaVal.toFixed(0);
+            var expDeltaText = (expDeltaIsPos ? "+" : "−") + expDeltaStr;
+            
+            html += '<div id="tooltip-month" class="tt-month" style="display:flex; justify-content:space-between; align-items:baseline;">' +
+                    '<span>' + monthLbl + '</span>' +
+                    '<span class="tt-delta" style="color:' + (expDeltaIsPos ? "#f87171" : "#2dd4bf") + '; font-size:11px; font-weight:500;"><i class="bi bi-basket"></i> ' + expDeltaText + '</span>' +
+                    '</div>';
             } else {
-              var summaryStr = items.map(function(it, i) {
-                var prefix = i === 0 ? "" : (it.val >= 0 ? " + " : " ");
-                return prefix + '<span style="color:' + it.color + ';">' + it.name + ': ' + it.formatVal + '</span>';
-              }).join("");
-              var netTotalStr = fmtShort(inv.total);
-              html += '<div>' + summaryStr + ' = <b>' + netTotalStr + '</b></div>';
+            html += '<div id="tooltip-month" class="tt-month">' + monthLbl + '</div>';
             }
-            html += '</div>';
-          }
+
+            if (lineVisibility.balance) {
+            var deltaIsPos = pt.momDelta >= 0;
+            var deltaVal = Math.abs(pt.momDelta);
+            var deltaStr = deltaVal >= 1e9 ? (deltaVal/1e9).toFixed(1)+"B" : deltaVal >= 1e6 ? (deltaVal/1e6).toFixed(1)+"M" : deltaVal >= 1e3 ? (deltaVal/1e3).toFixed(1)+"K" : deltaVal.toFixed(0);
+            var deltaTxt = (deltaIsPos ? "+" : "−") + deltaStr;
+            html += '<div id="tooltip-balance" style="display:flex; justify-content:space-between; align-items:baseline;">' +
+                    '<span>' + fmtFullTC(pt.balance) + '</span>' +
+                    '<span class="tt-delta ' + (deltaIsPos ? "pos" : "neg") + '" style="margin-left:3px;">' + " " + deltaTxt + '</span>' +
+                    '</div>';
+                    
+            }
+
+            if (lineVisibility.invest) {
+            if (typeof currentPts !== 'undefined' && currentPts[idx]) {
+                var originalIdx = currentPts[idx].originalIndex;
+                var inv = (originalIdx !== -1) ? investSeries[originalIdx] : { saving: 0, stock: 0, forex: 0, crypto: 0, gold: 0, comp: 0, total: 0 };
+                
+                if (inv) {
+                // Map colors to match the exact legend palette
+                var items = [];
+                if (inv.saving) items.push({name: "Saving", val: inv.saving, formatVal: (inv.saving >= 0 ? "" : "-") + fmtShort(Math.abs(inv.saving)), color: "#d8b4fe"});
+                if (inv.stock) items.push({name: "Stock", val: inv.stock, formatVal: (inv.stock >= 0 ? "" : "-") + fmtShort(Math.abs(inv.stock)), color: "#14b8a6"});
+                if (inv.forex) items.push({name: "Forex", val: inv.forex, formatVal: (inv.forex >= 0 ? "+" : "-") + fmtShort(Math.abs(inv.forex)), color: "#eab308"});
+                if (inv.crypto) items.push({name: "Crypto", val: inv.crypto, formatVal: (inv.crypto >= 0 ? "" : "-") + fmtShort(Math.abs(inv.crypto)), color: "#ca8a04"});
+                if (inv.gold) items.push({name: "Gold", val: inv.gold, formatVal: (inv.gold >= 0 ? "" : "-") + fmtShort(Math.abs(inv.gold)), color: "#f97316"});
+                if (inv.comp) items.push({name: "Comp", val: inv.comp, formatVal: (inv.comp >= 0 ? "" : "-") + fmtShort(Math.abs(inv.comp)), color: "#38bdf8"});
+
+                if (items.length > 0) {
+                    html += '<div style="margin-top:2px; padding-bottom:3px; font-size:11px;">';
+                    if (items.length === 1) {
+                    html += '<div><span style="color:' + items[0].color + ';"><b>' + items[0].name + ':</b> ' + items[0].formatVal + '</span></div>';
+                    } else {
+                    var summaryStr = items.map(function(it, i) {
+                        var prefix = i === 0 ? "" : (it.val >= 0 ? " + " : " ");
+                        return prefix + '<span style="color:' + it.color + ';">' + it.name + ': ' + it.formatVal + '</span>';
+                    }).join("");
+                    var netTotalStr = fmtShort(inv.total);
+                    html += '<div>' + summaryStr + ' = <b>' + netTotalStr + '</b></div>';
+                    }
+                    html += '</div>';
+                }
+                }
+            }
+            }
+            
+            if (lineVisibility.expense) {
+            var debtAmt = new Date < new Date(2029, 0, 1) ? 32453e3 : 19793347,
+                incAmt = ptInc ? ptInc.amount : 0,
+                expAmt = ptExp ? ptExp.amount : 0,
+                cashflow = incAmt - expAmt - debtAmt,
+                cfIsPos = cashflow >= 0,
+                cfColor = cfIsPos ? "#2dd4bf" : "#f87171";
+            
+            html += '<div id="tooltip-cashflow-amt" style="margin-top:0px;font-weight:600;">' + ('<span style="color:#ccf244;">' + fmtShort(incAmt) + "</span>" + ' <span style="color:rgba(255,255,255,0.6);">−</span> ' + ('<span style="color:#f472b6;">' + fmtShort(expAmt) + "</span>") + ' <span style="color:rgba(255,255,255,0.6);">−</span> ' + ('<span style="color:#fff;">' + fmtShort(debtAmt) + "</span>") + ' <span style="color:rgba(255,255,255,0.6);">=</span> ' + ('<span style="color:' + cfColor + ';">' + (cfIsPos ? "" : "−") + fmtShort(Math.abs(cashflow)) + "</span>")) + ' <span style="color:' + cfColor + ';"></span></div>';
+            }
+            
+            if (lineVisibility.debt) {
+            var partsTC = [];
+            0 !== currentDebtShinhanXY[idx].amount && partsTC.push('<span id="tooltip-debt" style="color:#60a5fa;font-weight:600;font-size:11px">' + fmtShort(currentDebtShinhanXY[idx].amount) + "</span>");
+            0 !== currentDebtSCXY[idx].amount && partsTC.push('<span id="tooltip-debt" style="color:#fbbf24;font-weight:600;font-size:11px">' + fmtShort(currentDebtSCXY[idx].amount) + "</span>");
+            partsTC.length > 1 && partsTC.push("= " + fmtShort(currentDebtTotalXY[idx].amount));
+            partsTC.length && (html += '<div id="tooltip-debt" style="margin-top:6px;font-weight:700;color:#fff;font-size:11px">' + partsTC.join("  ") + "</div>");
+            }
+
+            // Show balance-overlay-group and refresh-row only when Balance chart is active
+            var balanceOverlayGroup = document.getElementById('balance-overlay-group');
+            var refreshRowEl = document.querySelector('.refresh-row');
+            
+            if (lineVisibility.balance && !lineVisibility.invest) {
+                if (balanceOverlayGroup) balanceOverlayGroup.style.display = "flex";
+                if (refreshRowEl) refreshRowEl.style.display = "flex";
+            } else {
+                if (balanceOverlayGroup) balanceOverlayGroup.style.display = "none";
+                if (refreshRowEl) refreshRowEl.style.display = "none";
+            }
+
+            var refreshRowEl = document.querySelector('.refresh-row');
+            if (refreshRowEl) {
+            if (lineVisibility.balance && !lineVisibility.invest) {
+                refreshRowEl.style.display = "flex";
+            } else {
+                refreshRowEl.style.display = "none";
+            }
+            }
+            
+            tooltip.innerHTML = html;
+            var finalTop, tooltipH = tooltip.offsetHeight, chartH = wrapRect.height, anchorScreenY = anchorY * scaleY, topSafeMargin = 78;
+            anchorScreenY - 12 - tooltipH < topSafeMargin ? (tooltip.classList.add("tt-below"), tooltip.classList.remove("tt-above"), finalTop = anchorScreenY + 12) : (tooltip.classList.add("tt-above"), tooltip.classList.remove("tt-below"), finalTop = anchorScreenY - 12 - tooltipH);
+            lineVisibility.expense ? topSafeMargin = 80 : lineVisibility.debt && lineVisibility.balance ? topSafeMargin = 110 : lineVisibility.debt && (topSafeMargin = 145);
+            finalTop = Math.max(topSafeMargin, Math.min(finalTop, chartH - tooltipH - 15));
+            lineVisibility.expense && (finalTop = 70);
+            var tooltipW = tooltip.offsetWidth, chartW = wrapRect.width, rawLeft = pt.x * scaleX, halfW = tooltipW / 2, minLeft = halfW + 4, maxLeft = chartW - halfW - 4, clampedLeft = Math.max(minLeft, Math.min(rawLeft, maxLeft));
+            tooltip.style.left = clampedLeft + "px", tooltip.style.top = finalTop + "px";
         }
-      }
     }
-    
-    if (lineVisibility.expense) {
-      var debtAmt = new Date < new Date(2029, 0, 1) ? 32453e3 : 19793347,
-          incAmt = ptInc ? ptInc.amount : 0,
-          expAmt = ptExp ? ptExp.amount : 0,
-          cashflow = incAmt - expAmt - debtAmt,
-          cfIsPos = cashflow >= 0,
-          cfColor = cfIsPos ? "#2dd4bf" : "#f87171";
-      
-      html += '<div id="tooltip-cashflow-amt" style="margin-top:0px;font-weight:600;">' + ('<span style="color:#ccf244;">' + fmtShort(incAmt) + "</span>" + ' <span style="color:rgba(255,255,255,0.6);">−</span> ' + ('<span style="color:#f472b6;">' + fmtShort(expAmt) + "</span>") + ' <span style="color:rgba(255,255,255,0.6);">−</span> ' + ('<span style="color:#fff;">' + fmtShort(debtAmt) + "</span>") + ' <span style="color:rgba(255,255,255,0.6);">=</span> ' + ('<span style="color:' + cfColor + ';">' + (cfIsPos ? "" : "−") + fmtShort(Math.abs(cashflow)) + "</span>")) + ' <span style="color:' + cfColor + ';"></span></div>';
-    }
-    
-    if (lineVisibility.debt) {
-      var partsTC = [];
-      0 !== currentDebtShinhanXY[idx].amount && partsTC.push('<span id="tooltip-debt" style="color:#60a5fa;font-weight:600;font-size:11px">' + fmtShort(currentDebtShinhanXY[idx].amount) + "</span>");
-      0 !== currentDebtSCXY[idx].amount && partsTC.push('<span id="tooltip-debt" style="color:#fbbf24;font-weight:600;font-size:11px">' + fmtShort(currentDebtSCXY[idx].amount) + "</span>");
-      partsTC.length > 1 && partsTC.push("= " + fmtShort(currentDebtTotalXY[idx].amount));
-      partsTC.length && (html += '<div id="tooltip-debt" style="margin-top:6px;font-weight:700;color:#fff;font-size:11px">' + partsTC.join("  ") + "</div>");
-    }
+        !function(){var chartWrap=document.getElementById("chart-wrap");function nearestIndexFromClientX(clientX){var rect=chartWrap.getBoundingClientRect(),svgX=(clientX-rect.left)/rect.width*VB_W,plotW=VB_W-PAD_LEFT-PAD_RIGHT,frac=(svgX-PAD_LEFT)/plotW;return frac=Math.max(0,Math.min(1,frac)),Math.round(frac*(currentXY.length-1))}chartWrap.addEventListener("mousemove",function(e){currentXY.length&&showPointAt(nearestIndexFromClientX(e.clientX))}),chartWrap.addEventListener("mouseleave",function(){currentXY.length&&showPointAt(getDefaultHoverIndex())}),chartWrap.addEventListener("touchstart",function(e){currentXY.length&&showPointAt(nearestIndexFromClientX(e.touches[0].clientX))},{passive:!0}),chartWrap.addEventListener("touchmove",function(e){currentXY.length&&showPointAt(nearestIndexFromClientX(e.touches[0].clientX))},{passive:!0})}();
+        document.querySelectorAll(".range-btn").forEach(function(btn){btn.addEventListener("click",function(){document.querySelectorAll(".range-btn").forEach(b=>b.classList.remove("active")),this.classList.add("active"),this.scrollIntoView({behavior:"smooth",inline:"center",block:"nearest"}),renderChartTC(this.dataset.range)});const selector=document.getElementById("range-selector");selector.addEventListener("wheel",function(e){e.preventDefault(),selector.scrollLeft+=e.deltaY},{passive:!1})});
 
-    // Show balance-overlay-group and refresh-row only when Balance chart is active
-      var balanceOverlayGroup = document.getElementById('balance-overlay-group');
-      var refreshRowEl = document.querySelector('.refresh-row');
-      
-      if (lineVisibility.balance && !lineVisibility.invest) {
-        if (balanceOverlayGroup) balanceOverlayGroup.style.display = "flex";
-        if (refreshRowEl) refreshRowEl.style.display = "flex";
-      } else {
-        if (balanceOverlayGroup) balanceOverlayGroup.style.display = "none";
-        if (refreshRowEl) refreshRowEl.style.display = "none";
-      }
+        var balanceVisible=!0;function updateBalanceVisibility(){[{el:document.getElementById("balance-val"),mask:"*********"},{el:document.getElementById("balance-usd"),mask:"*********"},{el:document.getElementById("amt-hl"),mask:"*********"},{el:document.getElementById("tooltip-balance"),mask:"*********"},{el:document.getElementById("tooltip-gain"),mask:"*********"},{el:document.getElementById("tooltip-month"),mask:"*********"}].forEach(function(item){var el=item.el;el&&(balanceVisible?el.dataset.realHtml&&el.innerHTML===item.mask&&(el.innerHTML=el.dataset.realHtml):el.innerHTML!==item.mask&&(el.dataset.realHtml=el.innerHTML,el.innerHTML=item.mask))})}document.addEventListener("click",function(event){var balanceValEl=document.getElementById("balance-overlay-group");balanceValEl&&(event.target===balanceValEl||balanceValEl.contains(event.target))&&(balanceVisible=!balanceVisible,updateBalanceVisibility())});
+        document.getElementById("balance-toggle-area").addEventListener("click",function(){balanceVisible=!balanceVisible,updateBalanceVisibility()});
+        window.addEventListener("resize", function(){ if (fullSeries.length) renderChartTC(currentRangeTC); });
+        window.addEventListener("load", function () { setTimeout(function () { const selector = document.getElementById("range-selector"); const btn = selector.querySelector('[data-range="-3m"]'); btn.scrollIntoView({ inline:"start",behavior:"instant"});}, 0);});
+        document.querySelectorAll(".line-toggle-btn").forEach(function(btn){btn.addEventListener("click",function(){var line=this.dataset.line;lineVisibility[line]=!lineVisibility[line],"expense"===line&&lineVisibility.expense?(lineVisibility.balance=!1,lineVisibility.debt=!1,lineVisibility.invest=!1):"invest"===line&&lineVisibility.invest?(lineVisibility.balance=!1,lineVisibility.expense=!1,lineVisibility.debt=!1):("balance"===line&&lineVisibility.balance||"debt"===line&&lineVisibility.debt)&&(lineVisibility.expense=!1,lineVisibility.invest=!1),lineVisibility.balance||lineVisibility.expense||lineVisibility.debt||lineVisibility.invest||(lineVisibility[line]=!0),document.querySelectorAll(".line-toggle-btn").forEach(function(b){var l=b.dataset.line;b.classList.toggle("active",!!lineVisibility[l])}),fullSeries.length&&animateChartSwitchTC(function(){renderChartTC(currentRangeTC)})})});
+        function animateLineReveal(pathEl,duration){if(duration=duration||700,pathEl.getAttribute("stroke-dasharray")){var targetOpacity=pathEl.getAttribute("opacity")||pathEl.style.opacity||"1";return pathEl.style.opacity="0",void requestAnimationFrame(function(){pathEl.style.transition="opacity "+duration+"ms ease-out",pathEl.style.opacity=targetOpacity})}try{var len=pathEl.getTotalLength();pathEl.style.transition="none",pathEl.setAttribute("stroke-dasharray",len),pathEl.setAttribute("stroke-dashoffset",len),pathEl.getBoundingClientRect(),pathEl.style.transition="stroke-dashoffset "+duration+"ms ease-out",pathEl.style.strokeDashoffset="0"}catch(e){}}
+        function buildSharpPathTC(pts){if(!pts||!pts.length)return{line:"",area:""};for(var first=pts[0],last=pts[pts.length-1],lineCmds=["M",first.x.toFixed(2),first.y.toFixed(2)],i=1;i<pts.length;i++)lineCmds.push("L",pts[i].x.toFixed(2),pts[i].y.toFixed(2));var lineD=lineCmds.join(" "),bottomY=(VB_H-PAD_BOTTOM).toFixed(2);return{line:lineD,area:lineD+" L "+last.x.toFixed(2)+" "+bottomY+" L "+first.x.toFixed(2)+" "+bottomY+" Z"}}
+        
+        /* ══ DETAIL TAB ══ */
+        var CSV_EXPENSE = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1324702331";
+        var allExpanded=!1,monthlyBudget=0,currentExpense=0,lastExpense=0;
 
-    var refreshRowEl = document.querySelector('.refresh-row');
-    if (refreshRowEl) {
-      if (lineVisibility.balance && !lineVisibility.invest) {
-        refreshRowEl.style.display = "flex";
-      } else {
-        refreshRowEl.style.display = "none";
-      }
-    }
-    
-    tooltip.innerHTML = html;
-    var finalTop, tooltipH = tooltip.offsetHeight, chartH = wrapRect.height, anchorScreenY = anchorY * scaleY, topSafeMargin = 78;
-    anchorScreenY - 12 - tooltipH < topSafeMargin ? (tooltip.classList.add("tt-below"), tooltip.classList.remove("tt-above"), finalTop = anchorScreenY + 12) : (tooltip.classList.add("tt-above"), tooltip.classList.remove("tt-below"), finalTop = anchorScreenY - 12 - tooltipH);
-    lineVisibility.expense ? topSafeMargin = 80 : lineVisibility.debt && lineVisibility.balance ? topSafeMargin = 110 : lineVisibility.debt && (topSafeMargin = 145);
-    finalTop = Math.max(topSafeMargin, Math.min(finalTop, chartH - tooltipH - 15));
-    lineVisibility.expense && (finalTop = 70);
-    var tooltipW = tooltip.offsetWidth, chartW = wrapRect.width, rawLeft = pt.x * scaleX, halfW = tooltipW / 2, minLeft = halfW + 4, maxLeft = chartW - halfW - 4, clampedLeft = Math.max(minLeft, Math.min(rawLeft, maxLeft));
-    tooltip.style.left = clampedLeft + "px", tooltip.style.top = finalTop + "px";
-  }
-}
-    !function(){var chartWrap=document.getElementById("chart-wrap");function nearestIndexFromClientX(clientX){var rect=chartWrap.getBoundingClientRect(),svgX=(clientX-rect.left)/rect.width*VB_W,plotW=VB_W-PAD_LEFT-PAD_RIGHT,frac=(svgX-PAD_LEFT)/plotW;return frac=Math.max(0,Math.min(1,frac)),Math.round(frac*(currentXY.length-1))}chartWrap.addEventListener("mousemove",function(e){currentXY.length&&showPointAt(nearestIndexFromClientX(e.clientX))}),chartWrap.addEventListener("mouseleave",function(){currentXY.length&&showPointAt(getDefaultHoverIndex())}),chartWrap.addEventListener("touchstart",function(e){currentXY.length&&showPointAt(nearestIndexFromClientX(e.touches[0].clientX))},{passive:!0}),chartWrap.addEventListener("touchmove",function(e){currentXY.length&&showPointAt(nearestIndexFromClientX(e.touches[0].clientX))},{passive:!0})}();
-    document.querySelectorAll(".range-btn").forEach(function(btn){btn.addEventListener("click",function(){document.querySelectorAll(".range-btn").forEach(b=>b.classList.remove("active")),this.classList.add("active"),this.scrollIntoView({behavior:"smooth",inline:"center",block:"nearest"}),renderChartTC(this.dataset.range)});const selector=document.getElementById("range-selector");selector.addEventListener("wheel",function(e){e.preventDefault(),selector.scrollLeft+=e.deltaY},{passive:!1})});
-
-    var balanceVisible=!0;function updateBalanceVisibility(){[{el:document.getElementById("balance-val"),mask:"*********"},{el:document.getElementById("balance-usd"),mask:"*********"},{el:document.getElementById("amt-hl"),mask:"*********"},{el:document.getElementById("tooltip-balance"),mask:"*********"},{el:document.getElementById("tooltip-gain"),mask:"*********"},{el:document.getElementById("tooltip-month"),mask:"*********"}].forEach(function(item){var el=item.el;el&&(balanceVisible?el.dataset.realHtml&&el.innerHTML===item.mask&&(el.innerHTML=el.dataset.realHtml):el.innerHTML!==item.mask&&(el.dataset.realHtml=el.innerHTML,el.innerHTML=item.mask))})}document.addEventListener("click",function(event){var balanceValEl=document.getElementById("balance-overlay-group");balanceValEl&&(event.target===balanceValEl||balanceValEl.contains(event.target))&&(balanceVisible=!balanceVisible,updateBalanceVisibility())});
-    document.getElementById("balance-toggle-area").addEventListener("click",function(){balanceVisible=!balanceVisible,updateBalanceVisibility()});
-    window.addEventListener("resize", function(){ if (fullSeries.length) renderChartTC(currentRangeTC); });
-    window.addEventListener("load", function () { setTimeout(function () { const selector = document.getElementById("range-selector"); const btn = selector.querySelector('[data-range="-3m"]'); btn.scrollIntoView({ inline:"start",behavior:"instant"});}, 0);});
-    document.querySelectorAll(".line-toggle-btn").forEach(function(btn){btn.addEventListener("click",function(){var line=this.dataset.line;lineVisibility[line]=!lineVisibility[line],"expense"===line&&lineVisibility.expense?(lineVisibility.balance=!1,lineVisibility.debt=!1,lineVisibility.invest=!1):"invest"===line&&lineVisibility.invest?(lineVisibility.balance=!1,lineVisibility.expense=!1,lineVisibility.debt=!1):("balance"===line&&lineVisibility.balance||"debt"===line&&lineVisibility.debt)&&(lineVisibility.expense=!1,lineVisibility.invest=!1),lineVisibility.balance||lineVisibility.expense||lineVisibility.debt||lineVisibility.invest||(lineVisibility[line]=!0),document.querySelectorAll(".line-toggle-btn").forEach(function(b){var l=b.dataset.line;b.classList.toggle("active",!!lineVisibility[l])}),fullSeries.length&&renderChartTC(currentRangeTC)})});
-
-    function buildSharpPathTC(pts){if(!pts||!pts.length)return{line:"",area:""};for(var first=pts[0],last=pts[pts.length-1],lineCmds=["M",first.x.toFixed(2),first.y.toFixed(2)],i=1;i<pts.length;i++)lineCmds.push("L",pts[i].x.toFixed(2),pts[i].y.toFixed(2));var lineD=lineCmds.join(" "),bottomY=(VB_H-PAD_BOTTOM).toFixed(2);return{line:lineD,area:lineD+" L "+last.x.toFixed(2)+" "+bottomY+" L "+first.x.toFixed(2)+" "+bottomY+" Z"}}
-    
-    /* ══ DETAIL TAB ══ */
-    var CSV_EXPENSE = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1324702331";
-    var allExpanded=!1,monthlyBudget=0,currentExpense=0,lastExpense=0;
-
-    function buildRing(label, spent, budget, iconUrl, hideOnMobile, gids) {
-  var item = document.createElement("div");
-  item.className = "ring-item", hideOnMobile && (item.dataset.hideOnMobile = "1"), item.dataset.gids = gids.join(",");
-  var isMobile = window.innerWidth < 401,
-    displayLabel = label;
-  (label.includes("Family") ? displayLabel = "Family" : label.includes("Bills") ? displayLabel = "Bills & Ins." : label.includes("Rental") ? displayLabel = "Rental" : label.includes("Food") && (displayLabel = "Groceries"));
-  var pct = budget > 0 ? Math.min(100, spent / budget * 100) : 0,
-    displayPct = budget > 0 ? spent / budget * 100 : 0,
-    ringPct = Math.min(displayPct, 100),
-    circ = 2 * Math.PI * 28,
-    dash = ringPct / 100 * circ,
-    gap = circ - dash,
-    baseColor = ringColor(pct),
-    remain = budget - spent,
-    remCls = remain < 0 ? "over" : remain < .2 * budget ? "low" : "ok",
-    remText = remain >= 0 ? fmtK(remain) + " left" : fmtK(Math.abs(remain)) + " over",
-    ringIcoEl = null;
-  iconUrl && 0 === iconUrl.indexOf("http") && ((ringIcoEl = document.createElement("img")).className = "ring-icon", ringIcoEl.src = iconUrl, ringIcoEl.onerror = function() {
-    this.style.display = "none"
-  });
-  var ns = "http://www.w3.org/2000/svg",
-    svg = document.createElementNS(ns, "svg");
-  svg.setAttribute("viewBox", "0 0 80 80"), svg.className = "ring-svg";
-  var initRingSz = isMobile ? "13vw" : "6vw";
-  svg.style.width = initRingSz, svg.style.height = initRingSz;
-  var gradId = "grad-" + Math.random().toString(36).substr(2, 9),
-    defs = document.createElementNS(ns, "defs"),
-    realPct = budget > 0 ? spent / budget * 100 : 0,
-    gradColors = "";
-  gradColors = realPct > 100 ? '<stop offset="0%" stop-color="#fff" /><stop offset="100%" stop-color="#ff0055" />' : realPct > 90 ? '<stop offset="0%" stop-color="#14b8a6" /><stop offset="50%" stop-color="#f97316" />' : realPct > 80 ? '<stop offset="0%" stop-color="#14b8a6" /><stop offset="70%" stop-color="#eab308" />' : `<stop offset="0%" stop-color="#008080" /><stop offset="100%" stop-color="${baseColor}" />`, defs.innerHTML = `<linearGradient id="${gradId}" x1="0%" y1="100%" x2="100%" y2="0%">${gradColors}</linearGradient>`, svg.appendChild(defs);
-  var bg = document.createElementNS(ns, "circle");
-  bg.setAttribute("cx", 40), bg.setAttribute("cy", 40), bg.setAttribute("r", 28), bg.setAttribute("fill", "rgba(0, 0, 0, 0.1)"), bg.setAttribute("stroke", "rgba(255,255,255,0.08)"), bg.setAttribute("stroke-width", 8), svg.appendChild(bg);
-  var fg = document.createElementNS(ns, "circle");
-  fg.setAttribute("cx", 40), fg.setAttribute("cy", 40), fg.setAttribute("r", 28), fg.setAttribute("fill", "none"), fg.setAttribute("stroke", `url(#${gradId})`), fg.setAttribute("stroke-width", 8), fg.setAttribute("stroke-linecap", "round"), fg.setAttribute("stroke-dasharray", dash + " " + gap), fg.setAttribute("stroke-dashoffset", "0"), fg.setAttribute("transform", "rotate(-90 40 40)"), svg.appendChild(fg);
-  var pctTxt = document.createElementNS(ns, "text");
-  pctTxt.setAttribute("x", "40"), pctTxt.setAttribute("y", "41"), pctTxt.setAttribute("text-anchor", "middle"), pctTxt.setAttribute("dominant-baseline", "middle"), pctTxt.setAttribute("fill", "#fff"), pctTxt.setAttribute("font-size", "18"), pctTxt.setAttribute("font-family", "JetBrains Mono"), pctTxt.setAttribute("font-weight", "600"), pctTxt.textContent = Math.round(displayPct) + "%", svg.appendChild(pctTxt);
-  var lblEl = document.createElement("div");
-  lblEl.className = "ring-label", lblEl.textContent = displayLabel;
-  var remEl = document.createElement("div");
-  return remEl.className = "ring-remain " + remCls, remEl.textContent = remText, item.appendChild(svg), ringIcoEl && item.appendChild(ringIcoEl), item.appendChild(lblEl), item.appendChild(remEl), item.addEventListener("click", function() {
-    var alreadySel = this.classList.contains("selected"),
-      gids2 = (this.dataset.gids || "").split(",").filter(function(g) {
-        return g
-      });
-    document.querySelectorAll(".ring-item.selected").forEach(function(r2) {
-      r2.classList.remove("selected")
-    }), alreadySel ? (document.querySelectorAll(".main-row.ring-highlighted").forEach(function(r) {
-      r.classList.remove("ring-highlighted")
-    }), gids2.forEach(function(gid) {
-      var mainRow = document.querySelector(".main-row[data-id='" + gid + "']");
-      if (mainRow) {
-        mainRow.dataset.open = "0";
-        var chev2 = document.getElementById("chev-" + gid);
-        chev2 && (chev2.className = "chevron bi bi-chevron-right"), document.querySelectorAll(".sub-row[data-group='" + gid + "']").forEach(function(s) {
-          s.classList.remove("visible")
-        })
-      }
-    })) : (this.classList.add("selected"), document.querySelectorAll(".main-row.ring-highlighted").forEach(function(r) {
-      r.classList.remove("ring-highlighted")
-    }), gids2.forEach(function(gid) {
-      var mainRow = document.querySelector(".main-row[data-id='" + gid + "']");
-      if (mainRow) {
-        mainRow.classList.add("ring-highlighted"), mainRow.dataset.open = "1";
-        var chev2 = document.getElementById("chev-" + gid);
-        chev2 && (chev2.className = "chevron bi bi-chevron-down"), document.querySelectorAll(".sub-row[data-group='" + gid + "']").forEach(function(s) {
-          s.classList.add("visible")
-        })
-      }
-    }))
-  }), item
-}
-    var DETAIL_SHEET_URL = GOOGLE_SHEET_CSV_URL + "1492221762";
-    var cachedTxData = null; 
-    
-    function renderTxRows(subCatName, containerEl) {
-  containerEl.innerHTML = "";
-  var cleanStr = function(str) {
-      return (str || "").toLowerCase().replace(/[\u200B-\u200D\uFEFF]/g, "").replace(/\s+/g, " ").trim()
-    },
-    targetName = cleanStr(subCatName),
-    filtered = cachedTxData.filter(function(tx) {
-      if (cleanStr(tx.subCat) !== targetName) return !1;
-      if (!tx.date) return !1;
-      var d = new Date(tx.date);
-      return !isNaN(d.getTime()) && (d.getFullYear() === monthPickerState.selectedYear && d.getMonth() === monthPickerState.selectedMonth)
-    });
-  0 !== filtered.length ? filtered.forEach(function(tx) {
-    var row = document.createElement("div");
-    row.className = "tx-detail-row";
-    var shortDay = "";
-    if (tx.date) {
-      var parts = tx.date.split(" ")[0].split(/[\/\-\.]/);
-      if (parts.length >= 2) {
-        var dayPart = parts[1];
-        parts[0].length > 2 && (dayPart = parts[2]), dayPart && 1 === dayPart.length && (dayPart = "0" + dayPart), shortDay = dayPart || ""
-      }
-    }
-    var iconHtml = "";
-    iconHtml = tx.iconUrl && 0 === tx.iconUrl.indexOf("http") ? `<img src="${tx.iconUrl}" class="cat-ico" style="width:3vw; height:3vw; margin-right:1vw; border-radius:50%; object-fit:cover; flex-shrink:0;" onerror="this.outerHTML='<div class=&quot;cat-ico-fb&quot; style=&quot;width:3vw; height:3vw; font-size:1.6vw; margin-right:1vw; flex-shrink:0;&quot;>&bull;</div>'">` : '<div class="cat-ico-fb" style="width:3vw; height:3vw; font-size:1.6vw; margin-right:1vw; flex-shrink:0;">&bull;</div>', row.innerHTML = `\n            <div class="td-desc">\n                ${iconHtml}\n                <span class="td-detail">${tx.detail?cleanDetail(tx.detail):"—"}</span>\n            </div>\n            <div class="td-amt">${fmtK(tx.amount)}</div>\n            <div class="td-date">\n                ${shortDay?`<span class="tx-date-badge">${shortDay}</span>`:"—"}\n            </div>\n            `, containerEl.appendChild(row)
-  }) : containerEl.innerHTML = "<div class='tx-detail-row'><div class='td-desc' style='color:rgba(255,255,255,0.4)'>No transactions found</div></div>"
-}
+        function buildRing(label, spent, budget, iconUrl, hideOnMobile, gids) {
+            var item = document.createElement("div");
+            item.className = "ring-item", hideOnMobile && (item.dataset.hideOnMobile = "1"), item.dataset.gids = gids.join(",");
+            var isMobile = window.innerWidth < 401,
+                displayLabel = label;
+            (label.includes("Family") ? displayLabel = "Family" : label.includes("Bills") ? displayLabel = "Bills & Ins." : label.includes("Rental") ? displayLabel = "Rental" : label.includes("Food") && (displayLabel = "Groceries"));
+            var pct = budget > 0 ? Math.min(100, spent / budget * 100) : 0,
+                displayPct = budget > 0 ? spent / budget * 100 : 0,
+                ringPct = Math.min(displayPct, 100),
+                circ = 2 * Math.PI * 28,
+                dash = ringPct / 100 * circ,
+                gap = circ - dash,
+                baseColor = ringColor(pct),
+                remain = budget - spent,
+                remCls = remain < 0 ? "over" : remain < .2 * budget ? "low" : "ok",
+                remText = remain >= 0 ? fmtK(remain) + " left" : fmtK(Math.abs(remain)) + " over",
+                ringIcoEl = null;
+            iconUrl && 0 === iconUrl.indexOf("http") && ((ringIcoEl = document.createElement("img")).className = "ring-icon", ringIcoEl.src = iconUrl, ringIcoEl.onerror = function() {
+                this.style.display = "none"
+            });
+            var ns = "http://www.w3.org/2000/svg",
+                svg = document.createElementNS(ns, "svg");
+            svg.setAttribute("viewBox", "0 0 80 80"), svg.className = "ring-svg";
+            var initRingSz = isMobile ? "13vw" : "6vw";
+            svg.style.width = initRingSz, svg.style.height = initRingSz;
+            var gradId = "grad-" + Math.random().toString(36).substr(2, 9),
+                defs = document.createElementNS(ns, "defs"),
+                realPct = budget > 0 ? spent / budget * 100 : 0,
+                gradColors = "";
+            gradColors = realPct > 100 ? '<stop offset="0%" stop-color="#fff" /><stop offset="100%" stop-color="#ff0055" />' : realPct > 90 ? '<stop offset="0%" stop-color="#14b8a6" /><stop offset="50%" stop-color="#f97316" />' : realPct > 80 ? '<stop offset="0%" stop-color="#14b8a6" /><stop offset="70%" stop-color="#eab308" />' : `<stop offset="0%" stop-color="#008080" /><stop offset="100%" stop-color="${baseColor}" />`, defs.innerHTML = `<linearGradient id="${gradId}" x1="0%" y1="100%" x2="100%" y2="0%">${gradColors}</linearGradient>`, svg.appendChild(defs);
+            var bg = document.createElementNS(ns, "circle");
+            bg.setAttribute("cx", 40), bg.setAttribute("cy", 40), bg.setAttribute("r", 28), bg.setAttribute("fill", "rgba(0, 0, 0, 0.1)"), bg.setAttribute("stroke", "rgba(255,255,255,0.08)"), bg.setAttribute("stroke-width", 8), svg.appendChild(bg);
+            var fg = document.createElementNS(ns, "circle");
+            fg.setAttribute("cx", 40), fg.setAttribute("cy", 40), fg.setAttribute("r", 28), fg.setAttribute("fill", "none"), fg.setAttribute("stroke", `url(#${gradId})`), fg.setAttribute("stroke-width", 8), fg.setAttribute("stroke-linecap", "round"), fg.setAttribute("stroke-dasharray", dash + " " + gap), fg.setAttribute("stroke-dashoffset", "0"), fg.setAttribute("transform", "rotate(-90 40 40)"), svg.appendChild(fg);
+            var pctTxt = document.createElementNS(ns, "text");
+            pctTxt.setAttribute("x", "40"), pctTxt.setAttribute("y", "41"), pctTxt.setAttribute("text-anchor", "middle"), pctTxt.setAttribute("dominant-baseline", "middle"), pctTxt.setAttribute("fill", "#fff"), pctTxt.setAttribute("font-size", "18"), pctTxt.setAttribute("font-family", "JetBrains Mono"), pctTxt.setAttribute("font-weight", "600"), pctTxt.textContent = Math.round(displayPct) + "%", svg.appendChild(pctTxt);
+            var lblEl = document.createElement("div");
+            lblEl.className = "ring-label", lblEl.textContent = displayLabel;
+            var remEl = document.createElement("div");
+            return remEl.className = "ring-remain " + remCls, remEl.textContent = remText, item.appendChild(svg), ringIcoEl && item.appendChild(ringIcoEl), item.appendChild(lblEl), item.appendChild(remEl), item.addEventListener("click", function() {
+                var alreadySel = this.classList.contains("selected"),
+                gids2 = (this.dataset.gids || "").split(",").filter(function(g) {
+                    return g
+                });
+                document.querySelectorAll(".ring-item.selected").forEach(function(r2) {
+                r2.classList.remove("selected")
+                }), alreadySel ? (document.querySelectorAll(".main-row.ring-highlighted").forEach(function(r) {
+                r.classList.remove("ring-highlighted")
+                }), gids2.forEach(function(gid) {
+                var mainRow = document.querySelector(".main-row[data-id='" + gid + "']");
+                if (mainRow) {
+                    mainRow.dataset.open = "0";
+                    var chev2 = document.getElementById("chev-" + gid);
+                    chev2 && (chev2.className = "chevron bi bi-chevron-right"), document.querySelectorAll(".sub-row[data-group='" + gid + "']").forEach(function(s) {
+                    s.classList.remove("visible")
+                    })
+                }
+                })) : (this.classList.add("selected"), document.querySelectorAll(".main-row.ring-highlighted").forEach(function(r) {
+                r.classList.remove("ring-highlighted")
+                }), gids2.forEach(function(gid) {
+                var mainRow = document.querySelector(".main-row[data-id='" + gid + "']");
+                if (mainRow) {
+                    mainRow.classList.add("ring-highlighted"), mainRow.dataset.open = "1";
+                    var chev2 = document.getElementById("chev-" + gid);
+                    chev2 && (chev2.className = "chevron bi bi-chevron-down"), document.querySelectorAll(".sub-row[data-group='" + gid + "']").forEach(function(s) {
+                    s.classList.add("visible")
+                    })
+                }
+                }))
+            }), item
+            }
+                var DETAIL_SHEET_URL = GOOGLE_SHEET_CSV_URL + "1492221762";
+                var cachedTxData = null; 
+                
+                function renderTxRows(subCatName, containerEl) {
+            containerEl.innerHTML = "";
+            var cleanStr = function(str) {
+                return (str || "").toLowerCase().replace(/[\u200B-\u200D\uFEFF]/g, "").replace(/\s+/g, " ").trim()
+                },
+                targetName = cleanStr(subCatName),
+                filtered = cachedTxData.filter(function(tx) {
+                if (cleanStr(tx.subCat) !== targetName) return !1;
+                if (!tx.date) return !1;
+                var d = new Date(tx.date);
+                return !isNaN(d.getTime()) && (d.getFullYear() === monthPickerState.selectedYear && d.getMonth() === monthPickerState.selectedMonth)
+                });
+            0 !== filtered.length ? filtered.forEach(function(tx) {
+                var row = document.createElement("div");
+                row.className = "tx-detail-row";
+                var shortDay = "";
+                if (tx.date) {
+                var parts = tx.date.split(" ")[0].split(/[\/\-\.]/);
+                if (parts.length >= 2) {
+                    var dayPart = parts[1];
+                    parts[0].length > 2 && (dayPart = parts[2]), dayPart && 1 === dayPart.length && (dayPart = "0" + dayPart), shortDay = dayPart || ""
+                }
+                }
+                var iconHtml = "";
+                iconHtml = tx.iconUrl && 0 === tx.iconUrl.indexOf("http") ? `<img src="${tx.iconUrl}" class="cat-ico" style="width:3vw; height:3vw; margin-right:1vw; border-radius:50%; object-fit:cover; flex-shrink:0;" onerror="this.outerHTML='<div class=&quot;cat-ico-fb&quot; style=&quot;width:3vw; height:3vw; font-size:1.6vw; margin-right:1vw; flex-shrink:0;&quot;>&bull;</div>'">` : '<div class="cat-ico-fb" style="width:3vw; height:3vw; font-size:1.6vw; margin-right:1vw; flex-shrink:0;">&bull;</div>', row.innerHTML = `\n            <div class="td-desc">\n                ${iconHtml}\n                <span class="td-detail">${tx.detail?cleanDetail(tx.detail):"—"}</span>\n            </div>\n            <div class="td-amt">${fmtK(tx.amount)}</div>\n            <div class="td-date">\n                ${shortDay?`<span class="tx-date-badge">${shortDay}</span>`:"—"}\n            </div>\n            `, containerEl.appendChild(row)
+            }) : containerEl.innerHTML = "<div class='tx-detail-row'><div class='td-desc' style='color:rgba(255,255,255,0.4)'>No transactions found</div></div>"
+        }
     function fetchTransactionDetails(subCatName,containerEl){cachedTxData?renderTxRows(subCatName,containerEl):(containerEl.innerHTML="<div class='tx-detail-row'><div class='td-desc'>Loading details...</div></div>",fetch(DETAIL_SHEET_URL).then(res=>res.text()).then(text=>{var lines=text.split(/\r?\n/);cachedTxData=[];for(var skippedRows=0,i=1;i<lines.length;i++)if(lines[i].trim()){var cols=parseCsvRow(lines[i]);cols.length>=9?cachedTxData.push({date:cols[2],subCat:cols[4],detail:cols[6],cleanDetail:cols[6]||"",amount:parseNum(cols[5]),iconUrl:cols[8]}):skippedRows++}console.log("Total rows fetched:",cachedTxData.length),console.log("Rows skipped (cols.length < 9):",skippedRows),console.log("Date range in data:",cachedTxData.map(t=>t.date).sort()[0],"to",cachedTxData.map(t=>t.date).sort().slice(-1)[0]),console.log("Sample rows:",cachedTxData.slice(0,5)),renderTxRows(subCatName,containerEl)}).catch(err=>{containerEl.innerHTML="<div class='tx-detail-row'><div class='td-desc'>Error loading data</div></div>",console.error("Fetch error:",err)}))}
     function toggleSubCategoryTx(subRowEl,subCatName){var nextEl=subRowEl.nextSibling;if(!(nextEl&&nextEl.classList&&nextEl.classList.contains("tx-details-container"))){var container=document.createElement("div");container.className="tx-details-container",subRowEl.parentNode.insertBefore(container,nextEl),nextEl=container}nextEl.classList.contains("visible")?(nextEl.classList.remove("visible"),subRowEl.classList.remove("visible-tx")):(nextEl.classList.add("visible"),subRowEl.classList.add("visible-tx"),fetchTransactionDetails(subCatName,nextEl))}
     function makeIcon(iconUrl,fallback){if(iconUrl&&0===iconUrl.indexOf("http")){var img=document.createElement("img");return img.className="cat-ico",img.src=iconUrl,img.onerror=(fb=fallback,function(){var d=document.createElement("div");d.className="cat-ico-fb",d.textContent=fb||"•",this.parentNode.replaceChild(d,this)}),img}var fb,d=document.createElement("div");return d.className="cat-ico-fb",d.textContent=iconUrl||fallback||"•",d}
     function buildCatRow(item, isSub, gid) {
-    var row = document.createElement("div");
-    row.className = "cat-row" + (isSub ? " sub-row" : " main-row");
-    
-    if (isSub) row.dataset.group = gid;
-    else {
-        row.dataset.id = gid;
-        row.dataset.open = "0";
-    }
-    
-    var p = pctInfo(item.curr, item.last),
-        nameCell = document.createElement("div");
-    
-    nameCell.className = "name-cell";
-    if (isSub) {
-        var subChev = document.createElement("span");
-        subChev.className = "chevron sub-chev bi bi-chevron-right";
-        subChev.style.fontSize = "2.5vw";
-        nameCell.appendChild(subChev);
-    } else {
-        var chev = document.createElement("span");
-        chev.className = "chevron bi bi-chevron-right";
-        nameCell.appendChild(chev);
-    }
-    
-    nameCell.appendChild(makeIcon(item.icon, item.name ? item.name.charAt(0) : "•"));
-    
-    var nameSpan = document.createElement("span");
-    nameSpan.className = "cat-name";
-    nameSpan.textContent = item.name;
-    nameCell.appendChild(nameSpan);
-    
-    var amtEl = document.createElement("div");
-    amtEl.className = "amt-val";
-    amtEl.textContent = fmtK(item.curr);
-    
-    // NOTE: lastEl (Previous amount element) has been omitted here to hide it completely.
-    
-    var pctEl = document.createElement("div");
-    pctEl.className = "pct-val " + p.cls;
-    pctEl.innerHTML = p.html;
-    
-    row.appendChild(nameCell);
-    row.appendChild(amtEl);
-    // row.appendChild(lastEl); // Hidden
-    row.appendChild(pctEl);
-    
-    if (isSub) {
-        row.addEventListener("click", function(e) {
-            e.stopPropagation();
-            toggleSubCategoryTx(row, item.name);
-        });
-    } else {
-        row.addEventListener("click", function() {
-            var g = this.dataset.id,
-                isOpen = "1" === this.dataset.open;
-            this.dataset.open = isOpen ? "0" : "1";
-            var chev2 = document.getElementById("chev-" + g);
-            if (chev2) chev2.className = isOpen ? "bi bi-chevron-right" : "bi bi-chevron-down";
-            document.querySelectorAll(".sub-row[data-group='" + g + "']").forEach(function(s) {
-                if (isOpen) {
-                    s.classList.remove("visible");
-                    if (s.classList.contains("visible-tx")) toggleSubCategoryTx(s, "");
-                } else {
-                    s.classList.add("visible");
-                }
+        var row = document.createElement("div");
+        row.className = "cat-row" + (isSub ? " sub-row" : " main-row");
+        
+        if (isSub) row.dataset.group = gid;
+        else {
+            row.dataset.id = gid;
+            row.dataset.open = "0";
+        }
+        
+        var p = pctInfo(item.curr, item.last),
+            nameCell = document.createElement("div");
+        
+        nameCell.className = "name-cell";
+        if (isSub) {
+            var subChev = document.createElement("span");
+            subChev.className = "chevron sub-chev bi bi-chevron-right";
+            subChev.style.fontSize = "2.5vw";
+            nameCell.appendChild(subChev);
+        } else {
+            var chev = document.createElement("span");
+            chev.className = "chevron bi bi-chevron-right";
+            nameCell.appendChild(chev);
+        }
+        
+        nameCell.appendChild(makeIcon(item.icon, item.name ? item.name.charAt(0) : "•"));
+        
+        var nameSpan = document.createElement("span");
+        nameSpan.className = "cat-name";
+        nameSpan.textContent = item.name;
+        nameCell.appendChild(nameSpan);
+        
+        var amtEl = document.createElement("div");
+        amtEl.className = "amt-val";
+        amtEl.textContent = fmtK(item.curr);
+        
+        // NOTE: lastEl (Previous amount element) has been omitted here to hide it completely.
+        
+        var pctEl = document.createElement("div");
+        pctEl.className = "pct-val " + p.cls;
+        pctEl.innerHTML = p.html;
+        
+        row.appendChild(nameCell);
+        row.appendChild(amtEl);
+        // row.appendChild(lastEl); // Hidden
+        row.appendChild(pctEl);
+        
+        if (isSub) {
+            row.addEventListener("click", function(e) {
+                e.stopPropagation();
+                toggleSubCategoryTx(row, item.name);
             });
-        });
+        } else {
+            row.addEventListener("click", function() {
+                var g = this.dataset.id,
+                    isOpen = "1" === this.dataset.open;
+                this.dataset.open = isOpen ? "0" : "1";
+                var chev2 = document.getElementById("chev-" + g);
+                if (chev2) chev2.className = isOpen ? "bi bi-chevron-right" : "bi bi-chevron-down";
+                document.querySelectorAll(".sub-row[data-group='" + g + "']").forEach(function(s) {
+                    if (isOpen) {
+                        s.classList.remove("visible");
+                        if (s.classList.contains("visible-tx")) toggleSubCategoryTx(s, "");
+                    } else {
+                        s.classList.add("visible");
+                    }
+                });
+            });
+        }
+        
+        return row;
     }
-    
-    return row;
-}
     document.getElementById("expand-btn").addEventListener("click",function(){allExpanded=!allExpanded,this.innerHTML=allExpanded?'<i class="bi bi-chevron-up"></i> Collapse All':'<i class="bi bi-chevron-down"></i> Expand All',allExpanded?document.querySelectorAll(".main-row").forEach(function(r){r.classList.add("ring-highlighted")}):(document.querySelectorAll(".main-row.ring-highlighted").forEach(function(r){r.classList.remove("ring-highlighted")}),document.querySelectorAll(".ring-item.selected").forEach(function(r){r.classList.remove("selected")}),closeAllTxDetails()),document.querySelectorAll(".sub-row").forEach(function(s){allExpanded?s.classList.add("visible"):s.classList.remove("visible")}),document.querySelectorAll(".main-row").forEach(function(r){r.dataset.open=allExpanded?"1":"0"}),document.querySelectorAll(".chevron").forEach(function(c){c.textContent=(allExpanded,"")})});
     function buildColHdr(){
-    var isMobile = window.innerWidth < 1024,
-        hdr = document.getElementById("col-hdr");
-    
-    if (hdr) {
-        hdr.innerHTML = "";
-        hdr.style.fontSize = isMobile ? "14pxvw" : "14px";
-        // Updated grid template columns to exclude the previous amount space
-        hdr.style.gridTemplateColumns = isMobile ? "5.2fr 1.8fr 1.6fr" : "6.4fr 1.8fr 1.8fr"; 
+        var isMobile = window.innerWidth < 1024,
+            hdr = document.getElementById("col-hdr");
         
-        (isMobile ? ["Category", "Amount", "Change"] : ["Category", "Amount", "Change"]).forEach(function(t, i){
-            var d = document.createElement("div");
-            d.className = "ch";
-            var iconEl = document.createElement("i");
-            iconEl.style.display = "inline-block";
-            iconEl.style.marginRight = "4px";
-            iconEl.style.marginBottom = "2px";
-            iconEl.style.setProperty("font-size", "13px", "important");
+        if (hdr) {
+            hdr.innerHTML = "";
+            hdr.style.fontSize = isMobile ? "14pxvw" : "14px";
+            // Updated grid template columns to exclude the previous amount space
+            hdr.style.gridTemplateColumns = isMobile ? "5.2fr 1.8fr 1.6fr" : "6.4fr 1.8fr 1.8fr"; 
             
-            if ("Category" === t) iconEl.className = "bi bi-list";
-            else if ("Amount" === t) iconEl.className = "bi bi-cash";
-            else if ("Change" === t) {
-                iconEl.className = "bi bi-droplet-half";
-                t = "";
-            }
-            
-            if (iconEl.className) d.appendChild(iconEl);
-            if (t) d.appendChild(document.createTextNode(t));
-            hdr.appendChild(d);
-        });
+            (isMobile ? ["Category", "Amount", "Change"] : ["Category", "Amount", "Change"]).forEach(function(t, i){
+                var d = document.createElement("div");
+                d.className = "ch";
+                var iconEl = document.createElement("i");
+                iconEl.style.display = "inline-block";
+                iconEl.style.marginRight = "4px";
+                iconEl.style.marginBottom = "2px";
+                iconEl.style.setProperty("font-size", "13px", "important");
+                
+                if ("Category" === t) iconEl.className = "bi bi-list";
+                else if ("Amount" === t) iconEl.className = "bi bi-cash";
+                else if ("Change" === t) {
+                    iconEl.className = "bi bi-droplet-half";
+                    t = "";
+                }
+                
+                if (iconEl.className) d.appendChild(iconEl);
+                if (t) d.appendChild(document.createTextNode(t));
+                hdr.appendChild(d);
+            });
+        }
     }
-}
     function renderCatListByMonth(containerEl){containerEl.innerHTML="";var filtered=cachedTxData.filter(function(tx){if(!tx.date)return!1;var d=new Date(tx.date);return!isNaN(d.getTime())&&(d.getFullYear()===monthPickerState.selectedYear&&d.getMonth()===monthPickerState.selectedMonth)});0!==filtered.length?filtered.forEach(function(tx){var row=document.createElement("div");row.className="tx-detail-row";var shortDay="";if(tx.date){var parts=tx.date.split(" ")[0].split(/[\/\-\.]/);if(parts.length>=2){var dayPart=parts[1];parts[0].length>2&&(dayPart=parts[2]),dayPart&&1===dayPart.length&&(dayPart="0"+dayPart),shortDay=dayPart||""}}var iconHtml;iconHtml=tx.iconUrl&&0===tx.iconUrl.indexOf("http")?`<img src="${tx.iconUrl}" class="cat-ico" style="width:5vw; height:5vw; margin-right:1vw;" onerror="this.style.display='none'">`:'<div class="cat-ico-fb" style="width:5vw; height:5vw; font-size:1.8vw; margin-right:1vw;">&bull;</div>',row.innerHTML=`\n          <div class="td-desc">\n            ${iconHtml}\n            <span class="td-detail">${tx.detail?cleanDetail(tx.cleanDetail):"—"}</span>\n          </div>\n          <div class="td-amt">${fmtK(tx.amount)}</div>\n          <div class="td-empty"></div>\n          <div class="td-date">\n            ${shortDay?`<span class="tx-date-badge">${shortDay}</span>`:"—"}\n          </div>\n        `,containerEl.appendChild(row)}):containerEl.innerHTML="<div class='tx-detail-row'><div class='td-desc' style='color:rgba(255,255,255,0.4)'>No transactions found</div></div>"}function findSheetRowForMonth(year,month){for(var targetDateStr=String(month+1).padStart(2,"0")+"/"+String(year).slice(-2),i=0;i<sheetData.length;i++)if(sheetData[i][0]===targetDateStr)return sheetData[i];return null}
     
     var SUB_TO_MAIN_MAP={Electricity:"Bills & Insurances",Water:"Bills & Insurances",Internet:"Bills & Insurances",Phone:"Bills & Insurances",Subscriptions:"Bills & Insurances",Service:"Bills & Insurances",Paperwork:"Bills & Insurances",Insurance:"Bills & Insurances",Healthcare:"Bills & Insurances",Groceries:"Food & Beverage",Restaurant:"Food & Beverage","Coffee shop":"Food & Beverage",Withdraw:"Food & Beverage",Lottery:"Shop & Travel",Shopping:"Shop & Travel","Plant&Flower":"Shop & Travel",Cosmetic:"Shop & Travel",Electronic:"Shop & Travel",Cinema:"Shop & Travel","Study & Others":"Shop & Travel",Travel:"Shop & Travel",Mommy:"Family","Dad & Bro":"Family",Brother:"Family","Anh ban than":"Family",Friends:"Family",Cat:"Family"};
@@ -8837,6 +8710,7 @@ function applyPortfolioFiltersAndRender() {
     function closeModal(){const backdrop=document.getElementById("modalBackdrop");backdrop.style.pointerEvents="none",backdrop.classList.remove("active"),document.querySelectorAll('[id="portfolio-cal-menu"]').forEach(function(el){el.remove()})}
     function createChipElement(container,totalAmount,sign="+",targetInputId="transactionAmount"){let displayLabel="";if(totalAmount>=1e6){const clearMillions=totalAmount/1e6;displayLabel=`${sign}${clearMillions%1==0?clearMillions:clearMillions.toFixed(1)}M`}else if(totalAmount>=1e3){const clearThousands=totalAmount/1e3;displayLabel=`${sign}${clearThousands%1==0?clearThousands:clearThousands.toFixed(0)}K`}else displayLabel=`${sign}${totalAmount}`;const chip=document.createElement("div");chip.className="quick-amt-chip",chip.innerText=displayLabel,chip.onclick=()=>{const inputField=document.getElementById(targetInputId),clearBtnId="portfolioField3"===targetInputId?"portfolioClearAmountBtn":"clearAmountBtn",clearBtn=document.getElementById(clearBtnId);inputField&&(inputField.value=parseInt(totalAmount,10).toLocaleString("en-US"),clearBtn&&(clearBtn.style.display="block"),window.generateDynamicChips(totalAmount,container.id,targetInputId))},container.appendChild(chip)}
     function updateDropdownOptions(uniqueTypesMap){const dropdown=document.getElementById("transactionFilterOptions");if(!dropdown)return;var depositIcon=uniqueTypesMap.get("Deposit")||uniqueTypesMap.get("deposit")||uniqueTypesMap.get("Deposits")||uniqueTypesMap.get("deposits"),withdrawIcon=uniqueTypesMap.get("Withdrawal")||uniqueTypesMap.get("withdrawal")||uniqueTypesMap.get("Withdrawals")||uniqueTypesMap.get("withdrawals")||uniqueTypesMap.get("Withdraw")||uniqueTypesMap.get("withdraw");function getVisualIcon(iconUrl,defaultMaterialIcon,iconColor){return iconUrl&&"n/a"!==iconUrl.toLowerCase()?`\n          <img src="${iconUrl}" style="width: 18px; height: 18px; object-fit: contain; border-radius: 4px;" alt="" \n              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">\n          <span class="material-icons-round" style="display: none; font-size: 15px; color: ${iconColor}; width: 18px; height: 18px; align-items: center; justify-content: center;">${defaultMaterialIcon}</span>\n        `:`<span class="material-icons-round" style="font-size: 15px; color: ${iconColor}; display: flex; align-items: center; justify-content: center; width: 18px; height: 18px;">${defaultMaterialIcon}</span>`}let optionsHtml=`\n      <div class="filter-opt-item" onclick="window.selectTransactionFilter('all', 'All')" \n          style="padding: 8px 12px; color: #f8f9fa; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;"\n          onmouseover="this.style.background='#22252d'" onmouseout="this.style.background='transparent'">\n        <span class="material-icons-round" style="font-size: 15px; color: #6c757d; display: flex; align-items: center; justify-content: center; width: 18px; height: 18px;">filter_list</span>\n        All\n      </div>\n      \n      <div class="filter-opt-item" onclick="window.selectTransactionFilter('deposit', 'Deposits')" \n          style="padding: 8px 12px; color: #f8f9fa; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;"\n          onmouseover="this.style.background='#22252d'" onmouseout="this.style.background='transparent'">\n        <div style="display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0;">\n          ${getVisualIcon(depositIcon,"arrow_downward","#14b8a6")}\n        </div>\n        Deposits\n      </div>\n      \n      <div class="filter-opt-item" onclick="window.selectTransactionFilter('withdrawal', 'Withdrawals')" \n          style="padding: 8px 12px; color: #f8f9fa; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;"\n          onmouseover="this.style.background='#22252d'" onmouseout="this.style.background='transparent'">\n        <div style="display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0;">\n          ${getVisualIcon(withdrawIcon,"arrow_upward","rgb(255, 105, 180)")}\n        </div>\n        Withdrawals\n      </div>\n    `;uniqueTypesMap.forEach(function(iconUrl,type){var lowerT=(type||"").toLowerCase().trim();if(lowerT.startsWith("withdraw")||lowerT.startsWith("deposit"))return;let visualIconHtml="";iconUrl&&"n/a"!==iconUrl.toLowerCase()&&(visualIconHtml=`<img src="${iconUrl}" style="width: 18px; height: 18px; object-fit: contain; border-radius: 4px;" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`),visualIconHtml+=`\n        <div style="display: ${iconUrl?"none":"flex"}; width: 18px; height: 18px; background: rgba(255,255,255,0.1); border-radius: 4px; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: #3b82f6;">\n          ${(type||"?").charAt(0).toUpperCase()}\n        </div>\n      `,optionsHtml+=`\n        <div class="filter-opt-item" onclick="window.selectTransactionFilter('${type}', '${type}')" \n            style="padding: 8px 12px; color: #f8f9fa; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.15s;"\n            onmouseover="this.style.background='#22252d'" onmouseout="this.style.background='transparent'">\n          <div style="display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; flex-shrink: 0;">\n            ${visualIconHtml}\n          </div>\n          ${type}\n        </div>\n      `}),dropdown.innerHTML=optionsHtml}
+    
     window.generateDynamicChips=function(rawValue,containerId,targetInputId){containerId=containerId||"dynamicChipsContainer",targetInputId=targetInputId||"transactionAmount";const container=document.getElementById(containerId);if(!container)return;container.innerHTML="";const sign="Withdraw"===window.currentTransactionType?"-":"+",trimmed=rawValue.toString().trim().replace(/\D/g,"");if(""===trimmed)return void[5e5,1e6,2e6,5e6,1e7,2e7].forEach(amount=>{createChipElement(container,amount,sign,targetInputId)});const num=parseInt(trimmed,10);if(isNaN(num)||num<=0)return;const chipSet=new Set;[1,10,100,1e3,1e4,1e5,1e6].forEach(mult=>{const projected=num*mult;projected>=5e5&&projected<=1e9&&chipSet.add(projected)}),num>=5e5&&[num,2*num,5*num].forEach(amt=>{amt<=1e9&&chipSet.add(amt)}),Array.from(chipSet).sort((a,b)=>a-b).forEach(amount=>{createChipElement(container,amount,sign,targetInputId)})};
 
     document.addEventListener("DOMContentLoaded", initFullyAutomatedTimeline);
