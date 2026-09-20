@@ -151,9 +151,26 @@ background:
   60%  { transform: scale(1.03); opacity: 1; }
   100% { transform: scale(1); opacity: 1; }
 }
-#balance-val.val-pop {
-  display: inline-block;
-  animation: balanceValPop 0.28s ease-out;
+@keyframes walletCardFanIn {0% {opacity: 0;transform: translateY(30px) scale(0.93) rotateX(-10deg);}100% {opacity: 1;transform: translateY(0) scale(1) rotateX(0deg);}}
+@keyframes budgetSegLabelPop{0%{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
+#budget-over-indicator {
+    /* Set size to match the pixel repeat interval of your existing hatch pattern */
+    background-size: 20px 20px !important;
+    animation: animateExistingStrikeOut 1s linear infinite !important;
+}
+
+@keyframes animateExistingStrikeOut {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 20px 0;
+    }
+}
+@keyframes svgDrawLine {
+    to {
+        stroke-dashoffset: 0;
+    }
 }
 
 .ring-item{display:flex;flex-direction:column;align-items:center;gap:.6vw;flex:1;cursor:pointer;border-radius:2vw;padding:1.5vw .5vw;transition:background .2s}@media (max-width:1024px){.ring-item[data-hide-on-mobile="1"]{display:none!important}}
@@ -3037,7 +3054,7 @@ to{transform:rotate(360deg)}
           }
 
           var incPastPathEl = addIncLine(incPast, null, null);
-          var incFuturePathEl = addIncLine(incFuture, "5 4", "0.5");
+          var incFuturePathEl = addIncLine(incFuture, null, null);
 
           svg.appendChild(incGroup);
 
@@ -3165,38 +3182,47 @@ to{transform:rotate(360deg)}
       }
 
       var gradDebtTotal=document.createElementNS(ns,"linearGradient");gradDebtTotal.setAttribute("id","debtTotalFill"),gradDebtTotal.setAttribute("x1","0"),gradDebtTotal.setAttribute("y1","0"),gradDebtTotal.setAttribute("x2","0"),gradDebtTotal.setAttribute("y2","1");var dt1=document.createElementNS(ns,"stop");dt1.setAttribute("offset","0%"),dt1.setAttribute("stop-color","#ffffff"),dt1.setAttribute("stop-opacity","0.20");var dt2=document.createElementNS(ns,"stop");dt2.setAttribute("offset","100%"),dt2.setAttribute("stop-color","#ffffff"),dt2.setAttribute("stop-opacity","0"),gradDebtTotal.appendChild(dt1),gradDebtTotal.appendChild(dt2),defsTC.appendChild(gradDebtTotal);
-      
       var gradDebtShinhan=document.createElementNS(ns,"linearGradient");gradDebtShinhan.setAttribute("id","debtShinhanFill"),gradDebtShinhan.setAttribute("x1","0"),gradDebtShinhan.setAttribute("y1","0"),gradDebtShinhan.setAttribute("x2","0"),gradDebtShinhan.setAttribute("y2","1");var ds1=document.createElementNS(ns,"stop");ds1.setAttribute("offset","0%"),ds1.setAttribute("stop-color","#60a5fa"),ds1.setAttribute("stop-opacity","0.20");var ds2=document.createElementNS(ns,"stop");ds2.setAttribute("offset","100%"),ds2.setAttribute("stop-color","#60a5fa"),ds2.setAttribute("stop-opacity","0"),gradDebtShinhan.appendChild(ds1),gradDebtShinhan.appendChild(ds2),defsTC.appendChild(gradDebtShinhan);
-      
       var gradExpenseArea=document.createElementNS(ns,"linearGradient");gradExpenseArea.setAttribute("id","expenseAreaFill"),gradExpenseArea.setAttribute("x1","0"),gradExpenseArea.setAttribute("y1","0"),gradExpenseArea.setAttribute("x2","0"),gradExpenseArea.setAttribute("y2","1");var ea1=document.createElementNS(ns,"stop");ea1.setAttribute("offset","0%"),ea1.setAttribute("stop-color","#f472b6"),ea1.setAttribute("stop-opacity","0.22");var ea2=document.createElementNS(ns,"stop");ea2.setAttribute("offset","100%"),ea2.setAttribute("stop-color","#f472b6"),ea2.setAttribute("stop-opacity","0"),gradExpenseArea.appendChild(ea1),gradExpenseArea.appendChild(ea2),defsTC.appendChild(gradExpenseArea);
       
-            function ensureDiffStripePattern(defs, ns, id, color) {
-        if (defs.querySelector("#" + id)) return; // avoid duplicate defs if this runs more than once per render
-        var pat = document.createElementNS(ns, "pattern");
-        pat.setAttribute("id", id);
-        pat.setAttribute("patternUnits", "userSpaceOnUse");
-        pat.setAttribute("width", "14");
-        pat.setAttribute("height", "14");
-        pat.setAttribute("patternTransform", "rotate(45)");
+        function ensureDiffStripePattern(defs, ns, id, color) {
+            if (defs.querySelector("#" + id)) return; // avoid duplicate defs if this runs more than once per render
+            
+            var pat = document.createElementNS(ns, "pattern");
+            pat.setAttribute("id", id);
+            pat.setAttribute("patternUnits", "userSpaceOnUse");
+            pat.setAttribute("width", "14");
+            pat.setAttribute("height", "14");
+            pat.setAttribute("patternTransform", "rotate(45)");
 
-        // Faint background tint between the stripes
-        var bg = document.createElementNS(ns, "rect");
-        bg.setAttribute("x", "0"); bg.setAttribute("y", "0");
-        bg.setAttribute("width", "14"); bg.setAttribute("height", "14");
-        bg.setAttribute("fill", color);
-        bg.setAttribute("opacity", "0.08");
-        pat.appendChild(bg);
+            // Add keyframe translation animation to create the strikeout movement
+            var anim = document.createElementNS(ns, "animateTransform");
+            anim.setAttribute("attributeName", "patternTransform");
+            anim.setAttribute("type", "translate");
+            anim.setAttribute("from", "0 0");
+            anim.setAttribute("to", "14 0"); // Moves pattern seamlessly across pattern tile width
+            anim.setAttribute("dur", "1.2s");  // Speed of the animation (adjust as needed)
+            anim.setAttribute("repeatCount", "indefinite");
+            pat.appendChild(anim);
 
-        // Thick diagonal stripe — half the tile width, bold opacity
-        var stripe = document.createElementNS(ns, "rect");
-        stripe.setAttribute("x", "0"); stripe.setAttribute("y", "0");
-        stripe.setAttribute("width", "7"); stripe.setAttribute("height", "14");
-        stripe.setAttribute("fill", color);
-        stripe.setAttribute("opacity", "0.55");
-        pat.appendChild(stripe);
+            // Faint background tint between the stripes
+            var bg = document.createElementNS(ns, "rect");
+            bg.setAttribute("x", "0"); bg.setAttribute("y", "0");
+            bg.setAttribute("width", "14"); bg.setAttribute("height", "14");
+            bg.setAttribute("fill", color);
+            bg.setAttribute("opacity", "0.08");
+            pat.appendChild(bg);
 
-        defs.appendChild(pat);
-      }
+            // Thick diagonal stripe — half the tile width, bold opacity
+            var stripe = document.createElementNS(ns, "rect");
+            stripe.setAttribute("x", "0"); stripe.setAttribute("y", "0");
+            stripe.setAttribute("width", "7"); stripe.setAttribute("height", "14");
+            stripe.setAttribute("fill", color);
+            stripe.setAttribute("opacity", "0.55");
+            pat.appendChild(stripe);
+
+            defs.appendChild(pat);
+        }
 
       ensureDiffStripePattern(defsTC, ns, "diffStripeGreen", "#38bdf8");
       ensureDiffStripePattern(defsTC, ns, "diffStripePink", "#a78bfa");
@@ -3223,8 +3249,9 @@ to{transform:rotate(360deg)}
       var targetIndex=currentIndex=getCurrentMonthIndex();
       switch(range){case"today":targetIndex=getMonthIndex(-1);break;case"-3m":targetIndex=getMonthIndex(-3);break;case"-6m":targetIndex=getMonthIndex(-6);break;case"-1y":targetIndex=getMonthIndex(-12);break;case"-2y":targetIndex=getMonthIndex(-24);break;case"+3m":targetIndex=getMonthIndex(3);break;case"+6m":targetIndex=getMonthIndex(6);break;case"+1y":targetIndex=getMonthIndex(12);break;case"+2y":targetIndex=getMonthIndex(24);break;case"max":targetIndex=currentXY.length-1}
       var current=xy[currentIndex],targetTC=xy[targetIndex],diff="today"===range||range.startsWith("-")?current.balance-targetTC.balance:targetTC.balance-current.balance,pct=0!==current.balance?diff/Math.abs(current.balance)*100:0,isPos=diff>=0;
-      document.getElementById("balance-val").textContent=balanceVisible?fmtFullTC(current.balance):"*********",document.getElementById("balance-usd").textContent=fmtUSDTC(current.balance),updateGoalRing(current.balance),updateCountdown();
-      
+      balanceVisible?(animateNumberValue("balance-val",current.balance,fmtFullTC,1e3),animateNumberValue("balance-usd",current.balance,fmtUSDTC,1e3)):(document.getElementById("balance-val").textContent="*********",document.getElementById("balance-usd").textContent=fmtUSDTC(0)),updateGoalRing(current.balance),updateCountdown();
+      function animateNumberValue(elementId,targetValue,formatFn,duration){var el=document.getElementById(elementId);if(el){var durationMs=duration||500,startTime=null;requestAnimationFrame(function step(timestamp){startTime||(startTime=timestamp);var progress=Math.min((timestamp-startTime)/durationMs,1),easeOutProgress=1-Math.pow(1-progress,3),currentVal=0+(targetValue-0)*easeOutProgress;el.textContent=formatFn(currentVal),progress<1?requestAnimationFrame(step):el.textContent=formatFn(targetValue)})}}
+
       var directionText={today:"over the last month","-3m":"in the last 3 months","-6m":"in the last 6 months","-1y":"in the last year","-2y":"in the last 2 years","+3m":"over the next 3 months","+6m":"over the next 6 months","+1y":"over the next year","+2y":"over the next 2 years",max:"across all future projections"}[range]||"",verb="today"===range?"You "+(isPos?"gain ":"loss "):range.startsWith("-")?isPos?"You gained ":"You lost ":"You "+(isPos?"gain ":"loss ");
       document.getElementById("sub-text").innerHTML='<span id="amt-hl" class="amt-hl '+(isPos?"pos":"neg")+'">'+fmtFullTC(Math.abs(diff))+"</span> ";
       var pill=document.getElementById("change-pill");
