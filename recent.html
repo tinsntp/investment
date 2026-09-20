@@ -2498,21 +2498,7 @@ to{transform:rotate(360deg)}
     var currentDebtTotalXY = []; 
     var currentDebtShinhanXY = []; 
     var currentDebtSCXY = []; var currentPts = [];
-    function animateChartSwitchTC(renderFn) {
-        var svgEl = document.getElementById("chart-svg");
-        if (!svgEl) { renderFn(); return; }
-
-        svgEl.classList.add("tc-fading");
-        setTimeout(function() {
-            renderFn();
-            // One frame delay so the browser registers the freshly-rebuilt DOM before
-            // the fade-back-in starts — otherwise opacity:0 → opacity:1 can get
-            // coalesced into a single paint and the fade never visibly happens.
-            requestAnimationFrame(function() {
-            svgEl.classList.remove("tc-fading");
-            });
-        }, 180); // must match the CSS transition duration above
-        }
+    
     function getMonthIndex(monthOffset){if(!currentXY.length)return 0;for(var currentIndex=getCurrentMonthIndex(),currentDate=currentXY[currentIndex].date,targetTC=new Date(currentDate.getFullYear(),currentDate.getMonth()+monthOffset,1),targetYear=targetTC.getFullYear(),targetMonth=targetTC.getMonth(),idx=currentIndex,i=0;i<currentXY.length;i++){var d=currentXY[i].date;d.getFullYear()===targetYear&&d.getMonth()===targetMonth&&(idx=i)}return idx}
     function renderChartTC(range) {
       var pts;
@@ -3286,7 +3272,7 @@ to{transform:rotate(360deg)}
       var current=xy[currentIndex],targetTC=xy[targetIndex],diff="today"===range||range.startsWith("-")?current.balance-targetTC.balance:targetTC.balance-current.balance,pct=0!==current.balance?diff/Math.abs(current.balance)*100:0,isPos=diff>=0;
       balanceVisible?(animateNumberValue("balance-val",current.balance,fmtFullTC,1e3),animateNumberValue("balance-usd",current.balance,fmtUSDTC,1e3)):(document.getElementById("balance-val").textContent="*********",document.getElementById("balance-usd").textContent=fmtUSDTC(0)),updateGoalRing(current.balance),updateCountdown();
       function animateNumberValue(elementId,targetValue,formatFn,duration){var el=document.getElementById(elementId);if(el){var durationMs=duration||500,startTime=null;requestAnimationFrame(function step(timestamp){startTime||(startTime=timestamp);var progress=Math.min((timestamp-startTime)/durationMs,1),easeOutProgress=1-Math.pow(1-progress,3),currentVal=0+(targetValue-0)*easeOutProgress;el.textContent=formatFn(currentVal),progress<1?requestAnimationFrame(step):el.textContent=formatFn(targetValue)})}}
-      
+
       var directionText={today:"over the last month","-3m":"in the last 3 months","-6m":"in the last 6 months","-1y":"in the last year","-2y":"in the last 2 years","+3m":"over the next 3 months","+6m":"over the next 6 months","+1y":"over the next year","+2y":"over the next 2 years",max:"across all future projections"}[range]||"",verb="today"===range?"You "+(isPos?"gain ":"loss "):range.startsWith("-")?isPos?"You gained ":"You lost ":"You "+(isPos?"gain ":"loss ");
       document.getElementById("sub-text").innerHTML='<span id="amt-hl" class="amt-hl '+(isPos?"pos":"neg")+'">'+fmtFullTC(Math.abs(diff))+"</span> ";
       var pill=document.getElementById("change-pill");
@@ -3851,7 +3837,7 @@ to{transform:rotate(360deg)}
         document.getElementById("balance-toggle-area").addEventListener("click",function(){balanceVisible=!balanceVisible,updateBalanceVisibility()});
         window.addEventListener("resize", function(){ if (fullSeries.length) renderChartTC(currentRangeTC); });
         window.addEventListener("load", function () { setTimeout(function () { const selector = document.getElementById("range-selector"); const btn = selector.querySelector('[data-range="-3m"]'); btn.scrollIntoView({ inline:"start",behavior:"instant"});}, 0);});
-        document.querySelectorAll(".line-toggle-btn").forEach(function(btn){btn.addEventListener("click",function(){var line=this.dataset.line;lineVisibility[line]=!lineVisibility[line],"expense"===line&&lineVisibility.expense?(lineVisibility.balance=!1,lineVisibility.debt=!1,lineVisibility.invest=!1):"invest"===line&&lineVisibility.invest?(lineVisibility.balance=!1,lineVisibility.expense=!1,lineVisibility.debt=!1):("balance"===line&&lineVisibility.balance||"debt"===line&&lineVisibility.debt)&&(lineVisibility.expense=!1,lineVisibility.invest=!1),lineVisibility.balance||lineVisibility.expense||lineVisibility.debt||lineVisibility.invest||(lineVisibility[line]=!0),document.querySelectorAll(".line-toggle-btn").forEach(function(b){var l=b.dataset.line;b.classList.toggle("active",!!lineVisibility[l])}),fullSeries.length&&animateChartSwitchTC(function(){renderChartTC(currentRangeTC)})})});
+        document.querySelectorAll(".line-toggle-btn").forEach(function(btn){btn.addEventListener("click",function(){var line=this.dataset.line;lineVisibility[line]=!lineVisibility[line],"expense"===line&&lineVisibility.expense?(lineVisibility.balance=!1,lineVisibility.debt=!1,lineVisibility.invest=!1):"invest"===line&&lineVisibility.invest?(lineVisibility.balance=!1,lineVisibility.expense=!1,lineVisibility.debt=!1):("balance"===line&&lineVisibility.balance||"debt"===line&&lineVisibility.debt)&&(lineVisibility.expense=!1,lineVisibility.invest=!1),lineVisibility.balance||lineVisibility.expense||lineVisibility.debt||lineVisibility.invest||(lineVisibility[line]=!0),document.querySelectorAll(".line-toggle-btn").forEach(function(b){var l=b.dataset.line;b.classList.toggle("active",!!lineVisibility[l])}),fullSeries.length&&renderChartTC(currentRangeTC)})});
         function animateLineReveal(pathEl,duration){if(duration=duration||700,pathEl.getAttribute("stroke-dasharray")){var targetOpacity=pathEl.getAttribute("opacity")||pathEl.style.opacity||"1";return pathEl.style.opacity="0",void requestAnimationFrame(function(){pathEl.style.transition="opacity "+duration+"ms ease-out",pathEl.style.opacity=targetOpacity})}try{var len=pathEl.getTotalLength();pathEl.style.transition="none",pathEl.setAttribute("stroke-dasharray",len),pathEl.setAttribute("stroke-dashoffset",len),pathEl.getBoundingClientRect(),pathEl.style.transition="stroke-dashoffset "+duration+"ms ease-out",pathEl.style.strokeDashoffset="0"}catch(e){}}
         function buildSharpPathTC(pts){if(!pts||!pts.length)return{line:"",area:""};for(var first=pts[0],last=pts[pts.length-1],lineCmds=["M",first.x.toFixed(2),first.y.toFixed(2)],i=1;i<pts.length;i++)lineCmds.push("L",pts[i].x.toFixed(2),pts[i].y.toFixed(2));var lineD=lineCmds.join(" "),bottomY=(VB_H-PAD_BOTTOM).toFixed(2);return{line:lineD,area:lineD+" L "+last.x.toFixed(2)+" "+bottomY+" L "+first.x.toFixed(2)+" "+bottomY+" Z"}}
         
