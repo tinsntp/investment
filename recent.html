@@ -8425,8 +8425,30 @@ function applyPortfolioFiltersAndRender() {
               amount = pnlData[dateStr],
               hasData = void 0 !== amount,
               isNegative = hasData && amount < 0,
+              
+              // Check if this iteration matches today's date
+              nowRef = new Date(),
+              isToday = year === nowRef.getFullYear() && month === nowRef.getMonth() && day === nowRef.getDate(),
+              
               cell = document.createElement("div");
-            cell.style.cssText = `aspect-ratio:1;background:${hasData?isNegative?"#2d1622":"#042f2e":"#1a1e29"};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`, cell.onmouseover = () => cell.style.background = "#222733", cell.onmouseout = () => cell.style.background = hasData ? isNegative ? "#2d1622" : "#042f2e" : "#1a1e29", cell.innerHTML = `\n                      <span style="font-size:13px;color:${hasData?isNegative?"#ec4899":"#2dd4bf":"#94a3b8"};font-weight:600;">${day}</span>\n                      <span style="font-size:11px;color:${hasData?isNegative?"#ec4899":"#2dd4bf":"#475569"};margin-top:2px;">${hasData?formatVndShort(amount):"+0.00M"}</span>\n                  `, cell.onclick = () => {
+
+            const cellBg = hasData ? (isNegative ? "#2d1622" : "#042f2e") : "#1a1e29";
+
+            cell.style.cssText = `aspect-ratio:1;background:${cellBg};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:background 0.2s;`;
+            
+            cell.onmouseover = () => cell.style.background = "#222733";
+            cell.onmouseout = () => cell.style.background = cellBg;
+
+            // Subtle glowing dot marker for today's date
+            const todayIndicator = isToday ? '<span style="position:absolute;top:6px;right:6px;width:6px;height:6px;background:#fbbf24;border-radius:50%;box-shadow:0 0 6px #fbbf24;"></span>' : '';
+
+            cell.innerHTML = `
+                      ${todayIndicator}
+                      <span style="font-size:13px;color:${isToday ? '#fbbf24' : (hasData ? (isNegative ? '#ec4899' : '#2dd4bf') : '#94a3b8')};font-weight:${isToday ? '700' : '600'};">${day}</span>
+                      <span style="font-size:11px;color:${hasData ? (isNegative ? '#ec4899' : '#2dd4bf') : '#475569'};margin-top:2px;">${hasData ? formatVndShort(amount) : '+0.00M'}</span>
+                  `;
+            
+            cell.onclick = () => {
               selectedDateStr = dateStr;
               const dateTitle = document.getElementById("pnl-input-date-title");
               if (dateTitle) dateTitle.innerText = `Add P/L for ${dateStr}`;
