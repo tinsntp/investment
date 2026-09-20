@@ -2915,6 +2915,31 @@ to{transform:rotate(360deg)}
 
         var currentIdx = getCurrentMonthIndex();
 
+        // Fill the gap between Income and Expense — green where income wins that
+        // month, pink where expense wins — drawn first so both lines sit on top.
+        if (lineVisibility.expense && currentIncomeXY.length > 1 && currentExpenseXY.length > 1) {
+          var diffPaths = buildDiffBandPaths(currentIncomeXY, currentExpenseXY);
+          var diffGroup = document.createElementNS(ns, "g");
+          diffGroup.setAttribute("mask", "url(#lineEdgeFadeMask)");
+
+          if (diffPaths.greenD) {
+            var greenFill = document.createElementNS(ns, "path");
+            greenFill.setAttribute("d", diffPaths.greenD);
+            greenFill.setAttribute("fill", "url(#diffStripeGreen)");
+            greenFill.setAttribute("stroke", "none");
+            diffGroup.appendChild(greenFill);
+          }
+          if (diffPaths.pinkD) {
+            var pinkFill = document.createElementNS(ns, "path");
+            pinkFill.setAttribute("d", diffPaths.pinkD);
+            pinkFill.setAttribute("fill", "url(#diffStripePink)");
+            pinkFill.setAttribute("stroke", "none");
+            diffGroup.appendChild(pinkFill);
+          }
+
+          svg.appendChild(diffGroup);
+        }
+
         // Income: stroke-only line (no fill), split at today like the expense line
         if (lineVisibility.expense && currentIncomeXY.length > 1) {
           var incNow = new Date(),
@@ -3038,39 +3063,18 @@ to{transform:rotate(360deg)}
           }
         }
 
-        // Expense: gradient columns punched into blocks by the cell mask
+        // Expense: segmented line + area fill (past solid, future faded), matching
+        // the same treatment already used for the balance/debt lines.
         if (lineVisibility.expense && currentExpenseXY.length > 0) {
-          var expFade = document.createElementNS(ns, "g");
-          expFade.setAttribute("mask", "url(#lineEdgeFadeMask)");
-
-          var expBlocks = document.createElementNS(ns, "g");
-          expBlocks.setAttribute("mask", "url(#blockCellMask)");
-
-          var expBaseY   = VB_H - PAD_BOTTOM,
-              expPitch   = currentExpenseXY.length > 1
-                             ? (currentExpenseXY[1].x - currentExpenseXY[0].x)
-                             : (VB_W - PAD_LEFT - PAD_RIGHT),
-              expColW    = Math.max(6, Math.min(20, expPitch * 0.7)),
-              expNowDate = new Date();
-
-          for (var ei = 0; ei < currentExpenseXY.length; ei++) {
-            var ePt = currentExpenseXY[ei];
-            if (!ePt || !(ePt.amount > 0)) continue;
-
-            var eH = Math.max(BLOCK_CELL, expBaseY - ePt.y);
-            var eRect = document.createElementNS(ns, "rect");
-            eRect.setAttribute("x", (ePt.x - expColW / 2).toFixed(1));
-            eRect.setAttribute("y", (expBaseY - eH).toFixed(1));
-            eRect.setAttribute("width", expColW.toFixed(1));
-            eRect.setAttribute("height", eH.toFixed(1));
-            eRect.setAttribute("fill", "url(#expenseColumnGrad)");
-            if (ePt.date && ePt.date > expNowDate) eRect.setAttribute("opacity", "0.35");
-            eRect.setAttribute("data-index", ei);
-            expBlocks.appendChild(eRect);
-          }
-
-          expFade.appendChild(expBlocks);
-          svg.appendChild(expFade);
+          drawSegmentedExpenseLine(
+            currentExpenseXY,
+            "#f472b6",              // mainColor
+            "#f472b6",              // futureColor
+            "url(#expenseAreaFill)",// fillUrl
+            null,                   // glowFilterId (no glow filter defined in this file — safe to omit)
+            svg, ns,
+            true                    // showLiveDot
+          );
         }
       }
       
@@ -3103,8 +3107,39 @@ to{transform:rotate(360deg)}
       
       var gradDebtShinhan=document.createElementNS(ns,"linearGradient");gradDebtShinhan.setAttribute("id","debtShinhanFill"),gradDebtShinhan.setAttribute("x1","0"),gradDebtShinhan.setAttribute("y1","0"),gradDebtShinhan.setAttribute("x2","0"),gradDebtShinhan.setAttribute("y2","1");var ds1=document.createElementNS(ns,"stop");ds1.setAttribute("offset","0%"),ds1.setAttribute("stop-color","#60a5fa"),ds1.setAttribute("stop-opacity","0.20");var ds2=document.createElementNS(ns,"stop");ds2.setAttribute("offset","100%"),ds2.setAttribute("stop-color","#60a5fa"),ds2.setAttribute("stop-opacity","0"),gradDebtShinhan.appendChild(ds1),gradDebtShinhan.appendChild(ds2),defsTC.appendChild(gradDebtShinhan);
       
-      var gradDebtSC=document.createElementNS(ns,"linearGradient");gradDebtSC.setAttribute("id","debtSCFill"),gradDebtSC.setAttribute("x1","0"),gradDebtSC.setAttribute("y1","0"),gradDebtSC.setAttribute("x2","0"),gradDebtSC.setAttribute("y2","1");var dc1=document.createElementNS(ns,"stop");dc1.setAttribute("offset","0%"),dc1.setAttribute("stop-color","#fbbf24"),dc1.setAttribute("stop-opacity","0.20");var dc2=document.createElementNS(ns,"stop");dc2.setAttribute("offset","100%"),dc2.setAttribute("stop-color","#fbbf24"),dc2.setAttribute("stop-opacity","0"),gradDebtSC.appendChild(dc1),gradDebtSC.appendChild(dc2),defsTC.appendChild(gradDebtSC);
+      var gradExpenseArea=document.createElementNS(ns,"linearGradient");gradExpenseArea.setAttribute("id","expenseAreaFill"),gradExpenseArea.setAttribute("x1","0"),gradExpenseArea.setAttribute("y1","0"),gradExpenseArea.setAttribute("x2","0"),gradExpenseArea.setAttribute("y2","1");var ea1=document.createElementNS(ns,"stop");ea1.setAttribute("offset","0%"),ea1.setAttribute("stop-color","#f472b6"),ea1.setAttribute("stop-opacity","0.22");var ea2=document.createElementNS(ns,"stop");ea2.setAttribute("offset","100%"),ea2.setAttribute("stop-color","#f472b6"),ea2.setAttribute("stop-opacity","0"),gradExpenseArea.appendChild(ea1),gradExpenseArea.appendChild(ea2),defsTC.appendChild(gradExpenseArea);
       
+            function ensureDiffStripePattern(defs, ns, id, color) {
+        if (defs.querySelector("#" + id)) return; // avoid duplicate defs if this runs more than once per render
+        var pat = document.createElementNS(ns, "pattern");
+        pat.setAttribute("id", id);
+        pat.setAttribute("patternUnits", "userSpaceOnUse");
+        pat.setAttribute("width", "14");
+        pat.setAttribute("height", "14");
+        pat.setAttribute("patternTransform", "rotate(45)");
+
+        // Faint background tint between the stripes
+        var bg = document.createElementNS(ns, "rect");
+        bg.setAttribute("x", "0"); bg.setAttribute("y", "0");
+        bg.setAttribute("width", "14"); bg.setAttribute("height", "14");
+        bg.setAttribute("fill", color);
+        bg.setAttribute("opacity", "0.08");
+        pat.appendChild(bg);
+
+        // Thick diagonal stripe — half the tile width, bold opacity
+        var stripe = document.createElementNS(ns, "rect");
+        stripe.setAttribute("x", "0"); stripe.setAttribute("y", "0");
+        stripe.setAttribute("width", "7"); stripe.setAttribute("height", "14");
+        stripe.setAttribute("fill", color);
+        stripe.setAttribute("opacity", "0.55");
+        pat.appendChild(stripe);
+
+        defs.appendChild(pat);
+      }
+
+      ensureDiffStripePattern(defsTC, ns, "diffStripeGreen", "#38bdf8");
+      ensureDiffStripePattern(defsTC, ns, "diffStripePink", "#a78bfa");
+
       var hoverLine=document.createElementNS(ns,"line");hoverLine.setAttribute("id","hover-line"),hoverLine.setAttribute("y1",PAD_TOP+(lineVisibility.debt?155:85)),hoverLine.setAttribute("y2",VB_H-PAD_BOTTOM),hoverLine.setAttribute("stroke","rgba(255,255,255,0.35)"),hoverLine.setAttribute("stroke-width","1.3"),hoverLine.setAttribute("stroke-dasharray","4 4"),svg.appendChild(hoverLine);
       var hoverDot=document.createElementNS(ns,"circle");hoverDot.setAttribute("id","hover-dot"),hoverDot.setAttribute("r","5"),hoverDot.setAttribute("fill",TEAL),hoverDot.setAttribute("stroke","#191919"),hoverDot.setAttribute("stroke-width","2"),svg.appendChild(hoverDot);
       var hoverDotExp=document.createElementNS(ns,"circle");hoverDotExp.setAttribute("id","hover-dot-expense"),hoverDotExp.setAttribute("r","5"),hoverDotExp.setAttribute("fill","#f472b6"),hoverDotExp.setAttribute("stroke","#191919"),hoverDotExp.setAttribute("stroke-width","2"),svg.appendChild(hoverDotExp);
@@ -3319,6 +3354,56 @@ to{transform:rotate(360deg)}
         svg.appendChild(line);
       }
     }
+        // Builds the filled band between two aligned point series (same x per index),
+    // split into "topPts is higher" and "botPts is higher" segments — with a clean
+    // interpolated split exactly where the two series cross mid-segment, so the
+    // color boundary lands precisely at the crossover point instead of at whichever
+    // month happens to be nearest.
+    function buildDiffBandPaths(topPts, botPts) {
+      var greenSegs = [], pinkSegs = [];
+      var n = Math.min(topPts.length, botPts.length);
+
+      function sign(v) { return v > 0 ? 1 : (v < 0 ? -1 : 0); }
+
+      function quadPath(x1, aY1, bY1, x2, aY2, bY2) {
+        return "M " + x1.toFixed(1) + " " + aY1.toFixed(1)
+             + " L " + x2.toFixed(1) + " " + aY2.toFixed(1)
+             + " L " + x2.toFixed(1) + " " + bY2.toFixed(1)
+             + " L " + x1.toFixed(1) + " " + bY1.toFixed(1)
+             + " Z ";
+      }
+
+      for (var i = 0; i < n - 1; i++) {
+        var a1 = topPts[i], b1 = botPts[i], a2 = topPts[i + 1], b2 = botPts[i + 1];
+        if (!a1 || !b1 || !a2 || !b2) continue;
+
+        var d1 = a1.amount - b1.amount, d2 = a2.amount - b2.amount;
+        var s1 = sign(d1), s2 = sign(d2);
+
+        if (s1 === s2 || s1 === 0 || s2 === 0) {
+          // No crossing within this segment — one solid quad, colored by whichever wins.
+          var seg = quadPath(a1.x, a1.y, b1.y, a2.x, a2.y, b2.y);
+          var useGreen = (s1 + s2) >= 0; // top series (income) >= bottom series (expense)
+          (useGreen ? greenSegs : pinkSegs).push(seg);
+        } else {
+          // Sign flips mid-segment — interpolate the exact crossing point on x,
+          // then split into two quads on either side of it.
+          var t = d1 / (d1 - d2);
+          var xi = a1.x + (a2.x - a1.x) * t;
+          var ayi = a1.y + (a2.y - a1.y) * t;
+          var byi = b1.y + (b2.y - b1.y) * t;
+
+          var segA = quadPath(a1.x, a1.y, b1.y, xi, ayi, byi);
+          var segB = quadPath(xi, ayi, byi, a2.x, a2.y, b2.y);
+
+          if (s1 > 0) { greenSegs.push(segA); pinkSegs.push(segB); }
+          else        { pinkSegs.push(segA);  greenSegs.push(segB); }
+        }
+      }
+
+      return { greenD: greenSegs.join(""), pinkD: pinkSegs.join("") };
+    }
+
     function drawSegmentedExpenseLine(pts, mainColor, futureColor, fillUrl, glowFilterId, svg, ns, showLiveDot) {
       if (pts && pts.length) {
         for (var now = new Date, pastPts = [], futurePts = [], i = 0; i < pts.length; i++) pts[i].date <= now ? pastPts.push(pts[i]) : (0 === futurePts.length && pastPts.length > 0 && futurePts.push(pastPts[pastPts.length - 1]), futurePts.push(pts[i]));
