@@ -7150,7 +7150,6 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
     var svg = document.getElementById('nav-donut-svg');
     if (!statList || !svg) return;
 
-    // Reset DOM content
     statList.innerHTML = "";
     svg.innerHTML = "";
     categoryHasActiveMap = categoryHasActiveMap || {};
@@ -7241,37 +7240,6 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
     var uid = "p" + Math.random().toString(36).slice(2, 8);
     var defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
     
-    // Dynamic CSS Animations for SVG segments and middle stripe patterns
-    var style = document.createElementNS("http://www.w3.org/2000/svg", "style");
-    style.textContent = `
-        @keyframes drawDonutSegment {
-            from { stroke-dashoffset: 1000; }
-            to { stroke-dashoffset: 0; }
-        }
-        @keyframes fadeInDonutText {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        @keyframes stripeMove {
-            0% { transform: rotate(-45deg) translateX(0px); }
-            100% { transform: rotate(-45deg) translateX(8px); }
-        }
-        .nav-donut-segment {
-            stroke-dasharray: 1000;
-            stroke-dashoffset: 1000;
-            animation: drawDonutSegment 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            transform-origin: 100px 100px;
-        }
-        .nav-donut-stripe-pattern {
-            animation: stripeMove 1.5s linear infinite;
-        }
-        .nav-donut-label {
-            opacity: 0;
-            animation: fadeInDonutText 0.3s ease-out forwards;
-        }
-    `;
-    defs.appendChild(style);
-
     var maxIdx = 0;
     categories.forEach(function(c, i) {
         if (c.value > categories[maxIdx].value) maxIdx = i;
@@ -7285,11 +7253,6 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
         pat.setAttribute("height", "8");
         pat.setAttribute("patternTransform", "rotate(-45 0 0)");
         pat.setAttribute("overflow", "visible");
-        
-        // Add animated stripe pattern class to middle element pattern
-        if (idx === maxIdx) {
-            pat.setAttribute("class", "nav-donut-stripe-pattern");
-        }
 
         var bg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
         bg.setAttribute("x", "-1"); bg.setAttribute("y", "-1");
@@ -7306,9 +7269,6 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
         defs.appendChild(pat);
     });
     svg.appendChild(defs);
-
-    // Force DOM recalculation for animation restart
-    void svg.offsetWidth;
 
     var arcInfoByName = {};
     categories.forEach(function(cat, i) {
@@ -7331,9 +7291,6 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
             path.setAttribute("stroke", color);
             path.setAttribute("stroke-width", "1");
             path.setAttribute('data-seg', i);
-            path.setAttribute("class", "nav-donut-segment");
-            path.style.animationDelay = (i * 0.08) + "s";
-
             svg.appendChild(path);
 
             if (pct >= 0.05) {
@@ -7346,8 +7303,6 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
                 text.setAttribute("class", "nav-donut-label");
                 text.setAttribute("font-size", "13");
                 text.textContent = "(" + Math.round(pct * 100) + "%)";
-                text.style.animationDelay = (0.4 + i * 0.05) + "s";
-
                 svg.appendChild(text);
             }
         }
