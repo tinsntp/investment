@@ -253,7 +253,7 @@ background:
 .pct-val.flat { color:rgba(255,255,255,0.3); }
 #det-msg { font-size:3vw; color:rgba(255,255,255,0.4); text-align:center; padding:5vw; }
 
-.budget-card{padding:0 5px 0 0px;touch-action: pan-y;overflow-y: auto;}
+.budget-card{padding:0 5px 0 0px;touch-action: pan-y;}
 .budget-subtabs{background: 
     linear-gradient(135deg, rgba(30, 41, 59, 0.2) 0%, rgba(15, 23, 42, 0.2) 100%),
     url('https://i.pinimg.com/736x/51/b7/0d/51b70d9cbb138f7db3b95eeba6d4753c.jpg');border-radius:13px;padding:3px;gap:4px}.budget-subtab{flex:1;font-family:Lexend;display:flex;align-items:center;justify-content:center;gap:5px;background:0 0;border:0;color:rgba(255,255,255,.5);padding:4px 10px;font-size:12px;font-weight:400;border-radius:10px;cursor:pointer;transition:all .2s ease-in-out;outline:0;}
@@ -1497,7 +1497,83 @@ to{transform:rotate(360deg)}
 }
 #port-split-right{display:none;}
 #port-split-right #budget-view-portfolio{display:block!important;}
+.watchlist-container {
+      background: var(--bg-color);
+      border-radius: 16px;
+      width: 100%;
+      padding: 0px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--border-color);
+    }
 
+    .refresh-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 16px;
+      transition: color 0.2s;
+    }
+
+    .refresh-btn:hover {
+      color: var(--text-main);
+    }
+
+    /* List Item Styles */
+    #watchlist-items-container {
+      display: flex;
+      flex-direction: column;
+    }
+
+
+    .tv-item-price {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .tv-item-changes {
+      font-size: 12px;
+      font-weight: 500;
+      display: flex;
+      gap: 6px;
+      justify-content: flex-end;
+      margin-top: 2px;
+    }
+
+    .text-teal {
+      color: var(--text-teal) !important;
+    }
+
+    .text-pink {
+      color: var(--text-pink) !important;
+    }
+
+    /* Live Market Indicator Dot */
+    .tv-live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .tv-live-dot.active {
+      background-color: var(--text-teal);
+      box-shadow: 0 0 6px var(--text-teal);
+    }
+
+    .tv-live-dot.closed {
+      background-color: #64748b;
+    }
+    .text-teal,
+.text-teal span {
+  color: #00bfa5 !important; /* Original teal green */
+}
+
+.text-pink,
+.text-pink span {
+  color: #f472b6 !important; /* Original pink red */
+}
 </style>
 </head>
 <body>
@@ -1936,9 +2012,8 @@ to{transform:rotate(360deg)}
 
     <!-- PORTFOLIO SLIDE -->
     <div class="slide" id="slide-2" data-idx="2" style="overflow-y:auto;overflow-x:hidden;">
-      <div class="budget-card" >
-        <div class="
-        budget-subtabs-v2" data-tabgroup="portfolio-btc" style="display:flex!important;align-items:center;justify-content:center;gap:8px;position:relative;width:100%;">
+      <div class="budget-card">
+        <div class="budget-subtabs-v2" data-tabgroup="portfolio-btc" style="display:flex!important;align-items:center;justify-content:center;gap:8px;position:relative;width:100%;">
           <button type="button" class="budget-subtab-v2 active" onclick="switchBudgetTab(this, 'portfolio')">
             <span class="material-icons-round" style="font-size:6px;">circle</span>
           </button>
@@ -2015,84 +2090,115 @@ to{transform:rotate(360deg)}
                   </div>
               </div>
             <!-- PORTFOLIO TABLE CARD -->
-            <div class="portfolio-card">
-                <div class="table-wrapper">
-                  <table>
-                      <colgroup>
-                          <col class="col-asset">
-                          <col class="col-duration">
-                          <col class="col-volprice">
-                          <col class="col-pnl">
-                          <col class="col-costmarket">
-                      </colgroup>
-                      <thead>
-                          <tr>
-                              <th>
-                                  <div class="th-filter-wrap" onclick="toggleColMenu(event, 'asset')">
-                                      <span>Asset</span>
-                                      <i class="bi bi-funnel-fill th-filter-icon" id="asset-filter-icon"></i>
-                                      <div class="col-menu" id="col-menu-asset">
-                                        <div class="col-menu-item" data-filter-type="asset" data-filter-value="all">
-                                            All
-                                        </div>
-                                        <div class="col-menu-item" data-filter-type="asset" data-filter-value="on-going">
-                                            On-going
-                                        </div>
-                                        <div class="col-menu-item" data-filter-type="asset" data-filter-value="close">
-                                            Close
-                                        </div>
+            <div class="budget-card">
+              <!-- Sub-Tab Switcher Header (Placed at top) -->
+              <div class="budget-subtabs" data-tabgroup="portfolio-group" style="display: flex; align-items: center; justify-content: space-between; margin: 10px;">
+                  <button type="button" class="budget-subtab active" onclick="switchBudgetTab(this, 'watchlist')">
+                    <span class="material-icons-round" style="font-size: 14px;">timelapse</span>
+                    <span>Watchlist</span>
+                  </button>
+                  <button type="button" class="budget-subtab" onclick="switchBudgetTab(this, 'tradingview')">
+                    <span class="material-icons-round" style="font-size: 14px;">history</span>
+                    <span>TradingView</span>
+                  </button>
+                  <button type="button" class="budget-subtab" onclick="switchBudgetTab(this, 'portfolio-pnl')">
+                    <span class="material-icons-round" style="font-size: 14px;">cloud</span>
+                    <span>Portfolio</span>
+                  </button>
+                </div>
+              
+              <!-- Tab 2: Trading View Widget -->
+              <div class="budget-tab-content" id="budget-view-tradingview" style="display: none;">
+
+              </div>
+              <!-- Tab 1: Watch List -->
+              <div class="budget-tab-content" id="budget-view-watchlist">
+                <div id="watchlist-items-container">
+                  <div id="rec-msg"></div>
+                </div>
+              </div>
+              <!-- Tab 3: Portfolio PNL -->
+              <div class="budget-tab-content" id="budget-view-portfolio-pnl" style="display: none;">
+                <div class="portfolio-card">
+                  <div class="table-wrapper">
+                    <table>
+                        <colgroup>
+                            <col class="col-asset">
+                            <col class="col-duration">
+                            <col class="col-volprice">
+                            <col class="col-pnl">
+                            <col class="col-costmarket">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>
+                                    <div class="th-filter-wrap" onclick="toggleColMenu(event, 'asset')">
+                                        <span>Asset</span>
+                                        <i class="bi bi-funnel-fill th-filter-icon" id="asset-filter-icon"></i>
+                                        <div class="col-menu" id="col-menu-asset">
+                                          <div class="col-menu-item" data-filter-type="asset" data-filter-value="all">
+                                              All
+                                          </div>
+                                          <div class="col-menu-item" data-filter-type="asset" data-filter-value="on-going">
+                                              On-going
+                                          </div>
+                                          <div class="col-menu-item" data-filter-type="asset" data-filter-value="close">
+                                              Close
+                                          </div>
+                                      </div>
                                     </div>
-                                  </div>
-                              </th>
-                              <th>
-                                <div class="th-filter-wrap" onclick="toggleColMenu(event, 'date')">
-                                    <span>Date</span>
-                                    <i class="bi bi-funnel-fill th-filter-icon" id="date-filter-icon"></i>
-                                    <div class="col-menu col-menu-date-range" id="col-menu-date">
-                                        <div class="cal-header">
-                                            <button type="button" class="cal-nav-btn" onclick="calNavigate(event, -1)"><i class="bi bi-chevron-left"></i></button>
-                                            <div class="cal-month-label" id="cal-month-label">—</div>
-                                            <button type="button" class="cal-nav-btn" onclick="calNavigate(event, 1)"><i class="bi bi-chevron-right"></i></button>
-                                        </div>
-                                        <div class="cal-range-display" id="cal-range-display">Select a date range</div>
-                                        <div class="cal-weekdays">
-                                            <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
-                                        </div>
-                                        <div class="cal-grid" id="cal-grid"></div>
-                                        <div class="col-menu-divider"></div>
-                                        <div class="cal-quick-row">
-                                            <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,7)">7d</button>
-                                            <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,30)">30d</button>
-                                            <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,90)">3m</button>
-                                            <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,365)">1y</button>
-                                        </div>
-                                        <div class="date-range-actions">
-                                            <button type="button" class="date-range-btn date-range-clear" onclick="clearDateFilter(event)">Clear</button>
-                                            <button type="button" class="date-range-btn date-range-apply" onclick="applyDateFilter(event)">Apply</button>
-                                        </div>
-                                    </div>
-                                </div>
-                              </th>
-                              <th>Vol/Price</th>
-                              <th>
-                                  <div class="th-filter-wrap" onclick="toggleColMenu(event, 'pnl')">
-                                      <span>PnL</span>
-                                      <i class="bi bi-funnel-fill th-filter-icon" id="pnl-filter-icon"></i>
-                                      <div class="col-menu" id="col-menu-pnl">
-                                          <div class="col-menu-item" data-filter-type="pnl" data-filter-value="all">All</div>
-                                          <div class="col-menu-item" data-filter-type="pnl" data-filter-value="profited">Profited</div>
-                                          <div class="col-menu-item" data-filter-type="pnl" data-filter-value="lost">Lost</div>
+                                </th>
+                                <th>
+                                  <div class="th-filter-wrap" onclick="toggleColMenu(event, 'date')">
+                                      <span>Date</span>
+                                      <i class="bi bi-funnel-fill th-filter-icon" id="date-filter-icon"></i>
+                                      <div class="col-menu col-menu-date-range" id="col-menu-date">
+                                          <div class="cal-header">
+                                              <button type="button" class="cal-nav-btn" onclick="calNavigate(event, -1)"><i class="bi bi-chevron-left"></i></button>
+                                              <div class="cal-month-label" id="cal-month-label">—</div>
+                                              <button type="button" class="cal-nav-btn" onclick="calNavigate(event, 1)"><i class="bi bi-chevron-right"></i></button>
+                                          </div>
+                                          <div class="cal-range-display" id="cal-range-display">Select a date range</div>
+                                          <div class="cal-weekdays">
+                                              <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                                          </div>
+                                          <div class="cal-grid" id="cal-grid"></div>
+                                          <div class="col-menu-divider"></div>
+                                          <div class="cal-quick-row">
+                                              <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,7)">7d</button>
+                                              <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,30)">30d</button>
+                                              <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,90)">3m</button>
+                                              <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,365)">1y</button>
+                                          </div>
+                                          <div class="date-range-actions">
+                                              <button type="button" class="date-range-btn date-range-clear" onclick="clearDateFilter(event)">Clear</button>
+                                              <button type="button" class="date-range-btn date-range-apply" onclick="applyDateFilter(event)">Apply</button>
+                                          </div>
                                       </div>
                                   </div>
-                              </th>
-                              <th>Val/Price</th>
-                          </tr>
-                      </thead>
-                      <tbody id="portfolio-tbody">
-                          <!-- Dynamic Insertion -->
-                      </tbody>
-                  </table>
+                                </th>
+                                <th>Vol/Price</th>
+                                <th>
+                                    <div class="th-filter-wrap" onclick="toggleColMenu(event, 'pnl')">
+                                        <span>PnL</span>
+                                        <i class="bi bi-funnel-fill th-filter-icon" id="pnl-filter-icon"></i>
+                                        <div class="col-menu" id="col-menu-pnl">
+                                            <div class="col-menu-item" data-filter-type="pnl" data-filter-value="all">All</div>
+                                            <div class="col-menu-item" data-filter-type="pnl" data-filter-value="profited">Profited</div>
+                                            <div class="col-menu-item" data-filter-type="pnl" data-filter-value="lost">Lost</div>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th>Val/Price</th>
+                            </tr>
+                        </thead>
+                        <tbody id="portfolio-tbody">
+                            <!-- Dynamic Insertion -->
+                        </tbody>
+                    </table>
+                  </div>
                 </div>
+              </div>
               </div>
             </div>
           </div>
@@ -2283,7 +2389,7 @@ to{transform:rotate(360deg)}
           <button type="button" onclick="closeWatchlistModal()" class="tv-close-btn">&times;</button>
       </div>
       <div class="tv-modal-body" id="watchlist-items-container">
-          <div style="text-align:center; color: #94a3b8; padding: 20px;">Loading watchlist...</div>
+          <div style="text-align:center; color: #94a3b8; padding: 20px;"></div>
       </div>
   </div>
 </div>
@@ -6684,7 +6790,10 @@ to{transform:rotate(360deg)}
     function fetchVnIndexData(isUserRefresh){var now=new Date,vnTime=new Date(now.toLocaleString("en-US",{timeZone:"Asia/Ho_Chi_Minh"})),day=vnTime.getDay(),totalMins=60*vnTime.getHours()+vnTime.getMinutes();if(day>=1&&day<=5&&totalMins>=555&&totalMins<=900){var reloadBtn=document.getElementById("vnindex-reload-btn");reloadBtn&&reloadBtn.classList.add("spinning"),fetch(EXPENSE_APPS_SCRIPT_URL+"?action=vnindex&t="+Date.now(),{cache:"no-store"}).then(function(response){if(!response.ok)throw new Error("HTTP "+response.status);return response.json()}).then(function(result){if("success"!==result.status)throw new Error(result.message||"Failed");var vnindexVal=Number(result.data.close)||0,changeVal=Number(result.data.change)||0,pctChangeVal=Number(result.data.pctChange)||0,isPositive=changeVal>0,isZero=0===changeVal;document.getElementById("vnindex-bal").textContent=vnindexVal.toLocaleString("en-US");var changeSign=isZero?"":isPositive?"+":"",valEl=document.getElementById("vnindex-val");valEl.textContent=changeSign+changeVal.toLocaleString("en-US"),valEl.className=isZero||isPositive?"text-teal":"text-pink";var badgeEl=document.getElementById("vnindex-badge"),pctSign=isZero?"":isPositive?"+":"";badgeEl.textContent=pctSign+pctChangeVal.toFixed(2)+"%",badgeEl.className="badge-pill "+(isZero||isPositive?"badge-teal":"badge-pink")}).catch(function(err){console.warn("VNINDEX realtime failed, falling back to CSV:",err.message),fetchVnIndexData2()}).finally(function(){reloadBtn&&reloadBtn.classList.remove("spinning")})}else fetchVnIndexData2()}
     document.addEventListener("DOMContentLoaded", function(){ fetchVnIndexData(true); });
     function fetchVnIndexData2(){var csvUrl="https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=523826078&t="+Date.now();fetch(csvUrl,{cache:"no-store"}).then(function(response){if(!response.ok)throw new Error("HTTP "+response.status);return response.text()}).then(function(text){var targetLine=text.split(/\r?\n/)[12];if(targetLine){var cols=parseCsvRow(targetLine),vnindexRaw=cols[10]||"",changeRaw=cols[11]||"",pctChangeRaw=cols[12]||"",vnindexVal=cleanNum(vnindexRaw),changeVal=cleanNum(changeRaw),pctChangeVal=cleanNum(pctChangeRaw),isPositive=changeVal>0,isZero=0===changeVal;document.getElementById("vnindex-bal").textContent=vnindexVal.toLocaleString("en-US");var changeSign=isZero?"":isPositive?"+":"",valEl=document.getElementById("vnindex-val");valEl.textContent=changeSign+changeVal.toLocaleString("en-US"),valEl.className=isZero||isPositive?"text-teal":"text-pink";var badgeEl=document.getElementById("vnindex-badge"),pctSign=isZero?"":isPositive?"+":"";badgeEl.textContent=pctSign+pctChangeVal.toFixed(2)+"%",badgeEl.className="badge-pill "+(isZero||isPositive?"badge-teal":"badge-pink")}function cleanNum(val){if(!val)return 0;var c=val.toString().replace(/[\$,%\s]/g,"");c.startsWith("(")&&c.endsWith(")")&&(c="-"+c.slice(1,-1));var n=parseFloat(c);return isNaN(n)?0:n}}).catch(function(err){console.error("VNINDEX fetch error:",err)})}
-    function updateMarketStatusDot(){const now=new Date,utc=now.getTime()+6e4*now.getTimezoneOffset(),vnTime=new Date(utc+252e5),day=vnTime.getDay(),currentTimeMinutes=60*vnTime.getHours()+vnTime.getMinutes(),isMarketHours=day>=1&&day<=5&&currentTimeMinutes>=540&&currentTimeMinutes<=900,dot=document.getElementById("market-live-dot");dot&&(isMarketHours?(dot.style.backgroundColor="#2dd4bf",dot.style.boxShadow="0 0 6px #2dd4bf",dot.title="Market is Open"):(dot.style.backgroundColor="#64748b",dot.style.boxShadow="none",dot.title="Market is Closed"))}function openWatchlistModal(){var modal=document.getElementById("watchlist-modal");modal?(modal.style.setProperty("display","flex","important"),fetchWatchlistData()):console.error("Error: #watchlist-modal element not found in DOM!")}function closeWatchlistModal(){var modal=document.getElementById("watchlist-modal");modal&&modal.style.setProperty("display","none","important")}function fetchWatchlistData(){var csvUrl="https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=523826078&t="+Date.now(),container=document.getElementById("watchlist-items-container");container&&(container.innerHTML='<div id="loading-msg" style="text-align:center; color: #94a3b8; padding: 20px;"></div>');var now=new Date,day=now.getDay(),currentTimeVal=100*now.getHours()+now.getMinutes(),isMarketOpen=day>=1&&day<=5&&currentTimeVal>=900&&currentTimeVal<=1500,liveIndicatorHtml=`<span class="${isMarketOpen?"tv-live-dot active":"tv-live-dot closed"}" title="${isMarketOpen?"Market Live":"Market Closed"}"></span>`;fetch(csvUrl,{cache:"no-store"}).then(function(response){if(!response.ok)throw new Error("HTTP "+response.status);return response.text()}).then(function(text){var lines=text.split(/\r?\n/);if(container){container.innerHTML="";for(var html="",i=0;i<lines.length;i++){var line=lines[i].trim();if(line){var cols="function"==typeof parseCsvRow?parseCsvRow(line):line.split(","),symbol=(cols[15]||"").replace(/["']/g,"").trim(),priceRaw=(cols[16]||"").replace(/["']/g,"").trim(),changeRaw=(cols[17]||"").replace(/["']/g,"").trim(),pctRaw=(cols[18]||"").replace(/["']/g,"").trim(),desc=(cols[19]||"").replace(/["']/g,"").trim(),iconUrl=(cols[20]||"").replace(/["']/g,"").trim();if(symbol&&priceRaw){var rawPriceNum="function"==typeof cleanNum?cleanNum(priceRaw):parseFloat(priceRaw)||0,rawChangeNum="function"==typeof cleanNum?cleanNum(changeRaw):parseFloat(changeRaw)||0,pctVal="function"==typeof cleanNum?cleanNum(pctRaw):parseFloat(pctRaw)||0,priceVal=1e3*rawPriceNum,changeVal=1e3*rawChangeNum,isPositive=changeVal>0,isZero=0===changeVal,colorClass=isZero||isPositive?"text-teal":"text-pink",changeSign=isZero?"":isPositive?"+":"-",formattedPrice=Math.round(priceVal).toLocaleString("en-US"),formattedChange=Math.round(Math.abs(changeVal)).toLocaleString("en-US");html+=`\n                    <div class="tv-item-row" style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">\n                        <div class="tv-item-left" style="display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1;">\n                            <img class="tv-item-icon" src="${iconUrl}" onerror="this.src='https://via.placeholder.com/32'" style="flex-shrink: 0;" />\n                            <div class="tv-item-symbol-wrap" style="min-width: 0; flex: 1;">\n                                <div class="tv-symbol-title" style="display: flex; align-items: center; gap: 6px; white-space: nowrap;">\n                                    ${symbol} \n                                    ${liveIndicatorHtml}\n                                </div>\n                                <div class="tv-symbol-desc" title="${desc}" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${desc}</div>\n                            </div>\n                        </div>\n                        <div class="tv-item-right" style="display: flex; flex-direction: column; align-items: flex-end; text-align: right; flex-shrink: 0; white-space: nowrap;">\n                            <div class="tv-item-price">${formattedPrice}</div>\n                            <div class="tv-item-changes ${colorClass}" style="display: flex; gap: 6px; justify-content: flex-end;">\n                                <span>${changeSign}${formattedChange}</span>\n                                <span>${changeSign}${Math.abs(pctVal).toFixed(2)}%</span>\n                            </div>\n                        </div>\n                    </div>\n                `}}}container.innerHTML=html||'<div style="text-align:center; color: #94a3b8; padding: 20px;">No watchlist items found.</div>'}}).catch(function(err){console.error("Watchlist fetch error:",err),container&&(container.innerHTML='<div style="text-align:center; color: #f43f5e; padding: 20px;">Failed to load watchlist. Check console.</div>')})}
+    function updateMarketStatusDot(){const now=new Date,utc=now.getTime()+6e4*now.getTimezoneOffset(),vnTime=new Date(utc+252e5),day=vnTime.getDay(),currentTimeMinutes=60*vnTime.getHours()+vnTime.getMinutes(),isMarketHours=day>=1&&day<=5&&currentTimeMinutes>=540&&currentTimeMinutes<=900,dot=document.getElementById("market-live-dot");dot&&(isMarketHours?(dot.style.backgroundColor="#2dd4bf",dot.style.boxShadow="0 0 6px #2dd4bf",dot.title="Market is Open"):(dot.style.backgroundColor="#64748b",dot.style.boxShadow="none",dot.title="Market is Closed"))}
+    function parseCsvRow(rowStr){for(var cols=[],current="",inQuotes=!1,i=0;i<rowStr.length;i++){var char=rowStr[i];'"'===char||"'"===char?inQuotes=!inQuotes:","!==char||inQuotes?current+=char:(cols.push(current),current="")}return cols.push(current),cols}function cleanNum(val){if(!val)return 0;var cleaned=String(val).replace(/[^0-9.-]/g,"");return parseFloat(cleaned)||0}function fetchWatchlistData(){var csvUrl="https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=523826078&t="+Date.now(),container=document.getElementById("watchlist-items-container");container&&(container.innerHTML='<div id="loading-msg" style="text-align:center; color: #94a3b8; padding: 20px;"></div>');var now=new Date,day=now.getDay(),currentTimeVal=100*now.getHours()+now.getMinutes(),isMarketOpen=day>=1&&day<=5&&currentTimeVal>=900&&currentTimeVal<=1500,liveIndicatorHtml=`<span class="${isMarketOpen?"tv-live-dot active":"tv-live-dot closed"}" title="${isMarketOpen?"Market Live":"Market Closed"}"></span>`;fetch(csvUrl,{cache:"no-store"}).then(function(response){if(!response.ok)throw new Error("HTTP "+response.status);return response.text()}).then(function(text){var lines=text.split(/\r?\n/);if(container){container.innerHTML="";for(var html="",i=0;i<lines.length;i++){var line=lines[i].trim();if(line){var cols=parseCsvRow(line),symbol=(cols[15]||"").replace(/["']/g,"").trim(),priceRaw=(cols[16]||"").replace(/["']/g,"").trim(),changeRaw=(cols[17]||"").replace(/["']/g,"").trim(),pctRaw=(cols[18]||"").replace(/["']/g,"").trim(),desc=(cols[19]||"").replace(/["']/g,"").trim(),iconUrl=(cols[20]||"").replace(/["']/g,"").trim();if(symbol&&priceRaw){var rawPriceNum=cleanNum(priceRaw),rawChangeNum=cleanNum(changeRaw),pctVal=cleanNum(pctRaw),priceVal=1e3*rawPriceNum,changeVal=1e3*rawChangeNum,isPositive=changeVal>0,isZero=0===changeVal,colorClass=isZero||isPositive?"text-teal":"text-pink",changeSign=isZero?"":isPositive?"+":"-",formattedPrice=Math.round(priceVal).toLocaleString("en-US"),formattedChange=Math.round(Math.abs(changeVal)).toLocaleString("en-US");html+=`\n                    <div class="tv-item-row">\n                      <div class="tv-item-left">\n                        <img class="tv-item-icon" src="${iconUrl}" onerror="this.src='https://via.placeholder.com/32'" />\n                        <div class="tv-item-symbol-wrap">\n                          <div class="tv-symbol-title">\n                            ${symbol} \n                            ${liveIndicatorHtml}\n                          </div>\n                          <div class="tv-symbol-desc" title="${desc}">${desc}</div>\n                        </div>\n                      </div>\n                      <div class="tv-item-right">\n                        <div class="tv-item-price">${formattedPrice}</div>\n                        <div class="tv-item-changes ${colorClass}">\n                          <span class="${colorClass}">${changeSign}${formattedChange}</span>\n                          <span class="${colorClass}">${changeSign}${Math.abs(pctVal).toFixed(2)}%</span>\n                        </div>\n                      </div>\n                    </div>\n                  `}}}container.innerHTML=html||'<div style="text-align:center; color: #94a3b8; padding: 20px;">No watchlist items found.</div>'}}).catch(function(err){console.error("Watchlist fetch error:",err),container&&(container.innerHTML='<div style="text-align:center; color: #f43f5e; padding: 20px;">Failed to load watchlist. Check console.</div>')})}
+    document.addEventListener("DOMContentLoaded", fetchWatchlistData);
+    
     var navSelectedCatIdx = null;function navUpdateHighlight(){var svg=document.getElementById("nav-donut-svg"),statList=document.getElementById("nav-stat-list");svg&&statList&&(svg.querySelectorAll("path[data-seg]").forEach(function(p){var idx=parseInt(p.getAttribute("data-seg"));p.style.opacity=null===navSelectedCatIdx||navSelectedCatIdx===idx?"1":"0.2"}),statList.querySelectorAll(".nav-stat-item").forEach(function(el){var idx=parseInt(el.getAttribute("data-seg"));el.style.opacity=null===navSelectedCatIdx||navSelectedCatIdx===idx?"1":"0.35"}))}
     function cleanNum(val){if(!val)return 0;let c=val.toString().replace(/[\$,%\s]/g,"");c.startsWith("(")&&c.endsWith(")")&&(c="-"+c.slice(1,-1));const n=parseFloat(c);return isNaN(n)?0:n}function formatShortNumber(val){if(null==val||isNaN(val))return"-";if(0===val)return"0";const absNum=Math.abs(val),sign=val<0?"-":"",decimals=window.innerWidth>400?3:1;let formatted="";return formatted=absNum>=1e9?(absNum/1e9).toFixed(decimals)+"B":absNum>=1e6?(absNum/1e6).toFixed(decimals)+"M":absNum>=1e3?(absNum/1e3).toFixed(decimals)+"K":absNum.toLocaleString(void 0,{minimumFractionDigits:0,maximumFractionDigits:decimals}),`${sign}${formatted}`}function formatStockPrice(price){if(!price||isNaN(price))return"0.0";let formatted=(price>1e3?price/1e3:price).toFixed(2);return(formatted.endsWith("0")&&!formatted.endsWith(".00")||formatted.endsWith(".00"))&&(formatted=formatted.slice(0,-1)),formatted}function formatCryptoPrice(price){return!price||isNaN(price)?"0.000":price.toLocaleString(void 0,{minimumFractionDigits:0,maximumFractionDigits:0})}function formatPnlValue(num){if(0===num||null==num)return"-";return(num>0?"+":"")+formatShortNumber(num)}function formatPnlPct(pctVal){if(0===pctVal||null==pctVal||isNaN(pctVal))return"-";return`${pctVal>0?"+":""}${pctVal.toFixed(2)}%`}function parseDate(dateStr){if(!dateStr)return null;if(dateStr.includes("-")){const parts=dateStr.split("-");return new Date(parseInt(parts[0],10),parseInt(parts[1],10)-1,parseInt(parts[2],10))}if(dateStr.includes("/")){const parts=dateStr.split("/");return new Date(parseInt(parts[2],10),parseInt(parts[1],10)-1,parseInt(parts[0],10))}return new Date(dateStr)}function formatNoYearDate(dateObj){if(!dateObj)return"-";return`${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][dateObj.getMonth()]} ${String(dateObj.getDate()).padStart(2,"0")}`}
     function formatDateRangeTwoLinesNoYear(startDateStr,exitDateStr,isSaving=!1,volumeMonths=0){const sDate=parseDate(startDateStr);let eDate=null;isSaving&&volumeMonths>0&&sDate?(eDate=new Date(sDate),eDate.setMonth(eDate.getMonth()+parseInt(volumeMonths,10))):exitDateStr&&""!==exitDateStr.trim()&&(eDate=parseDate(exitDateStr));return`<div class="val-primary">${sDate?formatNoYearDate(sDate):"-"}</div><div class="val-secondary">${eDate?formatNoYearDate(eDate):"Present"}</div>`}
@@ -8978,12 +9087,7 @@ function applyPortfolioFiltersAndRender() {
     document.addEventListener("DOMContentLoaded", function(){ if (typeof fetchForexNavBalance === "function") fetchForexNavBalance(); });
 
     !function(){function applyAllSplitLayouts(){(function(){var bigWrap=document.querySelector(".big-wrap"),rightSlot=document.getElementById("exp-split-right"),ringsWrap=document.getElementById("rings-wrap"),spendingView=document.getElementById("budget-view-subcategory"),budgetCard=document.querySelector(".budget-card"),slideZero=document.getElementById("slide-0");if(bigWrap&&rightSlot&&spendingView&&slideZero){var tabBtn,shouldSplit=(tabBtn=document.getElementById("tab-btn-0"),window.innerWidth>400&&!!tabBtn&&tabBtn.classList.contains("active")),isSplit=bigWrap.classList.contains("expense-split");if(shouldSplit&&!isSplit){bigWrap.classList.add("expense-split"),ringsWrap&&rightSlot.appendChild(ringsWrap),rightSlot.appendChild(spendingView);var recentBtn=budgetCard&&budgetCard.querySelector(".budget-subtabs .budget-subtab:first-child");if(recentBtn&&recentBtn.classList.contains("active")){var detailBtn=budgetCard.querySelector(".budget-subtabs .budget-subtab:nth-child(1)");detailBtn&&detailBtn.click()}}else!shouldSplit&&isSplit&&(bigWrap.classList.remove("expense-split"),slideZero&&ringsWrap&&slideZero.insertBefore(ringsWrap,slideZero.firstChild),spendingView&&budgetCard&&budgetCard.appendChild(spendingView))}})(),function(){var bigWrap=document.querySelector(".big-wrap"),rightSlot=document.getElementById("ovw-split-right"),walletView=document.getElementById("budget-view-wallet"),budgetCard=document.querySelector("#ca-wrap .budget-card");if(bigWrap&&rightSlot&&walletView&&budgetCard){var tabBtn,shouldSplit=(tabBtn=document.getElementById("tab-btn-1"),window.innerWidth>400&&!!tabBtn&&tabBtn.classList.contains("active")),isSplit=bigWrap.classList.contains("wallet-split");if(shouldSplit&&!isSplit){bigWrap.classList.add("wallet-split"),rightSlot.appendChild(walletView);var walletBtn=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:first-child');if(walletBtn&&walletBtn.classList.contains("active")){var fireBtn=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:last-child');fireBtn&&fireBtn.click()}}else if(!shouldSplit&&isSplit){bigWrap.classList.remove("wallet-split"),budgetCard.insertBefore(walletView,budgetCard.querySelector("#budget-view-fire")||null);var fireBtnBack=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:last-child');if(fireBtnBack&&fireBtnBack.classList.contains("active")){var walletBtnBack=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:first-child');walletBtnBack&&walletBtnBack.click()}}}}(),function(){var bigWrap=document.querySelector(".big-wrap"),rightSlot=document.getElementById("port-split-right"),portfolioView=document.getElementById("budget-view-portfolio"),budgetCard=document.querySelector("#slide-2 .budget-card");if(bigWrap&&rightSlot&&portfolioView&&budgetCard){var tabBtn,shouldSplit=(tabBtn=document.getElementById("tab-btn-2"),window.innerWidth>400&&!!tabBtn&&tabBtn.classList.contains("active")),isSplit=bigWrap.classList.contains("portfolio-split");if(shouldSplit&&!isSplit){bigWrap.classList.add("portfolio-split"),rightSlot.appendChild(portfolioView);var portfolioBtn=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:first-child');if(portfolioBtn&&portfolioBtn.classList.contains("active")){var btcBtn=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:last-child');btcBtn&&btcBtn.click()}}else if(!shouldSplit&&isSplit){bigWrap.classList.remove("portfolio-split");var btcView=document.getElementById("budget-view-btc");btcView&&btcView.parentNode===budgetCard?budgetCard.insertBefore(portfolioView,btcView):budgetCard.appendChild(portfolioView);var btcBtnBack=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:last-child');if(btcBtnBack&&btcBtnBack.classList.contains("active")){var portfolioBtnBack=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:first-child');portfolioBtnBack&&portfolioBtnBack.click()}}}}()}var applyTimer,resizeTimer,tabBarObserverTarget=document.getElementById("tab-bar")||document.getElementById("tab-btn-group")||document.body;new MutationObserver(function(){clearTimeout(applyTimer),applyTimer=setTimeout(applyAllSplitLayouts,0)}).observe(tabBarObserverTarget,{attributes:!0,attributeFilter:["class"],subtree:!0}),window.addEventListener("resize",function(){clearTimeout(resizeTimer),resizeTimer=setTimeout(applyAllSplitLayouts,100)}),document.addEventListener("DOMContentLoaded",applyAllSplitLayouts),applyAllSplitLayouts()}();
-    function switchBudgetTab(e,t){var a=e.closest(".budget-card")||document,group=e.closest("[data-tabgroup]"),groupKey=group?group.getAttribute("data-tabgroup"):null;a.querySelectorAll(".budget-subtab, .budget-subtab-v2, .tab-btn:not(#tab-btn-x)").forEach(function(el){el.classList.remove("active")}),e.classList.add("active"),a.querySelectorAll(".budget-tab-content").forEach(function(el){el.style.display="none"});var c=a.querySelector("#budget-view-"+t);c&&(c.style.display="block"),groupKey?localStorage.setItem("active_budget_subtab_"+groupKey,t):localStorage.setItem("active_budget_subtab",t),e.id&&localStorage.setItem("active_regular_tab_id",e.id);var card=document.getElementById("card"),chartBtn=document.getElementById("tab-btn-x");card&&chartBtn&&("none"!==card.style.display&&"none"!==getComputedStyle(card).display&&"0px"!==card.style.maxHeight?chartBtn.classList.add("active"):chartBtn.classList.remove("active")),"subcategory"===t&&"function"==typeof renderSubcategoryBreakdown&&renderSubcategoryBreakdown()}
-    document.addEventListener("DOMContentLoaded",function(){var savedSubtabV1=localStorage.getItem("active_budget_subtab")||"spending",targetBtnV1=document.querySelector(`.budget-subtab[onclick*="'${savedSubtabV1}'"]`);if(targetBtnV1)switchBudgetTab(targetBtnV1,savedSubtabV1);else{var defaultBtn=document.querySelector(".budget-subtab");defaultBtn&&switchBudgetTab(defaultBtn,"spending")}var groupEl=document.querySelector('[data-tabgroup="wallet-fire"]');if(groupEl){var savedSubtabV2=localStorage.getItem("active_budget_subtab_wallet-fire")||"wallet",targetBtnV2=groupEl.querySelector(`.budget-subtab-v2[onclick*="'${savedSubtabV2}'"]`);targetBtnV2&&switchBudgetTab(targetBtnV2,savedSubtabV2)}var groupEl3=document.querySelector('[data-tabgroup="portfolio-btc"]');if(groupEl3){var savedSubtabV4=localStorage.getItem("active_budget_subtab_portfolio-btc")||"portfolio",targetBtnV4=groupEl3.querySelector(`.budget-subtab-v2[onclick*="'${savedSubtabV4}'"]`);targetBtnV4&&switchBudgetTab(targetBtnV4,savedSubtabV4)}var chartBtn=document.getElementById("tab-btn-x"),card=document.getElementById("card");chartBtn&&card&&(card.style.overflow="hidden",card.style.transition="max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease-in-out, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)","shown"===(localStorage.getItem("tab-btn-x-card-state")||"shown")?(chartBtn.classList.add("active"),card.style.display="block",card.style.maxHeight="1000px",card.style.opacity="1",card.style.transform="translateY(0)"):(chartBtn.classList.remove("active"),card.style.display="none",card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)"),chartBtn.addEventListener("click",function(e){e.stopPropagation(),"none"===card.style.display||"none"===getComputedStyle(card).display||"0px"===card.style.maxHeight?(card.style.display="block",card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)",card.offsetHeight,card.style.maxHeight="1000px",card.style.opacity="1",card.style.transform="translateY(0)",this.classList.add("active"),localStorage.setItem("tab-btn-x-card-state","shown")):(card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)",this.classList.remove("active"),setTimeout(function(){"0px"===card.style.maxHeight&&(card.style.display="none")},400),localStorage.setItem("tab-btn-x-card-state","hidden"));var savedId=localStorage.getItem("active_regular_tab_id"),activeBtn=(savedId?document.getElementById(savedId):null)||targetBtnV1||document.querySelector(".budget-subtab, .budget-subtab-v2, .tab-btn:not(#tab-btn-x)");activeBtn&&activeBtn.classList.add("active"),"block"===card.style.display&&"function"==typeof loadBalanceHistoryTC&&loadBalanceHistoryTC()})),document.querySelectorAll(".tab-btn").forEach(function(btn){btn.addEventListener("click",function(){"tab-btn-x"!==this.id&&(document.querySelectorAll(".tab-btn:not(#tab-btn-x)").forEach(function(otherBtn){otherBtn.classList.remove("active")}),this.classList.add("active"),this.id&&localStorage.setItem("active_regular_tab_id",this.id),card&&chartBtn&&("none"!==card.style.display&&"none"!==getComputedStyle(card).display&&"0px"!==card.style.maxHeight?chartBtn.classList.add("active"):chartBtn.classList.remove("active")))})})});
-    !function(){var tabOrdersByGroup={"wallet-fire":["wallet","fire"],"portfolio-btc":["portfolio","btc"]},startX=0,startY=0,isSwiping=!1,mouseDown=!1,activeCard=null,activeGroup=null;function goToTab(card,tabName){var btn=card.querySelector(".budget-subtab-v2[onclick*=\"'"+tabName+"'\"]");btn&&switchBudgetTab(btn,tabName)}
-    function handleSwipeEnd(card,groupEl,dx){var groupKey=groupEl.getAttribute("data-tabgroup"),tabOrder=tabOrdersByGroup[groupKey];if(tabOrder){var currentTab=function(card){var activeBtn=card.querySelector(".budget-subtab-v2.active");if(!activeBtn)return null;var match=activeBtn.getAttribute("onclick").match(/'([^']+)'/);return match?match[1]:null}(groupEl)||tabOrder[0],currentIndex=tabOrder.indexOf(currentTab),len=tabOrder.length;currentIndex<0||(dx<-50?goToTab(card,tabOrder[(currentIndex+1)%len]):dx>50&&goToTab(card,tabOrder[(currentIndex-1+len)%len]))}}function findTabGroupEl(card){return card.querySelector("[data-tabgroup]")}document.addEventListener("touchstart",function(e){var card=e.target.closest(".budget-card");if(card){var groupEl=findTabGroupEl(card);groupEl&&(activeCard=card,activeGroup=groupEl,startX=e.touches[0].clientX,startY=e.touches[0].clientY,isSwiping=!0)}},{passive:!0}),document.addEventListener("touchmove",function(e){if(isSwiping&&activeCard){var dx=e.touches[0].clientX-startX,dy=e.touches[0].clientY-startY;Math.abs(dy)>Math.abs(dx)&&(isSwiping=!1)}},{passive:!0}),document.addEventListener("touchend",function(e){if(isSwiping&&activeCard&&activeGroup){var dx=e.changedTouches[0].clientX-startX;handleSwipeEnd(activeCard,activeGroup,dx),isSwiping=!1,activeCard=null,activeGroup=null}}),document.addEventListener("mousedown",function(e){var card=e.target.closest(".budget-card");if(card){var groupEl=findTabGroupEl(card);groupEl&&(activeCard=card,activeGroup=groupEl,startX=e.clientX,startY=e.clientY,mouseDown=!0,isSwiping=!0)}}),document.addEventListener("mousemove",function(e){if(mouseDown&&isSwiping&&activeCard){var dx=e.clientX-startX,dy=e.clientY-startY;Math.abs(dy)>Math.abs(dx)&&(isSwiping=!1)}}),document.addEventListener("mouseup",function(e){if(mouseDown){if(isSwiping&&activeCard&&activeGroup){var dx=e.clientX-startX;handleSwipeEnd(activeCard,activeGroup,dx)}mouseDown=!1,isSwiping=!1,activeCard=null,activeGroup=null}})}();
-    function restoreBudgetSubtab(groupKey,defaultTab){var groupEl=document.querySelector('[data-tabgroup="'+groupKey+'"]');if(groupEl){var storageKey="active_budget_subtab_"+groupKey,savedSubtab=localStorage.getItem(storageKey)||defaultTab,targetBtn=groupEl.querySelector(".budget-subtab-v2[onclick*=\"'"+savedSubtab+"'\"]");targetBtn&&switchBudgetTab(targetBtn,savedSubtab)}}
-    
+    function switchBudgetTab(e,t){var a=e.closest(".budget-card")||e.closest(".slide")||document,group=e.closest("[data-tabgroup]"),groupKey=group?group.getAttribute("data-tabgroup"):null;a.querySelectorAll(".budget-subtab, .budget-subtab-v2, .tab-btn:not(#tab-btn-x)").forEach(function(el){el.classList.remove("active")}),e.classList.add("active"),a.querySelectorAll(".budget-tab-content").forEach(function(el){el.style.display="none"});var c=a.querySelector("#portfolio-view-"+t)||a.querySelector("#budget-view-"+t);c&&(c.style.display="block"),groupKey?localStorage.setItem("active_budget_subtab_"+groupKey,t):localStorage.setItem("active_budget_subtab",t),e.id&&localStorage.setItem("active_regular_tab_id",e.id);var card=document.getElementById("card"),chartBtn=document.getElementById("tab-btn-x");card&&chartBtn&&("none"!==card.style.display&&"none"!==getComputedStyle(card).display&&"0px"!==card.style.maxHeight?chartBtn.classList.add("active"):chartBtn.classList.remove("active")),"subcategory"===t&&"function"==typeof renderSubcategoryBreakdown?renderSubcategoryBreakdown():"watchlist"===t&&"function"==typeof fetchWatchlistData?fetchWatchlistData():"portfolio"===t&&restoreBudgetSubtab("portfolio-group","watchlist")}function restoreBudgetSubtab(groupKey,defaultTab){var groupEl=document.querySelector('[data-tabgroup="'+groupKey+'"]');if(groupEl){var storageKey="active_budget_subtab_"+groupKey,savedSubtab=localStorage.getItem(storageKey)||defaultTab,targetBtn=groupEl.querySelector(`.budget-subtab[onclick*="'${savedSubtab}'"], .budget-subtab-v2[onclick*="'${savedSubtab}'"]`);targetBtn&&switchBudgetTab(targetBtn,savedSubtab)}}document.addEventListener("DOMContentLoaded",function(){var savedSubtabV1=localStorage.getItem("active_budget_subtab")||"spending",targetBtnV1=document.querySelector(`.budget-subtab[onclick*="'${savedSubtabV1}'"], .budget-subtab-v2[onclick*="'${savedSubtabV1}'"]`);if(targetBtnV1)switchBudgetTab(targetBtnV1,savedSubtabV1);else{var defaultBtn=document.querySelector(".budget-subtab, .budget-subtab-v2");defaultBtn&&switchBudgetTab(defaultBtn,"spending")}restoreBudgetSubtab("wallet-fire","wallet"),restoreBudgetSubtab("portfolio-btc","portfolio"),restoreBudgetSubtab("portfolio-group","watchlist");var chartBtn=document.getElementById("tab-btn-x"),card=document.getElementById("card");chartBtn&&card&&(card.style.overflow="hidden",card.style.transition="max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease-in-out, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)","shown"===(localStorage.getItem("tab-btn-x-card-state")||"shown")?(chartBtn.classList.add("active"),card.style.display="block",card.style.maxHeight="1000px",card.style.opacity="1",card.style.transform="translateY(0)"):(chartBtn.classList.remove("active"),card.style.display="none",card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)"),chartBtn.addEventListener("click",function(e){e.stopPropagation(),"none"===card.style.display||"none"===getComputedStyle(card).display||"0px"===card.style.maxHeight?(card.style.display="block",card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)",card.offsetHeight,card.style.maxHeight="1000px",card.style.opacity="1",card.style.transform="translateY(0)",this.classList.add("active"),localStorage.setItem("tab-btn-x-card-state","shown")):(card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)",this.classList.remove("active"),setTimeout(function(){"0px"===card.style.maxHeight&&(card.style.display="none")},400),localStorage.setItem("tab-btn-x-card-state","hidden"));var savedId=localStorage.getItem("active_regular_tab_id"),activeBtn=(savedId?document.getElementById(savedId):null)||targetBtnV1||document.querySelector(".budget-subtab, .budget-subtab-v2, .tab-btn:not(#tab-btn-x)");activeBtn&&activeBtn.classList.add("active"),"block"===card.style.display&&"function"==typeof loadBalanceHistoryTC&&loadBalanceHistoryTC()})),document.querySelectorAll(".tab-btn").forEach(function(btn){btn.addEventListener("click",function(){"tab-btn-x"!==this.id&&(document.querySelectorAll(".tab-btn:not(#tab-btn-x)").forEach(function(otherBtn){otherBtn.classList.remove("active")}),this.classList.add("active"),this.id&&localStorage.setItem("active_regular_tab_id",this.id),card&&chartBtn&&("none"!==card.style.display&&"none"!==getComputedStyle(card).display&&"0px"!==card.style.maxHeight?chartBtn.classList.add("active"):chartBtn.classList.remove("active")))})})}),function(){var tabOrdersByGroup={"wallet-fire":["wallet","fire"],"portfolio-btc":["portfolio","btc"],"portfolio-group":["watchlist","tradingview","portfolio"]},startX=0,startY=0,isSwiping=!1,mouseDown=!1,activeCard=null,activeGroup=null;function goToTab(card,tabName){var btn=card.querySelector(`.budget-subtab[onclick*="'${tabName}'"], .budget-subtab-v2[onclick*="'${tabName}'"]`);btn&&switchBudgetTab(btn,tabName)}function handleSwipeEnd(card,groupEl,dx){var groupKey=groupEl.getAttribute("data-tabgroup"),tabOrder=tabOrdersByGroup[groupKey];if(tabOrder){var currentTab=function(card){var activeBtn=card.querySelector(".budget-subtab.active, .budget-subtab-v2.active");if(!activeBtn)return null;var match=activeBtn.getAttribute("onclick").match(/'([^']+)'/);return match?match[1]:null}(groupEl)||tabOrder[0],currentIndex=tabOrder.indexOf(currentTab),len=tabOrder.length;currentIndex>=0&&(dx<-50?goToTab(card,tabOrder[(currentIndex+1)%len]):dx>50&&goToTab(card,tabOrder[(currentIndex-1+len)%len]))}}function findTabGroupEl(card){return card.querySelector("[data-tabgroup]")}document.addEventListener("touchstart",function(e){var card=e.target.closest(".budget-card");if(card){var groupEl=findTabGroupEl(card);groupEl&&(activeCard=card,activeGroup=groupEl,startX=e.touches[0].clientX,startY=e.touches[0].clientY,isSwiping=!0)}},{passive:!0}),document.addEventListener("touchmove",function(e){if(isSwiping&&activeCard){var dx=e.touches[0].clientX-startX,dy=e.touches[0].clientY-startY;Math.abs(dy)>Math.abs(dx)&&(isSwiping=!1)}},{passive:!0}),document.addEventListener("touchend",function(e){if(isSwiping&&activeCard&&activeGroup){var dx=e.changedTouches[0].clientX-startX;handleSwipeEnd(activeCard,activeGroup,dx),isSwiping=!1,activeCard=null,activeGroup=null}}),document.addEventListener("mousedown",function(e){var card=e.target.closest(".budget-card");if(card){var groupEl=findTabGroupEl(card);groupEl&&(activeCard=card,activeGroup=groupEl,startX=e.clientX,startY=e.clientY,mouseDown=!0,isSwiping=!0)}}),document.addEventListener("mousemove",function(e){if(mouseDown&&isSwiping&&activeCard){var dx=e.clientX-startX,dy=e.clientY-startY;Math.abs(dy)>Math.abs(dx)&&(isSwiping=!1)}}),document.addEventListener("mouseup",function(e){if(mouseDown){if(isSwiping&&activeCard&&activeGroup){var dx=e.clientX-startX;handleSwipeEnd(activeCard,activeGroup,dx)}mouseDown=!1,isSwiping=!1,activeCard=null,activeGroup=null}})}();
 
     updateMarketStatusDot();fetchForexNavBalance();
     loadBalanceHistoryTC();restoreBudgetSubtab();updateBalanceVisibility();
