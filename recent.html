@@ -1574,6 +1574,20 @@ to{transform:rotate(360deg)}
 .text-pink span {
   color: #f472b6 !important; /* Original pink red */
 }
+@keyframes investBarWave {
+  0%, 100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(1.08); /* Height expands slightly upward */
+  }
+}
+
+.invest-bar-wave {
+  transform-box: fill-box;       /* Keeps scale anchor tied to each individual bar */
+  transform-origin: bottom;      /* Ensures bars expand upward, not down */
+  animation: investBarWave 2.2s ease-in-out infinite;
+}
 </style>
 </head>
 <body>
@@ -2093,15 +2107,17 @@ to{transform:rotate(360deg)}
             <div class="budget-card">
               <!-- Sub-Tab Switcher Header (Placed at top) -->
               <div class="budget-subtabs" data-tabgroup="portfolio-group" style="display: flex; align-items: center; justify-content: space-between; margin: 10px 3px 10px 3px;">
-                  <button type="button" class="budget-subtab active" onclick="switchBudgetTab(this, 'watchlist')">
+                  <button type="button" class="budget-subtab active" onclick="switchBudgetTab(this, 'watchlist'); this.parentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });">
                     <span class="material-icons-round" style="font-size: 14px;">bookmark</span>
                     <span>Watchlist</span>
                   </button>
-                  <button type="button" class="budget-subtab" onclick="switchBudgetTab(this, 'tradingview')">
+
+                  <button type="button" class="budget-subtab" onclick="switchBudgetTab(this, 'tradingview'); this.parentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });">
                     <span class="material-icons-round" style="font-size: 14px;">bar_chart</span>
                     <span>TradingView</span>
                   </button>
-                  <button type="button" class="budget-subtab" onclick="switchBudgetTab(this, 'portfolio-pnl')">
+
+                  <button type="button" class="budget-subtab" onclick="switchBudgetTab(this, 'portfolio-pnl'); this.parentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });">
                     <span class="material-icons-round" style="font-size: 14px;">data_usage</span>
                     <span>Portfolio</span>
                   </button>
@@ -3123,9 +3139,8 @@ to{transform:rotate(360deg)}
             rTL, rTR, rBR, rBL
             ));
             path.setAttribute("fill", "url(#pastelGrad_" + s.key + ")");
-            path.setAttribute("class", "anim-bar"); // <-- Added bar grow animation class
-            // Optional staggered delay for each column bar:
-            path.style.animationDelay = (i * 0.04) + "s"; 
+            path.setAttribute("class", "invest-bar-wave"); // Updated to use wave animation class
+            path.style.animationDelay = (i * 0.12) + "s"; // Staggered delay for wave effect
             stackGroup.appendChild(path);
           });
         });
