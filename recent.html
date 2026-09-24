@@ -8485,8 +8485,10 @@ function applyPortfolioFiltersAndRender() {
         const num = parseFloat(val);
         if (isNaN(num) || 0 === num) return "+0.0M";
         const absVal = Math.abs(num);
-        let formatted = "";
-        return formatted = absVal >= 1e9 ? (absVal / 1e9).toFixed(1) + "B" : absVal >= 1e6 ? (absVal / 1e6).toFixed(1) + "M" : absVal >= 1e3 ? (absVal / 1e3).toFixed(1) + "K" : absVal.toFixed(1), num >= 0 ? "+" + formatted : "-" + formatted
+        let formatted = absVal >= 1e9 
+          ? (absVal / 1e9).toFixed(1) + "B" 
+          : (absVal / 1e6).toFixed(1) + "M";
+        return num >= 0 ? "+" + formatted : "-" + formatted;
       };
 
       const setView = view => {
