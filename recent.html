@@ -8264,10 +8264,10 @@ function applyPortfolioFiltersAndRender() {
                               <button id="pnl-close-modal" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:18px;"><i class="bi bi-x-lg"></i></button>
                           </div>
                       </div>
-                      <div id="pnl-days-header" style="display:grid;grid-template-columns:repeat(7, 1fr);text-align:center;font-size:12px;color:#64748b;margin-bottom:8px;font-weight:600;">
-                          <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                      <div id="pnl-days-header" style="display:grid;grid-template-columns:repeat(6, 1fr);text-align:center;font-size:12px;color:#64748b;margin-bottom:8px;font-weight:600;">
+                          <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>∑</span>
                       </div>
-                      <div id="pnl-calendar-grid" style="display:grid;grid-template-columns:repeat(7, 1fr);gap:6px;max-height:320px;overflow-y:auto;"></div>
+                      <div id="pnl-calendar-grid" style="display:grid;grid-template-columns:repeat(6, 1fr);gap:6px;max-height:320px;overflow-y:auto;"></div>
                   </div>
                   <div id="pnl-input-dialog" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;z-index:10000;font-family:'DM Sans',sans-serif;">
                       <div style="background:#1e222b;padding:20px;border-radius:16px;width:380px;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,0.5);">
@@ -8483,10 +8483,10 @@ function applyPortfolioFiltersAndRender() {
 
       const formatVndShort = val => {
         const num = parseFloat(val);
-        if (isNaN(num) || 0 === num) return "+0.00";
+        if (isNaN(num) || 0 === num) return "+0.0M";
         const absVal = Math.abs(num);
         let formatted = "";
-        return formatted = absVal >= 1e9 ? (absVal / 1e9).toFixed(2) + "B" : absVal >= 1e6 ? (absVal / 1e6).toFixed(2) + "M" : absVal >= 1e3 ? (absVal / 1e3).toFixed(2) + "K" : absVal.toFixed(2), num >= 0 ? "+" + formatted : "-" + formatted
+        return formatted = absVal >= 1e9 ? (absVal / 1e9).toFixed(1) + "B" : absVal >= 1e6 ? (absVal / 1e6).toFixed(1) + "M" : absVal >= 1e3 ? (absVal / 1e3).toFixed(1) + "K" : absVal.toFixed(1), num >= 0 ? "+" + formatted : "-" + formatted
       };
 
       const setView = view => {
@@ -8537,38 +8537,59 @@ function applyPortfolioFiltersAndRender() {
 
         if ("daily" === currentView) {
           if (navTitle) navTitle.innerText = `${year}-${String(month+1).padStart(2,"0")}`;
-          grid.style.gridTemplateColumns = "repeat(7, 1fr)";
-          const firstDayIndex = new Date(year, month, 1).getDay(),
-            totalDays = new Date(year, month + 1, 0).getDate();
-          for (let i = 0; i < firstDayIndex; i++) grid.appendChild(document.createElement("div"));
-          for (let day = 1; day <= totalDays; day++) {
-            const dateStr = `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`,
-              amount = pnlData[dateStr],
-              hasData = void 0 !== amount,
-              isNegative = hasData && amount < 0,
-              
-              // Check if this iteration matches today's date
-              nowRef = new Date(),
-              isToday = year === nowRef.getFullYear() && month === nowRef.getMonth() && day === nowRef.getDate(),
-              
-              cell = document.createElement("div");
+          grid.style.gridTemplateColumns = "repeat(6, 1fr)";
+          
+          const totalDays = new Date(year, month + 1, 0).getDate();
+          
+          let weekSum = 0;
+          let weekHasData = false;
+          let daysInCurrentWeek = 0;
 
+          // Padding empty slots before the first day of the month (Monday = 0 ... Friday = 4)
+          const firstDayObj = new Date(year, month, 1);
+          let firstDayIndex = (firstDayObj.getDay() + 6) % 7; // Convert to Mon=0..Sun=6
+          if (firstDayIndex < 5) {
+            for (let i = 0; i < firstDayIndex; i++) {
+              grid.appendChild(document.createElement("div"));
+              daysInCurrentWeek++;
+            }
+          }
+
+          for (let day = 1; day <= totalDays; day++) {
+            const dObj = new Date(year, month, day);
+            const dayOfWeek = dObj.getDay(); // 0 = Sun, 6 = Sat
+
+            // Skip Saturday & Sunday
+            if (dayOfWeek === 0 || dayOfWeek === 6) continue;
+
+            const dateStr = `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+            const amount = pnlData[dateStr];
+            const hasData = amount !== undefined;
+            const isNegative = hasData && amount < 0;
+
+            if (hasData) {
+              weekSum += amount;
+              weekHasData = true;
+            }
+
+            const nowRef = new Date();
+            const isToday = year === nowRef.getFullYear() && month === nowRef.getMonth() && day === nowRef.getDate();
+
+            const cell = document.createElement("div");
             const cellBg = hasData ? (isNegative ? "#2d1622" : "#042f2e") : "#1a1e29";
 
             cell.style.cssText = `aspect-ratio:1;background:${cellBg};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:background 0.2s;`;
-            
             cell.onmouseover = () => cell.style.background = "#222733";
             cell.onmouseout = () => cell.style.background = cellBg;
 
-            // Subtle glowing dot marker for today's date
             const todayIndicator = isToday ? '<span style="position:absolute;top:6px;right:6px;width:6px;height:6px;background:#fbbf24;border-radius:50%;box-shadow:0 0 6px #fbbf24;"></span>' : '';
 
             cell.innerHTML = `
                       ${todayIndicator}
                       <span style="font-size:13px;color:${isToday ? '#fbbf24' : (hasData ? (isNegative ? '#ec4899' : '#2dd4bf') : '#94a3b8')};font-weight:${isToday ? '700' : '600'};">${day}</span>
-                      <span style="font-size:11px;color:${hasData ? (isNegative ? '#ec4899' : '#2dd4bf') : '#475569'};margin-top:2px;">${hasData ? formatVndShort(amount) : '+0.00M'}</span>
+                      <span style="font-size:13px;color:${hasData ? (isNegative ? '#ec4899' : '#2dd4bf') : '#475569'};margin-top:2px;">${hasData ? formatVndShort(amount) : '+0.0M'}</span>
                   `;
-            
+
             cell.onclick = () => {
               selectedDateStr = dateStr;
               const dateTitle = document.getElementById("pnl-input-date-title");
@@ -8588,7 +8609,45 @@ function applyPortfolioFiltersAndRender() {
               if (exitInput) exitInput.value = "";
               const inputDlg = document.getElementById("pnl-input-dialog");
               if (inputDlg) inputDlg.style.display = "flex";
-            }, grid.appendChild(cell)
+            };
+
+            grid.appendChild(cell);
+            daysInCurrentWeek++;
+
+            // Insert Total Column cell at Friday (dayOfWeek === 5)
+            if (dayOfWeek === 5) {
+              const totalCell = document.createElement("div");
+              const isTotNeg = weekHasData && weekSum < 0;
+              const totalBg = weekHasData ? (isTotNeg ? "#2d1622" : "#042f2e") : "#1a1e29";
+              totalCell.style.cssText = `aspect-ratio:1;background:${totalBg};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:0px solid #334155;`;
+              totalCell.innerHTML = `
+                <span style="font-size:13px;color:#94a3b8;font-weight:600;">∑</span>
+                <span style="font-size:15px;color:${weekHasData ? (isTotNeg ? '#ec4899' : '#2dd4bf') : '#475569'};margin-top:2px;font-weight:600;">${weekHasData ? formatVndShort(weekSum) : '+0.0M'}</span>
+              `;
+              grid.appendChild(totalCell);
+
+              // Reset weekly tracker
+              weekSum = 0;
+              weekHasData = false;
+              daysInCurrentWeek = 0;
+            }
+          }
+
+          // Render partial week total at month end if Friday was not reached
+          if (daysInCurrentWeek > 0) {
+            while (daysInCurrentWeek < 5) {
+              grid.appendChild(document.createElement("div"));
+              daysInCurrentWeek++;
+            }
+            const totalCell = document.createElement("div");
+            const isTotNeg = weekHasData && weekSum < 0;
+            const totalBg = weekHasData ? (isTotNeg ? "#2d1622" : "#042f2e") : "#1a1e29";
+            totalCell.style.cssText = `aspect-ratio:1;background:${totalBg};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid #334155;`;
+            totalCell.innerHTML = `
+              <span style="font-size:11px;color:#94a3b8;font-weight:600;">∑</span>
+              <span style="font-size:13px;color:${weekHasData ? (isTotNeg ? '#ec4899' : '#2dd4bf') : '#475569'};margin-top:2px;font-weight:600;">${weekHasData ? formatVndShort(weekSum) : '+0.0M'}</span>
+            `;
+            grid.appendChild(totalCell);
           }
         } else if ("monthly" === currentView) {
           if (navTitle) navTitle.innerText = `${year}`;
@@ -8602,7 +8661,7 @@ function applyPortfolioFiltersAndRender() {
             const hasData = count > 0,
               isNegative = monthlyTotal < 0,
               cell = document.createElement("div");
-            cell.style.cssText = `padding:15px 8px;background:${hasData?isNegative?"#2d1622":"#042f2e":"#1a1e29"};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`, cell.onmouseover = () => cell.style.background = "#222733", cell.onmouseout = () => cell.style.background = hasData ? isNegative ? "#2d1622" : "#042f2e" : "#1a1e29", cell.innerHTML = `\n                      <span style="font-size:15px;color:#f8f9fa;font-weight:600;">${mName}</span>\n                      <span style="font-size:14px;color:${hasData?isNegative?"#ec4899":"#2dd4bf":"#475569"};margin-top:6px;font-weight:600;">${hasData?formatVndShort(monthlyTotal):"+0.00M"}</span>\n                  `, cell.onclick = () => {
+            cell.style.cssText = `padding:15px 8px;background:${hasData?isNegative?"#2d1622":"#042f2e":"#1a1e29"};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`, cell.onmouseover = () => cell.style.background = "#222733", cell.onmouseout = () => cell.style.background = hasData ? isNegative ? "#2d1622" : "#042f2e" : "#1a1e29", cell.innerHTML = `\n                      <span style="font-size:15px;color:#f8f9fa;font-weight:600;">${mName}</span>\n                      <span style="font-size:16px;color:${hasData?isNegative?"#ec4899":"#2dd4bf":"#475569"};margin-top:6px;font-weight:600;">${hasData?formatVndShort(monthlyTotal):"+0.0M"}</span>\n                  `, cell.onclick = () => {
               currentNavDate.setMonth(mIdx), setView("daily")
             }, grid.appendChild(cell)
           })
@@ -8619,7 +8678,7 @@ function applyPortfolioFiltersAndRender() {
             const hasData = count > 0,
               isNegative = yearlyTotal < 0,
               cell = document.createElement("div");
-            cell.style.cssText = `padding:15px 8px;background:${hasData?isNegative?"#2d1622":"#042f2e":"#1a1e29"};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`, cell.onmouseover = () => cell.style.background = "#222733", cell.onmouseout = () => cell.style.background = hasData ? isNegative ? "#2d1622" : "#042f2e" : "#1a1e29", cell.innerHTML = `\n                      <span style="font-size:15px;color:#f8f9fa;font-weight:600;">${y}</span>\n                      <span style="font-size:14px;color:${hasData?isNegative?"#ec4899":"#2dd4bf":"#475569"};margin-top:6px;font-weight:600;">${hasData?formatVndShort(yearlyTotal):"+0.00M"}</span>\n                  `, cell.onclick = () => {
+            cell.style.cssText = `padding:15px 8px;background:${hasData?isNegative?"#2d1622":"#042f2e":"#1a1e29"};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`, cell.onmouseover = () => cell.style.background = "#222733", cell.onmouseout = () => cell.style.background = hasData ? isNegative ? "#2d1622" : "#042f2e" : "#1a1e29", cell.innerHTML = `\n                      <span style="font-size:15px;color:#f8f9fa;font-weight:600;">${y}</span>\n                      <span style="font-size:16px;color:${hasData?isNegative?"#ec4899":"#2dd4bf":"#475569"};margin-top:6px;font-weight:600;">${hasData?formatVndShort(yearlyTotal):"+0.0M"}</span>\n                  `, cell.onclick = () => {
               currentNavDate.setFullYear(y), setView("monthly")
             }, grid.appendChild(cell)
           }
