@@ -8469,7 +8469,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
     if (modalContent) {
         modalContent.style.width = '100%'; modalContent.style.height = '460px';
         modalContent.style.maxWidth = '100%'; // Ensures container isn't constrained by max-width
-        modalContent.style.margin = '0'; modalContent.style.padding = '20px';
+        modalContent.style.margin = '0'; modalContent.style.padding = '30px 18px 30px 18px';
     }
 
     if (!backdrop || !title || !body) return;
@@ -8496,7 +8496,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
     // 4. Inject Modal Body Content
     body.innerHTML = `
       <div id="pnl-days-header" style="display:grid; grid-template-columns:repeat(6, 1fr); text-align:center; font-size:12px; color:#64748b; margin-bottom:8px; font-weight:600;">
-          <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>∑</span>
+          <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>TOTAL</span>
       </div>
       <div id="pnl-calendar-grid" style="display:grid; grid-template-columns:repeat(6, 1fr); gap:6px; max-height:320px;"></div>
 
@@ -8513,7 +8513,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
                   <div style="flex:1; position:relative;">
                       <label style="display:block; color:#94a3b8; font-size:13px; margin-bottom:6px;">Symbol</label>
                       <div style="position:relative; display:flex; align-items:center;">
-                          <input type="text" id="pnl-symbol-input" value="XAUUSD" placeholder="XAUUSD" autocomplete="off" style="width:100%; padding:10px 30px 10px 12px; background:#14171f; border:none; border-radius:8px; color:#fff; box-sizing:border-box; outline:none; text-transform:uppercase; font-size:15px; font-family:'DM Sans',sans-serif;" />
+                          <input type="text" id="pnl-symbol-input" value="XAUUSD" placeholder="XAUUSD" autocomplete="off" style="width:100%; padding:10px 30px 10px 12px; background:#14171f; border:none; border-radius:8px; color:#fff; box-sizing:border-box; outline:none; text-transform:uppercase; font-size:17px; font-family:'DM Sans',sans-serif;" />
                           <span id="pnl-clear-symbol-btn" onclick="document.getElementById('pnl-symbol-input').value=''; updateSymbolIcon(''); document.getElementById('pnl-symbol-dropdown').style.display='none'; document.getElementById('pnl-symbol-input').focus();" style="position:absolute; right:10px; cursor:pointer; color:#94a3b8; font-size:18px; user-select:none;">&times;</span>
                       </div>
                       <div id="pnl-symbol-dropdown" style="display:none; position:absolute; top:100%; left:0; width:100%; background:#14171f; border-radius:8px; margin-top:4px; max-height:150px; overflow-y:auto; z-index:10001; box-shadow:0 4px 12px rgba(0,0,0,0.3);"></div>
@@ -8895,8 +8895,8 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
           const totalBg = weekHasData ? (isTotNeg ? "#2d1622" : "#042f2e") : "#1a1e29";
           totalCell.style.cssText = `aspect-ratio:1;background:${totalBg};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:0px solid #334155;`;
           totalCell.innerHTML = `
-            <span style="font-size:11px;color:#94a3b8;font-weight:600;">∑</span>
-            <span style="font-size:13px;color:${weekHasData ? (isTotNeg ? '#ec4899' : '#2dd4bf') : '#475569'};margin-top:2px;font-weight:600;">${weekHasData ? formatVndShort(weekSum) : '+0.0M'}</span>
+            <span style="font-size:13px;color:#94a3b8;font-weight:600;">∑</span>
+            <span style="font-size:15px;color:${weekHasData ? (isTotNeg ? '#ec4899' : '#2dd4bf') : '#475569'};margin-top:2px;font-weight:600;">${weekHasData ? formatVndShort(weekSum) : '+0.0M'}</span>
           `;
           grid.appendChild(totalCell);
         }
