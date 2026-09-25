@@ -9036,7 +9036,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
         }
         updateChartSummaryHeader(currMonthData, prevMonthData, true, year, month);
 
-        setTimeout(() => drawPnlChart(labels, currMonthData, prevMonthData, 1, true), 50);
+        setTimeout(() => drawPnlChart(labels, currMonthData, prevMonthData, 1.1, true), 50);
      } else if ("monthly" === currentView) {
         if (navTitle) navTitle.innerText = `${year}`;
         grid.style.gridTemplateColumns = "repeat(3, 1fr)";
@@ -9086,7 +9086,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
           const defaultBg = getPnlBgColor(monthlyTotal, hasData);
 
           const cell = document.createElement("div");
-          cell.style.cssText = `padding:12px 8px;background:${defaultBg};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
+          cell.style.cssText = `padding:9px 8px;background:${defaultBg};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
           
           cell.onmouseover = () => cell.style.background = "#222733";
           cell.onmouseout = () => cell.style.background = defaultBg;
@@ -9124,7 +9124,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
         });
         updateChartSummaryHeader(currYearData, prevYearData, false, year, month);
 
-        setTimeout(() => drawPnlChart(monthNames, currYearData, prevYearData, 1.2, false), 50);
+        setTimeout(() => drawPnlChart(monthNames, currYearData, prevYearData, 1.5, false), 50);
       } else if ("yearly" === currentView) {
         const chartContainer = document.getElementById('pnl-chart-container');
         if (chartContainer) chartContainer.style.display = 'none';
@@ -9349,7 +9349,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
 
     const width = rect.width;
     const height = rect.height;
-    const padding = { top: 38, right: 10, bottom: 25, left: 10 };
+    const padding = { top: 38, right: 5, bottom: 25, left: 5 };
     const chartWidth = width - padding.left - padding.right;
     const chartHeight = height - padding.top - padding.bottom;
 
@@ -9485,7 +9485,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
 
                 if (shouldShowMarker) {
                     ctx.beginPath();
-                    const pointRadius = isHovered ? 4.5 : (isHighest ? 4.5 : (isDaily ? 3 : 3));
+                    const pointRadius = isHovered ? 4.5 : (isHighest ? 4.5 : (isDaily ? 3 : 3.5));
                     ctx.arc(pt.x, pt.y, pointRadius, 0, Math.PI * 2);
                     ctx.fillStyle = isHighest ? '#f59e0b' : (isHovered ? '#ffffff' : color);
                     ctx.fill();
