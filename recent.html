@@ -7650,8 +7650,8 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
 
         statList.appendChild(item);
     });
-}
-function applyPortfolioFiltersAndRender() {
+  }
+  function applyPortfolioFiltersAndRender() {
         if (typeof window.currentPortfolioGroups === "undefined") return;
 
         var filtered = window.currentPortfolioGroups.filter(function(group) {
@@ -7830,254 +7830,254 @@ function applyPortfolioFiltersAndRender() {
     }
     function toggleCategoryGroup(categoryKey,headerRowEl){var isCollapsed=headerRowEl.classList.toggle("collapsed");document.querySelectorAll(`tr[data-category-key="${categoryKey}"]:not(.portfolio-group-hdr-row)`).forEach(function(row){isCollapsed?(row.dataset.prevDisplay=row.style.display||"",row.style.display="none"):row.classList.contains("log-row")?row.style.display=row.classList.contains("visible")?"table-row":"none":row.style.display=""})}
     function openPortfolioModal() {
-    document.querySelectorAll('[id="portfolio-cal-menu"]').forEach(function(el) { el.remove(); });
-    const backdrop = document.getElementById('modalBackdrop');
-    const title = document.getElementById('modalTitle');
-    const body = document.getElementById('modalBody');
+      document.querySelectorAll('[id="portfolio-cal-menu"]').forEach(function(el) { el.remove(); });
+      const backdrop = document.getElementById('modalBackdrop');
+      const title = document.getElementById('modalTitle');
+      const body = document.getElementById('modalBody');
 
-    const defaultIcon = "https://github.com/tinsntp/investment/blob/main/stock.png?raw=true";
+      const defaultIcon = "https://github.com/tinsntp/investment/blob/main/stock.png?raw=true";
 
-    title.innerHTML = `
-    <img id="portfolioModalIcon" src="${defaultIcon}" style="width: 24px; height: 24px; border-radius: 6px; object-fit: cover;">
-    <span style="color: #f8f9fa; font-weight: 600;" id="portfolioModalTitleText">Add Position</span>
-    `;
+      title.innerHTML = `
+      <img id="portfolioModalIcon" src="${defaultIcon}" style="width: 24px; height: 24px; border-radius: 6px; object-fit: cover;">
+      <span style="color: #f8f9fa; font-weight: 600;" id="portfolioModalTitleText">Add Position</span>
+      `;
 
-    const accountTypes = [
-        { value: "Stock", icon: "https://github.com/tinsntp/investment/blob/main/stock.png?raw=true" },
-        { value: "Saving", icon: "https://github.com/tinsntp/investment/blob/main/saving.png?raw=true" },
-        { value: "Crypto", icon: "https://github.com/tinsntp/investment/blob/main/bitcoin.png?raw=true" },
-        { value: "Forex", icon: "https://github.com/tinsntp/investment/blob/main/exness.png?raw=true" }
-    ];
-    let accountTypeOptionsHTML = '';
-    accountTypes.forEach(function(t) {
-        accountTypeOptionsHTML += `
-        <div class="custom-option-item" data-value="${t.value}" data-icon="${t.icon}" onclick="handlePortfolioTypeSelect(this)" style="display:flex; align-items:center; gap:10px; padding:10px 12px; cursor:pointer;">
-            <img src="${t.icon}" style="width: 20px; height: 20px; border-radius: 4px; object-fit: cover;">
-            <span>${t.value}</span>
-        </div>
-        `;
-    });
+      const accountTypes = [
+          { value: "Stock", icon: "https://github.com/tinsntp/investment/blob/main/stock.png?raw=true" },
+          { value: "Saving", icon: "https://github.com/tinsntp/investment/blob/main/saving.png?raw=true" },
+          { value: "Crypto", icon: "https://github.com/tinsntp/investment/blob/main/bitcoin.png?raw=true" },
+          { value: "Forex", icon: "https://github.com/tinsntp/investment/blob/main/exness.png?raw=true" }
+      ];
+      let accountTypeOptionsHTML = '';
+      accountTypes.forEach(function(t) {
+          accountTypeOptionsHTML += `
+          <div class="custom-option-item" data-value="${t.value}" data-icon="${t.icon}" onclick="handlePortfolioTypeSelect(this)" style="display:flex; align-items:center; gap:10px; padding:10px 12px; cursor:pointer;">
+              <img src="${t.icon}" style="width: 20px; height: 20px; border-radius: 4px; object-fit: cover;">
+              <span>${t.value}</span>
+          </div>
+          `;
+      });
 
-    let portfolioAccountOptionsHTML = '';
-    let portfolioInitialTriggerText = "Select Account";
-    let portfolioDefaultAccountValue = '';
+      let portfolioAccountOptionsHTML = '';
+      let portfolioInitialTriggerText = "Select Account";
+      let portfolioDefaultAccountValue = '';
 
-    if (typeof accountsData !== 'undefined' && Array.isArray(accountsData)) {
-        const usableAccounts = accountsData.filter(acc => acc.account !== "Salary" && acc.account !== "SOCIAL");
-        const defaultBankAccount = usableAccounts.find(acc => acc.account && acc.account.toUpperCase().includes("BANK"));
+      if (typeof accountsData !== 'undefined' && Array.isArray(accountsData)) {
+          const usableAccounts = accountsData.filter(acc => acc.account !== "Salary" && acc.account !== "SOCIAL");
+          const defaultBankAccount = usableAccounts.find(acc => acc.account && acc.account.toUpperCase().includes("BANK"));
 
-        usableAccounts.forEach(function(acc) {
-            const balanceFormatted = '₫' + Math.round(acc.amount).toLocaleString('vi-VN');
-            const iconUrl = acc.icon || 'https://cdn-icons-png.flaticon.com/512/3135/3135706.png';
-            const displayName = acc.account.toUpperCase().startsWith('SAVING') ? 'SAVING' : acc.account;
+          usableAccounts.forEach(function(acc) {
+              const balanceFormatted = '₫' + Math.round(acc.amount).toLocaleString('vi-VN');
+              const iconUrl = acc.icon || 'https://cdn-icons-png.flaticon.com/512/3135/3135706.png';
+              const displayName = acc.account.toUpperCase().startsWith('SAVING') ? 'SAVING' : acc.account;
 
-            const innerContentHTML = `
-            <img src="${iconUrl}"
-                style="width: 20px; height: 20px; border-radius: 4px; object-fit: cover;"
-                onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135706.png'">
-            <span>${displayName} (${balanceFormatted})</span>
-            `;
+              const innerContentHTML = `
+              <img src="${iconUrl}"
+                  style="width: 20px; height: 20px; border-radius: 4px; object-fit: cover;"
+                  onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135706.png'">
+              <span>${displayName} (${balanceFormatted})</span>
+              `;
 
-            if (defaultBankAccount && acc.account === defaultBankAccount.account) {
-                portfolioInitialTriggerText = innerContentHTML;
-                portfolioDefaultAccountValue = acc.account;
-            }
+              if (defaultBankAccount && acc.account === defaultBankAccount.account) {
+                  portfolioInitialTriggerText = innerContentHTML;
+                  portfolioDefaultAccountValue = acc.account;
+              }
 
-            portfolioAccountOptionsHTML += `
-            <div class="custom-option-item" data-value="${acc.account}" onclick="handlePortfolioAccountSelect(this)">
-                ${innerContentHTML}
-            </div>
-            `;
-        });
-    }
+              portfolioAccountOptionsHTML += `
+              <div class="custom-option-item" data-value="${acc.account}" onclick="handlePortfolioAccountSelect(this)">
+                  ${innerContentHTML}
+              </div>
+              `;
+          });
+      }
 
-    body.innerHTML = `
-    <!-- Symbol + Account Type row -->
-    <div id="portfolioTopRow">
-        <div class="modal-field-group" style="margin-bottom: 16px;" id="portfolioSymbolWrapper">
-            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioSymbolLabel">Symbol:</label>
-            <div style="position: relative; width: 100%; z-index: 10;">
-                <input type="text"
-                  id="portfolioSymbol" value="MBB" placeholder="MBB"
-                  oninput="if(typeof handlePortfolioSymbolInput==='function') handlePortfolioSymbolInput(this); window.syncPortfolioClearBtn('portfolioSymbol', 'portfolioClearSymbolBtn');"
-                  onkeyup="window.syncPortfolioClearBtn('portfolioSymbol', 'portfolioClearSymbolBtn');"
-                  onfocus="window.syncPortfolioClearBtn('portfolioSymbol', 'portfolioClearSymbolBtn');"
-                  onblur="if(typeof handlePortfolioSymbolBlur==='function') handlePortfolioSymbolBlur(this);"
-                  style="width: 100%; padding: 14px 40px 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; font-weight:300!important; box-sizing: border-box; outline: none; text-transform: uppercase; position: relative; z-index: 1;" />
-                <span class="material-icons-round" id="portfolioClearSymbolBtn" 
-                      onclick="window.clearPortfolioInputField('portfolioSymbol', 'portfolioClearSymbolBtn')" 
-                      style="display: block; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #6c757d; font-size: 20px; cursor: pointer; user-select: none; z-index: 9999!important; background: transparent;">cancel</span>
-            </div>
-        </div>
-        <div class="modal-field-group" style="margin-bottom: 16px;" id="portfolioAccountTypeWrapper">
-            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Account Type:</label>
-            <div class="premium-select-wrapper" style="position: relative;">
-                <div class="custom-select-trigger" id="portfolioTypeTrigger" onclick="togglePortfolioTypeDropdown(event)" style="font-weight:600; border:none; padding: 14px 16px; background: #111216; border-radius: 12px; color: #f8f9fa; font-size: 14px; display: flex; align-items: center; gap: 10px; justify-content: flex-start; cursor: pointer;">
-                    <img id="portfolioTypeTriggerIcon" src="" style="width: 20px; height: 20px; border-radius: 4px; object-fit: cover; display:none;">
-                    <span id="portfolioTypeTriggerText">Select Type</span>
-                </div>
-                <input type="hidden" id="portfolioAccountType" value="" />
-                <div class="custom-select-options" id="portfolioTypeOptions" style="display:none; position:absolute; left:0; top:calc(100% + 4px); background:#1e222b; border:0px solid #2d313c; border-radius:12px; width:100%; max-height:200px; overflow-y:auto; z-index:100; box-shadow:0 8px 24px rgba(0,0,0,0.5);">
-                    ${accountTypeOptionsHTML}
-                </div>
-            </div>
-        </div>
-    </div>
+      body.innerHTML = `
+      <!-- Symbol + Account Type row -->
+      <div id="portfolioTopRow">
+          <div class="modal-field-group" style="margin-bottom: 16px;" id="portfolioSymbolWrapper">
+              <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioSymbolLabel">Symbol:</label>
+              <div style="position: relative; width: 100%; z-index: 10;">
+                  <input type="text"
+                    id="portfolioSymbol" value="MBB" placeholder="MBB"
+                    oninput="if(typeof handlePortfolioSymbolInput==='function') handlePortfolioSymbolInput(this); window.syncPortfolioClearBtn('portfolioSymbol', 'portfolioClearSymbolBtn');"
+                    onkeyup="window.syncPortfolioClearBtn('portfolioSymbol', 'portfolioClearSymbolBtn');"
+                    onfocus="window.syncPortfolioClearBtn('portfolioSymbol', 'portfolioClearSymbolBtn');"
+                    onblur="if(typeof handlePortfolioSymbolBlur==='function') handlePortfolioSymbolBlur(this);"
+                    style="width: 100%; padding: 14px 40px 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; font-weight:300!important; box-sizing: border-box; outline: none; text-transform: uppercase; position: relative; z-index: 1;" />
+                  <span class="material-icons-round" id="portfolioClearSymbolBtn" 
+                        onclick="window.clearPortfolioInputField('portfolioSymbol', 'portfolioClearSymbolBtn')" 
+                        style="display: block; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #6c757d; font-size: 20px; cursor: pointer; user-select: none; z-index: 9999!important; background: transparent;">cancel</span>
+              </div>
+          </div>
+          <div class="modal-field-group" style="margin-bottom: 16px;" id="portfolioAccountTypeWrapper">
+              <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Account Type:</label>
+              <div class="premium-select-wrapper" style="position: relative;">
+                  <div class="custom-select-trigger" id="portfolioTypeTrigger" onclick="togglePortfolioTypeDropdown(event)" style="font-weight:600; border:none; padding: 14px 16px; background: #111216; border-radius: 12px; color: #f8f9fa; font-size: 14px; display: flex; align-items: center; gap: 10px; justify-content: flex-start; cursor: pointer;">
+                      <img id="portfolioTypeTriggerIcon" src="" style="width: 20px; height: 20px; border-radius: 4px; object-fit: cover; display:none;">
+                      <span id="portfolioTypeTriggerText">Select Type</span>
+                  </div>
+                  <input type="hidden" id="portfolioAccountType" value="" />
+                  <div class="custom-select-options" id="portfolioTypeOptions" style="display:none; position:absolute; left:0; top:calc(100% + 4px); background:#1e222b; border:0px solid #2d313c; border-radius:12px; width:100%; max-height:200px; overflow-y:auto; z-index:100; box-shadow:0 8px 24px rgba(0,0,0,0.5);">
+                      ${accountTypeOptionsHTML}
+                  </div>
+              </div>
+          </div>
+      </div>
 
-    <!-- Select Account dropdown -->
-    <div class="modal-field-group" style="margin-bottom: 16px; display: none;" id="portfolioSelectAccountWrapper">
-        <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Select Account:</label>
-        <div class="premium-select-wrapper" style="position: relative;">
-            <div class="custom-select-trigger" id="portfolioSelectAccountTrigger" onclick="togglePortfolioAccountDropdown(event)" style="font-weight:600; border:none; padding: 14px 16px; background: #111216; border-radius: 12px; color: #f8f9fa; font-size: 14px; display: flex; align-items: center; gap: 8px; justify-content: flex-start; cursor: pointer;">
-                ${portfolioInitialTriggerText}
-            </div>
-            <input type="hidden" id="portfolioTargetAccount" value="${portfolioDefaultAccountValue}" />
-            <div class="custom-select-options" id="portfolioSelectAccountOptions" style="display:none; position:absolute; left:0; top:calc(100% + 4px); background:#1e222b; border:0px solid #2d313c; border-radius:12px; width:100%; max-height:200px; overflow-y:auto; z-index:100; box-shadow:0 8px 24px rgba(0,0,0,0.5);">
-                ${portfolioAccountOptionsHTML}
-            </div>
-        </div>
-    </div>
+      <!-- Select Account dropdown -->
+      <div class="modal-field-group" style="margin-bottom: 16px; display: none;" id="portfolioSelectAccountWrapper">
+          <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Select Account:</label>
+          <div class="premium-select-wrapper" style="position: relative;">
+              <div class="custom-select-trigger" id="portfolioSelectAccountTrigger" onclick="togglePortfolioAccountDropdown(event)" style="font-weight:600; border:none; padding: 14px 16px; background: #111216; border-radius: 12px; color: #f8f9fa; font-size: 14px; display: flex; align-items: center; gap: 8px; justify-content: flex-start; cursor: pointer;">
+                  ${portfolioInitialTriggerText}
+              </div>
+              <input type="hidden" id="portfolioTargetAccount" value="${portfolioDefaultAccountValue}" />
+              <div class="custom-select-options" id="portfolioSelectAccountOptions" style="display:none; position:absolute; left:0; top:calc(100% + 4px); background:#1e222b; border:0px solid #2d313c; border-radius:12px; width:100%; max-height:200px; overflow-y:auto; z-index:100; box-shadow:0 8px 24px rgba(0,0,0,0.5);">
+                  ${portfolioAccountOptionsHTML}
+              </div>
+          </div>
+      </div>
 
-    <div style="display: flex; gap: 12px; margin-bottom: 16px;">
-        <!-- Entry Price Field -->
-        <div class="modal-field-group" style="flex: 1;" id="portfolioField1OuterWrapper">
-            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioField1Label">Entry Price:</label>
-            <div style="position: relative; width: 100%; z-index: 10;" id="portfolioField1Container">
-                <input type="text"
-                    id="portfolioField1" inputmode="decimal"
-                    placeholder="e.g. 35.45"
-                    oninput="if(typeof handlePortfolioEntryPriceInput==='function') handlePortfolioEntryPriceInput(this); window.syncPortfolioClearBtn('portfolioField1', 'portfolioClearField1Btn');"
-                    onkeyup="window.syncPortfolioClearBtn('portfolioField1', 'portfolioClearField1Btn');"
-                    onfocus="if(typeof handlePortfolioEntryPriceFocus==='function') handlePortfolioEntryPriceFocus(this); window.syncPortfolioClearBtn('portfolioField1', 'portfolioClearField1Btn');"
-                    onblur="if(typeof handlePortfolioEntryPriceBlur==='function') handlePortfolioEntryPriceBlur(this);"
-                    style="width: 100%; padding: 14px 40px 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:DM Sans; font-size: 20px; box-sizing: border-box; outline: none; position: relative; z-index: 1;" />
-                
-                <span class="material-icons-round" id="portfolioClearField1Btn" 
-                      onclick="window.clearPortfolioInputField('portfolioField1', 'portfolioClearField1Btn')" 
-                      style="display: none; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #6c757d; font-size: 20px; cursor: pointer; user-select: none; z-index: 9999!important; background: transparent;">cancel</span>
-            </div>
-        </div>
+      <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+          <!-- Entry Price Field -->
+          <div class="modal-field-group" style="flex: 1;" id="portfolioField1OuterWrapper">
+              <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioField1Label">Entry Price:</label>
+              <div style="position: relative; width: 100%; z-index: 10;" id="portfolioField1Container">
+                  <input type="text"
+                      id="portfolioField1" inputmode="decimal"
+                      placeholder="e.g. 35.45"
+                      oninput="if(typeof handlePortfolioEntryPriceInput==='function') handlePortfolioEntryPriceInput(this); window.syncPortfolioClearBtn('portfolioField1', 'portfolioClearField1Btn');"
+                      onkeyup="window.syncPortfolioClearBtn('portfolioField1', 'portfolioClearField1Btn');"
+                      onfocus="if(typeof handlePortfolioEntryPriceFocus==='function') handlePortfolioEntryPriceFocus(this); window.syncPortfolioClearBtn('portfolioField1', 'portfolioClearField1Btn');"
+                      onblur="if(typeof handlePortfolioEntryPriceBlur==='function') handlePortfolioEntryPriceBlur(this);"
+                      style="width: 100%; padding: 14px 40px 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:DM Sans; font-size: 20px; box-sizing: border-box; outline: none; position: relative; z-index: 1;" />
+                  
+                  <span class="material-icons-round" id="portfolioClearField1Btn" 
+                        onclick="window.clearPortfolioInputField('portfolioField1', 'portfolioClearField1Btn')" 
+                        style="display: none; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #6c757d; font-size: 20px; cursor: pointer; user-select: none; z-index: 9999!important; background: transparent;">cancel</span>
+              </div>
+          </div>
 
-        <!-- Volume Field -->
-        <div class="modal-field-group" style="flex: 1;">
-            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioField2Label">Volume:</label>
-            <div style="position: relative; width: 100%; z-index: 10;" id="portfolioField2Container">
-                <input type="text"
-                    id="portfolioField2" inputmode="decimal"
-                    placeholder="0"
-                    oninput="if(typeof handlePortfolioVolumeInput==='function') handlePortfolioVolumeInput(this); window.syncPortfolioClearBtn('portfolioField2', 'portfolioClearField2Btn');"
-                    onkeyup="window.syncPortfolioClearBtn('portfolioField2', 'portfolioClearField2Btn');"
-                    onfocus="if(typeof handlePortfolioRateFocus==='function') handlePortfolioRateFocus(this); window.syncPortfolioClearBtn('portfolioField2', 'portfolioClearField2Btn');"
-                    onblur="if(typeof handlePortfolioRateBlur==='function') handlePortfolioRateBlur(this);"
-                    style="width: 100%; padding: 14px 40px 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:DM Sans; font-size: 20px; box-sizing: border-box; outline: none; position: relative; z-index: 1;" />
-                
-                <span class="material-icons-round" id="portfolioClearField2Btn" 
-                      onclick="window.clearPortfolioInputField('portfolioField2', 'portfolioClearField2Btn')" 
-                      style="display: none; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #6c757d; font-size: 20px; cursor: pointer; user-select: none; z-index: 9999!important; background: transparent;">cancel</span>
-            </div>
-        </div>
-    </div>
+          <!-- Volume Field -->
+          <div class="modal-field-group" style="flex: 1;">
+              <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioField2Label">Volume:</label>
+              <div style="position: relative; width: 100%; z-index: 10;" id="portfolioField2Container">
+                  <input type="text"
+                      id="portfolioField2" inputmode="decimal"
+                      placeholder="0"
+                      oninput="if(typeof handlePortfolioVolumeInput==='function') handlePortfolioVolumeInput(this); window.syncPortfolioClearBtn('portfolioField2', 'portfolioClearField2Btn');"
+                      onkeyup="window.syncPortfolioClearBtn('portfolioField2', 'portfolioClearField2Btn');"
+                      onfocus="if(typeof handlePortfolioRateFocus==='function') handlePortfolioRateFocus(this); window.syncPortfolioClearBtn('portfolioField2', 'portfolioClearField2Btn');"
+                      onblur="if(typeof handlePortfolioRateBlur==='function') handlePortfolioRateBlur(this);"
+                      style="width: 100%; padding: 14px 40px 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:DM Sans; font-size: 20px; box-sizing: border-box; outline: none; position: relative; z-index: 1;" />
+                  
+                  <span class="material-icons-round" id="portfolioClearField2Btn" 
+                        onclick="window.clearPortfolioInputField('portfolioField2', 'portfolioClearField2Btn')" 
+                        style="display: none; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #6c757d; font-size: 20px; cursor: pointer; user-select: none; z-index: 9999!important; background: transparent;">cancel</span>
+              </div>
+          </div>
+      </div>
 
-    <div id="portfolioDateNoteRow" style="display: flex; gap: 12px; margin-bottom: 16px;">
-        <div style="flex: 1;" id="portfolioField3Col">
-            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioField3Label">Entry Date:</label>
-            <div id="portfolioField3Wrapper">
-                <div class="th-filter-wrap" onclick="togglePortfolioDatePicker(event)" style="position: relative; width: 100%;">
-                    <div id="portfolioDateTrigger" style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; box-sizing: border-box; cursor: pointer; display:flex; align-items:center; justify-content: space-between;">
-                        <span id="portfolioDateTriggerText">Select date</span>
-                        <i class="bi bi-calendar" style="color: var(--text-secondary); font-size: 14px!important;"></i>
-                    </div>
-                    <div class="col-menu col-menu-date-single" id="portfolio-cal-menu">
-                        <div class="cal-header">
-                            <button type="button" class="cal-nav-btn" onclick="portfolioCalNavigate(event, -1)"><i class="bi bi-chevron-left"></i></button>
-                            <div class="cal-month-label" id="portfolio-cal-month-label">—</div>
-                            <button type="button" class="cal-nav-btn" onclick="portfolioCalNavigate(event, 1)"><i class="bi bi-chevron-right"></i></button>
-                        </div>
-                        <div class="cal-weekdays">
-                            <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
-                        </div>
-                        <div class="cal-grid" id="portfolio-cal-grid"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="quick-amt-group" id="portfolioAmountChips" style="font-family:DM Sans!important; display: none; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; justify-content: flex-start;"></div>
-        <div style="flex: 1;" id="portfolioNoteCol">
-            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Note:</label>
-            <input type="text"
-                id="portfolioNote"
-                placeholder="Optional note"
-                style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; font-weight:300!important; box-sizing: border-box; outline: none;" />
-        </div>
-    </div>
+      <div id="portfolioDateNoteRow" style="display: flex; gap: 12px; margin-bottom: 16px;">
+          <div style="flex: 1;" id="portfolioField3Col">
+              <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioField3Label">Entry Date:</label>
+              <div id="portfolioField3Wrapper">
+                  <div class="th-filter-wrap" onclick="togglePortfolioDatePicker(event)" style="position: relative; width: 100%;">
+                      <div id="portfolioDateTrigger" style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; box-sizing: border-box; cursor: pointer; display:flex; align-items:center; justify-content: space-between;">
+                          <span id="portfolioDateTriggerText">Select date</span>
+                          <i class="bi bi-calendar" style="color: var(--text-secondary); font-size: 14px!important;"></i>
+                      </div>
+                      <div class="col-menu col-menu-date-single" id="portfolio-cal-menu">
+                          <div class="cal-header">
+                              <button type="button" class="cal-nav-btn" onclick="portfolioCalNavigate(event, -1)"><i class="bi bi-chevron-left"></i></button>
+                              <div class="cal-month-label" id="portfolio-cal-month-label">—</div>
+                              <button type="button" class="cal-nav-btn" onclick="portfolioCalNavigate(event, 1)"><i class="bi bi-chevron-right"></i></button>
+                          </div>
+                          <div class="cal-weekdays">
+                              <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                          </div>
+                          <div class="cal-grid" id="portfolio-cal-grid"></div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="quick-amt-group" id="portfolioAmountChips" style="font-family:DM Sans!important; display: none; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; justify-content: flex-start;"></div>
+          <div style="flex: 1;" id="portfolioNoteCol">
+              <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Note:</label>
+              <input type="text"
+                  id="portfolioNote"
+                  placeholder="Optional note"
+                  style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; font-weight:300!important; box-sizing: border-box; outline: none;" />
+          </div>
+      </div>
 
-    <div id="modalErrorMessage" style="display: none; padding: 12px; margin-bottom: 16px; background: rgba(220, 53, 69, 0.1); border: 0px solid #dc3545; color: #ea868f; border-radius: 8px; font-size: 13px; font-weight: 500;"></div>
-    <div id="modalSuccessMessage" style="display: none; padding: 14px; margin-bottom: 16px; background: rgba(40, 167, 69, 0.15); border: 0px solid #28a745; color: #75b798; border-radius: 12px; font-size: 14px; font-weight: 500; text-align: center; align-items: center; justify-content: center; gap: 8px;">
-        <span class="material-icons-round" style="color: #28a745; font-size: 18px;">check_circle</span>
-        <span id="successText">Position added successfully!</span>
-    </div>
+      <div id="modalErrorMessage" style="display: none; padding: 12px; margin-bottom: 16px; background: rgba(220, 53, 69, 0.1); border: 0px solid #dc3545; color: #ea868f; border-radius: 8px; font-size: 13px; font-weight: 500;"></div>
+      <div id="modalSuccessMessage" style="display: none; padding: 14px; margin-bottom: 16px; background: rgba(40, 167, 69, 0.15); border: 0px solid #28a745; color: #75b798; border-radius: 12px; font-size: 14px; font-weight: 500; text-align: center; align-items: center; justify-content: center; gap: 8px;">
+          <span class="material-icons-round" style="color: #28a745; font-size: 18px;">check_circle</span>
+          <span id="successText">Position added successfully!</span>
+      </div>
 
-    <div style="display: flex; gap: 12px; margin-top: 16px;">
-        <button onclick="closeModal()" id="modalCancelBtn" style="flex: 1; font-family:Lexend!important; font-size:14px!important; padding: 13px; background: #1e222b; border: 0px solid #2d313c; color: #cbd5e1; border-radius: 12px; font-weight: 600; cursor: pointer;">Cancel</button>
-        <button onclick="processPortfolioAdd()" class="btn-submit-tx" id="portfolioSubmitBtn" style="flex: 2; font-family:Lexend!important; font-size:13px!important; padding: 14px; background: #2d3748; border: none; color: #ffffff; border-radius: 12px; font-weight: 600; cursor: pointer;">Add Position</button>
-    </div>
-    `;
+      <div style="display: flex; gap: 12px; margin-top: 16px;">
+          <button onclick="closeModal()" id="modalCancelBtn" style="flex: 1; font-family:Lexend!important; font-size:14px!important; padding: 13px; background: #1e222b; border: 0px solid #2d313c; color: #cbd5e1; border-radius: 12px; font-weight: 600; cursor: pointer;">Cancel</button>
+          <button onclick="processPortfolioAdd()" class="btn-submit-tx" id="portfolioSubmitBtn" style="flex: 2; font-family:Lexend!important; font-size:13px!important; padding: 14px; background: #2d3748; border: none; color: #ffffff; border-radius: 12px; font-weight: 600; cursor: pointer;">Add Position</button>
+      </div>
+      `;
 
-    backdrop.classList.add('active');
-    backdrop.style.pointerEvents = 'auto';
+      backdrop.classList.add('active');
+      backdrop.style.pointerEvents = 'auto';
 
-    window.portfolioIsSavingMode = false;
+      window.portfolioIsSavingMode = false;
 
-    window.syncPortfolioClearBtn = function(inputId, btnId) {
-        const inputEl = document.getElementById(inputId);
-        const btn = document.getElementById(btnId);
-        if (inputEl && btn) {
-            const val = inputEl.value || (inputEl.dataset ? (inputEl.dataset.rawValue || inputEl.dataset.computedValue) : '') || '';
-            if (val && val.toString().trim() !== '') {
-                btn.style.setProperty('display', 'inline-block', 'important');
-            } else {
-                btn.style.setProperty('display', 'none', 'important');
-            }
-        }
-    };
+      window.syncPortfolioClearBtn = function(inputId, btnId) {
+          const inputEl = document.getElementById(inputId);
+          const btn = document.getElementById(btnId);
+          if (inputEl && btn) {
+              const val = inputEl.value || (inputEl.dataset ? (inputEl.dataset.rawValue || inputEl.dataset.computedValue) : '') || '';
+              if (val && val.toString().trim() !== '') {
+                  btn.style.setProperty('display', 'inline-block', 'important');
+              } else {
+                  btn.style.setProperty('display', 'none', 'important');
+              }
+          }
+      };
 
-    window.clearPortfolioInputField = function(inputId, btnId) {
-        const inputEl = document.getElementById(inputId);
-        if (inputEl) {
-            inputEl.value = '';
-            delete inputEl.dataset.computedValue;
-            delete inputEl.dataset.rawValue;
+      window.clearPortfolioInputField = function(inputId, btnId) {
+          const inputEl = document.getElementById(inputId);
+          if (inputEl) {
+              inputEl.value = '';
+              delete inputEl.dataset.computedValue;
+              delete inputEl.dataset.rawValue;
 
-            if (typeof handlePortfolioSymbolInput === 'function' && inputId === 'portfolioSymbol') {
-                handlePortfolioSymbolInput(inputEl);
-            }
-            if (typeof handlePortfolioEntryPriceInput === 'function' && inputId === 'portfolioField1') {
-                handlePortfolioEntryPriceInput(inputEl);
-            }
-            if (typeof handlePortfolioVolumeInput === 'function' && inputId === 'portfolioField2') {
-                handlePortfolioVolumeInput(inputEl);
-            }
-            
-            inputEl.dispatchEvent(new Event('input', { bubbles: true }));
-            inputEl.focus();
-        }
-        window.syncPortfolioClearBtn(inputId, btnId);
-    };
+              if (typeof handlePortfolioSymbolInput === 'function' && inputId === 'portfolioSymbol') {
+                  handlePortfolioSymbolInput(inputEl);
+              }
+              if (typeof handlePortfolioEntryPriceInput === 'function' && inputId === 'portfolioField1') {
+                  handlePortfolioEntryPriceInput(inputEl);
+              }
+              if (typeof handlePortfolioVolumeInput === 'function' && inputId === 'portfolioField2') {
+                  handlePortfolioVolumeInput(inputEl);
+              }
+              
+              inputEl.dispatchEvent(new Event('input', { bubbles: true }));
+              inputEl.focus();
+          }
+          window.syncPortfolioClearBtn(inputId, btnId);
+      };
 
-    var defaultTypeOption = document.querySelector('#portfolioTypeOptions .custom-option-item[data-value="Stock"]');
-    if (defaultTypeOption) {
-        handlePortfolioTypeSelect(defaultTypeOption);
-    }
+      var defaultTypeOption = document.querySelector('#portfolioTypeOptions .custom-option-item[data-value="Stock"]');
+      if (defaultTypeOption) {
+          handlePortfolioTypeSelect(defaultTypeOption);
+      }
 
-    setTimeout(function() {
-        ['portfolioSymbol', 'portfolioField1', 'portfolioField2'].forEach(function(id) {
-            const btnId = id === 'portfolioSymbol' ? 'portfolioClearSymbolBtn' : (id === 'portfolioField1' ? 'portfolioClearField1Btn' : 'portfolioClearField2Btn');
-            window.syncPortfolioClearBtn(id, btnId);
-        });
+      setTimeout(function() {
+          ['portfolioSymbol', 'portfolioField1', 'portfolioField2'].forEach(function(id) {
+              const btnId = id === 'portfolioSymbol' ? 'portfolioClearSymbolBtn' : (id === 'portfolioField1' ? 'portfolioClearField1Btn' : 'portfolioClearField2Btn');
+              window.syncPortfolioClearBtn(id, btnId);
+          });
 
-        const symbolInput = document.getElementById('portfolioSymbol');
-        if (symbolInput) symbolInput.focus();
-    }, 100);
+          const symbolInput = document.getElementById('portfolioSymbol');
+          if (symbolInput) symbolInput.focus();
+      }, 100);
   }
 
   var portfolioSymbolIconCache = null;
@@ -8442,594 +8442,603 @@ function applyPortfolioFiltersAndRender() {
     function handlePortfolioRateFocus(el){el.value=el.dataset.rawValue||el.value.replace("%","")}
     function handlePortfolioVolumeInput(el){var cleaned=el.value.replace(/,/g,".").replace(/[^\d.]/g,""),parts=cleaned.split(".");parts.length>2&&(cleaned=parts[0]+"."+parts.slice(1).join("")),el.value=cleaned,el.dataset.rawValue=cleaned}
     function openPnlCalendarModal() {
-      let modal = document.getElementById('pnl-calendar-modal');
-      if (!modal) {
-        modal = document.createElement('div');
-        modal.id = 'pnl-calendar-modal';
-        modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:9999;font-family:"DM Sans",sans-serif;';
-        modal.innerHTML = `
-                  <div style="font-family:'DM Sans',sans-serif;background:#14171f;color:#f8f9fa;padding:14px;border-radius:16px;min-height:440px;width:440px;box-shadow:0 8px 32px rgba(0,0,0,0.5);">
-                      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-                          <div style="display:flex;align-items:center;gap:12px;">
-                              <button id="pnl-prev-nav" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:16px;"><i class="bi bi-chevron-left"></i></button>
-                              <span id="pnl-nav-title" style="font-weight:600;font-size:16px;cursor:pointer;"></span>
-                              <button id="pnl-next-nav" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:16px;"><i class="bi bi-chevron-right"></i></button>
-                          </div>
-                          <div style="display:flex;align-items:center;gap:10px;">
-                              <div style="background:#1e222b;padding:2px;border-radius:8px;display:flex;gap:2px;">
-                                  <button id="pnl-view-daily" style="background:#00bfa5;border:none;color:#000;font-weight:600;font-size:13px;padding:4px 8px;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif;">Daily</button>
-                                  <button id="pnl-view-monthly" style="background:none;border:none;color:#94a3b8;font-weight:600;font-size:13px;padding:4px 8px;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif;">Monthly</button>
-                                  <button id="pnl-view-yearly" style="background:none;border:none;color:#94a3b8;font-weight:600;font-size:13px;padding:4px 8px;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif;">Yearly</button>
-                              </div>
-                              <button id="pnl-close-modal" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:18px;"><i class="bi bi-x-lg"></i></button>
-                          </div>
+    // 1. Clear any active calendar popovers
+    document.querySelectorAll('[id="portfolio-cal-menu"]').forEach(function(el) { el.remove(); });
+
+    // 2. Target the existing modal DOM structure
+    const backdrop = document.getElementById('modalBackdrop');
+    const title = document.getElementById('modalTitle');
+    const body = document.getElementById('modalBody');
+    // Target the modal card/container inside the backdrop
+    const modalContent = backdrop.querySelector('.modal-content') || backdrop.firstElementChild;
+
+    if (modalContent) {
+        modalContent.style.width = '100%'; modalContent.style.height = '460px';
+        modalContent.style.maxWidth = '100%'; // Ensures container isn't constrained by max-width
+        modalContent.style.margin = '0';      // Removes side margins if needed
+    }
+
+    if (!backdrop || !title || !body) return;
+
+    // 3. Set Modal Header
+    title.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+          <div style="display:flex; align-items:center; gap:12px;">
+              <button id="pnl-prev-nav" style="background:none; border:none; color:#94a3b8; cursor:pointer; font-size:16px;"><i class="bi bi-chevron-left"></i></button>
+              <span id="pnl-nav-title" style="font-weight:600; font-size:16px; color:#f8f9fa; cursor:pointer;"></span>
+              <button id="pnl-next-nav" style="background:none; border:none; color:#94a3b8; cursor:pointer; font-size:16px;"><i class="bi bi-chevron-right"></i></button>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+              <div style="background:#1e222b; padding:2px; border-radius:8px; display:flex; gap:2px;">
+                  <button id="pnl-view-daily" style="background:#00bfa5; border:none; color:#000; font-weight:600; font-size:13px; padding:4px 8px; border-radius:6px; cursor:pointer; font-family:'DM Sans',sans-serif;">Daily</button>
+                  <button id="pnl-view-monthly" style="background:none; border:none; color:#94a3b8; font-weight:600; font-size:13px; padding:4px 8px; border-radius:6px; cursor:pointer; font-family:'DM Sans',sans-serif;">Monthly</button>
+                  <button id="pnl-view-yearly" style="background:none; border:none; color:#94a3b8; font-weight:600; font-size:13px; padding:4px 8px; border-radius:6px; cursor:pointer; font-family:'DM Sans',sans-serif;">Yearly</button>
+              </div>
+              <button onclick="closeModal()" id="pnl-close-modal" style="background:none; border:none; color:#94a3b8; cursor:pointer; font-size:18px;"><i class="bi bi-x-lg"></i></button>
+          </div>
+      </div>
+    `;
+
+    // 4. Inject Modal Body Content
+    body.innerHTML = `
+      <div id="pnl-days-header" style="display:grid; grid-template-columns:repeat(6, 1fr); text-align:center; font-size:12px; color:#64748b; margin-bottom:8px; font-weight:600;">
+          <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>∑</span>
+      </div>
+      <div id="pnl-calendar-grid" style="display:grid; grid-template-columns:repeat(6, 1fr); gap:6px; max-height:320px;"></div>
+
+      <!-- Nested P/L Input Dialog -->
+      <div id="pnl-input-dialog" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:10000; font-family:'DM Sans',sans-serif;">
+          <div style="background:#1e222b; padding:20px; border-radius:16px; width:380px; color:#fff; box-shadow:0 8px 32px rgba(0,0,0,0.5);">
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">
+                  <img id="pnl-modal-icon" src="https://github.com/tinsntp/investment/blob/main/stock.png?raw=true" style="width:32px; height:32px; border-radius:6px; object-fit:cover;" />
+                  <h3 id="pnl-input-date-title" style="margin:0; font-size:16px; color:#f8f9fa; font-weight:600;">Add P/L</h3>
+              </div>
+              
+              <!-- Row 1: Symbol & Volume -->
+              <div style="display:flex; gap:12px; margin-bottom:12px;">
+                  <div style="flex:1; position:relative;">
+                      <label style="display:block; color:#94a3b8; font-size:13px; margin-bottom:6px;">Symbol</label>
+                      <div style="position:relative; display:flex; align-items:center;">
+                          <input type="text" id="pnl-symbol-input" value="XAUUSD" placeholder="XAUUSD" autocomplete="off" style="width:100%; padding:10px 30px 10px 12px; background:#14171f; border:none; border-radius:8px; color:#fff; box-sizing:border-box; outline:none; text-transform:uppercase; font-size:15px; font-family:'DM Sans',sans-serif;" />
+                          <span id="pnl-clear-symbol-btn" onclick="document.getElementById('pnl-symbol-input').value=''; updateSymbolIcon(''); document.getElementById('pnl-symbol-dropdown').style.display='none'; document.getElementById('pnl-symbol-input').focus();" style="position:absolute; right:10px; cursor:pointer; color:#94a3b8; font-size:18px; user-select:none;">&times;</span>
                       </div>
-                      <div id="pnl-days-header" style="display:grid;grid-template-columns:repeat(6, 1fr);text-align:center;font-size:12px;color:#64748b;margin-bottom:8px;font-weight:600;">
-                          <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>∑</span>
-                      </div>
-                      <div id="pnl-calendar-grid" style="display:grid;grid-template-columns:repeat(6, 1fr);gap:6px;max-height:320px;"></div>
+                      <div id="pnl-symbol-dropdown" style="display:none; position:absolute; top:100%; left:0; width:100%; background:#14171f; border-radius:8px; margin-top:4px; max-height:150px; overflow-y:auto; z-index:10001; box-shadow:0 4px 12px rgba(0,0,0,0.3);"></div>
                   </div>
-                  <div id="pnl-input-dialog" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;z-index:10000;font-family:'DM Sans',sans-serif;">
-                      <div style="background:#1e222b;padding:20px;border-radius:16px;width:380px;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,0.5);">
-                          <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
-                              <img id="pnl-modal-icon" src="https://github.com/tinsntp/investment/blob/main/stock.png?raw=true" style="width:32px;height:32px;border-radius:6px;object-fit:cover;" />
-                              <h3 id="pnl-input-date-title" style="margin:0;font-size:16px;color:#f8f9fa;font-weight:600;">Add P/L</h3>
-                          </div>
-                          
-                          <!-- Row 1: Symbol & Volume -->
-                          <div style="display:flex;gap:12px;margin-bottom:12px;">
-                              <div style="flex:1;position:relative;">
-                                  <label style="display:block;color:#94a3b8;font-size:13px;margin-bottom:6px;">Symbol</label>
-                                  <div style="position:relative;display:flex;align-items:center;">
-                                      <input type="text" id="pnl-symbol-input" value="XAUUSD" placeholder="XAUUSD" autocomplete="off" style="width:100%;padding:10px 30px 10px 12px;background:#14171f;border:none;border-radius:8px;color:#fff;box-sizing:border-box;outline:none;text-transform:uppercase;font-size:15px;font-family:'DM Sans',sans-serif;" />
-                                      <span id="pnl-clear-symbol-btn" onclick="document.getElementById('pnl-symbol-input').value=''; updateSymbolIcon(''); document.getElementById('pnl-symbol-dropdown').style.display='none'; document.getElementById('pnl-symbol-input').focus();" style="position:absolute;right:10px;cursor:pointer;color:#94a3b8;font-size:18px;user-select:none;">&times;</span>
-                                  </div>
-                                  <div id="pnl-symbol-dropdown" style="display:none;position:absolute;top:100%;left:0;width:100%;background:#14171f;border-radius:8px;margin-top:4px;max-height:150px;overflow-y:auto;z-index:10001;box-shadow:0 4px 12px rgba(0,0,0,0.3);"></div>
-                              </div>
-                              <div style="flex:1;position:relative;">
-                                  <label style="display:block;color:#94a3b8;font-size:13px;margin-bottom:6px;">Volume</label>
-                                  <div style="position:relative;display:flex;align-items:center;">
-                                      <input type="text" id="pnl-vol-input" value="0.05" style="width:100%;padding:10px 30px 10px 12px;background:#14171f;border:none;border-radius:8px;color:#fff;box-sizing:border-box;outline:none;font-size:18px;font-family:'DM Sans',sans-serif;" />
-                                      <span id="pnl-clear-vol-btn" onclick="document.getElementById('pnl-vol-input').value='';" style="position:absolute;right:10px;cursor:pointer;color:#94a3b8;font-size:18px;user-select:none;">&times;</span>
-                                  </div>
-                              </div>
-                          </div>
-
-                          <!-- Row 2: Entry Price & Exit Price -->
-                          <div style="display:flex;gap:12px;margin-bottom:12px;">
-                              <div style="flex:1;">
-                                  <label style="display:block;color:#94a3b8;font-size:13px;margin-bottom:6px;">Entry Price</label>
-                                  <input type="text" id="pnl-entry-price-input" placeholder="0.00" style="width:100%;padding:10px 12px;background:#14171f;border:none;border-radius:8px;color:#fff;box-sizing:border-box;outline:none;font-size:18px;font-family:'DM Sans',sans-serif;" />
-                              </div>
-                              <div style="flex:1;">
-                                  <label style="display:block;color:#94a3b8;font-size:13px;margin-bottom:6px;">Exit Price</label>
-                                  <input type="text" id="pnl-exit-price-input" placeholder="0.00" style="width:100%;padding:10px 12px;background:#14171f;border:none;border-radius:8px;color:#fff;box-sizing:border-box;outline:none;font-size:18px;font-family:'DM Sans',sans-serif;" />
-                              </div>
-                          </div>
-
-                          <!-- Row 3: P/L Amount & Action (Long/Short) -->
-                          <div style="display:flex;gap:12px;margin-bottom:20px;">
-                              <div style="flex:1;">
-                                  <label style="display:block;color:#94a3b8;font-size:13px;margin-bottom:6px;">P/L Amount (₫):</label>
-                                  <input type="text" id="pnl-amount-input" placeholder="0" style="width:100%;padding:10px 12px;background:#14171f;border:none;border-radius:8px;color:#fff;box-sizing:border-box;outline:none;font-size:18px;font-family:'DM Sans',sans-serif;" />
-                              </div>
-                              <div style="flex:1;">
-                                  <label style="display:block;color:#94a3b8;font-size:15px;margin-bottom:6px;">Action</label>
-                                  <div style="display:flex;background:#14171f;border-radius:12px;padding:2px;height:39px;box-sizing:border-box;align-items:center;">
-                                      <button type="button" id="pnl-action-long" onclick="setPnLAction('LONG')" style="flex:1;height:100%;border:none;border-radius:10px;background:#14b8a6;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:4px;">
-                                          <i class="bi bi-plus-circle-fill" style="font-size:16px!important;"></i> Buy
-                                      </button>
-                                      <button type="button" id="pnl-action-short" onclick="setPnLAction('SHORT')" style="flex:1;height:100%;border:none;border-radius:10px;background:transparent;color:#94a3b8;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:4px;">
-                                          <i class="bi bi-dash-circle-fill" style="font-size:16px!important;"></i> Sell
-                                      </button>
-                                  </div>
-                                  <input type="hidden" id="pnl-action-type" value="LONG" />
-                              </div>
-                          </div>
-
-                          <div id="pnl-error-message" style="display:none;padding:10px 12px;margin-bottom:12px;background:rgba(220,53,69,0.1);color:#ea868f;border-radius:8px;font-size:12px;font-weight:500;"></div>
-                          <div style="display:flex;justify-content:flex-end;gap:8px;">
-                              <button id="pnl-cancel-input" style="padding:8px 14px;background:none;border:none;color:#94a3b8;cursor:pointer;font-size:14px;font-family:'DM Sans',sans-serif;">Cancel</button>
-                              <button id="pnl-save-input" style="padding:8px 16px;background:#00bfa5;border:none;border-radius:10px;color:#000;font-weight:600;cursor:pointer;font-size:14px;font-family:'DM Sans',sans-serif;">Save</button>
-                          </div>
+                  <div style="flex:1; position:relative;">
+                      <label style="display:block; color:#94a3b8; font-size:13px; margin-bottom:6px;">Volume</label>
+                      <div style="position:relative; display:flex; align-items:center;">
+                          <input type="text" id="pnl-vol-input" value="0.05" style="width:100%; padding:10px 30px 10px 12px; background:#14171f; border:none; border-radius:8px; color:#fff; box-sizing:border-box; outline:none; font-size:18px; font-family:'DM Sans',sans-serif;" />
+                          <span id="pnl-clear-vol-btn" onclick="document.getElementById('pnl-vol-input').value='';" style="position:absolute; right:10px; cursor:pointer; color:#94a3b8; font-size:18px; user-select:none;">&times;</span>
                       </div>
                   </div>
-              `;
-        document.body.appendChild(modal);
+              </div>
 
-        const closeBtn = document.getElementById('pnl-close-modal');
-        if (closeBtn) closeBtn.onclick = () => modal.style.display = 'none';
-        modal.onclick = (e) => {
-          if (e.target === modal) {
-              modal.style.display = 'none';
-              const dropdown = document.getElementById('pnl-symbol-dropdown');
-              if (dropdown) dropdown.style.display = 'none';
-          }
+              <!-- Row 2: Entry Price & Exit Price -->
+              <div style="display:flex; gap:12px; margin-bottom:12px;">
+                  <div style="flex:1;">
+                      <label style="display:block; color:#94a3b8; font-size:13px; margin-bottom:6px;">Entry Price</label>
+                      <input type="text" id="pnl-entry-price-input" placeholder="0.00" style="width:100%; padding:10px 12px; background:#14171f; border:none; border-radius:8px; color:#fff; box-sizing:border-box; outline:none; font-size:18px; font-family:'DM Sans',sans-serif;" />
+                  </div>
+                  <div style="flex:1;">
+                      <label style="display:block; color:#94a3b8; font-size:13px; margin-bottom:6px;">Exit Price</label>
+                      <input type="text" id="pnl-exit-price-input" placeholder="0.00" style="width:100%; padding:10px 12px; background:#14171f; border:none; border-radius:8px; color:#fff; box-sizing:border-box; outline:none; font-size:18px; font-family:'DM Sans',sans-serif;" />
+                  </div>
+              </div>
+
+              <!-- Row 3: P/L Amount & Action -->
+              <div style="display:flex; gap:12px; margin-bottom:20px;">
+                  <div style="flex:1;">
+                      <label style="display:block; color:#94a3b8; font-size:13px; margin-bottom:6px;">P/L Amount (₫):</label>
+                      <input type="text" id="pnl-amount-input" placeholder="0" style="width:100%; padding:10px 12px; background:#14171f; border:none; border-radius:8px; color:#fff; box-sizing:border-box; outline:none; font-size:18px; font-family:'DM Sans',sans-serif;" />
+                  </div>
+                  <div style="flex:1;">
+                      <label style="display:block; color:#94a3b8; font-size:15px; margin-bottom:6px;">Action</label>
+                      <div style="display:flex; background:#14171f; border-radius:12px; padding:2px; height:39px; box-sizing:border-box; align-items:center;">
+                          <button type="button" id="pnl-action-long" onclick="setPnLAction('LONG')" style="flex:1; height:100%; border:none; border-radius:10px; background:#14b8a6; color:#fff; font-size:14px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; display:flex; align-items:center; justify-content:center; gap:4px;">
+                              <i class="bi bi-plus-circle-fill" style="font-size:16px!important;"></i> Buy
+                          </button>
+                          <button type="button" id="pnl-action-short" onclick="setPnLAction('SHORT')" style="flex:1; height:100%; border:none; border-radius:10px; background:transparent; color:#94a3b8; font-size:14px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; display:flex; align-items:center; justify-content:center; gap:4px;">
+                              <i class="bi bi-dash-circle-fill" style="font-size:16px!important;"></i> Sell
+                          </button>
+                      </div>
+                      <input type="hidden" id="pnl-action-type" value="LONG" />
+                  </div>
+              </div>
+
+              <div id="pnl-error-message" style="display:none; padding:10px 12px; margin-bottom:12px; background:rgba(220,53,69,0.1); color:#ea868f; border-radius:8px; font-size:12px; font-weight:500;"></div>
+              <div style="display:flex; justify-content:flex-end; gap:8px;">
+                  <button id="pnl-cancel-input" style="padding:8px 14px; background:none; border:none; color:#94a3b8; cursor:pointer; font-size:14px; font-family:'DM Sans',sans-serif;">Cancel</button>
+                  <button id="pnl-save-input" style="padding:8px 16px; background:#00bfa5; border:none; border-radius:10px; color:#000; font-weight:600; cursor:pointer; font-size:14px; font-family:'DM Sans',sans-serif;">Save</button>
+              </div>
+          </div>
+      </div>
+    `;
+
+    // 5. Open Modal Backdrop
+    backdrop.classList.add('active');
+    backdrop.style.pointerEvents = 'auto';
+
+    // State Variables & Handlers
+    let currentNavDate = new Date();
+    let currentView = 'daily';
+    let pnlData = {};
+    let selectedDateStr = '';
+    let symbolIconMap = {};
+    const defaultSymbols = ["BTCUSD", "XAUUSD", "XAGUSD", "ETHUSD", "USDJPY"];
+
+    const fetchSymbolIcons = async () => {
+        try {
+            const res = await fetch(`${GOOGLE_SHEET_CSV_URL}1012065455`);
+            const text = await res.text();
+            text.split("\n").forEach(row => {
+                if (!row.trim()) return;
+                const cols = row.split(",").map(col => col.trim().replace(/^["']|["']$/g, ""));
+                if (cols.length >= 2) {
+                    const sym = cols[0].toUpperCase();
+                    const url = cols[1];
+                    if (sym && url) {
+                        symbolIconMap[sym] = url;
+                    }
+                }
+            });
+        } catch (err) {
+            console.error("Error fetching symbol icons", err);
+        }
+    };
+    
+    window.updateSymbolIcon = function(symbol) {
+        const iconEl = document.getElementById('pnl-modal-icon') || document.getElementById('portfolioModalIcon');
+        if (!iconEl) return;
+        const cleanSymbol = symbol.trim().toUpperCase();
+        if (symbolIconMap[cleanSymbol]) {
+            iconEl.src = symbolIconMap[cleanSymbol];
+        } else {
+            iconEl.src = 'https://github.com/tinsntp/investment/blob/main/stock.png?raw=true';
+        }
+    };
+
+    const symbolInput = document.getElementById('pnl-symbol-input');
+    const symbolDropdown = document.getElementById('pnl-symbol-dropdown');
+
+    if (symbolInput) {
+        symbolInput.oninput = (e) => {
+            const val = e.target.value.trim().toUpperCase();
+            updateSymbolIcon(val);
+            const filtered = defaultSymbols.filter(s => s.includes(val));
+            if (filtered.length > 0 && val.length > 0 && symbolDropdown) {
+                symbolDropdown.innerHTML = filtered.map(s => `<div class="pnl-sym-option" style="padding:8px 12px;font-size:13px;cursor:pointer;color:#f8f9fa;" onmouseover="this.style.background='#1e222b'" onmouseout="this.style.background='transparent'">${s}</div>`).join('');
+                symbolDropdown.style.display = 'block';
+                
+                symbolDropdown.querySelectorAll('.pnl-sym-option').forEach(opt => {
+                    opt.onclick = () => {
+                        symbolInput.value = opt.innerText;
+                        updateSymbolIcon(opt.innerText);
+                        symbolDropdown.style.display = 'none';
+                    };
+                });
+            } else if (symbolDropdown) {
+                symbolDropdown.style.display = 'none';
+            }
         };
-      }
 
-      modal.style.display = 'flex';
-      let currentNavDate = new Date();
-      let currentView = 'daily';
-      let pnlData = {};
-      let selectedDateStr = '';
-      let symbolIconMap = {};
-      const defaultSymbols = ["BTCUSD", "XAUUSD", "XAGUSD", "ETHUSD", "USDJPY"];
+        symbolInput.onfocus = () => {
+            const val = symbolInput.value.trim().toUpperCase();
+            const filtered = defaultSymbols.filter(s => s.includes(val));
+            if (filtered.length > 0 && symbolDropdown) {
+                symbolDropdown.innerHTML = filtered.map(s => `<div class="pnl-sym-option" style="padding:8px 12px;font-size:13px;cursor:pointer;color:#f8f9fa;" onmouseover="this.style.background='#1e222b'" onmouseout="this.style.background='transparent'">${s}</div>`).join('');
+                symbolDropdown.style.display = 'block';
+                
+                symbolDropdown.querySelectorAll('.pnl-sym-option').forEach(opt => {
+                    opt.onclick = () => {
+                        symbolInput.value = opt.innerText;
+                        updateSymbolIcon(opt.innerText);
+                        symbolDropdown.style.display = 'none';
+                    };
+                });
+            }
+        };
+    }
 
-      const fetchSymbolIcons = async () => {
-          try {
-              const res = await fetch(`${GOOGLE_SHEET_CSV_URL}1012065455`);
-              const text = await res.text();
-              text.split("\n").forEach(row => {
-                  if (!row.trim()) return;
-                  const cols = row.split(",").map(col => col.trim().replace(/^["']|["']$/g, ""));
-                  if (cols.length >= 2) {
-                      const sym = cols[0].toUpperCase();
-                      const url = cols[1];
-                      if (sym && url) {
-                          symbolIconMap[sym] = url;
-                      }
-                  }
-              });
-          } catch (err) {
-              console.error("Error fetching symbol icons", err);
-          }
-      };
-      
-      window.updateSymbolIcon = function(symbol) {
-          const iconEl = document.getElementById('pnl-modal-icon') || document.getElementById('portfolioModalIcon');
-          if (!iconEl) return;
-          const cleanSymbol = symbol.trim().toUpperCase();
-          if (symbolIconMap[cleanSymbol]) {
-              iconEl.src = symbolIconMap[cleanSymbol];
-          } else {
-              iconEl.src = 'https://github.com/tinsntp/investment/blob/main/stock.png?raw=true';
-          }
-      };
+    const entryPriceInput = document.getElementById('pnl-entry-price-input');
+    const exitPriceInput = document.getElementById('pnl-exit-price-input');
 
-      const symbolInput = document.getElementById('pnl-symbol-input');
-      const symbolDropdown = document.getElementById('pnl-symbol-dropdown');
+    if (entryPriceInput) {
+        entryPriceInput.oninput = (e) => {
+            e.target.value = formatAmountValue(e.target.value);
+        };
+    }
+    if (exitPriceInput) {
+        exitPriceInput.oninput = (e) => {
+            e.target.value = formatAmountValue(e.target.value);
+        };
+    }
 
-      if (symbolInput) {
-          symbolInput.oninput = (e) => {
-              const val = e.target.value.trim().toUpperCase();
-              updateSymbolIcon(val);
-              const filtered = defaultSymbols.filter(s => s.includes(val));
-              if (filtered.length > 0 && val.length > 0 && symbolDropdown) {
-                  symbolDropdown.innerHTML = filtered.map(s => `<div class="pnl-sym-option" style="padding:8px 12px;font-size:13px;cursor:pointer;color:#f8f9fa;" onmouseover="this.style.background='#1e222b'" onmouseout="this.style.background='transparent'">${s}</div>`).join('');
-                  symbolDropdown.style.display = 'block';
-                  
-                  symbolDropdown.querySelectorAll('.pnl-sym-option').forEach(opt => {
-                      opt.onclick = () => {
-                          symbolInput.value = opt.innerText;
-                          updateSymbolIcon(opt.innerText);
-                          symbolDropdown.style.display = 'none';
-                      };
-                  });
-              } else if (symbolDropdown) {
-                  symbolDropdown.style.display = 'none';
-              }
-          };
+    window.formatAmountValue = function(val) {
+        if (val === undefined || val === null || val === '') return '';
+        let strVal = String(val).replace(/[^0-9.-]/g, '');
+        let parts = strVal.split('.');
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        return parts.join('.');
+    };
 
-          symbolInput.onfocus = () => {
-              const val = symbolInput.value.trim().toUpperCase();
-              const filtered = defaultSymbols.filter(s => s.includes(val));
-              if (filtered.length > 0 && symbolDropdown) {
-                  symbolDropdown.innerHTML = filtered.map(s => `<div class="pnl-sym-option" style="padding:8px 12px;font-size:13px;cursor:pointer;color:#f8f9fa;" onmouseover="this.style.background='#1e222b'" onmouseout="this.style.background='transparent'">${s}</div>`).join('');
-                  symbolDropdown.style.display = 'block';
-                  
-                  symbolDropdown.querySelectorAll('.pnl-sym-option').forEach(opt => {
-                      opt.onclick = () => {
-                          symbolInput.value = opt.innerText;
-                          updateSymbolIcon(opt.innerText);
-                          symbolDropdown.style.display = 'none';
-                      };
-                  });
-              }
-          };
-      }
+    const amountInput = document.getElementById('pnl-amount-input');
+    if (amountInput) {
+        amountInput.oninput = (e) => {
+            e.target.value = formatAmountValue(e.target.value);
+        };
+    }
 
-      // Entry/Exit price formatting: same thousand-separator format as P/L Amount
-      const entryPriceInput = document.getElementById('pnl-entry-price-input');
-      const exitPriceInput = document.getElementById('pnl-exit-price-input');
+    window.setPnLAction = function(action) {
+        const longBtn = document.getElementById("pnl-action-long");
+        const shortBtn = document.getElementById("pnl-action-short");
+        const hiddenInput = document.getElementById("pnl-action-type");
+        if (longBtn && shortBtn && hiddenInput) {
+            if (action === "BUY" || action === "LONG") {
+                longBtn.style.background = "#14b8a6";
+                longBtn.style.color = "#fff";
+                shortBtn.style.background = "transparent";
+                shortBtn.style.color = "#94a3b8";
+                hiddenInput.value = "BUY";
+            } else {
+                shortBtn.style.background = "#ec4899";
+                shortBtn.style.color = "#fff";
+                longBtn.style.background = "transparent";
+                longBtn.style.color = "#94a3b8";
+                hiddenInput.value = "SELL";
+            }
+        }
+    };
 
-      if (entryPriceInput) {
-          entryPriceInput.oninput = (e) => {
-              e.target.value = formatAmountValue(e.target.value);
-          };
-      }
-      if (exitPriceInput) {
-          exitPriceInput.oninput = (e) => {
-              e.target.value = formatAmountValue(e.target.value);
-          };
-      }
+    const formatVndShort = val => {
+      const num = parseFloat(val);
+      if (isNaN(num) || 0 === num) return "+0.0M";
+      const absVal = Math.abs(num);
+      let formatted = absVal >= 1e9 
+        ? (absVal / 1e9).toFixed(1) + "B" 
+        : (absVal / 1e6).toFixed(1) + "M";
+      return num >= 0 ? "+" + formatted : "-" + formatted;
+    };
 
-      // P/L Amount formatting: VND style comma division
-      window.formatAmountValue = function(val) {
-          if (val === undefined || val === null || val === '') return '';
-          let strVal = String(val).replace(/[^0-9.-]/g, '');
-          let parts = strVal.split('.');
-          parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-          return parts.join('.');
-      };
+    const setView = view => {
+      currentView = view;
+      ["daily", "monthly", "yearly"].forEach(v => {
+        const btn = document.getElementById(`pnl-view-${v}`);
+        if (btn) {
+            v === view ? (btn.style.background = "#00bfa5", btn.style.color = "#000") : (btn.style.background = "none", btn.style.color = "#94a3b8");
+        }
+      });
+      const daysHeader = document.getElementById("pnl-days-header");
+      if (daysHeader) daysHeader.style.display = "daily" === view ? "grid" : "none";
+      renderView();
+    };
 
-      const amountInput = document.getElementById('pnl-amount-input');
-      if (amountInput) {
-          amountInput.oninput = (e) => {
-              e.target.value = formatAmountValue(e.target.value);
-          };
-      }
-
-      window.setPnLAction = function(action) {
-          const longBtn = document.getElementById("pnl-action-long");
-          const shortBtn = document.getElementById("pnl-action-short");
-          const hiddenInput = document.getElementById("pnl-action-type");
-          if (longBtn && shortBtn && hiddenInput) {
-              if (action === "BUY" || action === "LONG") {
-                  longBtn.style.background = "#14b8a6";
-                  longBtn.style.color = "#fff";
-                  shortBtn.style.background = "transparent";
-                  shortBtn.style.color = "#94a3b8";
-                  hiddenInput.value = "BUY";
+    const viewDailyBtn = document.getElementById('pnl-view-daily');
+    if (viewDailyBtn) viewDailyBtn.onclick = () => setView('daily');
+    const viewMonthlyBtn = document.getElementById('pnl-view-monthly');
+    if (viewMonthlyBtn) viewMonthlyBtn.onclick = () => setView('monthly');
+    const viewYearlyBtn = document.getElementById('pnl-view-yearly');
+    if (viewYearlyBtn) viewYearlyBtn.onclick = () => setView('yearly');
+    
+    const fetchPnlData = async () => {
+      try {
+        const res = await fetch(`${GOOGLE_SHEET_CSV_URL}1158462025`);
+        const text = await res.text();
+        pnlData = {};
+        text.split("\n").forEach(row => {
+          if (!row.trim()) return;
+          const cols = row.split(",").map(col => col.trim().replace(/^["']|["']$/g, ""));
+          if (cols.length >= 2) {
+            const dateKey = cols[0].split("T")[0].split(" ")[0],
+              cleanAmountStr = cols[1].replace(/,/g, ""),
+              amountVal = parseFloat(cleanAmountStr);
+            if (dateKey && !isNaN(amountVal)) {
+              if (!pnlData[dateKey]) {
+                pnlData[dateKey] = {
+                  amount: amountVal,
+                  symbol: cols[3] ? cols[3].toUpperCase() : "",
+                  volume: cols[4] || "",
+                  entryPrice: parseFloat(cols[5]) || "",
+                  exitPrice: parseFloat(cols[6]) || "",
+                  action: cols[7] ? cols[7].toUpperCase() : ""
+                };
               } else {
-                  shortBtn.style.background = "#ec4899";
-                  shortBtn.style.color = "#fff";
-                  longBtn.style.background = "transparent";
-                  longBtn.style.color = "#94a3b8";
-                  hiddenInput.value = "SELL";
+                pnlData[dateKey].amount += amountVal;
+                if (cols[3]) pnlData[dateKey].symbol = cols[3].toUpperCase();
+                if (cols[4]) pnlData[dateKey].volume = cols[4];
+                if (cols[5]) pnlData[dateKey].entryPrice = parseFloat(cols[5]);
+                if (cols[6]) pnlData[dateKey].exitPrice = parseFloat(cols[6]);
+                if (cols[7]) pnlData[dateKey].action = cols[7].toUpperCase();
               }
-          }
-      };
-
-      const formatVndShort = val => {
-        const num = parseFloat(val);
-        if (isNaN(num) || 0 === num) return "+0.0M";
-        const absVal = Math.abs(num);
-        let formatted = absVal >= 1e9 
-          ? (absVal / 1e9).toFixed(1) + "B" 
-          : (absVal / 1e6).toFixed(1) + "M";
-        return num >= 0 ? "+" + formatted : "-" + formatted;
-      };
-
-      const setView = view => {
-        currentView = view, ["daily", "monthly", "yearly"].forEach(v => {
-          const btn = document.getElementById(`pnl-view-${v}`);
-          if (btn) {
-              v === view ? (btn.style.background = "#00bfa5", btn.style.color = "#000") : (btn.style.background = "none", btn.style.color = "#94a3b8");
+            }
           }
         });
-        const daysHeader = document.getElementById("pnl-days-header");
-        if (daysHeader) daysHeader.style.display = "daily" === view ? "grid" : "none";
-        renderView();
-      };
+      } catch (err) {
+        console.error("Error fetching PnL data", err);
+      }
+      renderView();
+    };
 
-      const viewDailyBtn = document.getElementById('pnl-view-daily');
-      if (viewDailyBtn) viewDailyBtn.onclick = () => setView('daily');
-      const viewMonthlyBtn = document.getElementById('pnl-view-monthly');
-      if (viewMonthlyBtn) viewMonthlyBtn.onclick = () => setView('monthly');
-      const viewYearlyBtn = document.getElementById('pnl-view-yearly');
-      if (viewYearlyBtn) viewYearlyBtn.onclick = () => setView('yearly');
-      
-      const fetchPnlData = async () => {
-        try {
-          const res = await fetch(`${GOOGLE_SHEET_CSV_URL}1158462025`);
-          const text = await res.text();
-          pnlData = {};
-          text.split("\n").forEach(row => {
-            if (!row.trim()) return;
-            const cols = row.split(",").map(col => col.trim().replace(/^["']|["']$/g, ""));
-            if (cols.length >= 2) {
-              const dateKey = cols[0].split("T")[0].split(" ")[0],
-                cleanAmountStr = cols[1].replace(/,/g, ""),
-                amountVal = parseFloat(cleanAmountStr);
-              if (dateKey && !isNaN(amountVal)) {
-                if (!pnlData[dateKey]) {
-                  pnlData[dateKey] = {
-                    amount: amountVal,
-                    symbol: cols[3] ? cols[3].toUpperCase() : "",
-                    volume: cols[4] || "",
-                    entryPrice: parseFloat(cols[5]) || "",
-                    exitPrice: parseFloat(cols[6]) || "",
-                    action: cols[7] ? cols[7].toUpperCase() : ""
-                  };
-                } else {
-                  pnlData[dateKey].amount += amountVal;
-                  if (cols[3]) pnlData[dateKey].symbol = cols[3].toUpperCase();
-                  if (cols[4]) pnlData[dateKey].volume = cols[4];
-                  if (cols[5]) pnlData[dateKey].entryPrice = parseFloat(cols[5]);
-                  if (cols[6]) pnlData[dateKey].exitPrice = parseFloat(cols[6]);
-                  if (cols[7]) pnlData[dateKey].action = cols[7].toUpperCase();
-                }
-              }
-            }
-          });
-        } catch (err) {
-          console.error("Error fetching PnL data", err);
-        }
-        renderView();
-      };
+    const renderView = () => {
+      const grid = document.getElementById("pnl-calendar-grid");
+      if (!grid) return;
+      grid.innerHTML = "";
+      const year = currentNavDate.getFullYear(),
+        month = currentNavDate.getMonth();
+      const navTitle = document.getElementById("pnl-nav-title");
 
-      const renderView = () => {
-        const grid = document.getElementById("pnl-calendar-grid");
-        if (!grid) return;
-        grid.innerHTML = "";
-        const year = currentNavDate.getFullYear(),
-          month = currentNavDate.getMonth();
-        const navTitle = document.getElementById("pnl-nav-title");
+      if ("daily" === currentView) {
+        if (navTitle) navTitle.innerText = `${year}-${String(month+1).padStart(2,"0")}`;
+        grid.style.gridTemplateColumns = "repeat(6, 1fr)";
+        
+        const totalDays = new Date(year, month + 1, 0).getDate();
+        
+        let weekSum = 0;
+        let weekHasData = false;
+        let daysInCurrentWeek = 0;
 
-        if ("daily" === currentView) {
-          if (navTitle) navTitle.innerText = `${year}-${String(month+1).padStart(2,"0")}`;
-          grid.style.gridTemplateColumns = "repeat(6, 1fr)";
-          
-          const totalDays = new Date(year, month + 1, 0).getDate();
-          
-          let weekSum = 0;
-          let weekHasData = false;
-          let daysInCurrentWeek = 0;
-
-          const firstDayObj = new Date(year, month, 1);
-          let firstDayIndex = (firstDayObj.getDay() + 6) % 7;
-          if (firstDayIndex < 5) {
-            for (let i = 0; i < firstDayIndex; i++) {
-              grid.appendChild(document.createElement("div"));
-              daysInCurrentWeek++;
-            }
-          }
-
-          for (let day = 1; day <= totalDays; day++) {
-            const dObj = new Date(year, month, day);
-            const dayOfWeek = dObj.getDay();
-
-            if (dayOfWeek === 0 || dayOfWeek === 6) continue;
-
-            const dateStr = `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
-            const entryData = pnlData[dateStr];
-            const hasData = entryData !== undefined && entryData.amount !== undefined;
-            const amount = hasData ? entryData.amount : 0;
-            const isNegative = hasData && amount < 0;
-
-            if (hasData) {
-              weekSum += amount;
-              weekHasData = true;
-            }
-
-            const nowRef = new Date();
-            const isToday = year === nowRef.getFullYear() && month === nowRef.getMonth() && day === nowRef.getDate();
-
-            const cell = document.createElement("div");
-            const cellBg = hasData ? (isNegative ? "#2d1622" : "#042f2e") : "#1a1e29";
-
-            cell.style.cssText = `aspect-ratio:1;background:${cellBg};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:background 0.2s;`;
-            cell.onmouseover = () => cell.style.background = "#222733";
-            cell.onmouseout = () => cell.style.background = cellBg;
-
-            const todayIndicator = isToday ? '<span style="position:absolute;top:6px;right:6px;width:6px;height:6px;background:#fbbf24;border-radius:50%;box-shadow:0 0 6px #fbbf24;"></span>' : '';
-
-            cell.innerHTML = `
-                      ${todayIndicator}
-                      <span style="font-size:13px;color:${isToday ? '#fbbf24' : (hasData ? (isNegative ? '#ec4899' : '#2dd4bf') : '#94a3b8')};font-weight:${isToday ? '700' : '600'};">${day}</span>
-                      <span style="font-size:13px;color:${hasData ? (isNegative ? '#ec4899' : '#2dd4bf') : '#475569'};margin-top:2px;">${hasData ? formatVndShort(amount) : '+0.0M'}</span>
-                  `;
-
-            cell.onclick = () => {
-              selectedDateStr = dateStr;
-              const dateTitle = document.getElementById("pnl-input-date-title");
-              if (dateTitle) dateTitle.innerText = `Add P/L for ${dateStr}`;
-              
-              // Extract existing trade details or fallback to defaults
-              const currentSymbol = (hasData && entryData.symbol) ? entryData.symbol : "XAUUSD";
-              const currentVol = (hasData && entryData.volume) ? entryData.volume : "0.05";
-              const currentEntryPrice = (hasData && entryData.entryPrice) ? entryData.entryPrice : "";
-              const currentExitPrice = (hasData && entryData.exitPrice) ? entryData.exitPrice : "";
-              const currentAction = (hasData && entryData.action) ? entryData.action : "BUY";
-
-              const amtInput = document.getElementById("pnl-amount-input");
-              if (amtInput) {
-                  amtInput.value = hasData ? formatAmountValue(amount) : "";
-              }
-              const symInput = document.getElementById("pnl-symbol-input");
-              if (symInput) symInput.value = currentSymbol;
-              updateSymbolIcon(currentSymbol);
-              
-              const volInput = document.getElementById("pnl-vol-input");
-              if (volInput) volInput.value = currentVol;
-              
-              const entryInput = document.getElementById("pnl-entry-price-input");
-              if (entryInput) entryInput.value = (hasData && entryData.entryPrice) ? formatAmountValue(entryData.entryPrice) : "";
-
-              const exitInput = document.getElementById("pnl-exit-price-input");
-              if (exitInput) exitInput.value = (hasData && entryData.exitPrice) ? formatAmountValue(entryData.exitPrice) : ""; 
-              
-              setPnLAction(currentAction);
-
-              const inputDlg = document.getElementById("pnl-input-dialog");
-              if (inputDlg) inputDlg.style.display = "flex";
-            };
-
-            grid.appendChild(cell);
+        const firstDayObj = new Date(year, month, 1);
+        let firstDayIndex = (firstDayObj.getDay() + 6) % 7;
+        if (firstDayIndex < 5) {
+          for (let i = 0; i < firstDayIndex; i++) {
+            grid.appendChild(document.createElement("div"));
             daysInCurrentWeek++;
+          }
+        }
 
-            if (dayOfWeek === 5) {
-              const totalCell = document.createElement("div");
-              const isTotNeg = weekHasData && weekSum < 0;
-              const totalBg = weekHasData ? (isTotNeg ? "#2d1622" : "#042f2e") : "#1a1e29";
-              totalCell.style.cssText = `aspect-ratio:1;background:${totalBg};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:0px solid #334155;`;
-              totalCell.innerHTML = `
-                <span style="font-size:13px;color:#94a3b8;font-weight:600;">∑</span>
-                <span style="font-size:15px;color:${weekHasData ? (isTotNeg ? '#ec4899' : '#2dd4bf') : '#475569'};margin-top:2px;font-weight:600;">${weekHasData ? formatVndShort(weekSum) : '+0.0M'}</span>
-              `;
-              grid.appendChild(totalCell);
+        for (let day = 1; day <= totalDays; day++) {
+          const dObj = new Date(year, month, day);
+          const dayOfWeek = dObj.getDay();
 
-              weekSum = 0;
-              weekHasData = false;
-              daysInCurrentWeek = 0;
-            }
+          if (dayOfWeek === 0 || dayOfWeek === 6) continue;
+
+          const dateStr = `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+          const entryData = pnlData[dateStr];
+          const hasData = entryData !== undefined && entryData.amount !== undefined;
+          const amount = hasData ? entryData.amount : 0;
+          const isNegative = hasData && amount < 0;
+
+          if (hasData) {
+            weekSum += amount;
+            weekHasData = true;
           }
 
-          if (daysInCurrentWeek > 0) {
-            while (daysInCurrentWeek < 5) {
-              grid.appendChild(document.createElement("div"));
-              daysInCurrentWeek++;
+          const nowRef = new Date();
+          const isToday = year === nowRef.getFullYear() && month === nowRef.getMonth() && day === nowRef.getDate();
+
+          const cell = document.createElement("div");
+          const cellBg = hasData ? (isNegative ? "#2d1622" : "#042f2e") : "#1a1e29";
+
+          cell.style.cssText = `aspect-ratio:1;background:${cellBg};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:background 0.2s;`;
+          cell.onmouseover = () => cell.style.background = "#222733";
+          cell.onmouseout = () => cell.style.background = cellBg;
+
+          const todayIndicator = isToday ? '<span style="position:absolute;top:6px;right:6px;width:6px;height:6px;background:#fbbf24;border-radius:50%;box-shadow:0 0 6px #fbbf24;"></span>' : '';
+
+          cell.innerHTML = `
+                    ${todayIndicator}
+                    <span style="font-size:13px;color:${isToday ? '#fbbf24' : (hasData ? (isNegative ? '#ec4899' : '#2dd4bf') : '#94a3b8')};font-weight:${isToday ? '700' : '600'};">${day}</span>
+                    <span style="font-size:13px;color:${hasData ? (isNegative ? '#ec4899' : '#2dd4bf') : '#475569'};margin-top:2px;">${hasData ? formatVndShort(amount) : '+0.0M'}</span>
+                `;
+
+          cell.onclick = () => {
+            selectedDateStr = dateStr;
+            const dateTitle = document.getElementById("pnl-input-date-title");
+            if (dateTitle) dateTitle.innerText = `Add P/L for ${dateStr}`;
+            
+            const currentSymbol = (hasData && entryData.symbol) ? entryData.symbol : "XAUUSD";
+            const currentVol = (hasData && entryData.volume) ? entryData.volume : "0.05";
+
+            const amtInput = document.getElementById("pnl-amount-input");
+            if (amtInput) {
+                amtInput.value = hasData ? formatAmountValue(amount) : "";
             }
+            const symInput = document.getElementById("pnl-symbol-input");
+            if (symInput) symInput.value = currentSymbol;
+            updateSymbolIcon(currentSymbol);
+            
+            const volInput = document.getElementById("pnl-vol-input");
+            if (volInput) volInput.value = currentVol;
+            
+            const entryInput = document.getElementById("pnl-entry-price-input");
+            if (entryInput) entryInput.value = (hasData && entryData.entryPrice) ? formatAmountValue(entryData.entryPrice) : "";
+
+            const exitInput = document.getElementById("pnl-exit-price-input");
+            if (exitInput) exitInput.value = (hasData && entryData.exitPrice) ? formatAmountValue(entryData.exitPrice) : ""; 
+            
+            setPnLAction((hasData && entryData.action) ? entryData.action : "BUY");
+
+            const inputDlg = document.getElementById("pnl-input-dialog");
+            if (inputDlg) inputDlg.style.display = "flex";
+          };
+
+          grid.appendChild(cell);
+          daysInCurrentWeek++;
+
+          if (dayOfWeek === 5) {
             const totalCell = document.createElement("div");
             const isTotNeg = weekHasData && weekSum < 0;
             const totalBg = weekHasData ? (isTotNeg ? "#2d1622" : "#042f2e") : "#1a1e29";
             totalCell.style.cssText = `aspect-ratio:1;background:${totalBg};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:0px solid #334155;`;
             totalCell.innerHTML = `
-              <span style="font-size:11px;color:#94a3b8;font-weight:600;">∑</span>
-              <span style="font-size:13px;color:${weekHasData ? (isTotNeg ? '#ec4899' : '#2dd4bf') : '#475569'};margin-top:2px;font-weight:600;">${weekHasData ? formatVndShort(weekSum) : '+0.0M'}</span>
+              <span style="font-size:13px;color:#94a3b8;font-weight:600;">∑</span>
+              <span style="font-size:15px;color:${weekHasData ? (isTotNeg ? '#ec4899' : '#2dd4bf') : '#475569'};margin-top:2px;font-weight:600;">${weekHasData ? formatVndShort(weekSum) : '+0.0M'}</span>
             `;
             grid.appendChild(totalCell);
-          }
-        } else if ("monthly" === currentView) {
-          if (navTitle) navTitle.innerText = `${year}`;
-          grid.style.gridTemplateColumns = "repeat(3, 1fr)";
-          ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].forEach((mName, mIdx) => {
-            let monthlyTotal = 0,
-              count = 0;
-            Object.keys(pnlData).forEach(dKey => {
-              if (dKey.startsWith(`${year}-${String(mIdx+1).padStart(2,"0")}`)) {
-                monthlyTotal += pnlData[dKey].amount;
-                count++;
-              }
-            });
-            const hasData = count > 0,
-              isNegative = monthlyTotal < 0,
-              cell = document.createElement("div");
-            cell.style.cssText = `padding:15px 8px;background:${hasData?isNegative?"#2d1622":"#042f2e":"#1a1e29"};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`, cell.onmouseover = () => cell.style.background = "#222733", cell.onmouseout = () => cell.style.background = hasData ? isNegative ? "#2d1622" : "#042f2e" : "#1a1e29", cell.innerHTML = `\n                      <span style="font-size:15px;color:#f8f9fa;font-weight:600;">${mName}</span>\n                      <span style="font-size:16px;color:${hasData?isNegative?"#ec4899":"#2dd4bf":"#475569"};margin-top:6px;font-weight:600;">${hasData?formatVndShort(monthlyTotal):"+0.0M"}</span>\n                  `, cell.onclick = () => {
-              currentNavDate.setMonth(mIdx), setView("daily")
-            }, grid.appendChild(cell)
-          })
-        } else if ("yearly" === currentView) {
-          if (navTitle) navTitle.innerText = `${year-4} - ${year+3}`;
-          grid.style.gridTemplateColumns = "repeat(2, 1fr)";
-          const startYear = year - 4;
-          for (let y = startYear; y <= startYear + 7; y++) {
-            let yearlyTotal = 0,
-              count = 0;
-            Object.keys(pnlData).forEach(dKey => {
-              if (dKey.startsWith(`${y}`)) {
-                yearlyTotal += pnlData[dKey].amount;
-                count++;
-              }
-            });
-            const hasData = count > 0,
-              isNegative = yearlyTotal < 0,
-              cell = document.createElement("div");
-            cell.style.cssText = `padding:15px 8px;background:${hasData?isNegative?"#2d1622":"#042f2e":"#1a1e29"};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`, cell.onmouseover = () => cell.style.background = "#222733", cell.onmouseout = () => cell.style.background = hasData ? isNegative ? "#2d1622" : "#042f2e" : "#1a1e29", cell.innerHTML = `\n                      <span style="font-size:15px;color:#f8f9fa;font-weight:600;">${y}</span>\n                      <span style="font-size:16px;color:${hasData?isNegative?"#ec4899":"#2dd4bf":"#475569"};margin-top:6px;font-weight:600;">${hasData?formatVndShort(yearlyTotal):"+0.0M"}</span>\n                  `, cell.onclick = () => {
-              currentNavDate.setFullYear(y), setView("monthly")
-            }, grid.appendChild(cell)
+
+            weekSum = 0;
+            weekHasData = false;
+            daysInCurrentWeek = 0;
           }
         }
-      };
 
-      const prevNavBtn = document.getElementById("pnl-prev-nav");
-      if (prevNavBtn) {
-          prevNavBtn.onclick = () => {
-            "daily" === currentView ? currentNavDate.setMonth(currentNavDate.getMonth() - 1) : "monthly" === currentView ? currentNavDate.setFullYear(currentNavDate.getFullYear() - 1) : "yearly" === currentView && currentNavDate.setFullYear(currentNavDate.getFullYear() - 8), renderView()
-          };
+        if (daysInCurrentWeek > 0) {
+          while (daysInCurrentWeek < 5) {
+            grid.appendChild(document.createElement("div"));
+            daysInCurrentWeek++;
+          }
+          const totalCell = document.createElement("div");
+          const isTotNeg = weekHasData && weekSum < 0;
+          const totalBg = weekHasData ? (isTotNeg ? "#2d1622" : "#042f2e") : "#1a1e29";
+          totalCell.style.cssText = `aspect-ratio:1;background:${totalBg};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:0px solid #334155;`;
+          totalCell.innerHTML = `
+            <span style="font-size:11px;color:#94a3b8;font-weight:600;">∑</span>
+            <span style="font-size:13px;color:${weekHasData ? (isTotNeg ? '#ec4899' : '#2dd4bf') : '#475569'};margin-top:2px;font-weight:600;">${weekHasData ? formatVndShort(weekSum) : '+0.0M'}</span>
+          `;
+          grid.appendChild(totalCell);
+        }
+      } else if ("monthly" === currentView) {
+        if (navTitle) navTitle.innerText = `${year}`;
+        grid.style.gridTemplateColumns = "repeat(3, 1fr)";
+        ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].forEach((mName, mIdx) => {
+          let monthlyTotal = 0, count = 0;
+          Object.keys(pnlData).forEach(dKey => {
+            if (dKey.startsWith(`${year}-${String(mIdx+1).padStart(2,"0")}`)) {
+              monthlyTotal += pnlData[dKey].amount;
+              count++;
+            }
+          });
+          const hasData = count > 0,
+            isNegative = monthlyTotal < 0,
+            cell = document.createElement("div");
+          cell.style.cssText = `padding:15px 8px;background:${hasData?isNegative?"#2d1622":"#042f2e":"#1a1e29"};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
+          cell.onmouseover = () => cell.style.background = "#222733";
+          cell.onmouseout = () => cell.style.background = hasData ? isNegative ? "#2d1622" : "#042f2e" : "#1a1e29";
+          cell.innerHTML = `
+            <span style="font-size:15px;color:#f8f9fa;font-weight:600;">${mName}</span>
+            <span style="font-size:16px;color:${hasData?isNegative?"#ec4899":"#2dd4bf":"#475569"};margin-top:6px;font-weight:600;">${hasData?formatVndShort(monthlyTotal):"+0.0M"}</span>
+          `;
+          cell.onclick = () => { currentNavDate.setMonth(mIdx); setView("daily"); };
+          grid.appendChild(cell);
+        });
+      } else if ("yearly" === currentView) {
+        if (navTitle) navTitle.innerText = `${year-4} - ${year+3}`;
+        grid.style.gridTemplateColumns = "repeat(2, 1fr)";
+        const startYear = year - 4;
+        for (let y = startYear; y <= startYear + 7; y++) {
+          let yearlyTotal = 0, count = 0;
+          Object.keys(pnlData).forEach(dKey => {
+            if (dKey.startsWith(`${y}`)) {
+              yearlyTotal += pnlData[dKey].amount;
+              count++;
+            }
+          });
+          const hasData = count > 0,
+            isNegative = yearlyTotal < 0,
+            cell = document.createElement("div");
+          cell.style.cssText = `padding:15px 8px;background:${hasData?isNegative?"#2d1622":"#042f2e":"#1a1e29"};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
+          cell.onmouseover = () => cell.style.background = "#222733";
+          cell.onmouseout = () => cell.style.background = hasData ? isNegative ? "#2d1622" : "#042f2e" : "#1a1e29";
+          cell.innerHTML = `
+            <span style="font-size:15px;color:#f8f9fa;font-weight:600;">${y}</span>
+            <span style="font-size:16px;color:${hasData?isNegative?"#ec4899":"#2dd4bf":"#475569"};margin-top:6px;font-weight:600;">${hasData?formatVndShort(yearlyTotal):"+0.0M"}</span>
+          `;
+          cell.onclick = () => { currentNavDate.setFullYear(y); setView("monthly"); };
+          grid.appendChild(cell);
+        }
       }
-      const nextNavBtn = document.getElementById("pnl-next-nav");
-      if (nextNavBtn) {
-          nextNavBtn.onclick = () => {
-            "daily" === currentView ? currentNavDate.setMonth(currentNavDate.getMonth() + 1) : "monthly" === currentView ? currentNavDate.setFullYear(currentNavDate.getFullYear() + 1) : "yearly" === currentView && currentNavDate.setFullYear(currentNavDate.getFullYear() + 8), renderView()
-          };
-      }
-      const cancelInputBtn = document.getElementById("pnl-cancel-input");
-      if (cancelInputBtn) {
-          cancelInputBtn.onclick = () => {
-            const inputDlg = document.getElementById("pnl-input-dialog");
-            if (inputDlg) inputDlg.style.display = "none";
+    };
+
+    const prevNavBtn = document.getElementById("pnl-prev-nav");
+    if (prevNavBtn) {
+        prevNavBtn.onclick = () => {
+          "daily" === currentView ? currentNavDate.setMonth(currentNavDate.getMonth() - 1) : "monthly" === currentView ? currentNavDate.setFullYear(currentNavDate.getFullYear() - 1) : "yearly" === currentView && currentNavDate.setFullYear(currentNavDate.getFullYear() - 8);
+          renderView();
+        };
+    }
+    const nextNavBtn = document.getElementById("pnl-next-nav");
+    if (nextNavBtn) {
+        nextNavBtn.onclick = () => {
+          "daily" === currentView ? currentNavDate.setMonth(currentNavDate.getMonth() + 1) : "monthly" === currentView ? currentNavDate.setFullYear(currentNavDate.getFullYear() + 1) : "yearly" === currentView && currentNavDate.setFullYear(currentNavDate.getFullYear() + 8);
+          renderView();
+        };
+    }
+    const cancelInputBtn = document.getElementById("pnl-cancel-input");
+    if (cancelInputBtn) {
+        cancelInputBtn.onclick = () => {
+          const inputDlg = document.getElementById("pnl-input-dialog");
+          if (inputDlg) inputDlg.style.display = "none";
+          const dropdown = document.getElementById("pnl-symbol-dropdown");
+          if (dropdown) dropdown.style.display = "none";
+        };
+    }
+    const saveInputBtn = document.getElementById("pnl-save-input");
+    if (saveInputBtn) {
+        saveInputBtn.onclick = () => {
+            const rawAmountVal = document.getElementById("pnl-amount-input")?.value || "";
+            const cleanAmountVal = rawAmountVal.replace(/,/g, '');
+            const symbolVal = document.getElementById("pnl-symbol-input")?.value || "";
+            const volVal = document.getElementById("pnl-vol-input")?.value || "";
+            const rawEntryPriceVal = document.getElementById("pnl-entry-price-input")?.value || "";
+            const entryPriceVal = rawEntryPriceVal.replace(/,/g, '');
+
+            const rawExitPriceVal = document.getElementById("pnl-exit-price-input")?.value || "";
+            const exitPriceVal = rawExitPriceVal.replace(/,/g, '');
+            const actionVal = document.getElementById("pnl-action-type")?.value || "BUY";
+
             const dropdown = document.getElementById("pnl-symbol-dropdown");
             if (dropdown) dropdown.style.display = "none";
-          };
-      }
-      const saveInputBtn = document.getElementById("pnl-save-input");
-      if (saveInputBtn) {
-          saveInputBtn.onclick = () => {
-              const rawAmountVal = document.getElementById("pnl-amount-input")?.value || "";
-              const cleanAmountVal = rawAmountVal.replace(/,/g, '');
-              const symbolVal = document.getElementById("pnl-symbol-input")?.value || "";
-              const volVal = document.getElementById("pnl-vol-input")?.value || "";
-              const rawEntryPriceVal = document.getElementById("pnl-entry-price-input")?.value || "";
-              const entryPriceVal = rawEntryPriceVal.replace(/,/g, '');
 
-              const rawExitPriceVal = document.getElementById("pnl-exit-price-input")?.value || "";
-              const exitPriceVal = rawExitPriceVal.replace(/,/g, '');
-              const actionVal = document.getElementById("pnl-action-type")?.value || "BUY";
-              const mappedTradeAction = actionVal;
+            const errorEl = document.getElementById("pnl-error-message");
 
-              const dropdown = document.getElementById("pnl-symbol-dropdown");
-              if (dropdown) dropdown.style.display = "none";
+            if (cleanAmountVal === "" || isNaN(parseFloat(cleanAmountVal))) {
+                if (errorEl) {
+                    errorEl.textContent = "Please enter a P/L amount.";
+                    errorEl.style.display = "block";
+                }
+                return;
+            }
 
-              const errorEl = document.getElementById("pnl-error-message");
-              const cancelBtn = document.getElementById("pnl-cancel-input");
+            if (errorEl) errorEl.style.display = "none";
 
-              if (cleanAmountVal === "" || isNaN(parseFloat(cleanAmountVal))) {
-                  if (errorEl) {
-                      errorEl.textContent = "Please enter a P/L amount.";
-                      errorEl.style.display = "block";
-                  }
-                  return;
-              }
+            const inputDlg = document.getElementById("pnl-input-dialog");
+            if (inputDlg) inputDlg.style.display = "none";
 
-              if (errorEl) errorEl.style.display = "none";
+            // Close Shared Backdrop Modal
+            if (typeof closeModal === 'function') {
+                closeModal();
+            } else {
+                backdrop.classList.remove('active');
+            }
 
-              const inputDlg = document.getElementById("pnl-input-dialog");
-              if (inputDlg) inputDlg.style.display = "none";
+            pnlData[selectedDateStr] = {
+                amount: parseFloat(cleanAmountVal) || 0,
+                symbol: symbolVal.toUpperCase(),
+                volume: volVal,
+                entryPrice: entryPriceVal,
+                exitPrice: exitPriceVal,
+                action: actionVal
+            };
+            renderView();
+            if (typeof triggerPaperFirework === "function") {
+                triggerPaperFirework(null);
+            }
 
-              const calendarModal = document.getElementById('pnl-calendar-modal');
-              if (calendarModal) calendarModal.style.display = 'none';
+            const payload = {
+                action: "portfolio_calendar_pnl_close_forex",
+                date: selectedDateStr,
+                amount: cleanAmountVal,
+                symbol: symbolVal,
+                volume: volVal,
+                entryPrice: entryPriceVal,
+                exitPrice: exitPriceVal,
+                tradeAction: actionVal
+            };
 
-              pnlData[selectedDateStr] = {
-                  amount: parseFloat(cleanAmountVal) || 0,
-                  symbol: symbolVal.toUpperCase(),
-                  volume: volVal,
-                  entryPrice: entryPriceVal,
-                  exitPrice: exitPriceVal,
-                  action: actionVal
-              };
-              renderView();
-              if (typeof triggerPaperFirework === "function") {
-                  triggerPaperFirework(null);
-              }
-
-              if (saveInputBtn) {
-                  saveInputBtn.disabled = false;
-                  saveInputBtn.style.opacity = "1";
-                  saveInputBtn.textContent = "Save";
-              }
-              if (cancelBtn) {
-                  cancelBtn.disabled = false;
-                  cancelBtn.style.opacity = "1";
-              }
-
-              const payload = {
-                  action: "portfolio_calendar_pnl_close_forex",
-                  date: selectedDateStr,
-                  amount: cleanAmountVal,
-                  symbol: symbolVal,
-                  volume: volVal,
-                  entryPrice: entryPriceVal,
-                  exitPrice: exitPriceVal,
-                  tradeAction: mappedTradeAction
-              };
-
-              fetch(EXPENSE_APPS_SCRIPT_URL, {
-                  method: "POST",
-                  mode: "no-cors",
-                  headers: { "Content-Type": "text/plain;charset=utf-8" },
-                  body: JSON.stringify(payload)
-              })
-              .catch(function(err) {
-                  console.error("Failed to sync with Apps Script", err);
-              });
-          };
-      }
-
-      fetchSymbolIcons();
-      fetchPnlData();
+            fetch(EXPENSE_APPS_SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify(payload)
+            })
+            .catch(function(err) {
+                console.error("Failed to sync with Apps Script", err);
+            });
+        };
     }
+
+    fetchSymbolIcons();
+    fetchPnlData();
+  }
   
   function openExpenseCalendarModal() {
     let modal = document.getElementById('expense-calendar-modal');
