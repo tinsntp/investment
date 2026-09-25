@@ -8455,7 +8455,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
     if (modalContent) {
         modalContent.style.width = '100%'; modalContent.style.height = '460px';
         modalContent.style.maxWidth = '100%'; // Ensures container isn't constrained by max-width
-        modalContent.style.margin = '0';      // Removes side margins if needed
+        modalContent.style.margin = '0'; modalContent.style.padding = '20px';
     }
 
     if (!backdrop || !title || !body) return;
