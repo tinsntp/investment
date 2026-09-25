@@ -8474,10 +8474,10 @@ function applyPortfolioFiltersAndRender() {
                                   <label style="display:block;color:#94a3b8;font-size:15px;margin-bottom:6px;">Action</label>
                                   <div style="display:flex;background:#14171f;border-radius:12px;padding:2px;height:39px;box-sizing:border-box;align-items:center;">
                                       <button type="button" id="pnl-action-long" onclick="setPnLAction('LONG')" style="flex:1;height:100%;border:none;border-radius:10px;background:#14b8a6;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:4px;">
-                                          <i class="bi bi-plus-circle-fill" style="font-size:16px!important;"></i> Long
+                                          <i class="bi bi-plus-circle-fill" style="font-size:16px!important;"></i> Buy
                                       </button>
                                       <button type="button" id="pnl-action-short" onclick="setPnLAction('SHORT')" style="flex:1;height:100%;border:none;border-radius:10px;background:transparent;color:#94a3b8;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:4px;">
-                                          <i class="bi bi-dash-circle-fill" style="font-size:16px!important;"></i> Short
+                                          <i class="bi bi-dash-circle-fill" style="font-size:16px!important;"></i> Sell
                                       </button>
                                   </div>
                                   <input type="hidden" id="pnl-action-type" value="LONG" />
@@ -8586,18 +8586,18 @@ function applyPortfolioFiltersAndRender() {
           };
       }
 
-      // Entry/Exit price decimal handling: convert comma to dot
+      // Entry/Exit price formatting: same thousand-separator format as P/L Amount
       const entryPriceInput = document.getElementById('pnl-entry-price-input');
       const exitPriceInput = document.getElementById('pnl-exit-price-input');
-      
+
       if (entryPriceInput) {
           entryPriceInput.oninput = (e) => {
-              e.target.value = e.target.value.replace(/,/g, '.');
+              e.target.value = formatAmountValue(e.target.value);
           };
       }
       if (exitPriceInput) {
           exitPriceInput.oninput = (e) => {
-              e.target.value = e.target.value.replace(/,/g, '.');
+              e.target.value = formatAmountValue(e.target.value);
           };
       }
 
@@ -8622,18 +8622,18 @@ function applyPortfolioFiltersAndRender() {
           const shortBtn = document.getElementById("pnl-action-short");
           const hiddenInput = document.getElementById("pnl-action-type");
           if (longBtn && shortBtn && hiddenInput) {
-              if (action === "LONG" || action === "BUY") {
+              if (action === "BUY" || action === "LONG") {
                   longBtn.style.background = "#14b8a6";
                   longBtn.style.color = "#fff";
                   shortBtn.style.background = "transparent";
                   shortBtn.style.color = "#94a3b8";
-                  hiddenInput.value = "LONG";
+                  hiddenInput.value = "BUY";
               } else {
                   shortBtn.style.background = "#ec4899";
                   shortBtn.style.color = "#fff";
                   longBtn.style.background = "transparent";
                   longBtn.style.color = "#94a3b8";
-                  hiddenInput.value = "SHORT";
+                  hiddenInput.value = "SELL";
               }
           }
       };
@@ -8778,7 +8778,7 @@ function applyPortfolioFiltersAndRender() {
               const currentVol = (hasData && entryData.volume) ? entryData.volume : "0.05";
               const currentEntryPrice = (hasData && entryData.entryPrice) ? entryData.entryPrice : "";
               const currentExitPrice = (hasData && entryData.exitPrice) ? entryData.exitPrice : "";
-              const currentAction = (hasData && entryData.action) ? entryData.action : "LONG";
+              const currentAction = (hasData && entryData.action) ? entryData.action : "BUY";
 
               const amtInput = document.getElementById("pnl-amount-input");
               if (amtInput) {
@@ -8792,10 +8792,10 @@ function applyPortfolioFiltersAndRender() {
               if (volInput) volInput.value = currentVol;
               
               const entryInput = document.getElementById("pnl-entry-price-input");
-              if (entryInput) entryInput.value = currentEntryPrice;
-              
+              if (entryInput) entryInput.value = (hasData && entryData.entryPrice) ? formatAmountValue(entryData.entryPrice) : "";
+
               const exitInput = document.getElementById("pnl-exit-price-input");
-              if (exitInput) exitInput.value = currentExitPrice;
+              if (exitInput) exitInput.value = (hasData && entryData.exitPrice) ? formatAmountValue(entryData.exitPrice) : ""; 
               
               setPnLAction(currentAction);
 
@@ -8908,10 +8908,13 @@ function applyPortfolioFiltersAndRender() {
               const cleanAmountVal = rawAmountVal.replace(/,/g, '');
               const symbolVal = document.getElementById("pnl-symbol-input")?.value || "";
               const volVal = document.getElementById("pnl-vol-input")?.value || "";
-              const entryPriceVal = document.getElementById("pnl-entry-price-input")?.value || "";
-              const exitPriceVal = document.getElementById("pnl-exit-price-input")?.value || "";
-              const actionVal = document.getElementById("pnl-action-type")?.value || "LONG";
-              const mappedTradeAction = actionVal === "LONG" ? "BUY" : "SELL";
+              const rawEntryPriceVal = document.getElementById("pnl-entry-price-input")?.value || "";
+              const entryPriceVal = rawEntryPriceVal.replace(/,/g, '');
+
+              const rawExitPriceVal = document.getElementById("pnl-exit-price-input")?.value || "";
+              const exitPriceVal = rawExitPriceVal.replace(/,/g, '');
+              const actionVal = document.getElementById("pnl-action-type")?.value || "BUY";
+              const mappedTradeAction = actionVal;
 
               const dropdown = document.getElementById("pnl-symbol-dropdown");
               if (dropdown) dropdown.style.display = "none";
