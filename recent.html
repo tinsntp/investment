@@ -8515,7 +8515,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
       <!-- Chart Section inside openPnlCalendarModal -->
       <div id="pnl-chart-container" style="position:relative; width:100%; flex-shrink:0; margin-top:12px; padding:5px 16px;  border-radius:12px; border:0px solid rgba(255,255,255,0.05); box-sizing:border-box;">
           <!-- Summary Header Container above Chart Canvas -->
-          <div id="pnl-chart-summary-header" style="display: flex; justify-content: space-between; align-items: flex-start; padding:5px 18px 4px 18px;">
+          <div id="pnl-chart-summary-header" style="display: flex; justify-content: space-between; align-items: flex-start; padding:5px;">
             <!-- Left Side: Previous Period -->
             <div style="display: flex; flex-direction: column;">
               <span id="pnl-summary-prev-title" style="font-size: 13px; color: #94a3b8; font-weight: 500; margin-bottom: 2px;">Last Month</span>
@@ -8538,7 +8538,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
           <div style="position:relative; width:100%; height:150px;">
               <canvas id="pnlPerformanceChart" style="width:100%; height:100%; display:block;"></canvas>
               <!-- Floating Hover Tooltip -->
-              <div id="pnl-chart-tooltip" style="position:absolute; display:none; pointer-events:none; background:#1e293b; color:#f8fafc; padding:6px 10px; border-radius:6px; font-size:11px; font-family:'DM Sans', sans-serif; border:1px solid rgba(255,255,255,0.1); box-shadow:0 10px 15px -3px rgba(0,0,0,0.5); z-index:10; white-space:nowrap;"></div>
+              <div id="pnl-chart-tooltip" style="position:absolute; display:none; pointer-events:none; background:#1e293b; color:#f8fafc; padding:5px; border-radius:6px; font-size:11px; font-family:'DM Sans', sans-serif; border:1px solid rgba(255,255,255,0.1); box-shadow:0 10px 15px -3px rgba(0,0,0,0.5); z-index:10; white-space:nowrap;"></div>
           </div>
       </div>
 
@@ -9086,7 +9086,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
           const defaultBg = getPnlBgColor(monthlyTotal, hasData);
 
           const cell = document.createElement("div");
-          cell.style.cssText = `padding:10px 8px;background:${defaultBg};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
+          cell.style.cssText = `padding:12px 8px;background:${defaultBg};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
           
           cell.onmouseover = () => cell.style.background = "#222733";
           cell.onmouseout = () => cell.style.background = defaultBg;
@@ -9349,7 +9349,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
 
     const width = rect.width;
     const height = rect.height;
-    const padding = { top: 38, right: 18, bottom: 25, left: 18 };
+    const padding = { top: 38, right: 10, bottom: 25, left: 10 };
     const chartWidth = width - padding.left - padding.right;
     const chartHeight = height - padding.top - padding.bottom;
 
