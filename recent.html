@@ -9086,7 +9086,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
           const defaultBg = getPnlBgColor(monthlyTotal, hasData);
 
           const cell = document.createElement("div");
-          cell.style.cssText = `padding:9px 8px;background:${defaultBg};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
+          cell.style.cssText = `padding:9.5px 8px;background:${defaultBg};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
           
           cell.onmouseover = () => cell.style.background = "#222733";
           cell.onmouseout = () => cell.style.background = defaultBg;
