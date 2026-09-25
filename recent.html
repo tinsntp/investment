@@ -8622,7 +8622,7 @@ function applyPortfolioFiltersAndRender() {
           const shortBtn = document.getElementById("pnl-action-short");
           const hiddenInput = document.getElementById("pnl-action-type");
           if (longBtn && shortBtn && hiddenInput) {
-              if (action === "LONG") {
+              if (action === "LONG" || action === "BUY") {
                   longBtn.style.background = "#14b8a6";
                   longBtn.style.color = "#fff";
                   shortBtn.style.background = "transparent";
@@ -8670,20 +8670,40 @@ function applyPortfolioFiltersAndRender() {
       const fetchPnlData = async () => {
         try {
           const res = await fetch(`${GOOGLE_SHEET_CSV_URL}1158462025`);
-          (await res.text()).split("\n").forEach(row => {
+          const text = await res.text();
+          pnlData = {};
+          text.split("\n").forEach(row => {
             if (!row.trim()) return;
             const cols = row.split(",").map(col => col.trim().replace(/^["']|["']$/g, ""));
             if (cols.length >= 2) {
               const dateKey = cols[0].split("T")[0].split(" ")[0],
                 cleanAmountStr = cols[1].replace(/,/g, ""),
                 amountVal = parseFloat(cleanAmountStr);
-              dateKey && !isNaN(amountVal) && (pnlData[dateKey] = (pnlData[dateKey] || 0) + amountVal)
+              if (dateKey && !isNaN(amountVal)) {
+                if (!pnlData[dateKey]) {
+                  pnlData[dateKey] = {
+                    amount: amountVal,
+                    symbol: cols[3] ? cols[3].toUpperCase() : "",
+                    volume: cols[4] || "",
+                    entryPrice: parseFloat(cols[5]) || "",
+                    exitPrice: parseFloat(cols[6]) || "",
+                    action: cols[7] ? cols[7].toUpperCase() : ""
+                  };
+                } else {
+                  pnlData[dateKey].amount += amountVal;
+                  if (cols[3]) pnlData[dateKey].symbol = cols[3].toUpperCase();
+                  if (cols[4]) pnlData[dateKey].volume = cols[4];
+                  if (cols[5]) pnlData[dateKey].entryPrice = parseFloat(cols[5]);
+                  if (cols[6]) pnlData[dateKey].exitPrice = parseFloat(cols[6]);
+                  if (cols[7]) pnlData[dateKey].action = cols[7].toUpperCase();
+                }
+              }
             }
-          })
+          });
         } catch (err) {
-          console.error("Error fetching PnL data", err)
+          console.error("Error fetching PnL data", err);
         }
-        renderView()
+        renderView();
       };
 
       const renderView = () => {
@@ -8704,9 +8724,8 @@ function applyPortfolioFiltersAndRender() {
           let weekHasData = false;
           let daysInCurrentWeek = 0;
 
-          // Padding empty slots before the first day of the month (Monday = 0 ... Friday = 4)
           const firstDayObj = new Date(year, month, 1);
-          let firstDayIndex = (firstDayObj.getDay() + 6) % 7; // Convert to Mon=0..Sun=6
+          let firstDayIndex = (firstDayObj.getDay() + 6) % 7;
           if (firstDayIndex < 5) {
             for (let i = 0; i < firstDayIndex; i++) {
               grid.appendChild(document.createElement("div"));
@@ -8716,14 +8735,14 @@ function applyPortfolioFiltersAndRender() {
 
           for (let day = 1; day <= totalDays; day++) {
             const dObj = new Date(year, month, day);
-            const dayOfWeek = dObj.getDay(); // 0 = Sun, 6 = Sat
+            const dayOfWeek = dObj.getDay();
 
-            // Skip Saturday & Sunday
             if (dayOfWeek === 0 || dayOfWeek === 6) continue;
 
             const dateStr = `${year}-${String(month+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
-            const amount = pnlData[dateStr];
-            const hasData = amount !== undefined;
+            const entryData = pnlData[dateStr];
+            const hasData = entryData !== undefined && entryData.amount !== undefined;
+            const amount = hasData ? entryData.amount : 0;
             const isNegative = hasData && amount < 0;
 
             if (hasData) {
@@ -8753,19 +8772,33 @@ function applyPortfolioFiltersAndRender() {
               selectedDateStr = dateStr;
               const dateTitle = document.getElementById("pnl-input-date-title");
               if (dateTitle) dateTitle.innerText = `Add P/L for ${dateStr}`;
+              
+              // Extract existing trade details or fallback to defaults
+              const currentSymbol = (hasData && entryData.symbol) ? entryData.symbol : "XAUUSD";
+              const currentVol = (hasData && entryData.volume) ? entryData.volume : "0.05";
+              const currentEntryPrice = (hasData && entryData.entryPrice) ? entryData.entryPrice : "";
+              const currentExitPrice = (hasData && entryData.exitPrice) ? entryData.exitPrice : "";
+              const currentAction = (hasData && entryData.action) ? entryData.action : "LONG";
+
               const amtInput = document.getElementById("pnl-amount-input");
               if (amtInput) {
                   amtInput.value = hasData ? formatAmountValue(amount) : "";
               }
               const symInput = document.getElementById("pnl-symbol-input");
-              if (symInput) symInput.value = "XAUUSD";
-              updateSymbolIcon("XAUUSD");
+              if (symInput) symInput.value = currentSymbol;
+              updateSymbolIcon(currentSymbol);
+              
               const volInput = document.getElementById("pnl-vol-input");
-              if (volInput) volInput.value = "0.05";
+              if (volInput) volInput.value = currentVol;
+              
               const entryInput = document.getElementById("pnl-entry-price-input");
-              if (entryInput) entryInput.value = "";
+              if (entryInput) entryInput.value = currentEntryPrice;
+              
               const exitInput = document.getElementById("pnl-exit-price-input");
-              if (exitInput) exitInput.value = "";
+              if (exitInput) exitInput.value = currentExitPrice;
+              
+              setPnLAction(currentAction);
+
               const inputDlg = document.getElementById("pnl-input-dialog");
               if (inputDlg) inputDlg.style.display = "flex";
             };
@@ -8773,7 +8806,6 @@ function applyPortfolioFiltersAndRender() {
             grid.appendChild(cell);
             daysInCurrentWeek++;
 
-            // Insert Total Column cell at Friday (dayOfWeek === 5)
             if (dayOfWeek === 5) {
               const totalCell = document.createElement("div");
               const isTotNeg = weekHasData && weekSum < 0;
@@ -8785,14 +8817,12 @@ function applyPortfolioFiltersAndRender() {
               `;
               grid.appendChild(totalCell);
 
-              // Reset weekly tracker
               weekSum = 0;
               weekHasData = false;
               daysInCurrentWeek = 0;
             }
           }
 
-          // Render partial week total at month end if Friday was not reached
           if (daysInCurrentWeek > 0) {
             while (daysInCurrentWeek < 5) {
               grid.appendChild(document.createElement("div"));
@@ -8815,7 +8845,10 @@ function applyPortfolioFiltersAndRender() {
             let monthlyTotal = 0,
               count = 0;
             Object.keys(pnlData).forEach(dKey => {
-              dKey.startsWith(`${year}-${String(mIdx+1).padStart(2,"0")}`) && (monthlyTotal += pnlData[dKey], count++)
+              if (dKey.startsWith(`${year}-${String(mIdx+1).padStart(2,"0")}`)) {
+                monthlyTotal += pnlData[dKey].amount;
+                count++;
+              }
             });
             const hasData = count > 0,
               isNegative = monthlyTotal < 0,
@@ -8832,7 +8865,10 @@ function applyPortfolioFiltersAndRender() {
             let yearlyTotal = 0,
               count = 0;
             Object.keys(pnlData).forEach(dKey => {
-              dKey.startsWith(`${y}`) && (yearlyTotal += pnlData[dKey], count++)
+              if (dKey.startsWith(`${y}`)) {
+                yearlyTotal += pnlData[dKey].amount;
+                count++;
+              }
             });
             const hasData = count > 0,
               isNegative = yearlyTotal < 0,
@@ -8883,7 +8919,6 @@ function applyPortfolioFiltersAndRender() {
               const errorEl = document.getElementById("pnl-error-message");
               const cancelBtn = document.getElementById("pnl-cancel-input");
 
-              // Validation
               if (cleanAmountVal === "" || isNaN(parseFloat(cleanAmountVal))) {
                   if (errorEl) {
                       errorEl.textContent = "Please enter a P/L amount.";
@@ -8894,21 +8929,25 @@ function applyPortfolioFiltersAndRender() {
 
               if (errorEl) errorEl.style.display = "none";
 
-              // 1. Immediately close the dialog and parent calendar modal to guarantee it disappears
               const inputDlg = document.getElementById("pnl-input-dialog");
               if (inputDlg) inputDlg.style.display = "none";
 
               const calendarModal = document.getElementById('pnl-calendar-modal');
               if (calendarModal) calendarModal.style.display = 'none';
 
-              // 2. Update local state, re-render, and trigger firework effect
-              pnlData[selectedDateStr] = parseFloat(cleanAmountVal) || 0;
+              pnlData[selectedDateStr] = {
+                  amount: parseFloat(cleanAmountVal) || 0,
+                  symbol: symbolVal.toUpperCase(),
+                  volume: volVal,
+                  entryPrice: entryPriceVal,
+                  exitPrice: exitPriceVal,
+                  action: actionVal
+              };
               renderView();
               if (typeof triggerPaperFirework === "function") {
                   triggerPaperFirework(null);
               }
 
-              // 3. Reset buttons
               if (saveInputBtn) {
                   saveInputBtn.disabled = false;
                   saveInputBtn.style.opacity = "1";
@@ -8919,7 +8958,6 @@ function applyPortfolioFiltersAndRender() {
                   cancelBtn.style.opacity = "1";
               }
 
-              // 4. Send payload to backend in the background using no-cors
               const payload = {
                   action: "portfolio_calendar_pnl_close_forex",
                   date: selectedDateStr,
