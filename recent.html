@@ -8472,7 +8472,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
         modalContent.style.padding = '25px 18px';
         modalContent.style.display = 'flex';
         modalContent.style.flexDirection = 'column';
-        modalContent.style.height = '740px';
+        modalContent.style.height = '700px';
         modalContent.style.overflowY = 'auto'; // Scroll parent container if total height exceeds viewport
         modalContent.style.boxSizing = 'border-box';
     }
@@ -8513,9 +8513,9 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
       <div id="pnl-calendar-grid" style="display:grid; grid-template-columns:repeat(6, 1fr); gap:8px; flex-shrink:0; width:100%;"></div>
 
       <!-- Chart Section inside openPnlCalendarModal -->
-      <div id="pnl-chart-container" style="position:relative; width:100%; flex-shrink:0; margin-top:12px; padding:12px 16px;  border-radius:12px; border:0px solid rgba(255,255,255,0.05); box-sizing:border-box;">
+      <div id="pnl-chart-container" style="position:relative; width:100%; flex-shrink:0; margin-top:12px; padding:5px 16px;  border-radius:12px; border:0px solid rgba(255,255,255,0.05); box-sizing:border-box;">
           <!-- Summary Header Container above Chart Canvas -->
-          <div id="pnl-chart-summary-header" style="display: flex; justify-content: space-between; align-items: flex-start; padding: 12px 18px 4px 18px;">
+          <div id="pnl-chart-summary-header" style="display: flex; justify-content: space-between; align-items: flex-start; padding:5px 18px 4px 18px;">
             <!-- Left Side: Previous Period -->
             <div style="display: flex; flex-direction: column;">
               <span id="pnl-summary-prev-title" style="font-size: 13px; color: #94a3b8; font-weight: 500; margin-bottom: 2px;">Last Month</span>
@@ -8523,7 +8523,6 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
                 <span id="pnl-summary-prev-val" style="font-size: 26px; color: #f8f9fa; font-weight: 700; letter-spacing: -0.5px;">+$0.0M</span>
                 <span style="font-size: 12px; color: #64748b; font-weight: 500;"></span>
               </div>
-              <span id="pnl-summary-prev-sub" style="font-size: 11px; color: #64748b; margin-top: 2px;">Total</span>
             </div>
 
             <!-- Right Side: Current Period -->
@@ -8533,7 +8532,6 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
                 <span id="pnl-summary-curr-val" style="font-size: 26px; color: #2dd4bf; font-weight: 700; letter-spacing: -0.5px;">+$0.0M</span>
                 <span style="font-size: 12px; color: #2dd4bf; opacity: 0.8; font-weight: 500;"></span>
               </div>
-              <span id="pnl-summary-curr-sub" style="font-size: 11px; color: #64748b; margin-top: 2px;">For Now</span>
             </div>
           </div>
           
@@ -9088,7 +9086,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
           const defaultBg = getPnlBgColor(monthlyTotal, hasData);
 
           const cell = document.createElement("div");
-          cell.style.cssText = `padding:12.5px 8px;background:${defaultBg};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
+          cell.style.cssText = `padding:12px 8px;background:${defaultBg};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
           
           cell.onmouseover = () => cell.style.background = "#222733";
           cell.onmouseout = () => cell.style.background = defaultBg;
@@ -9293,11 +9291,11 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
 
     const prevTitleEl = document.getElementById('pnl-summary-prev-title');
     const prevValEl = document.getElementById('pnl-summary-prev-val');
-    const prevSubEl = document.getElementById('pnl-summary-prev-sub');
+    //const prevSubEl = document.getElementById('pnl-summary-prev-sub');
 
     const currTitleEl = document.getElementById('pnl-summary-curr-title');
     const currValEl = document.getElementById('pnl-summary-curr-val');
-    const currSubEl = document.getElementById('pnl-summary-curr-sub');
+    //const currSubEl = document.getElementById('pnl-summary-curr-sub');
 
     if (!currValEl) return;
 
@@ -9311,23 +9309,23 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
         if (prevTitleEl) prevTitleEl.innerText = `Last Month (${monthNames[prevMonthIdx]})`;
         if (prevValEl) prevValEl.innerText = formatValue(prevTotal);
         if (prevValEl) prevValEl.style.color = prevTotal < 0 ? '#ec4899' : '#f8f9fa';
-        if (prevSubEl) prevSubEl.innerText = `${monthNames[prevMonthIdx]} ${prevYearNum}`;
+        //if (prevSubEl) prevSubEl.innerText = `${monthNames[prevMonthIdx]} ${prevYearNum}`;
 
         if (currTitleEl) currTitleEl.innerText = `This Month (${monthNames[month]})`;
         if (currValEl) currValEl.innerText = formatValue(currTotal);
         if (currValEl) currValEl.style.color = currTotal < 0 ? '#ec4899' : '#2dd4bf';
-        if (currSubEl) currSubEl.innerText = "For Now";
+        //if (currSubEl) currSubEl.innerText = "For Now";
     } else {
         // MONTHLY VIEW: Previous Year vs Current Year
         if (prevTitleEl) prevTitleEl.innerText = `Last Year (${year - 1})`;
         if (prevValEl) prevValEl.innerText = formatValue(prevTotal);
         if (prevValEl) prevValEl.style.color = prevTotal < 0 ? '#ec4899' : '#f8f9fa';
-        if (prevSubEl) prevSubEl.innerText = `Full Year ${year - 1}`;
+        //if (prevSubEl) prevSubEl.innerText = `Full Year ${year - 1}`;
 
         if (currTitleEl) currTitleEl.innerText = `This Year (${year})`;
         if (currValEl) currValEl.innerText = formatValue(currTotal);
         if (currValEl) currValEl.style.color = currTotal < 0 ? '#ec4899' : '#2dd4bf';
-        if (currSubEl) currSubEl.innerText = "For Now";
+        //if (currSubEl) currSubEl.innerText = "For Now";
     }
   }
   
