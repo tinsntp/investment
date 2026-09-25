@@ -9094,7 +9094,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
           }
 
           const cell = document.createElement("div");
-          cell.style.cssText = `padding:7.5px 8px;background:${defaultBg};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
+          cell.style.cssText = `padding:7px 8px;background:${defaultBg};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
           
           cell.onmouseover = () => cell.style.background = "#222733";
           cell.onmouseout = () => cell.style.background = defaultBg;
@@ -9113,7 +9113,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
             const qBg = getPnlBgColor(qSum, qHasData);
 
             const qCell = document.createElement("div");
-            qCell.style.cssText = `padding:7.5px 8px;background:${qBg};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:0px solid #334155;`;
+            qCell.style.cssText = `padding:7px 8px;background:${qBg};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:0px solid #334155;`;
             
             qCell.innerHTML = `
               <span style="font-size:16px;color:#94a3b8;font-weight:600;">∑Q${qNum}</span>
