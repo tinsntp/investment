@@ -1005,7 +1005,7 @@ col.col-costmarket{width:20%}
 
 .tv-symbol-title {
     font-weight: 600;
-    font-size: 14.5px;
+    font-size: 15px;
     color: #f8fafc;
     display: flex;
     align-items: center;
@@ -1587,10 +1587,45 @@ to{transform:rotate(360deg)}
   }
 }
 
+/* Stage 1: Entrance Pop & Scale Up */
+@keyframes investBarEntrance {
+  0% {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+  70% {
+    opacity: 1;
+    transform: scaleY(1.08);
+  }
+  100% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+/* Stage 2: Continuous Breathing Wave */
+@keyframes investBarContinuousWave {
+  0% {
+    transform: scaleY(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scaleY(1.05) translateY(-1px);
+    filter: brightness(1.1);
+  }
+  100% {
+    transform: scaleY(0.96);
+    filter: brightness(0.95);
+  }
+}
+
+/* Optional hover state enhancement */
 .invest-bar-wave {
-  transform-box: fill-box;       /* Keeps scale anchor tied to each individual bar */
-  transform-origin: bottom;      /* Ensures bars expand upward, not down */
-  animation: investBarWave 2.2s ease-in-out infinite;
+  transition: filter 0.2s ease;
+}
+
+.invest-bar-wave:hover {
+  filter: brightness(1.25);
 }
 </style>
 </head>
@@ -2111,21 +2146,21 @@ to{transform:rotate(360deg)}
             <div class="budget-card" style="padding:0 !important">
               <!-- Sub-Tab Switcher Header (Placed at top) -->
               <div class="budget-subtabs" data-tabgroup="portfolio-group" style="display: flex; align-items: center; justify-content: space-between; margin: 10px 3px 10px 3px;">
-                  <button type="button" class="budget-subtab active" onclick="switchBudgetTab(this, 'watchlist'); this.parentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });">
-                    <span class="material-icons-round" style="font-size: 14px;">bookmark</span>
-                    <span>Watchlist</span>
-                  </button>
+                <button type="button" class="budget-subtab active" onclick="switchBudgetTab(this, 'watchlist'); if (window.innerWidth <= 400) this.parentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });">
+                  <span class="material-icons-round" style="font-size: 14px;">bookmark</span>
+                  <span>Watchlist</span>
+                </button>
 
-                  <button type="button" class="budget-subtab" onclick="switchBudgetTab(this, 'tradingview'); this.parentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });">
-                    <span class="material-icons-round" style="font-size: 14px;">bar_chart</span>
-                    <span>TradingView</span>
-                  </button>
+                <button type="button" class="budget-subtab" onclick="switchBudgetTab(this, 'tradingview'); if (window.innerWidth <= 400) this.parentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });">
+                  <span class="material-icons-round" style="font-size: 14px;">bar_chart</span>
+                  <span>TradingView</span>
+                </button>
 
-                  <button type="button" class="budget-subtab" onclick="switchBudgetTab(this, 'portfolio-pnl'); this.parentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });">
-                    <span class="material-icons-round" style="font-size: 14px;">data_usage</span>
-                    <span>Portfolio</span>
-                  </button>
-                </div>
+                <button type="button" class="budget-subtab" onclick="switchBudgetTab(this, 'portfolio-pnl'); if (window.innerWidth <= 400) this.parentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });">
+                  <span class="material-icons-round" style="font-size: 14px;">data_usage</span>
+                  <span>Portfolio</span>
+                </button>
+              </div>
               
               <!-- Tab 2: Trading View Widget -->
               <div class="budget-tab-content" id="budget-view-tradingview" style="display: none;">
@@ -3022,135 +3057,143 @@ to{transform:rotate(360deg)}
       }
       
       // 2. Invest Mode Layer
-      if (lineVisibility.invest && pts.length > 0) {
-        var stackGroup = document.createElementNS(ns, "g");
-        stackGroup.setAttribute("mask", "url(#lineEdgeFadeMask)");
+if (lineVisibility.invest && pts.length > 0) {
+  var stackGroup = document.createElementNS(ns, "g");
+  stackGroup.setAttribute("mask", "url(#lineEdgeFadeMask)");
 
-        var pastelCategories = [
-          {key: "saving", top: "#e879f9", bottom: "#d8b4fe"},
-          {key: "stock", top: "#5eead4", bottom: "#34d399"},
-          {key: "forex", top: "#fef9c3", bottom: "#eab308"},
-          {key: "crypto", top: "#fef08a", bottom: "#ca8a04"},
-          {key: "gold", top: "#ffedd5", bottom: "#f97316"},
-          {key: "comp", top: "#7dd3fc", bottom: "#38bdf8"}
-        ];
+  var pastelCategories = [
+    {key: "saving", top: "#e879f9", bottom: "#d8b4fe"},
+    {key: "stock", top: "#5eead4", bottom: "#34d399"},
+    {key: "forex", top: "#fef9c3", bottom: "#eab308"},
+    {key: "crypto", top: "#fef08a", bottom: "#ca8a04"},
+    {key: "gold", top: "#ffedd5", bottom: "#f97316"},
+    {key: "comp", top: "#7dd3fc", bottom: "#38bdf8"}
+  ];
 
-        var defs = svg.querySelector("defs") || svg;
-        pastelCategories.forEach(function(cat) {
-          var gradId = "pastelGrad_" + cat.key;
-          if (!document.getElementById(gradId)) {
-            var grad = document.createElementNS(ns, "linearGradient");
-            grad.setAttribute("id", gradId);
-            grad.setAttribute("x1", "0"); grad.setAttribute("y1", "0");
-            grad.setAttribute("x2", "0"); grad.setAttribute("y2", "1");
+  var defs = svg.querySelector("defs") || svg;
+  pastelCategories.forEach(function(cat) {
+    var gradId = "pastelGrad_" + cat.key;
+    if (!document.getElementById(gradId)) {
+      var grad = document.createElementNS(ns, "linearGradient");
+      grad.setAttribute("id", gradId);
+      grad.setAttribute("x1", "0"); grad.setAttribute("y1", "0");
+      grad.setAttribute("x2", "0"); grad.setAttribute("y2", "1");
 
-            var stop1 = document.createElementNS(ns, "stop");
-            stop1.setAttribute("offset", "0%");
-            stop1.setAttribute("stop-color", cat.top);
-            stop1.setAttribute("stop-opacity", "1");
+      var stop1 = document.createElementNS(ns, "stop");
+      stop1.setAttribute("offset", "0%");
+      stop1.setAttribute("stop-color", cat.top);
+      stop1.setAttribute("stop-opacity", "1");
 
-            var stop2 = document.createElementNS(ns, "stop");
-            stop2.setAttribute("offset", "100%");
-            stop2.setAttribute("stop-color", cat.bottom);
-            stop2.setAttribute("stop-opacity", "0.75");
+      var stop2 = document.createElementNS(ns, "stop");
+      stop2.setAttribute("offset", "100%");
+      stop2.setAttribute("stop-color", cat.bottom);
+      stop2.setAttribute("stop-opacity", "0.75");
 
-            grad.appendChild(stop1);
-            grad.appendChild(stop2);
-            defs.appendChild(grad);
-          }
-        });
+      grad.appendChild(stop1);
+      grad.appendChild(stop2);
+      defs.appendChild(grad);
+    }
+  });
 
-        // Rounded-rect path with independent corner radii (<rect> rx applies to all four).
-        function roundedBoxPath(x, y, w, h, rTL, rTR, rBR, rBL) {
-          var maxR = Math.min(w, h) / 2;
-          rTL = Math.min(rTL, maxR); rTR = Math.min(rTR, maxR);
-          rBR = Math.min(rBR, maxR); rBL = Math.min(rBL, maxR);
-          return "M " + (x + rTL) + " " + y +
-                 " H " + (x + w - rTR) +
-                 (rTR ? " A " + rTR + " " + rTR + " 0 0 1 " + (x + w) + " " + (y + rTR) : "") +
-                 " V " + (y + h - rBR) +
-                 (rBR ? " A " + rBR + " " + rBR + " 0 0 1 " + (x + w - rBR) + " " + (y + h) : "") +
-                 " H " + (x + rBL) +
-                 (rBL ? " A " + rBL + " " + rBL + " 0 0 1 " + x + " " + (y + h - rBL) : "") +
-                 " V " + (y + rTL) +
-                 (rTL ? " A " + rTL + " " + rTL + " 0 0 1 " + (x + rTL) + " " + y : "") +
-                 " Z";
-        }
+  // Rounded-rect path with independent corner radii
+  function roundedBoxPath(x, y, w, h, rTL, rTR, rBR, rBL) {
+    var maxR = Math.min(w, h) / 2;
+    rTL = Math.min(rTL, maxR); rTR = Math.min(rTR, maxR);
+    rBR = Math.min(rBR, maxR); rBL = Math.min(rBL, maxR);
+    return "M " + (x + rTL) + " " + y +
+           " H " + (x + w - rTR) +
+           (rTR ? " A " + rTR + " " + rTR + " 0 0 1 " + (x + w) + " " + (y + rTR) : "") +
+           " V " + (y + h - rBR) +
+           (rBR ? " A " + rBR + " " + rBR + " 0 0 1 " + (x + w - rBR) + " " + (y + h) : "") +
+           " H " + (x + rBL) +
+           (rBL ? " A " + rBL + " " + rBL + " 0 0 1 " + x + " " + (y + h - rBL) : "") +
+           " V " + (y + rTL) +
+           (rTL ? " A " + rTL + " " + rTL + " 0 0 1 " + (x + rTL) + " " + y : "") +
+           " Z";
+  }
 
-        var colWidth = Math.max(18, Math.min(24, (plotW / pts.length) * 1)),
-            SEG_GAP  = 1.5,
-            capR     = 4;
+  var colWidth = Math.max(18, Math.min(24, (plotW / pts.length) * 1)),
+      SEG_GAP  = 1.5,
+      capR     = 4;
 
-        // PASS 1: collect every segment, keyed by point index.
-        var segsByPoint = pts.map(function() { return []; });
-        var lowerCumulative = pts.map(function() { return 0; });
-        var upperCumulative = pts.map(function() { return 0; });
+  // PASS 1: collect every segment, keyed by point index.
+  var segsByPoint = pts.map(function() { return []; });
+  var lowerCumulative = pts.map(function() { return 0; });
+  var upperCumulative = pts.map(function() { return 0; });
 
-        pastelCategories.forEach(function(cat) {
-          var nextLower = [], nextUpper = [];
+  pastelCategories.forEach(function(cat) {
+    var nextLower = [], nextUpper = [];
 
-          pts.forEach(function(p, i) {
-            var invItem = p.investData || (p.originalIndex !== -1 ? investSeries[p.originalIndex] : { saving: 0, stock: 0, forex: 0, crypto: 0, gold: 0, comp: 0, total: 0 });
-            var val = invItem ? (invItem[cat.key] || 0) : 0;
+    pts.forEach(function(p, i) {
+      var invItem = p.investData || (p.originalIndex !== -1 ? investSeries[p.originalIndex] : { saving: 0, stock: 0, forex: 0, crypto: 0, gold: 0, comp: 0, total: 0 });
+      var val = invItem ? (invItem[cat.key] || 0) : 0;
 
-            var lowVal = lowerCumulative[i], upVal = upperCumulative[i];
-            if (val >= 0) {
-              nextLower[i] = upVal;         nextUpper[i] = upVal + val;
-            } else {
-              nextLower[i] = lowVal + val;  nextUpper[i] = lowVal;
-            }
-
-            var yLow = PAD_TOP + (1 - (nextLower[i] - minV) / (maxV - minV)) * plotH,
-                yUp  = PAD_TOP + (1 - (nextUpper[i] - minV) / (maxV - minV)) * plotH,
-                colY = Math.min(yLow, yUp),
-                colHeight = Math.abs(yLow - yUp);
-
-            if (colHeight > 0.5 && val !== 0) {
-              segsByPoint[i].push({ key: cat.key, y: colY, h: colHeight });
-            }
-          });
-
-          lowerCumulative = nextLower;
-          upperCumulative = nextUpper;
-        });
-
-        // PASS 2: round only the outer ends of each month's stack.
-        segsByPoint.forEach(function(segs, i) {
-          if (!segs.length) return;
-
-          // sort top-down so index 0 is the visually highest segment
-          segs.sort(function(a, b) { return a.y - b.y; });
-
-          var topMost = segs[0],
-              botMost = segs[segs.length - 1];
-
-          segs.forEach(function(s) {
-            var isTop = (s === topMost),
-                isBot = (s === botMost),
-                rTL = isTop ? capR : 0,
-                rTR = isTop ? capR : 0,
-                rBR = isBot ? capR : 0,
-                rBL = isBot ? capR : 0;
-
-            var drawY = s.y + SEG_GAP / 2,
-                drawH = s.h - SEG_GAP;
-            if (drawH < 1) { drawH = s.h; drawY = s.y; }
-
-            var path = document.createElementNS(ns, "path");
-            path.setAttribute("d", roundedBoxPath(
-            +(xy[i].x - colWidth / 2).toFixed(2), +drawY.toFixed(2),
-            +colWidth.toFixed(2), +drawH.toFixed(2),
-            rTL, rTR, rBR, rBL
-            ));
-            path.setAttribute("fill", "url(#pastelGrad_" + s.key + ")");
-            path.setAttribute("class", "invest-bar-wave"); // Updated to use wave animation class
-            path.style.animationDelay = (i * 0.12) + "s"; // Staggered delay for wave effect
-            stackGroup.appendChild(path);
-          });
-        });
-
-        svg.appendChild(stackGroup);
+      var lowVal = lowerCumulative[i], upVal = upperCumulative[i];
+      if (val >= 0) {
+        nextLower[i] = upVal;         nextUpper[i] = upVal + val;
+      } else {
+        nextLower[i] = lowVal + val;  nextUpper[i] = lowVal;
       }
+
+      var yLow = PAD_TOP + (1 - (nextLower[i] - minV) / (maxV - minV)) * plotH,
+          yUp  = PAD_TOP + (1 - (nextUpper[i] - minV) / (maxV - minV)) * plotH,
+          colY = Math.min(yLow, yUp),
+          colHeight = Math.abs(yLow - yUp);
+
+      if (colHeight > 0.5 && val !== 0) {
+        segsByPoint[i].push({ key: cat.key, y: colY, h: colHeight });
+      }
+    });
+
+    lowerCumulative = nextLower;
+    upperCumulative = nextUpper;
+  });
+
+  // PASS 2: round outer ends and set up dual-stage entrance + continuous wave animation.
+  segsByPoint.forEach(function(segs, i) {
+    if (!segs.length) return;
+
+    // Sort top-down so index 0 is top-most
+    segs.sort(function(a, b) { return a.y - b.y; });
+
+    var topMost = segs[0],
+        botMost = segs[segs.length - 1];
+
+    var staggerDelay = (i * 0.08); // Wave delay between columns
+
+    segs.forEach(function(s) {
+      var isTop = (s === topMost),
+          isBot = (s === botMost),
+          rTL = isTop ? capR : 0,
+          rTR = isTop ? capR : 0,
+          rBR = isBot ? capR : 0,
+          rBL = isBot ? capR : 0;
+
+      var drawY = s.y + SEG_GAP / 2,
+          drawH = s.h - SEG_GAP;
+      if (drawH < 1) { drawH = s.h; drawY = s.y; }
+
+      var path = document.createElementNS(ns, "path");
+      path.setAttribute("d", roundedBoxPath(
+        +(xy[i].x - colWidth / 2).toFixed(2), +drawY.toFixed(2),
+        +colWidth.toFixed(2), +drawH.toFixed(2),
+        rTL, rTR, rBR, rBL
+      ));
+      path.setAttribute("fill", "url(#pastelGrad_" + s.key + ")");
+      path.setAttribute("class", "invest-bar-wave");
+
+      // Set SVG transform origin to bottom center of individual column for accurate vertical scaling
+      path.style.transformOrigin = xy[i].x + "px " + (drawY + drawH) + "px";
+      
+      // Sequence: Entrance animation (1s delay offset) -> Continuous wave infinite loop
+      path.style.animation = `investBarEntrance 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) ${staggerDelay}s backwards, investBarContinuousWave 3s ease-in-out ${staggerDelay + 0.7}s infinite alternate`;
+
+      stackGroup.appendChild(path);
+    });
+  });
+
+  svg.appendChild(stackGroup);
+}
 
       // 3. Expense / Income Layer
       if (!lineVisibility.invest) {
@@ -6719,101 +6762,146 @@ to{transform:rotate(360deg)}
     function handleAmountSuggestions(val){const container=document.getElementById("quickAmountContainer");container.innerHTML="";const numericBase=parseFloat(val);if(isNaN(numericBase)||numericBase<=0)return;[1e5,1e6,1e7].forEach(function(factor){const calculatedValue=numericBase*factor;if(calculatedValue<=5e9){const displayString=calculatedValue.toLocaleString("vi-VN")+" ₫",chipElement=document.createElement("div");chipElement.className="quick-amt-chip",chipElement.textContent=displayString,chipElement.onclick=function(){document.getElementById("transactionAmount").value=calculatedValue,container.innerHTML=""},container.appendChild(chipElement)}})}
     function handleCustomSelect(element){const selectedValue=element.getAttribute("data-value"),selectedInnerHtml=element.innerHTML;document.getElementById("targetAccount").value=selectedValue,document.getElementById("customSelectTrigger").innerHTML=selectedInnerHtml,document.getElementById("customSelectOptions").classList.remove("show")}
     function processTransaction(type) {
-        const accountSelect = document.getElementById('targetAccount');
-        const amountInput = document.getElementById('transactionAmount');
-        const detailInput = document.getElementById('transactionDetail');
-        const incomeTypeSelect = document.getElementById('incomeTypeSelect'); 
-        const errorDiv = document.getElementById('modalErrorMessage');
-        const successDiv = document.getElementById('modalSuccessMessage');
-        const successTextSpan = document.getElementById('successText');
-        const submitBtn = document.querySelector('.btn-submit-tx');
-        const cancelBtn = document.getElementById('modalCancelBtn');
-        const rawAmountString = amountInput ? amountInput.value.replace(/[\.,\s]/g, '') : '0';
-        const amount = parseFloat(rawAmountString);
-        let detailText = detailInput ? detailInput.value.trim() : '';
-        const isTransfer = type === 'Transfer';
+      const accountSelect = document.getElementById('targetAccount');
+      const amountInput = document.getElementById('transactionAmount');
+      const detailInput = document.getElementById('transactionDetail');
+      const incomeTypeSelect = document.getElementById('incomeTypeSelect'); 
+      const errorDiv = document.getElementById('modalErrorMessage');
+      const successDiv = document.getElementById('modalSuccessMessage');
+      const successTextSpan = document.getElementById('successText');
+      const submitBtn = document.querySelector('.btn-submit-tx');
+      const cancelBtn = document.getElementById('modalCancelBtn');
+      const rawAmountString = amountInput ? amountInput.value.replace(/[\.,\s]/g, '') : '0';
+      const amount = parseFloat(rawAmountString);
+      let detailText = detailInput ? detailInput.value.trim() : '';
+      const isTransfer = type === 'Transfer';
 
-        if (isNaN(amount) || amount <= 0) { if (errorDiv) {errorDiv.textContent = "Please enter a valid amount."; errorDiv.style.display = "block"; } else {alert("Please enter a valid amount."); }return;}
-        if (isTransfer && window.swapState) { if (amount > (window.swapState.fromBalance || 0)) { if (errorDiv) {errorDiv.textContent = "Insufficient balance in source account."; errorDiv.style.display = "block"; } else {alert("Insufficient balance in source account."); }return;}
-        if (window.swapState.toAccount === 'Select Account' || !window.swapState.toAccount) { if (errorDiv) {errorDiv.textContent = "Please select a valid destination account."; errorDiv.style.display = "block"; } else {alert("Please select a valid destination account."); }return;}}
-        if (errorDiv) {errorDiv.textContent = ""; errorDiv.style.display = "none"; }
-        if (successDiv) {successDiv.style.display = "none"; }
-        if (submitBtn) {submitBtn.disabled = true; submitBtn.style.opacity = "0.6"; submitBtn.textContent = "Processing..."; }
-        if (cancelBtn) {cancelBtn.disabled = true; cancelBtn.style.opacity = "0.5"; }
-        
-        let payload = {};
-        if (isTransfer && window.swapState) {
-            // If the SOURCE account is a Saving account, its name already encodes
-            // "Saving-<BANK>-<MONTHS>-<RATE>%" — pass it straight through as detail
-            // so the BE apps script can detect and process the Saving row.
-            const fromAccountName = window.swapState.fromAccount || '';
-            const isFromSaving = fromAccountName.toUpperCase().startsWith('SAVING');
-            const savingDetail = isFromSaving ? fromAccountName : '';
+      if (isNaN(amount) || amount <= 0) { 
+          if (errorDiv) { errorDiv.textContent = "Please enter a valid amount."; errorDiv.style.display = "block"; } 
+          else { alert("Please enter a valid amount."); }
+          return;
+      }
+      if (isTransfer && window.swapState) { 
+          if (amount > (window.swapState.fromBalance || 0)) { 
+              if (errorDiv) { errorDiv.textContent = "Insufficient balance in source account."; errorDiv.style.display = "block"; } 
+              else { alert("Insufficient balance in source account."); }
+              return;
+          }
+          if (window.swapState.toAccount === 'Select Account' || !window.swapState.toAccount) { 
+              if (errorDiv) { errorDiv.textContent = "Please select a valid destination account."; errorDiv.style.display = "block"; } 
+              else { alert("Please select a valid destination account."); }
+              return;
+          }
+      }
 
-            payload = {
-                action: "wallet_transfer",
-                fromAccount: window.swapState.fromAccount,
-                toAccount: window.swapState.toAccount,
-                amount: amount,
-                detail: savingDetail || (detailText || `Transfer from ${window.swapState.fromAccount} to ${window.swapState.toAccount}`)
-            };
-        } else {
-            const selectedAccountName = accountSelect ? accountSelect.value : 'SAVING';
-            const actionPayloadName = type === 'Deposit' ? 'wallet_deposit' : 'wallet_withdraw';
-            if (type === 'Deposit') {
-                let incomeType = "Deposit"; 
-                let cleanDetail = detailText.trim(); 
-                if (cleanDetail !== '') {
-                    const lowerText = cleanDetail.toLowerCase();
-                    if (lowerText.includes('forex')) {
-                        incomeType = "Forex PNL";
-                    } else if (lowerText.includes('crypto')) { 
-                        incomeType = "Crypto PNL";
-                    } else if (lowerText.includes('comp')) {
-                        incomeType = "Comp.";
-                    } else if (lowerText.includes('interest')) {
-                        incomeType = "Interest";
-                    } else if (lowerText.includes('others') || lowerText.includes('other')) {
-                        incomeType = "Others";
-                    } else {
-                        incomeType = "Income"; 
-                    }
-                    if (cleanDetail.includes('/')) {
-                    const parts = cleanDetail.split('/');
-                    cleanDetail = parts[1].trim(); 
-                    } else {
-                    const checkRaw = cleanDetail.toLowerCase().replace('.', '');
-                    if (['comp', 'forex', 'crypto', 'interest', 'others', 'other'].includes(checkRaw)) {
-                        cleanDetail = ""; 
-                    }
-                    }
-                }
-                payload = {
-                    action: actionPayloadName,
-                    account: selectedAccountName,
-                    amount: amount,
-                    incomeType: incomeType, 
-                    detail: cleanDetail     
-                };
-            }
-        }
-        fetch(EXPENSE_APPS_SCRIPT_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify(payload)
-        })
-        .then(function(response) {
-            if (!response.ok) throw new Error("Network response error: " + response.status);
-            return response.json();
-        })
-        .then(function(result) {
-            if("success"!==result.status)throw new Error(result.message||"Execution exception.");"function"==typeof caLoadAccounts&&caLoadAccounts(),isTransfer&&window.swapState&&(window.swapState.fromBalance-=amount,void 0!==window.swapState.toBalance&&(window.swapState.toBalance+=amount)),successDiv&&successTextSpan&&(successTextSpan.textContent=isTransfer?"Transfer processed successfully!":`${type} successfully!`,successDiv.style.display="flex",submitBtn&&(submitBtn.style.display="none"),cancelBtn&&(cancelBtn.style.display="none")),setTimeout(function(){"function"==typeof closeModal&&closeModal()},1200);
-        })
-        .catch(function(err) {
-            console.error(err),errorDiv?(errorDiv.textContent="Server Error: "+err.message,errorDiv.style.display="block"):alert("Server Error: "+err.message),submitBtn&&(submitBtn.disabled=!1,submitBtn.style.opacity="1",submitBtn.textContent=isTransfer?"Confirm Transfer":"Confirm Transaction"),cancelBtn&&(cancelBtn.disabled=!1,cancelBtn.style.opacity="1");
-        });
-    }
+      if (errorDiv) { errorDiv.textContent = ""; errorDiv.style.display = "none"; }
+
+      // 1. Build Payload
+      let payload = {};
+      if (isTransfer && window.swapState) {
+          const fromAccountName = window.swapState.fromAccount || '';
+          const isFromSaving = fromAccountName.toUpperCase().startsWith('SAVING');
+          const savingDetail = isFromSaving ? fromAccountName : '';
+
+          payload = {
+              action: "wallet_transfer",
+              fromAccount: window.swapState.fromAccount,
+              toAccount: window.swapState.toAccount,
+              amount: amount,
+              detail: savingDetail || (detailText || `Transfer from ${window.swapState.fromAccount} to ${window.swapState.toAccount}`)
+          };
+      } else {
+          const selectedAccountName = accountSelect ? accountSelect.value : 'SAVING';
+          const actionPayloadName = type === 'Deposit' ? 'wallet_deposit' : 'wallet_withdraw';
+          if (type === 'Deposit') {
+              let incomeType = "Deposit"; 
+              let cleanDetail = detailText.trim(); 
+              if (cleanDetail !== '') {
+                  const lowerText = cleanDetail.toLowerCase();
+                  if (lowerText.includes('forex')) {
+                      incomeType = "Forex PNL";
+                  } else if (lowerText.includes('crypto')) { 
+                      incomeType = "Crypto PNL";
+                  } else if (lowerText.includes('comp')) {
+                      incomeType = "Comp.";
+                  } else if (lowerText.includes('interest')) {
+                      incomeType = "Interest";
+                  } else if (lowerText.includes('others') || lowerText.includes('other')) {
+                      incomeType = "Others";
+                  } else {
+                      incomeType = "Income"; 
+                  }
+                  if (cleanDetail.includes('/')) {
+                      const parts = cleanDetail.split('/');
+                      cleanDetail = parts[1].trim(); 
+                  } else {
+                      const checkRaw = cleanDetail.toLowerCase().replace('.', '');
+                      if (['comp', 'forex', 'crypto', 'interest', 'others', 'other'].includes(checkRaw)) {
+                          cleanDetail = ""; 
+                      }
+                  }
+              }
+              payload = {
+                  action: actionPayloadName,
+                  account: selectedAccountName,
+                  amount: amount,
+                  incomeType: incomeType, 
+                  detail: cleanDetail     
+              };
+          } else {
+              payload = {
+                  action: actionPayloadName,
+                  account: selectedAccountName,
+                  amount: amount,
+                  detail: detailText
+              };
+          }
+      }
+
+      // 2. Perform optimistic local UI state updates instantly
+      if (isTransfer && window.swapState) {
+          window.swapState.fromBalance -= amount;
+          if (typeof window.swapState.toBalance !== "undefined") {
+              window.swapState.toBalance += amount;
+          }
+      }
+
+      if (typeof caLoadAccounts === "function") {
+          caLoadAccounts();
+      }
+
+      // Fire success fireworks effect if available
+      if (typeof triggerPaperFirework === "function") {
+          triggerPaperFirework(null);
+      }
+
+      // 3. Close the modal immediately without waiting for server response
+      if (typeof closeModal === "function") {
+          closeModal();
+      }
+
+      // Reset buttons state for next usage
+      if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = "1";
+          submitBtn.textContent = isTransfer ? "Confirm Transfer" : "Confirm Transaction";
+      }
+      if (cancelBtn) {
+          cancelBtn.disabled = false;
+          cancelBtn.style.opacity = "1";
+      }
+
+      // 4. Send request to Apps Script asynchronously in background
+      fetch(EXPENSE_APPS_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload)
+      })
+      .catch(function(err) {
+          console.error("Background transaction sync error:", err);
+      });
+  }
 
     
     function fetchVnIndexData(isUserRefresh){var now=new Date,vnTime=new Date(now.toLocaleString("en-US",{timeZone:"Asia/Ho_Chi_Minh"})),day=vnTime.getDay(),totalMins=60*vnTime.getHours()+vnTime.getMinutes();if(day>=1&&day<=5&&totalMins>=555&&totalMins<=900){var reloadBtn=document.getElementById("vnindex-reload-btn");reloadBtn&&reloadBtn.classList.add("spinning"),fetch(EXPENSE_APPS_SCRIPT_URL+"?action=vnindex&t="+Date.now(),{cache:"no-store"}).then(function(response){if(!response.ok)throw new Error("HTTP "+response.status);return response.json()}).then(function(result){if("success"!==result.status)throw new Error(result.message||"Failed");var vnindexVal=Number(result.data.close)||0,changeVal=Number(result.data.change)||0,pctChangeVal=Number(result.data.pctChange)||0,isPositive=changeVal>0,isZero=0===changeVal;document.getElementById("vnindex-bal").textContent=vnindexVal.toLocaleString("en-US");var changeSign=isZero?"":isPositive?"+":"",valEl=document.getElementById("vnindex-val");valEl.textContent=changeSign+changeVal.toLocaleString("en-US"),valEl.className=isZero||isPositive?"text-teal":"text-pink";var badgeEl=document.getElementById("vnindex-badge"),pctSign=isZero?"":isPositive?"+":"";badgeEl.textContent=pctSign+pctChangeVal.toFixed(2)+"%",badgeEl.className="badge-pill "+(isZero||isPositive?"badge-teal":"badge-pink")}).catch(function(err){console.warn("VNINDEX realtime failed, falling back to CSV:",err.message),fetchVnIndexData2()}).finally(function(){reloadBtn&&reloadBtn.classList.remove("spinning")})}else fetchVnIndexData2()}
@@ -7742,210 +7830,273 @@ function applyPortfolioFiltersAndRender() {
     }
     function toggleCategoryGroup(categoryKey,headerRowEl){var isCollapsed=headerRowEl.classList.toggle("collapsed");document.querySelectorAll(`tr[data-category-key="${categoryKey}"]:not(.portfolio-group-hdr-row)`).forEach(function(row){isCollapsed?(row.dataset.prevDisplay=row.style.display||"",row.style.display="none"):row.classList.contains("log-row")?row.style.display=row.classList.contains("visible")?"table-row":"none":row.style.display=""})}
     function openPortfolioModal() {
-        document.querySelectorAll('[id="portfolio-cal-menu"]').forEach(function(el) { el.remove(); });
-        const backdrop = document.getElementById('modalBackdrop');
-        const title = document.getElementById('modalTitle');
-        const body = document.getElementById('modalBody');
+    document.querySelectorAll('[id="portfolio-cal-menu"]').forEach(function(el) { el.remove(); });
+    const backdrop = document.getElementById('modalBackdrop');
+    const title = document.getElementById('modalTitle');
+    const body = document.getElementById('modalBody');
 
-        const defaultIcon = "https://github.com/tinsntp/investment/blob/main/stock.png?raw=true";
+    const defaultIcon = "https://github.com/tinsntp/investment/blob/main/stock.png?raw=true";
 
-        title.innerHTML = `
-        <img id="portfolioModalIcon" src="${defaultIcon}" style="width: 24px; height: 24px; border-radius: 6px; object-fit: cover;">
-        <span style="color: #f8f9fa; font-weight: 600;" id="portfolioModalTitleText">Add Position</span>
-        `;
+    title.innerHTML = `
+    <img id="portfolioModalIcon" src="${defaultIcon}" style="width: 24px; height: 24px; border-radius: 6px; object-fit: cover;">
+    <span style="color: #f8f9fa; font-weight: 600;" id="portfolioModalTitleText">Add Position</span>
+    `;
 
-        const accountTypes = [
+    const accountTypes = [
         { value: "Stock", icon: "https://github.com/tinsntp/investment/blob/main/stock.png?raw=true" },
         { value: "Saving", icon: "https://github.com/tinsntp/investment/blob/main/saving.png?raw=true" },
         { value: "Crypto", icon: "https://github.com/tinsntp/investment/blob/main/bitcoin.png?raw=true" },
         { value: "Forex", icon: "https://github.com/tinsntp/investment/blob/main/exness.png?raw=true" }
-        ];
-        let accountTypeOptionsHTML = '';
-        accountTypes.forEach(function(t) {
-            accountTypeOptionsHTML += `
-            <div class="custom-option-item" data-value="${t.value}" data-icon="${t.icon}" onclick="handlePortfolioTypeSelect(this)" style="display:flex; align-items:center; gap:10px; padding:10px 12px; cursor:pointer;">
-                <img src="${t.icon}" style="width: 20px; height: 20px; border-radius: 4px; object-fit: cover;">
-                <span>${t.value}</span>
+    ];
+    let accountTypeOptionsHTML = '';
+    accountTypes.forEach(function(t) {
+        accountTypeOptionsHTML += `
+        <div class="custom-option-item" data-value="${t.value}" data-icon="${t.icon}" onclick="handlePortfolioTypeSelect(this)" style="display:flex; align-items:center; gap:10px; padding:10px 12px; cursor:pointer;">
+            <img src="${t.icon}" style="width: 20px; height: 20px; border-radius: 4px; object-fit: cover;">
+            <span>${t.value}</span>
+        </div>
+        `;
+    });
+
+    let portfolioAccountOptionsHTML = '';
+    let portfolioInitialTriggerText = "Select Account";
+    let portfolioDefaultAccountValue = '';
+
+    if (typeof accountsData !== 'undefined' && Array.isArray(accountsData)) {
+        const usableAccounts = accountsData.filter(acc => acc.account !== "Salary" && acc.account !== "SOCIAL");
+        const defaultBankAccount = usableAccounts.find(acc => acc.account && acc.account.toUpperCase().includes("BANK"));
+
+        usableAccounts.forEach(function(acc) {
+            const balanceFormatted = '₫' + Math.round(acc.amount).toLocaleString('vi-VN');
+            const iconUrl = acc.icon || 'https://cdn-icons-png.flaticon.com/512/3135/3135706.png';
+            const displayName = acc.account.toUpperCase().startsWith('SAVING') ? 'SAVING' : acc.account;
+
+            const innerContentHTML = `
+            <img src="${iconUrl}"
+                style="width: 20px; height: 20px; border-radius: 4px; object-fit: cover;"
+                onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135706.png'">
+            <span>${displayName} (${balanceFormatted})</span>
+            `;
+
+            if (defaultBankAccount && acc.account === defaultBankAccount.account) {
+                portfolioInitialTriggerText = innerContentHTML;
+                portfolioDefaultAccountValue = acc.account;
+            }
+
+            portfolioAccountOptionsHTML += `
+            <div class="custom-option-item" data-value="${acc.account}" onclick="handlePortfolioAccountSelect(this)">
+                ${innerContentHTML}
             </div>
             `;
         });
+    }
 
-        // NEW: build "Select Account" options — same pattern/source as openModal()'s accountOptionsHTML
-        let portfolioAccountOptionsHTML = '';
-        let portfolioInitialTriggerText = "Select Account";
-        let portfolioDefaultAccountValue = '';
-
-        if (typeof accountsData !== 'undefined' && Array.isArray(accountsData)) {
-            const usableAccounts = accountsData.filter(acc => acc.account !== "Salary" && acc.account !== "SOCIAL");
-
-            // NEW: find the default account — the one containing "BANK" (case-insensitive)
-            const defaultBankAccount = usableAccounts.find(acc => acc.account && acc.account.toUpperCase().includes("BANK"));
-
-            usableAccounts.forEach(function(acc) {
-                const balanceFormatted = '₫' + Math.round(acc.amount).toLocaleString('vi-VN');
-                const iconUrl = acc.icon || 'https://cdn-icons-png.flaticon.com/512/3135/3135706.png';
-                const displayName = acc.account.toUpperCase().startsWith('SAVING') ? 'SAVING' : acc.account;
-
-                const innerContentHTML = `
-                <img src="${iconUrl}"
-                    style="width: 20px; height: 20px; border-radius: 4px; object-fit: cover;"
-                    onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135706.png'">
-                <span>${displayName} (${balanceFormatted})</span>
-                `;
-
-                // NEW: pre-fill trigger text + hidden value if this is the default BANK account
-                if (defaultBankAccount && acc.account === defaultBankAccount.account) {
-                    portfolioInitialTriggerText = innerContentHTML;
-                    portfolioDefaultAccountValue = acc.account;
-                }
-
-                portfolioAccountOptionsHTML += `
-                <div class="custom-option-item" data-value="${acc.account}" onclick="handlePortfolioAccountSelect(this)">
-                    ${innerContentHTML}
-                </div>
-                `;
-            });
-        }
-
-        body.innerHTML = `
-        <!-- Symbol + Account Type row — stacked in normal mode, side-by-side in Saving mode -->
-        <div id="portfolioTopRow">
-            <div class="modal-field-group" style="margin-bottom: 16px;" id="portfolioSymbolWrapper">
-                <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioSymbolLabel">Symbol:</label>
+    body.innerHTML = `
+    <!-- Symbol + Account Type row -->
+    <div id="portfolioTopRow">
+        <div class="modal-field-group" style="margin-bottom: 16px;" id="portfolioSymbolWrapper">
+            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioSymbolLabel">Symbol:</label>
+            <div style="position: relative; width: 100%; z-index: 10;">
                 <input type="text"
-                  id="portfolioSymbol" placeholder="MBB"
-                  oninput="handlePortfolioSymbolInput(this)"
-                  onblur="handlePortfolioSymbolBlur(this)"
-                  style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; font-weight:300!important; box-sizing: border-box; outline: none; text-transform: uppercase;" />
+                  id="portfolioSymbol" value="MBB" placeholder="MBB"
+                  oninput="if(typeof handlePortfolioSymbolInput==='function') handlePortfolioSymbolInput(this); window.syncPortfolioClearBtn('portfolioSymbol', 'portfolioClearSymbolBtn');"
+                  onkeyup="window.syncPortfolioClearBtn('portfolioSymbol', 'portfolioClearSymbolBtn');"
+                  onfocus="window.syncPortfolioClearBtn('portfolioSymbol', 'portfolioClearSymbolBtn');"
+                  onblur="if(typeof handlePortfolioSymbolBlur==='function') handlePortfolioSymbolBlur(this);"
+                  style="width: 100%; padding: 14px 40px 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; font-weight:300!important; box-sizing: border-box; outline: none; text-transform: uppercase; position: relative; z-index: 1;" />
+                <span class="material-icons-round" id="portfolioClearSymbolBtn" 
+                      onclick="window.clearPortfolioInputField('portfolioSymbol', 'portfolioClearSymbolBtn')" 
+                      style="display: block; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #6c757d; font-size: 20px; cursor: pointer; user-select: none; z-index: 9999!important; background: transparent;">cancel</span>
             </div>
-            <div class="modal-field-group" style="margin-bottom: 16px;" id="portfolioAccountTypeWrapper">
-                <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Account Type:</label>
-                <div class="premium-select-wrapper" style="position: relative;">
-                    <div class="custom-select-trigger" id="portfolioTypeTrigger" onclick="togglePortfolioTypeDropdown(event)" style="font-weight:600; border:none; padding: 14px 16px; background: #111216; border-radius: 12px; color: #f8f9fa; font-size: 14px; display: flex; align-items: center; gap: 10px; justify-content: flex-start; cursor: pointer;">
-                        <img id="portfolioTypeTriggerIcon" src="" style="width: 20px; height: 20px; border-radius: 4px; object-fit: cover; display:none;">
-                        <span id="portfolioTypeTriggerText">Select Type</span>
-                    </div>
-                    <input type="hidden" id="portfolioAccountType" value="" />
-                    <div class="custom-select-options" id="portfolioTypeOptions" style="display:none; position:absolute; left:0; top:calc(100% + 4px); background:#1e222b; border:0px solid #2d313c; border-radius:12px; width:100%; max-height:200px; overflow-y:auto; z-index:100; box-shadow:0 8px 24px rgba(0,0,0,0.5);">
-                        ${accountTypeOptionsHTML}
-                    </div>
-                </div>
-            </div>
-            
         </div>
-        <!-- NEW: Select Account dropdown — only visible in Saving mode, sits where Symbol used to be -->
-        <div class="modal-field-group" style="margin-bottom: 16px; display: none;" id="portfolioSelectAccountWrapper">
-            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Select Account:</label>
+        <div class="modal-field-group" style="margin-bottom: 16px;" id="portfolioAccountTypeWrapper">
+            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Account Type:</label>
             <div class="premium-select-wrapper" style="position: relative;">
-                <div class="custom-select-trigger" id="portfolioSelectAccountTrigger" onclick="togglePortfolioAccountDropdown(event)" style="font-weight:600; border:none; padding: 14px 16px; background: #111216; border-radius: 12px; color: #f8f9fa; font-size: 14px; display: flex; align-items: center; gap: 8px; justify-content: flex-start; cursor: pointer;">
-                    ${portfolioInitialTriggerText}
+                <div class="custom-select-trigger" id="portfolioTypeTrigger" onclick="togglePortfolioTypeDropdown(event)" style="font-weight:600; border:none; padding: 14px 16px; background: #111216; border-radius: 12px; color: #f8f9fa; font-size: 14px; display: flex; align-items: center; gap: 10px; justify-content: flex-start; cursor: pointer;">
+                    <img id="portfolioTypeTriggerIcon" src="" style="width: 20px; height: 20px; border-radius: 4px; object-fit: cover; display:none;">
+                    <span id="portfolioTypeTriggerText">Select Type</span>
                 </div>
-                <input type="hidden" id="portfolioTargetAccount" value="${portfolioDefaultAccountValue}" />
-                <div class="custom-select-options" id="portfolioSelectAccountOptions" style="display:none; position:absolute; left:0; top:calc(100% + 4px); background:#1e222b; border:0px solid #2d313c; border-radius:12px; width:100%; max-height:200px; overflow-y:auto; z-index:100; box-shadow:0 8px 24px rgba(0,0,0,0.5);">
-                    ${portfolioAccountOptionsHTML}
+                <input type="hidden" id="portfolioAccountType" value="" />
+                <div class="custom-select-options" id="portfolioTypeOptions" style="display:none; position:absolute; left:0; top:calc(100% + 4px); background:#1e222b; border:0px solid #2d313c; border-radius:12px; width:100%; max-height:200px; overflow-y:auto; z-index:100; box-shadow:0 8px 24px rgba(0,0,0,0.5);">
+                    ${accountTypeOptionsHTML}
                 </div>
             </div>
         </div>
+    </div>
 
-        <div style="display: flex; gap: 12px; margin-bottom: 16px;">
-            <div class="modal-field-group" style="flex: 1;" id="portfolioField1OuterWrapper">
-                <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioField1Label">Entry Price:</label>
+    <!-- Select Account dropdown -->
+    <div class="modal-field-group" style="margin-bottom: 16px; display: none;" id="portfolioSelectAccountWrapper">
+        <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Select Account:</label>
+        <div class="premium-select-wrapper" style="position: relative;">
+            <div class="custom-select-trigger" id="portfolioSelectAccountTrigger" onclick="togglePortfolioAccountDropdown(event)" style="font-weight:600; border:none; padding: 14px 16px; background: #111216; border-radius: 12px; color: #f8f9fa; font-size: 14px; display: flex; align-items: center; gap: 8px; justify-content: flex-start; cursor: pointer;">
+                ${portfolioInitialTriggerText}
+            </div>
+            <input type="hidden" id="portfolioTargetAccount" value="${portfolioDefaultAccountValue}" />
+            <div class="custom-select-options" id="portfolioSelectAccountOptions" style="display:none; position:absolute; left:0; top:calc(100% + 4px); background:#1e222b; border:0px solid #2d313c; border-radius:12px; width:100%; max-height:200px; overflow-y:auto; z-index:100; box-shadow:0 8px 24px rgba(0,0,0,0.5);">
+                ${portfolioAccountOptionsHTML}
+            </div>
+        </div>
+    </div>
+
+    <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+        <!-- Entry Price Field -->
+        <div class="modal-field-group" style="flex: 1;" id="portfolioField1OuterWrapper">
+            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioField1Label">Entry Price:</label>
+            <div style="position: relative; width: 100%; z-index: 10;" id="portfolioField1Container">
                 <input type="text"
                     id="portfolioField1" inputmode="decimal"
                     placeholder="e.g. 35.45"
-                    oninput="handlePortfolioEntryPriceInput(this)"
-                    onblur="handlePortfolioEntryPriceBlur(this)"
-                    onfocus="handlePortfolioEntryPriceFocus(this)"
-                    style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:DM Sans; font-size: 20px; box-sizing: border-box; outline: none;" />
+                    oninput="if(typeof handlePortfolioEntryPriceInput==='function') handlePortfolioEntryPriceInput(this); window.syncPortfolioClearBtn('portfolioField1', 'portfolioClearField1Btn');"
+                    onkeyup="window.syncPortfolioClearBtn('portfolioField1', 'portfolioClearField1Btn');"
+                    onfocus="if(typeof handlePortfolioEntryPriceFocus==='function') handlePortfolioEntryPriceFocus(this); window.syncPortfolioClearBtn('portfolioField1', 'portfolioClearField1Btn');"
+                    onblur="if(typeof handlePortfolioEntryPriceBlur==='function') handlePortfolioEntryPriceBlur(this);"
+                    style="width: 100%; padding: 14px 40px 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:DM Sans; font-size: 20px; box-sizing: border-box; outline: none; position: relative; z-index: 1;" />
+                
+                <span class="material-icons-round" id="portfolioClearField1Btn" 
+                      onclick="window.clearPortfolioInputField('portfolioField1', 'portfolioClearField1Btn')" 
+                      style="display: none; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #6c757d; font-size: 20px; cursor: pointer; user-select: none; z-index: 9999!important; background: transparent;">cancel</span>
             </div>
-            <div class="modal-field-group" style="flex: 1;">
-                <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioField2Label">Volume:</label>
+        </div>
+
+        <!-- Volume Field -->
+        <div class="modal-field-group" style="flex: 1;">
+            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioField2Label">Volume:</label>
+            <div style="position: relative; width: 100%; z-index: 10;" id="portfolioField2Container">
                 <input type="text"
                     id="portfolioField2" inputmode="decimal"
                     placeholder="0"
-                    oninput="handlePortfolioVolumeInput(this)"
-                    onblur="handlePortfolioRateBlur(this)"
-                    onfocus="handlePortfolioRateFocus(this)"
-                    style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:DM Sans; font-size: 20px; box-sizing: border-box; outline: none;" />
+                    oninput="if(typeof handlePortfolioVolumeInput==='function') handlePortfolioVolumeInput(this); window.syncPortfolioClearBtn('portfolioField2', 'portfolioClearField2Btn');"
+                    onkeyup="window.syncPortfolioClearBtn('portfolioField2', 'portfolioClearField2Btn');"
+                    onfocus="if(typeof handlePortfolioRateFocus==='function') handlePortfolioRateFocus(this); window.syncPortfolioClearBtn('portfolioField2', 'portfolioClearField2Btn');"
+                    onblur="if(typeof handlePortfolioRateBlur==='function') handlePortfolioRateBlur(this);"
+                    style="width: 100%; padding: 14px 40px 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:DM Sans; font-size: 20px; box-sizing: border-box; outline: none; position: relative; z-index: 1;" />
+                
+                <span class="material-icons-round" id="portfolioClearField2Btn" 
+                      onclick="window.clearPortfolioInputField('portfolioField2', 'portfolioClearField2Btn')" 
+                      style="display: none; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #6c757d; font-size: 20px; cursor: pointer; user-select: none; z-index: 9999!important; background: transparent;">cancel</span>
             </div>
         </div>
+    </div>
 
-        <div id="portfolioDateNoteRow" style="display: flex; gap: 12px; margin-bottom: 16px;">
-            <div style="flex: 1;" id="portfolioField3Col">
-                <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioField3Label">Entry Date:</label>
-                <div id="portfolioField3Wrapper">
-                    <div class="th-filter-wrap" onclick="togglePortfolioDatePicker(event)" style="position: relative; width: 100%;">
-                        <div id="portfolioDateTrigger" style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; box-sizing: border-box; cursor: pointer; display:flex; align-items:center; justify-content: space-between;">
-                            <span id="portfolioDateTriggerText">Select date</span>
-                            <i class="bi bi-calendar" style="color: var(--text-secondary); font-size: 14px!important;"></i>
+    <div id="portfolioDateNoteRow" style="display: flex; gap: 12px; margin-bottom: 16px;">
+        <div style="flex: 1;" id="portfolioField3Col">
+            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioField3Label">Entry Date:</label>
+            <div id="portfolioField3Wrapper">
+                <div class="th-filter-wrap" onclick="togglePortfolioDatePicker(event)" style="position: relative; width: 100%;">
+                    <div id="portfolioDateTrigger" style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; box-sizing: border-box; cursor: pointer; display:flex; align-items:center; justify-content: space-between;">
+                        <span id="portfolioDateTriggerText">Select date</span>
+                        <i class="bi bi-calendar" style="color: var(--text-secondary); font-size: 14px!important;"></i>
+                    </div>
+                    <div class="col-menu col-menu-date-single" id="portfolio-cal-menu">
+                        <div class="cal-header">
+                            <button type="button" class="cal-nav-btn" onclick="portfolioCalNavigate(event, -1)"><i class="bi bi-chevron-left"></i></button>
+                            <div class="cal-month-label" id="portfolio-cal-month-label">—</div>
+                            <button type="button" class="cal-nav-btn" onclick="portfolioCalNavigate(event, 1)"><i class="bi bi-chevron-right"></i></button>
                         </div>
-                        <div class="col-menu col-menu-date-single" id="portfolio-cal-menu">
-                            <div class="cal-header">
-                                <button type="button" class="cal-nav-btn" onclick="portfolioCalNavigate(event, -1)"><i class="bi bi-chevron-left"></i></button>
-                                <div class="cal-month-label" id="portfolio-cal-month-label">—</div>
-                                <button type="button" class="cal-nav-btn" onclick="portfolioCalNavigate(event, 1)"><i class="bi bi-chevron-right"></i></button>
-                            </div>
-                            <div class="cal-weekdays">
-                                <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
-                            </div>
-                            <div class="cal-grid" id="portfolio-cal-grid"></div>
+                        <div class="cal-weekdays">
+                            <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
                         </div>
+                        <div class="cal-grid" id="portfolio-cal-grid"></div>
                     </div>
                 </div>
             </div>
-            <div class="quick-amt-group" id="portfolioAmountChips" style="font-family:DM Sans!important; display: none; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; justify-content: flex-start;"></div>
-            <div style="flex: 1;" id="portfolioNoteCol">
-                <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Note:</label>
-                <input type="text"
-                    id="portfolioNote"
-                    placeholder="Optional note"
-                    style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; font-weight:300!important; box-sizing: border-box; outline: none;" />
-            </div>
         </div>
-
-        <div id="modalErrorMessage" style="display: none; padding: 12px; margin-bottom: 16px; background: rgba(220, 53, 69, 0.1); border: 0px solid #dc3545; color: #ea868f; border-radius: 8px; font-size: 13px; font-weight: 500;"></div>
-        <div id="modalSuccessMessage" style="display: none; padding: 14px; margin-bottom: 16px; background: rgba(40, 167, 69, 0.15); border: 0px solid #28a745; color: #75b798; border-radius: 12px; font-size: 14px; font-weight: 500; text-align: center; align-items: center; justify-content: center; gap: 8px;">
-            <span class="material-icons-round" style="color: #28a745; font-size: 18px;">check_circle</span>
-            <span id="successText">Position added successfully!</span>
+        <div class="quick-amt-group" id="portfolioAmountChips" style="font-family:DM Sans!important; display: none; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; justify-content: flex-start;"></div>
+        <div style="flex: 1;" id="portfolioNoteCol">
+            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;">Note:</label>
+            <input type="text"
+                id="portfolioNote"
+                placeholder="Optional note"
+                style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family:Lexend; font-size: 14px; font-weight:300!important; box-sizing: border-box; outline: none;" />
         </div>
+    </div>
 
-        <div style="display: flex; gap: 12px; margin-top: 16px;">
-            <button onclick="closeModal()" id="modalCancelBtn" style="flex: 1; font-family:Lexend!important; font-size:14px!important; padding: 13px; background: #1e222b; border: 0px solid #2d313c; color: #cbd5e1; border-radius: 12px; font-weight: 600; cursor: pointer;">Cancel</button>
-            <button onclick="processPortfolioAdd()" class="btn-submit-tx" id="portfolioSubmitBtn" style="flex: 2; font-family:Lexend!important; font-size:13px!important; padding: 14px; background: #2d3748; border: none; color: #ffffff; border-radius: 12px; font-weight: 600; cursor: pointer;">Add Position</button>
-        </div>
-        `;
+    <div id="modalErrorMessage" style="display: none; padding: 12px; margin-bottom: 16px; background: rgba(220, 53, 69, 0.1); border: 0px solid #dc3545; color: #ea868f; border-radius: 8px; font-size: 13px; font-weight: 500;"></div>
+    <div id="modalSuccessMessage" style="display: none; padding: 14px; margin-bottom: 16px; background: rgba(40, 167, 69, 0.15); border: 0px solid #28a745; color: #75b798; border-radius: 12px; font-size: 14px; font-weight: 500; text-align: center; align-items: center; justify-content: center; gap: 8px;">
+        <span class="material-icons-round" style="color: #28a745; font-size: 18px;">check_circle</span>
+        <span id="successText">Position added successfully!</span>
+    </div>
 
-        
+    <div style="display: flex; gap: 12px; margin-top: 16px;">
+        <button onclick="closeModal()" id="modalCancelBtn" style="flex: 1; font-family:Lexend!important; font-size:14px!important; padding: 13px; background: #1e222b; border: 0px solid #2d313c; color: #cbd5e1; border-radius: 12px; font-weight: 600; cursor: pointer;">Cancel</button>
+        <button onclick="processPortfolioAdd()" class="btn-submit-tx" id="portfolioSubmitBtn" style="flex: 2; font-family:Lexend!important; font-size:13px!important; padding: 14px; background: #2d3748; border: none; color: #ffffff; border-radius: 12px; font-weight: 600; cursor: pointer;">Add Position</button>
+    </div>
+    `;
 
-        backdrop.classList.add('active');
-        backdrop.style.pointerEvents = 'auto';
+    backdrop.classList.add('active');
+    backdrop.style.pointerEvents = 'auto';
 
-        window.portfolioIsSavingMode = false;
+    window.portfolioIsSavingMode = false;
 
-        var defaultTypeOption = document.querySelector('#portfolioTypeOptions .custom-option-item[data-value="Stock"]');
-        if (defaultTypeOption) {
-            handlePortfolioTypeSelect(defaultTypeOption);
+    window.syncPortfolioClearBtn = function(inputId, btnId) {
+        const inputEl = document.getElementById(inputId);
+        const btn = document.getElementById(btnId);
+        if (inputEl && btn) {
+            const val = inputEl.value || (inputEl.dataset ? (inputEl.dataset.rawValue || inputEl.dataset.computedValue) : '') || '';
+            if (val && val.toString().trim() !== '') {
+                btn.style.setProperty('display', 'inline-block', 'important');
+            } else {
+                btn.style.setProperty('display', 'none', 'important');
+            }
         }
+    };
 
-        setTimeout(function() {
-            const symbolInput = document.getElementById('portfolioSymbol');
-            if (symbolInput) symbolInput.focus();
-        }, 50);
-        
+    window.clearPortfolioInputField = function(inputId, btnId) {
+        const inputEl = document.getElementById(inputId);
+        if (inputEl) {
+            inputEl.value = '';
+            delete inputEl.dataset.computedValue;
+            delete inputEl.dataset.rawValue;
+
+            if (typeof handlePortfolioSymbolInput === 'function' && inputId === 'portfolioSymbol') {
+                handlePortfolioSymbolInput(inputEl);
+            }
+            if (typeof handlePortfolioEntryPriceInput === 'function' && inputId === 'portfolioField1') {
+                handlePortfolioEntryPriceInput(inputEl);
+            }
+            if (typeof handlePortfolioVolumeInput === 'function' && inputId === 'portfolioField2') {
+                handlePortfolioVolumeInput(inputEl);
+            }
+            
+            inputEl.dispatchEvent(new Event('input', { bubbles: true }));
+            inputEl.focus();
+        }
+        window.syncPortfolioClearBtn(inputId, btnId);
+    };
+
+    var defaultTypeOption = document.querySelector('#portfolioTypeOptions .custom-option-item[data-value="Stock"]');
+    if (defaultTypeOption) {
+        handlePortfolioTypeSelect(defaultTypeOption);
     }
 
-    var portfolioSymbolIconCache = null;
-    var portfolioSymbolIconCacheLoading = false;
-    function handlePortfolioSymbolInput(el){el.value&&el.value.trim()||resetPortfolioModalIconToAccountType()}function resetPortfolioModalIconToAccountType(){var titleIcon=document.getElementById("portfolioModalIcon"),typeIcon=document.getElementById("portfolioTypeTriggerIcon");titleIcon&&typeIcon&&typeIcon.src&&(titleIcon.src=typeIcon.src)}
-    function loadPortfolioSymbolIconCache(callback){portfolioSymbolIconCache?callback(portfolioSymbolIconCache):portfolioSymbolIconCacheLoading?setTimeout(function(){loadPortfolioSymbolIconCache(callback)},200):(portfolioSymbolIconCacheLoading=!0,fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1012065455",{cache:"no-store"}).then(function(res){if(!res.ok)throw new Error("HTTP "+res.status);return res.text()}).then(function(csvText){for(var lines=csvText.trim().split(/\r?\n/),map={},i=1;i<lines.length;i++){var cols=parseCSVLine(lines[i]);if(cols&&!(cols.length<2)){var sym=(cols[0]||"").trim().toUpperCase(),url=(cols[1]||"").trim();sym&&url&&(map[sym]=url)}}portfolioSymbolIconCache=map,portfolioSymbolIconCacheLoading=!1,callback(map)}).catch(function(err){console.error("Symbol icon cache load error:",err),portfolioSymbolIconCacheLoading=!1,callback({})}))}function handlePortfolioSymbolBlur(el){var symbol=(el.value||"").trim().toUpperCase(),titleIcon=document.getElementById("portfolioModalIcon");titleIcon&&(symbol?loadPortfolioSymbolIconCache(function(map){(document.getElementById("portfolioSymbol").value||"").trim().toUpperCase()===symbol&&(map[symbol]?titleIcon.src=map[symbol]:resetPortfolioModalIconToAccountType())}):resetPortfolioModalIconToAccountType())}
+    setTimeout(function() {
+        ['portfolioSymbol', 'portfolioField1', 'portfolioField2'].forEach(function(id) {
+            const btnId = id === 'portfolioSymbol' ? 'portfolioClearSymbolBtn' : (id === 'portfolioField1' ? 'portfolioClearField1Btn' : 'portfolioClearField2Btn');
+            window.syncPortfolioClearBtn(id, btnId);
+        });
 
-    function togglePortfolioAccountDropdown(e){e.stopPropagation();var options=document.getElementById("portfolioSelectAccountOptions"),isOpen="block"===options.style.display;options.style.display=isOpen?"none":"block"}function handlePortfolioAccountSelect(el){var selectedValue=el.getAttribute("data-value"),selectedInnerHtml=el.innerHTML;document.getElementById("portfolioTargetAccount").value=selectedValue,document.getElementById("portfolioSelectAccountTrigger").innerHTML=selectedInnerHtml,document.getElementById("portfolioSelectAccountOptions").style.display="none"}function togglePortfolioTypeDropdown(e){e.stopPropagation();var options=document.getElementById("portfolioTypeOptions"),isOpen="block"===options.style.display;options.style.display=isOpen?"none":"block"}function handlePortfolioTypeSelect(el){var value=el.getAttribute("data-value"),icon=el.getAttribute("data-icon");document.getElementById("portfolioAccountType").value=value;var triggerIcon=document.getElementById("portfolioTypeTriggerIcon");triggerIcon.src=icon,triggerIcon.style.display="inline-block";var titleIcon=document.getElementById("portfolioModalIcon"),symbolVal=(document.getElementById("portfolioSymbol")?document.getElementById("portfolioSymbol").value:"").trim();titleIcon&&!symbolVal&&(titleIcon.src=icon),document.getElementById("portfolioTypeTriggerText").textContent=value,document.getElementById("portfolioTypeOptions").style.display="none";var isSaving="Saving"===value;window.portfolioIsSavingMode=isSaving,applyPortfolioModalMode(isSaving),updatePortfolioActionButtonLabels(value),updatePortfolioPriceFieldHandlers(value)}function updatePortfolioActionButtonLabels(accountTypeValue){var buyBtn=document.getElementById("portfolioBuyBtn"),sellBtn=document.getElementById("portfolioSellBtn");if(buyBtn&&sellBtn){var isForex="Forex"===accountTypeValue;buyBtn.textContent=isForex?"Long":"Buy",sellBtn.textContent=isForex?"Short":"Sell"}}function updatePortfolioPriceFieldHandlers(accountTypeValue){if(!window.portfolioIsSavingMode){var field1=document.getElementById("portfolioField1");if(field1)"Forex"===accountTypeValue?(field1.setAttribute("oninput","handlePortfolioForexPriceInput(this)"),field1.setAttribute("onblur","handlePortfolioForexPriceBlur(this)"),field1.setAttribute("onfocus","handlePortfolioForexPriceFocus(this)"),field1.placeholder="0"):(field1.setAttribute("oninput","handlePortfolioEntryPriceInput(this)"),field1.setAttribute("onblur","handlePortfolioEntryPriceBlur(this)"),field1.setAttribute("onfocus","handlePortfolioEntryPriceFocus(this)"),field1.placeholder="35.45"),field1.value="",delete field1.dataset.rawValue,delete field1.dataset.computedValue}}function handlePortfolioForexPriceInput(el){var cleaned=el.value.replace(/,/g,".").replace(/[^\d.]/g,""),parts=cleaned.split(".");parts.length>2&&(cleaned=parts[0]+"."+parts.slice(1).join("")),el.value=cleaned,el.dataset.rawValue=cleaned}function handlePortfolioForexPriceBlur(el){var raw=el.dataset.rawValue||el.value,num=parseFloat(raw);if(""===raw||isNaN(num))return el.value="",void delete el.dataset.computedValue;el.dataset.computedValue=num,el.value=num.toString()}
-    function handlePortfolioForexPriceFocus(el) {if (el.dataset.rawValue) el.value = el.dataset.rawValue;}
-    function handlePortfolioEntryPriceInput(el){var cleaned = el.value.replace(/,/g, '.').replace(/[^\d.]/g, ""),parts=cleaned.split(".");parts.length>2&&(cleaned=parts[0]+"."+parts.slice(1).join("")),el.value=cleaned,el.dataset.rawValue=cleaned}
-    function handlePortfolioEntryPriceBlur(el){var raw=el.dataset.rawValue||el.value,num=parseFloat(raw);if(""===raw||isNaN(num))return el.value="",void delete el.dataset.computedValue;var computed=Math.round(1e3*num);el.dataset.computedValue=computed,el.value=computed.toLocaleString("en-US")}
-    function handlePortfolioEntryPriceFocus(el){el.dataset.rawValue&&(el.value=el.dataset.rawValue)}document.addEventListener("click",function(e){var options=document.getElementById("portfolioSelectAccountOptions"),trigger=document.getElementById("portfolioSelectAccountTrigger");options&&trigger&&!trigger.contains(e.target)&&!options.contains(e.target)&&(options.style.display="none")}),document.addEventListener("click",function(e){var options=document.getElementById("portfolioTypeOptions"),trigger=document.getElementById("portfolioTypeTrigger");options&&trigger&&!trigger.contains(e.target)&&!options.contains(e.target)&&(options.style.display="none")});
-    function handlePortfolioForexPriceInput(el){var cleaned=el.value.replace(/,/g,".").replace(/[^\d.]/g,""),parts=cleaned.split(".");parts.length>2&&(cleaned=parts[0]+"."+parts.slice(1).join("")),el.value=cleaned,el.dataset.rawValue=cleaned}function handlePortfolioForexPriceBlur(el){var raw=el.dataset.rawValue||el.value,num=parseFloat(raw);if(""===raw||isNaN(num))return el.value="",void delete el.dataset.computedValue;el.dataset.computedValue=num,el.value=num.toString()}function handlePortfolioForexPriceFocus(el){el.dataset.rawValue&&(el.value=el.dataset.rawValue)}
-    function applyPortfolioModalMode(isSaving) {
+        const symbolInput = document.getElementById('portfolioSymbol');
+        if (symbolInput) symbolInput.focus();
+    }, 100);
+  }
+
+  var portfolioSymbolIconCache = null;
+  var portfolioSymbolIconCacheLoading = false;
+  function handlePortfolioSymbolInput(el){el.value&&el.value.trim()||resetPortfolioModalIconToAccountType()}
+  function resetPortfolioModalIconToAccountType(){var titleIcon=document.getElementById("portfolioModalIcon"),typeIcon=document.getElementById("portfolioTypeTriggerIcon");titleIcon&&typeIcon&&typeIcon.src&&(titleIcon.src=typeIcon.src)}
+  function loadPortfolioSymbolIconCache(callback){portfolioSymbolIconCache?callback(portfolioSymbolIconCache):portfolioSymbolIconCacheLoading?setTimeout(function(){loadPortfolioSymbolIconCache(callback)},200):(portfolioSymbolIconCacheLoading=!0,fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=1012065455",{cache:"no-store"}).then(function(res){if(!res.ok)throw new Error("HTTP "+res.status);return res.text()}).then(function(csvText){for(var lines=csvText.trim().split(/\r?\n/),map={},i=1;i<lines.length;i++){var cols=parseCSVLine(lines[i]);if(cols&&!(cols.length<2)){var sym=(cols[0]||"").trim().toUpperCase(),url=(cols[1]||"").trim();sym&&url&&(map[sym]=url)}}portfolioSymbolIconCache=map,portfolioSymbolIconCacheLoading=!1,callback(map)}).catch(function(err){console.error("Symbol icon cache load error:",err),portfolioSymbolIconCacheLoading=!1,callback({})}))}
+  function handlePortfolioSymbolBlur(el){var symbol=(el.value||"").trim().toUpperCase(),titleIcon=document.getElementById("portfolioModalIcon");titleIcon&&(symbol?loadPortfolioSymbolIconCache(function(map){(document.getElementById("portfolioSymbol").value||"").trim().toUpperCase()===symbol&&(map[symbol]?titleIcon.src=map[symbol]:resetPortfolioModalIconToAccountType())}):resetPortfolioModalIconToAccountType())}
+
+  function togglePortfolioAccountDropdown(e){e.stopPropagation();var options=document.getElementById("portfolioSelectAccountOptions"),isOpen="block"===options.style.display;options.style.display=isOpen?"none":"block"}
+  function handlePortfolioAccountSelect(el){var selectedValue=el.getAttribute("data-value"),selectedInnerHtml=el.innerHTML;document.getElementById("portfolioTargetAccount").value=selectedValue,document.getElementById("portfolioSelectAccountTrigger").innerHTML=selectedInnerHtml,document.getElementById("portfolioSelectAccountOptions").style.display="none"}
+  function togglePortfolioTypeDropdown(e){e.stopPropagation();var options=document.getElementById("portfolioTypeOptions"),isOpen="block"===options.style.display;options.style.display=isOpen?"none":"block"}
+  function handlePortfolioTypeSelect(el){var value=el.getAttribute("data-value"),icon=el.getAttribute("data-icon");document.getElementById("portfolioAccountType").value=value;var triggerIcon=document.getElementById("portfolioTypeTriggerIcon");triggerIcon.src=icon,triggerIcon.style.display="inline-block";var titleIcon=document.getElementById("portfolioModalIcon"),symbolVal=(document.getElementById("portfolioSymbol")?document.getElementById("portfolioSymbol").value:"").trim();titleIcon&&!symbolVal&&(titleIcon.src=icon),document.getElementById("portfolioTypeTriggerText").textContent=value,document.getElementById("portfolioTypeOptions").style.display="none";var isSaving="Saving"===value;window.portfolioIsSavingMode=isSaving,applyPortfolioModalMode(isSaving),updatePortfolioActionButtonLabels(value),updatePortfolioPriceFieldHandlers(value)}
+  function updatePortfolioActionButtonLabels(accountTypeValue){var buyBtn=document.getElementById("portfolioBuyBtn"),sellBtn=document.getElementById("portfolioSellBtn");if(buyBtn&&sellBtn){var isForex="Forex"===accountTypeValue;buyBtn.textContent=isForex?"Long":"Buy",sellBtn.textContent=isForex?"Short":"Sell"}}
+
+  function updatePortfolioPriceFieldHandlers(accountTypeValue){if(!window.portfolioIsSavingMode){var field1=document.getElementById("portfolioField1");field1&&("Forex"===accountTypeValue?(field1.setAttribute("oninput","handlePortfolioForexPriceInput(this); window.syncPortfolioClearBtn('portfolioField1', 'portfolioClearField1Btn');"),field1.setAttribute("onkeyup","window.syncPortfolioClearBtn('portfolioField1', 'portfolioClearField1Btn');"),field1.setAttribute("onblur","handlePortfolioForexPriceBlur(this); window.syncPortfolioClearBtn('portfolioField1', 'portfolioClearField1Btn');"),field1.setAttribute("onfocus","handlePortfolioForexPriceFocus(this); window.syncPortfolioClearBtn('portfolioField1', 'portfolioClearField1Btn');"),field1.placeholder="0"):(field1.setAttribute("oninput","handlePortfolioEntryPriceInput(this); window.syncPortfolioClearBtn('portfolioField1', 'portfolioClearField1Btn');"),field1.setAttribute("onkeyup","window.syncPortfolioClearBtn('portfolioField1', 'portfolioClearField1Btn');"),field1.setAttribute("onblur","handlePortfolioEntryPriceBlur(this); window.syncPortfolioClearBtn('portfolioField1', 'portfolioClearField1Btn');"),field1.setAttribute("onfocus","handlePortfolioEntryPriceFocus(this); window.syncPortfolioClearBtn('portfolioField1', 'portfolioClearField1Btn');"),field1.placeholder="35.45"),field1.value="",delete field1.dataset.rawValue,delete field1.dataset.computedValue,window.syncPortfolioClearBtn("portfolioField1","portfolioClearField1Btn"))}}
+  function handlePortfolioForexPriceInput(el){var cleaned=el.value.replace(/,/g,".").replace(/[^\d.]/g,""),parts=cleaned.split(".");parts.length>2&&(cleaned=parts[0]+"."+parts.slice(1).join("")),el.value=cleaned,el.dataset.rawValue=cleaned,"function"==typeof window.syncPortfolioClearBtn&&window.syncPortfolioClearBtn(el.id,"portfolioClearField1Btn")}function handlePortfolioForexPriceBlur(el){var raw=el.dataset.rawValue||el.value,num=parseFloat(raw);""===raw||isNaN(num)?(el.value="",delete el.dataset.computedValue):(el.dataset.computedValue=num,el.value=num.toString()),"function"==typeof window.syncPortfolioClearBtn&&window.syncPortfolioClearBtn(el.id,"portfolioClearField1Btn")}function handlePortfolioForexPriceFocus(el){el.dataset.rawValue&&(el.value=el.dataset.rawValue),"function"==typeof window.syncPortfolioClearBtn&&window.syncPortfolioClearBtn(el.id,"portfolioClearField1Btn")}function handlePortfolioEntryPriceInput(el){var cleaned=el.value.replace(/,/g,".").replace(/[^\d.]/g,""),parts=cleaned.split(".");parts.length>2&&(cleaned=parts[0]+"."+parts.slice(1).join("")),el.value=cleaned,el.dataset.rawValue=cleaned,"function"==typeof window.syncPortfolioClearBtn&&window.syncPortfolioClearBtn(el.id,"portfolioClearField1Btn")}function handlePortfolioEntryPriceBlur(el){var raw=el.dataset.rawValue||el.value,num=parseFloat(raw);if(""===raw||isNaN(num))el.value="",delete el.dataset.computedValue;else{var computed=Math.round(1e3*num);el.dataset.computedValue=computed,el.value=computed.toLocaleString("en-US")}"function"==typeof window.syncPortfolioClearBtn&&window.syncPortfolioClearBtn(el.id,"portfolioClearField1Btn")}function handlePortfolioEntryPriceFocus(el){el.dataset.rawValue&&(el.value=el.dataset.rawValue),"function"==typeof window.syncPortfolioClearBtn&&window.syncPortfolioClearBtn(el.id,"portfolioClearField1Btn")}
+
+  function applyPortfolioModalMode(isSaving) {
       var titleText = document.getElementById('portfolioModalTitleText');
       var icon = document.getElementById('portfolioModalIcon');
       var label1 = document.getElementById('portfolioField1Label');
@@ -7975,11 +8126,13 @@ function applyPortfolioFiltersAndRender() {
         if (submitBtn) submitBtn.textContent = "Open Saving"; 
         
         if (field2) {
-          field2.setAttribute('oninput', "handlePortfolioRateInput(this)");
-          field2.setAttribute('onblur', "handlePortfolioRateBlur(this)");
-          field2.setAttribute('onfocus', "handlePortfolioRateFocus(this)"); 
+          field2.setAttribute('oninput', "handlePortfolioRateInput(this); window.syncPortfolioClearBtn('portfolioField2', 'portfolioClearField2Btn');");
+          field2.setAttribute('onkeyup', "window.syncPortfolioClearBtn('portfolioField2', 'portfolioClearField2Btn');");
+          field2.setAttribute('onblur', "handlePortfolioRateBlur(this); window.syncPortfolioClearBtn('portfolioField2', 'portfolioClearField2Btn');");
+          field2.setAttribute('onfocus', "handlePortfolioRateFocus(this); window.syncPortfolioClearBtn('portfolioField2', 'portfolioClearField2Btn');"); 
           field2.value = ''; 
           delete field2.dataset.rawValue; 
+          window.syncPortfolioClearBtn('portfolioField2', 'portfolioClearField2Btn');
         }
         
         if (selectAccountWrapper) selectAccountWrapper.style.display = "block";
@@ -7990,7 +8143,11 @@ function applyPortfolioFiltersAndRender() {
         if (symbolWrapper) symbolWrapper.style.flex = "1"; 
         if (accountTypeWrapper) accountTypeWrapper.style.flex = "1";
         if (symbolLabel) symbolLabel.textContent = "Bank:"; 
-
+        
+        var fieldSavingWrapper = document.getElementById('portfolioSymbol');
+        if (fieldSavingWrapper) {
+            fieldSavingWrapper.value = "MBB";
+        }
         var field1Wrapper = document.getElementById('portfolioField1OuterWrapper');
         if (field1Wrapper) {
           field1Wrapper.style.minWidth = "0"; 
@@ -7998,7 +8155,7 @@ function applyPortfolioFiltersAndRender() {
             <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px" id="portfolioField1Label"># of Months:</label>
             <div style="display: flex; align-items: center; gap: 6px; background: #111216; border-radius: 12px; padding: 0; box-sizing: border-box; height: 52px; width: 100%; overflow: hidden;">
               <button type="button" onclick="window.adjustPortfolioMonths(-1)" style="width: 36px; height: 100%; flex-shrink: 0; border-radius: 12px 0 0 12px; border: none; background: #1e222b; color: #f8f9fa; font-size: 18px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center;">−</button>
-              <input type="text" id="portfolioField1" inputmode="numeric" value="6" oninput="window.handlePortfolioMonthsInput(this)" onblur="window.handlePortfolioMonthsBlur(this)" style="flex: 1; min-width: 0; width: 0; text-align: center; padding: 0; background: transparent; border: none; color: #f8f9fa; font-family: DM Sans; font-size: 18px; box-sizing: border-box; outline: none;" />
+              <input type="text" id="portfolioField1" inputmode="numeric" value="3" oninput="window.handlePortfolioMonthsInput(this)" onblur="window.handlePortfolioMonthsBlur(this)" style="flex: 1; min-width: 0; width: 0; text-align: center; padding: 0; background: transparent; border: none; color: #f8f9fa; font-family: DM Sans; font-size: 18px; box-sizing: border-box; outline: none;" />
               <button type="button" onclick="window.adjustPortfolioMonths(1)" style="width: 36px; height: 100%; flex-shrink: 0; border-radius: 0 12px 12px 0; border: none; background: #1e222b; color: #f8f9fa; font-size: 18px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center;">+</button>
             </div>
           `; 
@@ -8030,10 +8187,12 @@ function applyPortfolioFiltersAndRender() {
         if (submitBtn) submitBtn.textContent = "Add Position"; 
         
         if (field2) {
-          field2.setAttribute('oninput', "handlePortfolioVolumeInput(this)");
+          field2.setAttribute('oninput', "if(typeof handlePortfolioVolumeInput==='function') handlePortfolioVolumeInput(this); window.syncPortfolioClearBtn('portfolioField2', 'portfolioClearField2Btn');");
+          field2.setAttribute('onkeyup', "window.syncPortfolioClearBtn('portfolioField2', 'portfolioClearField2Btn');");
+          field2.setAttribute('onfocus', "window.syncPortfolioClearBtn('portfolioField2', 'portfolioClearField2Btn');");
           field2.removeAttribute('onblur');
-          field2.removeAttribute('onfocus'); 
           field2.value = '';
+          window.syncPortfolioClearBtn('portfolioField2', 'portfolioClearField2Btn');
         }
         if (selectAccountWrapper) selectAccountWrapper.style.display = "none"; 
         if (topRow) {
@@ -8047,8 +8206,18 @@ function applyPortfolioFiltersAndRender() {
         var field1Wrapper = document.getElementById('portfolioField1OuterWrapper');
         if (field1Wrapper) {
           field1Wrapper.innerHTML = `
-            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px" id="portfolioField1Label">Entry Price:</label>
-            <input type="text" id="portfolioField1" inputmode="decimal" placeholder="35.45" oninput="handlePortfolioEntryPriceInput(this)" onblur="handlePortfolioEntryPriceBlur(this)" onfocus="handlePortfolioEntryPriceFocus(this)" style="width: 100%; padding: 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family: DM Sans; font-size: 20px; box-sizing: border-box; outline: none;" />
+            <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px;" id="portfolioField1Label">Entry Price:</label>
+            <div style="position: relative; width: 100%; z-index: 10;" id="portfolioField1Container">
+                <input type="text" id="portfolioField1" inputmode="decimal" placeholder="35.45"
+                    oninput="if(typeof handlePortfolioEntryPriceInput==='function') handlePortfolioEntryPriceInput(this); window.syncPortfolioClearBtn('portfolioField1', 'portfolioClearField1Btn');"
+                    onkeyup="window.syncPortfolioClearBtn('portfolioField1', 'portfolioClearField1Btn');"
+                    onfocus="if(typeof handlePortfolioEntryPriceFocus==='function') handlePortfolioEntryPriceFocus(this); window.syncPortfolioClearBtn('portfolioField1', 'portfolioClearField1Btn');"
+                    onblur="if(typeof handlePortfolioEntryPriceBlur==='function') handlePortfolioEntryPriceBlur(this);"
+                    style="width: 100%; padding: 14px 40px 14px 16px; background: #111216; border: 0px solid #2d313c; border-radius: 12px; color: #f8f9fa; font-family: DM Sans; font-size: 20px; box-sizing: border-box; outline: none; position: relative; z-index: 1;" />
+                <span class="material-icons-round" id="portfolioClearField1Btn" 
+                      onclick="window.clearPortfolioInputField('portfolioField1', 'portfolioClearField1Btn')" 
+                      style="display: none; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #6c757d; font-size: 20px; cursor: pointer; user-select: none; z-index: 9999!important; background: transparent;">cancel</span>
+            </div>
           `; 
         }
 
@@ -8087,153 +8256,139 @@ function applyPortfolioFiltersAndRender() {
           noteCol.innerHTML = `
             <label style="display: block; color: #ced4da; font-size: 13px; margin-bottom: 8px">Action:</label>
             <div style="display: flex; background: #111216; border-radius: 12px; padding: 3px; height: 50px; box-sizing: border-box; align-items: center;">
-              <!-- Buy/Long defaults to Teal: #14b8a6 -->
               <button type="button" id="portfolioBuyBtn" onclick="setPortfolioAction('BUY')" style="flex: 1; height: 100%; border: none; border-radius: 10px; background: #14b8a6; color: #ffffff; font-family: Lexend; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;">${buyLabel}</button>
-              <!-- Sell/Short defaults to inactive -->
               <button type="button" id="portfolioSellBtn" onclick="setPortfolioAction('SELL')" style="flex: 1; height: 100%; border: none; border-radius: 10px; background: transparent; color: #94a3b8; font-family: Lexend; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;">${sellLabel}</button>
             </div>
             <input type="hidden" id="portfolioActionType" value="BUY" />
           `;
         }
       }
+  }
+
+  window.setPortfolioAction=function(action){const buyBtn=document.getElementById("portfolioBuyBtn"),sellBtn=document.getElementById("portfolioSellBtn"),hiddenInput=document.getElementById("portfolioActionType");buyBtn&&sellBtn&&("BUY"===action?(buyBtn.style.background="#14b8a6",buyBtn.style.color="#ffffff",sellBtn.style.background="transparent",sellBtn.style.color="#94a3b8",hiddenInput&&(hiddenInput.value="BUY")):(sellBtn.style.background="#ec4899",sellBtn.style.color="#ffffff",buyBtn.style.background="transparent",buyBtn.style.color="#94a3b8",hiddenInput&&(hiddenInput.value="SELL")))};
+  function processPortfolioAdd() {
+    const symbol = document.getElementById('portfolioSymbol').value.trim().toUpperCase();
+    const accountType = document.getElementById('portfolioAccountType').value;
+
+    var field1El = document.getElementById('portfolioField1');
+    var field1; // Entry Price (normal mode) or # of Months (Saving mode)
+
+    if (window.portfolioIsSavingMode) {
+        field1 = parseFloat(field1El.value.replace(/,/g, '')) || 0;
+    } else {
+        field1 = field1El.dataset.computedValue
+            ? parseFloat(field1El.dataset.computedValue)
+            : parseFloat(field1El.value.replace(/,/g, '')) || 0;
     }
-    window.setPortfolioAction=function(action){const buyBtn=document.getElementById("portfolioBuyBtn"),sellBtn=document.getElementById("portfolioSellBtn"),hiddenInput=document.getElementById("portfolioActionType");buyBtn&&sellBtn&&("BUY"===action?(buyBtn.style.background="#14b8a6",buyBtn.style.color="#ffffff",sellBtn.style.background="transparent",sellBtn.style.color="#94a3b8",hiddenInput&&(hiddenInput.value="BUY")):(sellBtn.style.background="#ec4899",sellBtn.style.color="#ffffff",buyBtn.style.background="transparent",buyBtn.style.color="#94a3b8",hiddenInput&&(hiddenInput.value="SELL")))};
-    function processPortfolioAdd() {
-        const symbol = document.getElementById('portfolioSymbol').value.trim().toUpperCase();
-        const accountType = document.getElementById('portfolioAccountType').value;
 
-        var field1El = document.getElementById('portfolioField1');
-        var field1; // Entry Price (normal mode) or # of Months (Saving mode)
+    // Field2: Rate (Saving) or Volume (normal) — use rawValue for Rate since it's stored without the % sign
+    var field2El = document.getElementById('portfolioField2');
+    var field2 = window.portfolioIsSavingMode
+      ? parseFloat(field2El.dataset.rawValue || field2El.value.replace('%', '')) || 0
+      : parseFloat(field2El.value.replace(/,/g, '')) || 0;
 
-        if (window.portfolioIsSavingMode) {
-            field1 = parseFloat(field1El.value.replace(/,/g, '')) || 0;
+    // Retrieve action value for normal mode from the hidden input, or note for saving mode
+    const actionTypeEl = document.getElementById('portfolioActionType');
+    const actionValue = actionTypeEl ? actionTypeEl.value : "BUY";
+    const note = window.portfolioIsSavingMode 
+        ? (document.getElementById('portfolioNote') ? document.getElementById('portfolioNote').value.trim() : "") 
+        : actionValue;
+
+    // capture selected bank account when in Saving mode
+    const savingTargetAccount = window.portfolioIsSavingMode
+        ? document.getElementById('portfolioTargetAccount').value
+        : null;
+
+    const errorEl = document.getElementById('modalErrorMessage');
+    const successEl = document.getElementById('modalSuccessMessage');
+    const submitBtn = document.getElementById('portfolioSubmitBtn');
+    const cancelBtn = document.getElementById('modalCancelBtn');
+
+    // Field3: Amount (Saving) or Entry Date (normal)
+    var field3Value;
+    if (window.portfolioIsSavingMode) {
+        field3Value = parseFloat(document.getElementById('portfolioField3').value.replace(/,/g, '')) || 0;
+    } else {
+        if (portfolioCalState.selectedDate) {
+            field3Value = portfolioCalState.selectedDate.toISOString().slice(0, 10);
         } else {
-            field1 = field1El.dataset.computedValue
-                ? parseFloat(field1El.dataset.computedValue)
-                : parseFloat(field1El.value.replace(/,/g, '')) || 0;
+            field3Value = new Date().toISOString().slice(0, 10);
         }
+    }
 
-        // Field2: Rate (Saving) or Volume (normal) — use rawValue for Rate since it's stored without the % sign
-        var field2El = document.getElementById('portfolioField2');
-        var field2 = window.portfolioIsSavingMode
-          ? parseFloat(field2El.dataset.rawValue || field2El.value.replace('%', '')) || 0
-          : parseFloat(field2El.value.replace(/,/g, '')) || 0;
-
-        // Retrieve action value for normal mode from the hidden input, or note for saving mode
-        const actionTypeEl = document.getElementById('portfolioActionType');
-        const actionValue = actionTypeEl ? actionTypeEl.value : "BUY";
-        const note = window.portfolioIsSavingMode 
-            ? (document.getElementById('portfolioNote') ? document.getElementById('portfolioNote').value.trim() : "") 
-            : actionValue;
-
-        // NEW: capture selected bank account when in Saving mode
-        const savingTargetAccount = window.portfolioIsSavingMode
-            ? document.getElementById('portfolioTargetAccount').value
-            : null;
-
-        const errorEl = document.getElementById('modalErrorMessage');
-        const successEl = document.getElementById('modalSuccessMessage');
-        const submitBtn = document.getElementById('portfolioSubmitBtn');
-        const cancelBtn = document.getElementById('modalCancelBtn');
-
-        // Field3: Amount (Saving) or Entry Date (normal)
-        var field3Value;
-        if (window.portfolioIsSavingMode) {
-            field3Value = parseFloat(document.getElementById('portfolioField3').value.replace(/,/g, '')) || 0;
-        } else {
-            // NEW: default to today's date if the user never picked one
-            if (portfolioCalState.selectedDate) {
-                field3Value = portfolioCalState.selectedDate.toISOString().slice(0, 10);
-            } else {
-                field3Value = new Date().toISOString().slice(0, 10);
-            }
-        }
-
-        // Validation
-        if (!symbol || !accountType || !field1 || !field2 || !field3Value || (window.portfolioIsSavingMode && !savingTargetAccount)) {
+    // Validation
+    if (!symbol || !accountType || !field1 || !field2 || !field3Value || (window.portfolioIsSavingMode && !savingTargetAccount)) {
+        if (errorEl) {
             errorEl.textContent = "Please fill in all required fields.";
             errorEl.style.display = "block";
-            successEl.style.display = "none";
-            return;
         }
-
-        errorEl.style.display = "none";
-        successEl.style.display = "none";
-
-        if (submitBtn) {
-            submitBtn.disabled = true;
-            submitBtn.style.opacity = "0.6";
-            submitBtn.textContent = window.portfolioIsSavingMode ? "Opening..." : "Adding...";
-        }
-        if (cancelBtn) {
-            cancelBtn.disabled = true;
-            cancelBtn.style.opacity = "0.5";
-        }
-
-        // Build payload
-        var payload = {};
-        if (window.portfolioIsSavingMode) {
-            payload = {
-                action: "portfolio_open_saving",
-                bank: symbol,  
-                account: savingTargetAccount,
-                months: field1,
-                rate: field2,
-                amount: field3Value,
-                note: note
-            };
-        } else {
-            payload = {
-                action: (accountType === "Forex") ? "portfolio_add_position_forex" : "portfolio_add_position",
-                symbol: symbol,
-                accountType: accountType,
-                entryPrice: field1,
-                volume: field2,
-                entryDate: field3Value,
-                note: note // Passes BUY or SELL from the hidden input field
-            };
-        }
-
-        fetch(EXPENSE_APPS_SCRIPT_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify(payload)
-        })
-        .then(function(response) {
-            if (!response.ok) throw new Error("Network response error: " + response.status);
-            return response.json();
-        })
-        .then(function(result) {
-            if (result.status !== "success") throw new Error(result.message || "Execution exception.");
-
-            // Refresh portfolio data if the loader function exists
-            if (typeof fetchOrderSheetCSV === "function") fetchOrderSheetCSV();
-
-            successEl.style.display = "flex";
-            if (submitBtn) submitBtn.style.display = "none";
-            if (cancelBtn) cancelBtn.style.display = "none";
-            triggerPaperFirework(null);
-            setTimeout(function() {
-                if (typeof closeModal === "function") closeModal();
-            }, 1200);
-        })
-        .catch(function(err) {
-            console.error(err);
-            errorEl.textContent = "Server Error: " + err.message;
-            errorEl.style.display = "block";
-
-            if (submitBtn) {
-                submitBtn.disabled = false;
-                submitBtn.style.opacity = "1";
-                submitBtn.textContent = window.portfolioIsSavingMode ? "Open Saving" : "Add Position";
-            }
-            if (cancelBtn) {
-                cancelBtn.disabled = false;
-                cancelBtn.style.opacity = "1";
-            }
-        });
+        if (successEl) successEl.style.display = "none";
+        return;
     }
+
+    if (errorEl) errorEl.style.display = "none";
+    if (successEl) successEl.style.display = "none";
+
+    // 1. Build Payload
+    var payload = {};
+    if (window.portfolioIsSavingMode) {
+        payload = {
+            action: "portfolio_open_saving",
+            bank: symbol,  
+            account: savingTargetAccount,
+            months: field1,
+            rate: field2,
+            amount: field3Value,
+            note: note
+        };
+    } else {
+        payload = {
+            action: (accountType === "Forex") ? "portfolio_add_position_forex" : "portfolio_add_position",
+            symbol: symbol,
+            accountType: accountType,
+            entryPrice: field1,
+            volume: field2,
+            entryDate: field3Value,
+            note: note // Passes BUY or SELL from the hidden input field
+        };
+    }
+
+    // 2. Perform optimistic local UI state updates instantly
+    if (typeof fetchOrderSheetCSV === "function") {
+        fetchOrderSheetCSV();
+    }
+
+    if (typeof triggerPaperFirework === "function") {
+        triggerPaperFirework(null);
+    }
+
+    // 3. Close modal immediately
+    if (typeof closeModal === "function") {
+        closeModal();
+    }
+
+    // Reset button state for next modal invocation
+    if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = "1";
+        submitBtn.textContent = window.portfolioIsSavingMode ? "Open Saving" : "Add Position";
+    }
+    if (cancelBtn) {
+        cancelBtn.disabled = false;
+        cancelBtn.style.opacity = "1";
+    }
+
+    // 4. Send request asynchronously in background
+    fetch(EXPENSE_APPS_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+    })
+    .catch(function(err) {
+        console.error("Background portfolio add sync error:", err);
+    });
+  }
 
     
     window.adjustPortfolioMonths=function(delta){var input=document.getElementById("portfolioField1");if(input){var next=(parseInt(input.value,10)||0)+delta;next<1&&(next=1),next>60&&(next=60),input.value=next}},window.handlePortfolioMonthsInput=function(el){var cleaned=el.value.replace(/[^\d]/g,"");el.value=cleaned},window.handlePortfolioMonthsBlur=function(el){var val=parseInt(el.value,10);isNaN(val)||val<1?el.value=1:el.value=val>60?60:val};
@@ -8250,7 +8405,7 @@ function applyPortfolioFiltersAndRender() {
         modal.id = 'pnl-calendar-modal';
         modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:9999;font-family:"DM Sans",sans-serif;';
         modal.innerHTML = `
-                  <div style="font-family:'DM Sans',sans-serif;background:#14171f;color:#f8f9fa;padding:14px;border-radius:16px;min-height:420px;width:440px;box-shadow:0 8px 32px rgba(0,0,0,0.5);">
+                  <div style="font-family:'DM Sans',sans-serif;background:#14171f;color:#f8f9fa;padding:14px;border-radius:16px;min-height:440px;width:440px;box-shadow:0 8px 32px rgba(0,0,0,0.5);">
                       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
                           <div style="display:flex;align-items:center;gap:12px;">
                               <button id="pnl-prev-nav" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:16px;"><i class="bi bi-chevron-left"></i></button>
