@@ -1627,6 +1627,20 @@ to{transform:rotate(360deg)}
 .invest-bar-wave:hover {
   filter: brightness(1.25);
 }
+/* Outer backdrop blur */
+#pnl-input-dialog {
+    background: rgba(0, 0, 0, 0.4) !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+/* Inner card frosted glass effect */
+#pnl-input-dialog > div {
+    background: rgba(30, 34, 43, 0.65) !important; /* Semi-transparent background */
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+}
 </style>
 </head>
 <body>
