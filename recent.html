@@ -9116,8 +9116,8 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
             qCell.style.cssText = `padding:10px 8px;background:${qBg};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:0px solid #334155;`;
             
             qCell.innerHTML = `
-              <span style="font-size:15px;color:#94a3b8;font-weight:600;">∑Q${qNum}</span>
-              <span style="font-size:16px;color:${qHasData ? (isQNeg ? "#ec4899" : "#2dd4bf") : "#475569"};margin-top:6px;font-weight:600;">${qHasData ? formatVndShort(qSum) : "+0.0M"}</span>
+              <span style="font-size:16px;color:#94a3b8;font-weight:600;">∑Q${qNum}</span>
+              <span style="font-size:18px;color:${qHasData ? (isQNeg ? "#ec4899" : "#2dd4bf") : "#475569"};margin-top:6px;font-weight:600;">${qHasData ? formatVndShort(qSum) : "+0.0M"}</span>
             `;
             grid.appendChild(qCell);
 
