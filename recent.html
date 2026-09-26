@@ -9799,19 +9799,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
       const parseNum = val => { if (!val) return 0; const clean = String(val).replace(/,/g, "").trim(); const num = parseFloat(clean); return isNaN(num) ? 0 : num; };
       const parseCsvRow = text => { var result = [], cell = "", insideQuotes = false; for (var i = 0; i < text.length; i++) { var c = text[i]; if (c === '"') { insideQuotes = !insideQuotes; } else if (c === ',' && !insideQuotes) { result.push(cell); cell = ""; } else { cell += c; } } result.push(cell); return result; };
 
-      const formatVndShort = (val, decimals = 1) => { 
-    const num = parseFloat(val); 
-    if (isNaN(num) || 0 === num) return "-0M"; 
-    const absVal = Math.abs(num); 
-    let formatted = absVal >= 1e9 
-        ? (absVal / 1e9).toFixed(decimals) + "B" 
-        : absVal >= 1e6 
-            ? (absVal / 1e6).toFixed(decimals) + "M" 
-            : absVal >= 1e3 
-                ? (absVal / 1e3).toFixed(decimals) + "K" 
-                : absVal.toFixed(decimals); 
-    return num >= 0 ? "+" + formatted : "-" + formatted; 
-};
+      const formatVndShort=(val,decimals=1)=>{const num=parseFloat(val);if(isNaN(num)||0===num)return"-0M";const absVal=Math.abs(num);let formatted=absVal>=1e9?(absVal/1e9).toFixed(decimals)+"B":absVal>=1e6?(absVal/1e6).toFixed(decimals)+"M":absVal>=1e3?(absVal/1e3).toFixed(decimals)+"K":absVal.toFixed(decimals);return num>=0?"+"+formatted:"-"+formatted};
       const formatFullVnd = val => { const num = Math.abs(parseFloat(val) || 0); return "-" + (num / 1e6).toFixed(3) + "M₫"; };
 
       const setView = view => { 
