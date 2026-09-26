@@ -9452,14 +9452,13 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
           const { titleColor, valueColor } = getCellTextColors(defaultBg, hasData, monthlyTotal);
 
           const cell = document.createElement("div");
-          cell.style.cssText = `padding:7px 8px; background: ${defaultBg}; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s;`;
-          
+          cell.style.cssText = `padding:7px 8px;background:${defaultBg};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
           cell.onmouseover = () => cell.style.background = "#222733";
           cell.onmouseout = () => cell.style.background = defaultBg;
           
           cell.innerHTML = `
-            <span style="font-size: 14px; color: ${titleColor}; font-weight: 700;">${mName}</span>
-            <span style="font-size: 15px; color: ${valueColor}; margin-top: 4px; font-weight: 700;">${hasData ? formatVndShort(monthlyTotal) : "+0.0M"}</span>
+            <span style="font-size: 15px; color: ${titleColor}; font-weight: 600;">${mName}</span>
+            <span style="font-size: 16px; color: ${valueColor}; margin-top: 6px; font-weight: 600;">${hasData ? formatVndShort(monthlyTotal) : "+0.0M"}</span>
           `;
           cell.onclick = () => { currentNavDate.setMonth(mIdx); setView("daily"); };
 
@@ -9477,11 +9476,10 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
             const { titleColor: qTitleColor, valueColor: qValueColor } = getCellTextColors(qBg, qHasData, qSum);
 
             const qCell = document.createElement("div");
-            qCell.style.cssText = `padding:7.5px 8px; background: ${qBg}; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center;`;
-            
+            qCell.style.cssText = `padding:7.5px 8px;background:${qBg};border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:0px solid #334155;`;
             qCell.innerHTML = `
-              <span style="font-size: 14px; color: ${qTitleColor}; font-weight: 700;">∑Q${qNum}</span>
-              <span style="font-size: 15px; color: ${qValueColor}; margin-top: 4px; font-weight: 700;">${qHasData ? formatVndShort(qSum) : "+0.0M"}</span>
+              <span style="font-size:16px;color:${qTitleColor};font-weight:600;">∑Q${qNum}</span>
+              <span style="font-size:18px;color:${qValueColor};margin-top:6px;font-weight:600;">${qHasData ? formatVndShort(qSum) : "+0.0M"}</span>
             `;
             grid.appendChild(qCell);
 
