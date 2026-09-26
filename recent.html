@@ -90,11 +90,11 @@ html,body{width:100%;height:100%;border-radius:10px;background:#191919;font-fami
 #chart-macro{height:200px !important}
 #chart-micro{height:340px !important}
 
-/* ══ DETAIL STYLES ══ */
+/* ══ DETAIL STYLES ══ https://i.pinimg.com/1200x/75/ab/b1/75abb1ed3cc7e63dc9161635c015e925.jpg*/
 #rings-wrap{display:flex;flex-wrap:wrap;gap:1.5vw;justify-content:space-around;margin-bottom:1.5vw;border-radius:20px;margin:0 5px 0 5px;
 background: 
     linear-gradient(135deg, rgba(30, 41, 59, 0.2) 0%, rgba(15, 23, 42, 0.2) 100%),
-    url('https://i.pinimg.com/1200x/75/ab/b1/75abb1ed3cc7e63dc9161635c015e925.jpg');
+    url('https://i.pinimg.com/1200x/7e/f5/ec/7ef5ecbda8c3229d1af56828ef7ae2a4.jpg');
   background-size: cover;
   background-position: center 47%;
   background-repeat: no-repeat;filter: saturate(110%) contrast(1.1);
@@ -107,10 +107,10 @@ background:
   margin-bottom: 1.5vw;
   border-radius: 10px;
   background: 
-    linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.6) 100%),
-    url('https://i.pinimg.com/1200x/75/ab/b1/75abb1ed3cc7e63dc9161635c015e925.jpg');
+    linear-gradient(135deg, rgba(15, 23, 42, 0.45) 0%, rgba(15, 23, 42, 0.4) 100%),
+    url('https://i.pinimg.com/736x/2e/cf/29/2ecf296bec203e39a3eac00e19cba269.jpg');
   background-size: cover;
-  background-position: center 45%;
+  background-position: center 90%;
   background-repeat: no-repeat;
   filter: saturate(100%) contrast(1.1);
 }
@@ -576,8 +576,8 @@ background:
 .card{max-width:100%;}
 .sub-header-bg{border-radius:15px;background: 
     linear-gradient(135deg, rgba(30, 41, 59, 0.2) 0%, rgba(15, 23, 42, 0.2) 100%),
-    url('https://i.pinimg.com/736x/d0/5a/df/d05adfdd1c922b41f80b5248c9c718e3.jpg');
-  background-size: cover;
+    url('https://i.pinimg.com/1200x/39/54/bb/3954bb2839cc76c63e8225b4bc0a50a8.jpg');
+  background-size: cover;background-position: center 15%;
   background-repeat: no-repeat;filter: saturate(110%) contrast(1.1);}
 .sub-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
 .sub-title{font-size:13px;font-weight:300;color:rgba(255,255,255,0.55);margin-left:2vw;}
@@ -1473,6 +1473,7 @@ to{transform:rotate(360deg)}
       opacity: 0;
     }
   }
+  
 /* ══ iPad Expense split layout (min-width:401px, Expense tab active) ══ */
 @media (min-width:401px){
   .big-wrap.expense-split{display:grid;grid-template-columns:1fr 1.1fr;grid-template-rows:auto 1fr;gap:6px;overflow:visible;}
@@ -1631,6 +1632,30 @@ to{transform:rotate(360deg)}
     opacity: 1;
     transform: scale(1) translateY(0);
   }
+}
+@keyframes subStatPulse {
+    0% {
+        opacity: 0.35;
+        transform: scale(0.98);
+        filter: blur(1px);
+    }
+    50% {
+        opacity: 0.85;
+        transform: scale(1.02);
+        filter: blur(0px);
+    }
+    100% {
+        opacity: 0.35;
+        transform: scale(0.98);
+        filter: blur(1px);
+    }
+}
+
+/* Apply during loading state */
+#sub-total-val.loading,
+#sub-total-excl-val.loading {
+    animation: subStatPulse 1.2s ease-in-out infinite;
+    color: #94a3b8;
 }
 
 .pnl-animated-cell {
@@ -9208,7 +9233,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
             <span style="font-size: 15px; color: ${valueColor}; margin-top: 4px; font-weight: 700;">${hasData ? formatVndShort(monthlyTotal) : "+0.0M"}</span>
           `;
           cell.onclick = () => { currentNavDate.setMonth(mIdx); setView("daily"); };
-          
+
           cell.classList.add("pnl-animated-cell");
           const delay = Math.min(cellIndex * 0.018, 0.45);
           cell.style.animationDelay = `${delay}s`;
