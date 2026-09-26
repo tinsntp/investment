@@ -225,9 +225,7 @@ background:
 .det-col-hdr{display:grid;grid-template-columns:5.4fr 1.6fr 1.6fr 1.6fr;padding:0.8vw 0.5vw;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:0.5vw;font-size:12px;font-weight:600;color:rgba(255,255,255,0.35)}
 .det-col-hdr .ch{text-align:right}
 .det-col-hdr .ch:first-child{text-align:left}
-.expand-txt{display:block;text-align:right;font-family:Lexend;font-weight:400;color:rgba(255,255,255,0.75);border-radius:4vw;cursor:pointer;background:rgba(255,255,255,0.08);border:0px solid rgba(255,255,255,0.25);padding:<!--[if lte IE 8]>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
-<![endif]-->px 10px}
+.expand-txt{display:block;text-align:right;font-family:Lexend;font-weight:400;color:rgba(255,255,255,0.75);border-radius:4vw;cursor:pointer;background:rgba(255,255,255,0.08);border:0px solid rgba(255,255,255,0.25);padding:4px 10px}
 .expand-txt:hover{color:#fff;background:rgba(255,255,255,0.1)}
 #cat-list{display:flex;flex-direction:column}
 .cat-row{display:grid;grid-template-columns:5.8fr 1.6fr 1.6fr;align-items:center;gap:1vw;padding:1.4vw 0.5vw;border-bottom:1px solid rgba(255,255,255,0.08);cursor:pointer;transition:background 0.15s}
@@ -390,7 +388,73 @@ background:
 .cash-modal-overlay.open,.add-modal-overlay.open{display:flex!important;}
 .btn-spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,0.3);border-top-color:#ffffff;border-radius:50%;animation:spinCircle 0.8s linear infinite;display:inline-block}
 #add-cash.success-confirm{background-color:#10b981 !important;color:#ffffff !important;font-size:15px;font-weight:500;display:flex;align-items:center;justify-content:center;transition:background-color 0.3s ease}
+/* Container fill width expansion animation */
+@keyframes barExpand {
+    from {
+        width: 0%;
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
 
+/* Base style for animated segments */
+.budget-fill-seg {
+    opacity: 0;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease;
+    animation: segFadeIn 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes segFadeIn {
+    from {
+        opacity: 0;
+        transform: scaleX(0);
+    }
+    to {
+        opacity: 1;
+        transform: scaleX(1);
+    }
+}
+
+/* Stagger delay classes for up to 6 segments */
+.budget-fill-seg:nth-child(1) { animation-delay: 0.05s; }
+.budget-fill-seg:nth-child(2) { animation-delay: 0.12s; }
+.budget-fill-seg:nth-child(3) { animation-delay: 0.19s; }
+.budget-fill-seg:nth-child(4) { animation-delay: 0.26s; }
+.budget-fill-seg:nth-child(5) { animation-delay: 0.33s; }
+.budget-fill-seg:nth-child(6) { animation-delay: 0.40s; }
+
+/* Legend items fade in from bottom */
+.legend-item {
+    opacity: 0;
+    transform: translateY(6px);
+    animation: legendSlideUp 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes legendSlideUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Rounded pill effect for individual inner segments */
+.budget-fill-seg.pill-segment {
+    border-radius: 9999px;
+    z-index: 1;
+}
+
+/* Semi-translucent overlapping pill for middle segments (Green accent) */
+.budget-fill-seg.pill-overlay {
+    border-radius: 9999px;
+    margin-left: -12px;
+    margin-right: -12px;
+    z-index: 2;
+    mix-blend-mode: screen;
+}
 @keyframes spinCircle{to{transform:rotate(360deg)}}
 @media screen and (min-width:401px){#add-cash{width:30px;height:30px;font-size:20px;} #add-cash.success-confirm{font-size:3.4vw;} .btn-spinner{width:20px;height:20px;}}
 
@@ -1323,6 +1387,7 @@ to{transform:rotate(360deg)}
   font-weight: 600;
   color: #ffffff;
 }
+
 
 /* 1. Debts Display: One row for Current, Stacked for others */
 .fb-debt-chips-inline {
@@ -4937,7 +5002,7 @@ to{transform:rotate(360deg)}
           document.getElementById("budget-spent").innerHTML = fmtFull(currentExpense) + " <span class='budget-percent'>" + (percent * 100).toFixed(0) + "%</span>";
           document.getElementById("budget-remaining").textContent = fmtFull(remaining);
 
-          function buildAllocationBar(mains,currentExpense,lastMonthExpense,averageExpense){for(var gradients=[["#f2545b","#e63960"],["#e63960","#d6247d"],["#d6247d","#b7299e"],["#b7299e","#8b3fd6"],["#8b3fd6","#6a5ce8"],["#6a5ce8","#5b8def"]],cats=[],total=0,i=0;i<mains.length;i++)mains[i].curr>0&&(cats.push(mains[i]),total+=mains[i].curr);var barTrack=document.getElementById("budget-fill-track"),barEl=document.getElementById("budget-fill-container"),legendEl=document.getElementById("budget-fill-legend");if(barTrack&&barEl&&legendEl&&(barEl.innerHTML="",legendEl.innerHTML="",!(total<=0))){var isMobile=window.innerWidth<1024,scaleMax=Math.max(averageExpense,lastMonthExpense,currentExpense,1),barWidthPct=Math.min(currentExpense/scaleMax*100,100);barEl.style.width=barWidthPct+"%";document.getElementById("budget-fill-track").style.width="100%";var markerPercent=Math.min(lastMonthExpense/scaleMax,1),marker=document.getElementById("last-month-marker");marker&&(marker.style.left=100*markerPercent+"%",marker.innerHTML='<div class="marker-label">Last month</div><div class="marker-value" style="font-family:DM Sans">'+fmtFull(lastMonthExpense)+'</div><i class="bi bi-caret-up Custom-triangle"></i>');var overAmount=currentExpense-averageExpense,overEl=document.getElementById("budget-over-indicator");if(overEl)if(overAmount>0){var budgetPct=averageExpense/scaleMax*100,overWidthPct=(currentExpense-averageExpense)/scaleMax*100;overEl.style.display="flex",overEl.style.left=budgetPct+"%",overEl.style.width=overWidthPct+"%",overEl.title="Exceeded budget by "+fmtAxis(overAmount)}else overEl.style.display="none";for(var c=0;c<cats.length;c++){var g=gradients[c%gradients.length],pct=cats[c].curr/total*100,seg=document.createElement("div");if(seg.className="budget-fill-seg",seg.style.flexGrow=pct,seg.style.background="linear-gradient(90deg, "+g[0]+" 0%, "+g[1]+" 100%)",pct>=1){var label=document.createElement("span");label.textContent=pct.toFixed(0)+"%",pct<8&&(label.style.fontSize="10px"),seg.appendChild(label)}barEl.appendChild(seg);var item=document.createElement("span");item.className="legend-item";var rawName=cats[c].name,shortName=rawName;isMobile?rawName.includes("Family")?shortName="Family":rawName.includes("Bills")?shortName="Bills":rawName.includes("Rental")?shortName="Rental":rawName.includes("Food")?shortName="Groceries":rawName.includes("Shop")&&(shortName="Shop/Travel"):shortName=rawName.length>12?rawName.slice(0,10)+"…":rawName,item.innerHTML='<span class="legend-dot" style="background:'+g[1]+'"></span>'+shortName,legendEl.appendChild(item)}}}
+          function buildAllocationBar(mains,currentExpense,lastMonthExpense,averageExpense){for(var categoryPalette=[{bg:"#0f52ba",text:"#ffffff",dot:"#0f52ba"},{bg:"#2bbba0",text:"#ffffff",dot:"#2bbba0"},{bg:"#e286d4",text:"#ffffff",dot:"#e286d4"},{bg:"#f34e2c",text:"#ffffff",dot:"#f34e2c"},{bg:"#8a6be7",text:"#ffffff",dot:"#8a6be7"},{bg:"#0032c8",text:"#ffffff",dot:"#0032c8"}],cats=[],total=0,i=0;i<mains.length;i++)mains[i].curr>0&&(cats.push(mains[i]),total+=mains[i].curr);var barTrack=document.getElementById("budget-fill-track"),barEl=document.getElementById("budget-fill-container"),legendEl=document.getElementById("budget-fill-legend");if(barTrack&&barEl&&legendEl&&(barEl.innerHTML="",legendEl.innerHTML="",!(total<=0))){var isMobile=window.innerWidth<1024,scaleMax=Math.max(averageExpense,lastMonthExpense,currentExpense,1),barWidthPct=Math.min(currentExpense/scaleMax*100,100);barEl.style.transition="width 0.8s cubic-bezier(0.25, 1, 0.5, 1)",barEl.style.width="0%",barEl.style.borderRadius="9999px",barTrack.style.width="100%",barTrack.style.borderRadius="9999px",requestAnimationFrame(function(){barEl.style.width=barWidthPct+"%"});var markerPercent=Math.min(lastMonthExpense/scaleMax,1),marker=document.getElementById("last-month-marker");marker&&(marker.style.transition="left 0.8s cubic-bezier(0.25, 1, 0.5, 1)",marker.style.left=100*markerPercent+"%",marker.innerHTML='<div class="marker-label">Last month</div><div class="marker-value" style="font-family:DM Sans">'+fmtFull(lastMonthExpense)+'</div><i class="bi bi-caret-up Custom-triangle"></i>');var overAmount=currentExpense-averageExpense,overEl=document.getElementById("budget-over-indicator");if(overEl)if(overAmount>0){var budgetPct=averageExpense/scaleMax*100,overWidthPct=(currentExpense-averageExpense)/scaleMax*100;overEl.style.display="flex",overEl.style.left=budgetPct+"%",overEl.style.width=overWidthPct+"%",overEl.title="Exceeded budget by "+fmtAxis(overAmount)}else overEl.style.display="none";for(var c=0;c<cats.length;c++){var paletteItem=categoryPalette[c%categoryPalette.length],pct=cats[c].curr/total*100,seg=document.createElement("div");if(seg.className="budget-fill-seg",seg.style.flex=pct+" 1 0%",seg.style.height="100%",seg.style.backgroundColor=paletteItem.bg,seg.style.color="#ffffff",c>0&&c<cats.length-1?seg.classList.add("pill-overlay"):0===c?(seg.style.borderTopLeftRadius="9999px",seg.style.borderBottomLeftRadius="9999px"):c===cats.length-1&&(seg.style.borderTopRightRadius="9999px",seg.style.borderBottomRightRadius="9999px"),pct>=1){var label=document.createElement("span");label.textContent=pct.toFixed(0)+"%",label.style.fontWeight="700",pct<8&&(label.style.fontSize="10px"),seg.appendChild(label)}barEl.appendChild(seg);var item=document.createElement("span");item.className="legend-item",item.style.animationDelay=.1+.05*c+"s";var rawName=cats[c].name,shortName=rawName;isMobile?rawName.includes("Family")?shortName="Family":rawName.includes("Bills")?shortName="Bills":rawName.includes("Rental")?shortName="Rental":rawName.includes("Food")?shortName="Groceries":rawName.includes("Shop")&&(shortName="Shop/Travel"):shortName=rawName.length>12?rawName.slice(0,10)+"…":rawName,item.innerHTML='<span class="legend-dot" style="background:'+paletteItem.dot+'"></span>'+shortName,legendEl.appendChild(item)}}}
 
           buildAllocationBar(mains, currentExpense, lastMonthExpense, averageExpense);
           buildColHdr(); 
@@ -10015,7 +10080,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
 
     const width = rect.width;
     const height = rect.height;
-    const padding = { top: 38, right: 5, bottom: 25, left: 5 };
+    const padding = { top: 38, right: 10, bottom: 25, left: 10 };
     const chartWidth = width - padding.left - padding.right;
     const chartHeight = height - padding.top - padding.bottom;
 
