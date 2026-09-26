@@ -1633,29 +1633,130 @@ to{transform:rotate(360deg)}
     transform: scale(1) translateY(0);
   }
 }
-@keyframes subStatPulse {
+/* 1. Staggered Slide-In for Rows */
+@keyframes subRowSlideIn {
     0% {
-        opacity: 0.35;
-        transform: scale(0.98);
-        filter: blur(1px);
-    }
-    50% {
-        opacity: 0.85;
-        transform: scale(1.02);
-        filter: blur(0px);
+        opacity: 0;
+        transform: translateY(16px);
     }
     100% {
-        opacity: 0.35;
-        transform: scale(0.98);
-        filter: blur(1px);
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
-/* Apply during loading state */
-#sub-total-val.loading,
-#sub-total-excl-val.loading {
-    animation: subStatPulse 1.2s ease-in-out infinite;
-    color: #94a3b8;
+.sub-row-animate {
+    opacity: 0;
+    animation: subRowSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* 2. Pop-and-Scale Animation for Icons */
+@keyframes subIconPop {
+    0% {
+        opacity: 0;
+        transform: scale(0.3) rotate(-15deg);
+    }
+    70% {
+        transform: scale(1.15) rotate(5deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+.sub-icon-animate {
+    opacity: 0;
+    animation: subIconPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* 3. Bounce Effect for Totals */
+@keyframes subValBounce {
+    0% {
+        transform: scale(1);
+    }
+    30% {
+        transform: scale(1.12);
+        color: #2dd4bf;
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.sub-val-bounce {
+    display: inline-block;
+    animation: subValBounce 0.6s ease-out;
+}
+
+/* Container for the rolling characters */
+.sub-num-container {
+    display: inline-flex;
+    align-items: center;
+    overflow: hidden;
+    height: 1.2em;
+    line-height: 1.2em;
+    vertical-align: bottom;
+}
+
+/* Character box mask */
+.sub-char-box {
+    position: relative;
+    display: inline-block;
+    width: 0.6em; /* Adjust to match your font width */
+    height: 100%;
+    overflow: hidden;
+    text-align: center;
+}
+
+/* Static non-digit characters ($, ., commas) */
+.sub-char-static {
+    display: inline-block;
+    padding: 0 1px;
+    opacity: 0.85;
+}
+
+/* Vertical 0-9 reel strip */
+.sub-digit-reel {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: slotRoll 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Individual digit height inside reel */
+.sub-digit-item {
+    display: block;
+    height: 1.2em;
+    line-height: 1.2em;
+    text-align: center;
+}
+
+/* Keyframes to roll from top/bottom to the target digit position */
+@keyframes slotRoll {
+    0% {
+        transform: translateY(0%);
+        filter: blur(2px);
+    }
+    100% {
+        transform: translateY(var(--target-y));
+        filter: blur(0);
+    }
+}
+/* 4. Soft Skeleton Pulse While Fetching */
+@keyframes subLoadingPulse {
+    0% { opacity: 0.3; }
+    50% { opacity: 0.8; }
+    100% { opacity: 0.3; }
+}
+
+.sub-loading-pulse {
+    animation: subLoadingPulse 1.2s infinite ease-in-out;
+    color: rgba(255, 255, 255, 0.4) !important;
 }
 
 .pnl-animated-cell {
@@ -4860,23 +4961,43 @@ to{transform:rotate(360deg)}
     var globalTxItems = [];
 
     function loadSubscriptions() {
-        fetch(CSV_URL + "&t=" + Date.now(), { cache:"no-store" })
-        .then(function(r){ if(!r.ok) throw new Error("HTTP "+r.status); return r.text(); })
-        .then(function(text){
-            var lines = text.split("\n").filter(function(l){ return l.trim(); });
+        var totalVal = document.getElementById("sub-total-val");
+        var totalExclVal = document.getElementById("sub-total-excl-val");
+        var loadingEl = document.getElementById("sub-loading");
+        var listEl = document.getElementById("sub-list");
+
+        if (loadingEl) loadingEl.style.display = "block";
+        
+        // Set skeleton loading state on numbers
+        if (totalVal) {
+            totalVal.classList.add("sub-loading-pulse");
+            totalVal.textContent = "—";
+        }
+        if (totalExclVal) {
+            totalExclVal.classList.add("sub-loading-pulse");
+            totalExclVal.textContent = "—";
+        }
+
+        fetch(CSV_URL + "&t=" + Date.now(), { cache: "no-store" })
+        .then(function(r) { 
+            if (!r.ok) throw new Error("HTTP " + r.status); 
+            return r.text(); 
+        })
+        .then(function(text) {
+            var lines = text.split("\n").filter(function(l) { return l.trim(); });
             var rows = lines.map(csvRow);
 
             rows = rows.slice(1);
             var items = [];
-            rows.forEach(function(cols, index){
+            rows.forEach(function(cols, index) {
                 if (!parseBool(cols[COL_ACTIVE])) return;
-                var rawName = (cols[COL_NAME]||"").trim();
+                var rawName = (cols[COL_NAME] || "").trim();
                 if (!rawName) return;
                 var name = stripEmoji(rawName) || rawName;
                 var price = parseAmt(cols[COL_PRICE]);
-                var startdate = parseSheetDate(cols[COL_START]||""); // Column D[cite: 4]
-                var expiry = parseSheetDate(cols[COL_EXPIRY]||"");     // Column E[cite: 4]
-                var iconUrl = (cols[COL_ICON]||"").trim();
+                var startdate = parseSheetDate(cols[COL_START] || "");
+                var expiry = parseSheetDate(cols[COL_EXPIRY] || "");
+                var iconUrl = (cols[COL_ICON] || "").trim();
                 
                 items.push({ 
                     id: index,
@@ -4887,6 +5008,7 @@ to{transform:rotate(360deg)}
                     iconUrl: iconUrl 
                 });
             });
+
             items.sort(function(a, b) {
                 var timeA = a.expiry ? new Date(a.expiry).getTime() : 0;
                 var timeB = b.expiry ? new Date(b.expiry).getTime() : 0;
@@ -4895,17 +5017,27 @@ to{transform:rotate(360deg)}
 
             lastLoadedItems = items;
             globalSubItems = items;
+
+            if (totalVal) totalVal.classList.remove("sub-loading-pulse");
+            if (totalExclVal) totalExclVal.classList.remove("sub-loading-pulse");
+
             renderSubscriptions(items);
 
             var now = new Date();
-            var hh = String(now.getHours()).padStart(2,"0");
-            var mm = String(now.getMinutes()).padStart(2,"0");
+            var hh = String(now.getHours()).padStart(2, "0");
+            var mm = String(now.getMinutes()).padStart(2, "0");
             var lastUpdatedEl = document.getElementById("sub-last-updated");
-            if (lastUpdatedEl) lastUpdatedEl.textContent = hh+":"+mm+" ago";
+            if (lastUpdatedEl) lastUpdatedEl.textContent = hh + ":" + mm + " ago";
         })
-        .catch(function(err){
-            var loadingEl = document.getElementById("sub-loading");
-            if (loadingEl) loadingEl.textContent = "Error: " + err.message;
+        .catch(function(err) {
+            if (totalVal) totalVal.classList.remove("sub-loading-pulse");
+            if (totalExclVal) totalExclVal.classList.remove("sub-loading-pulse");
+
+            var errLoadingEl = document.getElementById("sub-loading");
+            if (errLoadingEl) {
+                errLoadingEl.style.display = "block";
+                errLoadingEl.textContent = "Error: " + err.message;
+            }
         });
     }
 
@@ -4916,64 +5048,161 @@ to{transform:rotate(360deg)}
         listEl.innerHTML = "";
 
         if (!items.length) {
-        var empty = document.createElement("div");
-        empty.id = "sub-empty";
-        empty.textContent = "No active subscriptions found.";
-        listEl.appendChild(empty);
+            var empty = document.createElement("div");
+            empty.id = "sub-empty";
+            empty.textContent = "No active subscriptions found.";
+            listEl.appendChild(empty);
         }
+
         var isMobile = window.innerWidth <= 1024;
         var total = 0;
         var totalExclKfs = 0;
-        items.forEach(function(item, index){
-        total+=item.price,item.name.toLowerCase().indexOf("kungfu stocks pro")<0&&(totalExclKfs+=item.price);var icon=iconFor(item.name),swipeContainer=document.createElement("div");swipeContainer.className="sub-swipe-container";var itemId=item.id||index;swipeContainer.setAttribute("data-id",itemId);var editAction=document.createElement("div");editAction.className="sub-edit-action";var actionWidth=60;editAction.style.position="absolute",editAction.style.right=actionWidth+"px",editAction.style.top="0",editAction.style.bottom="0",editAction.style.width=actionWidth+"px";
-        var editAction=document.createElement("div");editAction.className="sub-edit-action";var actionWidth=60;editAction.style.position="absolute",editAction.style.right=actionWidth+"px",editAction.style.top="0",editAction.style.bottom="0",editAction.style.width=actionWidth+"px";
-        
-        editAction.addEventListener("click", function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            editSubscription(itemId);
-        });
-        editAction.addEventListener("touchend", function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            editSubscription(itemId);
-        }, { passive: false });
-        editAction.innerHTML = `
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-            </svg>
-        `;
-        var deleteAction = document.createElement("div");
-        deleteAction.className="sub-delete-action",deleteAction.style.position="absolute",deleteAction.style.right="0px",deleteAction.style.top="0",deleteAction.style.bottom="0",deleteAction.style.width=actionWidth+"px";
-        deleteAction.addEventListener("click",function(e){e.preventDefault(),e.stopPropagation(),deleteSubscription(itemId)}),deleteAction.addEventListener("touchend",function(e){e.preventDefault(),e.stopPropagation(),deleteSubscription(itemId)},{passive:!1});
-        deleteAction.innerHTML = `
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="3 6 5 6 21 6"></polyline>
-            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-            <line x1="10" y1="11" x2="10" y2="17"></line>
-            <line x1="14" y1="11" x2="14" y2="17"></line>
-            </svg>
-        `;
-        var row=document.createElement("div");row.className="subs-row",Object.assign(row.style,{borderBottom:"1px solid rgba(255,255,255,0.08)"});var iconEl=document.createElement("div");iconEl.className="sub-icon";
-        if(item.iconUrl){iconEl.style.background="rgba(255,255,255,0.08)";var imgEl=document.createElement("img");imgEl.src=item.iconUrl,imgEl.style.width="100%",imgEl.style.height="100%",imgEl.style.objectFit="contain",imgEl.style.borderRadius="50%",imgEl.onerror=function(el,fallbackIcon){return function(){el.style.background=fallbackIcon.bg,el.textContent=fallbackIcon.ltr,el.style.display="flex",el.style.alignItems="center",el.style.justifyContent="center"}}(iconEl,icon),iconEl.appendChild(imgEl),iconEl.style.display="flex",iconEl.style.alignItems="center",iconEl.style.justifyContent="center"}else iconEl.style.background=icon.bg,iconEl.textContent=icon.ltr;var mid=document.createElement("div");mid.className="sub-mid";var nameRow=document.createElement("div");nameRow.className="sub-name-row";var nameLeft=document.createElement("div");nameLeft.className="sub-name-left";var nameEl=document.createElement("span");nameEl.className="sub-name",nameEl.textContent=getDisplayName(item.name,isMobile);var badge=document.createElement("span");badge.className="sub-badge",badge.textContent="Active",nameLeft.appendChild(nameEl),nameLeft.appendChild(badge);var priceEl=document.createElement("div");priceEl.className="sub-price",priceEl.innerHTML=fmtFull(item.price),nameRow.appendChild(nameLeft),nameRow.appendChild(priceEl);var expEl=document.createElement("div");expEl.className="sub-expiry",expEl.style.display="flex",expEl.style.alignItems="center",expEl.style.justifyContent="space-between",expEl.style.width="100%";
-        expEl.innerHTML =
-            '<div class="sub-expiry-left" style="display: flex; align-items: center; gap: 4px;">' +
-            '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>' +
-            '<span>Expired: ' + fmtExpiryDate(item.expiry) + '</span>' +
-            '</div>' +
-            '<span class="sub-price-unit" style="font-size: 14px; font-weight:300; color:rgba(255,255,255,0.45);opacity: 0.8; text-align: right;">per month</span>';
 
-        mid.appendChild(nameRow),mid.appendChild(expEl),row.appendChild(iconEl),row.appendChild(mid),swipeContainer.appendChild(editAction),swipeContainer.appendChild(deleteAction),swipeContainer.appendChild(row),attachSwipeEvents(row,swipeContainer),listEl.appendChild(swipeContainer);
+        items.forEach(function(item, index) {
+            total += item.price;
+            if (item.name.toLowerCase().indexOf("kungfu stocks pro") < 0) {
+                totalExclKfs += item.price;
+            }
+
+            var icon = iconFor(item.name);
+            var swipeContainer = document.createElement("div");
+            swipeContainer.className = "sub-swipe-container sub-row-animate";
+            
+            // Stagger row arrival delay based on list index (50ms offset per item)
+            swipeContainer.style.animationDelay = (index * 0.05) + "s";
+
+            var itemId = item.id || index;
+            swipeContainer.setAttribute("data-id", itemId);
+
+            var actionWidth = 60;
+            var editAction = document.createElement("div");
+            editAction.className = "sub-edit-action";
+            editAction.style.position = "absolute";
+            editAction.style.right = actionWidth + "px";
+            editAction.style.top = "0";
+            editAction.style.bottom = "0";
+            editAction.style.width = actionWidth + "px";
+
+            editAction.addEventListener("click", function(e) { e.preventDefault(); e.stopPropagation(); editSubscription(itemId); });
+            editAction.addEventListener("touchend", function(e) { e.preventDefault(); e.stopPropagation(); editSubscription(itemId); }, { passive: false });
+            editAction.innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+            `;
+
+            var deleteAction = document.createElement("div");
+            deleteAction.className = "sub-delete-action";
+            deleteAction.style.position = "absolute";
+            deleteAction.style.right = "0px";
+            deleteAction.style.top = "0";
+            deleteAction.style.bottom = "0";
+            deleteAction.style.width = actionWidth + "px";
+
+            deleteAction.addEventListener("click", function(e) { e.preventDefault(); e.stopPropagation(); deleteSubscription(itemId); });
+            deleteAction.addEventListener("touchend", function(e) { e.preventDefault(); e.stopPropagation(); deleteSubscription(itemId); }, { passive: false });
+            deleteAction.innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                <line x1="10" y1="11" x2="10" y2="17"></line>
+                <line x1="14" y1="11" x2="14" y2="17"></line>
+                </svg>
+            `;
+
+            var row = document.createElement("div");
+            row.className = "subs-row";
+            Object.assign(row.style, { borderBottom: "1px solid rgba(255,255,255,0.08)" });
+
+            var iconEl = document.createElement("div");
+            // Add animated icon class
+            iconEl.className = "sub-icon sub-icon-animate";
+            iconEl.style.animationDelay = (index * 0.05 + 0.1) + "s";
+
+            if (item.iconUrl) {
+                iconEl.style.background = "rgba(255,255,255,0.08)";
+                var imgEl = document.createElement("img");
+                imgEl.src = item.iconUrl;
+                imgEl.style.width = "100%";
+                imgEl.style.height = "100%";
+                imgEl.style.objectFit = "contain";
+                imgEl.style.borderRadius = "50%";
+                imgEl.onerror = (function(el, fallbackIcon) {
+                    return function() {
+                        el.style.background = fallbackIcon.bg;
+                        el.textContent = fallbackIcon.ltr;
+                        el.style.display = "flex";
+                        el.style.alignItems = "center";
+                        el.style.justifyContent = "center";
+                    };
+                })(iconEl, icon);
+                iconEl.appendChild(imgEl);
+                iconEl.style.display = "flex";
+                iconEl.style.alignItems = "center";
+                iconEl.style.justifyContent = "center";
+            } else {
+                iconEl.style.background = icon.bg;
+                iconEl.textContent = icon.ltr;
+            }
+
+            var mid = document.createElement("div");
+            mid.className = "sub-mid";
+            var nameRow = document.createElement("div");
+            nameRow.className = "sub-name-row";
+            var nameLeft = document.createElement("div");
+            nameLeft.className = "sub-name-left";
+            var nameEl = document.createElement("span");
+            nameEl.className = "sub-name";
+            nameEl.textContent = getDisplayName(item.name, isMobile);
+
+            var badge = document.createElement("span");
+            badge.className = "sub-badge";
+            badge.textContent = "Active";
+
+            nameLeft.appendChild(nameEl);
+            nameLeft.appendChild(badge);
+
+            var priceEl = document.createElement("div");
+            priceEl.className = "sub-price";
+            priceEl.innerHTML = fmtFull(item.price);
+
+            nameRow.appendChild(nameLeft);
+            nameRow.appendChild(priceEl);
+
+            var expEl = document.createElement("div");
+            expEl.className = "sub-expiry";
+            expEl.style.display = "flex";
+            expEl.style.alignItems = "center";
+            expEl.style.justifyContent = "space-between";
+            expEl.style.width = "100%";
+            expEl.innerHTML =
+                '<div class="sub-expiry-left" style="display: flex; align-items: center; gap: 4px;">' +
+                '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>' +
+                '<span>Expired: ' + fmtExpiryDate(item.expiry) + '</span>' +
+                '</div>' +
+                '<span class="sub-price-unit" style="font-size: 14px; font-weight:300; color:rgba(255,255,255,0.45);opacity: 0.8; text-align: right;">per month</span>';
+
+            mid.appendChild(nameRow);
+            mid.appendChild(expEl);
+            row.appendChild(iconEl);
+            row.appendChild(mid);
+            swipeContainer.appendChild(editAction);
+            swipeContainer.appendChild(deleteAction);
+            swipeContainer.appendChild(row);
+            attachSwipeEvents(row, swipeContainer);
+            listEl.appendChild(swipeContainer);
         });
 
-        document.getElementById("sub-total-val").textContent = fmtFull(total);
+        function animateNumber(elementId,targetVal){var el=document.getElementById(elementId);if(el){var formattedStr=fmtFull(targetVal);el.innerHTML="",el.classList.add("sub-num-container");for(var i=0;i<formattedStr.length;i++){var char=formattedStr[i],charSpan=document.createElement("span");if(charSpan.className="sub-char-box",/\d/.test(char)){var digit=parseInt(char,10),reel=document.createElement("span");reel.className="sub-digit-reel";for(var stripHtml="",d=0;d<=9;d++)stripHtml+='<span class="sub-digit-item">'+d+"</span>";reel.innerHTML=stripHtml;var delay=.04*i+"s";reel.style.animationDelay=delay,reel.style.setProperty("--target-y","-"+10*digit+"%"),reel.classList.add("roll-up"),charSpan.appendChild(reel)}else charSpan.className="sub-char-static",charSpan.textContent=char;el.appendChild(charSpan)}}}
+        animateNumber("sub-total-val", total);
+        animateNumber("sub-total-excl-val", totalExclKfs);
+
         document.getElementById("sub-total-label").innerHTML =
-        items.length + ' <span class="hl-teal">active</span> subscription' + (items.length===1?"":"s");
+            items.length + ' <span class="hl-teal">active</span> subscription' + (items.length === 1 ? "" : "s");
 
-        document.getElementById("sub-total-excl-val").textContent = fmtFull(totalExclKfs);
         document.getElementById("sub-total-excl-label").innerHTML =
-        ' <span class="hl-teal">Excl.</span> KungfuStocksPro';
+            ' <span class="hl-teal">Excl.</span> KungfuStocksPro';
     }
 
     function closeAllSwipeRows(){document.querySelectorAll(".sub-swipe-container").forEach(function(container){container.classList.remove("swiped");var cardRow=container.querySelector(".subs-row, .row");cardRow&&(cardRow.style.transition="transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)",cardRow.style.transform="translateX(0px)");var btn=container.querySelector(".sub-delete-action");btn&&(btn.style.zIndex="1")})}
