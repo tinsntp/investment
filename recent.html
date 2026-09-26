@@ -1901,38 +1901,21 @@ to{transform:rotate(360deg)}
 </div>
 <!-- CASH TRANSACTION MODAL POPUP -->
 <div id="cash-modal-overlay" class="cash-modal-overlay">
-  <!-- Modal container with padding: 0 so video touches top/left/right flush -->
   <div class="add-modal-expense" style="position:relative; padding: 0 !important; overflow: hidden; height: auto; min-height: 380px; max-height: 85vh;" onclick="event.stopPropagation()">
-    
-    <!-- Video Banner Row (Height: 80px) -->
     <div style="position: relative; width: 100%; height: 60px; overflow: hidden; border-top-left-radius: inherit; border-top-right-radius: inherit;">
       <video autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover; display: block;">
         <source src="https://v1.pinimg.com/videos/iht/expMp4/f8/3c/83/f83c83244da173c71d71d422d909dccd_720w.mp4" type="video/mp4">
       </video>
-      
-      <!-- Gradient Overlay for readability -->
       <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6)); pointer-events: none;"></div>
-      
-      <!-- Title positioned higher (~20%-25% down) -->
       <h2 style="position: absolute; top: 45%; transform: translateY(-50%); left: 16px; font-family: Alegreya; text-align: left; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8); color: #fff; margin: 0; white-space: nowrap; font-size: 22px; z-index: 5;">Add today cash expense...</h2>
-
-      <!-- Close (x) Button perfectly inline with title at top: 25% -->
       <span class="material-icons-round" id="cash-modal-cancel" 
             style="display: flex; align-items: center; justify-content: center; position: absolute; right: 12px; top: 40%; transform: translateY(-50%); color: rgba(255, 255, 255, 0.85); font-size: 18px; cursor: pointer; user-select: none; z-index: 9999!important; background: rgba(0, 0, 0, 0.35); border-radius: 50%; width: 24px; height: 24px; transition: color 0.2s ease;">cancel</span>
     </div>
-
-    <!-- Inner Content Area -->
     <div style="padding: 66px 16px 20px 16px; box-sizing: border-box;">
-
-      <!-- Input Field Area shifted up by 20px -->
       <div class="add-field" style="position: relative; width: 100%; box-sizing: border-box; margin-top: -20px;">
         <textarea id="cash-modal-input" rows="1" style="width: 100%; resize: none; overflow-x: hidden; overflow-y: hidden; min-height: 36px; line-height: 20px; padding: 6px 45px 6px 10px; box-sizing: border-box; word-brlur="this.style.setProperty('border-color', 'currentcolor currentcolor rgba(255, 255, 255, 0.2)', 'important');"></textarea>
-        
-        <!-- (+) Button -->
         <button id="cash-modal-submit" type="button" style="position: absolute; right: 6px; top: 40%; transform: translateY(-50%); height: 28px; width: 28px; min-width: 28px; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 22px;line-height: 1; border-radius: 50%; background: rgba(255,255,255,0.25); border: 1px solid rgba(255,255,255,0.4); color: #fff; cursor: pointer; z-index: 10;">+</button>
       </div>
-
-      <!-- Overlapping Icons Display Container -->
       <div id="cash-modal-icons" style="display:flex; align-items:center; margin-top:10px; padding-left:2px; height:36px; min-height:36px;"></div>
       <div id="cash-modal-status" class="add-status"></div>
     </div>
@@ -9712,7 +9695,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
         modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:9999;font-family:sans-serif;';
         
         modal.innerHTML = `
-            <div style="font-family:DM Sans, sans-serif;background:rgba(20, 23, 31, 0.75);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:0px solid rgba(255,255,255,0.1);color:#f8f9fa;padding:14px;border-radius:16px;width:440px;box-shadow:0 8px 32px rgba(0,0,0,0.5);">
+            <div style="font-family:'DM Sans', sans-serif;background:rgba(20, 23, 31, 0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.08);color:#f8f9fa;padding:16px;border-radius:16px;width:440px;box-shadow:0 8px 32px rgba(0,0,0,0.5);">
                 <!-- Header Nav & Controls -->
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
                     <div style="display:flex;align-items:center;gap:12px;">
@@ -9736,10 +9719,10 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
                 </div>
 
                 <!-- Calendar Grid -->
-                <div id="expense-calendar-grid" style="display:grid;grid-template-columns:repeat(7, 1fr);gap:6px;height:280px;box-sizing:border-box;"></div>
+                <div id="expense-calendar-grid" style="display:grid;grid-template-columns:repeat(7, 1fr);gap:6px;min-height:240px;box-sizing:border-box;"></div>
 
-                <!-- PnL Style Summary Totals & Comparison Line Chart -->
-                <div id="expense-chart-container" style="margin-top:16px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.08);">
+                <!-- Expense Dual Chart Section -->
+                <div id="expense-chart-container" style="margin-top:16px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.08);position:relative;">
                     <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:8px;">
                         <div>
                             <div id="expense-prev-label" style="font-size:12px;color:#94a3b8;font-weight:600;">Last Month</div>
@@ -9751,9 +9734,10 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
                         </div>
                     </div>
 
-                    <!-- Line Chart Canvas -->
+                    <!-- Line Chart Canvas & Hover Tooltip -->
                     <div style="height:140px;position:relative;width:100%;">
-                        <canvas id="expense-pnl-canvas"></canvas>
+                        <canvas id="expense-pnl-canvas" style="width:100%;height:100%;display:block;"></canvas>
+                        <div id="expense-chart-tooltip" style="position:absolute;display:none;pointer-events:none;background:#1e293b;color:#f8fafc;padding:6px 10px;border-radius:6px;font-size:11px;font-family:'DM Sans', sans-serif;border:1px solid rgba(255,255,255,0.1);box-shadow:0 10px 15px -3px rgba(0,0,0,0.5);z-index:10;white-space:nowrap;"></div>
                     </div>
                 </div>
             </div>
@@ -9768,21 +9752,23 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
     let currentNavDate = new Date();
     let currentView = 'daily';
     let expenseData = {};
-    let chartInstance = null;
+    let animFrameId = null;
+    let activeHoverIndex = -1;
 
     const parseNum = val => { if (!val) return 0; const clean = String(val).replace(/,/g, "").trim(); const num = parseFloat(clean); return isNaN(num) ? 0 : num; };
     const parseCsvRow = text => { var result = [], cell = "", insideQuotes = false; for (var i = 0; i < text.length; i++) { var c = text[i]; if (c === '"') { insideQuotes = !insideQuotes; } else if (c === ',' && !insideQuotes) { result.push(cell); cell = ""; } else { cell += c; } } result.push(cell); return result; };
 
-    const formatVndShort = val => { const num = parseFloat(val); if (isNaN(num) || 0 === num) return "-0.0"; const absVal = Math.abs(num); let formatted = ""; return formatted = absVal >= 1e9 ? (absVal / 1e9).toFixed(1) + "B" : absVal >= 1e6 ? (absVal / 1e6).toFixed(1) + "M" : absVal >= 1e3 ? (absVal / 1e3).toFixed(1) + "K" : absVal.toFixed(1), num >= 0 ? "+" + formatted : "-" + formatted };
+    const formatVndShort = val => { const num = parseFloat(val); if (isNaN(num) || 0 === num) return "-0.0"; const absVal = Math.abs(num); let formatted = absVal >= 1e9 ? (absVal / 1e9).toFixed(1) + "B" : absVal >= 1e6 ? (absVal / 1e6).toFixed(1) + "M" : absVal >= 1e3 ? (absVal / 1e3).toFixed(1) + "K" : absVal.toFixed(1); return num >= 0 ? "+" + formatted : "-" + formatted; };
     const formatFullVnd = val => { const num = Math.abs(parseFloat(val) || 0); return "-" + (num / 1e6).toFixed(3) + "M₫"; };
 
     const setView = view => { 
         currentView = view;
         ["daily", "monthly", "yearly"].forEach(v => { 
             const btn = document.getElementById(`expense-view-${v}`); 
-            v === view ? (btn.style.background = "#ec4899", btn.style.color = "#000") : (btn.style.background = "none", btn.style.color = "#94a3b8") 
+            if (btn) v === view ? (btn.style.background = "#ec4899", btn.style.color = "#000") : (btn.style.background = "none", btn.style.color = "#94a3b8"); 
         }); 
-        document.getElementById("expense-days-header").style.display = "daily" === view ? "grid" : "none"; 
+        const daysHeader = document.getElementById("expense-days-header");
+        if (daysHeader) daysHeader.style.display = "daily" === view ? "grid" : "none"; 
         
         const chartContainer = document.getElementById("expense-chart-container");
         if (chartContainer) {
@@ -9804,7 +9790,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
         
         const grid = document.getElementById("expense-calendar-grid");
         if (grid) {
-            grid.innerHTML = "<div id='loading-msg' style='grid-column: span 7; text-align: center; color: #94a3b8; padding: 20px;'></div>";
+            grid.innerHTML = "<div id='loading-msg' style='grid-column: span 7; text-align: center; color: #94a3b8; padding: 20px;'>Loading data...</div>";
         }
 
         const targetUrl = typeof DETAIL_SHEET_URL !== 'undefined' ? DETAIL_SHEET_URL : `${GOOGLE_SHEET_CSV_URL}1492221762`;
@@ -9866,29 +9852,34 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
         renderView();
     };
 
-    // Draw Dual Comparison Line Chart
-    const drawComparisonChart = (labels, currentPoints, previousPoints, prevLegendLabel, isDailyView) => {
+    const drawExpenseCanvasChart = (labels, currentPoints, previousPoints, isDailyView) => {
         const canvas = document.getElementById('expense-pnl-canvas');
-        if (!canvas || typeof Chart === 'undefined') return;
-
-        const existingChart = Chart.getChart(canvas);
-        if (existingChart) {
-            existingChart.destroy();
-        }
+        const tooltip = document.getElementById('expense-chart-tooltip');
+        if (!canvas) return;
         const ctx = canvas.getContext('2d');
 
-        // Outlier & Peak Calculations for Current Period
+        if (animFrameId) cancelAnimationFrame(animFrameId);
+
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * 2;
+        canvas.height = rect.height * 2;
+        ctx.scale(2, 2);
+
+        const width = rect.width;
+        const height = rect.height;
+        const padding = { top: 25, right: 10, bottom: 20, left: 10 };
+        const chartWidth = width - padding.left - padding.right;
+        const chartHeight = height - padding.top - padding.bottom;
+
+        // Peak and outlier index mapping
         let sortedPoints = [...currentPoints].map((val, idx) => ({ val, idx })).sort((a, b) => b.val - a.val);
-        
         let maxVal = sortedPoints[0] ? sortedPoints[0].val : 0;
         let maxIdx = sortedPoints[0] ? sortedPoints[0].idx : -1;
-
         let secondMaxVal = sortedPoints[1] ? sortedPoints[1].val : 0;
         let secondMaxIdx = sortedPoints[1] ? sortedPoints[1].idx : -1;
 
         let isOutlierPresent = (secondMaxVal > 0 && (maxVal / secondMaxVal) > 2.0);
 
-        // Peak Calculations for Previous Period
         let sortedPrevPoints = [...previousPoints].map((val, idx) => ({ val, idx })).sort((a, b) => b.val - a.val);
         let maxPrevVal = sortedPrevPoints[0] ? sortedPrevPoints[0].val : 0;
         let maxPrevIdx = sortedPrevPoints[0] ? sortedPrevPoints[0].idx : -1;
@@ -9899,209 +9890,265 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
         } else if (chartYMax > 0) {
             chartYMax = chartYMax * 1.15;
         }
+        if (chartYMax === 0) chartYMax = 1;
 
-        const gradientCurr = ctx.createLinearGradient(0, 0, 0, 140);
-        gradientCurr.addColorStop(0, 'rgba(236, 72, 153, 0.35)');
-        gradientCurr.addColorStop(1, 'rgba(236, 72, 153, 0.0)');
+        const getY = (val) => padding.top + chartHeight - (val / chartYMax) * chartHeight;
+        const getX = (index, total) => padding.left + (index / (total - 1 || 1)) * chartWidth;
 
-        // Plugin 1: Vertical lines for BOTH Current and Previous Period lines
-        const gradientVerticalLinesPlugin = {
-            id: 'gradientVerticalLinesPlugin',
-            beforeDatasetsDraw(chart) {
-                const yScale = chart.scales.y;
-                const chartCtx = chart.ctx;
+        let pulseRadius = 0;
+        let startTime = null;
+        const duration = 600;
 
-                chartCtx.save();
-                chartCtx.lineWidth = 1;
-                chartCtx.setLineDash([2, 3]);
+        function renderChart(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const easeProgress = 1 - Math.pow(1 - progress, 3);
 
-                // 1. Draw vertical lines for Current Period (Pink)
-                const metaCurr = chart.getDatasetMeta(0);
-                chartCtx.strokeStyle = 'rgba(236, 72, 153, 0.15)';
-                metaCurr.data.forEach((point) => {
-                    chartCtx.beginPath();
-                    const startY = Math.max(point.y, yScale.top);
-                    chartCtx.moveTo(point.x, startY);
-                    chartCtx.lineTo(point.x, yScale.bottom);
-                    chartCtx.stroke();
+            ctx.clearRect(0, 0, width, height);
+
+            // 1. Grid Lines
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([]);
+            for (let i = 0; i <= 3; i++) {
+                const y = padding.top + (chartHeight / 3) * i;
+                ctx.beginPath();
+                ctx.moveTo(padding.left, y);
+                ctx.lineTo(width - padding.right, y);
+                ctx.stroke();
+            }
+
+            const buildPoints = (data) => data.map((val, idx) => ({
+                x: getX(idx, data.length),
+                y: getY(val),
+                val: val,
+                label: labels[idx]
+            }));
+
+            const currPts = buildPoints(currentPoints);
+            const prevPts = buildPoints(previousPoints);
+
+            // 2. Dashed Vertical Grid Guides
+            if (easeProgress > 0) {
+                ctx.strokeStyle = 'rgba(236, 72, 153, 0.12)';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([2, 3]);
+                currPts.forEach(pt => {
+                    if (pt.val > 0) {
+                        ctx.beginPath();
+                        ctx.moveTo(pt.x, pt.y);
+                        ctx.lineTo(pt.x, height - padding.bottom);
+                        ctx.stroke();
+                    }
                 });
+                ctx.setLineDash([]);
+            }
 
-                // 2. Draw vertical lines for Previous Period (Grey)
-                const metaPrev = chart.getDatasetMeta(1);
-                chartCtx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
-                metaPrev.data.forEach((point) => {
-                    chartCtx.beginPath();
-                    const startY = Math.max(point.y, yScale.top);
-                    chartCtx.moveTo(point.x, startY);
-                    chartCtx.lineTo(point.x, yScale.bottom);
-                    chartCtx.stroke();
-                });
+            // 3. Pink Gradient Fill
+            if (currPts.length > 0 && easeProgress > 0) {
+                const baselineY = height - padding.bottom;
+                const visibleCount = Math.max(1, Math.floor(currPts.length * easeProgress));
 
-                chartCtx.restore();
+                ctx.save();
+                ctx.beginPath();
+                ctx.moveTo(currPts[0].x, currPts[0].y);
+
+                for (let i = 1; i < visibleCount; i++) {
+                    ctx.lineTo(currPts[i].x, currPts[i].y);
+                }
+
+                if (visibleCount < currPts.length) {
+                    const p1 = currPts[visibleCount - 1];
+                    const p2 = currPts[visibleCount];
+                    const subProgress = (currPts.length * easeProgress) - visibleCount;
+                    ctx.lineTo(p1.x + (p2.x - p1.x) * subProgress, p1.y + (p2.y - p1.y) * subProgress);
+                    ctx.lineTo(p1.x + (p2.x - p1.x) * subProgress, baselineY);
+                } else {
+                    ctx.lineTo(currPts[currPts.length - 1].x, baselineY);
+                }
+
+                ctx.lineTo(currPts[0].x, baselineY);
+                ctx.closePath();
+
+                const gradient = ctx.createLinearGradient(0, padding.top, 0, baselineY);
+                gradient.addColorStop(0, `rgba(236, 72, 153, ${0.35 * easeProgress})`);
+                gradient.addColorStop(1, 'rgba(236, 72, 153, 0.0)');
+                ctx.fillStyle = gradient;
+                ctx.fill();
+                ctx.restore();
+            }
+
+            // 4. Lines & Point Markers
+            const drawLine = (points, color, isDashed = false) => {
+                if (!points || points.length === 0) return;
+                const visibleCount = Math.max(1, Math.floor(points.length * easeProgress));
+
+                ctx.beginPath();
+                ctx.strokeStyle = color;
+                ctx.lineWidth = isDashed ? 1.5 : 2;
+                if (isDashed) ctx.setLineDash([4, 4]);
+                else ctx.setLineDash([]);
+
+                ctx.moveTo(points[0].x, points[0].y);
+                for (let i = 1; i < visibleCount; i++) {
+                    ctx.lineTo(points[i].x, points[i].y);
+                }
+                if (visibleCount < points.length) {
+                    const p1 = points[visibleCount - 1];
+                    const p2 = points[visibleCount];
+                    const subProgress = (points.length * easeProgress) - visibleCount;
+                    ctx.lineTo(p1.x + (p2.x - p1.x) * subProgress, p1.y + (p2.y - p1.y) * subProgress);
+                }
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Conditional Markers: Show all markers for Monthly view, hide standard markers for Daily view
+                if (!isDailyView) {
+                    points.slice(0, visibleCount).forEach((pt, idx) => {
+                        if (pt.val === 0) return;
+                        const isHovered = (activeHoverIndex === idx);
+                        ctx.beginPath();
+                        ctx.arc(pt.x, pt.y, isHovered ? 4.5 : 3.5, 0, Math.PI * 2);
+                        ctx.fillStyle = isHovered ? '#ffffff' : color;
+                        ctx.fill();
+                    });
+                } else {
+                    // Hover state marker for daily view
+                    if (activeHoverIndex !== -1 && points[activeHoverIndex] && points[activeHoverIndex].val > 0) {
+                        const hPt = points[activeHoverIndex];
+                        ctx.beginPath();
+                        ctx.arc(hPt.x, hPt.y, 4.5, 0, Math.PI * 2);
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fill();
+                    }
+                }
+            };
+
+            if (prevPts.length > 0) drawLine(prevPts, '#64748b', true);
+            if (currPts.length > 0) drawLine(currPts, '#ec4899', false);
+
+            // 5. Render Top Peak Markers & Labels
+            if (progress > 0.8) {
+                // Peak 1 (Main Peak)
+                if (maxIdx !== -1 && currPts[maxIdx] && currPts[maxIdx].val > 0) {
+                    const peak = currPts[maxIdx];
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(peak.x, peak.y, 4 + pulseRadius, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(236, 72, 153, ${Math.max(0, 0.45 - pulseRadius / 18)})`;
+                    ctx.fill();
+
+                    ctx.font = '600 11px "DM Sans", sans-serif';
+                    ctx.fillStyle = '#ec4899';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(formatVndShort(-peak.val), peak.x, peak.y - 8);
+                    ctx.restore();
+                }
+
+                // Peak 2 (Second Peak if present or during outlier)
+                if (secondMaxIdx !== -1 && currPts[secondMaxIdx] && currPts[secondMaxIdx].val > 0) {
+                    const peak2 = currPts[secondMaxIdx];
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(peak2.x, peak2.y, 3.5, 0, Math.PI * 2);
+                    ctx.fillStyle = '#ec4899';
+                    ctx.fill();
+
+                    ctx.font = '600 10px "DM Sans", sans-serif';
+                    ctx.fillStyle = '#f472b6';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(formatVndShort(-peak2.val), peak2.x, peak2.y - 8);
+                    ctx.restore();
+                }
+
+                // Previous Period Top Peak
+                if (maxPrevIdx !== -1 && prevPts[maxPrevIdx] && prevPts[maxPrevIdx].val > 0) {
+                    const peakPrev = prevPts[maxPrevIdx];
+                    ctx.save();
+                    ctx.font = '600 11px "DM Sans", sans-serif';
+                    ctx.fillStyle = '#94a3b8';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(formatVndShort(-peakPrev.val), peakPrev.x, peakPrev.y - 8);
+                    ctx.restore();
+                }
+            }
+
+            // 6. Hover Line Indicator
+            if (activeHoverIndex !== -1 && currPts[activeHoverIndex]) {
+                const hPt = currPts[activeHoverIndex];
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([2, 2]);
+                ctx.beginPath();
+                ctx.moveTo(hPt.x, padding.top);
+                ctx.lineTo(hPt.x, height - padding.bottom);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+
+            // 7. X-Axis Labels
+            ctx.fillStyle = '#64748b';
+            ctx.font = '10px "DM Sans", sans-serif';
+            ctx.textAlign = 'center';
+            labels.forEach((lbl, i) => {
+                if (isDailyView) {
+                    if ([1, 5, 10, 15, 20, 25, 30].includes(Number(lbl))) {
+                        ctx.fillText(lbl, getX(i, labels.length), height - 2);
+                    }
+                } else {
+                    ctx.fillText(lbl, getX(i, labels.length), height - 2);
+                }
+            });
+
+            pulseRadius = (pulseRadius + 0.05) % 8;
+            animFrameId = requestAnimationFrame(renderChart);
+        }
+
+        requestAnimationFrame(renderChart);
+
+        canvas.onmousemove = function(e) {
+            const bbox = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - bbox.left;
+            let closestIdx = -1;
+            let minDistance = Infinity;
+
+            currentPoints.forEach((_, idx) => {
+                const ptX = getX(idx, currentPoints.length);
+                const dist = Math.abs(mouseX - ptX);
+                if (dist < minDistance) {
+                    minDistance = dist;
+                    closestIdx = idx;
+                }
+            });
+
+            activeHoverIndex = closestIdx;
+
+            if (closestIdx !== -1 && tooltip) {
+                const currVal = currentPoints[closestIdx] || 0;
+                const prevVal = previousPoints[closestIdx] || 0;
+                const lbl = labels[closestIdx];
+
+                tooltip.style.display = 'block';
+                tooltip.style.left = `${Math.min(Math.max(mouseX - 40, 10), rect.width - 120)}px`;
+                tooltip.style.top = `10px`;
+                tooltip.innerHTML = `
+                    <div style="font-weight:700;margin-bottom:2px;color:#f8fafc;">Day/Period: ${lbl}</div>
+                    <div style="color:#ec4899;font-weight:600;">Current: ${formatVndShort(-currVal)}</div>
+                    <div style="color:#94a3b8;font-weight:600;">Previous: ${formatVndShort(-prevVal)}</div>
+                `;
             }
         };
 
-        // Helper to draw live pulsing dot halo
-        const drawLiveDot = (chartCtx, x, y, color, outerColor) => {
-            chartCtx.save();
-            // Outer pulsing halo ring
-            chartCtx.beginPath();
-            chartCtx.arc(x, y, 7, 0, 2 * Math.PI);
-            chartCtx.fillStyle = outerColor;
-            chartCtx.fill();
-
-            // Inner core dot
-            chartCtx.beginPath();
-            chartCtx.arc(x, y, 3.5, 0, 2 * Math.PI);
-            chartCtx.fillStyle = color;
-            chartCtx.fill();
-            chartCtx.restore();
+        canvas.onmouseleave = function() {
+            activeHoverIndex = -1;
+            if (tooltip) tooltip.style.display = 'none';
         };
-
-        // Plugin 2: Peak Text Labels & Live Dots
-        const peakLabelPlugin = {
-            id: 'peakLabelPlugin',
-            afterDatasetsDraw(chart) {
-                const chartCtx = chart.ctx;
-
-                // --- 1. CURRENT PERIOD PEAK ---
-                const metaCurr = chart.getDatasetMeta(0);
-                const targetIdx = isOutlierPresent ? secondMaxIdx : maxIdx;
-                const targetVal = isOutlierPresent ? secondMaxVal : maxVal;
-
-                if (targetIdx !== -1 && targetVal > 0) {
-                    const pointCurr = metaCurr.data[targetIdx];
-                    if (pointCurr) {
-                        // Live dot effect for current peak
-                        drawLiveDot(chartCtx, pointCurr.x, pointCurr.y, '#ec4899', 'rgba(236, 72, 153, 0.25)');
-
-                        // Text Label
-                        chartCtx.save();
-                        chartCtx.font = '600 11px sans-serif';
-                        chartCtx.fillStyle = '#ec4899';
-                        chartCtx.textAlign = 'center';
-                        chartCtx.textBaseline = 'bottom';
-                        chartCtx.fillText(formatVndShort(-targetVal), pointCurr.x, pointCurr.y - 6);
-                        chartCtx.restore();
-                    }
-                }
-
-                // --- 2. PREVIOUS PERIOD PEAK ---
-                const metaPrev = chart.getDatasetMeta(1);
-                if (maxPrevIdx !== -1 && maxPrevVal > 0) {
-                    const pointPrev = metaPrev.data[maxPrevIdx];
-                    if (pointPrev) {
-                        // Live dot effect for previous period peak
-                        drawLiveDot(chartCtx, pointPrev.x, pointPrev.y, '#94a3b8', 'rgba(148, 163, 184, 0.2)');
-
-                        // Text Label for previous period peak
-                        chartCtx.save();
-                        chartCtx.font = '600 11px sans-serif';
-                        chartCtx.fillStyle = '#94a3b8';
-                        chartCtx.textAlign = 'center';
-                        chartCtx.textBaseline = 'bottom';
-                        chartCtx.fillText(formatVndShort(-maxPrevVal), pointPrev.x, pointPrev.y - 6);
-                        chartCtx.restore();
-                    }
-                }
-            }
-        };
-
-        chartInstance = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [
-                    {
-                        label: 'Current',
-                        data: currentPoints,
-                        borderColor: '#ec4899',
-                        borderWidth: 2,
-                        fill: true,
-                        backgroundColor: gradientCurr,
-                        tension: 0,
-                        pointRadius: isDailyView ? 0 : 3,
-                        pointBackgroundColor: '#ec4899',
-                        pointHoverRadius: 5,
-                        pointHoverBackgroundColor: '#ec4899'
-                    },
-                    {
-                        label: prevLegendLabel || 'Previous',
-                        data: previousPoints,
-                        borderColor: '#64748b',
-                        borderWidth: 1.5,
-                        borderDash: [4, 4],
-                        fill: false,
-                        tension: 0,
-                        pointRadius: isDailyView ? 0 : 3,
-                        pointBackgroundColor: '#64748b',
-                        pointHoverRadius: 5,
-                        pointHoverBackgroundColor: '#64748b'
-                    }
-                ]
-            },
-            plugins: [gradientVerticalLinesPlugin, peakLabelPlugin],
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'index',
-                    intersect: false
-                },
-                plugins: { 
-                    legend: { display: false },
-                    tooltip: {
-                        enabled: true,
-                        backgroundColor: 'rgba(20, 23, 31, 0.9)',
-                        titleColor: '#94a3b8',
-                        bodyColor: '#f8f9fa',
-                        borderColor: 'rgba(255,255,255,0.1)',
-                        borderWidth: 1,
-                        padding: 8,
-                        callbacks: {
-                            label: function(context) {
-                                const val = context.raw;
-                                return ` ${context.dataset.label}: ${formatVndShort(-val)}`;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: { display: false },
-                        ticks: { 
-                            color: '#64748b', 
-                            font: { size: 10 },
-                            maxRotation: 0,
-                            minRotation: 0,
-                            autoSkip: false,
-                            callback: function(val) {
-                                const label = this.getLabelForValue(val);
-                                if (isDailyView) {
-                                    const allowedDays = [1, 5, 10, 15, 20, 25, 30];
-                                    return allowedDays.includes(Number(label)) ? label : '';
-                                }
-                                return label;
-                            }
-                        }
-                    },
-                    y: { 
-                        display: true,
-                        max: chartYMax,
-                        grid: {
-                            display: true,
-                            color: 'rgba(255, 255, 255, 0.05)',
-                            drawBorder: false
-                        },
-                        ticks: { display: false }
-                    }
-                }
-            }
-        });
     };
 
     const renderView = () => {
         const grid = document.getElementById("expense-calendar-grid");
+        if (!grid) return;
         grid.innerHTML = "";
         const year = currentNavDate.getFullYear(), month = currentNavDate.getMonth();
         
@@ -10179,7 +10226,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
             document.getElementById("expense-curr-label").innerText = `This Month (${currMonthName})`;
             document.getElementById("expense-curr-val").innerText = formatFullVnd(currentMonthTotal);
 
-            drawComparisonChart(chartLabels, currMonthPoints, prevMonthPoints, `Last Month (${prevMonthName})`, true);
+            setTimeout(() => drawExpenseCanvasChart(chartLabels, currMonthPoints, prevMonthPoints, true), 50);
 
         } else if ("monthly" === currentView) {
             document.getElementById("expense-nav-title").innerText = `${year}`;
@@ -10251,7 +10298,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
             document.getElementById("expense-curr-label").innerText = `This Year (${year})`;
             document.getElementById("expense-curr-val").innerText = formatFullVnd(currentYearTotal);
 
-            drawComparisonChart(mNames, currYearPoints, prevYearPoints, `Last Year (${year - 1})`, false);
+            setTimeout(() => drawExpenseCanvasChart(mNames, currYearPoints, prevYearPoints, false), 50);
 
         } else if ("yearly" === currentView) {
             document.getElementById("expense-nav-title").innerText = `${year - 4} - ${year + 3}`;
@@ -10303,7 +10350,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
     };
 
     fetchExpenseData();
-  }
+}
     
     function renderActivePositionsStat(count,icons){const statEl=document.getElementById("stat-cycles");if(!statEl)return;const shownIcons=icons.slice(0,4),remaining=icons.length-shownIcons.length;let stackHTML='<div class="stat-icon-stack">';shownIcons.forEach(function(ic){ic.iconUrl?stackHTML+=`<div class="stat-stack-icon" style="background-image:url('${ic.iconUrl}');"></div>`:stackHTML+=`<div class="stat-stack-icon stat-stack-icon-text">${ic.symbol.slice(0,2)}</div>`}),remaining>0&&(stackHTML+=`<div class="stat-stack-icon stat-stack-icon-more">+${remaining}</div>`),stackHTML+="</div>",statEl.innerHTML=`\n        <div class="stat-cycles-row">\n            <span class="stat-cycles-num">${count}</span>\n            ${stackHTML}\n        </div>`}
     function toggleGroup(groupId,mainRowEl){const logRows=document.querySelectorAll(`.${groupId}`);if(0===logRows.length)return;mainRowEl.classList.contains("expanded")?(mainRowEl.classList.remove("expanded"),logRows.forEach(row=>row.classList.remove("visible"))):(mainRowEl.classList.add("expanded"),logRows.forEach(row=>row.classList.add("visible")))}
