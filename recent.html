@@ -9452,7 +9452,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
           const { titleColor, valueColor } = getCellTextColors(defaultBg, hasData, monthlyTotal);
 
           const cell = document.createElement("div");
-          cell.style.cssText = `aspect-ratio: 1.05; background: ${defaultBg}; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s; padding: 6px;`;
+          cell.style.cssText = `padding:7px 8px; background: ${defaultBg}; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s;`;
           
           cell.onmouseover = () => cell.style.background = "#222733";
           cell.onmouseout = () => cell.style.background = defaultBg;
@@ -9477,7 +9477,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
             const { titleColor: qTitleColor, valueColor: qValueColor } = getCellTextColors(qBg, qHasData, qSum);
 
             const qCell = document.createElement("div");
-            qCell.style.cssText = `aspect-ratio: 1.05; background: ${qBg}; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px;`;
+            qCell.style.cssText = `padding:7.5px 8px; background: ${qBg}; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center;`;
             
             qCell.innerHTML = `
               <span style="font-size: 14px; color: ${qTitleColor}; font-weight: 700;">∑Q${qNum}</span>
