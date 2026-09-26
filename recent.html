@@ -225,7 +225,9 @@ background:
 .det-col-hdr{display:grid;grid-template-columns:5.4fr 1.6fr 1.6fr 1.6fr;padding:0.8vw 0.5vw;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:0.5vw;font-size:12px;font-weight:600;color:rgba(255,255,255,0.35)}
 .det-col-hdr .ch{text-align:right}
 .det-col-hdr .ch:first-child{text-align:left}
-.expand-txt{display:block;text-align:right;font-family:Lexend;font-weight:400;color:rgba(255,255,255,0.75);border-radius:4vw;cursor:pointer;background:rgba(255,255,255,0.08);border:0px solid rgba(255,255,255,0.25);padding:7px 10px}
+.expand-txt{display:block;text-align:right;font-family:Lexend;font-weight:400;color:rgba(255,255,255,0.75);border-radius:4vw;cursor:pointer;background:rgba(255,255,255,0.08);border:0px solid rgba(255,255,255,0.25);padding:<!--[if lte IE 8]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+<![endif]-->px 10px}
 .expand-txt:hover{color:#fff;background:rgba(255,255,255,0.1)}
 #cat-list{display:flex;flex-direction:column}
 .cat-row{display:grid;grid-template-columns:5.8fr 1.6fr 1.6fr;align-items:center;gap:1vw;padding:1.4vw 0.5vw;border-bottom:1px solid rgba(255,255,255,0.08);cursor:pointer;transition:background 0.15s}
@@ -1651,23 +1653,48 @@ to{transform:rotate(360deg)}
 }
 
 /* 2. Pop-and-Scale Animation for Icons */
-@keyframes subIconPop {
+@keyframes subIconBounce {
     0% {
         opacity: 0;
-        transform: scale(0.3) rotate(-15deg);
+        transform: translateY(-12px) scale(0.8);
     }
-    70% {
-        transform: scale(1.15) rotate(5deg);
+    60% {
+        transform: translateY(3px) scale(1.08);
     }
     100% {
         opacity: 1;
-        transform: scale(1) rotate(0deg);
+        transform: translateY(0) scale(1);
     }
 }
 
 .sub-icon-animate {
-    opacity: 0;
-    animation: subIconPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    opacity: 0;will-change: transform, opacity, filter;
+    animation: subIconBounce 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+/* 1. Dimmed Loading Effect for Recent List Area */
+#tx-list {
+    transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+
+/* 2. Option B: Soft Pulse Bounce Animation for Icons */
+@keyframes subIconBounce {
+    0% {
+        opacity: 0;
+        transform: translateY(-12px) scale(0.8);
+    }
+    60% {
+        transform: translateY(3px) scale(1.08);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.sub-icon-bounce {
+    opacity: 0;will-change: transform, opacity, filter;
+    animation: subIconBounce 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
 /* 3. Bounce Effect for Totals */
@@ -4782,83 +4809,143 @@ to{transform:rotate(360deg)}
 
     function parseAmt(raw){if(!raw)return NaN;var s=raw.trim(),neg=!1;if("("===s.charAt(0)&&")"===s.charAt(s.length-1)&&(neg=!0,s=s.slice(1,-1)),""===(s=s.replace(/[^\d,.\-]/g,""))||"-"===s)return NaN;"-"===s.charAt(0)&&(neg=!0,s=s.slice(1));var lastComma=s.lastIndexOf(","),lastDot=s.lastIndexOf(".");if(lastComma>-1&&lastDot>-1)s=lastComma>lastDot?s.replace(/\./g,"").replace(",","."):s.replace(/,/g,"");else if(lastComma>-1){var afterComma=s.length-lastComma-1,commaCount=(s.match(/,/g)||[]).length;s=1===commaCount&&afterComma<=2?s.replace(",","."):s.replace(/,/g,"")}else if(lastDot>-1){var afterDot=s.length-lastDot-1;1===(s.match(/\./g)||[]).length&&afterDot<=2||(s=s.replace(/\./g,""))}var v=parseFloat(s);return isNaN(v)?NaN:neg?-v:v}function fmtFull(v){return(v<0?"−":"")+"₫"+Math.round(Math.abs(v)).toLocaleString("en-US")}function fmtAxis(v){var a=Math.abs(v),sign=v<0?"-":"";return a>=1e9?sign+(a/1e9).toFixed(1)+"B":a>=1e6?sign+(a/1e6).toFixed(1)+"M":a>=1e3?sign+Math.round(a/1e3)+"K":sign+Math.round(a)}
     function loadExpense() {
-        fetch(CSV_EXPENSE+"&t="+Date.now(),{cache:"no-store"})
-        .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.text();})
-        .then(function(text){
-            var lines=text.split("\n"); var rows=[];
-            for(var i=0;i<lines.length;i++) rows.push(parseCsvRow(lines[i]));
-            function g(ri,col){var ci=col.toUpperCase().charCodeAt(0)-65;return rows[ri]?rows[ri][ci]||"":"";}
-            function n(ri,col){return parseNum(g(ri,col));}
-            var budgetMap={};
-            for(var bi=1;bi<=8;bi++){var bn=g(bi,"B"),bv=n(bi,"C");if(bn)budgetMap[bn.toLowerCase().trim()]=bv;}
-            var mains=[];
-            for(var mi=12;mi<=17;mi++){var nm=g(mi,"B");if(!nm)continue;mains.push({rowIdx:mi,name:nm,icon:g(mi,"F"),curr:n(mi,"C"),last:n(mi,"D"),groupE:g(mi,"E"),budget:0,subs:[]});}
-            var subs=[];
-            for(var si=18;si<rows.length;si++){var sn=g(si,"B");if(!sn)continue;var sc=n(si,"C");if(sc===0)continue;subs.push({rowIdx:si,name:sn,icon:g(si,"F"),curr:sc,last:n(si,"D"),parentE:g(si,"E")});}
-            for(var mc=0;mc<mains.length;mc++){var key=mains[mc].name.toLowerCase().trim();if(budgetMap[key]!==undefined){mains[mc].budget=budgetMap[key];continue;}for(var bk in budgetMap){if(key.indexOf(bk)>=0||bk.indexOf(key)>=0){mains[mc].budget=budgetMap[bk];break;}}}
-            for(var sc2=0;sc2<subs.length;sc2++){var pk=subs[sc2].parentE.toLowerCase().trim();var done=false;for(var pm=0;pm<mains.length;pm++){var mk=mains[pm].name.toLowerCase().trim(),mg=mains[pm].groupE.toLowerCase().trim();if(pk&&(pk===mk||pk===mg||mk.indexOf(pk)>=0||pk.indexOf(mk)>=0)){mains[pm].subs.push(subs[sc2]);done=true;break;}}if(!done){var best=mains[0];for(var cm=1;cm<mains.length;cm++){if(mains[cm].rowIdx<subs[sc2].rowIdx)best=mains[cm];}best.subs.push(subs[sc2]);}}
-            for(var rc=0;rc<mains.length;rc++){if(mains[rc].subs.length>0){var s3=0,l3=0;for(var s4=0;s4<mains[rc].subs.length;s4++){s3+=mains[rc].subs[s4].curr;l3+=mains[rc].subs[s4].last;}if(s3>0){mains[rc].curr=s3;mains[rc].last=l3;}}}
-            var ringsWrap=document.getElementById("rings-wrap");ringsWrap.innerHTML="";ringsWrap.style.marginTop = "5px";
-            var billsSpent=0,billsBudget=0,billsIcon="",billsGids=[];
-            for(var ri=0;ri<mains.length;ri++){var mn=mains[ri].name.toLowerCase();var isRental=mn.indexOf("rental")>=0||mn.indexOf("rent")>=0;var isBills=mn.indexOf("bill")>=0||mn.indexOf("insurance")>=0||mn.indexOf("health")>=0;if(isBills){billsSpent+=mains[ri].curr;billsBudget+=mains[ri].budget;billsGids.push("g"+ri);if(!billsIcon)billsIcon=mains[ri].icon;continue;}if(mains[ri].budget>0){ringsWrap.appendChild(buildRing(mains[ri].name,mains[ri].curr,mains[ri].budget,mains[ri].icon,isRental,["g"+ri]));}}
-            if(billsBudget>0||billsSpent>0){ringsWrap.appendChild(buildRing("Bills & Insurance",billsSpent,billsBudget,billsIcon,false,billsGids));}
-            var list=document.getElementById("cat-list");list.innerHTML="";
-            for(var r2=0;r2<mains.length;r2++){var gid="g"+r2;list.appendChild(buildCatRow(mains[r2],false,gid));for(var s5=0;s5<mains[r2].subs.length;s5++)list.appendChild(buildCatRow(mains[r2].subs[s5],true,gid));}
-            for(var dr=0;dr<mains.length;dr++){var dmn=mains[dr].name.toLowerCase();if(dmn.indexOf("food")>=0||dmn.indexOf("shop")>=0||dmn.indexOf("travel")>=0){var dgid="g"+dr;var dRow=document.querySelector(".main-row[data-id='"+dgid+"']");if(dRow){dRow.dataset.open="1";var dc=document.getElementById("chev-"+dgid);if(dc)dc.textContent="\u25be";document.querySelectorAll(".sub-row[data-group='"+dgid+"']").forEach(function(s){s.classList.add("visible");});dRow.classList.add("ring-highlighted");}}}
-            document.getElementById("det-msg").style.display="none";
-            var row = rows[11];
-                currentExpense = parseAmt(row[2]); // Column C
-                lastMonthExpense = parseAmt(row[3]); // Column D
-                averageExpense = parseAmt(row[4]); // Column E
-                if (!averageExpense) return;
-                var percent = currentExpense / averageExpense;
-                var remaining = averageExpense - currentExpense;
-                document.getElementById("budget-average").textContent = fmtFull(averageExpense);
-                document.getElementById("budget-spent").innerHTML = fmtFull(currentExpense) + " <span class='budget-percent'>" + (percent * 100).toFixed(0) + "%</span>";
-                document.getElementById("budget-remaining").textContent = fmtFull(remaining);
-                function buildAllocationBar(mains, currentExpense, lastMonthExpense, averageExpense) {
-                var gradients = [
-                    ["#f2545b", "#e63960"], // red-coral
-                    ["#e63960", "#d6247d"], // coral-pink
-                    ["#d6247d", "#b7299e"], // pink-magenta
-                    ["#b7299e", "#8b3fd6"], // magenta-purple
-                    ["#8b3fd6", "#6a5ce8"], // purple-indigo
-                    ["#6a5ce8", "#5b8def"]  // indigo-blue
-                ];
+      fetch(CSV_EXPENSE + "&t=" + Date.now(), { cache: "no-store" })
+      .then(function(r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.text(); })
+      .then(function(text) {
+          var lines = text.split("\n"); 
+          var rows = [];
+          for (var i = 0; i < lines.length; i++) rows.push(parseCsvRow(lines[i]));
 
-                for(var cats=[],total=0,i=0;i<mains.length;i++)mains[i].curr>0&&(cats.push(mains[i]),total+=mains[i].curr);
-                var barTrack = document.getElementById("budget-fill-track"); // NEW: outer track wrapper, full width
-                var barEl = document.getElementById("budget-fill-container"); // inner, now dynamically sized
-                var legendEl = document.getElementById("budget-fill-legend");
-                if (!barTrack || !barEl || !legendEl) return;
-                barEl.innerHTML = "";
-                legendEl.innerHTML = "";
-                if (total <= 0) return;
-                var isMobile = window.innerWidth < 1024;
-                var scaleMax = Math.max(averageExpense, lastMonthExpense, currentExpense, 1);
-                var usableWidth = 100; // reserve space on the right for marker label
-                var barWidthPct = Math.min((currentExpense / scaleMax) * usableWidth, usableWidth);
-                barEl.style.width = barWidthPct + "%";
-                var trackWidthPct = usableWidth;
-                document.getElementById("budget-fill-track").style.width = trackWidthPct + "%";
-                var markerPercent = Math.min(lastMonthExpense / scaleMax, 1);
-                var marker = document.getElementById("last-month-marker");
-                marker.style.left = (markerPercent * usableWidth) + "%";
-                var overAmount = lastMonthExpense - averageExpense;
-                var overEl = document.getElementById("budget-over-indicator");
-                if(overEl)if(overAmount>0){var budgetPct=Math.min(averageExpense/scaleMax*usableWidth,usableWidth),overWidthPct=Math.min(lastMonthExpense/scaleMax*usableWidth,usableWidth)-budgetPct;overEl.style.display="flex",overEl.style.left=budgetPct+"%",overEl.style.width=overWidthPct+"%",overEl.title="Last month exceeded budget by "+fmtAxis(overAmount)}else overEl.style.display="none";
-                for(var c=0;c<cats.length;c++){var g=gradients[c%gradients.length],pct=cats[c].curr/total*100,seg=document.createElement("div");if(seg.className="budget-fill-seg",seg.style.flexGrow=pct,seg.style.background="linear-gradient(90deg, "+g[0]+" 0%, "+g[1]+" 100%)",pct>=1){var label=document.createElement("span");label.textContent=pct.toFixed(0)+"%",pct<8&&(label.style.fontSize="10px"),seg.appendChild(label)}barEl.appendChild(seg);var item=document.createElement("span");item.className="legend-item";var rawName=cats[c].name,shortName=rawName;isMobile?rawName.includes("Family")?shortName="Family":rawName.includes("Bills")?shortName="Bills":rawName.includes("Rental")?shortName="Rental":rawName.includes("Food")?shortName="Groceries":rawName.includes("Shop")&&(shortName="Shop/Travel"):shortName=rawName.length>12?rawName.slice(0,10)+"…":rawName,item.innerHTML='<span class="legend-dot" style="background:'+g[1]+'"></span>'+shortName,legendEl.appendChild(item)}
-                var markerPercent = Math.min(lastMonthExpense / scaleMax, 1);
-                var marker = document.getElementById("last-month-marker");
-                marker.style.left = (markerPercent * 100) + "%";
-                marker.innerHTML = '<div class="marker-label">Last month</div>' +
-                    '<div class="marker-value"style="font-family:DM Sans">' + fmtFull(lastMonthExpense) + '</div>' +
-                    '<i class="bi bi-caret-up Custom-triangle"></i>';
-            }
+          function g(ri, col) { var ci = col.toUpperCase().charCodeAt(0) - 65; return rows[ri] ? rows[ri][ci] || "" : ""; }
+          function n(ri, col) { return parseNum(g(ri, col)); }
 
-            buildAllocationBar(mains, currentExpense, lastMonthExpense, averageExpense);
-            buildColHdr(); applyLayout();
-        }).catch(function(err){document.getElementById("det-msg").textContent="Error: "+err.message;});
+          var budgetMap = {};
+          for (var bi = 1; bi <= 8; bi++) { 
+              var bn = g(bi, "B"), bv = n(bi, "C"); 
+              if (bn) budgetMap[bn.toLowerCase().trim()] = bv; 
+          }
+
+          var mains = [];
+          for (var mi = 12; mi <= 17; mi++) { 
+              var nm = g(mi, "B"); 
+              if (!nm) continue; 
+              mains.push({ rowIdx: mi, name: nm, icon: g(mi, "F"), curr: n(mi, "C"), last: n(mi, "D"), groupE: g(mi, "E"), budget: 0, subs: [] }); 
+          }
+
+          var subs = [];
+          for (var si = 18; si < rows.length; si++) { 
+              var sn = g(si, "B"); 
+              if (!sn) continue; 
+              var sc = n(si, "C"); 
+              if (sc === 0) continue; 
+              subs.push({ rowIdx: si, name: sn, icon: g(si, "F"), curr: sc, last: n(si, "D"), parentE: g(si, "E") }); 
+          }
+
+          for (var mc = 0; mc < mains.length; mc++) { 
+              var key = mains[mc].name.toLowerCase().trim(); 
+              if (budgetMap[key] !== undefined) { mains[mc].budget = budgetMap[key]; continue; } 
+              for (var bk in budgetMap) { 
+                  if (key.indexOf(bk) >= 0 || bk.indexOf(key) >= 0) { mains[mc].budget = budgetMap[bk]; break; } 
+              } 
+          }
+
+          for (var sc2 = 0; sc2 < subs.length; sc2++) { 
+              var pk = subs[sc2].parentE.toLowerCase().trim(); 
+              var done = false; 
+              for (var pm = 0; pm < mains.length; pm++) { 
+                  var mk = mains[pm].name.toLowerCase().trim(), mg = mains[pm].groupE.toLowerCase().trim(); 
+                  if (pk && (pk === mk || pk === mg || mk.indexOf(pk) >= 0 || pk.indexOf(mk) >= 0)) { mains[pm].subs.push(subs[sc2]); done = true; break; } 
+              } 
+              if (!done) { 
+                  var best = mains[0]; 
+                  for (var cm = 1; cm < mains.length; cm++) { 
+                      if (mains[cm].rowIdx < subs[sc2].rowIdx) best = mains[cm]; 
+                  } 
+                  best.subs.push(subs[sc2]); 
+              } 
+          }
+
+          for (var rc = 0; rc < mains.length; rc++) { 
+              if (mains[rc].subs.length > 0) { 
+                  var s3 = 0, l3 = 0; 
+                  for (var s4 = 0; s4 < mains[rc].subs.length; s4++) { s3 += mains[rc].subs[s4].curr; l3 += mains[rc].subs[s4].last; } 
+                  if (s3 > 0) { mains[rc].curr = s3; mains[rc].last = l3; } 
+              } 
+          }
+
+          var ringsWrap = document.getElementById("rings-wrap"); 
+          ringsWrap.innerHTML = ""; 
+          ringsWrap.style.marginTop = "5px";
+
+          var billsSpent = 0, billsBudget = 0, billsIcon = "", billsGids = [];
+          for (var ri = 0; ri < mains.length; ri++) { 
+              var mn = mains[ri].name.toLowerCase(); 
+              var isRental = mn.indexOf("rental") >= 0 || mn.indexOf("rent") >= 0; 
+              var isBills = mn.indexOf("bill") >= 0 || mn.indexOf("insurance") >= 0 || mn.indexOf("health") >= 0; 
+              if (isBills) { 
+                  billsSpent += mains[ri].curr; 
+                  billsBudget += mains[ri].budget; 
+                  billsGids.push("g" + ri); 
+                  if (!billsIcon) billsIcon = mains[ri].icon; 
+                  continue; 
+              } 
+              if (mains[ri].budget > 0) { 
+                  ringsWrap.appendChild(buildRing(mains[ri].name, mains[ri].curr, mains[ri].budget, mains[ri].icon, isRental, ["g" + ri])); 
+              } 
+          }
+
+          if (billsBudget > 0 || billsSpent > 0) { 
+              ringsWrap.appendChild(buildRing("Bills & Insurance", billsSpent, billsBudget, billsIcon, false, billsGids)); 
+          }
+
+          var list = document.getElementById("cat-list"); 
+          list.innerHTML = "";
+          for (var r2 = 0; r2 < mains.length; r2++) { 
+              var gid = "g" + r2; 
+              list.appendChild(buildCatRow(mains[r2], false, gid)); 
+              for (var s5 = 0; s5 < mains[r2].subs.length; s5++) list.appendChild(buildCatRow(mains[r2].subs[s5], true, gid)); 
+          }
+
+          for (var dr = 0; dr < mains.length; dr++) { 
+              var dmn = mains[dr].name.toLowerCase(); 
+              // Added "family" to the condition below
+              if (dmn.indexOf("food") >= 0 || dmn.indexOf("shop") >= 0 || dmn.indexOf("travel") >= 0 || dmn.indexOf("family") >= 0) { 
+                  var dgid = "g" + dr; 
+                  var dRow = document.querySelector(".main-row[data-id='" + dgid + "']"); 
+                  if (dRow) { 
+                      dRow.dataset.open = "1"; 
+                      var dc = document.getElementById("chev-" + dgid); 
+                      if (dc) dc.textContent = "\u25be"; 
+                      document.querySelectorAll(".sub-row[data-group='" + dgid + "']").forEach(function(s) { s.classList.add("visible"); }); 
+                      dRow.classList.add("ring-highlighted"); 
+                  } 
+              } 
+          }
+
+          document.getElementById("det-msg").style.display = "none";
+          
+          var row = rows[11];
+          currentExpense = parseAmt(row[2]);  // Column C
+          lastMonthExpense = parseAmt(row[3]); // Column D
+          averageExpense = parseAmt(row[4]);   // Column E
+          if (!averageExpense) return;
+
+          var percent = currentExpense / averageExpense;
+          var remaining = averageExpense - currentExpense;
+
+          document.getElementById("budget-average").textContent = fmtFull(averageExpense);
+          document.getElementById("budget-spent").innerHTML = fmtFull(currentExpense) + " <span class='budget-percent'>" + (percent * 100).toFixed(0) + "%</span>";
+          document.getElementById("budget-remaining").textContent = fmtFull(remaining);
+
+          function buildAllocationBar(mains,currentExpense,lastMonthExpense,averageExpense){for(var gradients=[["#f2545b","#e63960"],["#e63960","#d6247d"],["#d6247d","#b7299e"],["#b7299e","#8b3fd6"],["#8b3fd6","#6a5ce8"],["#6a5ce8","#5b8def"]],cats=[],total=0,i=0;i<mains.length;i++)mains[i].curr>0&&(cats.push(mains[i]),total+=mains[i].curr);var barTrack=document.getElementById("budget-fill-track"),barEl=document.getElementById("budget-fill-container"),legendEl=document.getElementById("budget-fill-legend");if(barTrack&&barEl&&legendEl&&(barEl.innerHTML="",legendEl.innerHTML="",!(total<=0))){var isMobile=window.innerWidth<1024,scaleMax=Math.max(averageExpense,lastMonthExpense,currentExpense,1),barWidthPct=Math.min(currentExpense/scaleMax*100,100);barEl.style.width=barWidthPct+"%";document.getElementById("budget-fill-track").style.width="100%";var markerPercent=Math.min(lastMonthExpense/scaleMax,1),marker=document.getElementById("last-month-marker");marker&&(marker.style.left=100*markerPercent+"%",marker.innerHTML='<div class="marker-label">Last month</div><div class="marker-value" style="font-family:DM Sans">'+fmtFull(lastMonthExpense)+'</div><i class="bi bi-caret-up Custom-triangle"></i>');var overAmount=currentExpense-averageExpense,overEl=document.getElementById("budget-over-indicator");if(overEl)if(overAmount>0){var budgetPct=averageExpense/scaleMax*100,overWidthPct=(currentExpense-averageExpense)/scaleMax*100;overEl.style.display="flex",overEl.style.left=budgetPct+"%",overEl.style.width=overWidthPct+"%",overEl.title="Exceeded budget by "+fmtAxis(overAmount)}else overEl.style.display="none";for(var c=0;c<cats.length;c++){var g=gradients[c%gradients.length],pct=cats[c].curr/total*100,seg=document.createElement("div");if(seg.className="budget-fill-seg",seg.style.flexGrow=pct,seg.style.background="linear-gradient(90deg, "+g[0]+" 0%, "+g[1]+" 100%)",pct>=1){var label=document.createElement("span");label.textContent=pct.toFixed(0)+"%",pct<8&&(label.style.fontSize="10px"),seg.appendChild(label)}barEl.appendChild(seg);var item=document.createElement("span");item.className="legend-item";var rawName=cats[c].name,shortName=rawName;isMobile?rawName.includes("Family")?shortName="Family":rawName.includes("Bills")?shortName="Bills":rawName.includes("Rental")?shortName="Rental":rawName.includes("Food")?shortName="Groceries":rawName.includes("Shop")&&(shortName="Shop/Travel"):shortName=rawName.length>12?rawName.slice(0,10)+"…":rawName,item.innerHTML='<span class="legend-dot" style="background:'+g[1]+'"></span>'+shortName,legendEl.appendChild(item)}}}
+
+          buildAllocationBar(mains, currentExpense, lastMonthExpense, averageExpense);
+          buildColHdr(); 
+          applyLayout();
+      })
+      .catch(function(err) {
+          document.getElementById("det-msg").textContent = "Error: " + err.message;
+      });
     }
 
     /* ══ RECENT TAB ══ */
@@ -4871,13 +4958,205 @@ to{transform:rotate(360deg)}
     function startOfDay(d){return new Date(d.getFullYear(),d.getMonth(),d.getDate());}
     function relativeGroupLabel(raw){if(!raw)return"Unknown";var d=new Date(raw);if(isNaN(d.getTime()))return"Unknown";var today=startOfDay(new Date),day=startOfDay(d),diffDays=Math.round((today-day)/864e5);if(0===diffDays)return"Today";if(1===diffDays)return"Yesterday";if(diffDays>1&&diffDays<7)return"This Week";if(day.getFullYear()===today.getFullYear()&&day.getMonth()===today.getMonth())return"This Month";var lastMonth=new Date(today.getFullYear(),today.getMonth()-1,1);return day.getFullYear()===lastMonth.getFullYear()&&day.getMonth()===lastMonth.getMonth()?"Last Month":d.toLocaleDateString("en-US",{month:"long",year:"numeric"})}
     function buildGroupHeader(label){var hdr=document.createElement("div");return hdr.className="tx-group-hdr",hdr.textContent=label,hdr}
-    function buildTxRow(item){var container=document.createElement("div");container.className="sub-swipe-container",Object.assign(container.style,{position:"relative",overflow:"hidden"}),container.setAttribute("data-date",item.date),container.setAttribute("data-detail",item.detail||item.rawDetail||""),container.setAttribute("data-amount",item.amount),container.setAttribute("data-title",item.title||"");var editBtn=document.createElement("div");editBtn.className="sub-edit-action",editBtn.setAttribute("data-id",item.id),Object.assign(editBtn.style,{position:"absolute",right:"60px",top:"0",width:"60px",height:"100%",backgroundColor:"#14b8a6",display:"flex",alignItems:"center",justifyContent:"center",color:"#ffffff",cursor:"pointer",zIndex:"1"}),editBtn.onclick=function(){"function"==typeof editTx&&editTx(this)},editBtn.innerHTML='\n            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">\n            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>\n            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"></path>\n            </svg>\n        ',container.appendChild(editBtn);var deleteBtn=document.createElement("div");deleteBtn.className="sub-delete-action",deleteBtn.setAttribute("data-id",item.id),Object.assign(deleteBtn.style,{position:"absolute",right:"0",top:"0",width:"60px",height:"100%",backgroundColor:"#ef4444",display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",zIndex:"1"}),deleteBtn.onclick=function(){deleteTx(this)},deleteBtn.innerHTML='\n            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">\n            <polyline points="3 6 5 6 21 6"></polyline>\n            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>\n            <line x1="10" y1="11" x2="10" y2="17"></line>\n            <line x1="14" y1="11" x2="14" y2="17"></line>\n            </svg>\n        ',container.appendChild(deleteBtn);var iconEl,t,row=document.createElement("div");row.className="row subs-row",row.setAttribute("data-id",item.id),Object.assign(row.style,{position:"relative",zIndex:"2",transition:"transform 0.2s ease"}),item.icon&&0===item.icon.indexOf("http")?((iconEl=document.createElement("img")).className="ico",iconEl.src=item.icon,iconEl.onerror=(t=item.title,function(){var fb=document.createElement("div");fb.className="ico-fb",fb.textContent=t?t.charAt(0):"?",this.parentNode.replaceChild(fb,this)})):((iconEl=document.createElement("div")).className="ico-fb",iconEl.textContent=item.icon||(item.title?item.title.charAt(0):"?"));var mid=document.createElement("div");mid.className="mid";var ttl=document.createElement("div");ttl.className="ttl",ttl.textContent=item.title;var badgeText="",rawColE=item.title?item.title.trim().toUpperCase():"",rawColH=item.badgeSource?item.badgeSource.trim():"",rawColG=item.rawDetail?item.rawDetail.trim().toUpperCase():"";if(rawColG.includes("GIAO DICH THE")&&rawColG.includes("GRAB")?badgeText='<i class="bi bi-credit-card-2-back"></i> ***4768':rawColG.includes("GIAO DICH THE")&&!rawColG.includes("GRAB")?badgeText='<i class="bi bi-apple"></i> Pay':rawColH?rawColG.includes("MOMO")?badgeText='<img src="https://developers.momo.vn/v3/assets/images/transparent-background-logo-138ebf0ffca865ec0f1a7d9c1e4a9f3c.png" style="width: 14px; height: 14px; vertical-align: middle; margin-top:-1px;filter: brightness(0) saturate(100%) invert(57%) sepia(38%) saturate(545%) hue-rotate(129deg) brightness(91%) contrast(92%);"> Momo':rawColG.includes("SHOPEEPAY")?badgeText='<img src="https://github.com/tinsntp/investment/blob/main/icon/shopeepay-v2.png?raw=true" style="width: 14px; height: 14px; vertical-align: middle; margin-top:-1px;filter: brightness(0) saturate(100%) invert(57%) sepia(38%) saturate(545%) hue-rotate(129deg) brightness(91%) contrast(92%);"> Pay':rawColE.includes("WITHDRAW")?badgeText='<i class="bi bi-credit-card-2-back"></i> ***000':(rawColH.includes("*000")||rawColH.includes("*003")||rawColH.includes("*309"))&&(badgeText='<i class="bi bi-qr-code-scan"></i> Transfer'):badgeText='<i class="bi bi-cash-stack"></i> Cash',badgeText){var badgeEl=document.createElement("span");badgeEl.className="recent-badge",badgeEl.innerHTML=badgeText,ttl.appendChild(badgeEl)}var dtl=document.createElement("div");dtl.className="dtl",dtl.textContent=item.detail,mid.appendChild(ttl),mid.appendChild(dtl);var rgt=document.createElement("div");rgt.className="rgt";var amt=document.createElement("div");amt.className="amt",amt.textContent=fmtMoney(item.amount);var dte=document.createElement("div");return dte.className="dte",dte.textContent=fmtDate(item.date),rgt.appendChild(amt),rgt.appendChild(dte),row.appendChild(iconEl),row.appendChild(mid),row.appendChild(rgt),container.appendChild(row),container}
-
+    
     var allParsedItems=[],loadedCount=0,PAGE_SIZE=20,lastRenderedGroup=null;window.allParsedItems=[],window.loadedCount=0,window.PAGE_SIZE=20,window.lastRenderedGroup=null,window.allParsedItems=[],window.loadedCount=0,window.PAGE_SIZE=20,window.lastRenderedGroup=null;
-    function loadRecent(){const addCashBtn=document.getElementById("add-cash");addCashBtn&&(addCashBtn.classList.add("loading"),addCashBtn.innerHTML='<span class="btn-spinner"></span>'),fetch(CSV_RECENT+"&t="+Date.now(),{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.text()}).then(function(text){var lines=text.trim().split("\n").filter(function(l){return l.trim()}),start=0,first=parseCsvRow(lines[0]);isNaN(parseVal(first[3]))&&(start=1),window.allParsedItems=[],window.loadedCount=0,window.lastRenderedGroup=null;for(var i=start;i<lines.length;i++){var cols=parseCsvRow(lines[i]);cols[2]&&window.allParsedItems.push({date:cols[2]||"",icon:cols[8]||"",title:cols[4]||"",rawDetail:cols[6]||"",detail:cleanDetail(cols[6]||""),amount:"-"+parseVal(cols[5]),badgeSource:cols[7]||""})}var list=document.getElementById("tx-list");list&&(list.innerHTML=""),renderNextChunk(),addCashBtn&&(addCashBtn.classList.remove("loading"),addCashBtn.classList.add("success-confirm")),setTimeout(function(){addCashBtn&&(addCashBtn.classList.remove("success-confirm"),addCashBtn.innerHTML="+")},500),applyLayout(),setupInfiniteScrollObserver()}).catch(function(err){document.getElementById("rec-msg").textContent="Error: "+err.message,addCashBtn&&(addCashBtn.classList.remove("loading","success-confirm"),addCashBtn.innerHTML="+")})}
+    function loadRecent() {
+    const addCashBtn = document.getElementById("add-cash");
+    const list = document.getElementById("tx-list");
 
-    function renderNextChunk(){var list=document.getElementById("tx-list");if(list&&!(window.loadedCount>=window.allParsedItems.length)){var nextBatch=window.allParsedItems.slice(window.loadedCount,window.loadedCount+window.PAGE_SIZE),fragment=document.createDocumentFragment();nextBatch.forEach(function(item){var group=relativeGroupLabel(item.date);group!==window.lastRenderedGroup&&(fragment.appendChild(buildGroupHeader(group)),window.lastRenderedGroup=group);var rowNode=buildTxRow(item);fragment.appendChild(rowNode)});var oldSentinel=document.getElementById("tx-list-sentinel");if(oldSentinel&&oldSentinel.remove(),list.appendChild(fragment),window.loadedCount+=nextBatch.length,window.loadedCount<window.allParsedItems.length){var sentinel=document.createElement("div");sentinel.id="tx-list-sentinel",sentinel.style.height="20px",sentinel.style.width="100%",list.appendChild(sentinel),window.txObserver&&window.txObserver.observe(sentinel)}document.querySelectorAll("#tx-list .sub-swipe-container").forEach(function(container){var row=container.querySelector(".row");row&&!container.dataset.swipeAttached&&(attachSwipeEvents(row,container),container.dataset.swipeAttached="true")}),"function"==typeof applyLayout&&applyLayout()}}
-    function setupInfiniteScrollObserver(){window.txObserver&&window.txObserver.disconnect(),window.txObserver=new IntersectionObserver(function(entries){entries[0].isIntersecting&&renderNextChunk()},{root:null,rootMargin:"200px",threshold:.1});var sentinel=document.getElementById("tx-list-sentinel");sentinel&&window.txObserver.observe(sentinel)}
+    addCashBtn && (addCashBtn.classList.add("loading"), addCashBtn.innerHTML = '<span class="btn-spinner"></span>');
+
+    fetch(CSV_RECENT + "&t=" + Date.now(), { cache: "no-store" })
+    .then(function(r) {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.text();
+    })
+    .then(function(text) {
+        var lines = text.trim().split("\n").filter(function(l) { return l.trim(); }),
+            start = 0,
+            first = parseCsvRow(lines[0]);
+
+        isNaN(parseVal(first[3])) && (start = 1);
+        window.allParsedItems = [];
+        window.loadedCount = 0;
+        window.lastRenderedGroup = null;
+
+        for (var i = start; i < lines.length; i++) {
+            var cols = parseCsvRow(lines[i]);
+            cols[2] && window.allParsedItems.push({
+                date: cols[2] || "",
+                icon: cols[8] || "",
+                title: cols[4] || "",
+                rawDetail: cols[6] || "",
+                detail: cleanDetail(cols[6] || ""),
+                amount: "-" + parseVal(cols[5]),
+                badgeSource: cols[7] || ""
+            });
+        }
+
+        // 2. Remove dimming and clear list before rendering
+        if (list) {
+            list.classList.remove("tx-list-dimmed");
+            list.innerHTML = "";
+        }
+
+        renderNextChunk();
+        addCashBtn && (addCashBtn.classList.remove("loading"), addCashBtn.classList.add("success-confirm"));
+        
+        setTimeout(function() {
+            addCashBtn && (addCashBtn.classList.remove("success-confirm"), addCashBtn.innerHTML = "+");
+        }, 500);
+
+        applyLayout();
+        setupInfiniteScrollObserver();
+    })
+    .catch(function(err) {
+        if (list) list.classList.remove("tx-list-dimmed");
+        document.getElementById("rec-msg").textContent = "Error: " + err.message;
+        addCashBtn && (addCashBtn.classList.remove("loading", "success-confirm"), addCashBtn.innerHTML = "+");
+    });
+}
+
+function renderNextChunk() {
+  var list = document.getElementById("tx-list");
+  if (list && !(window.loadedCount >= window.allParsedItems.length)) {
+    var nextBatch = window.allParsedItems.slice(window.loadedCount, window.loadedCount + window.PAGE_SIZE),
+      fragment = document.createDocumentFragment();
+      
+    nextBatch.forEach(function(item, idx) {
+      var group = relativeGroupLabel(item.date);
+      group !== window.lastRenderedGroup && (fragment.appendChild(buildGroupHeader(group)), window.lastRenderedGroup = group);
+      
+      // Pass the batch index for staggered animation timing
+      var rowNode = buildTxRow(item, idx);
+      fragment.appendChild(rowNode);
+    });
+
+    var oldSentinel = document.getElementById("tx-list-sentinel");
+    if (oldSentinel && oldSentinel.remove(), list.appendChild(fragment), window.loadedCount += nextBatch.length, window.loadedCount < window.allParsedItems.length) {
+      var sentinel = document.createElement("div");
+      sentinel.id = "tx-list-sentinel", sentinel.style.height = "20px", sentinel.style.width = "100%", list.appendChild(sentinel), window.txObserver && window.txObserver.observe(sentinel);
+    }
+    document.querySelectorAll("#tx-list .sub-swipe-container").forEach(function(container) {
+      var row = container.querySelector(".row");
+      row && !container.dataset.swipeAttached && (attachSwipeEvents(row, container), container.dataset.swipeAttached = "true");
+    }), "function" == typeof applyLayout && applyLayout();
+  }
+}
+
+function buildTxRow(item, batchIdx) {
+    var container = document.createElement("div");
+    container.className = "sub-swipe-container";
+    Object.assign(container.style, { position: "relative", overflow: "hidden" });
+    container.setAttribute("data-date", item.date);
+    container.setAttribute("data-detail", item.detail || item.rawDetail || "");
+    container.setAttribute("data-amount", item.amount);
+    container.setAttribute("data-title", item.title || "");
+
+    var editBtn = document.createElement("div");
+    editBtn.className = "sub-edit-action";
+    editBtn.setAttribute("data-id", item.id);
+    Object.assign(editBtn.style, { position: "absolute", right: "60px", top: "0", width: "60px", height: "100%", backgroundColor: "#14b8a6", display: "flex", alignItems: "center", justifyContent: "center", color: "#ffffff", cursor: "pointer", zIndex: "1" });
+    editBtn.onclick = function() { "function" == typeof editTx && editTx(this); };
+    editBtn.innerHTML = '\n            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">\n            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>\n            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"></path>\n            </svg>\n        ';
+    container.appendChild(editBtn);
+
+    var deleteBtn = document.createElement("div");
+    deleteBtn.className = "sub-delete-action";
+    deleteBtn.setAttribute("data-id", item.id);
+    Object.assign(deleteBtn.style, { position: "absolute", right: "0", top: "0", width: "60px", height: "100%", backgroundColor: "#ef4444", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: "1" });
+    deleteBtn.onclick = function() { deleteTx(this); };
+    deleteBtn.innerHTML = '\n            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">\n            <polyline points="3 6 5 6 21 6"></polyline>\n            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>\n            <line x1="10" y1="11" x2="10" y2="17"></line>\n            <line x1="14" y1="11" x2="14" y2="17"></line>\n            </svg>\n        ';
+    container.appendChild(deleteBtn);
+
+    var iconEl, t, row = document.createElement("div");
+    row.className = "row subs-row";
+    row.setAttribute("data-id", item.id);
+    Object.assign(row.style, { position: "relative", zIndex: "2", transition: "transform 0.2s ease" });
+
+    // Icon creation with Option B bounce animation class and staggered delay applied
+    var staggerDelay = (typeof batchIdx === "number" ? batchIdx * 0.04 : 0) + "s";
+
+    if (item.icon && 0 === item.icon.indexOf("http")) {
+        iconEl = document.createElement("img");
+        iconEl.className = "ico sub-icon-bounce";
+        iconEl.style.animationDelay = staggerDelay;
+        iconEl.src = item.icon;
+        iconEl.onerror = (t = item.title, function() {
+            var fb = document.createElement("div");
+            fb.className = "ico-fb sub-icon-bounce";
+            fb.style.animationDelay = staggerDelay;
+            fb.textContent = t ? t.charAt(0) : "?";
+            if (this.parentNode) this.parentNode.replaceChild(fb, this);
+        });
+    } else {
+        iconEl = document.createElement("div");
+        iconEl.className = "ico-fb sub-icon-bounce";
+        iconEl.style.animationDelay = staggerDelay;
+        iconEl.textContent = item.icon || (item.title ? item.title.charAt(0) : "?");
+    }
+
+    var mid = document.createElement("div");
+    mid.className = "mid";
+    var ttl = document.createElement("div");
+    ttl.className = "ttl";
+    ttl.textContent = item.title;
+
+    var badgeText = "",
+        rawColE = item.title ? item.title.trim().toUpperCase() : "",
+        rawColH = item.badgeSource ? item.badgeSource.trim() : "",
+        rawColG = item.rawDetail ? item.rawDetail.trim().toUpperCase() : "";
+
+    if (rawColG.includes("GIAO DICH THE") && rawColG.includes("GRAB")) {
+        badgeText = '<i class="bi bi-credit-card-2-back"></i> ***4768';
+    } else if (rawColG.includes("GIAO DICH THE") && !rawColG.includes("GRAB")) {
+        badgeText = '<i class="bi bi-apple"></i> Pay';
+    } else if (rawColH) {
+        if (rawColG.includes("MOMO")) {
+            badgeText = '<img src="https://developers.momo.vn/v3/assets/images/transparent-background-logo-138ebf0ffca865ec0f1a7d9c1e4a9f3c.png" style="width: 14px; height: 14px; vertical-align: middle; margin-top:-1px;filter: brightness(0) saturate(100%) invert(57%) sepia(38%) saturate(545%) hue-rotate(129deg) brightness(91%) contrast(92%);"> Momo';
+        } else if (rawColG.includes("SHOPEEPAY")) {
+            badgeText = '<img src="https://github.com/tinsntp/investment/blob/main/icon/shopeepay-v2.png?raw=true" style="width: 14px; height: 14px; vertical-align: middle; margin-top:-1px;filter: brightness(0) saturate(100%) invert(57%) sepia(38%) saturate(545%) hue-rotate(129deg) brightness(91%) contrast(92%);"> Pay';
+        } else if (rawColE.includes("WITHDRAW")) {
+            badgeText = '<i class="bi bi-credit-card-2-back"></i> ***000';
+        } else if (rawColH.includes("*000") || rawColH.includes("*003") || rawColH.includes("*309")) {
+            badgeText = '<i class="bi bi-qr-code-scan"></i> Transfer';
+        }
+    } else {
+        badgeText = '<i class="bi bi-cash-stack"></i> Cash';
+    }
+
+    if (badgeText) {
+        var badgeEl = document.createElement("span");
+        badgeEl.className = "recent-badge";
+        badgeEl.innerHTML = badgeText;
+        ttl.appendChild(badgeEl);
+    }
+
+    var dtl = document.createElement("div");
+    dtl.className = "dtl";
+    dtl.textContent = item.detail;
+    mid.appendChild(ttl);
+    mid.appendChild(dtl);
+
+    var rgt = document.createElement("div");
+    rgt.className = "rgt";
+    var amt = document.createElement("div");
+    amt.className = "amt";
+    amt.textContent = fmtMoney(item.amount);
+    var dte = document.createElement("div");
+    dte.className = "dte";
+    dte.textContent = fmtDate(item.date);
+
+    rgt.appendChild(amt);
+    rgt.appendChild(dte);
+    row.appendChild(iconEl);
+    row.appendChild(mid);
+    row.appendChild(rgt);
+    container.appendChild(row);
+
+    return container;
+}
+function setupInfiniteScrollObserver(){window.txObserver&&window.txObserver.disconnect(),window.txObserver=new IntersectionObserver(function(entries){entries[0].isIntersecting&&renderNextChunk()},{root:null,rootMargin:"200px",threshold:.1});var sentinel=document.getElementById("tx-list-sentinel");sentinel&&window.txObserver.observe(sentinel)}
     document.getElementById("tx-list").addEventListener("click",function(e){var target=e.target;if(!(target.closest(".sub-edit-action")||target.closest(".sub-delete-action")||target.closest(".edit-tx-btn")||target.closest(".edit-btn")||target.closest(".delete-btn")||target.closest(".swipe-delete-btn")||target.closest("[onclick*='deleteTx']")||target.closest("[onclick*='editTx']"))){var row=target.closest(".row");if(row){var container=row.closest(".sub-swipe-container");if(container&&container.classList.contains("swiped"))return container.classList.remove("swiped"),void(row.style.transform="translateX(0px)");var isExp=row.classList.contains("expanded");document.querySelectorAll(".row.expanded").forEach(function(el){el.classList.remove("expanded")}),isExp||row.classList.add("expanded"),"function"==typeof applyLayout&&applyLayout()}}});
     function updateDetailInSheets(date,oldDetail,newDetail){var payload={date,oldDetail,newDetail};fetch("https://script.google.com/macros/s/AKfycbz45guEvRxnEpsrP3G553lYI-UCp78JMrCfK7aS5RX3K-Jd0C9-yhNkqW9Du2O-dkAjeA/exec",{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)}).then(function(){alert("Đang yêu cầu cập nhật lên Sheets! CSV sẽ đồng bộ sau vài giây.")}).catch(function(err){console.error("Lỗi gửi update:",err)})}
     function applyLayout(){
@@ -9357,7 +9636,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
         }
         updateChartSummaryHeader(currMonthData, prevMonthData, true, year, month);
 
-        setTimeout(() => drawPnlChart(labels, currMonthData, prevMonthData, 1.2, true), 50);
+        setTimeout(() => drawPnlChart(labels, currMonthData, prevMonthData, 1.3, true), 50);
      } else if ("monthly" === currentView) {
         if (navTitle) navTitle.innerText = `${year}`;
         // 1. Updated to 4 columns to fit 3 months + 1 Quarterly Total per row
@@ -9721,7 +10000,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
   let activeHoverIndex = -1;
   let animFrameId = null;
 
-function drawPnlChart(labels, currentData, previousData, lineWidth = 1, isDaily = false) {
+  function drawPnlChart(labels, currentData, previousData, lineWidth = 1, isDaily = false) {
     const canvas = document.getElementById('pnlPerformanceChart');
     const tooltip = document.getElementById('pnl-chart-tooltip');
     if (!canvas) return;
@@ -9916,17 +10195,12 @@ function drawPnlChart(labels, currentData, previousData, lineWidth = 1, isDaily 
             ctx.fillStyle = `rgba(245, 158, 11, ${Math.max(0, 0.45 - pulseRadius / 18)})`;
             ctx.fill();
 
-            ctx.font = '700 13px "DM Sans", sans-serif';
+            ctx.font = '700 14px "DM Sans", sans-serif';
             const textWidth = ctx.measureText(peakText).width;
             const badgeWidth = textWidth + 14;
             const badgeHeight = 20;
             const badgeX = Math.min(Math.max(peak.x - badgeWidth / 2, padding.left), width - padding.right - badgeWidth);
             const badgeY = peak.y - 28;
-
-            ctx.fillStyle = '#0f172a';
-            ctx.beginPath();
-            ctx.roundRect(badgeX, badgeY, badgeWidth, badgeHeight, 6);
-            ctx.fill();
 
             ctx.fillStyle = '#f59e0b';
             ctx.textAlign = 'center';
