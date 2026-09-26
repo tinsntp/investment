@@ -5252,9 +5252,16 @@ function setupInfiniteScrollObserver(){window.txObserver&&window.txObserver.disc
           }
       });
 
-      // String normalizer for matching item detail against cached tx rows
+      // Fixed String Normalizer: Strips Unicode accents/diacritics safely on iOS WebKit
       function normalizeStr(str) {
-          return (str || "").toString().toLowerCase().replace(/[^a-z0-9\s]/gi, "").trim();
+          if (!str) return "";
+          return String(str)
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "") // Strips Unicode accent marks
+              .replace(/đ/g, "d").replace(/Đ/g, "d")
+              .toLowerCase()
+              .replace(/[^a-z0-9\s]/gi, "")
+              .trim();
       }
 
       // Lookup Icon matching exact or partial Transaction Detail in cachedTxData
@@ -5268,7 +5275,7 @@ function setupInfiniteScrollObserver(){window.txObserver&&window.txObserver.disc
               for (var i = 0; i < cachedTxData.length; i++) {
                   var tx = cachedTxData[i];
                   var txDetailNorm = normalizeStr(tx.detail || tx.cleanDetail);
-                  if (txDetailNorm && tx.iconUrl && tx.iconUrl.indexOf("http") === 0) {
+                  if (txDetailNorm && tx.iconUrl && String(tx.iconUrl).trim().indexOf("http") === 0) {
                       if (txDetailNorm === inputNorm) {
                           return tx.iconUrl;
                       }
@@ -5279,7 +5286,7 @@ function setupInfiniteScrollObserver(){window.txObserver&&window.txObserver.disc
               for (var j = 0; j < cachedTxData.length; j++) {
                   var tx2 = cachedTxData[j];
                   var txDetailNorm2 = normalizeStr(tx2.detail || tx2.cleanDetail);
-                  if (txDetailNorm2 && tx2.iconUrl && tx2.iconUrl.indexOf("http") === 0) {
+                  if (txDetailNorm2 && tx2.iconUrl && String(tx2.iconUrl).trim().indexOf("http") === 0) {
                       if (txDetailNorm2.indexOf(inputNorm) !== -1 || inputNorm.indexOf(txDetailNorm2) !== -1) {
                           return tx2.iconUrl;
                       }
@@ -5290,7 +5297,7 @@ function setupInfiniteScrollObserver(){window.txObserver&&window.txObserver.disc
           return null;
       }
 
-      // Render detected icons with increased size (32px x 32px)
+      // Render detected icons with increased size (36px x 36px)
       function updateLiveIcons() {
           if (!cashIconsContainer) return;
           cashIconsContainer.innerHTML = "";
@@ -5414,7 +5421,7 @@ function setupInfiniteScrollObserver(){window.txObserver&&window.txObserver.disc
               }
           }
       });
-    }
+}
 
     window.triggerPaperFirework=function(containerElement){let targetParent=containerElement&&containerElement.nodeType?containerElement:document.body,startX=window.innerWidth/2,startY=window.innerHeight/2;const overlay=document.createElement("div");overlay.style.position="fixed",overlay.style.top="0",overlay.style.left="0",overlay.style.width="100vw",overlay.style.height="100vh",overlay.style.pointerEvents="none",overlay.style.zIndex="2147483647",targetParent.appendChild(overlay);const colors=["#75b798","#0ea5e9","#f59e0b","#f43f5e","#a855f7","#ec4899","#10b981"];for(let i=0;i<60;i++){const piece=document.createElement("div");piece.style.position="absolute",piece.style.left=startX+"px",piece.style.top=startY+"px",piece.style.width=4+4*Math.random()+"px",piece.style.height=10+8*Math.random()+"px",piece.style.backgroundColor=colors[Math.floor(Math.random()*colors.length)],piece.style.borderRadius="0px",piece.style.transition="transform 1s cubic-bezier(0.15, 0.85, 0.35, 1), opacity 1s ease-in",overlay.appendChild(piece);const angle=Math.random()*Math.PI*2,velocity=90+180*Math.random(),targetX=Math.cos(angle)*velocity,targetY=Math.sin(angle)*velocity-60;requestAnimationFrame(()=>{piece.style.transform=`\n                translate(${targetX}px, ${targetY}px) \n                rotateX(${360*Math.random()}deg) \n                rotateY(${360*Math.random()}deg) \n                rotateZ(${720*Math.random()}deg) \n                scale(${.6+.4*Math.random()})\n            `,piece.style.opacity="0"})}setTimeout(()=>{overlay.remove()},1200)};
 
@@ -9790,7 +9797,7 @@ function renderNavDonut(categoryValueTotals, categoryPnlTotals, categoryIconMap,
         
         const grid = document.getElementById("expense-calendar-grid");
         if (grid) {
-            grid.innerHTML = "<div id='loading-msg' style='grid-column: span 7; text-align: center; color: #94a3b8; padding: 20px;'>Loading data...</div>";
+            grid.innerHTML = "<div id='loading-msg' style='grid-column: span 7; text-align: center; color: #94a3b8; padding: 20px;'></div>";
         }
 
         const targetUrl = typeof DETAIL_SHEET_URL !== 'undefined' ? DETAIL_SHEET_URL : `${GOOGLE_SHEET_CSV_URL}1492221762`;
