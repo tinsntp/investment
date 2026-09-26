@@ -655,7 +655,7 @@ background:
 @keyframes subSpin{from{transform:rotate(0deg)}
 to{transform:rotate(360deg)}
 }.sub-stats-row{display:flex;gap:28px;margin-left:2vw;padding-bottom:5px}
-.sub-stat-val{font-size:28px;font-weight:400;color:rgba(255,255,255,0.95);letter-spacing:-0.02em;line-height:1;margin-bottom:4px;font-family:DM Sans;}
+.sub-stat-val{font-size:28px;font-weight:400;color:rgba(255,255,255,0.95);letter-spacing:-0em;line-height:1;margin-bottom:4px;font-family:DM Sans;}
 .sub-stat-label{font-size:12.5px;color:rgba(255,255,255,0.45)}
 .sub-stat-label .hl-teal{color:#2dd4bf;font-weight:600}
 .sub-list-title{display:flex;align-items:center;justify-content:left;gap:2vw;width:100%;font-size:14.5px;font-weight:300;color:rgba(255,255,255,0.75);margin-bottom:12px;margin-left:2vw;}
@@ -670,11 +670,11 @@ to{transform:rotate(360deg)}
 .sub-mid{flex:1;min-width:0;margin:10px}
 .sub-name-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;flex-wrap:wrap}
 .sub-name-left{display:flex;align-items:center;gap:8px;min-width:0;flex-wrap:wrap}
-.sub-name{opacity:0.9;font-size:15px;font-weight:400;color:rgba(255,255,255,0.95);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sub-name{opacity:0.9;font-size:17px;font-weight:400;color:rgba(255,255,255,0.95);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sub-badge{font-size:13.5px;font-weight:700;color:#14b8a6;background:rgba(74,222,128,0.14);border-radius:99px;padding:2px 9px;white-space:nowrap}
 .sub-expiry{display:flex;align-items:center;gap:5px;font-size:14px;color:rgba(255,255,255,0.45);white-space:nowrap}
 .sub-expiry svg{flex-shrink:0;opacity:0.6}
-.sub-price{opacity:0.9;font-size:15px;font-family:DM Sans;font-weight:600;color:rgba(255,255,255,0.95);text-align:right;white-space:nowrap;flex-shrink:0}
+.sub-price{opacity:0.9;font-size:17px;font-family:DM Sans;font-weight:600;color:rgba(255,255,255,0.95);text-align:right;white-space:nowrap;flex-shrink:0}
 .sub-price-unit{font-size:12.5px;font-weight:500;color:rgba(255,255,255,0.4);margin-left:2px}
 
 .add-modal h3{font-size: 16px;margin-bottom:4vw;text-align:center;}
@@ -1090,7 +1090,10 @@ to{transform:rotate(360deg)}
 
 /* animation*/
 .anim-area{opacity:0;animation:areaFadeIn .8s cubic-bezier(.25,1,.5,1) forwards}@keyframes areaFadeIn{0%{opacity:0}to{opacity:1}}.post-load-pulse{animation:postLoadPulse 3s ease-in-out infinite alternate}@keyframes postLoadPulse{0%{opacity:.35;filter:brightness(1) drop-shadow(0 0 0 transparent)}50%{opacity:.55;filter:brightness(1.15) drop-shadow(0 0 8px rgba(43,187,160,.4))}to{opacity:.35;filter:brightness(1) drop-shadow(0 0 0 transparent)}}
-.post-load-line-glow{animation:lineGlow 2.5s ease-in-out infinite alternate}@keyframes lineGlow{0%{filter:drop-shadow(0 0 0 transparent)}to{filter:drop-shadow(0 0 5px rgba(255,255,255,.8))}}@keyframes investBarWave{0%,to{transform:scaleY(1)}50%{transform:scaleY(1.08)}}@keyframes investBarEntrance{0%{opacity:0;transform:scaleY(0)}70%{opacity:1;transform:scaleY(1.08)}to{opacity:1;transform:scaleY(1)}}@keyframes investBarContinuousWave{0%{transform:scaleY(1);filter:brightness(1)}50%{transform:scaleY(1.05) translateY(-1px);filter:brightness(1.1)}to{transform:scaleY(.96);filter:brightness(.95)}}@keyframes pnlTilePopIn{0%{opacity:0;transform:scale(.82) translateY(12px)}70%{transform:scale(1.04) translateY(-2px)}to{opacity:1;transform:scale(1) translateY(0)}}@keyframes subRowSlideIn{0%{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}.sub-row-animate{opacity:0;animation:subRowSlideIn .4s cubic-bezier(.16,1,.3,1) forwards}@keyframes subIconBounce{0%{opacity:0;transform:translateY(-12px) scale(.8)}60%{transform:translateY(3px) scale(1.08)}to{opacity:1;transform:translateY(0) scale(1)}}.sub-icon-animate{opacity:0;will-change:transform,opacity,filter;animation:subIconBounce .6s cubic-bezier(.25,1,.5,1) forwards}#tx-list{transition:opacity .3s ease,filter .3s ease}@keyframes subIconBounce{0%{opacity:0;transform:translateY(-12px) scale(.8)}60%{transform:translateY(3px) scale(1.08)}to{opacity:1;transform:translateY(0) scale(1)}}.sub-icon-bounce{opacity:0;will-change:transform,opacity,filter;animation:subIconBounce .6s cubic-bezier(.25,1,.5,1) forwards}@keyframes subValBounce{0%{transform:scale(1)}30%{transform:scale(1.12);color:#2dd4bf}to{transform:scale(1)}}.sub-val-bounce{display:inline-block;animation:subValBounce .6s ease-out}.sub-num-container{display:inline-flex;align-items:center;overflow:hidden;height:1.2em;line-height:1.2em;vertical-align:bottom}.sub-char-box{position:relative;display:inline-block;width:.6em;height:100%;overflow:hidden;text-align:center}.sub-char-static{display:inline-block;padding:0 1px;opacity:.85}.sub-digit-reel{display:flex;flex-direction:column;position:absolute;top:0;left:0;width:100%;transition:transform .8s cubic-bezier(.16,1,.3,1);animation:slotRoll .85s cubic-bezier(.16,1,.3,1) forwards}.sub-digit-item{display:block;height:1.2em;line-height:1.2em;text-align:center}@keyframes slotRoll{0%{transform:translateY(0);filter:blur(2px)}to{transform:translateY(var(--target-y));filter:blur(0)}}@keyframes subLoadingPulse{0%{opacity:.3}50%{opacity:.8}to{opacity:.3}}.sub-loading-pulse{animation:subLoadingPulse 1.2s infinite ease-in-out;color:rgba(255,255,255,.4)!important}.pnl-animated-cell{animation:pnlTilePopIn .35s cubic-bezier(.34,1.56,.64,1) forwards;will-change:transform,opacity}.invest-bar-wave{transition:filter .2s ease}.invest-bar-wave:hover{filter:brightness(1.25)}#pnl-input-dialog{background:rgba(0,0,0,.4)!important;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}#pnl-input-dialog>div{background:rgba(30,34,43,.65)!important;backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);box-shadow:0 16px 40px rgba(0,0,0,.6)}
+.post-load-line-glow{animation:lineGlow 2.5s ease-in-out infinite alternate}@keyframes lineGlow{0%{filter:drop-shadow(0 0 0 transparent)}to{filter:drop-shadow(0 0 5px rgba(255,255,255,.8))}}@keyframes investBarWave{0%,to{transform:scaleY(1)}50%{transform:scaleY(1.08)}}@keyframes investBarEntrance{0%{opacity:0;transform:scaleY(0)}70%{opacity:1;transform:scaleY(1.08)}to{opacity:1;transform:scaleY(1)}}@keyframes investBarContinuousWave{0%{transform:scaleY(1);filter:brightness(1)}50%{transform:scaleY(1.05) translateY(-1px);filter:brightness(1.1)}to{transform:scaleY(.96);filter:brightness(.95)}}@keyframes pnlTilePopIn{0%{opacity:0;transform:scale(.82) translateY(12px)}70%{transform:scale(1.04) translateY(-2px)}to{opacity:1;transform:scale(1) translateY(0)}}@keyframes subRowSlideIn{0%{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}.sub-row-animate{opacity:0;animation:subRowSlideIn .4s cubic-bezier(.16,1,.3,1) forwards}@keyframes subIconBounce{0%{opacity:0;transform:translateY(-12px) scale(.8)}60%{transform:translateY(3px) scale(1.08)}to{opacity:1;transform:translateY(0) scale(1)}}.sub-icon-animate{opacity:0;will-change:transform,opacity,filter;animation:subIconBounce .6s cubic-bezier(.25,1,.5,1) forwards}#tx-list{transition:opacity .3s ease,filter .3s ease}@keyframes subIconBounce{0%{opacity:0;transform:translateY(-12px) scale(.8)}60%{transform:translateY(3px) scale(1.08)}to{opacity:1;transform:translateY(0) scale(1)}}.sub-icon-bounce{opacity:0;will-change:transform,opacity,filter;animation:subIconBounce .6s cubic-bezier(.25,1,.5,1) forwards}@keyframes subValBounce{0%{transform:scale(1)}30%{transform:scale(1.12);color:#2dd4bf}to{transform:scale(1)}}.sub-val-bounce{display:inline-block;animation:subValBounce .6s ease-out}.sub-num-container{display:inline-flex;align-items:center;overflow:hidden;height:1.2em;line-height:1.2em;vertical-align:bottom}
+.sub-char-box{position:relative;display:inline-block;width:auto;min-width:.65em;height:100%;overflow:hidden;text-align:center}.sub-char-static{display:inline-block;padding:0 2px;opacity:.85}
+.sub-digit-reel{display:flex;flex-direction:column;position:absolute;top:0;left:0;width:100%;transition:transform .8s cubic-bezier(.16,1,.3,1);animation:slotRoll .85s cubic-bezier(.16,1,.3,1) forwards}
+.sub-digit-item{display:block;height:1.2em;line-height:1.2em;text-align:center}@keyframes slotRoll{0%{transform:translateY(0);filter:blur(2px)}to{transform:translateY(var(--target-y));filter:blur(0)}}@keyframes subLoadingPulse{0%{opacity:.3}50%{opacity:.8}to{opacity:.3}}.sub-loading-pulse{animation:subLoadingPulse 1.2s infinite ease-in-out;color:rgba(255,255,255,.4)!important}.pnl-animated-cell{animation:pnlTilePopIn .35s cubic-bezier(.34,1.56,.64,1) forwards;will-change:transform,opacity}.invest-bar-wave{transition:filter .2s ease}.invest-bar-wave:hover{filter:brightness(1.25)}#pnl-input-dialog{background:rgba(0,0,0,.4)!important;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}#pnl-input-dialog>div{background:rgba(30,34,43,.65)!important;backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);box-shadow:0 16px 40px rgba(0,0,0,.6)}
 </style>
 </head>
 <body>
@@ -1898,16 +1901,42 @@ to{transform:rotate(360deg)}
 </div>
 <!-- CASH TRANSACTION MODAL POPUP -->
 <div id="cash-modal-overlay" class="cash-modal-overlay">
-  <div class="add-modal-expense" style="height:380px">
-    <button id="cash-modal-cancel" type="button">x</button>
-    <div style="margin-top:-5px;margin-left:10px;width:100%">
-      <h3 style="font-family: Alegreya; text-align:left;text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); color: #fff; margin: 0; white-space: nowrap; font-size: 20px;">Add today cash expense...</h3>
-      <div class="add-field" style="margin-top:10px;position: relative; display: flex; align-items: center; flex: 1;">
-        <input type="text" id="cash-modal-input" onblur="this.style.setProperty('border-color', 'currentcolor currentcolor rgba(255, 255, 255, 0.2)', 'important');">
-        <button id="cash-modal-submit" type="button">+</button>
+  <!-- Modal container with padding: 0 so video touches top/left/right flush -->
+  <div class="add-modal-expense" style="position:relative; padding: 0 !important; overflow: hidden; height: auto; min-height: 380px; max-height: 85vh;" onclick="event.stopPropagation()">
+    
+    <!-- Video Banner Row (Height: 80px) -->
+    <div style="position: relative; width: 100%; height: 60px; overflow: hidden; border-top-left-radius: inherit; border-top-right-radius: inherit;">
+      <video autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover; display: block;">
+        <source src="https://v1.pinimg.com/videos/iht/expMp4/f8/3c/83/f83c83244da173c71d71d422d909dccd_720w.mp4" type="video/mp4">
+      </video>
+      
+      <!-- Gradient Overlay for readability -->
+      <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6)); pointer-events: none;"></div>
+      
+      <!-- Title positioned higher (~20%-25% down) -->
+      <h2 style="position: absolute; top: 45%; transform: translateY(-50%); left: 16px; font-family: Alegreya; text-align: left; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8); color: #fff; margin: 0; white-space: nowrap; font-size: 22px; z-index: 5;">Add today cash expense...</h2>
+
+      <!-- Close (x) Button perfectly inline with title at top: 25% -->
+      <span class="material-icons-round" id="cash-modal-cancel" 
+            style="display: flex; align-items: center; justify-content: center; position: absolute; right: 12px; top: 40%; transform: translateY(-50%); color: rgba(255, 255, 255, 0.85); font-size: 18px; cursor: pointer; user-select: none; z-index: 9999!important; background: rgba(0, 0, 0, 0.35); border-radius: 50%; width: 24px; height: 24px; transition: color 0.2s ease;">cancel</span>
+    </div>
+
+    <!-- Inner Content Area -->
+    <div style="padding: 66px 16px 20px 16px; box-sizing: border-box;">
+
+      <!-- Input Field Area shifted up by 20px -->
+      <div class="add-field" style="position: relative; width: 100%; box-sizing: border-box; margin-top: -20px;">
+        <textarea id="cash-modal-input" rows="1" style="width: 100%; resize: none; overflow-x: hidden; overflow-y: hidden; min-height: 36px; line-height: 20px; padding: 6px 45px 6px 10px; box-sizing: border-box; word-brlur="this.style.setProperty('border-color', 'currentcolor currentcolor rgba(255, 255, 255, 0.2)', 'important');"></textarea>
+        
+        <!-- (+) Button -->
+        <button id="cash-modal-submit" type="button" style="position: absolute; right: 6px; top: 40%; transform: translateY(-50%); height: 28px; width: 28px; min-width: 28px; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 22px;line-height: 1; border-radius: 50%; background: rgba(255,255,255,0.25); border: 1px solid rgba(255,255,255,0.4); color: #fff; cursor: pointer; z-index: 10;">+</button>
       </div>
+
+      <!-- Overlapping Icons Display Container -->
+      <div id="cash-modal-icons" style="display:flex; align-items:center; margin-top:10px; padding-left:2px; height:36px; min-height:36px;"></div>
       <div id="cash-modal-status" class="add-status"></div>
     </div>
+
   </div>
 </div>
 
@@ -5200,68 +5229,209 @@ function setupInfiniteScrollObserver(){window.txObserver&&window.txObserver.disc
     function adjustUserCount(delta){var input=document.getElementById("add-user"),next=(parseInt(input.value,10)||1)+delta;next<1&&(next=1),next>999&&(next=999),input.value=next}var currentPriceMode="monthly";function selectPriceMode(mode){currentPriceMode=mode,document.getElementById("monthly-price-card").classList.toggle("selected","monthly"===mode),document.getElementById("total-price-card").classList.toggle("selected","total"===mode)}function syncPriceToggleDisplay(){}
     var addSubCalState={viewMonth:(new Date).getMonth(),viewYear:(new Date).getFullYear(),rangeStart:null,rangeEnd:null,hoverDate:null};function getActiveCalContext(e){var isEdit=!1;e&&e.currentTarget?(0===(e.currentTarget.id||"").indexOf("edit-")||e.currentTarget.closest("#edit-sub-modal-overlay"))&&(isEdit=!0):isEdit=!!document.getElementById("edit-sub-cal-menu")&&document.getElementById("edit-sub-cal-menu").classList.contains("open");return{isEdit,menuId:isEdit?"edit-sub-cal-menu":"add-sub-cal-menu",labelId:isEdit?"edit-sub-cal-month-label":"add-sub-cal-month-label",gridId:isEdit?"edit-sub-cal-grid":"add-sub-cal-grid",displayId:isEdit?"edit-sub-cal-range-display":"add-sub-cal-range-display",startDateId:isEdit?"edit-sub-start-date":"add-start-date",endDateId:isEdit?"edit-sub-end-date":"add-end-date",triggerTextId:isEdit?"edit-sub-date-trigger-text":"add-sub-date-trigger-text"}}function toggleAddSubDatePicker(e){e.stopPropagation();var ctx=getActiveCalContext(e),menu=document.getElementById(ctx.menuId);if(menu){var isOpen=menu.classList.contains("open");if(document.querySelectorAll(".col-menu").forEach(function(m){m.classList.remove("open")}),!isOpen){var rect=e.currentTarget.getBoundingClientRect();document.body.appendChild(menu),menu.style.position="fixed",menu.style.top=rect.bottom+6+"px",menu.style.left=rect.left+"px",menu.style.width=Math.max(rect.width,280)+"px",menu.style.zIndex="9999999",menu.style.transform="none",menu.style.margin="0",menu.classList.add("open"),renderAddSubCalendar(ctx)}}}function renderAddSubCalendar(ctx){ctx||(ctx=getActiveCalContext());var label=document.getElementById(ctx.labelId),grid=document.getElementById(ctx.gridId);if(label&&grid){label.textContent=FULL_MONTH_NAMES[addSubCalState.viewMonth]+" "+addSubCalState.viewYear,updateAddSubRangeDisplay(ctx),grid.innerHTML="";for(var startDow=new Date(addSubCalState.viewYear,addSubCalState.viewMonth,1).getDay(),daysInMonth=new Date(addSubCalState.viewYear,addSubCalState.viewMonth+1,0).getDate(),daysInPrevMonth=new Date(addSubCalState.viewYear,addSubCalState.viewMonth,0).getDate(),today=new Date,i=0;i<42;i++){var cellDate,isOtherMonth=!1,dayNum=i-startDow+1;dayNum<1?(cellDate=new Date(addSubCalState.viewYear,addSubCalState.viewMonth-1,daysInPrevMonth+dayNum),isOtherMonth=!0):dayNum>daysInMonth?(cellDate=new Date(addSubCalState.viewYear,addSubCalState.viewMonth+1,dayNum-daysInMonth),isOtherMonth=!0):cellDate=new Date(addSubCalState.viewYear,addSubCalState.viewMonth,dayNum);var cellEl=document.createElement("div");cellEl.className="cal-day"+(isOtherMonth?" other-month":""),cellEl.dataset.time=cellDate.getTime(),isSameDay(cellDate,today)&&cellEl.classList.add("today"),cellEl.textContent=cellDate.getDate(),function(d,el,currentCtx){el.addEventListener("click",function(e){e.stopPropagation(),addSubSelectDate(d,currentCtx)}),el.addEventListener("mouseenter",function(){addSubCalState.rangeStart&&!addSubCalState.rangeEnd&&(addSubCalState.hoverDate=d,updateAddSubRangeClassesOnly(currentCtx))})}(cellDate,cellEl,ctx),grid.appendChild(cellEl)}updateAddSubRangeClassesOnly(ctx)}}function updateAddSubRangeClassesOnly(ctx){ctx||(ctx=getActiveCalContext());var grid=document.getElementById(ctx.gridId);if(grid){var cells=grid.querySelectorAll(".cal-day"),effectiveEnd=addSubCalState.rangeEnd||addSubCalState.hoverDate;cells.forEach(function(cellEl){cellEl.classList.remove("in-range","range-start","range-end");var cellDate=new Date(parseInt(cellEl.dataset.time,10));if(addSubCalState.rangeStart&&effectiveEnd){var rs=addSubCalState.rangeStart<effectiveEnd?addSubCalState.rangeStart:effectiveEnd,re=addSubCalState.rangeStart<effectiveEnd?effectiveEnd:addSubCalState.rangeStart;cellDate>=rs&&cellDate<=re&&cellEl.classList.add("in-range"),isSameDay(cellDate,rs)&&cellEl.classList.add("range-start"),isSameDay(cellDate,re)&&cellEl.classList.add("range-end")}else addSubCalState.rangeStart&&isSameDay(cellDate,addSubCalState.rangeStart)&&cellEl.classList.add("range-start")}),updateAddSubRangeDisplay(ctx)}}function updateAddSubRangeDisplay(ctx){ctx||(ctx=getActiveCalContext());var display=document.getElementById(ctx.displayId);display&&(addSubCalState.rangeStart&&addSubCalState.rangeEnd?display.textContent=formatDateLong(addSubCalState.rangeStart)+" - "+formatDateLong(addSubCalState.rangeEnd):addSubCalState.rangeStart?display.textContent=formatDateLong(addSubCalState.rangeStart)+"  →  Select end date":display.textContent="Select a date range")}function addSubSelectDate(d,ctx){ctx||(ctx=getActiveCalContext()),!addSubCalState.rangeStart||addSubCalState.rangeStart&&addSubCalState.rangeEnd?(addSubCalState.rangeStart=d,addSubCalState.rangeEnd=null,addSubCalState.hoverDate=null):(d<addSubCalState.rangeStart?(addSubCalState.rangeEnd=addSubCalState.rangeStart,addSubCalState.rangeStart=d):addSubCalState.rangeEnd=d,addSubCalState.hoverDate=null),updateAddSubRangeClassesOnly(ctx)}function addSubCalNavigate(e,dir){e&&(e.stopPropagation(),e.preventDefault());var isEditMenu=document.getElementById("edit-sub-cal-menu")&&document.getElementById("edit-sub-cal-menu").classList.contains("open"),ctx={isEdit:isEditMenu,menuId:isEditMenu?"edit-sub-cal-menu":"add-sub-cal-menu",labelId:isEditMenu?"edit-sub-cal-month-label":"add-sub-cal-month-label",gridId:isEditMenu?"edit-sub-cal-grid":"add-sub-cal-grid",displayId:isEditMenu?"edit-sub-cal-range-display":"add-sub-cal-range-display",startDateId:isEditMenu?"edit-sub-start-date":"add-start-date",endDateId:isEditMenu?"edit-sub-end-date":"add-end-date",triggerTextId:isEditMenu?"edit-sub-date-trigger-text":"add-sub-date-trigger-text"};addSubCalState.viewMonth+=dir,addSubCalState.viewMonth>11?(addSubCalState.viewMonth=0,addSubCalState.viewYear++):addSubCalState.viewMonth<0&&(addSubCalState.viewMonth=11,addSubCalState.viewYear--),renderAddSubCalendar(ctx)}function applyAddSubDateRange(e){e&&(e.stopPropagation(),e.preventDefault());var isEditMenu=document.getElementById("edit-sub-cal-menu")&&document.getElementById("edit-sub-cal-menu").classList.contains("open"),ctx={menuId:isEditMenu?"edit-sub-cal-menu":"add-sub-cal-menu",startDateId:isEditMenu?"edit-sub-start-date":"add-start-date",endDateId:isEditMenu?"edit-sub-end-date":"add-end-date",triggerTextId:isEditMenu?"edit-sub-date-trigger-text":"add-sub-date-trigger-text"};if(addSubCalState.rangeStart&&addSubCalState.rangeEnd){var startISO=addSubCalState.rangeStart.toISOString().slice(0,10),endISO=addSubCalState.rangeEnd.toISOString().slice(0,10),startEl=document.getElementById(ctx.startDateId),endEl=document.getElementById(ctx.endDateId);startEl&&(startEl.value=startISO),endEl&&(endEl.value=endISO);var triggerText=document.getElementById(ctx.triggerTextId);triggerText&&(triggerText.textContent=formatDateLong(addSubCalState.rangeStart)+" - "+formatDateLong(addSubCalState.rangeEnd));var menu=document.getElementById(ctx.menuId);menu&&menu.classList.remove("open")}}function clearAddSubDateRange(e){e.stopPropagation();var ctx=getActiveCalContext(e);addSubCalState.rangeStart=null,addSubCalState.rangeEnd=null,addSubCalState.hoverDate=null;var startEl=document.getElementById(ctx.startDateId),endEl=document.getElementById(ctx.endDateId);startEl&&(startEl.value=""),endEl&&(endEl.value="");var triggerText=document.getElementById(ctx.triggerTextId);triggerText&&(triggerText.textContent="Select date range"),renderAddSubCalendar(ctx)}document.addEventListener("DOMContentLoaded",function(){["add-sub-cal-menu","edit-sub-cal-menu"].forEach(function(id){var menu=document.getElementById(id);menu&&menu.addEventListener("click",function(e){e.stopPropagation()})})});
     function initCashModal() {
-        var CASH_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw0gHOLH6bNZSOxIsXHRlu7WbXa5e0hpAxwtNquiLBBl4_Lkf79BClUZuCgwgj7CGWO/exec";
+      var CASH_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw0gHOLH6bNZSOxIsXHRlu7WbXa5e0hpAxwtNquiLBBl4_Lkf79BClUZuCgwgj7CGWO/exec";
 
-        var addCashBtn = document.getElementById("add-cash");
-        var cashOverlay = document.getElementById("cash-modal-overlay");
-        var cashInput = document.getElementById("cash-modal-input");
-        var cashCancel = document.getElementById("cash-modal-cancel");
-        var cashSubmit = document.getElementById("cash-modal-submit");
-        var cashStatus = document.getElementById("cash-modal-status");
+      var addCashBtn = document.getElementById("add-cash");
+      var cashOverlay = document.getElementById("cash-modal-overlay");
+      var cashInput = document.getElementById("cash-modal-input");
+      var cashCancel = document.getElementById("cash-modal-cancel");
+      var cashSubmit = document.getElementById("cash-modal-submit");
+      var cashStatus = document.getElementById("cash-modal-status");
+      var cashIconsContainer = document.getElementById("cash-modal-icons");
 
-        if (!addCashBtn || !cashOverlay || !cashSubmit) {console.warn("Cash modal elements missing from the DOM. Skipping initialization.");return;}
+      if (!addCashBtn || !cashOverlay || !cashSubmit) {
+          console.warn("Cash modal elements missing from the DOM. Skipping initialization.");
+          return;
+      }
 
-        Object.assign(cashOverlay.style,{position:"fixed",top:"0",left:"0",width:"100%",height:"100%",backgroundColor:"rgba(0, 0, 0, 0.75)",backdropFilter:"blur(4px)",webkitBackdropFilter:"blur(4px)",zIndex:"999",display:"none",alignItems:"flex-start",justifyContent:"center",paddingTop:"150px",opacity:"1"});
-        cashCancel&&Object.assign(cashCancel.style,{fontFamily:"DM Sans",cursor:"pointer"});
-        cashSubmit&&Object.assign(cashSubmit.style,{fontFamily:"DM Sans",cursor:"pointer"});
+      Object.assign(cashOverlay.style, {
+          position: "fixed",
+          top: "0",
+          left: "0",
+          width: "100%",
+          height: "100%",
+          backgroundColor: "rgba(0, 0, 0, 0.75)",
+          backdropFilter: "blur(4px)",
+          webkitBackdropFilter: "blur(4px)",
+          zIndex: "999",
+          display: "none",
+          alignItems: "flex-start",
+          justifyContent: "center",
+          paddingTop: "150px",
+          opacity: "1",
+          overflowX: "hidden"
+      });
 
-        var actionContainer = (cashCancel && cashCancel.parentElement) || (cashSubmit && cashSubmit.parentElement);
-        actionContainer&&(actionContainer.style.display="flex",actionContainer.style.gap="12px"),addCashBtn.addEventListener("click",function(){cashInput.value="",cashStatus&&(cashStatus.className="add-status",cashStatus.innerText=""),cashOverlay.style.display="flex",setTimeout(function(){cashInput.focus()},50)}),cashCancel&&cashCancel.addEventListener("click",function(){cashOverlay.style.display="none"});
-        
-        cashSubmit.addEventListener("click", function() {
-            var rawText = cashInput.value.trim();
-            if (rawText) {
-                cashSubmit.disabled = !0;
-                var d = new Date();
-                var formatter=new Intl.DateTimeFormat("sv-SE",{timeZone:"Asia/Ho_Chi_Minh",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:!1});
-                var todayStr = formatter.format(d).replace(' ', ' ');
-                for(var items=rawText.split(";"),payloadBatch=[],i=0;i<items.length;i++){var item=items[i].trim();if(item){var parts=item.split("-");if(!(parts.length<2)){var detail=parts[0].trim(),rawAmount=parseFloat(parts[1].trim());isNaN(rawAmount)||(payloadBatch.push({type:"Cash",date:todayStr,detail,amount:1e3*rawAmount}),console.log(payloadBatch))}}}
-                
-                if (payloadBatch.length > 0) {
-                    fetch(CASH_APPS_SCRIPT_URL, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "text/plain"
-                        },
-                        body: JSON.stringify(payloadBatch)
-                    }).catch(function(err) {
-                        console.error("Background transmission failed:", err);
-                    });
+      // 1. Click outside overlay to close modal
+      cashOverlay.addEventListener("click", function(e) {
+          if (e.target === cashOverlay) {
+              cashOverlay.style.display = "none";
+          }
+      });
 
-                    cashOverlay.style.display = "none";
-                    cashSubmit.disabled = !1;
-                    cashStatus && (cashStatus.className = "add-status", cashStatus.innerText = "Processing...");
-                    addCashBtn && (addCashBtn.classList.add("loading"), addCashBtn.innerHTML = '<span class="btn-spinner"></span>');
-                    
-                    // Trigger paper firework effect right when successfully processed
-                    triggerPaperFirework(null);
+      // String normalizer for matching item detail against cached tx rows
+      function normalizeStr(str) {
+          return (str || "").toString().toLowerCase().replace(/[^a-z0-9\s]/gi, "").trim();
+      }
 
-                    setTimeout(function() {
-                        "function" == typeof loadRecent && loadRecent();
-                        cashStatus && (cashStatus.innerText = "Successfully added!");
-                        addCashBtn && (addCashBtn.classList.remove("loading"), addCashBtn.classList.add("success-confirm"), addCashBtn.innerHTML = "&#10003;");
-                        
-                        setTimeout(function() {
-                            addCashBtn && (addCashBtn.classList.remove("success-confirm"), addCashBtn.innerHTML = "+");
-                        }, 1500);
-                    }, 11e3);
-                } else {
-                    cashStatus && (cashStatus.className = "add-status error", cashStatus.innerText = "Error: Input formatting issue.");
-                    cashSubmit.disabled = !1;
-                }
-            }
-        });
-  }
+      // Lookup Icon matching exact or partial Transaction Detail in cachedTxData
+      function getIconForDetail(detailText) {
+          if (!detailText) return null;
+          var inputNorm = normalizeStr(detailText);
+          if (!inputNorm) return null;
+
+          if (typeof cachedTxData !== "undefined" && Array.isArray(cachedTxData)) {
+              // First pass: Direct/exact match
+              for (var i = 0; i < cachedTxData.length; i++) {
+                  var tx = cachedTxData[i];
+                  var txDetailNorm = normalizeStr(tx.detail || tx.cleanDetail);
+                  if (txDetailNorm && tx.iconUrl && tx.iconUrl.indexOf("http") === 0) {
+                      if (txDetailNorm === inputNorm) {
+                          return tx.iconUrl;
+                      }
+                  }
+              }
+
+              // Second pass: Substring match (e.g. "pho" matches "pho bo")
+              for (var j = 0; j < cachedTxData.length; j++) {
+                  var tx2 = cachedTxData[j];
+                  var txDetailNorm2 = normalizeStr(tx2.detail || tx2.cleanDetail);
+                  if (txDetailNorm2 && tx2.iconUrl && tx2.iconUrl.indexOf("http") === 0) {
+                      if (txDetailNorm2.indexOf(inputNorm) !== -1 || inputNorm.indexOf(txDetailNorm2) !== -1) {
+                          return tx2.iconUrl;
+                      }
+                  }
+              }
+          }
+
+          return null;
+      }
+
+      // Render detected icons with increased size (32px x 32px)
+      function updateLiveIcons() {
+          if (!cashIconsContainer) return;
+          cashIconsContainer.innerHTML = "";
+          var rawText = cashInput.value.trim();
+          if (!rawText) return;
+
+          var items = rawText.split(";");
+          var detectedIcons = [];
+
+          items.forEach(function(item) {
+              var trimmed = item.trim();
+              if (trimmed) {
+                  var parts = trimmed.split("-");
+                  var detail = parts[0].trim();
+                  var iconUrl = getIconForDetail(detail);
+                  if (iconUrl && detectedIcons.indexOf(iconUrl) === -1) {
+                      detectedIcons.push(iconUrl);
+                  }
+              }
+          });
+
+          // Render larger overlapping icon stack
+          detectedIcons.forEach(function(url, idx) {
+              var img = document.createElement("img");
+              img.src = url;
+              img.className = "cat-ico";
+              img.style.cssText = "width:36px; height:36px; border-radius:50%; border:2px solid #14171f; background:#1e222b; object-fit:cover; box-shadow:0 2px 4px rgba(0,0,0,0.4);";
+              if (idx > 0) {
+                  img.style.marginLeft = "-12px";
+              }
+              cashIconsContainer.appendChild(img);
+          });
+      }
+
+      // Textarea input event + Enter key handler to submit
+      if (cashInput) {
+          cashInput.addEventListener("input", function() {
+              this.style.height = 'auto';
+              this.style.height = (this.scrollHeight) + 'px';
+              updateLiveIcons();
+          });
+
+          // Enter key submits; Shift+Enter creates a new line
+          cashInput.addEventListener("keydown", function(e) {
+              if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  cashSubmit.click();
+              }
+          });
+      }
+
+      addCashBtn.addEventListener("click", function() {
+          cashInput.value = "";
+          cashInput.style.height = '38px';
+          if (cashIconsContainer) cashIconsContainer.innerHTML = "";
+          cashStatus && (cashStatus.className = "add-status", cashStatus.innerText = "");
+          cashOverlay.style.display = "flex";
+
+          // Pre-fetch transaction details if not cached yet
+          if ((typeof cachedTxData === "undefined" || !cachedTxData || cachedTxData.length === 0) && typeof fetchTransactionDetails === "function") {
+              var dummyContainer = document.createElement("div");
+              fetchTransactionDetails("", dummyContainer);
+          }
+
+          setTimeout(function() { cashInput.focus(); }, 50);
+      });
+
+      cashCancel && cashCancel.addEventListener("click", function() {
+          cashOverlay.style.display = "none";
+      });
+
+      cashSubmit.addEventListener("click", function() {
+          var rawText = cashInput.value.trim();
+          if (rawText) {
+              cashSubmit.disabled = true;
+              var d = new Date();
+              var formatter = new Intl.DateTimeFormat("sv-SE", { timeZone: "Asia/Ho_Chi_Minh", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false });
+              var todayStr = formatter.format(d).replace(' ', ' ');
+              for (var items = rawText.split(";"), payloadBatch = [], i = 0; i < items.length; i++) {
+                  var item = items[i].trim();
+                  if (item) {
+                      var parts = item.split("-");
+                      if (!(parts.length < 2)) {
+                          var detail = parts[0].trim(),
+                              rawAmount = parseFloat(parts[1].trim());
+                          isNaN(rawAmount) || (payloadBatch.push({ type: "Cash", date: todayStr, detail: detail, amount: 1e3 * rawAmount }), console.log(payloadBatch));
+                      }
+                  }
+              }
+
+              if (payloadBatch.length > 0) {
+                  fetch(CASH_APPS_SCRIPT_URL, {
+                      method: "POST",
+                      headers: {
+                          "Content-Type": "text/plain"
+                      },
+                      body: JSON.stringify(payloadBatch)
+                  }).catch(function(err) {
+                      console.error("Background transmission failed:", err);
+                  });
+
+                  cashOverlay.style.display = "none";
+                  cashSubmit.disabled = false;
+                  cashStatus && (cashStatus.className = "add-status", cashStatus.innerText = "Processing...");
+                  addCashBtn && (addCashBtn.classList.add("loading"), addCashBtn.innerHTML = '<span class="btn-spinner"></span>');
+
+                  if (typeof triggerPaperFirework === "function") triggerPaperFirework(null);
+
+                  setTimeout(function() {
+                      "function" == typeof loadRecent && loadRecent();
+                      cashStatus && (cashStatus.innerText = "Successfully added!");
+                      addCashBtn && (addCashBtn.classList.remove("loading"), addCashBtn.classList.add("success-confirm"), addCashBtn.innerHTML = "&#10003;");
+
+                      setTimeout(function() {
+                          addCashBtn && (addCashBtn.classList.remove("success-confirm"), addCashBtn.innerHTML = "+");
+                      }, 1500);
+                  }, 11e3);
+              } else {
+                  cashStatus && (cashStatus.className = "add-status error", cashStatus.innerText = "Error: Input formatting issue.");
+                  cashSubmit.disabled = false;
+              }
+          }
+      });
+    }
 
     window.triggerPaperFirework=function(containerElement){let targetParent=containerElement&&containerElement.nodeType?containerElement:document.body,startX=window.innerWidth/2,startY=window.innerHeight/2;const overlay=document.createElement("div");overlay.style.position="fixed",overlay.style.top="0",overlay.style.left="0",overlay.style.width="100vw",overlay.style.height="100vh",overlay.style.pointerEvents="none",overlay.style.zIndex="2147483647",targetParent.appendChild(overlay);const colors=["#75b798","#0ea5e9","#f59e0b","#f43f5e","#a855f7","#ec4899","#10b981"];for(let i=0;i<60;i++){const piece=document.createElement("div");piece.style.position="absolute",piece.style.left=startX+"px",piece.style.top=startY+"px",piece.style.width=4+4*Math.random()+"px",piece.style.height=10+8*Math.random()+"px",piece.style.backgroundColor=colors[Math.floor(Math.random()*colors.length)],piece.style.borderRadius="0px",piece.style.transition="transform 1s cubic-bezier(0.15, 0.85, 0.35, 1), opacity 1s ease-in",overlay.appendChild(piece);const angle=Math.random()*Math.PI*2,velocity=90+180*Math.random(),targetX=Math.cos(angle)*velocity,targetY=Math.sin(angle)*velocity-60;requestAnimationFrame(()=>{piece.style.transform=`\n                translate(${targetX}px, ${targetY}px) \n                rotateX(${360*Math.random()}deg) \n                rotateY(${360*Math.random()}deg) \n                rotateZ(${720*Math.random()}deg) \n                scale(${.6+.4*Math.random()})\n            `,piece.style.opacity="0"})}setTimeout(()=>{overlay.remove()},1200)};
 
