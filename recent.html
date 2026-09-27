@@ -5632,463 +5632,99 @@ to{transform:rotate(360deg)}
 
     const getY=e=>e.touches?e.touches[0].clientY:e.clientY,onStart=e=>{0!==window.scrollY||"touchstart"!==e.type&&0!==e.button||(startY=getY(e),pulling=!0,ptrIndicator.style.transition="none")},onMove=e=>{if(!pulling)return;currentY=getY(e);const dist=currentY-startY;if(dist>0&&0===window.scrollY){e.cancelable&&e.preventDefault();const pullDist=Math.min(dist*RESISTANCE,THRESHOLD+15);ptrIndicator.style.transform=`translate(-50%, ${pullDist}px)`,ptrIndicator.style.opacity=Math.min(pullDist/(.5*THRESHOLD),1);const rotation=pullDist/THRESHOLD*360;ptrSpinner.style.transform=`rotate(${rotation}deg)`}},onEnd=()=>{if(!pulling)return;pulling=!1,ptrIndicator.style.transition="transform 0.2s ease-out, opacity 0.2s ease-out";(currentY-startY)*RESISTANCE>=THRESHOLD?(ptrIndicator.style.transform=`translate(-50%, ${THRESHOLD}px)`,ptrIndicator.style.opacity="1",ptrIndicator.classList.add("ptr-loading"),setTimeout(()=>window.location.reload(),500)):(ptrIndicator.style.transform="translate(-50%, 0px)",ptrIndicator.style.opacity="0",ptrSpinner.style.transform="rotate(0deg)"),startY=0,currentY=0};
 
-  /* ══ FINANCIAL BREAKDOWN MODULE WITH SINGLE UNIFIED DONUT CHART ══ */
-  (function() {
-    var FB_BASE_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv";
-    var GIDS = { income: "311369594", expense: "1608160084", debt: "271989628" };
-    var rawData = { income: [], expense: [], debt: [] };
+    /* ══ FINANCIAL BREAKDOWN MODULE WITH SINGLE UNIFIED DONUT CHART ══ */
+    (function() {
+      var FB_BASE_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv";
+      var GIDS = { income: "311369594", expense: "1608160084", debt: "271989628" };
+      var rawData = { income: [], expense: [], debt: [] };
 
-    var icons = {
-        income: {
-            salary: "https://github.com/tinsntp/investment/blob/main/ces.png?raw=true",
-            comp: "https://github.com/tinsntp/investment/blob/main/cash.png?raw=true",
-            invest: "https://github.com/tinsntp/investment/blob/main/stock.png?raw=true"
-        },
-        expense: {},
-        debt: {}
-    };
+      var icons = {
+          income: {
+              salary: "https://github.com/tinsntp/investment/blob/main/ces.png?raw=true",
+              comp: "https://github.com/tinsntp/investment/blob/main/cash.png?raw=true",
+              invest: "https://github.com/tinsntp/investment/blob/main/stock.png?raw=true"
+          },
+          expense: {},
+          debt: {}
+      };
 
-    var RANGES = ["-6m", "-3m", "-1m", "current", "+1m", "current-year", "+3m", "+6m"];
-    var currentRangeIndex = 3; // "current"
-    var RANGE_LABELS = {
-        "-6m": "Past 6 Months",
-        "-3m": "Past 3 Months",
-        "-1m": "Previous Month",
-        current: "Current Month",
-        "+1m": "Next Month",
-        "current-year": "Current Year",
-        "+3m": "+3 Months",
-        "+6m": "+6 Months"
-    };
+      var RANGES = ["-6m", "-3m", "-1m", "current", "+1m", "current-year", "+3m", "+6m"];
+      var currentRangeIndex = 3; // "current"
+      var RANGE_LABELS={"-6m":"Past 6 Months","-3m":"Past 3 Months","-1m":"Previous Month",current:"Current Month","+1m":"Next Month","current-year":"Current Year","+3m":"+3 Months","+6m":"+6 Months"};
 
-    function fmtShortDec(v) {
-        var a = Math.abs(v), sign = v < 0 ? "-" : "";
-        return a >= 1e9 ? sign + (a / 1e9).toFixed(1) + "B" :
-               a >= 1e6 ? sign + (a / 1e6).toFixed(1) + "M" :
-               a >= 1e3 ? sign + (a / 1e3).toFixed(1) + "K" : sign + Math.round(a);
-    }
+      function fmtShortDec(v){var a=Math.abs(v),sign=v<0?"-":"";return a>=1e9?sign+(a/1e9).toFixed(1)+"B":a>=1e6?sign+(a/1e6).toFixed(1)+"M":a>=1e3?sign+(a/1e3).toFixed(1)+"K":sign+Math.round(a)}function injectFBAnimationStyles(){if(!document.getElementById("fb-custom-anim-styles")){var styleEl=document.createElement("style");styleEl.id="fb-custom-anim-styles",styleEl.innerHTML="\n                @keyframes fbScaleIn {\n                    0% { transform: scaleX(0); opacity: 0; }\n                    100% { transform: scaleX(1); opacity: 0.95; }\n                }\n                .fb-semicircle-anim {\n                    animation: fbScaleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;\n                    transform-origin: left center;\n                }\n                .fb-item-dimmed {\n                    opacity: 0.3 !important;\n                    transition: opacity 0.3s ease;\n                }\n                .fb-item-active {\n                    opacity: 1 !important;\n                    transition: opacity 0.3s ease;\n                }\n                .fb-inline-chips {\n                    display: flex;\n                    flex-direction: column;\n                    gap: 4px;\n                }\n                .fb-chips-row {\n                    display: flex;\n                    gap: 4px;\n                }\n                .fb-debt-chips-inline {\n                    display: flex;\n                    flex-direction: row;\n                    flex-wrap: wrap;\n                    gap: 4px;\n                }\n                .fb-chip {\n                    display: inline-flex;\n                    align-items: center;\n                    gap: 3px;\n                    background: rgba(255,255,255,0.08);\n                    border-radius: 14px;\n                    padding: 3px 6px;\n                    font-size: 13px;\n                    white-space: nowrap;\n                }\n                .fb-chip-icon {\n                    width: 14px;\n                    height: 14px;\n                    object-fit: contain;\n                }\n                .fb-chip-val {\n                    font-weight: 600;\n                }\n            ",document.head.appendChild(styleEl)}}
+      function initFinancialBreakdown(){injectFBAnimationStyles();var now=Date.now();Promise.all([fetch(FB_BASE_URL+"&gid="+GIDS.income+"&t="+now).then(r=>r.text()),fetch(FB_BASE_URL+"&gid="+GIDS.expense+"&t="+now).then(r=>r.text()),fetch(FB_BASE_URL+"&gid="+GIDS.debt+"&t="+now).then(r=>r.text())]).then(function(results){parseIncomeCSV(results[0]),parseExpenseCSV(results[1]),parseDebtCSV(results[2]),renderFBBreakdown(RANGES[currentRangeIndex])}).catch(function(err){console.error("FB Stack Chart load error:",err)})}function parseIncomeCSV(csvText){var lines=csvText.trim().split(/\r?\n/);if(!(lines.length<2)){rawData.income=[];for(var i=1;i<lines.length;i++){var cols=parseCSVLine(lines[i]),qStr=(cols[16]||"").trim();if(qStr){var d=parseMonthYear?parseMonthYear(qStr):null;if(d){var salary=Math.abs(parseAmtTopChart(cols[19]||"0")),invest=Math.abs(parseAmtTopChart(cols[20]||"0")),comp=Math.abs(parseAmtTopChart(cols[21]||"0"));rawData.income.push({date:d,salary,invest,comp,total:salary+invest+comp})}}}}}function parseExpenseCSV(csvText){var lines=csvText.trim().split(/\r?\n/);if(!(lines.length<3)){var iconRow=parseCSVLine(lines[0]);icons.expense={rental:iconRow[3]||"",bills:iconRow[6]||"",livingCost:iconRow[7]||iconRow[8]||"",family:iconRow[9]||""},rawData.expense=[];for(var i=2;i<lines.length;i++){var cols=parseCSVLine(lines[i]),parts=(cols[0]||"").split("/");if(parts.length>=2){var d=new Date(2e3+parseInt(parts[1],10),parseInt(parts[0],10)-1,1),rental=Math.abs(parseAmtTopChart(cols[3]||"0")),bills=Math.abs(parseAmtTopChart(cols[6]||"0")),living=Math.abs(parseAmtTopChart(cols[7]||"0"))+Math.abs(parseAmtTopChart(cols[8]||"0")),family=Math.abs(parseAmtTopChart(cols[9]||"0"));rawData.expense.push({date:d,rental,bills,livingCost:living,family,total:rental+bills+living+family})}}}}function parseDebtCSV(csvText){var lines=csvText.trim().split(/\r?\n/);if(!(lines.length<2)){var iconRow=parseCSVLine(lines[0]);icons.debt={shinhan:iconRow[3]||"",sc:iconRow[4]||""},rawData.debt=[];for(var i=1;i<lines.length;i++){var cols=parseCSVLine(lines[i]),dateStr=(cols[0]||"").trim();if(dateStr){var m=dateStr.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);if(m){var d=new Date(parseInt(m[3],10),parseInt(m[1],10)-1,parseInt(m[2],10)),shinhan=Math.abs(parseAmtTopChart(cols[3]||"0")),sc=Math.abs(parseAmtTopChart(cols[4]||"0"));rawData.debt.push({date:d,shinhan,sc,total:shinhan+sc})}}}}}function getDateRange(rangeKey){var now=new Date,curYear=now.getFullYear(),curMonth=now.getMonth();if("current-year"===rangeKey)return{start:new Date(curYear,0,1),end:new Date(curYear,11,31),monthsCount:12,isCurrent:!1,isYearly:!0};var start,end,mCount,offsetMap={"-6m":-6,"-3m":-3,"-1m":-1,current:0,"+1m":1,"+3m":3,"+6m":6},months=void 0!==offsetMap[rangeKey]?offsetMap[rangeKey]:0;return-1===months?(mCount=1,start=new Date(curYear,curMonth-1,1),end=new Date(curYear,curMonth,0)):months<0?(mCount=Math.abs(months),start=new Date(curYear,curMonth-mCount+1,1),end=new Date(curYear,curMonth+1,0)):months>0?(mCount=months,start=new Date(curYear,curMonth+1,1),end=new Date(curYear,curMonth+mCount+1,0)):(mCount=1,start=new Date(curYear,curMonth,1),end=new Date(curYear,curMonth+1,0)),{start,end,monthsCount:mCount,isCurrent:"current"===rangeKey,isSingleMonth:1===mCount,isFuture:rangeKey.startsWith("+")}}
+      function renderFBBreakdown(rangeKey) {
+          var expTotals,range=getDateRange(rangeKey),now=new Date,incFiltered=rawData.income.filter(r=>r.date>=range.start&&r.date<=range.end),activeIncomeRows=incFiltered.filter(r=>r.total>0),activeDates=new Set(activeIncomeRows.map(r=>r.date.getTime())),incActiveMonths=activeIncomeRows.length,incDivisor=range.isSingleMonth?1:incActiveMonths||range.monthsCount||1,incSums=incFiltered.reduce((acc,r)=>(acc.salary+=r.salary,acc.invest+=r.invest,acc.comp+=r.comp,acc.total+=r.total,acc),{salary:0,invest:0,comp:0,total:0}),incTotals={sum:incSums,avg:{salary:incSums.salary/incDivisor,invest:incSums.invest/incDivisor,comp:incSums.comp/incDivisor,total:incSums.total/incDivisor}},expFiltered=rawData.expense.filter(r=>r.date>=range.start&&r.date<=range.end),expActiveFiltered=range.isSingleMonth?expFiltered:expFiltered.filter(r=>activeDates.has(r.date.getTime())),expDivisor=range.isSingleMonth?1:incDivisor;
+          if (range.isFuture) {
+              var currentYearExp = rawData.expense.filter(r => r.date.getFullYear() === now.getFullYear());
+              var divYear = currentYearExp.length || 1;
+              var sumsYear = currentYearExp.reduce((acc, r) => (acc.rental += r.rental, acc.bills += r.bills, acc.livingCost += r.livingCost, acc.family += r.family, acc.total += r.total, acc), { rental: 0, bills: 0, livingCost: 0, family: 0, total: 0 });
+              var avgYearMonthly = { rental: sumsYear.rental / divYear, bills: sumsYear.bills / divYear, livingCost: sumsYear.livingCost / divYear, family: sumsYear.family / divYear, total: sumsYear.total / divYear };
+              var mCount = range.monthsCount || 1;
+              expTotals = { avg: avgYearMonthly, sum: { rental: avgYearMonthly.rental * mCount, bills: avgYearMonthly.bills * mCount, livingCost: avgYearMonthly.livingCost * mCount, family: avgYearMonthly.family * mCount, total: avgYearMonthly.total * mCount } };
+          } else {
+              var expSums = expActiveFiltered.reduce((acc, r) => (acc.rental += r.rental, acc.bills += r.bills, acc.livingCost += r.livingCost, acc.family += r.family, acc.total += r.total, acc), { rental: 0, bills: 0, livingCost: 0, family: 0, total: 0 });
+              expTotals = { sum: expSums, avg: { rental: expSums.rental / expDivisor, bills: expSums.bills / expDivisor, livingCost: expSums.livingCost / expDivisor, family: expSums.family / expDivisor, total: expSums.total / expDivisor } };
+          }
 
-    function injectFBAnimationStyles() {
-        if (!document.getElementById("fb-custom-anim-styles")) {
-            var styleEl = document.createElement("style");
-            styleEl.id = "fb-custom-anim-styles";
-            styleEl.innerHTML = `
-                @keyframes fbScaleIn {
-                    0% { transform: scaleX(0); opacity: 0; }
-                    100% { transform: scaleX(1); opacity: 0.95; }
-                }
-                .fb-semicircle-anim {
-                    animation: fbScaleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-                    transform-origin: left center;
-                }
-                .fb-item-dimmed {
-                    opacity: 0.3 !important;
-                    transition: opacity 0.3s ease;
-                }
-                .fb-item-active {
-                    opacity: 1 !important;
-                    transition: opacity 0.3s ease;
-                }
-                .fb-inline-chips {
-                    display: flex;
-                    flex-wrap: wrap;
-                    gap: 6px;
-                    margin-top: 4px;
-                }
-                .fb-chip {
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 4px;
-                    background: rgba(255,255,255,0.08);
-                    border-radius: 14px;
-                    padding: 3px 8px;
-                    font-size: 13px;
-                    white-space: nowrap;
-                }
-                .fb-chip-icon {
-                    width: 14px;
-                    height: 14px;
-                    object-fit: contain;
-                }
-                .fb-chip-val {
-                    font-weight: 600;
-                }
-            `;
-            document.head.appendChild(styleEl);
-        }
-    }
+          var debtFiltered=rawData.debt.filter(r=>r.date>=range.start&&r.date<=range.end),debtActiveFiltered=range.isSingleMonth?debtFiltered:debtFiltered.filter(r=>activeDates.has(r.date.getTime())),debtDivisor=range.isSingleMonth?1:incDivisor,debtSums=debtActiveFiltered.reduce((acc,r)=>(acc.shinhan+=r.shinhan,acc.sc+=r.sc,acc.total+=r.total,acc),{shinhan:0,sc:0,total:0}),debtTotals={sum:debtSums,avg:{shinhan:debtSums.shinhan/debtDivisor,sc:debtSums.sc/debtDivisor,total:debtSums.total/debtDivisor}},cashflowSum=incTotals.sum.total-expTotals.sum.total-debtTotals.sum.total,cashflowAvg=cashflowSum/(range.isSingleMonth?1:range.isYearly?incActiveMonths:incActiveMonths||range.monthsCount||1),totalIncomeBasis=range.isSingleMonth?incTotals.avg.total:incTotals.sum.total,totalDenom=totalIncomeBasis>0?totalIncomeBasis:1;
+          function fmtHeader(title,sumVal,avgVal){return range.isSingleMonth||range.isYearly?title+" (₫"+fmtShortDec(avgVal)+")":title+"<br>∑₫"+fmtShortDec(sumVal)+" | ₫"+fmtShortDec(avgVal)}
+          var expBasis = range.isSingleMonth ? expTotals.avg.total : expTotals.sum.total;
+          var debtBasis = range.isSingleMonth ? debtTotals.avg.total : debtTotals.sum.total;
+          var cashflowBasis = range.isSingleMonth ? cashflowAvg : cashflowSum;
 
-    function initFinancialBreakdown() {
-        injectFBAnimationStyles();
-        var now = Date.now();
-        Promise.all([
-            fetch(FB_BASE_URL + "&gid=" + GIDS.income + "&t=" + now).then(r => r.text()),
-            fetch(FB_BASE_URL + "&gid=" + GIDS.expense + "&t=" + now).then(r => r.text()),
-            fetch(FB_BASE_URL + "&gid=" + GIDS.debt + "&t=" + now).then(r => r.text())
-        ]).then(function(results) {
-            parseIncomeCSV(results[0]);
-            parseExpenseCSV(results[1]);
-            parseDebtCSV(results[2]);
-            renderFBBreakdown(RANGES[currentRangeIndex]);
-        }).catch(function(err) {
-            console.error("FB Stack Chart load error:", err);
-        });
-    }
+          var cashflowItem = { id: "cashflow", title: "Cashflow", headerLabel: fmtHeader("Cashflow", cashflowSum, cashflowAvg), total: Math.abs(cashflowBasis), pct: (cashflowBasis / totalDenom * 100).toFixed(1), color: "#14b8a6", children: [{ name: "Salary", sumVal: incTotals.sum.salary, avgVal: incTotals.avg.salary, icon: icons.income.salary }, { name: "Invest", sumVal: incTotals.sum.invest, avgVal: incTotals.avg.invest, icon: icons.income.invest }, { name: "Comp.", sumVal: incTotals.sum.comp, avgVal: incTotals.avg.comp, icon: icons.income.comp }] },
+              expenseItem = { id: "expense", title: "Expenses", headerLabel: fmtHeader("Expenses", expTotals.sum.total, expTotals.avg.total), total: Math.abs(expBasis), pct: (expBasis / totalDenom * 100).toFixed(1), color: "#ec4899", isExpense: true, children: [{ name: "Rental", sumVal: expTotals.sum.rental, avgVal: expTotals.avg.rental, icon: icons.expense.rental }, { name: "Bills & Ins.", sumVal: expTotals.sum.bills, avgVal: expTotals.avg.bills, icon: icons.expense.bills }, { name: "Living Cost", sumVal: expTotals.sum.livingCost, avgVal: expTotals.avg.livingCost, icon: icons.expense.livingCost }, { name: "Family", sumVal: expTotals.sum.family, avgVal: expTotals.avg.family, icon: icons.expense.family }] },
+              debtItem = { id: "debts", title: "Debts", headerLabel: fmtHeader("Debts", debtTotals.sum.total, debtTotals.avg.total), total: Math.abs(debtBasis), pct: (debtBasis / totalDenom * 100).toFixed(1), color: "#a855f7", isDebt: true, children: [{ name: "Shinhan", sumVal: debtTotals.sum.shinhan, avgVal: debtTotals.avg.shinhan, icon: icons.debt.shinhan }, { name: "SC", sumVal: debtTotals.sum.sc, avgVal: debtTotals.avg.sc, icon: icons.debt.sc }] };
 
-    function parseIncomeCSV(csvText) {
-        var lines = csvText.trim().split(/\r?\n/);
-        if (lines.length < 2) return;
-        rawData.income = [];
-        for (var i = 1; i < lines.length; i++) {
-            var cols = parseCSVLine(lines[i]), qStr = (cols[16] || "").trim();
-            if (qStr) {
-                var d = parseMonthYear ? parseMonthYear(qStr) : null;
-                if (d) {
-                    var salary = Math.abs(parseAmtTopChart(cols[19] || "0")),
-                        invest = Math.abs(parseAmtTopChart(cols[20] || "0")),
-                        comp = Math.abs(parseAmtTopChart(cols[21] || "0"));
-                    rawData.income.push({ date: d, salary: salary, invest: invest, comp: comp, total: salary + invest + comp });
-                }
-            }
-        }
-    }
+          var allItems=[cashflowItem,expenseItem,debtItem];allItems.sort((a,b)=>a.total-b.total),allItems.forEach((item,index)=>item.segmentIndex=index);var bigItem=allItems[2],subItems=[allItems[0],allItems[1]];subItems.sort((a,b)=>"expense"===a.id?-1:1);
+          function buildInlineChipsHtml(item){if(item.isDebt){var dHtml='<div class="fb-inline-chips fb-debt-chips-inline">';return item.children.forEach(function(c){var avgV;c.sumVal&&!isNaN(c.sumVal)&&0!==Math.round(c.sumVal)&&(dHtml+='<span class="fb-chip">',c.icon&&(dHtml+='<img class="fb-chip-icon" src="'+c.icon+'" alt="'+c.name+'" onerror="this.style.display=\'none\'" />'),avgV=c.avgVal,dHtml+='<span class="fb-chip-val">₫'+fmtShortDec(avgV)+"</span></span>")}),dHtml+="</div>"}var childrenToRender=item.children?item.children.slice():[];if(item.isExpense){var expenseOrder={"Bills & Ins.":1,"Living Cost":2,Rental:3,Family:3};childrenToRender.sort(function(a,b){return(expenseOrder[a.name]||99)-(expenseOrder[b.name]||99)})}var html='<div class="fb-inline-chips">',chipList=[],isBigCashflow="undefined"!=typeof bigItem&&bigItem&&"cashflow"===item.id&&"cashflow"===bigItem.id,hideTextLabel="current-year"===rangeKey||"string"==typeof rangeKey&&rangeKey.startsWith("+")&&"+1m"!==rangeKey;if(childrenToRender.forEach(function(c){if(c.sumVal&&!isNaN(c.sumVal)&&0!==Math.round(c.sumVal)){var sumV=c.sumVal,avgV=c.avgVal,cHtml='<span class="fb-chip">';c.icon&&(cHtml+='<img class="fb-chip-icon" src="'+c.icon+'" alt="'+c.name+'" onerror="this.style.display=\'none\'" />'),cHtml+=(isBigCashflow&&!hideTextLabel?c.name+": ":"")+'<span class="fb-chip-val">'+(item.isExpense||range.isSingleMonth?"₫"+fmtShortDec(avgV):"∑₫"+fmtShortDec(sumV)+" | ₫"+fmtShortDec(avgV))+"</span></span>",chipList.push(cHtml)}}),isBigCashflow)chipList.forEach(function(chipHtml){html+='<div class="fb-chips-row">'+chipHtml+"</div>"});else if(item.isExpense)for(var i=0;i<chipList.length;i+=2)html+='<div class="fb-chips-row">'+chipList.slice(i,i+2).join("")+"</div>";else html+='<div class="fb-chips-row">'+chipList.join("")+"</div>";return html+="</div>"}
+          function renderSteppedSemicirclesWithText(itemsList){var maxVal=Math.max(itemsList[2].total,1),bgImages={0:"https://i.pinimg.com/736x/cb/29/bd/cb29bd3e97ee291d64c66f85030f2968.jpg",1:"https://i.pinimg.com/736x/dd/45/91/dd45914f35fb9a5cf40656b141742498.jpg",2:"https://i.pinimg.com/736x/a3/b3/56/a3b3562a288a03b7309d67413f03f996.jpg"},svg='<svg class="fb-semicircles-svg" viewBox="0 0 160 140" style="width:100%; height:140px; background:transparent; overflow:visible;">';svg+="  <defs>",itemsList.forEach(function(item,idx){svg+='    <pattern id="fbTextureBg_'+idx+'" patternUnits="userSpaceOnUse" width="160" height="140">',svg+='      <image href="'+(bgImages[idx]||bgImages[2])+'" x="0" y="0" width="160" height="140" preserveAspectRatio="xMidYMid slice" />',svg+="    </pattern>"}),svg+="  </defs>";var xOffsets=[0,30,75];return itemsList.forEach(function(item,idx){var r=Math.max(20,Math.round(item.total/maxVal*60)),startX=xOffsets[idx],animDelay=.15*idx+"s",pathD=["M",startX,70-r,"A",r,r,0,0,1,startX,70+r,"Z"].join(" ");svg+='<g class="fb-semicircle-anim" style="animation-delay:'+animDelay+'; cursor:pointer; transition:all 0.3s;" data-segment-index="'+item.segmentIndex+'">',svg+='  <path d="'+pathD+'" fill="url(#fbTextureBg_'+idx+')" opacity="0.95" />',svg+='  <path d="'+pathD+'" fill="'+item.color+'" style="mix-blend-mode: multiply;" opacity="0.85" />',svg+="</g>"}),svg+="</svg>"}
 
-    function parseExpenseCSV(csvText) {
-        var lines = csvText.trim().split(/\r?\n/);
-        if (lines.length < 3) return;
-        var iconRow = parseCSVLine(lines[0]);
-        icons.expense = { rental: iconRow[3] || "", bills: iconRow[6] || "", livingCost: iconRow[7] || iconRow[8] || "", family: iconRow[9] || "" };
-        rawData.expense = [];
-        for (var i = 2; i < lines.length; i++) {
-            var cols = parseCSVLine(lines[i]), parts = (cols[0] || "").split("/");
-            if (parts.length >= 2) {
-                var d = new Date(2e3 + parseInt(parts[1], 10), parseInt(parts[0], 10) - 1, 1),
-                    rental = Math.abs(parseAmtTopChart(cols[3] || "0")),
-                    bills = Math.abs(parseAmtTopChart(cols[6] || "0")),
-                    living = Math.abs(parseAmtTopChart(cols[7] || "0")) + Math.abs(parseAmtTopChart(cols[8] || "0")),
-                    family = Math.abs(parseAmtTopChart(cols[9] || "0"));
-                rawData.expense.push({ date: d, rental: rental, bills: bills, livingCost: living, family: family, total: rental + bills + living + family });
-            }
-        }
-    }
+          var html = "";
+          html += '<div class="fb-nav-bar">';
+          html += '  <button class="fb-nav-btn" id="fb-prev-btn" aria-label="Previous filter"><i class="bi bi-chevron-left"></i></button>';
+          html += '  <span class="fb-nav-label">' + RANGE_LABELS[rangeKey] + '</span>';
+          html += '  <button class="fb-nav-btn" id="fb-next-btn" aria-label="Next filter"><i class="bi bi-chevron-right"></i></button>';
+          html += '</div>';
 
-    function parseDebtCSV(csvText) {
-        var lines = csvText.trim().split(/\r?\n/);
-        if (lines.length < 2) return;
-        var iconRow = parseCSVLine(lines[0]);
-        icons.debt = { shinhan: iconRow[3] || "", sc: iconRow[4] || "" };
-        rawData.debt = [];
-        for (var i = 1; i < lines.length; i++) {
-            var cols = parseCSVLine(lines[i]), dateStr = (cols[0] || "").trim();
-            if (dateStr) {
-                var m = dateStr.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-                if (m) {
-                    var d = new Date(parseInt(m[3], 10), parseInt(m[1], 10) - 1, parseInt(m[2], 10)),
-                        shinhan = Math.abs(parseAmtTopChart(cols[3] || "0")),
-                        sc = Math.abs(parseAmtTopChart(cols[4] || "0"));
-                    rawData.debt.push({ date: d, shinhan: shinhan, sc: sc, total: shinhan + sc });
-                }
-            }
-        }
-    }
+          html += '<div class="fb-chart-layout-grid" id="fb-chart-layout-canvas" style="display:grid; grid-template-columns: 160px 1fr; gap: 0px; align-items: top; padding: 5px;">';
+          
+          // Left Column
+          html += '  <div class="fb-stack-column">';
+          html += '    <div class="fb-semicircle-wrapper" style="width:160px; height:140px;">';
+          html +=        renderSteppedSemicirclesWithText(allItems);
+          html += '    </div>';
+          
+          // Increased margin-top to 40px for larger gap below semicircles
+          html += '    <div class="fb-sub-items-bottom" style="margin-top:20px; display:grid; grid-template-columns: 1fr 1fr; gap:15px; width:100%;">';
+          subItems.forEach(function(item) {
+              html += '  <div class="fb-metric-block" data-index="' + item.segmentIndex + '" style="cursor:pointer;">';
+              html += '    <div class="fb-metric-header" style="font-size:13px; font-weight:600;">' + item.headerLabel + '</div>';
+              html += '    <div class="fb-sec-pct" style="color:' + item.color + '; font-size: 28px; font-weight: bold;">' + item.pct + '%</div>';
+              html +=      buildInlineChipsHtml(item);
+              html += '  </div>';
+          });
+          html += '    </div>';
+          html += '  </div>';
 
-    function getDateRange(rangeKey) {
-        var now = new Date(), curYear = now.getFullYear(), curMonth = now.getMonth();
-        if (rangeKey === "current-year") return { start: new Date(curYear, 0, 1), end: new Date(curYear, 11, 31), monthsCount: 12, isCurrent: false, isYearly: true };
-        
-        var start, end, mCount, offsetMap = { "-6m": -6, "-3m": -3, "-1m": -1, current: 0, "+1m": 1, "+3m": 3, "+6m": 6 },
-            months = offsetMap[rangeKey] !== undefined ? offsetMap[rangeKey] : 0;
-            
-        if (months === -1) {
-            mCount = 1;
-            start = new Date(curYear, curMonth - 1, 1);
-            end = new Date(curYear, curMonth, 0);
-        } else if (months < 0) {
-            mCount = Math.abs(months);
-            start = new Date(curYear, curMonth - mCount + 1, 1);
-            end = new Date(curYear, curMonth + 1, 0);
-        } else if (months > 0) {
-            mCount = months;
-            start = new Date(curYear, curMonth + 1, 1);
-            end = new Date(curYear, curMonth + mCount + 1, 0);
-        } else {
-            mCount = 1;
-            start = new Date(curYear, curMonth, 1);
-            end = new Date(curYear, curMonth + 1, 0);
-        }
-        return { start: start, end: end, monthsCount: mCount, isCurrent: rangeKey === "current", isSingleMonth: mCount === 1, isFuture: rangeKey.startsWith("+") };
-    }
+          // Right Column
+          html += '  <div class="fb-big-item-column" style="display:flex; flex-direction:column; justify-content:flex-start; min-width:0; overflow:hidden;">';
+          html += '    <div class="fb-metric-block" data-index="' + bigItem.segmentIndex + '" style="cursor:pointer; margin-top:5px;">';
+          html += '      <div class="fb-metric-header" style="font-size:13.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + bigItem.headerLabel + '</div>';
+          html += '      <div class="fb-main-pct" style="color:' + bigItem.color + '; font-size: 38px; font-weight: bold;">' + bigItem.pct + '%</div>';
+          html +=        buildInlineChipsHtml(bigItem);
+          html += '    </div>';
+          html += '  </div>';
+          html += '</div>';
+          document.getElementById("fb-content").innerHTML=html;var canvasEl=document.getElementById("fb-chart-layout-canvas");canvasEl&&canvasEl.addEventListener("click",function(e){var targetMetric=e.target.closest(".fb-metric-block"),targetPath=e.target.closest("path");if(targetMetric){var idx=parseInt(targetMetric.getAttribute("data-index"),10);fbHighlight(idx)}else if(targetPath){var pIdx=parseInt(targetPath.getAttribute("data-segment-index"),10);fbHighlight(pIdx)}else fbHighlight(null)}),document.getElementById("fb-prev-btn").addEventListener("click",function(){currentRangeIndex>0&&(currentRangeIndex--,renderFBBreakdown(RANGES[currentRangeIndex]))}),document.getElementById("fb-next-btn").addEventListener("click",function(){currentRangeIndex<RANGES.length-1&&(currentRangeIndex++,renderFBBreakdown(RANGES[currentRangeIndex]))});
+      }
+      window.initFinancialBreakdown = initFinancialBreakdown;
+    })(); 
 
-    function renderFBBreakdown(rangeKey) {
-        var expTotals, range = getDateRange(rangeKey), now = new Date();
-        var incFiltered = rawData.income.filter(r => r.date >= range.start && r.date <= range.end);
-        var activeIncomeRows = incFiltered.filter(r => r.total > 0);
-        var activeDates = new Set(activeIncomeRows.map(r => r.date.getTime()));
-        var incActiveMonths = activeIncomeRows.length;
-        var incDivisor = range.isSingleMonth ? 1 : incActiveMonths || range.monthsCount || 1;
-        var incSums = incFiltered.reduce((acc, r) => (acc.salary += r.salary, acc.invest += r.invest, acc.comp += r.comp, acc.total += r.total, acc), { salary: 0, invest: 0, comp: 0, total: 0 });
-        var incTotals = { sum: incSums, avg: { salary: incSums.salary / incDivisor, invest: incSums.invest / incDivisor, comp: incSums.comp / incDivisor, total: incSums.total / incDivisor } };
-        
-        var expFiltered = rawData.expense.filter(r => r.date >= range.start && r.date <= range.end);
-        var expActiveFiltered = range.isSingleMonth ? expFiltered : expFiltered.filter(r => activeDates.has(r.date.getTime()));
-        var expDivisor = range.isSingleMonth ? 1 : incDivisor;
-        
-        if (range.isFuture) {
-            var currentYearExp = rawData.expense.filter(r => r.date.getFullYear() === now.getFullYear());
-            var divYear = currentYearExp.length || 1;
-            var sumsYear = currentYearExp.reduce((acc, r) => (acc.rental += r.rental, acc.bills += r.bills, acc.livingCost += r.livingCost, acc.family += r.family, acc.total += r.total, acc), { rental: 0, bills: 0, livingCost: 0, family: 0, total: 0 });
-            var avgYearMonthly = { rental: sumsYear.rental / divYear, bills: sumsYear.bills / divYear, livingCost: sumsYear.livingCost / divYear, family: sumsYear.family / divYear, total: sumsYear.total / divYear };
-            var mCount = range.monthsCount || 1;
-            expTotals = { avg: avgYearMonthly, sum: { rental: avgYearMonthly.rental * mCount, bills: avgYearMonthly.bills * mCount, livingCost: avgYearMonthly.livingCost * mCount, family: avgYearMonthly.family * mCount, total: avgYearMonthly.total * mCount } };
-        } else {
-            var expSums = expActiveFiltered.reduce((acc, r) => (acc.rental += r.rental, acc.bills += r.bills, acc.livingCost += r.livingCost, acc.family += r.family, acc.total += r.total, acc), { rental: 0, bills: 0, livingCost: 0, family: 0, total: 0 });
-            expTotals = { sum: expSums, avg: { rental: expSums.rental / expDivisor, bills: expSums.bills / expDivisor, livingCost: expSums.livingCost / expDivisor, family: expSums.family / expDivisor, total: expSums.total / expDivisor } };
-        }
-
-        var debtFiltered = rawData.debt.filter(r => r.date >= range.start && r.date <= range.end);
-        var debtActiveFiltered = range.isSingleMonth ? debtFiltered : debtFiltered.filter(r => activeDates.has(r.date.getTime()));
-        var debtDivisor = range.isSingleMonth ? 1 : incDivisor;
-        var debtSums = debtActiveFiltered.reduce((acc, r) => (acc.shinhan += r.shinhan, acc.sc += r.sc, acc.total += r.total, acc), { shinhan: 0, sc: 0, total: 0 });
-        var debtTotals = { sum: debtSums, avg: { shinhan: debtSums.shinhan / debtDivisor, sc: debtSums.sc / debtDivisor, total: debtSums.total / debtDivisor } };
-
-        var cashflowSum = incTotals.sum.total - expTotals.sum.total - debtTotals.sum.total;
-        var cashflowAvg = cashflowSum / (range.isSingleMonth ? 1 : range.isYearly ? incActiveMonths : incActiveMonths || range.monthsCount || 1);
-        var totalIncomeBasis = range.isSingleMonth ? incTotals.avg.total : incTotals.sum.total;
-        var totalDenom = totalIncomeBasis > 0 ? totalIncomeBasis : 1;
-        
-function fmtHeader(title, sumVal, avgVal) {
-    if (range.isSingleMonth || range.isYearly) {
-        return title + " (₫" + fmtShortDec(avgVal) + ")";
-    }
-    // Added <br> between sum and average
-    return title + "<br>∑₫" + fmtShortDec(sumVal) + " | ₫" + fmtShortDec(avgVal) + "";
-}
-
-        var expBasis = range.isSingleMonth ? expTotals.avg.total : expTotals.sum.total;
-        var debtBasis = range.isSingleMonth ? debtTotals.avg.total : debtTotals.sum.total;
-        var cashflowBasis = range.isSingleMonth ? cashflowAvg : cashflowSum;
-
-        var cashflowItem = { id: "cashflow", title: "Cashflow", headerLabel: fmtHeader("Cashflow", cashflowSum, cashflowAvg), total: Math.abs(cashflowBasis), pct: (cashflowBasis / totalDenom * 100).toFixed(1), color: "#14b8a6", children: [{ name: "Salary", sumVal: incTotals.sum.salary, avgVal: incTotals.avg.salary, icon: icons.income.salary }, { name: "Invest", sumVal: incTotals.sum.invest, avgVal: incTotals.avg.invest, icon: icons.income.invest }, { name: "Comp.", sumVal: incTotals.sum.comp, avgVal: incTotals.avg.comp, icon: icons.income.comp }] },
-            expenseItem = { id: "expense", title: "Expenses", headerLabel: fmtHeader("Expenses", expTotals.sum.total, expTotals.avg.total), total: Math.abs(expBasis), pct: (expBasis / totalDenom * 100).toFixed(1), color: "#ec4899", isExpense: true, children: [{ name: "Rental", sumVal: expTotals.sum.rental, avgVal: expTotals.avg.rental, icon: icons.expense.rental }, { name: "Bills & Ins.", sumVal: expTotals.sum.bills, avgVal: expTotals.avg.bills, icon: icons.expense.bills }, { name: "Living Cost", sumVal: expTotals.sum.livingCost, avgVal: expTotals.avg.livingCost, icon: icons.expense.livingCost }, { name: "Family", sumVal: expTotals.sum.family, avgVal: expTotals.avg.family, icon: icons.expense.family }] },
-            debtItem = { id: "debts", title: "Debts", headerLabel: fmtHeader("Debts", debtTotals.sum.total, debtTotals.avg.total), total: Math.abs(debtBasis), pct: (debtBasis / totalDenom * 100).toFixed(1), color: "#a855f7", isDebt: true, children: [{ name: "Shinhan", sumVal: debtTotals.sum.shinhan, avgVal: debtTotals.avg.shinhan, icon: icons.debt.shinhan }, { name: "SC", sumVal: debtTotals.sum.sc, avgVal: debtTotals.avg.sc, icon: icons.debt.sc }] };
-
-        var allItems = [cashflowItem, expenseItem, debtItem];
-        allItems.sort((a, b) => a.total - b.total);
-        
-        allItems.forEach((item, index) => item.segmentIndex = index);
-
-        var bigItem = allItems[2];
-        var subItems = [allItems[0], allItems[1]];
-
-        subItems.sort((a, b) => (a.id === "expense" ? -1 : 1));
-
-        function buildInlineChipsHtml(item) {
-    // Check if range is Current Year or +3m, AND if the item is the big item
-    var isBigItem = (bigItem && item.id === bigItem.id);
-    var hideTextLabel = (rangeKey === "current-year" || rangeKey === "+3m") && isBigItem;
-
-    if (item.isDebt) {
-        var dHtml = '<div class="fb-inline-chips fb-debt-chips-inline">';
-        item.children.forEach(function(c) {
-            var avgV;
-            if (c.sumVal && !isNaN(c.sumVal) && 0 !== Math.round(c.sumVal)) {
-                dHtml += '<span class="fb-chip">';
-                if (c.icon) dHtml += '<img class="fb-chip-icon" src="' + c.icon + '" alt="' + c.name + '" onerror="this.style.display=\'none\'" />';
-                avgV = c.avgVal;
-                dHtml += '<span class="fb-chip-val">₫' + fmtShortDec(avgV) + '</span></span>';
-            }
-        });
-        dHtml += "</div>";
-        return dHtml;
-    }
-    
-    var html = '<div class="fb-inline-chips">';
-    item.children.forEach(function(c) {
-        var sumV, avgV;
-        if (c.sumVal && !isNaN(c.sumVal) && 0 !== Math.round(c.sumVal)) {
-            html += '<span class="fb-chip">';
-            if (c.icon) html += '<img class="fb-chip-icon" src="' + c.icon + '" alt="' + c.name + '" onerror="this.style.display=\'none\'" />';
-            sumV = c.sumVal; avgV = c.avgVal;
-            
-            // Hide label prefix only for the big item on Current Year or +3m
-            var labelPrefix = hideTextLabel ? "" : (c.name + ": ");
-            
-            html += labelPrefix + '<span class="fb-chip-val">' + (item.isExpense || range.isSingleMonth ? "₫" + fmtShortDec(avgV) : "∑₫" + fmtShortDec(sumV) + " | ₫" + fmtShortDec(avgV)) + '</span></span>';
-        }
-    });
-    html += "</div>";
-    return html;
-}
-
-        function renderSteppedSemicirclesWithText(itemsList) {
-    var maxVal = Math.max(itemsList[2].total, 1);
-    
-    // Define 3 separate image URLs for the semi-circles
-    var bgImages = {
-        0: "https://i.pinimg.com/736x/cb/29/bd/cb29bd3e97ee291d64c66f85030f2968.jpg", // Smallest semi-circle
-        1: "https://i.pinimg.com/736x/dd/45/91/dd45914f35fb9a5cf40656b141742498.jpg", // Medium semi-circle
-        2: "https://i.pinimg.com/736x/a3/b3/56/a3b3562a288a03b7309d67413f03f996.jpg"  // Largest semi-circle
-    };
-    
-    var svg = '<svg class="fb-semicircles-svg" viewBox="0 0 160 140" style="width:100%; height:140px; background:transparent; overflow:visible;">';
-    
-    // Create 3 SVG patterns
-    svg += '  <defs>';
-    itemsList.forEach(function(item, idx) {
-        var imgUrl = bgImages[idx] || bgImages[2];
-        svg += '    <pattern id="fbTextureBg_' + idx + '" patternUnits="userSpaceOnUse" width="160" height="140">';
-        svg += '      <image href="' + imgUrl + '" x="0" y="0" width="160" height="140" preserveAspectRatio="xMidYMid slice" />';
-        svg += '    </pattern>';
-    });
-    svg += '  </defs>';
-
-    var xOffsets = [0, 30, 75];
-
-    itemsList.forEach(function(item, idx) {
-        var r = Math.max(20, Math.round((item.total / maxVal) * 60));
-        var startX = xOffsets[idx];
-        var cy = 70;
-        var animDelay = (idx * 0.15) + "s";
-        var pathD = ["M", startX, cy - r, "A", r, r, 0, 0, 1, startX, cy + r, "Z"].join(" ");
-
-        svg += '<g class="fb-semicircle-anim" style="animation-delay:' + animDelay + '; cursor:pointer; transition:all 0.3s;" data-segment-index="' + item.segmentIndex + '">';
-        // 1. Bottom Layer: Distinct image texture for this index
-        svg += '  <path d="' + pathD + '" fill="url(#fbTextureBg_' + idx + ')" opacity="0.95" />';
-        // 2. Top Layer: Item theme color tinted over the pattern
-        svg += '  <path d="' + pathD + '" fill="' + item.color + '" style="mix-blend-mode: multiply;" opacity="0.85" />';
-        svg += '</g>';
-    });
-
-    svg += '</svg>';
-    return svg;
-}
-// Helper to generate text SVG with image pattern + color blend
-function renderPatternPctSvg(pctValue, color, height, fontSize, bgImgUrl) {
-    var patternId = "fbPctPattern_" + Math.random().toString(36).substr(2, 9);
-    return `
-        <svg style="width: 100%; height: ${height}px; overflow: visible; display: block;">
-            <defs>
-                <pattern id="${patternId}" patternUnits="userSpaceOnUse" width="200" height="${height}">
-                    <image href="${bgImgUrl}" x="0" y="0" width="200" height="${height}" preserveAspectRatio="xMidYMid slice" />
-                </pattern>
-            </defs>
-            <g>
-                <!-- Base Layer: Background Image Texture inside Text -->
-                <text x="0" y="${fontSize * 0.85}" fill="url(#${patternId})" font-size="${fontSize}px" font-weight="bold">${pctValue}%</text>
-                <!-- Tint Layer: Color Blended over Image Texture -->
-                <text x="0" y="${fontSize * 0.85}" fill="${color}" font-size="${fontSize}px" font-weight="bold" style="mix-blend-mode: multiply;" opacity="0.85">${pctValue}%</text>
-            </g>
-        </svg>
-    `;
-}
-
-        var html = "";
-        html += '<div class="fb-nav-bar">';
-        html += '  <button class="fb-nav-btn" id="fb-prev-btn" aria-label="Previous filter"><i class="bi bi-chevron-left"></i></button>';
-        html += '  <span class="fb-nav-label">' + RANGE_LABELS[rangeKey] + '</span>';
-        html += '  <button class="fb-nav-btn" id="fb-next-btn" aria-label="Next filter"><i class="bi bi-chevron-right"></i></button>';
-        html += '</div>';
-
-        html += '<div class="fb-chart-layout-grid" id="fb-chart-layout-canvas" style="display:grid; grid-template-columns: 160px 1fr; gap: 0px; align-items: top; padding: 5px;">';
-        
-        // Left Column
-        html += '  <div class="fb-stack-column">';
-        html += '    <div class="fb-semicircle-wrapper" style="width:160px; height:140px;">';
-        html +=        renderSteppedSemicirclesWithText(allItems);
-        html += '    </div>';
-        
-        html += '    <div class="fb-sub-items-bottom" style="margin-top:20px; display:grid; grid-template-columns: 1fr 1fr; gap:8px; width:100%;">';
-        subItems.forEach(function(item) {
-            html += '  <div class="fb-metric-block" data-index="' + item.segmentIndex + '" style="cursor:pointer;">';
-            html += '    <div class="fb-metric-header" style="font-size:13px; font-weight:600;">' + item.headerLabel + '</div>';
-            html += '    <div class="fb-sec-pct" style="color:' + item.color + '; font-size: 28px; font-weight: bold;">' + item.pct + '%</div>';
-            html +=      buildInlineChipsHtml(item);
-            html += '  </div>';
-        });
-        html += '    </div>';
-        html += '  </div>';
-
-        // Right Column
-        html += '  <div class="fb-big-item-column" style="display:flex; flex-direction:column; justify-content:flex-start; min-width:0; overflow:hidden;">';
-        html += '    <div class="fb-metric-block" data-index="' + bigItem.segmentIndex + '" style="cursor:pointer; margin-top:5px;">';
-        html += '      <div class="fb-metric-header" style="font-size:13.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + bigItem.headerLabel + '</div>';
-        html += '      <div class="fb-main-pct" style="color:' + bigItem.color + '; font-size: 38px; font-weight: bold;">' + bigItem.pct + '%</div>';
-        html +=        buildInlineChipsHtml(bigItem);
-        html += '    </div>';
-        html += '  </div>';
-
-        html += '</div>';
-
-        document.getElementById("fb-content").innerHTML = html;
-
-        var canvasEl = document.getElementById("fb-chart-layout-canvas");
-        if (canvasEl) {
-            canvasEl.addEventListener("click", function(e) {
-                var targetMetric = e.target.closest(".fb-metric-block"),
-                    targetPath = e.target.closest("path");
-                if (targetMetric) {
-                    var idx = parseInt(targetMetric.getAttribute("data-index"), 10);
-                    fbHighlight(idx);
-                } else if (targetPath) {
-                    var pIdx = parseInt(targetPath.getAttribute("data-segment-index"), 10);
-                    fbHighlight(pIdx);
-                } else {
-                    fbHighlight(null);
-                }
-            });
-        }
-
-        document.getElementById("fb-prev-btn").addEventListener("click", function() {
-            if (currentRangeIndex > 0) {
-                currentRangeIndex--;
-                renderFBBreakdown(RANGES[currentRangeIndex]);
-            }
-        });
-
-        document.getElementById("fb-next-btn").addEventListener("click", function() {
-            if (currentRangeIndex < RANGES.length - 1) {
-                currentRangeIndex++;
-                renderFBBreakdown(RANGES[currentRangeIndex]);
-            }
-        });
-    }
-
-    // Attach to window so it can be called externally
-    window.initFinancialBreakdown = initFinancialBreakdown;
-})();
-
-var caActiveIdx = null;
-function fbHighlight(idx) {
-    caActiveIdx = caActiveIdx === idx ? null : idx;
-    var layoutEl = document.getElementById("fb-chart-layout-canvas");
-    if (layoutEl) {
-        if (caActiveIdx === null) layoutEl.classList.remove("has-selection");
-        else layoutEl.classList.add("has-selection");
-
-        layoutEl.querySelectorAll(".fb-metric-block").forEach(function(el) {
-            var elIdx = parseInt(el.getAttribute("data-index"), 10);
-            if (caActiveIdx === null || elIdx === caActiveIdx) {
-                el.classList.add("fb-item-active");
-                el.classList.remove("fb-item-dimmed");
-            } else {
-                el.classList.remove("fb-item-active");
-                el.classList.add("fb-item-dimmed");
-            }
-        });
-
-        layoutEl.querySelectorAll(".fb-semicircles-svg path").forEach(function(path) {
-            var pIdx = parseInt(path.getAttribute("data-segment-index"), 10);
-            if (caActiveIdx === null || pIdx === caActiveIdx) {
-                path.style.opacity = "1";
-                path.style.transform = "scaleX(1.05)";
-                path.style.transformOrigin = "left center";
-            } else {
-                path.style.opacity = "0.3";
-                path.style.transform = "scaleX(1)";
-            }
-        });
-    }
-}
+    var caActiveIdx = null;
+    function fbHighlight(idx){caActiveIdx=caActiveIdx===idx?null:idx;var layoutEl=document.getElementById("fb-chart-layout-canvas");layoutEl&&(null===caActiveIdx?layoutEl.classList.remove("has-selection"):layoutEl.classList.add("has-selection"),layoutEl.querySelectorAll(".fb-metric-block").forEach(function(el){var elIdx=parseInt(el.getAttribute("data-index"),10);null===caActiveIdx||elIdx===caActiveIdx?(el.classList.add("fb-item-active"),el.classList.remove("fb-item-dimmed")):(el.classList.remove("fb-item-active"),el.classList.add("fb-item-dimmed"))}),layoutEl.querySelectorAll(".fb-semicircles-svg path").forEach(function(path){var pIdx=parseInt(path.getAttribute("data-segment-index"),10);null===caActiveIdx||pIdx===caActiveIdx?(path.style.opacity="1",path.style.transform="scaleX(1.05)",path.style.transformOrigin="left center"):(path.style.opacity="0.3",path.style.transform="scaleX(1)")}))}
     // Touch events
     window.addEventListener('touchstart', onStart, { passive: true });
     window.addEventListener('touchmove', onMove, { passive: false });
