@@ -6961,9 +6961,6 @@ function renderSalaryTrendChart() {
       });
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      loadData();
-    });
     // Touch events
     window.addEventListener('touchstart', onStart, { passive: true });
     window.addEventListener('touchmove', onMove, { passive: false });
@@ -6998,7 +6995,7 @@ function renderSalaryTrendChart() {
 
     updateMarketStatusDot();fetchForexNavBalance();initFinancialBreakdown();
     loadBalanceHistoryTC();restoreBudgetSubtab();updateBalanceVisibility();
-    fetchOrderSheetCSV();loadTransactionHistory();loadSubscriptions();
+    fetchOrderSheetCSV();loadTransactionHistory();loadSubscriptions();loadData();
 
     loadRecent();fetchSheetCSV();
     loadCycles();initFullyAutomatedTimeline();loadFIRE();
