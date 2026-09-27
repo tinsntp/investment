@@ -20,7 +20,10 @@
 <link href="https://fonts.googleapis.com/icon?family=IBM+Plex+Mono" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Alegreya" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 html,body{width:100%;height:100%;border-radius:10px;background:#0a0a0c;font-family: "Lexend", Roboto, sans-serif;font-weight:300!important;color:#fff;overflow:hidden;margin-top:5px;display:flex;flex-direction:column;padding-bottom:5px}
@@ -50,8 +53,418 @@ html,body{width:100%;height:100%;border-radius:10px;background:#0a0a0c;font-fami
     --pink-bg: rgba(255, 105, 180, 0.15);
 
     --status-ongoing: rgb(20, 184, 166);
-    --status-close: #6E7681;}
+    --status-close: #6E7681;
 
+      --bg-hover: #222222;
+      --bg-element: #262626;
+
+      --text-main: #f0f0f0;
+      --text-muted: #757575;
+      --text-dark: #484848;
+
+      --accent-teal: #00f5d4;
+      --accent-pink: #ff2a85;
+      --accent-orange: #f97316;
+      --accent-bhxh: #38bdf8;
+      --accent-bhyt: #818cf8;
+      --accent-bhtn: #c084fc;
+      --accent-purple: #a855f7;
+
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-pill: 20px;
+    }
+    
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      border: none !important;
+      outline: none;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+.app-container {
+      width: 100%;
+      max-width: 420px;
+      display: flex;
+      flex-direction: column;font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      gap: 16px;
+    }
+
+    .card-salary {
+      background-color: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+    }
+
+    .label-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    /* ==========================================================================
+       2. TOP CONTROLS & POPUP CALENDAR PICKER
+       ========================================================================== */
+    .top-controls-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      width: 100%;
+      position: relative;
+    }
+
+    .nav-tabs-salary {
+      display: flex;
+      background-color: var(--bg-card);
+      padding: 4px;
+      border-radius: var(--radius-md);
+      gap: 2px;
+      flex-shrink: 0;
+    }
+
+    .tab-btn-salary {
+      padding: 8px 12px;
+      background-color: transparent;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn-salary.active {
+      background-color: var(--bg-element);
+      color: var(--text-main);
+    }
+
+    .right-control-container {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background-color: var(--bg-card);
+      padding: 4px;
+      border-radius: var(--radius-md);
+      height: 35px;
+      position: relative;
+    }
+
+    .nav-arrow-btn {
+      background: transparent;
+      color: var(--text-main);
+      width: 27px;
+      height: 27px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 13px;
+      transition: background-color 0.2s ease;
+    }
+
+    .nav-arrow-btn:hover {
+      background-color: var(--bg-hover);
+    }
+
+    .date-display-btn {
+      background: transparent;
+      color: var(--text-main);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0 8px;
+      height: 27px;
+      display: flex;
+      align-items: center;
+      border-radius: var(--radius-sm);
+    }
+
+    .date-display-btn:hover {
+      background-color: var(--bg-hover);
+    }
+
+    /* Popup Calendar Picker Overlay */
+    .calendar-popup {
+      position: absolute;
+      top: 45px;
+      right: 0;
+      width: 280px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--bg-element) !important;
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      z-index: 100;
+      display: none;
+    }
+
+    .calendar-popup.open {
+      display: block;
+    }
+
+    .cal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+    }
+
+    .cal-cell {
+      padding: 8px 4px;
+      background-color: var(--bg-element);
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 600;
+      text-align: center;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    .cal-cell:hover {
+      background-color: var(--bg-hover);
+      color: var(--accent-teal);
+    }
+
+    .cal-cell.selected {
+      background-color: var(--accent-teal);
+      color: #0e0e0e;
+      font-weight: 700;
+    }
+
+    .cal-cell.disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    /* ==========================================================================
+       3. KPI OVERVIEW & BAR CHART
+       ========================================================================== */
+    .kpi-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .takehome-badge {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      background-color: var(--bg-element);
+      color: var(--accent-teal);
+      font-weight: 600;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .kpi-value {
+      font-size: 28px;
+      font-weight: 800;
+      margin-top: 4px;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+    }
+
+    .kpi-value.net {
+      color: var(--accent-teal);
+    }
+
+    .horizontal-chart-track {
+      width: 100%;
+      height: 10px;
+      background-color: var(--bg-element);
+      border-radius: 5px;
+      overflow: hidden;
+      display: flex;
+    }
+
+    .chart-segment-net {
+      background-color: var(--accent-teal);
+      transition: width 0.4s ease;
+    }
+
+    .chart-segment-bonus {
+      background-color: #f59e0b;
+      transition: width 0.4s ease;
+    }
+
+    .chart-segment-bhxh {
+      background-color: var(--accent-bhxh);
+      transition: width 0.4s ease;
+    }
+
+    .chart-segment-bhyt {
+      background-color: var(--accent-bhyt);
+      transition: width 0.4s ease;
+    }
+
+    .chart-segment-bhtn {
+      background-color: var(--accent-bhtn);
+      transition: width 0.4s ease;
+    }
+
+    .chart-segment-pit {
+      background-color: var(--accent-pink);
+      transition: width 0.4s ease;
+    }
+
+    .progress-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 16px;
+      justify-content: flex-start;
+      margin-top: 12px;
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    /* ==========================================================================
+       4. HISTORY TABLE WITH NATIVE SELECT DROPDOWN FOR FILTERING
+       ========================================================================== */
+    .card-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 6px;
+    }
+
+    .history-table th {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: left;
+      padding-bottom: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .history-table td {
+      padding: 13px 0;
+      font-size: 13px;
+      border-bottom: 1px solid var(--bg-element) !important;
+    }
+
+    .history-table tr:last-child td {
+      border-bottom: none !important;
+    }
+
+    .history-row-clickable {
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    .history-row-clickable:hover {
+      background-color: var(--bg-hover);
+    }
+
+    .history-row-clickable.active-selected td {
+      font-weight: 800;
+    }
+
+    .text-right {
+      text-align: right;
+    }
+
+    .period-header-container {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      position: relative;
+    }
+
+    .period-select-hidden {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .filter-symbol {
+      font-size: 9px;
+      color: var(--accent-teal);
+      font-weight: 800;
+    }
+
+    /* ==========================================================================
+       5. SKELETON LOADING & STATES
+       ========================================================================== */
+    .skeleton-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .skeleton-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .skeleton-block {
+      background: linear-gradient(90deg, #181818 25%, #262626 50%, #181818 75%);
+      background-size: 200% 100%;
+      animation: loading 1.5s infinite;
+      border-radius: var(--radius-sm);
+    }
+
+    @keyframes loading {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .center-state {
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--text-muted);
+    }
 #loader-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background-color:#0a0a0c;display:flex;justify-content:center;align-items:center;z-index:9999;transition:opacity .3s cubic-bezier(.16,1,.3,1),transform .3s cubic-bezier(.16,1,.3,1),visibility .3s step-end;will-change:opacity,transform;transform:scale(1);transform-origin:center center;
 }
 #loader-overlay.fade-out{opacity:0;transform:scale(1);visibility:hidden;pointer-events:none;transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1),visibility .6s step-start}
@@ -839,7 +1252,7 @@ to{transform:rotate(360deg)}
 .stacked-bar-segment.seg-animate{transition:width .6s cubic-bezier(.16,1,.3,1)}.legend-item.legend-animate{opacity:0;animation:legendFadeIn .4s ease forwards}@keyframes legendFadeIn{0%{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}.cat-card.cat-card-animate{opacity:0;animation:cardSlideUp .4s cubic-bezier(.16,1,.3,1) forwards}@keyframes cardSlideUp{0%{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}.cat-bar-fill.bar-fill-animate{transition:width .8s cubic-bezier(.16,1,.3,1)}
 </style>
 </head>
-<body>
+<body >
 <svg width="0" height="0"><defs><linearGradient id="grad-halving" x1="0%" y1="0%" x2="100%" y2="0%"> <stop offset="0%" stop-color="#00f5d4" /> <stop offset="100%" stop-color="#0088ff" /> </linearGradient><linearGradient id="grad-pi" x1="0%" y1="0%" x2="100%" y2="0%"> <stop offset="0%" stop-color="#ffb11a" /> <stop offset="100%" stop-color="#ff6a00" /> </linearGradient><linearGradient id="grad-risk" x1="0%" y1="0%" x2="100%" y2="0%"> <stop offset="0%" stop-color="#f72585" /> <stop offset="100%" stop-color="#7209b7" /> </linearGradient></defs></svg>
 <div id="loader-overlay" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background-color:#0a0a0c;display:flex;justify-content:center;align-items:center;z-index:9999;transition:opacity .3s cubic-bezier(.16,1,.3,1),transform .3s cubic-bezier(.16,1,.3,1),visibility .3s step-end;will-change:opacity,transform;transform:scale(1);transform-origin:center center;">
     <div class="paper-firework-container">
@@ -1277,7 +1690,98 @@ to{transform:rotate(360deg)}
                                 </div>
                             </div>
                         </div>
-                        <div class="budget-tab-content" id="budget-view-pit" style="display: none;">hello
+                        <div class="budget-tab-content" id="budget-view-pit" style="display: none;">
+                          <div class="app-container">
+                            <!-- Top Inline Navigation Header -->
+                            <div class="top-controls-row">
+                              <div class="nav-tabs-salary">
+                                <button class="tab-btn-salary active" id="mode-month" onclick="setSelectMode('month')">MONTH</button>
+                                <button class="tab-btn-salary" id="mode-year" onclick="setSelectMode('year')">YEAR</button>
+                              </div>
+                              <div class="right-control-container" id="date-inputs-container"></div>
+                            </div>
+
+                            <!-- Skeleton Loading State -->
+                            <div id="loading-state" class="skeleton-container">
+                              <div class="skeleton-card">
+                                <div class="skeleton-block" style="height: 14px; width: 40%;"></div>
+                                <div class="skeleton-block" style="height: 38px; width: 70%;"></div>
+                                <div class="skeleton-block" style="height: 10px; width: 100%;"></div>
+                              </div>
+                              <div class="skeleton-card">
+                                <div class="skeleton-block" style="height: 14px; width: 50%;"></div>
+                                <div class="skeleton-block" style="height: 20px; width: 100%;"></div>
+                                <div class="skeleton-block" style="height: 20px; width: 100%;"></div>
+                              </div>
+                            </div>
+
+                            <div id="error-state" class="center-state" style="display: none;">
+                              <p style="color: var(--accent-pink); font-weight: 700; margin-bottom: 8px;">Failed to load data</p>
+                              <button onclick="loadData()" style="padding: 6px 12px; background: var(--accent-teal); color: #0e0e0e; font-size: 12px; font-weight: 700; cursor: pointer; border-radius: 4px;">Retry</button>
+                            </div>
+
+                            <!-- Main Dashboard View -->
+                            <main id="main-content" style="display: none;">
+                              
+                              <!-- KPI Overview Card -->
+                              <div class="card-salary">
+                                <div class="kpi-grid">
+                                  <div>
+                                    <div class="label-title">GROSS SALARY</div>
+                                    <div class="kpi-value" id="kpi-gross">0M</div>
+                                  </div>
+                                  <div>
+                                    <div class="label-title"id="kpi-ratio-badge">NET TAKE-HOME 0%</div>
+                                    <div class="kpi-value net" id="kpi-net">0M</div>
+                                  </div>
+                                </div>
+
+                                <!-- Horizontal Bar Chart Track with individual insurance segments -->
+                                <div class="horizontal-chart-track">
+                                  <div class="chart-segment-net" id="bar-net" title="Net Take-Home"></div>
+                                  <div class="chart-segment-bonus" id="bar-bonus" title="Bonus & Incentives"></div>
+                                  <div class="chart-segment-bhxh" id="bar-bhxh" title="BHXH"></div>
+                                  <div class="chart-segment-bhyt" id="bar-bhyt" title="BHYT"></div>
+                                  <div class="chart-segment-bhtn" id="bar-bhtn" title="BHTN"></div>
+                                  <div class="chart-segment-pit" id="bar-pit" title="Personal Income Tax"></div>
+                                </div>
+
+                                <div class="progress-legend" id="overview-legend-container">
+                                  <!-- Dynamically Populated (Excludes Net, displays non-zero items with clean K/M amounts) -->
+                                </div>
+                                <div style="height: 180px; width: 100%;">
+                                  <canvas id="salaryTrendChart"></canvas>
+                                </div>
+                              </div>
+
+                              <!-- Pay Period History Table -->
+                              <div class="card" style="margin-top: 16px;">
+                                <table class="history-table">
+                                  <thead>
+                                    <tr>
+                                      <th>
+                                        <div class="period-header-container">
+                                          <span>Month</span>
+                                          <span class="filter-symbol">▼</span>
+                                          <select id="history-filter-select" class="period-select-hidden" onchange="onHistoryFilterChange(this.value)">
+                                            <option value="DEFAULT_12M">Last 12 Months</option>
+                                          </select>
+                                        </div>
+                                      </th>
+                                      <th>Gross</th>
+                                      <th>Insurances</th>
+                                      <th>PIT Tax</th>
+                                      <th class="text-right">NET</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody id="historyTableBody">
+                                    <!-- Dynamically Populated -->
+                                  </tbody>
+                                </table>
+                              </div>
+
+                            </main>
+                          </div>
                         </div>
                     </div>
                 </div>
@@ -5739,6 +6243,610 @@ to{transform:rotate(360deg)}
 
     var caActiveIdx = null;
     function fbHighlight(idx){caActiveIdx=caActiveIdx===idx?null:idx;var layoutEl=document.getElementById("fb-chart-layout-canvas");layoutEl&&(null===caActiveIdx?layoutEl.classList.remove("has-selection"):layoutEl.classList.add("has-selection"),layoutEl.querySelectorAll(".fb-metric-block").forEach(function(el){var elIdx=parseInt(el.getAttribute("data-index"),10);null===caActiveIdx||elIdx===caActiveIdx?(el.classList.add("fb-item-active"),el.classList.remove("fb-item-dimmed")):(el.classList.remove("fb-item-active"),el.classList.add("fb-item-dimmed"))}),layoutEl.querySelectorAll(".fb-semicircles-svg path").forEach(function(path){var pIdx=parseInt(path.getAttribute("data-segment-index"),10);null===caActiveIdx||pIdx===caActiveIdx?(path.style.opacity="1",path.style.transform="scaleX(1.05)",path.style.transformOrigin="left center"):(path.style.opacity="0.3",path.style.transform="scaleX(1)")}))}
+    const SHEET_URL = "https://docs.google.com/spreadsheets/d/1lxq_OOJNzigR-kuWDx2toke9ED5nrZcumUvLtBm2jMo/export?format=csv&gid=841568857";
+
+    let rawPayrollRows = [];
+    let selectMode = 'month';
+    let availableMonths = [];
+    let availableYears = [];
+
+    let selectedMonthKey = '';
+    let selectedYear = new Date().getFullYear();
+    let historySelectedYear = 'DEFAULT_12M';
+    let trendChartInstance = null;
+
+    const shortMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    
+    function parseNum(val) {
+      if (!val) return 0;
+      const cleaned = String(val).replace(/[^0-9.-]+/g, '');
+      const parsed = parseFloat(cleaned);
+      return isNaN(parsed) ? 0 : parsed;
+    }
+
+    function formatLegendAmount(num) {
+      if (Math.abs(num) >= 1e6) {
+        let valInM = num / 1e6;
+        let fixedStr = valInM.toFixed(3);
+        const parts = fixedStr.split('.');
+        let integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        let decimalPart = parts[1] || '000';
+        return `${integerPart}.${decimalPart}M`;
+      } else if (Math.abs(num) >= 1e3) {
+        let valInK = num / 1e3;
+        let fixedStr = valInK.toFixed(0);
+        let formattedK = fixedStr.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        return `${formattedK}K`;
+      }
+      return `${Math.round(num)}`;
+    }
+
+    function formatHistoryVND(num) {
+      if (Math.abs(num) >= 1e9) {
+        return (num / 1e9).toFixed(1) + 'B';
+      }
+      if (Math.abs(num) >= 1e6) {
+        return (num / 1e6).toFixed(1) + 'M';
+      }
+      return new Intl.NumberFormat('vi-VN').format(Math.round(num));
+    }
+
+    function formatMonthYearMMM(monthKey) {
+      if (!monthKey || !monthKey.includes('/')) return monthKey;
+      const parts = monthKey.split('/');
+      const m = parseInt(parts[0], 10);
+      const y = parts[1];
+      return `${shortMonthNames[m - 1]} ${y}`;
+    }
+
+    function getPreviousMonthKey(monthKey) {
+      if (!monthKey || !monthKey.includes('/')) return monthKey;
+      const parts = monthKey.split('/');
+      let m = parseInt(parts[0], 10);
+      let y = parseInt(parts[1], 10);
+      m--;
+      if (m < 1) {
+        m = 12;
+        y--;
+      }
+      return `${m.toString().padStart(2, '0')}/${y}`;
+    }
+
+    async function loadData() {
+      document.getElementById('loading-state').style.display = 'flex';
+      document.getElementById('error-state').style.display = 'none';
+      document.getElementById('main-content').style.display = 'none';
+
+      try {
+        const response = await fetch(SHEET_URL);
+        if (!response.ok) throw new Error("HTTP error " + response.status);
+        const csvText = await response.text();
+
+        Papa.parse(csvText, {
+          header: false,
+          skipEmptyLines: true,
+          complete: function(results) {
+            processParsedData(results.data);
+          }
+        });
+      } catch (err) {
+        console.error("Fetch Error:", err);
+        document.getElementById('loading-state').style.display = 'none';
+        document.getElementById('error-state').style.display = 'block';
+      }
+    }
+
+    function processParsedData(rows) {
+      rawPayrollRows = [];
+      const monthSet = new Set();
+      const yearSet = new Set();
+
+      rows.forEach((row) => {
+        if (!row || row.length === 0) return;
+        const col0 = String(row[0] || '').trim();
+
+        if (col0.startsWith('Σ') || col0.toLowerCase().includes('earnings') || col0 === '' || !col0.includes('/')) {
+          return;
+        }
+
+        const parts = col0.split('/');
+        if (parts.length === 2) {
+          const m = parseInt(parts[0], 10);
+          const y = parseInt(parts[1], 10);
+
+          if (!isNaN(m) && !isNaN(y)) {
+            const formattedMonth = `${m.toString().padStart(2, '0')}/${y}`;
+            monthSet.add(formattedMonth);
+            yearSet.add(y);
+
+            rawPayrollRows.push({
+              rawDate: col0,
+              monthKey: formattedMonth,
+              month: m,
+              year: y,
+              salary: parseNum(row[1]),
+              insurance: parseNum(row[2]),
+              bonus: parseNum(row[3]),
+              bhxh: parseNum(row[4]),
+              bhyt: parseNum(row[5]),
+              bhtn: parseNum(row[6]),
+              pit: parseNum(row[7]),
+              taxable: parseNum(row[8]),
+              net: parseNum(row[9])
+            });
+          }
+        }
+      });
+
+      if (rawPayrollRows.length === 0) {
+        document.getElementById('loading-state').style.display = 'none';
+        document.getElementById('error-state').style.display = 'block';
+        return;
+      }
+
+      availableMonths = Array.from(monthSet);
+      availableYears = Array.from(yearSet).sort((a, b) => a - b);
+
+      const curM = (new Date().getMonth() + 1).toString().padStart(2, '0');
+      const curY = new Date().getFullYear();
+      const currentMatch = `${curM}/${curY}`;
+
+      if (availableMonths.includes(currentMatch)) {
+        selectedMonthKey = currentMatch;
+        selectedYear = curY;
+      } else {
+        selectedMonthKey = availableMonths[availableMonths.length - 1];
+        const parts = selectedMonthKey.split('/');
+        selectedYear = parseInt(parts[1], 10);
+      }
+
+      document.getElementById('loading-state').style.display = 'none';
+      document.getElementById('main-content').style.display = 'block';
+
+      renderControlInputs();
+      renderOverview();
+      renderSalaryTrendChart();
+      renderHistorySelectOptions();
+      renderHistoryTable();
+    }
+
+    function setSelectMode(mode) {
+      selectMode = mode;
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(`mode-${mode}`).classList.add('active');
+
+      renderControlInputs();
+      renderOverview();
+      renderSalaryTrendChart();
+      renderHistoryTable();
+    }
+
+    function renderControlInputs() {
+      const container = document.getElementById('date-inputs-container');
+      container.innerHTML = '';
+
+      if (selectMode === 'month') {
+        const prevBtn = document.createElement('button');
+        prevBtn.className = 'nav-arrow-btn';
+        prevBtn.innerHTML = `<i class="bi bi-chevron-left"></i>`;
+        prevBtn.onclick = (e) => { e.stopPropagation(); navigateMonth(-1); };
+
+        const displayBtn = document.createElement('button');
+        displayBtn.className = 'date-display-btn';
+        displayBtn.innerHTML = `<span>${formatMonthYearMMM(selectedMonthKey)}</span>`;
+        displayBtn.onclick = (e) => { e.stopPropagation(); toggleCalendarPopup(); };
+
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'nav-arrow-btn';
+        nextBtn.innerHTML = `<i class="bi bi-chevron-right"></i>`;
+        nextBtn.onclick = (e) => { e.stopPropagation(); navigateMonth(1); };
+
+        const popup = document.createElement('div');
+        popup.className = 'calendar-popup';
+        popup.id = 'calendar-popup-box';
+        popup.innerHTML = buildCalendarHTML();
+
+        container.appendChild(prevBtn);
+        container.appendChild(displayBtn);
+        container.appendChild(nextBtn);
+        container.appendChild(popup);
+
+      } else if (selectMode === 'year') {
+        const prevBtn = document.createElement('button');
+        prevBtn.className = 'nav-arrow-btn';
+        prevBtn.innerHTML = `<i class="bi bi-chevron-left"></i>`;
+        prevBtn.onclick = () => navigateYear(-1);
+
+        const displayBtn = document.createElement('button');
+        displayBtn.className = 'date-display-btn';
+        displayBtn.innerHTML = `<span>Year ${selectedYear}</span>`;
+        displayBtn.style.cursor = 'default';
+
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'nav-arrow-btn';
+        nextBtn.innerHTML = `<i class="bi bi-chevron-right"></i>`;
+        nextBtn.onclick = () => navigateYear(1);
+
+        container.appendChild(prevBtn);
+        container.appendChild(displayBtn);
+        container.appendChild(nextBtn);
+      }
+    }
+
+    function toggleCalendarPopup() {
+      const popup = document.getElementById('calendar-popup-box');
+      if (popup) {
+        popup.classList.toggle('open');
+      }
+    }
+
+    function closeCalendarPopup(event) {
+      const popup = document.getElementById('calendar-popup-box');
+      if (popup && popup.classList.contains('open')) {
+        if (!event.target.closest('.right-control-container')) {
+          popup.classList.remove('open');
+        }
+      }
+    }
+
+    function buildCalendarHTML() {
+      const parts = selectedMonthKey.split('/');
+      let calYear = parseInt(parts[1], 10);
+
+      let html = `
+        <div class="cal-header">
+          <button onclick="event.stopPropagation(); changeCalendarYear(-1)" class="nav-arrow-btn" style="width:20px; height:20px; font-size:11px;"><i class="bi bi-chevron-left"></i></button>
+          <span>${calYear}</span>
+          <button onclick="event.stopPropagation(); changeCalendarYear(1)" class="nav-arrow-btn" style="width:20px; height:20px; font-size:11px;"><i class="bi bi-chevron-right"></i></button>
+        </div>
+        <div class="cal-grid">
+      `;
+
+      for (let m = 1; m <= 12; m++) {
+        const mKey = `${m.toString().padStart(2, '0')}/${calYear}`;
+        const isAvailable = availableMonths.includes(mKey);
+        const isSelected = (mKey === selectedMonthKey);
+
+        let cellClass = 'cal-cell';
+        if (isSelected) cellClass += ' selected';
+        if (!isAvailable) cellClass += ' disabled';
+
+        html += `<div class="${cellClass}" ${isAvailable ? `onclick="event.stopPropagation(); selectMonthFromCalendar('${mKey}')"` : ''}>${shortMonthNames[m - 1]}</div>`;
+      }
+
+      html += `</div>`;
+      return html;
+    }
+
+    function changeCalendarYear(dir) {
+      const parts = selectedMonthKey.split('/');
+      let calYear = parseInt(parts[1], 10) + dir;
+      const mStr = parts[0];
+      const newKey = `${mStr}/${calYear}`;
+      
+      selectedMonthKey = newKey;
+      selectedYear = calYear;
+      
+      const popup = document.getElementById('calendar-popup-box');
+      if (popup) popup.innerHTML = buildCalendarHTML();
+      renderControlInputs();
+      document.getElementById('calendar-popup-box').classList.add('open');
+    }
+
+    function selectMonthFromCalendar(mKey) {
+      selectedMonthKey = mKey;
+      const parts = mKey.split('/');
+      selectedYear = parseInt(parts[1], 10);
+
+      const popup = document.getElementById('calendar-popup-box');
+      if (popup) popup.classList.remove('open');
+
+      renderControlInputs();
+      renderOverview();
+      renderSalaryTrendChart();
+      renderHistoryTable();
+    }
+
+    function navigateMonth(direction) {
+      const idx = availableMonths.indexOf(selectedMonthKey);
+      if (idx === -1) return;
+      const newIdx = idx + direction;
+      if (newIdx >= 0 && newIdx < availableMonths.length) {
+        selectedMonthKey = availableMonths[newIdx];
+        const parts = selectedMonthKey.split('/');
+        selectedYear = parseInt(parts[1], 10);
+        renderControlInputs();
+        renderOverview();
+        renderSalaryTrendChart();
+        renderHistoryTable();
+      }
+    }
+
+    function navigateYear(direction) {
+      const idx = availableYears.indexOf(selectedYear);
+      if (idx === -1) return;
+      const newIdx = idx + direction;
+      if (newIdx >= 0 && newIdx < availableYears.length) {
+        selectedYear = availableYears[newIdx];
+        renderControlInputs();
+        renderOverview();
+        renderSalaryTrendChart();
+        renderHistoryTable();
+      }
+    }
+
+    function renderHistorySelectOptions() {
+      const selectEl = document.getElementById('history-filter-select');
+      if (!selectEl) return;
+      
+      let html = `<option value="DEFAULT_12M" ${historySelectedYear === 'DEFAULT_12M' ? 'selected' : ''}>Last 12 Months</option>`;
+      availableYears.forEach(y => {
+        html += `<option value="${y}" ${historySelectedYear === String(y) ? 'selected' : ''}>Year ${y}</option>`;
+      });
+      selectEl.innerHTML = html;
+    }
+
+    function onHistoryFilterChange(val) {
+      historySelectedYear = val;
+      renderHistoryTable();
+    }
+
+    function getFilteredRows() {
+      if (selectMode === 'month') {
+        const targetDataMonthKey = getPreviousMonthKey(selectedMonthKey);
+        return rawPayrollRows.filter(r => r.monthKey === targetDataMonthKey);
+      } else if (selectMode === 'year') {
+        return rawPayrollRows.filter(r => r.year === selectedYear);
+      }
+      return [];
+    }
+
+    function renderOverview() {
+      const filtered = getFilteredRows();
+
+      const totals = filtered.reduce((acc, r) => {
+        acc.salary += r.salary;
+        acc.bonus += r.bonus;
+        acc.bhxh += r.bhxh;
+        acc.bhyt += r.bhyt;
+        acc.bhtn += r.bhtn;
+        acc.pit += r.pit;
+        acc.net += r.net;
+        return acc;
+      }, { salary: 0, bonus: 0, bhxh: 0, bhyt: 0, bhtn: 0, pit: 0, net: 0 });
+
+      const gross = totals.salary + totals.bonus;
+
+      const currentScope = selectMode === 'year' ? 'year' : 'month';
+      document.getElementById('kpi-gross').innerText = formatLegendAmount(gross);
+      document.getElementById('kpi-net').innerText = formatLegendAmount(totals.net);
+
+      const netRatio = gross > 0 ? ((totals.net / gross) * 100).toFixed(1) : 0;
+      document.getElementById('kpi-ratio-badge').innerText = `Net Take-Home (${netRatio}%)`;
+
+      const overviewLegendContainer = document.getElementById('overview-legend-container');
+      overviewLegendContainer.innerHTML = '';
+
+      const items = [
+        { id: 'bar-net', label: 'Net Take-Home', value: totals.net, color: 'var(--accent-teal)' },
+        { id: 'bar-bonus', label: 'Bonus & Incentives', shortName: 'Bonus', value: totals.bonus, color: '#f59e0b' },
+        { id: 'bar-bhxh', label: 'BHXH', shortName: 'BHXH', value: totals.bhxh, color: 'var(--accent-bhxh)' },
+        { id: 'bar-bhyt', label: 'BHYT', shortName: 'BHYT', value: totals.bhyt, color: 'var(--accent-bhyt)' },
+        { id: 'bar-bhtn', label: 'BHTN', shortName: 'BHTN', value: totals.bhtn, color: 'var(--accent-bhtn)' },
+        { id: 'bar-pit', label: 'Personal Income Tax', shortName: 'PIT Tax', value: totals.pit, color: 'var(--accent-pink)' }
+      ];
+
+      items.forEach(item => {
+        const barEl = document.getElementById(item.id);
+        if (barEl) {
+          const pctVal = gross > 0 ? ((item.value / gross) * 100) : 0;
+          barEl.style.width = pctVal + '%';
+        }
+
+        // Only display non-zero items in legend (skip Net, and skip Bonus if it's 0)
+        if (item.shortName && item.value > 0) {
+          const legendItem = document.createElement('div');
+          legendItem.className = 'legend-item';
+          legendItem.innerHTML = `
+            <span class="legend-dot" style="background-color: ${item.color};"></span>
+            <span>${item.shortName}: ${formatLegendAmount(item.value)}</span>
+          `;
+          overviewLegendContainer.appendChild(legendItem);
+        }
+      });
+    }
+
+    const activeMarkerPlugin = {
+      id: 'activeMarker',
+      afterDraw(chart) {
+        const activeIndex = chart.config.options.plugins.activeMarkerIndex;
+        if (activeIndex === undefined || activeIndex < 0) return;
+
+        const meta = chart.getDatasetMeta(1);
+        if (!meta.data[activeIndex]) return;
+
+        const point = meta.data[activeIndex];
+        const x = point.x;
+        const y = point.y;
+        const topY = chart.chartArea.top;
+        const bottomY = chart.chartArea.bottom;
+        const ctx = chart.ctx;
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.setLineDash([4, 4]);
+        ctx.strokeStyle = '#00897b';
+        ctx.lineWidth = 2;
+        ctx.moveTo(x, topY);
+        ctx.lineTo(x, bottomY);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(x, y, 7, 0, 2 * Math.PI);
+        ctx.fillStyle = 'rgba(0, 245, 212, 0.3)';
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, 2 * Math.PI);
+        ctx.fillStyle = '#00f5d4';
+        ctx.fill();
+
+        ctx.restore();
+      }
+    };
+
+    function renderSalaryTrendChart() {
+      let labels = [];
+      let grossData = [];
+      let netData = [];
+      let activeIndex = -1;
+
+      if (selectMode === 'month') {
+        const targetActiveMonthKey = getPreviousMonthKey(selectedMonthKey);
+        const yearRows = rawPayrollRows.filter(r => r.year === selectedYear);
+
+        labels = yearRows.map(r => monthNames[r.month - 1]);
+        grossData = yearRows.map(r => (r.salary + r.bonus) / 1e6);
+        netData = yearRows.map(r => r.net / 1e6);
+
+        activeIndex = yearRows.findIndex(r => r.monthKey === targetActiveMonthKey);
+
+      } else {
+        labels = availableYears.map(y => `'${String(y).slice(-2)}`);
+        grossData = availableYears.map(y => {
+          return rawPayrollRows.filter(r => r.year === y).reduce((acc, r) => acc + (r.salary + r.bonus), 0) / 1e6;
+        });
+        netData = availableYears.map(y => {
+          return rawPayrollRows.filter(r => r.year === y).reduce((acc, r) => acc + r.net, 0) / 1e6;
+        });
+
+        activeIndex = availableYears.indexOf(selectedYear);
+      }
+
+      const ctx = document.getElementById('salaryTrendChart').getContext('2d');
+      if (trendChartInstance) trendChartInstance.destroy();
+
+      trendChartInstance = new Chart(ctx, {
+        type: 'line',
+        plugins: [activeMarkerPlugin],
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Gross',
+              data: grossData,
+              borderColor: '#f0f0f0',
+              borderWidth: 2,
+              tension: 0,
+              pointRadius: (ctx) => (ctx.dataIndex === 0 || ctx.dataIndex === ctx.chart.data.labels.length - 1) ? 2 : 3,
+              pointBackgroundColor: '#f0f0f0',
+              pointHoverRadius: 5
+            },
+            {
+              label: 'Net',
+              data: netData,
+              borderColor: '#00f5d4',
+              borderWidth: 2,
+              tension: 0,
+              pointRadius: (ctx) => (ctx.dataIndex === 0 || ctx.dataIndex === ctx.chart.data.labels.length - 1) ? 2 : 3,
+              pointBackgroundColor: '#00f5d4',
+              pointHoverRadius: 5
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          layout: { padding: { top: 10 } },
+          animation: {
+            duration: 1200,
+            easing: 'easeInOutCubic'
+          },
+          plugins: {
+            activeMarkerIndex: activeIndex,
+            legend: { display: false }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(38, 38, 38, 0.5)' },
+              ticks: { color: '#757575', font: { size: 10, family: 'Plus Jakarta Sans' } }
+            },
+            y: {
+              display: false,
+              grid: { display: false }
+            }
+          }
+        }
+      });
+    }
+
+    const now = new Date();
+    const currentRealMonthKey = `${(now.getMonth() + 0).toString().padStart(2, '0')}/${now.getFullYear()}`;
+
+    function renderHistoryTable() {
+      const tbody = document.getElementById('historyTableBody');
+      tbody.innerHTML = '';
+
+      const nowYear = new Date().getFullYear();
+      const nowMonth = new Date().getMonth() + 1;
+
+      const nonFutureRows = rawPayrollRows.filter(r => {
+        if (r.year < nowYear) return true;
+        if (r.year === nowYear && r.month <= nowMonth) return true;
+        return false;
+      });
+
+      let displayRows = [];
+
+      if (historySelectedYear === 'DEFAULT_12M') {
+        displayRows = nonFutureRows.slice(-12);
+      } else {
+        const targetY = parseInt(historySelectedYear, 10);
+        displayRows = nonFutureRows.filter(r => r.year === targetY);
+      }
+
+      const sorted = [...displayRows].reverse();
+
+      sorted.forEach(row => {
+        const gross = row.salary + row.bonus;
+        const totalInsurance = row.bhxh + row.bhyt + row.bhtn;
+        const isActive = (row.monthKey === currentRealMonthKey);
+
+        const tr = document.createElement('tr');
+        tr.className = `history-row-clickable ${isActive ? 'active-selected' : ''}`;
+        
+        tr.onclick = () => {
+          setSelectMode('month');
+          let m = row.month + 1;
+          let y = row.year;
+          if (m > 12) {
+            m = 1;
+            y++;
+          }
+          selectedMonthKey = `${m.toString().padStart(2, '0')}/${y}`;
+          selectedYear = y;
+          renderControlInputs();
+          renderOverview();
+          renderSalaryTrendChart();
+          renderHistoryTable();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        tr.innerHTML = `
+          <td>${row.monthKey}</td>
+          <td style="color: var(--text-muted);">${formatHistoryVND(gross)}</td>
+          <td style="color: var(--accent-bhxh);">${formatHistoryVND(totalInsurance)}</td>
+          <td style="color: var(--accent-pink);">${formatHistoryVND(row.pit)}</td>
+          <td class="text-right" style="font-weight: 600; color: var(--accent-teal);">${formatHistoryVND(row.net)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadData();
+    });
     // Touch events
     window.addEventListener('touchstart', onStart, { passive: true });
     window.addEventListener('touchmove', onMove, { passive: false });
