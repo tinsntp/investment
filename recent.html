@@ -6322,18 +6322,26 @@ to{transform:rotate(360deg)}
   errorState && (errorState.style.display = 'none');
   mainContent && (mainContent.style.display = 'none');
 
-  fetch(SHEET_URL, { cache: "no-store", mode: "cors" })
-    .then(res => {
-      if (!res.ok) throw new Error("HTTP " + res.status);
-      return res.text();
+  // Add cache-busting timestamp parameter just like fetchForexNavBalance
+  const csvUrl = SHEET_URL + (SHEET_URL.includes('?') ? '&' : '?') + 't=' + Date.now();
+
+  fetch(csvUrl, { cache: "no-store" })
+    .then(function(response) {
+      if (!response.ok) throw new Error("HTTP " + response.status);
+      return response.text();
     })
-    .then(csvText => {
-      // Native CSV lines parser (handling standard comma separation and basic quotes)
+    .then(function(csvText) {
+      // Protect against Google Sheets returning login/error HTML pages instead of CSV
+      if (!csvText || csvText.trim().startsWith("<!DOCTYPE html>")) {
+        throw new Error("Received HTML instead of CSV. Check sheet permissions or URL.");
+      }
+
+      // Native CSV lines parser matching your loop style
       const rows = [];
-      const lines = csvText.split(/\r\n|\n/);
+      const lines = csvText.split(/\r?\n/);
       
-      lines.forEach(line => {
-        if (!line.trim()) return;
+      lines.forEach(function(line) {
+        if (!line || typeof line !== 'string' || !line.trim()) return;
         const row = [];
         let insideQuote = false;
         let currentVal = '';
@@ -6358,7 +6366,7 @@ to{transform:rotate(360deg)}
       loadingState && (loadingState.style.display = 'none');
       mainContent && (mainContent.style.display = 'block');
     })
-    .catch(err => {
+    .catch(function(err) {
       console.error("Widget load error:", err);
       loadingState && (loadingState.style.display = 'none');
       errorState && (errorState.style.display = 'block');
