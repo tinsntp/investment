@@ -6322,25 +6322,41 @@ to{transform:rotate(360deg)}
   errorState && (errorState.style.display = 'none');
   mainContent && (mainContent.style.display = 'none');
 
-  fetch(SHEET_URL, { cache: "no-store" })
+  fetch(SHEET_URL, { cache: "no-store", mode: "cors" })
     .then(res => {
       if (!res.ok) throw new Error("HTTP " + res.status);
       return res.text();
     })
     .then(csvText => {
-      Papa.parse(csvText, {
-        header: false,
-        skipEmptyLines: true,
-        complete: function(results) {
-          processParsedData(results.data);
-          
-          loadingState && (loadingState.style.display = 'none');
-          mainContent && (mainContent.style.display = 'block');
-        },
-        error: function(err) {
-          throw new Error("Papa Parse Error: " + err.message);
+      // Native CSV lines parser (handling standard comma separation and basic quotes)
+      const rows = [];
+      const lines = csvText.split(/\r\n|\n/);
+      
+      lines.forEach(line => {
+        if (!line.trim()) return;
+        const row = [];
+        let insideQuote = false;
+        let currentVal = '';
+        
+        for (let i = 0; i < line.length; i++) {
+          const char = line[i];
+          if (char === '"') {
+            insideQuote = !insideQuote;
+          } else if (char === ',' && !insideQuote) {
+            row.push(currentVal.trim());
+            currentVal = '';
+          } else {
+            currentVal += char;
+          }
         }
+        row.push(currentVal.trim());
+        rows.push(row);
       });
+
+      processParsedData(rows);
+
+      loadingState && (loadingState.style.display = 'none');
+      mainContent && (mainContent.style.display = 'block');
     })
     .catch(err => {
       console.error("Widget load error:", err);
