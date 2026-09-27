@@ -6353,78 +6353,95 @@ to{transform:rotate(360deg)}
 }
 
     function processParsedData(rows) {
-      rawPayrollRows = [];
-      const monthSet = new Set();
-      const yearSet = new Set();
+  rawPayrollRows = [];
+  const monthSet = new Set();
+  const yearSet = new Set();
 
-      rows.forEach((row) => {
-        if (!row || row.length === 0) return;
-        const col0 = String(row[0] || '').trim();
+  rows.forEach((row) => {
+    if (!row || row.length === 0) return;
+    let col0 = String(row[0] || '').trim();
 
-        if (col0.startsWith('Σ') || col0.toLowerCase().includes('earnings') || col0 === '' || !col0.includes('/')) {
-          return;
-        }
-
-        const parts = col0.split('/');
-        if (parts.length === 2) {
-          const m = parseInt(parts[0], 10);
-          const y = parseInt(parts[1], 10);
-
-          if (!isNaN(m) && !isNaN(y)) {
-            const formattedMonth = `${m.toString().padStart(2, '0')}/${y}`;
-            monthSet.add(formattedMonth);
-            yearSet.add(y);
-
-            rawPayrollRows.push({
-              rawDate: col0,
-              monthKey: formattedMonth,
-              month: m,
-              year: y,
-              salary: parseNum(row[1]),
-              insurance: parseNum(row[2]),
-              bonus: parseNum(row[3]),
-              bhxh: parseNum(row[4]),
-              bhyt: parseNum(row[5]),
-              bhtn: parseNum(row[6]),
-              pit: parseNum(row[7]),
-              taxable: parseNum(row[8]),
-              net: parseNum(row[9])
-            });
-          }
-        }
-      });
-
-      if (rawPayrollRows.length === 0) {
-        document.getElementById('loading-state').style.display = 'none';
-        document.getElementById('error-state').style.display = 'block';
-        return;
-      }
-
-      availableMonths = Array.from(monthSet);
-      availableYears = Array.from(yearSet).sort((a, b) => a - b);
-
-      const curM = (new Date().getMonth() + 1).toString().padStart(2, '0');
-      const curY = new Date().getFullYear();
-      const currentMatch = `${curM}/${curY}`;
-
-      if (availableMonths.includes(currentMatch)) {
-        selectedMonthKey = currentMatch;
-        selectedYear = curY;
-      } else {
-        selectedMonthKey = availableMonths[availableMonths.length - 1];
-        const parts = selectedMonthKey.split('/');
-        selectedYear = parseInt(parts[1], 10);
-      }
-
-      document.getElementById('loading-state').style.display = 'none';
-      document.getElementById('main-content').style.display = 'block';
-
-      renderControlInputs();
-      renderOverview();
-      renderSalaryTrendChart();
-      renderHistorySelectOptions();
-      renderHistoryTable();
+    if (!col0 || col0.startsWith('Σ') || col0.toLowerCase().includes('earnings')) {
+      return;
     }
+
+    let m, y;
+
+    // Handle full ISO dates or standard date strings if Google Sheets exports them as such
+    if (col0.includes('-') && !col0.includes('/')) {
+      const dateObj = new Date(col0);
+      if (!isNaN(dateObj.getTime())) {
+        m = dateObj.getMonth() + 1;
+        y = dateObj.getFullYear();
+      }
+    } else {
+      // Handle standard "MM/YYYY" or "M/YYYY"
+      const parts = col0.split('/');
+      if (parts.length >= 2) {
+        // If it's DD/MM/YYYY or MM/YYYY, let's look at the parts safely
+        // Assuming format is Month/Year based on your original code: parts[0] = month, parts[1] = year
+        m = parseInt(parts[0], 10);
+        y = parseInt(parts[1], 10);
+        
+        // Handle 2-digit years if any (e.g., '26 -> 2026)
+        if (y < 100) y += 2000;
+      }
+    }
+
+    if (m && y && !isNaN(m) && !isNaN(y)) {
+      const formattedMonth = `${m.toString().padStart(2, '0')}/${y}`;
+      monthSet.add(formattedMonth);
+      yearSet.add(y);
+
+      rawPayrollRows.push({
+        rawDate: col0,
+        monthKey: formattedMonth,
+        month: m,
+        year: y,
+        salary: parseNum(row[1]),
+        insurance: parseNum(row[2]),
+        bonus: parseNum(row[3]),
+        bhxh: parseNum(row[4]),
+        bhyt: parseNum(row[5]),
+        bhtn: parseNum(row[6]),
+        pit: parseNum(row[7]),
+        taxable: parseNum(row[8]),
+        net: parseNum(row[9])
+      });
+    }
+  });
+
+  if (rawPayrollRows.length === 0) {
+    document.getElementById('loading-state').style.display = 'none';
+    document.getElementById('error-state').style.display = 'block';
+    return;
+  }
+
+  availableMonths = Array.from(monthSet);
+  availableYears = Array.from(yearSet).sort((a, b) => a - b);
+
+  const curM = (new Date().getMonth() + 1).toString().padStart(2, '0');
+  const curY = new Date().getFullYear();
+  const currentMatch = `${curM}/${curY}`;
+
+  if (availableMonths.includes(currentMatch)) {
+    selectedMonthKey = currentMatch;
+    selectedYear = curY;
+  } else {
+    selectedMonthKey = availableMonths[availableMonths.length - 1];
+    const parts = selectedMonthKey.split('/');
+    selectedYear = parseInt(parts[1], 10);
+  }
+
+  document.getElementById('loading-state').style.display = 'none';
+  document.getElementById('main-content').style.display = 'block';
+
+  renderControlInputs();
+  renderOverview();
+  renderSalaryTrendChart();
+  renderHistorySelectOptions();
+  renderHistoryTable();
+}
 
     function setSelectMode(mode) {
       selectMode = mode;
