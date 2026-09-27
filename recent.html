@@ -6313,29 +6313,44 @@ to{transform:rotate(360deg)}
       return `${m.toString().padStart(2, '0')}/${y}`;
     }
 
-    async function loadData() {
-      document.getElementById('loading-state').style.display = 'flex';
-      document.getElementById('error-state').style.display = 'none';
-      document.getElementById('main-content').style.display = 'none';
+    function loadData() {
+  const loadingState = document.getElementById('loading-state');
+  const errorState = document.getElementById('error-state');
+  const mainContent = document.getElementById('main-content');
 
-      try {
-        const response = await fetch(SHEET_URL);
-        if (!response.ok) throw new Error("HTTP error " + response.status);
-        const csvText = await response.text();
+  loadingState && (loadingState.style.display = 'flex');
+  errorState && (errorState.style.display = 'none');
+  mainContent && (mainContent.style.display = 'none');
 
-        Papa.parse(csvText, {
-          header: false,
-          skipEmptyLines: true,
-          complete: function(results) {
-            processParsedData(results.data);
-          }
-        });
-      } catch (err) {
-        console.error("Fetch Error:", err);
-        document.getElementById('loading-state').style.display = 'none';
-        document.getElementById('error-state').style.display = 'block';
-      }
-    }
+  fetch(SHEET_URL, { cache: "no-store" })
+    .then(res => {
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return res.text();
+    })
+    .then(csvText => {
+      Papa.parse(csvText, {
+        header: false,
+        skipEmptyLines: true,
+        complete: function(results) {
+          processParsedData(results.data);
+          
+          loadingState && (loadingState.style.display = 'none');
+          mainContent && (mainContent.style.display = 'block');
+        },
+        error: function(err) {
+          throw new Error("Papa Parse Error: " + err.message);
+        }
+      });
+    })
+    .catch(err => {
+      console.error("Widget load error:", err);
+      loadingState && (loadingState.style.display = 'none');
+      errorState && (errorState.style.display = 'block');
+      
+      var msgEl = document.getElementById("det-msg");
+      msgEl && (msgEl.style.display = "block", msgEl.textContent = "CSV Fetch Error: " + err.message);
+    });
+}
 
     function processParsedData(rows) {
       rawPayrollRows = [];
