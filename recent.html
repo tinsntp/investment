@@ -1756,6 +1756,17 @@ to{transform:rotate(360deg)}
                                 <div class="progress-legend" id="overview-legend-container">
                                   <!-- Dynamically Populated (Excludes Net, displays non-zero items with clean K/M amounts) -->
                                 </div>
+                                    <div style="display: flex; justify-content: flex-end; align-items: flex-end; flex-direction: column; margin-top:8px;margin-bottom: -8px; text-align: right;">
+                                    <div style="display: flex; align-items: baseline; gap: 8px;">
+                                        <!-- Percentage Badge -->
+                                        <div id="chart-pct-badge" style="font-size: 22px; font-weight: bold; color: #ffffff;">+0.0%</div>
+                                        <!-- Absolute Difference Badge displayed inline -->
+                                        <div id="chart-diff-badge" style="font-size: 13px; font-weight: 600; color: #00f5d4;">+0.0M</div>
+                                    </div>
+                                    <!-- Note below -->
+                                    <div id="chart-pct-note" style="font-size: 11px; color: #9e9e9e;">higher than last year</div>
+                                    </div>
+
                                     <div style="position: relative; width: 100%; height: 160px;">
                                     <canvas id="salaryTrendChart" style="width: 100%; height: 100%; display: block;"></canvas>
                                     </div>
@@ -6774,8 +6785,8 @@ function renderSalaryTrendChart() {
   let netValues = [];   
   let badgeValues = [];
   let defaultActiveIndex = -1;
-  let currentTotalGross = 0;
-  let priorTotalGross = 0;
+  let currentValForPct = 0;
+  let priorValForPct = 0;
 
   if (selectMode === 'month') {
     const targetActiveMonthKey = getPreviousMonthKey(selectedMonthKey);
@@ -6787,10 +6798,23 @@ function renderSalaryTrendChart() {
     badgeValues = [...netValues];
 
     defaultActiveIndex = yearRows.findIndex(r => r.monthKey === targetActiveMonthKey);
+    if (defaultActiveIndex === -1 && yearRows.length > 0) defaultActiveIndex = yearRows.length - 1;
 
-    currentTotalGross = grossValues.reduce((a, b) => a + b, 0);
-    const priorYearRows = rawPayrollRows.filter(r => r.year === selectedYear - 1);
-    priorTotalGross = priorYearRows.reduce((acc, r) => acc + ((r.salary + r.bonus) / 1e6), 0);
+    const activeIdx = (window.chartHoverIndex !== null && window.chartHoverIndex !== undefined) 
+      ? window.chartHoverIndex 
+      : defaultActiveIndex;
+      
+    currentValForPct = grossValues[activeIdx] || 0;
+
+    // Month view calculation: compare with the same month in the previous year
+    const activeRow = yearRows[activeIdx];
+    if (activeRow) {
+      const priorRow = rawPayrollRows.find(r => r.year === selectedYear - 1 && r.month === activeRow.month);
+      if (priorRow) {
+        priorValForPct = (priorRow.salary + priorRow.bonus) / 1e6;
+      }
+    }
+
   } else {
     labels = availableYears.map(y => `'${String(y).slice(-2)}`);
     
@@ -6806,18 +6830,37 @@ function renderSalaryTrendChart() {
     defaultActiveIndex = availableYears.indexOf(Number(selectedYear));
     if (defaultActiveIndex === -1) defaultActiveIndex = 0;
 
-    currentTotalGross = grossValues[defaultActiveIndex] || 0;
-    priorTotalGross = grossValues[defaultActiveIndex - 1] || 0;
+    const activeIdx = (window.chartHoverIndex !== null && window.chartHoverIndex !== undefined) 
+      ? window.chartHoverIndex 
+      : defaultActiveIndex;
+
+    // Year view calculation: compare active year with the previous year
+    currentValForPct = grossValues[activeIdx] || 0;
+    priorValForPct = activeIdx > 0 ? (grossValues[activeIdx - 1] || 0) : 0;
   }
 
-  // Calculate Big Percentage Change stat for left display
+// Calculate Percentage Change & Absolute Difference
   let yoyPct = 0;
-  if (priorTotalGross > 0) {
-    yoyPct = ((currentTotalGross - priorTotalGross) / priorTotalGross) * 100;
+  if (priorValForPct > 0) {
+    yoyPct = ((currentValForPct - priorValForPct) / priorValForPct) * 100;
   }
   const pctString = (yoyPct >= 0 ? '+' : '') + yoyPct.toFixed(1) + '%';
+  
   const pctBadgeEl = document.getElementById('chart-pct-badge');
   if (pctBadgeEl) pctBadgeEl.innerText = pctString;
+
+  const pctNoteEl = document.getElementById('chart-pct-note');
+  if (pctNoteEl) {
+    pctNoteEl.innerText = yoyPct >= 0 ? 'higher than last year' : 'lower than last year';
+  }
+
+// Calculate and update the absolute change value line
+  const diffVal = currentValForPct - priorValForPct;
+  const actualDiff = selectMode === 'year' ? (diffVal / 12) : diffVal;
+  const diffString = (actualDiff >= 0 ? '+' : '') + actualDiff.toFixed(3) + 'M';
+  
+  const diffBadgeEl = document.getElementById('chart-diff-badge');
+  if (diffBadgeEl) diffBadgeEl.innerText = diffString;
 
   const activeIndex = (window.chartHoverIndex !== null && window.chartHoverIndex !== undefined) 
     ? window.chartHoverIndex 
@@ -6937,7 +6980,9 @@ function renderSalaryTrendChart() {
       ctx.fill();
     });
 
-    // 2. Draw Vertical Lines and Gross Markers
+    // 2. Draw Vertical Lines and Gross Markers (with Live Pulsing Dot Animation)
+    const pulseFactor = 1 + 0.3 * Math.sin(timestamp / 500);
+
     points.forEach((pt) => {
       const targetH = (baselineY - pt.grossY) * easeProgress;
       const currentGrossY = baselineY - targetH;
@@ -6961,21 +7006,24 @@ function renderSalaryTrendChart() {
       ctx.lineTo(pt.x, currentGrossY);
       ctx.stroke();
 
+      if (isActive) {
+        ctx.fillStyle = "rgba(255, 221, 0, 0.25)";
+        ctx.beginPath();
+        ctx.arc(pt.x, currentGrossY, 7 * pulseFactor, 0, 2 * Math.PI);
+        ctx.fill();
+      }
+
       ctx.fillStyle = dotColor;
       ctx.beginPath();
       ctx.arc(pt.x, currentGrossY, (isActive || isNextYear) ? 4 : 2, 0, 2 * Math.PI);
       ctx.fill();
     });
 
-    // 3. Determine active badges to display (Show top 2 peaks regardless, unless current month is neither and should be hidden)
+    // 3. Determine active badges to display
     let activeBadges = [];
     if (selectMode === 'month') {
       const sortedPeaks = [...points].sort((a, b) => b.badgeVal - a.badgeVal).slice(0, 2);
-      
       activeBadges = sortedPeaks.map(pt => ({ ...pt, badgeColor: "#ffdd00" }));
-      
-      // If active/current month is one of the top 2 peaks, it's already included. 
-      // If it's NOT in the top 2 peaks, we keep it hidden as requested previously.
     } else {
       if (activeIndex >= 0 && activeIndex < points.length) {
         activeBadges.push({ ...points[activeIndex], badgeColor: "#ffdd00", side: 'left' });
@@ -7021,6 +7069,61 @@ function renderSalaryTrendChart() {
     });
 
     animFrameId = requestAnimationFrame(renderChart);
+  });
+}
+
+function drawResolvedBadges(ctx, pointsList, mode) {
+  ctx.font = 'bold 13px DM Sans';
+  
+  let boxes = pointsList.map(pt => {
+    const textVal = `${pt.badgeVal.toFixed(1)}M`;
+    const textWidth = ctx.measureText(textVal).width;
+    const boxW = textWidth + 14;
+    const boxH = 20;
+    
+    let boxX = pt.x - boxW / 2;
+    if (mode === 'year') {
+      if (pt.side === 'left') {
+        boxX = pt.x - boxW + 8;
+      } else if (pt.side === 'right') {
+        boxX = pt.x - 8;
+      }
+    }
+
+    return {
+      pt,
+      textVal,
+      boxW,
+      boxH,
+      x: boxX,
+      y: Math.max(4, pt.grossY - 36),
+      bgColor: pt.badgeColor || "#ffdd00"
+    };
+  });
+
+  if (mode === 'month') {
+    boxes.sort((a, b) => a.x - b.x);
+    for (let i = 1; i < boxes.length; i++) {
+      const prev = boxes[i - 1];
+      const curr = boxes[i];
+      const minGap = 4;
+      if (curr.x < prev.x + prev.boxW + minGap) {
+        curr.x = prev.x + prev.boxW + minGap;
+      }
+    }
+  }
+
+  boxes.forEach(box => {
+    ctx.fillStyle = box.bgColor;
+    ctx.beginPath();
+    ctx.roundRect(box.x, box.y, box.boxW, box.boxH, 10);
+    ctx.fill();
+
+    ctx.fillStyle = "#121212";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(box.textVal, box.x + box.boxW / 2, box.y + box.boxH / 2);
+    ctx.textBaseline = "alphabetic";
   });
 }
 
