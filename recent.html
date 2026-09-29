@@ -82,21 +82,20 @@ html,body{width:100%;height:100%;border-radius:10px;background:#0a0a0c;font-fami
       padding: 0;
       border: none !important;
       outline: none;
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
-.app-container {
+.app-container-salary {
       width: 100%;
       max-width: 420px;
       display: flex;
-      flex-direction: column;font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      flex-direction: column;
       gap: 16px;
     }
 
     .card-salary {
-      background-color: var(--bg-card);
+      background-color: var(--bg-card);margin-top:10px;
       border-radius: var(--radius-lg);
-      padding: 16px;
+      padding: 16px;font-family: 'IBM Plex Mono';
     }
 
     .label-title {
@@ -122,7 +121,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#0a0a0c;font-fami
     .nav-tabs-salary {
       display: flex;
       background-color: var(--bg-card);
-      padding: 4px;
+
       border-radius: var(--radius-md);
       gap: 2px;
       flex-shrink: 0;
@@ -142,7 +141,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#0a0a0c;font-fami
 
     .tab-btn-salary.active {
       background-color: var(--bg-element);
-      color: var(--text-main);
+      color: var(--text-main);border-radius: var(--radius-md);
     }
 
     .right-control-container {
@@ -150,7 +149,6 @@ html,body{width:100%;height:100%;border-radius:10px;background:#0a0a0c;font-fami
       display: flex;
       align-items: center;
       gap: 4px;
-      background-color: var(--bg-card);
       padding: 4px;
       border-radius: var(--radius-md);
       height: 35px;
@@ -284,7 +282,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#0a0a0c;font-fami
       font-size: 28px;
       font-weight: 800;
       margin-top: 4px;
-      letter-spacing: -0.5px;
+      letter-spacing: -1.5px;
       line-height: 1.1;
     }
 
@@ -296,7 +294,6 @@ html,body{width:100%;height:100%;border-radius:10px;background:#0a0a0c;font-fami
       width: 100%;
       height: 10px;
       background-color: var(--bg-element);
-      border-radius: 5px;
       overflow: hidden;
       display: flex;
     }
@@ -355,6 +352,15 @@ html,body{width:100%;height:100%;border-radius:10px;background:#0a0a0c;font-fami
       display: inline-block;
       flex-shrink: 0;
     }
+    #bar-pit {
+  background: repeating-linear-gradient(
+    90deg,
+    var(--accent-pink),
+    var(--accent-pink) 3px,
+    rgba(0, 0, 0, 0.4) 3px,
+    rgba(0, 0, 0, 0.4) 6px
+  ) !important;
+}
 
     /* ==========================================================================
        4. HISTORY TABLE WITH NATIVE SELECT DROPDOWN FOR FILTERING
@@ -372,7 +378,7 @@ html,body{width:100%;height:100%;border-radius:10px;background:#0a0a0c;font-fami
     }
 
     .history-table th {
-      font-size: 11px;
+      font-size: 13px;
       color: var(--text-muted);
       text-align: left;
       padding-bottom: 10px;
@@ -1250,6 +1256,7 @@ to{transform:rotate(360deg)}
 .sub-digit-reel{display:flex;flex-direction:column;position:absolute;top:0;left:0;width:100%;transition:transform .8s cubic-bezier(.16,1,.3,1);animation:slotRoll .85s cubic-bezier(.16,1,.3,1) forwards}
 .sub-digit-item{display:block;height:1.2em;line-height:1.2em;text-align:center}@keyframes slotRoll{0%{transform:translateY(0);filter:blur(2px)}to{transform:translateY(var(--target-y));filter:blur(0)}}@keyframes subLoadingPulse{0%{opacity:.3}50%{opacity:.8}to{opacity:.3}}.sub-loading-pulse{animation:subLoadingPulse 1.2s infinite ease-in-out;color:rgba(255,255,255,.4)!important}.pnl-animated-cell{animation:pnlTilePopIn .35s cubic-bezier(.34,1.56,.64,1) forwards;will-change:transform,opacity}.invest-bar-wave{transition:filter .2s ease}.invest-bar-wave:hover{filter:brightness(1.25)}#pnl-input-dialog{background:rgba(0,0,0,.4)!important;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}#pnl-input-dialog>div{background:rgba(30,34,43,.65)!important;backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);box-shadow:0 16px 40px rgba(0,0,0,.6)}
 .stacked-bar-segment.seg-animate{transition:width .6s cubic-bezier(.16,1,.3,1)}.legend-item.legend-animate{opacity:0;animation:legendFadeIn .4s ease forwards}@keyframes legendFadeIn{0%{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}.cat-card.cat-card-animate{opacity:0;animation:cardSlideUp .4s cubic-bezier(.16,1,.3,1) forwards}@keyframes cardSlideUp{0%{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}.cat-bar-fill.bar-fill-animate{transition:width .8s cubic-bezier(.16,1,.3,1)}
+
 </style>
 </head>
 <body >
@@ -1644,7 +1651,7 @@ to{transform:rotate(360deg)}
                             </div>
                         </div>
                         <div class="budget-tab-content" id="budget-view-fire" style="display: none;">
-                            <div class="app-container">
+                            <div class="app-container-salary">
                                 <header class="header">
                                     <div class="title-group">
                                     </div>
@@ -1749,9 +1756,9 @@ to{transform:rotate(360deg)}
                                 <div class="progress-legend" id="overview-legend-container">
                                   <!-- Dynamically Populated (Excludes Net, displays non-zero items with clean K/M amounts) -->
                                 </div>
-<div style="position: relative; width: 100%; height: 160px;">
-  <canvas id="salaryTrendChart" style="width: 100%; height: 100%; display: block;"></canvas>
-</div>
+                                    <div style="position: relative; width: 100%; height: 160px;">
+                                    <canvas id="salaryTrendChart" style="width: 100%; height: 100%; display: block;"></canvas>
+                                    </div>
                               </div>
 
                               <!-- Pay Period History Table -->
@@ -1762,14 +1769,14 @@ to{transform:rotate(360deg)}
                                       <th>
                                         <div class="period-header-container">
                                           <span>Month</span>
-                                          <span class="filter-symbol">▼</span>
+                                          <span class="material-icons-round" style="font-size:11px;">filter_alt</span>
                                           <select id="history-filter-select" class="period-select-hidden" onchange="onHistoryFilterChange(this.value)">
                                             <option value="DEFAULT_12M">Last 12 Months</option>
                                           </select>
                                         </div>
                                       </th>
                                       <th>Gross</th>
-                                      <th>Insurances</th>
+                                      <th>Ins.</th>
                                       <th>PIT Tax</th>
                                       <th class="text-right">NET</th>
                                     </tr>
@@ -6444,7 +6451,7 @@ to{transform:rotate(360deg)}
   availableMonths = Array.from(monthSet);
   availableYears = Array.from(yearSet).sort((a, b) => a - b);
 
-  const curM = (new Date().getMonth() + 1).toString().padStart(2, '0');
+  const curM = (new Date().getMonth() + 2).toString().padStart(2, '0');
   const curY = new Date().getFullYear();
   const currentMatch = `${curM}/${curY}`;
 
@@ -6469,7 +6476,7 @@ to{transform:rotate(360deg)}
 
     function setSelectMode(mode) {
       selectMode = mode;
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-btn-salary').forEach(btn => btn.classList.remove('active'));
       document.getElementById(`mode-${mode}`).classList.add('active');
 
       renderControlInputs();
@@ -6674,7 +6681,6 @@ to{transform:rotate(360deg)}
 
       const gross = totals.salary + totals.bonus;
 
-      const currentScope = selectMode === 'year' ? 'year' : 'month';
       document.getElementById('kpi-gross').innerText = formatLegendAmount(gross);
       document.getElementById('kpi-net').innerText = formatLegendAmount(totals.net);
 
@@ -6684,6 +6690,7 @@ to{transform:rotate(360deg)}
       const overviewLegendContainer = document.getElementById('overview-legend-container');
       overviewLegendContainer.innerHTML = '';
 
+      // All items that make up the proportional breakdown bar
       const items = [
         { id: 'bar-net', label: 'Net Take-Home', value: totals.net, color: 'var(--accent-teal)' },
         { id: 'bar-bonus', label: 'Bonus & Incentives', shortName: 'Bonus', value: totals.bonus, color: '#f59e0b' },
@@ -6697,7 +6704,9 @@ to{transform:rotate(360deg)}
         const barEl = document.getElementById(item.id);
         if (barEl) {
           const pctVal = gross > 0 ? ((item.value / gross) * 100) : 0;
+          // Set width proportionally and ensure zero-value items collapse completely
           barEl.style.width = pctVal + '%';
+          barEl.style.display = pctVal > 0 ? 'block' : 'none';
         }
 
         // Only display non-zero items in legend (skip Net, and skip Bonus if it's 0)
@@ -6754,32 +6763,65 @@ to{transform:rotate(360deg)}
 
 
 
+// Global hover tracking for the chart
+if (typeof window.chartHoverIndex === 'undefined') {
+  window.chartHoverIndex = null;
+}
+
 function renderSalaryTrendChart() {
   let labels = [];
-  let grossData = [];
-  let netData = [];
-  let activeIndex = -1;
+  let grossValues = []; 
+  let netValues = [];   
+  let badgeValues = [];
+  let defaultActiveIndex = -1;
+  let currentTotalGross = 0;
+  let priorTotalGross = 0;
 
   if (selectMode === 'month') {
     const targetActiveMonthKey = getPreviousMonthKey(selectedMonthKey);
     const yearRows = rawPayrollRows.filter(r => r.year === selectedYear);
 
     labels = yearRows.map(r => monthNames[r.month - 1]);
-    grossData = yearRows.map(r => (r.salary + r.bonus) / 1e6);
-    netData = yearRows.map(r => r.net / 1e6);
+    grossValues = yearRows.map(r => (r.salary + r.bonus) / 1e6);
+    netValues = yearRows.map(r => r.net / 1e6);
+    badgeValues = [...netValues];
 
-    activeIndex = yearRows.findIndex(r => r.monthKey === targetActiveMonthKey);
+    defaultActiveIndex = yearRows.findIndex(r => r.monthKey === targetActiveMonthKey);
+
+    currentTotalGross = grossValues.reduce((a, b) => a + b, 0);
+    const priorYearRows = rawPayrollRows.filter(r => r.year === selectedYear - 1);
+    priorTotalGross = priorYearRows.reduce((acc, r) => acc + ((r.salary + r.bonus) / 1e6), 0);
   } else {
     labels = availableYears.map(y => `'${String(y).slice(-2)}`);
-    grossData = availableYears.map(y => {
+    
+    grossValues = availableYears.map(y => {
       return rawPayrollRows.filter(r => r.year === y).reduce((acc, r) => acc + (r.salary + r.bonus), 0) / 1e6;
     });
-    netData = availableYears.map(y => {
-      return rawPayrollRows.filter(r => r.year === y).reduce((acc, r) => acc + r.net, 0) / 1e6;
+    netValues = availableYears.map(y => {
+      const annualNet = rawPayrollRows.filter(r => r.year === y).reduce((acc, r) => acc + r.net, 0);
+      return (annualNet / 12) / 1e6;
     });
+    badgeValues = [...netValues];
 
-    activeIndex = availableYears.indexOf(selectedYear);
+    defaultActiveIndex = availableYears.indexOf(Number(selectedYear));
+    if (defaultActiveIndex === -1) defaultActiveIndex = 0;
+
+    currentTotalGross = grossValues[defaultActiveIndex] || 0;
+    priorTotalGross = grossValues[defaultActiveIndex - 1] || 0;
   }
+
+  // Calculate Big Percentage Change stat for left display
+  let yoyPct = 0;
+  if (priorTotalGross > 0) {
+    yoyPct = ((currentTotalGross - priorTotalGross) / priorTotalGross) * 100;
+  }
+  const pctString = (yoyPct >= 0 ? '+' : '') + yoyPct.toFixed(1) + '%';
+  const pctBadgeEl = document.getElementById('chart-pct-badge');
+  if (pctBadgeEl) pctBadgeEl.innerText = pctString;
+
+  const activeIndex = (window.chartHoverIndex !== null && window.chartHoverIndex !== undefined) 
+    ? window.chartHoverIndex 
+    : defaultActiveIndex;
 
   const canvas = document.getElementById('salaryTrendChart');
   if (!canvas) return;
@@ -6790,7 +6832,6 @@ function renderSalaryTrendChart() {
   }
 
   const rect = canvas.getBoundingClientRect();
-  // Fallback if dimensions are 0 initially during hidden state/tab switches
   const width = rect.width > 0 ? rect.width : 300;
   const height = rect.height > 0 ? rect.height : 250;
 
@@ -6798,10 +6839,50 @@ function renderSalaryTrendChart() {
   canvas.height = 2 * height;
   ctx.scale(2, 2);
 
-  const padding_top = 25;
-  const padding_right = 10;
-  const padding_bottom = -35;
-  const padding_left = 10;
+  // Robust interactive hover/touch setup
+  if (!canvas.dataset.interactiveInitialized) {
+    canvas.dataset.interactiveInitialized = "true";
+    
+    const handleMove = (clientX) => {
+      const cr = canvas.getBoundingClientRect();
+      const xPos = clientX - cr.left;
+      const totalPts = labels.length;
+      if (totalPts === 0) return;
+      
+      const padding_l = 25;
+      const padding_r = 25;
+      const cWidth = cr.width - padding_l - padding_r;
+      
+      let closestIdx = 0;
+      let minDst = Infinity;
+      
+      for (let i = 0; i < totalPts; i++) {
+        const ptX = padding_l + (i / (totalPts - 1 || 1)) * cWidth;
+        const dst = Math.abs(xPos - ptX);
+        if (dst < minDst) {
+          minDst = dst;
+          closestIdx = i;
+        }
+      }
+      window.chartHoverIndex = closestIdx;
+    };
+
+    canvas.addEventListener('mousemove', (e) => handleMove(e.clientX), { passive: true });
+    canvas.addEventListener('touchmove', (e) => {
+      if (e.touches && e.touches[0]) handleMove(e.touches[0].clientX);
+    }, { passive: true });
+    canvas.addEventListener('touchstart', (e) => {
+      if (e.touches && e.touches[0]) handleMove(e.touches[0].clientX);
+    }, { passive: true });
+    
+    canvas.addEventListener('mouseleave', () => { window.chartHoverIndex = null; });
+    canvas.addEventListener('touchend', () => { window.chartHoverIndex = null; });
+  }
+
+  const padding_top = 55;
+  const padding_right = 25;
+  const padding_bottom = 35;
+  const padding_left = 25;
   const chartWidth = width - padding_left - padding_right;
   const chartHeight = height - padding_top - padding_bottom;
 
@@ -6810,120 +6891,197 @@ function renderSalaryTrendChart() {
   requestAnimationFrame(function renderChart(timestamp) {
     if (!startTime) startTime = timestamp;
     const elapsed = timestamp - startTime;
-    const progress = Math.min(elapsed / 650, 1);
+    const progress = Math.min(elapsed / 600, 1);
     const easeProgress = 1 - Math.pow(1 - progress, 3);
 
     ctx.clearRect(0, 0, width, height);
 
-    const allValues = [...grossData, ...netData, 0];
-    let maxVal = Math.max(...allValues), minVal = Math.min(...allValues);
-    if (maxVal === minVal) { maxVal += 1; minVal -= 1; }
+    let maxVal = Math.max(...grossValues, 0), minVal = 0;
+    if (maxVal === minVal) { maxVal += 1; }
+    maxVal *= 1.12; // Headroom
 
     const getY = val => padding_top + chartHeight - (val - minVal) / (maxVal - minVal) * chartHeight;
     const getX = (index, total) => padding_left + index / (total - 1 || 1) * chartWidth;
 
-    // X-axis grid lines
-    ctx.strokeStyle = "rgba(38, 38, 38, 0.5)";
-    ctx.lineWidth = 1;
-    ctx.setLineDash([]);
-    for (let i = 0; i <= 3; i++) {
-      const y = padding_top + chartHeight / 3 * i;
-      ctx.beginPath();
-      ctx.moveTo(padding_left, y);
-      ctx.lineTo(width - padding_right, y);
-      ctx.stroke();
-    }
+    const baselineY = padding_top + chartHeight;
 
-    const buildPoints = data => data.map((val, idx) => ({ x: getX(idx, data.length), y: getY(val), val, label: labels[idx] }));
-    const grossPoints = buildPoints(grossData);
-    const netPoints = buildPoints(netData);
-
-    function drawSharpLine(points, color, strokeWidth) {
-      if (!points || points.length === 0) return;
-      const visibleCount = Math.max(1, Math.floor(points.length * easeProgress));
-      ctx.beginPath();
-      ctx.strokeStyle = color;
-      ctx.lineWidth = strokeWidth;
-      ctx.lineJoin = "miter";
-      ctx.moveTo(points[0].x, points[0].y);
-      for (let i = 1; i < visibleCount; i++) {
-        ctx.lineTo(points[i].x, points[i].y);
-      }
-      if (visibleCount < points.length) {
-        const p1 = points[visibleCount - 1], p2 = points[visibleCount];
-        const subProgress = points.length * easeProgress - visibleCount;
-        ctx.lineTo(p1.x + (p2.x - p1.x) * subProgress, p1.y + (p2.y - p1.y) * subProgress);
-      }
-      ctx.stroke();
-
-      points.slice(0, visibleCount).forEach((pt, idx) => {
-        const isEdge = idx === 0 || idx === points.length - 1;
-        const pointRadius = isEdge ? 2 : 3;
-        ctx.beginPath();
-        ctx.arc(pt.x, pt.y, pointRadius, 0, 2 * Math.PI);
-        ctx.fillStyle = color;
-        ctx.fill();
-      });
-    }
-
-    if (grossPoints.length > 0) drawSharpLine(grossPoints, "#f0f0f0", 2);
-    if (netPoints.length > 0) drawSharpLine(netPoints, "#00f5d4", 2);
-
-    // Active marker with a pulsing live ring
-    if (activeIndex !== undefined && activeIndex >= 0 && activeIndex < netPoints.length) {
-      const activePt = netPoints[activeIndex];
-
-      // Vertical dashed guideline (reduced height, ending at the point)
-      const lineStartY = padding_top + 10;
-      const lineEndY = activePt.y;
-
-      ctx.strokeStyle = "#00897b";
-      ctx.lineWidth = 2;
-      ctx.setLineDash([4, 4]);
-      ctx.beginPath();
-      ctx.moveTo(activePt.x, lineStartY);
-      ctx.lineTo(activePt.x, lineEndY);
-      ctx.stroke();
-      ctx.setLineDash([]);
-
-      // Pulsing outer ring (animates using pulseRadius)
-      ctx.beginPath();
-      ctx.arc(activePt.x, activePt.y, 4.5 + (typeof pulseRadius !== 'undefined' ? pulseRadius : 0), 0, 2 * Math.PI);
-      ctx.fillStyle = `rgba(0, 245, 212, ${Math.max(0, 0.45 - (typeof pulseRadius !== 'undefined' ? pulseRadius : 0) / 18)})`;
-      ctx.fill();
-
-      // Outer static soft glow circle
-      ctx.beginPath();
-      ctx.arc(activePt.x, activePt.y, 7, 0, 2 * Math.PI);
-      ctx.fillStyle = "rgba(0, 245, 212, 0.3)";
-      ctx.fill();
-
-      // Inner solid core dot
-      ctx.beginPath();
-      ctx.arc(activePt.x, activePt.y, 4, 0, 2 * Math.PI);
-      ctx.fillStyle = "#00f5d4";
-      ctx.fill();
-    }
-
-    // X-axis labels
-    ctx.fillStyle = "#757575";
-    ctx.font = '10px -apple-system, BlinkMacSystemFont, sans-serif';
-    ctx.textAlign = "center";
-    labels.forEach((lbl, i) => {
-      ctx.fillText(lbl, getX(i, labels.length), height - 4);
+    const points = grossValues.map((grossVal, idx) => {
+      const netVal = netValues[idx];
+      return {
+        x: getX(idx, grossValues.length),
+        grossY: getY(grossVal), 
+        netY: getY(netVal),     
+        grossVal: grossVal,
+        netVal: netVal,
+        badgeVal: badgeValues[idx],
+        label: labels[idx],
+        index: idx
+      };
     });
 
-    // Increment pulse radius for the live dot effect
-    if (typeof pulseRadius === 'undefined') window.pulseRadius = 0;
-    window.pulseRadius = (window.pulseRadius + 0.06) % 9;
+    // 1. Draw Glow Background Pillar ONLY for Active Column
+    points.forEach((pt) => {
+      const isActive = (pt.index === activeIndex);
+      if (!isActive) return;
 
-    // Keep looping the animation so the live dot pulses smoothly
+      const circleBottomY = baselineY + 23;
+      const totalPillarHeight = circleBottomY - padding_top;
+
+      const grad = ctx.createLinearGradient(pt.x, padding_top, pt.x, circleBottomY);
+      grad.addColorStop(1, "rgba(255, 221, 0, 0.35)");
+      grad.addColorStop(0, "rgba(255, 221, 0, 0.0)");
+
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.roundRect(pt.x - 14, padding_top, 28, totalPillarHeight, 14);
+      ctx.fill();
+    });
+
+    // 2. Draw Vertical Lines and Gross Markers
+    points.forEach((pt) => {
+      const targetH = (baselineY - pt.grossY) * easeProgress;
+      const currentGrossY = baselineY - targetH;
+      const isActive = (pt.index === activeIndex);
+      const isNextYear = (selectMode === 'year' && pt.index === activeIndex + 1);
+
+      let lineColor = "rgba(255, 255, 255, 0.2)";
+      let dotColor = "rgba(255, 255, 255, 0.4)";
+      if (isActive) {
+        lineColor = "#ffdd00";
+        dotColor = "#ffdd00";
+      } else if (isNextYear) {
+        lineColor = "#00f5d4";
+        dotColor = "#00f5d4";
+      }
+
+      ctx.strokeStyle = lineColor;
+      ctx.lineWidth = (isActive || isNextYear) ? 2 : 1.5;
+      ctx.beginPath();
+      ctx.moveTo(pt.x, baselineY);
+      ctx.lineTo(pt.x, currentGrossY);
+      ctx.stroke();
+
+      ctx.fillStyle = dotColor;
+      ctx.beginPath();
+      ctx.arc(pt.x, currentGrossY, (isActive || isNextYear) ? 4 : 2, 0, 2 * Math.PI);
+      ctx.fill();
+    });
+
+    // 3. Determine active badges to display (Show top 2 peaks regardless, unless current month is neither and should be hidden)
+    let activeBadges = [];
+    if (selectMode === 'month') {
+      const sortedPeaks = [...points].sort((a, b) => b.badgeVal - a.badgeVal).slice(0, 2);
+      
+      activeBadges = sortedPeaks.map(pt => ({ ...pt, badgeColor: "#ffdd00" }));
+      
+      // If active/current month is one of the top 2 peaks, it's already included. 
+      // If it's NOT in the top 2 peaks, we keep it hidden as requested previously.
+    } else {
+      if (activeIndex >= 0 && activeIndex < points.length) {
+        activeBadges.push({ ...points[activeIndex], badgeColor: "#ffdd00", side: 'left' });
+      }
+      if (activeIndex + 1 >= 0 && activeIndex + 1 < points.length) {
+        activeBadges.push({ ...points[activeIndex + 1], badgeColor: "#00f5d4", side: 'right' });
+      }
+    }
+
+    // 4. Draw Badges with Collision Resolution
+    drawResolvedBadges(ctx, activeBadges, selectMode);
+
+    // 5. X-Axis Circular Label Badges at the bottom
+    labels.forEach((lbl, i) => {
+      const ptX = getX(i, labels.length);
+      const isSelectedCircle = (i === activeIndex);
+      const isNextCircle = (selectMode === 'year' && i === activeIndex + 1);
+      const circleY = baselineY + 12;
+      const radius = 11;
+
+      let circleBg = "rgba(255, 255, 255, 0.07)";
+      let textCol = "#9e9e9e";
+
+      if (isSelectedCircle) {
+        circleBg = "#ffdd00";
+        textCol = "#121212";
+      } else if (isNextCircle) {
+        circleBg = "#00f5d4";
+        textCol = "#121212";
+      }
+
+      ctx.fillStyle = circleBg;
+      ctx.beginPath();
+      ctx.arc(ptX, circleY, radius, 0, 2 * Math.PI);
+      ctx.fill();
+
+      ctx.fillStyle = textCol;
+      ctx.font = 'bold 9px -apple-system, BlinkMacSystemFont, sans-serif';
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(lbl, ptX, circleY);
+      ctx.textBaseline = "alphabetic";
+    });
+
     animFrameId = requestAnimationFrame(renderChart);
   });
 }
 
+// Helper to render badges with yellow background / dark text & directional placement for Year view
+function drawResolvedBadges(ctx, pointsList, mode) {
+  ctx.font = 'bold 13px DM Sans';
+  
+  let boxes = pointsList.map(pt => {
+    const textVal = `${pt.badgeVal.toFixed(1)}M`;
+    const textWidth = ctx.measureText(textVal).width;
+    const boxW = textWidth + 14;
+    const boxH = 20;
+    
+    let boxX = pt.x - boxW / 2;
+    if (mode === 'year') {
+      if (pt.side === 'left') {
+        boxX = pt.x - boxW + 8;
+      } else if (pt.side === 'right') {
+        boxX = pt.x - 8;
+      }
+    }
+
+    return {
+      pt,
+      textVal,
+      boxW,
+      boxH,
+      x: boxX,
+      y: Math.max(4, pt.grossY - 36),
+      bgColor: pt.badgeColor || "#ffdd00"
+    };
+  });
+
+  if (mode === 'month') {
+    boxes.sort((a, b) => a.x - b.x);
+    for (let i = 1; i < boxes.length; i++) {
+      const prev = boxes[i - 1];
+      const curr = boxes[i];
+      const minGap = 4;
+      if (curr.x < prev.x + prev.boxW + minGap) {
+        curr.x = prev.x + prev.boxW + minGap;
+      }
+    }
+  }
+
+  boxes.forEach(box => {
+    ctx.fillStyle = box.bgColor;
+    ctx.beginPath();
+    ctx.roundRect(box.x, box.y, box.boxW, box.boxH, 10);
+    ctx.fill();
+
+    ctx.fillStyle = "#121212";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(box.textVal, box.x + box.boxW / 2, box.y + box.boxH / 2);
+    ctx.textBaseline = "alphabetic";
+  });
+}
+
     const now = new Date();
-    const currentRealMonthKey = `${(now.getMonth() + 0).toString().padStart(2, '0')}/${now.getFullYear()}`;
+    const currentRealMonthKey = `${(now.getMonth() + 1).toString().padStart(2, '0')}/${now.getFullYear()}`;
 
     function renderHistoryTable() {
       const tbody = document.getElementById('historyTableBody');
