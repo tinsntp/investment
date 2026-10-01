@@ -108,7 +108,7 @@ h1,h2,h3,.num{font-family:'Manrope',sans-serif;}
 .status-dot.err{background:#e8615f;}
 .status-dot.loading{background:var(--accent); animation:pulse 1s infinite ease-in-out;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.reload{background:var(--bg-elev); color:var(--fg-dim); border-radius:8px; padding:7px 10px; font-size:.75rem; cursor:pointer; box-shadow:var(--shadow); border:none; transition:.15s;}
+.reload{background:var(--bg-elev); color:var(--fg-dim); border-radius:8px; padding:7px 10px; font-size:13px; cursor:pointer; box-shadow:var(--shadow); border:none; transition:.15s;}
 .reload:hover{color:var(--fg);}
 
 @keyframes fadeInUp{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
@@ -159,7 +159,7 @@ h1,h2,h3,.num{font-family:'Manrope',sans-serif;}
 .trip-meta .spend{font-size:.8rem; font-weight:700; color:var(--highlight);}
 
 /* ---- detail (continuous itinerary) ---- */
-.det-topbar{display:flex; align-items:center; gap:10px; margin-bottom:14px;}
+.det-topbar{display:flex; align-items:center; gap:1px; margin-bottom:14px;}
 .back-btn{display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:50%; background:var(--bg-elev); color:var(--fg); cursor:pointer; flex-shrink:0; font-size:1.5rem; box-shadow:var(--shadow); border:none;}
 .back-btn:hover{color:var(--accent);}
 .det-title{flex:1; min-width:0;}
@@ -177,16 +177,24 @@ h1,h2,h3,.num{font-family:'Manrope',sans-serif;}
 .stack-legend-item img{width:14px;height:14px;border-radius:4px;object-fit:cover;}
 .stack-legend-item b{color:var(--fg); font-family:'JetBrains Mono',monospace;}
 
-/* Unified sticky container holding both the title and day strip */
+/* Unified sticky container holding both the title and day strip.
+   NOTE: CSS position:sticky cannot work here — #slides-wrap (an ancestor, see the
+   `transform: translateX(...)` the tab-switcher applies to it) permanently has a
+   `transform`, which per spec creates a new containing block and disables sticky
+   for every descendant. So this is pinned manually in JS instead (see openTrip():
+   initStickyPin()) by translateY-ing it to cancel out scroll, and this rule is now
+   just the *base* look before JS takes over each frame. */
 .det-sticky-container {
-  position: sticky;
+  position: relative;
   top: 0;
-  background: #12131a;
+  background: #0d0e12;
   z-index: 999;
-  margin: 0; /* Remove negative margins if they cause overflow clipping */
-  padding: 14px 16px 10px 16px;
+  margin: 0;
+  padding: 14px 5px 10px 5px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+  will-change: transform;
 }
+.det-sticky-container.js-pinned{ box-shadow: 0 4px 20px rgba(0, 0, 0, 0.85); }
 .det-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .day-strip-wrap {
   width: 100%;
@@ -198,7 +206,7 @@ h1,h2,h3,.num{font-family:'Manrope',sans-serif;}
   overflow-x: auto;
   scrollbar-width: none; /* Hide scrollbar for clean look */
   -webkit-overflow-scrolling: touch;
-  padding: 4px 0;
+  padding: 4px ;
 }
 .day-strip::-webkit-scrollbar {
   display: none;
@@ -1327,7 +1335,7 @@ to{transform:rotate(360deg)}
                             <h1>Travel Planner</h1>
                             <p><span class="status-dot loading" id="statusDot"></span><span id="statusText"></span></p>
                           </div>
-                          <button class="reload" id="reloadBtn"><i class="bi bi-arrow-clockwise" style="margin-right:4px;"></i> Refresh</button>
+                          <button class="reload" id="reloadBtn"><i class="bi bi-arrow-clockwise" style="margin-right:2px;font-size:13px!important;"></i> Refresh</button>
                         </div>
 
                         <div class="panel active" id="panel-dashboard">
@@ -2197,7 +2205,7 @@ to{transform:rotate(360deg)}
     var DEBT_CSV_URL = GOOGLE_SHEET_CSV_URL + "271989628";
     var GOAL_CSV_URL = GOOGLE_SHEET_CSV_URL + "1134096431";
     var monthlyExpenseGoal = 0; // raw value from B2
-    var goalTarget = 0;         // monthlyExpenseGoal * 12 — the "12 months of expenses" targetTC
+    var goalTarget = 0;         // monthlyExpenseGoal * 12 * 15
     var TEAL = "#2dd4bf";
     var TEAL_DIM = "#14b8a6";
     var RED = "#f87171";
@@ -6159,6 +6167,7 @@ const PALETTE = ['#f2a341','#5b9cf2','#b184f2','#4fd8b0','#ff8fa3','#e2c14d','#7
 
 let trips = [];
 let dayObserver = null;
+let stickyCleanup = null; // tears down the JS-driven sticky pin's scroll/resize listeners
 let LOCATION_MAP = {}; // code (e.g. HUI) -> location name (e.g. Huế), from columns J/K
 
 function parseCSV(text){
@@ -6501,7 +6510,7 @@ band.items.forEach((a, ai)=>{
           </div>
           <div class="act-side">
             ${a.code?`<span class="code-chip">${a.code}</span>`:''}
-            <div class="act-amt ${a.expense?'':'zero'}">${a.expense?fmtVND(a.expense)+'₫':'no cost'}</div>
+            <div class="act-amt ${a.expense?'':'zero'}">${a.expense?fmtVND(a.expense)+'₫':''}</div>
           </div>
         </div>`;
       });
@@ -6513,8 +6522,11 @@ band.items.forEach((a, ai)=>{
 
   el.innerHTML = html;
 
+  if(stickyCleanup){ stickyCleanup(); stickyCleanup = null; }
+
   document.getElementById('backBtn').addEventListener('click', ()=>{
     if(dayObserver){ dayObserver.disconnect(); dayObserver = null; }
+    if(stickyCleanup){ stickyCleanup(); stickyCleanup = null; }
     document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
     document.getElementById('panel-dashboard').classList.add('active');
   });
@@ -6523,19 +6535,86 @@ band.items.forEach((a, ai)=>{
   const stripWrap = el.querySelector('.day-strip-wrap');
   let suppressObserverUntil = 0;
 
-pills.forEach(p=>{
+  // This widget is embedded inside the app's swipeable ".slide" tab, which is its
+  // own overflow-y:auto box — the page/window itself never scrolls here. Walk up
+  // from the element to find whichever ancestor is actually the scrolling box, so
+  // the jump-to-day click (and the sticky header) work no matter where this is embedded.
+  function findScrollParent(node){
+    let p = node ? node.parentElement : null;
+    while(p && p !== document.body && p !== document.documentElement){
+      const cs = getComputedStyle(p);
+      const canScrollY = (cs.overflowY === 'auto' || cs.overflowY === 'scroll');
+      if(canScrollY && p.scrollHeight > p.clientHeight + 1) return p;
+      p = p.parentElement;
+    }
+    return document.scrollingElement || document.documentElement;
+  }
+  const scrollRoot = findScrollParent(el);
+  const usesWindow = scrollRoot === document.documentElement || scrollRoot === document.body;
+
+  // --- JS-driven sticky pin -------------------------------------------------
+  // CSS position:sticky cannot work here: #slides-wrap (an ancestor of this panel)
+  // gets a permanent `transform: translateX(...)` from the tab carousel, and a
+  // transform on ANY ancestor disables position:sticky for every descendant in
+  // every browser. So this pins .det-sticky-container manually: on every scroll
+  // of the real scroll container, shift it down by (scrollTop - itsNaturalTop),
+  // clamped at 0, using `transform: translateY(...)` — a transform computed from
+  // raw scroll pixels isn't affected by the carousel's own transform.
+  (function initStickyPin(){
+    const stickyEl = el.querySelector('.det-sticky-container');
+    if(!stickyEl) return;
+    const getScrollTop = () => usesWindow ? (window.pageYOffset || document.documentElement.scrollTop) : scrollRoot.scrollTop;
+    const scrollTarget = usesWindow ? window : scrollRoot;
+
+    // natural distance from the top of the scroll container's content to this element
+    let naturalTop = stickyEl.getBoundingClientRect().top - scrollRoot.getBoundingClientRect().top + getScrollTop();
+
+    function update(){
+      const shift = Math.max(0, getScrollTop() - naturalTop);
+      stickyEl.style.transform = shift > 0 ? `translateY(${shift}px)` : '';
+      stickyEl.classList.toggle('js-pinned', shift > 0);
+    }
+    function recalc(){
+      // re-measure in case content above it (fonts/images) reflowed after first paint
+      stickyEl.style.transform = '';
+      naturalTop = stickyEl.getBoundingClientRect().top - scrollRoot.getBoundingClientRect().top + getScrollTop();
+      update();
+    }
+
+    scrollTarget.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', recalc);
+    const ro = ('ResizeObserver' in window) ? new ResizeObserver(recalc) : null;
+    if(ro) ro.observe(stickyEl);
+    update();
+
+    stickyCleanup = function(){
+      scrollTarget.removeEventListener('scroll', update);
+      window.removeEventListener('resize', recalc);
+      if(ro) ro.disconnect();
+    };
+  })();
+
+  function jumpToDay(target){
+    const stickyContainer = el.querySelector('.det-sticky-container');
+    const stickyH = stickyContainer ? stickyContainer.getBoundingClientRect().height : 110;
+    if(usesWindow){
+      const top = target.getBoundingClientRect().top + window.pageYOffset - stickyH - 12;
+      window.scrollTo({ top, behavior:'smooth' });
+    } else {
+      // offset of target relative to the scrolling container's own content box
+      const delta = target.getBoundingClientRect().top - scrollRoot.getBoundingClientRect().top;
+      const top = scrollRoot.scrollTop + delta - stickyH - 12;
+      scrollRoot.scrollTo({ top, behavior:'smooth' });
+    }
+  }
+
+  pills.forEach(p=>{
     p.addEventListener('click', ()=>{
       const target = document.getElementById(p.dataset.target);
       if(!target) return;
       pills.forEach(pp=>pp.classList.toggle('active', pp===p));
       suppressObserverUntil = Date.now() + 900;
-      
-      // Measure the exact height of the unified sticky container
-      const stickyContainer = el.querySelector('.det-sticky-container');
-      const stickyH = stickyContainer ? stickyContainer.getBoundingClientRect().height : 110;
-      const top = target.getBoundingClientRect().top + window.pageYOffset - stickyH - 12;
-      
-      window.scrollTo({ top, behavior:'smooth' });
+      jumpToDay(target);
     });
   });
   if(dayObserver) dayObserver.disconnect();
@@ -6548,12 +6627,12 @@ pills.forEach(p=>{
         pills.forEach(p=>p.classList.toggle('active', p.dataset.day===idx));
       }
     });
-  }, { rootMargin: '-70px 0px -70% 0px', threshold: 0 });
+  }, { root: usesWindow ? null : scrollRoot, rootMargin: '-70px 0px -70% 0px', threshold: 0 });
   sections.forEach(s=>dayObserver.observe(s));
 
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('panel-detail').classList.add('active');
-  window.scrollTo(0,0);
+  if(usesWindow){ window.scrollTo(0,0); } else { scrollRoot.scrollTop = 0; }
 }
 
 function setStatus(state, text){
