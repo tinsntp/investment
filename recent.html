@@ -6166,6 +6166,10 @@ let dayObserver = null;
 let stickyCleanup = null; // tears down the JS-driven sticky pin's scroll/resize listeners
 let LOCATION_MAP = {}; // code (e.g. HUI) -> location name (e.g. Huế), from columns J/K
 
+// Global mapping objects for Month/Year
+let monthBackgroundMap = {};
+let monthStayMap = {};
+
 function parseCSV(text){
   const rows = [];
   let row = [], field = '', inQuotes = false;
@@ -6185,6 +6189,25 @@ function parseCSV(text){
     }
   }
   if(field.length || row.length){ row.push(field); rows.push(row); }
+  
+  // Extract mappings from columns N (time, index 13), O (stay, index 14), and P (background, index 15)
+  monthBackgroundMap = {};
+  monthStayMap = {};
+  
+  rows.forEach(r => {
+    if(r[13]) {
+      const timeKey = r[13].trim(); // e.g. "Jan 2027"
+      if(timeKey) {
+        if(r[14] && r[14].trim()) {
+          monthStayMap[timeKey] = r[14].trim();
+        }
+        if(r[15] && /^https?:\/\//i.test(r[15].trim())) {
+          monthBackgroundMap[timeKey] = r[15].trim();
+        }
+      }
+    }
+  });
+
   return rows;
 }
 
@@ -6206,7 +6229,7 @@ function parseDate(s){
 const DEFAULT_ICON_URL = 'https://cdn-icons-png.flaticon.com/512/1706/1706227.png';
 const CAT_ICON = {
   '✈️ Air Ticket':'https://cdn-icons-png.flaticon.com/512/870/870194.png', '🚖 Transport':'https://cdn-icons-png.flaticon.com/512/1040/1040457.png', '🛌 Hotel':'https://cdn-icons-png.flaticon.com/512/535/535165.png', '🍽️ F&B':'https://cdn-icons-png.flaticon.com/512/10479/10479094.png',
-  '🥤Drink':'🥤', '🥤 Drink':'🥤', '🛍️ Shopping':'🛍️', '💆 Services':'💆','🏂 Shop & Fun':'https://cdn-icons-png.flaticon.com/512/1074/1074584.png',
+  '🥤Drink':'🥤', '🥤 Drink':'🥤', '🛍️️ Shopping':'🛍️', '💆 Services':'💆','🏂 Shop & Fun':'https://cdn-icons-png.flaticon.com/512/1074/1074584.png',
   '🏂 Experience':'🏂', '🍓 Fruit & Plant 🪴':'🍓', '🪴Plant':'🪴','🚖 Transport':'https://cdn-icons-png.flaticon.com/512/1040/1040457.png'
 };
 function iconFor(cat){
@@ -6215,13 +6238,11 @@ function iconFor(cat){
   return CAT_ICON[t] || (t.match(/\p{Emoji}/u) ? t.match(/\p{Emoji}/u)[0] : '📍');
 }
 
-// activity icon: uses a.icon if present, otherwise falls back to iconFor(a.category) URL
 function iconHTML(a){
   const url = (a.icon && /^https?:\/\//i.test(a.icon)) ? a.icon : iconFor(a.category);
   return `<img src="${url}" alt="" loading="lazy" onerror="this.src='${DEFAULT_ICON_URL}';">`;
 }
 
-// small (14px) icon for a category legend
 function catIconHTML(cat, acts){
   const hit = acts.find(a => (a.category?a.category.trim():'Other') === cat && a.icon && /^https?:\/\//i.test(a.icon));
   const url = hit ? hit.icon : iconFor(cat);
@@ -6232,14 +6253,31 @@ function isAirportCode(code){
   return /^[A-Z]{2,4}$/.test(code);
 }
 
-// trip cover photo: first Hotel/Accommodation entry in the trip that has an image url (col I)
-function buildTripCover(acts){
+function getMonthYearKey(date){
+  return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+}
+
+// trip cover photo: maps trip start month/year to column P background URL, with fallback
+function buildTripCover(acts, startDate){
+  const myKey = getMonthYearKey(startDate);
+  if(monthBackgroundMap[myKey] && /^https?:\/\//i.test(monthBackgroundMap[myKey])){
+    return monthBackgroundMap[myKey];
+  }
   const hotel = acts.find(a => a.category && /hotel|accommodation/i.test(a.category) && a.coverUrl && /^https?:\/\//i.test(a.coverUrl));
   return hotel ? hotel.coverUrl : null;
 }
 
-// accommodation name shown under the trip title
-function buildTripHotel(acts){
+// accommodation name: maps from column O via month/year key, with fallback to hotel category
+function buildTripHotel(acts, startDate){
+  const myKey = getMonthYearKey(startDate);
+  if(monthStayMap[myKey]) {
+    const hotel = acts.find(a => a.category && /hotel|accommodation/i.test(a.category));
+    return {
+      name: monthStayMap[myKey],
+      icon: hotel ? ((hotel.icon && /^https?:\/\//i.test(hotel.icon)) ? hotel.icon : (hotel.coverUrl && /^https?:\/\//i.test(hotel.coverUrl) ? hotel.coverUrl : null)) : null
+    };
+  }
+
   const hotel = acts.find(a => a.category && /hotel|accommodation/i.test(a.category));
   if(!hotel) return null;
   return {
@@ -6253,7 +6291,6 @@ function fmtVND(n){
   return Math.round(n).toLocaleString('en-US');
 }
 
-// short number format with fixed(0) precision: e.g., 13,200,000 -> "13M"
 function fmtShort(n){
   if(!n) return '0';
   const sign = n < 0 ? '-' : '';
@@ -6284,8 +6321,8 @@ function buildTrips(records){
     const start = acts[0].date, end = acts[acts.length-1].date;
     const total = acts.reduce((s,a)=>s+a.expense,0);
     const name = buildTripName(acts);
-    const cover = buildTripCover(acts);
-    const hotel = buildTripHotel(acts); // returns { name, icon }
+    const cover = buildTripCover(acts, start);
+    const hotel = buildTripHotel(acts, start); 
     const nights = Math.max(1, Math.round((end-start)/(24*3600*1000)));
     return {
       id: 'trip-'+idx,
@@ -6310,7 +6347,7 @@ function renderYearChart(yearsAsc, currentYear){
   const totals = yearsAsc.map(y => trips.filter(t=>t.year===y).reduce((s,t)=>s+t.total,0));
   const max = Math.max(...totals, 1);
   const grand = totals.reduce((a,b)=>a+b,0);
-const cols = yearsAsc.map((y,i)=>{
+  const cols = yearsAsc.map((y,i)=>{
     const h = Math.max(6, Math.round((totals[i]/max)*76));
     return `<div class="year-bar-col ${y===currentYear?'current':''}">
       <div class="year-bar-amt figure">${fmtShort(totals[i])}</div>
@@ -6323,7 +6360,7 @@ const cols = yearsAsc.map((y,i)=>{
     <div class="year-bar-row">${cols}</div>
   </div>`;
 }
-const DEFAULT_COVER_URL = 'https://i.pinimg.com/736x/fa/74/c3/fa74c3b5e05e56f23b9cee40f4b25326.jpg'; // or your preferred fallback image URL
+const DEFAULT_COVER_URL = 'https://i.pinimg.com/736x/fa/74/c3/fa74c3b5e05e56f23b9cee40f4b25326.jpg';
 
 function renderDashboard(){
   const el = document.getElementById('dashContent');
@@ -6531,10 +6568,7 @@ band.items.forEach((a, ai)=>{
   const stripWrap = el.querySelector('.day-strip-wrap');
   let suppressObserverUntil = 0;
 
-  // This widget is embedded inside the app's swipeable ".slide" tab, which is its
-  // own overflow-y:auto box — the page/window itself never scrolls here. Walk up
-  // from the element to find whichever ancestor is actually the scrolling box, so
-  // the jump-to-day click (and the sticky header) work no matter where this is embedded.
+
   function findScrollParent(node){
     let p = node ? node.parentElement : null;
     while(p && p !== document.body && p !== document.documentElement){
@@ -6548,14 +6582,7 @@ band.items.forEach((a, ai)=>{
   const scrollRoot = findScrollParent(el);
   const usesWindow = scrollRoot === document.documentElement || scrollRoot === document.body;
 
-  // --- JS-driven sticky pin -------------------------------------------------
-  // CSS position:sticky cannot work here: #slides-wrap (an ancestor of this panel)
-  // gets a permanent `transform: translateX(...)` from the tab carousel, and a
-  // transform on ANY ancestor disables position:sticky for every descendant in
-  // every browser. So this pins .det-sticky-container manually: on every scroll
-  // of the real scroll container, shift it down by (scrollTop - itsNaturalTop),
-  // clamped at 0, using `transform: translateY(...)` — a transform computed from
-  // raw scroll pixels isn't affected by the carousel's own transform.
+
   (function initStickyPin(){
     const stickyEl = el.querySelector('.det-sticky-container');
     if(!stickyEl) return;
