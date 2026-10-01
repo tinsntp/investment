@@ -155,7 +155,7 @@ h1,h2,h3,.num{font-family:'Manrope',sans-serif;}
 .trip-hotel{color:var(--fg-faint); font-size:.8rem; margin:3px 0 4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .trip-dates{color:var(--fg-dim); font-size:.72rem; margin-bottom:8px;}
 .trip-meta{display:flex; justify-content:space-between; align-items:center;}
-.nights-chip{font-size:.66rem; background:#3a2d1d; color:#f2a341; padding:3px 8px; border-radius:20px; font-weight:700;}
+.nights-chip{font-size:.66rem; background:#3a2d1d; color:#f2a341; padding:3px 6px; border-radius:20px; font-weight:700;}
 .trip-meta .spend{font-size:.8rem; font-weight:700; color:var(--highlight);}
 
 /* ---- detail (continuous itinerary) ---- */
@@ -6166,6 +6166,10 @@ let dayObserver = null;
 let stickyCleanup = null; // tears down the JS-driven sticky pin's scroll/resize listeners
 let LOCATION_MAP = {}; // code (e.g. HUI) -> location name (e.g. Huế), from columns J/K
 
+let monthBackgroundMap = {};
+let monthStayMap = {};
+let monthTypeMap = {}; // Column Q (Index 16) for Trip Type
+
 function parseCSV(text){
   const rows = [];
   let row = [], field = '', inQuotes = false;
@@ -6185,6 +6189,23 @@ function parseCSV(text){
     }
   }
   if(field.length || row.length){ row.push(field); rows.push(row); }
+  
+  // Extract mappings from columns N (time, 13), O (stay, 14), P (background, 15), Q (type, 16)
+  monthBackgroundMap = {};
+  monthStayMap = {};
+  monthTypeMap = {};
+  
+rows.forEach(r => {
+  if(r[13]) {
+    const timeKey = r[13].trim().replace(/\s+/g, ' '); // collapse multiple spaces
+    if(timeKey) {
+      if(r[14] && r[14].trim()) monthStayMap[timeKey] = r[14].trim();
+      if(r[15] && /^https?:\/\//i.test(r[15].trim())) monthBackgroundMap[timeKey] = r[15].trim();
+      if(r[16] && r[16].trim()) monthTypeMap[timeKey] = r[16].trim();
+    }
+  }
+});
+
   return rows;
 }
 
@@ -6205,23 +6226,22 @@ function parseDate(s){
 
 const DEFAULT_ICON_URL = 'https://cdn-icons-png.flaticon.com/512/1706/1706227.png';
 const CAT_ICON = {
-  '✈️ Air Ticket':'https://cdn-icons-png.flaticon.com/512/870/870194.png', '🚖 Transport':'https://cdn-icons-png.flaticon.com/512/1040/1040457.png', '🛌 Hotel':'https://cdn-icons-png.flaticon.com/512/535/535165.png', '🍽️ F&B':'https://cdn-icons-png.flaticon.com/512/10479/10479094.png',
-  '🥤Drink':'🥤', '🥤 Drink':'🥤', '🛍️ Shopping':'🛍️', '💆 Services':'💆','🏂 Shop & Fun':'https://cdn-icons-png.flaticon.com/512/1074/1074584.png',
+  '✈️️ Air Ticket':'https://cdn-icons-png.flaticon.com/512/870/870194.png', '🚖 Transport':'https://cdn-icons-png.flaticon.com/512/1040/1040457.png', '🛌 Hotel':'https://cdn-icons-png.flaticon.com/512/535/535165.png', '🍽️ F&B':'https://cdn-icons-png.flaticon.com/512/10479/10479094.png',
+  '🥤Drink':'🥤', '🥤 Drink':'🥤', '🛍 Shopping':'🛍️', '💆 Services':'💆','🏂 Shop & Fun':'https://cdn-icons-png.flaticon.com/512/1074/1074584.png',
   '🏂 Experience':'🏂', '🍓 Fruit & Plant 🪴':'🍓', '🪴Plant':'🪴','🚖 Transport':'https://cdn-icons-png.flaticon.com/512/1040/1040457.png'
 };
+
 function iconFor(cat){
   if(!cat) return '📍';
   const t = cat.trim();
   return CAT_ICON[t] || (t.match(/\p{Emoji}/u) ? t.match(/\p{Emoji}/u)[0] : '📍');
 }
 
-// activity icon: uses a.icon if present, otherwise falls back to iconFor(a.category) URL
 function iconHTML(a){
   const url = (a.icon && /^https?:\/\//i.test(a.icon)) ? a.icon : iconFor(a.category);
   return `<img src="${url}" alt="" loading="lazy" onerror="this.src='${DEFAULT_ICON_URL}';">`;
 }
 
-// small (14px) icon for a category legend
 function catIconHTML(cat, acts){
   const hit = acts.find(a => (a.category?a.category.trim():'Other') === cat && a.icon && /^https?:\/\//i.test(a.icon));
   const url = hit ? hit.icon : iconFor(cat);
@@ -6232,14 +6252,29 @@ function isAirportCode(code){
   return /^[A-Z]{2,4}$/.test(code);
 }
 
-// trip cover photo: first Hotel/Accommodation entry in the trip that has an image url (col I)
-function buildTripCover(acts){
+function getMonthYearKey(date){
+  return `${date.toLocaleString('en-US', { month: 'short' })} ${date.getFullYear()}`;
+}
+
+function buildTripCover(acts, startDate){
+  const myKey = getMonthYearKey(startDate);
+  if(monthBackgroundMap[myKey] && /^https?:\/\//i.test(monthBackgroundMap[myKey])){
+    return monthBackgroundMap[myKey];
+  }
   const hotel = acts.find(a => a.category && /hotel|accommodation/i.test(a.category) && a.coverUrl && /^https?:\/\//i.test(a.coverUrl));
   return hotel ? hotel.coverUrl : null;
 }
 
-// accommodation name shown under the trip title
-function buildTripHotel(acts){
+function buildTripHotel(acts, startDate){
+  const myKey = getMonthYearKey(startDate);
+  if(monthStayMap[myKey]) {
+    const hotel = acts.find(a => a.category && /hotel|accommodation/i.test(a.category));
+    return {
+      name: monthStayMap[myKey],
+      icon: hotel ? ((hotel.icon && /^https?:\/\//i.test(hotel.icon)) ? hotel.icon : (hotel.coverUrl && /^https?:\/\//i.test(hotel.coverUrl) ? hotel.coverUrl : null)) : null
+    };
+  }
+
   const hotel = acts.find(a => a.category && /hotel|accommodation/i.test(a.category));
   if(!hotel) return null;
   return {
@@ -6253,7 +6288,6 @@ function fmtVND(n){
   return Math.round(n).toLocaleString('en-US');
 }
 
-// short number format with fixed(0) precision: e.g., 13,200,000 -> "13M"
 function fmtShort(n){
   if(!n) return '0';
   const sign = n < 0 ? '-' : '';
@@ -6263,6 +6297,52 @@ function fmtShort(n){
   if(abs >= 1e6) return sign + (abs / 1e6).toFixed(0) + 'M';
   if(abs >= 1e3) return sign + (abs / 1e3).toFixed(0) + 'K';
   return sign + Math.round(abs).toString();
+}
+
+function buildTripName(acts, startDate){
+  const codeChain = [];
+  for(const a of acts){
+    if(!a.category || !(a.category.includes('Air Ticket') || a.category.includes('Transport'))) continue;
+    const m = a.activity.match(/^([A-Z]{2,4})[\s\-]+([A-Z]{2,4})\b/);
+    if(!m) continue;
+    const [_, c1, c2] = m;
+    if(!isAirportCode(c1) || !isAirportCode(c2)) continue;
+    if(codeChain[codeChain.length-1] !== c1) codeChain.push(c1);
+    codeChain.push(c2);
+  }
+  const chain = codeChain.filter((c,i)=> c !== codeChain[i-1]);
+  let validChain = chain.filter(c => !EXCLUDE_CODES.has(c));
+
+  // Handle round trips (e.g. PHL -> JFK -> PHL becomes JFK)
+  if(validChain.length >= 3 && validChain[0] === validChain[validChain.length - 1]){
+    validChain = validChain.slice(1, validChain.length - 1);
+  }
+
+  let baseName = '';
+  if(validChain.length >= 1){
+    const names = validChain.map(c => {
+      if (c === 'IUH') return 'Quy Nhơn';
+      return LOCATION_MAP[c] || c;
+    });
+    const deduped = [];
+    names.forEach(n => {
+      if(deduped.length === 0 || deduped[deduped.length - 1] !== n){
+        deduped.push(n);
+      }
+    });
+    baseName = deduped.join(' – ');
+  } else {
+    baseName = acts[0].activity.slice(0,30);
+  }
+
+  // Append 💼 if trip type is company based on Column Q mapping
+  const myKey = getMonthYearKey(startDate);
+  const rawType = monthTypeMap[myKey] || '';
+  if(rawType.toLowerCase().includes('company') && !baseName.includes('💼')){
+    baseName += ' 💼';
+  }
+
+  return baseName;
 }
 
 function buildTrips(records){
@@ -6282,15 +6362,20 @@ function buildTrips(records){
 
   return clusters.map((acts, idx) => {
     const start = acts[0].date, end = acts[acts.length-1].date;
+    const myKey = getMonthYearKey(start);
+    const rawType = monthTypeMap[myKey] || '';
+    const isCompany = rawType.toLowerCase().includes('company');
+    
     const total = acts.reduce((s,a)=>s+a.expense,0);
-    const name = buildTripName(acts);
-    const cover = buildTripCover(acts);
-    const hotel = buildTripHotel(acts); // returns { name, icon }
+    const name = buildTripName(acts, start);
+    const cover = buildTripCover(acts, start);
+    const hotel = buildTripHotel(acts, start); 
     const nights = Math.max(1, Math.round((end-start)/(24*3600*1000)));
     return {
       id: 'trip-'+idx,
       name, cover, hotel, activities: acts, start, end, total, nights,
-      year: start.getFullYear()
+      year: start.getFullYear(),
+      isCompany
     };
   }).sort((a,b)=>b.start-a.start);
 }
@@ -6307,10 +6392,10 @@ function fmtRange(a,b){
 }
 
 function renderYearChart(yearsAsc, currentYear){
-  const totals = yearsAsc.map(y => trips.filter(t=>t.year===y).reduce((s,t)=>s+t.total,0));
+  const totals = yearsAsc.map(y => trips.filter(t=>t.year===y && !t.isCompany).reduce((s,t)=>s+t.total,0));
   const max = Math.max(...totals, 1);
   const grand = totals.reduce((a,b)=>a+b,0);
-const cols = yearsAsc.map((y,i)=>{
+  const cols = yearsAsc.map((y,i)=>{
     const h = Math.max(6, Math.round((totals[i]/max)*76));
     return `<div class="year-bar-col ${y===currentYear?'current':''}">
       <div class="year-bar-amt figure">${fmtShort(totals[i])}</div>
@@ -6323,7 +6408,8 @@ const cols = yearsAsc.map((y,i)=>{
     <div class="year-bar-row">${cols}</div>
   </div>`;
 }
-const DEFAULT_COVER_URL = 'https://i.pinimg.com/736x/fa/74/c3/fa74c3b5e05e56f23b9cee40f4b25326.jpg'; // or your preferred fallback image URL
+
+const DEFAULT_COVER_URL = 'https://i.pinimg.com/736x/fa/74/c3/fa74c3b5e05e56f23b9cee40f4b25326.jpg';
 
 function renderDashboard(){
   const el = document.getElementById('dashContent');
@@ -6336,7 +6422,7 @@ function renderDashboard(){
 
   for(const y of years){
     const yTrips = trips.filter(t=>t.year===y);
-    const yTotal = yTrips.reduce((s,t)=>s+t.total,0);
+    const yTotal = yTrips.filter(t=>!t.isCompany).reduce((s,t)=>s+t.total,0);
     html += `<div class="year-head">
       <h2>${y}</h2>
       <span class="chip-trips">${yTrips.length} trip${yTrips.length>1?'s':''}</span>
