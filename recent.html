@@ -945,9 +945,9 @@ tbody tr.current-row td{font-weight:600;}
 .val-secondary{font-size:13px;padding-top:2px;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.full-log-text{display:inline}.short-log-text{display:none}#det-msg{display:none;padding:12px;margin-bottom:16px;background:rgba(255,105,180,.15);border-radius:12px;color:var(--pink-primary);font-size:13px}
 @media (max-width:400px){.portfolio-card,.hero-card-port{padding-left:5px;padding-right:2px}
 .table-wrapper{margin:0 0-6px -6px;padding-right:0}
-col.col-asset{width:28%}
-col.col-duration{width:16%}
-col.col-volprice{width:18%}
+col.col-asset{width:25%}
+col.col-duration{width:17%}
+col.col-volprice{width:20%}
 col.col-pnl{width:18%}
 col.col-costmarket{width:20%}
 .status-dot,.asset-icon{margin-right:5px}th{font-size:12px;padding:8px 5px;letter-spacing:0}td{padding:10px 3px;font-size:13px}tr.log-row td{padding:4px 2px}.sub-indent{padding-left:8px!important}.asset-cell{gap:3px}.asset-icon{width:25px;height:25px;font-size:8px}.metrics-grid{grid-template-columns:repeat(2,1fr);gap:8px}
@@ -4563,12 +4563,268 @@ to{transform:rotate(360deg)}
     document.addEventListener("click",function(){document.querySelectorAll(".col-menu").forEach(function(m){m.classList.remove("open")})});
     document.addEventListener("click",function(e){var item=e.target.closest(".col-menu-item");if(item){e.stopPropagation();var filterType=item.getAttribute("data-filter-type"),filterValue=item.getAttribute("data-filter-value");portfolioFilters[filterType]=filterValue;var menu=item.closest(".col-menu");menu.querySelectorAll(".col-menu-item").forEach(function(el){el.classList.remove("selected")}),item.classList.add("selected");var icon=document.getElementById(filterType+"-filter-icon");if(icon){var isDefault="date"!==filterType&&"all"===filterValue;icon.classList.toggle("active-filter",!isDefault)}menu.classList.remove("open"),applyPortfolioFiltersAndRender()}});
     function getForexDisplaySymbol(symbol){return{BTCUSD:"BTC",XAUUSD:"XAU"}[symbol]||symbol}
-    function renderAccordion(portfolioGroups){const tbody=document.getElementById("portfolio-tbody");tbody.innerHTML="";let totalPnlVnd=0,totalMarketValVnd=0,totalCostVnd=0,activeMarketValVnd=0,activePositions=0;const activeIcons=[],now=new Date;let lastRenderedCategory=null;const hasForexInView=portfolioGroups.some(function(g){return"forex"===(g.accountType||"").toLowerCase()});var ACCOUNT_TYPE_ICONS={Stock:"https://github.com/tinsntp/investment/blob/main/stock.png?raw=true",Saving:"https://github.com/tinsntp/investment/blob/main/saving.png?raw=true",Crypto:"https://cdn-icons-png.flaticon.com/512/5968/5968260.png",Forex:"https://github.com/tinsntp/investment/blob/main/exness.png?raw=true"};const categoryPnlTotals={},categoryValueTotals={},categoryIconMap={};portfolioGroups.forEach(group=>{const records=group.records||[],isStock="stock"===group.accountType.toLowerCase(),isCrypto="crypto"===group.accountType.toLowerCase(),isForex="forex"===group.accountType.toLowerCase(),isSaving="saving"===group.accountType.toLowerCase(),mainRec=(isStock||isCrypto||isForex||isSaving)&&group.mainRecord?group.mainRecord:null,sumPnl=mainRec?mainRec.actualPnl:records.reduce((acc,r)=>acc+r.actualPnl,0)+(group.mainRecord?group.mainRecord.actualPnl:0),sumValue=mainRec?mainRec.marketValue:records.reduce((acc,r)=>acc+r.marketValue,0)+(group.mainRecord?group.mainRecord.marketValue:0),cat=group.accountType||"Other";categoryPnlTotals[cat]=(categoryPnlTotals[cat]||0)+sumPnl,categoryValueTotals[cat]=(categoryValueTotals[cat]||0)+sumValue,categoryIconMap[cat]||(categoryIconMap[cat]=ACCOUNT_TYPE_ICONS[cat]||"")}),window.navFullCategoryValueTotals=Object.assign({},categoryValueTotals),window.navFullCategoryPnlTotals=Object.assign({},categoryPnlTotals),window.navFullCategoryIconMap=Object.assign({},categoryIconMap),window.navFullTotalValue=Object.values(categoryValueTotals).reduce(function(s,v){return s+v},0),portfolioGroups.forEach((group,index)=>{const groupGroupId=`group-${index}`,records=group.records||[],isSaving="saving"===group.accountType.toLowerCase(),isStock="stock"===group.accountType.toLowerCase(),isCrypto="crypto"===group.accountType.toLowerCase(),isForex="forex"===group.accountType.toLowerCase(),visibleRecords=isForex?records.filter(r=>""!==(r.status||"").toLowerCase()):records;function forexPrice(v){return"$"+Math.round(Number(v||0)).toLocaleString()}isForex&&records.some(r=>-1!==(r.note||"").toUpperCase().indexOf("INITIAL SELL"));const categoryLabel=group.accountType||"Other",categoryKey=categoryLabel.toLowerCase().replace(/\s+/g,"-");if(categoryLabel!==lastRenderedCategory){lastRenderedCategory=categoryLabel;const catPnl=categoryPnlTotals[categoryLabel]||0,headerTr=(Math.round(catPnl).toLocaleString("en-US"),document.createElement("tr"));headerTr.className="portfolio-group-hdr-row",headerTr.setAttribute("data-category-key",categoryKey),headerTr.setAttribute("onclick",`toggleCategoryGroup('${categoryKey}', this)`),headerTr.innerHTML=`\n                    <td class="portfolio-group-hdr" colspan="5">\n                        <div class="portfolio-group-hdr-inner">\n                            <span class="portfolio-group-hdr-label">\n                                ${categoryLabel}                      \n                            </span>\n                            <span class="portfolio-group-hdr-chevron"><i class="bi bi-chevron-down"></i></span>\n                        </div>\n                    </td>\n                `,tbody.appendChild(headerTr)}const mainRec=(isStock||isCrypto||isForex||isSaving)&&group.mainRecord?group.mainRecord:null,sumMarketValue=mainRec?mainRec.marketValue:records.reduce((acc,r)=>acc+r.marketValue,0)+(group.mainRecord?group.mainRecord.marketValue:0),sumCost=mainRec?mainRec.costValue:records.reduce((acc,r)=>acc+r.costValue,0)+(group.mainRecord?group.mainRecord.costValue:0),sumPnl=mainRec?mainRec.actualPnl:records.reduce((acc,r)=>acc+r.actualPnl,0)+(group.mainRecord?group.mainRecord.actualPnl:0);let overallPnlPct=0;overallPnlPct=mainRec?mainRec.colCPnlPct:isSaving&&records.length>0?records[0].colCPnlPct:sumCost>0?sumPnl/sumCost*100:0,totalPnlVnd+=sumPnl,totalMarketValVnd+=sumMarketValue,totalCostVnd+=sumCost;const isOngoing=group.status.toLowerCase().includes("on-going");if(isOngoing){isForex||(activeMarketValVnd+=sumMarketValue),activePositions++;const hasIconUrlForStack=group.iconUrl&&group.iconUrl.trim().startsWith("http");activeIcons.push({iconUrl:hasIconUrlForStack?group.iconUrl:null,symbol:group.symbol||"?"})}const dotClass=isOngoing?"ongoing":"close",pnlColorStyle=0===sumPnl?"var(--text-secondary)":sumPnl>0?"var(--teal-primary)":"var(--pink-primary)",hasIconUrl=group.iconUrl&&group.iconUrl.trim().startsWith("http"),iconStyle=hasIconUrl?`background-image: url('${group.iconUrl}');`:"background-color: #21262D;",iconText=hasIconUrl?"":group.symbol.slice(0,4);let displayAccountTitle=group.accountType;if(isSaving&&records.length>0){const maxRec=records.reduce((max,r)=>r.costValue>max.costValue?r:max,records[0]);maxRec&&maxRec.accountType&&(displayAccountTitle=maxRec.accountType)}let activeSavingSubrowsCount=0;isSaving&&records.forEach(r=>{const sDate=parseDate(r.entryDate);let eDate=null;sDate&&r.volume>0?(eDate=new Date(sDate),eDate.setMonth(eDate.getMonth()+parseInt(r.volume,10))):r.exitDate&&(eDate=parseDate(r.exitDate)),(!eDate||eDate>=now)&&activeSavingSubrowsCount++});const rawLive=mainRec?mainRec.livePrice:group.livePrice;let volumePriceHTML="";if(isSaving)volumePriceHTML=`\n                    <div class="val-primary">${activeSavingSubrowsCount}/${records.length}</div>\n                    <div class="val-secondary" style="text-transform: lowercase;">${group.status}</div>`;else if(isCrypto){const rawEntry=mainRec?mainRec.entryPrice||mainRec.execPrice:records[0]?.entryPrice||records[0]?.execPrice||0;volumePriceHTML=`\n                    <div class="val-primary">${"$"+formatCryptoPrice(rawEntry)}</div>\n                    <div class="val-secondary" style="color: ${pnlColorStyle}; font-weight: 600;">${isOngoing?"$"+formatCryptoPrice(rawLive):"-"}</div>`}else if(isStock){const displayVol=mainRec?mainRec.volume:records.reduce((acc,r)=>acc+r.volume,0),rawEntry=mainRec?mainRec.entryPrice||mainRec.execPrice:group.mainRecord?.entryPrice||records[0]?.entryPrice||0,strEntry=formatStockPrice(rawEntry),strLive=isOngoing?formatStockPrice(rawLive):"",displayPriceCombined=isOngoing?`${strEntry}/<span style="color: ${pnlColorStyle}; font-weight: 600;">${strLive}</span>`:strEntry;volumePriceHTML=`\n                    <div class="val-primary">${displayVol.toLocaleString()}</div>\n                    <div class="val-secondary">${displayPriceCombined}</div>`}else if(isForex)volumePriceHTML='\n                    <div class="val-primary"></div>\n                    <div class="val-secondary"></div>';else{const totalVol=records.reduce((acc,r)=>acc+r.volume,0),avgPrice=records[0]?.entryPrice||records[0]?.execPrice||0;volumePriceHTML=`\n                    <div class="val-primary">${totalVol.toLocaleString()}</div>\n                    <div class="val-secondary">${avgPrice.toLocaleString()}</div>`}const mainTr=document.createElement("tr");mainTr.className="main-row",mainTr.setAttribute("onclick",`toggleGroup('${groupGroupId}', this)`),mainTr.setAttribute("data-category-key",categoryKey);const refDateRecord=mainRec||group.mainRecord||records[0],durationHTML=formatDateRangeTwoLinesNoYear(refDateRecord?.entryDate,refDateRecord?.exitDate,isSaving,refDateRecord?.volume);mainTr.innerHTML=`\n                <td>\n                    <div class="asset-cell">\n                        <span class="chevron-icon">\n                            ${visibleRecords.length>0?'<i class="bi bi-chevron-right"></i>':'<i class="bi bi-dot"></i>'}\n                        </span>\n                        <div class="asset-icon-wrapper">\n                            <div class="asset-icon" style="${iconStyle}">${iconText}</div>\n                            <span class="status-dot ${dotClass}" title="${group.status}"></span>\n                        </div>\n                        <div style="overflow: hidden;">\n                            <div class="val-primary">${isForex?getForexDisplaySymbol(group.symbol):group.symbol}</div>\n                        </div>\n                    </div>\n                </td>\n                <td>\n                    ${durationHTML}\n                </td>\n                <td>\n                    ${volumePriceHTML}\n                </td>\n                <td>\n                    <div class="val-primary" style="color: ${pnlColorStyle};">\n                        ${formatPnlValue(sumPnl)}\n                    </div>\n                    <div class="val-secondary" style="color: ${pnlColorStyle};">\n                        ${isForex?"":formatPnlPct(overallPnlPct)}\n                    </div>\n                </td>\n                <td>\n                    ${isForex?`\n                        <div class="val-primary">${forexPrice(group.mainRecord.livePrice)}</div>\n                    `:`\n                        <div class="val-primary">${formatShortNumber(sumCost)}</div>\n                        <div class="val-secondary">${formatShortNumber(sumMarketValue)}</div>\n                    `}\n                </td>\n            `,tbody.appendChild(mainTr),visibleRecords.length>0&&visibleRecords.forEach(r=>{const logTr=document.createElement("tr");logTr.className=`log-row ${groupGroupId}`,logTr.setAttribute("data-category-key",categoryKey);const subPnlPct=isSaving||isStock||isCrypto||isForex?r.colCPnlPct:r.costValue>0?r.actualPnl/r.costValue*100:0,isSubPositive=r.actualPnl>0,isSubZero=0===r.actualPnl,execDateObj=parseDate(r.entryDate),subExecDateStr=execDateObj?formatNoYearDate(execDateObj):"-",cleanedDetailNote=cleanNoteText(r.note,r.status),shortKeyword=getShortLogKeyword(cleanedDetailNote),subAssetLabel=isSaving?r.symbol:cleanedDetailNote;let subVolumePriceHTML="";if(isSaving)subVolumePriceHTML=`\n                            <div class="val-primary">${r.volume} Mos</div>`;else if(isForex)!function(note){const n=(note||"").toUpperCase();-1!==n.indexOf("SELL")||n.indexOf("BUY")}(r.note),subVolumePriceHTML=`\n                            <div class="val-secondary">${r.volume.toLocaleString()}</div>`;else{const rawPrice=r.execPrice||r.entryPrice||0,subPriceDisplay=isCrypto?"$"+formatCryptoPrice(rawPrice):isStock?formatStockPrice(rawPrice):rawPrice.toLocaleString();subVolumePriceHTML=`\n                            <div class="val-primary">${r.volume.toLocaleString()}</div>\n                            <div class="val-secondary">${subPriceDisplay}</div>`}const assetBadgeText=isForex?subAssetLabel:isSaving?r.symbol:shortKeyword,normalizedLabel=(subAssetLabel||"").trim().toLowerCase(),badgeHtml=isForex?orderTypeBadge(isForex?"sell"===normalizedLabel?"Short":"buy"===normalizedLabel?"Long":subAssetLabel:subAssetLabel)+" ":orderTypeBadge(assetBadgeText)+" ";logTr.innerHTML=`\n                        <td class="sub-indent" style="padding-left: 28px;">\n                            <div class="asset-cell">\n                                <span style="color: var(--text-muted); flex-shrink: 0;"><i class="bi bi-arrow-return-right"></i></span>\n                                <span class="val-primary" style="font-size: 11px; display: flex; align-items: center; gap: 6px;">\n                                    ${badgeHtml}\n                                    <span class="full-log-text">${subAssetLabel}</span>\n                                </span>\n                            </div>\n                        </td>\n                        <td>\n                            <div class="val-primary">${subExecDateStr}</div>\n                        </td>\n                        <td>\n                            ${subVolumePriceHTML}\n                        </td>\n                        <td>\n                            <div class="val-secondary" style="color: ${isSubZero?"var(--text-secondary)":isSubPositive?"var(--teal-primary)":"var(--pink-primary)"}; font-weight: 700;">\n                                ${r.actualPnl?formatPnlValue(r.actualPnl):""}\n                            </div>\n                            <div class="val-secondary" style="color: ${isSubZero?"var(--text-secondary)":isSubPositive?"var(--teal-primary)":"var(--pink-primary)"};">\n                                ${subPnlPct?formatPnlPct(subPnlPct):""}\n                            </div>\n                        </td>\n                        <td>\n                            ${isForex?`\n                                <div class="val-secondary" style="font-weight: 700; color: var(--text-primary);">${r.entryPrice?forexPrice(r.entryPrice):""}</div>\n                            `:`\n                                <div class="val-secondary" style="font-weight: 700; color: var(--text-primary);">${r.costValue?formatShortNumber(r.costValue):""}</div>\n                                <div class="val-secondary">${r.marketValue?formatShortNumber(r.marketValue):""}</div>\n                            `}\n                        </td>\n                    `,tbody.appendChild(logTr)})}),hasForexInView&&null!==window.forexNavBalance&&void 0!==window.forexNavBalance&&(activeMarketValVnd+=window.forexNavBalance);const totalBalanceVnd=activeMarketValVnd;document.getElementById("total-profit-bal").textContent=totalBalanceVnd.toLocaleString()+"₫",document.getElementById("total-profit-val").textContent=(totalPnlVnd>0?"+":"")+totalPnlVnd.toLocaleString()+"₫";const overallPct=totalCostVnd>0?totalPnlVnd/totalCostVnd*100:0,badgeEl=document.getElementById("total-profit-badge");badgeEl.textContent=formatPnlPct(overallPct),badgeEl.className="badge-pill "+(totalPnlVnd>=0?"badge-teal":"badge-pink"),renderActivePositionsStat(activePositions,activeIcons);var balances,pnls,CAT_KEY_DISPLAY,donutValues={},donutPnls={},donutCosts={},donutIcons={},donutHasActive={},CAT_ICONS={Stock:"https://github.com/tinsntp/investment/blob/main/stock.png?raw=true",Saving:"https://github.com/tinsntp/investment/blob/main/saving.png?raw=true",Crypto:"https://cdn-icons-png.flaticon.com/512/5968/5968260.png",Forex:"https://github.com/tinsntp/investment/blob/main/exness.png?raw=true"};(window.currentPortfolioGroups||[]).forEach(function(group){var cat=group.accountType||"Other",isStock="stock"===cat.toLowerCase(),isCrypto="crypto"===cat.toLowerCase(),isForex="forex"===cat.toLowerCase(),isSaving="saving"===cat.toLowerCase(),isOngoing=group.status.toLowerCase().includes("on-going"),mainRec=isStock||isCrypto||isForex||isSaving?group.mainRecord:null,val=mainRec?mainRec.marketValue:(group.records||[]).reduce(function(a,r){return a+(r.marketValue||0)},0)+(group.mainRecord&&group.mainRecord.marketValue||0),pnl=mainRec?mainRec.actualPnl:(group.records||[]).reduce(function(a,r){return a+(r.actualPnl||0)},0)+(group.mainRecord&&group.mainRecord.actualPnl||0),cost=mainRec?mainRec.costValue:(group.records||[]).reduce(function(a,r){return a+(r.costValue||0)},0)+(group.mainRecord&&group.mainRecord.costValue||0);isOngoing?(donutValues[cat]=(donutValues[cat]||0)+val,donutHasActive[cat]=!0):cat in donutHasActive||(donutHasActive[cat]=!1),donutPnls[cat]=(donutPnls[cat]||0)+pnl,donutCosts[cat]=(donutCosts[cat]||0)+cost,donutIcons[cat]||(donutIcons[cat]=CAT_ICONS[cat]||"")}),window.navCategoryBalances&&(balances=window.navCategoryBalances,pnls=window.navCategoryPnls,CAT_KEY_DISPLAY={FOREX:"Forex",CRYPTO:"Crypto",STOCK:"Stock",GOLD:"Gold",SAVING:"Saving"},Object.keys(balances).forEach(function(k){var dispName=CAT_KEY_DISPLAY[k]||k.charAt(0)+k.slice(1).toLowerCase();donutValues[dispName]=balances[k],donutHasActive[dispName]=!0,donutIcons[dispName]||(donutIcons[dispName]=CAT_ICONS[dispName]||"")}),pnls&&Object.keys(pnls).forEach(function(k){var dispName=CAT_KEY_DISPLAY[k]||k.charAt(0)+k.slice(1).toLowerCase();donutPnls[dispName]=pnls[k]}));var donutTotal=Object.values(donutValues).reduce(function(s,v){return s+v},0);renderNavDonut(donutValues,donutPnls,donutIcons,donutTotal,donutHasActive,donutCosts)}
+    function renderAccordion(portfolioGroups){const tbody=document.getElementById("portfolio-tbody");tbody.innerHTML="";let totalPnlVnd=0,totalMarketValVnd=0,totalCostVnd=0,activeMarketValVnd=0,activePositions=0;const activeIcons=[],now=new Date;let lastRenderedCategory=null;const hasForexInView=portfolioGroups.some(function(g){return"forex"===(g.accountType||"").toLowerCase()});var ACCOUNT_TYPE_ICONS={Stock:"https://github.com/tinsntp/investment/blob/main/stock.png?raw=true",Saving:"https://github.com/tinsntp/investment/blob/main/saving.png?raw=true",Crypto:"https://cdn-icons-png.flaticon.com/512/5968/5968260.png",Forex:"https://github.com/tinsntp/investment/blob/main/exness.png?raw=true"};const categoryPnlTotals={},categoryValueTotals={},categoryIconMap={};portfolioGroups.forEach(group=>{const records=group.records||[],isStock="stock"===group.accountType.toLowerCase(),isCrypto="crypto"===group.accountType.toLowerCase(),isForex="forex"===group.accountType.toLowerCase(),isSaving="saving"===group.accountType.toLowerCase(),mainRec=(isStock||isCrypto||isForex||isSaving)&&group.mainRecord?group.mainRecord:null,sumPnl=mainRec?mainRec.actualPnl:records.reduce((acc,r)=>acc+r.actualPnl,0)+(group.mainRecord?group.mainRecord.actualPnl:0),sumValue=mainRec?mainRec.marketValue:records.reduce((acc,r)=>acc+r.marketValue,0)+(group.mainRecord?group.mainRecord.marketValue:0),cat=group.accountType||"Other";categoryPnlTotals[cat]=(categoryPnlTotals[cat]||0)+sumPnl,categoryValueTotals[cat]=(categoryValueTotals[cat]||0)+sumValue,categoryIconMap[cat]||(categoryIconMap[cat]=ACCOUNT_TYPE_ICONS[cat]||"")}),window.navFullCategoryValueTotals=Object.assign({},categoryValueTotals),window.navFullCategoryPnlTotals=Object.assign({},categoryPnlTotals),window.navFullCategoryIconMap=Object.assign({},categoryIconMap),window.navFullTotalValue=Object.values(categoryValueTotals).reduce(function(s,v){return s+v},0),portfolioGroups.forEach((group,index)=>{
+    const records=group.records||[],
+          isSaving="saving"===group.accountType.toLowerCase(),
+          isStock="stock"===group.accountType.toLowerCase(),
+          isCrypto="crypto"===group.accountType.toLowerCase(),
+          isForex="forex"===group.accountType.toLowerCase();
+
+    function forexPrice(v){return "$"+Math.round(Number(v||0)).toLocaleString()}
+
+    const categoryLabel=group.accountType||"Other",
+          categoryKey=categoryLabel.toLowerCase().replace(/\s+/g,"-");
+
+    if(categoryLabel!==lastRenderedCategory){
+        lastRenderedCategory=categoryLabel;
+        const headerTr=document.createElement("tr");
+        headerTr.className="portfolio-group-hdr-row",
+        headerTr.setAttribute("data-category-key",categoryKey),
+        headerTr.setAttribute("onclick",`toggleCategoryGroup('${categoryKey}', this)`),
+        headerTr.innerHTML=`
+                    <td class="portfolio-group-hdr" colspan="5">
+                        <div class="portfolio-group-hdr-inner">
+                            <span class="portfolio-group-hdr-label">
+                                ${categoryLabel}                      
+                            </span>
+                            <span class="portfolio-group-hdr-chevron"><i class="bi bi-chevron-down"></i></span>
+                        </div>
+                    </td>
+                `,
+        tbody.appendChild(headerTr)
+    }
+
+    // --- NEW: split a group's records into separate BUY->CLOSE cycles so each
+    // cycle gets its own main (parent) row with its own symbol/date-range/sums,
+    // instead of merging all cycles under a single parent row. ---
+    function splitRecordsIntoCycles(recs,liveMainRecord){
+        const result=[];
+        let bucket=[];
+        recs.forEach(r=>{
+            bucket.push(r);
+            const noteUp=(r.note||"").toUpperCase(),
+                  statusUp=(r.status||"").toUpperCase(),
+                  isCloseRec=-1!==noteUp.indexOf("CLOSE")||-1!==statusUp.indexOf("CLOSE");
+            if(isCloseRec){
+                result.push({records:bucket,mainRecord:r,isOpen:!1});
+                bucket=[]
+            }
+        });
+        if(bucket.length>0){
+            result.push({records:bucket,mainRecord:liveMainRecord||null,isOpen:!0})
+        }
+        if(0===result.length){
+            result.push({records:recs,mainRecord:liveMainRecord||null,isOpen:!0})
+        }
+        return result
+    }
+
+    const cycles=(isStock||isCrypto)
+        ?splitRecordsIntoCycles(records,group.mainRecord).reverse()
+        :[{records:records,mainRecord:(isForex||isSaving)&&group.mainRecord?group.mainRecord:null,isOpen:!0}];
+
+    cycles.forEach((cycle,cycleIdx)=>{
+        const groupGroupId=`group-${index}-${cycleIdx}`,
+              cycleRecords=cycle.records||[],
+              visibleRecords=isForex?cycleRecords.filter(r=>""!==(r.status||"").toLowerCase()):cycleRecords;
+
+        const mainRec=cycle.mainRecord,
+              sumMarketValue=mainRec?mainRec.marketValue:cycleRecords.reduce((acc,r)=>acc+r.marketValue,0),
+              sumCost=mainRec?mainRec.costValue:cycleRecords.reduce((acc,r)=>acc+r.costValue,0),
+              sumPnl=mainRec?mainRec.actualPnl:cycleRecords.reduce((acc,r)=>acc+r.actualPnl,0);
+
+        let overallPnlPct=0;
+        overallPnlPct=mainRec?mainRec.colCPnlPct:(isSaving&&cycleRecords.length>0?cycleRecords[0].colCPnlPct:(sumCost>0?sumPnl/sumCost*100:0)),
+        totalPnlVnd+=sumPnl,totalMarketValVnd+=sumMarketValue,totalCostVnd+=sumCost;
+
+        const isOngoing=!!cycle.isOpen&&group.status.toLowerCase().includes("on-going");
+        if(isOngoing){
+            isForex||(activeMarketValVnd+=sumMarketValue),activePositions++;
+            const hasIconUrlForStack=group.iconUrl&&group.iconUrl.trim().startsWith("http");
+            activeIcons.push({iconUrl:hasIconUrlForStack?group.iconUrl:null,symbol:group.symbol||"?"})
+        }
+
+        const dotClass=isOngoing?"ongoing":"close",
+              pnlColorStyle=0===sumPnl?"var(--text-secondary)":sumPnl>0?"var(--teal-primary)":"var(--pink-primary)",
+              hasIconUrl=group.iconUrl&&group.iconUrl.trim().startsWith("http"),
+              iconStyle=hasIconUrl?`background-image: url('${group.iconUrl}');`:"background-color: #21262D;",
+              iconText=hasIconUrl?"":group.symbol.slice(0,4);
+
+        let displayAccountTitle=group.accountType;
+        if(isSaving&&cycleRecords.length>0){
+            const maxRec=cycleRecords.reduce((max,r)=>r.costValue>max.costValue?r:max,cycleRecords[0]);
+            maxRec&&maxRec.accountType&&(displayAccountTitle=maxRec.accountType)
+        }
+
+        let activeSavingSubrowsCount=0;
+        isSaving&&cycleRecords.forEach(r=>{
+            const sDate=parseDate(r.entryDate);
+            let eDate=null;
+            sDate&&r.volume>0?(eDate=new Date(sDate),eDate.setMonth(eDate.getMonth()+parseInt(r.volume,10))):r.exitDate&&(eDate=parseDate(r.exitDate)),
+            (!eDate||eDate>=now)&&activeSavingSubrowsCount++
+        });
+
+        const rawLive=mainRec?mainRec.livePrice:group.livePrice;
+        let volumePriceHTML="";
+        if(isSaving)
+            volumePriceHTML=`
+                    <div class="val-primary">${activeSavingSubrowsCount}/${cycleRecords.length}</div>
+                    <div class="val-secondary" style="text-transform: lowercase;">${isOngoing?group.status:"Closed"}</div>`;
+        else if(isCrypto){
+            const rawEntry=mainRec?mainRec.entryPrice||mainRec.execPrice:cycleRecords[0]?.entryPrice||cycleRecords[0]?.execPrice||0;
+            volumePriceHTML=`
+                    <div class="val-primary">${"$"+formatCryptoPrice(rawEntry)}</div>
+                    <div class="val-secondary" style="color: ${pnlColorStyle}; font-weight: 600;">${isOngoing?"$"+formatCryptoPrice(rawLive):"-"}</div>`
+        }else if(isStock){
+            const displayVol=mainRec?mainRec.volume:cycleRecords.reduce((acc,r)=>acc+r.volume,0),
+                  rawEntry=mainRec?mainRec.entryPrice||mainRec.execPrice:cycleRecords[0]?.entryPrice||0,
+                  strEntry=formatStockPrice(rawEntry),
+                  strLive=isOngoing?formatStockPrice(rawLive):"",
+                  displayPriceCombined=isOngoing?`${strEntry}/<span style="color: ${pnlColorStyle}; font-weight: 600;">${strLive}</span>`:strEntry;
+            volumePriceHTML=`
+                    <div class="val-primary">${displayVol.toLocaleString()}</div>
+                    <div class="val-secondary">${displayPriceCombined}</div>`
+        }else if(isForex)
+            volumePriceHTML=`
+                    <div class="val-primary"></div>
+                    <div class="val-secondary"></div>`;
+        else{
+            const totalVol=cycleRecords.reduce((acc,r)=>acc+r.volume,0),
+                  avgPrice=cycleRecords[0]?.entryPrice||cycleRecords[0]?.execPrice||0;
+            volumePriceHTML=`
+                    <div class="val-primary">${totalVol.toLocaleString()}</div>
+                    <div class="val-secondary">${avgPrice.toLocaleString()}</div>`
+        }
+
+        const mainTr=document.createElement("tr");
+        mainTr.className="main-row",
+        mainTr.setAttribute("onclick",`toggleGroup('${groupGroupId}', this)`),
+        mainTr.setAttribute("data-category-key",categoryKey);
+
+        const firstRec=cycleRecords[0],
+              lastRec=mainRec||cycleRecords[cycleRecords.length-1],
+              startDate=firstRec?.entryDate,
+              endDate=cycle.isOpen?lastRec?.exitDate:(lastRec?.exitDate||lastRec?.entryDate),
+              durationHTML=formatDateRangeTwoLinesNoYear(startDate,endDate,isSaving,lastRec?.volume);
+
+        mainTr.innerHTML=`
+                <td>
+                    <div class="asset-cell">
+                        <span class="chevron-icon">
+                            ${visibleRecords.length>0?'<i class="bi bi-chevron-right"></i>':'<i class="bi bi-dot"></i>'}
+                        </span>
+                        <div class="asset-icon-wrapper">
+                            <div class="asset-icon" style="${iconStyle}">${iconText}</div>
+                            <span class="status-dot ${dotClass}" title="${isOngoing?group.status:"Closed"}"></span>
+                        </div>
+                        <div style="overflow: hidden;">
+                            <div class="val-primary">${isForex?getForexDisplaySymbol(group.symbol):group.symbol}</div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    ${durationHTML}
+                </td>
+                <td>
+                    ${volumePriceHTML}
+                </td>
+                <td>
+                    <div class="val-primary" style="color: ${pnlColorStyle};">
+                        ${formatPnlValue(sumPnl)}
+                    </div>
+                    <div class="val-secondary" style="color: ${pnlColorStyle};">
+                        ${isForex?"":formatPnlPct(overallPnlPct)}
+                    </div>
+                </td>
+                <td>
+                    ${isForex?`
+                        <div class="val-primary">${forexPrice((mainRec||group.mainRecord).livePrice)}</div>
+                    `:`
+                        <div class="val-primary">${formatShortNumber(sumCost)}</div>
+                        <div class="val-secondary">${formatShortNumber(sumMarketValue)}</div>
+                    `}
+                </td>
+            `,
+        tbody.appendChild(mainTr),
+
+        visibleRecords.length>0&&visibleRecords.forEach(r=>{
+            const logTr=document.createElement("tr");
+            logTr.className=`log-row ${groupGroupId}`,
+            logTr.setAttribute("data-category-key",categoryKey);
+
+            const subPnlPct=isSaving||isStock||isCrypto||isForex?r.colCPnlPct:(r.costValue>0?r.actualPnl/r.costValue*100:0),
+                  isSubPositive=r.actualPnl>0,
+                  isSubZero=0===r.actualPnl,
+                  execDateObj=parseDate(r.entryDate),
+                  subExecDateStr=execDateObj?formatNoYearDate(execDateObj):"-",
+                  cleanedDetailNote=cleanNoteText(r.note,r.status),
+                  shortKeyword=getShortLogKeyword(cleanedDetailNote),
+                  subAssetLabel=isSaving?r.symbol:cleanedDetailNote;
+
+            let subVolumePriceHTML="";
+            if(isSaving)
+                subVolumePriceHTML=`
+                            <div class="val-primary">${r.volume} Mos</div>`;
+            else if(isForex)
+                subVolumePriceHTML=`
+                            <div class="val-secondary">${r.volume.toLocaleString()}</div>`;
+            else{
+                const rawPrice=r.execPrice||r.entryPrice||0,
+                      subPriceDisplay=isCrypto?"$"+formatCryptoPrice(rawPrice):isStock?formatStockPrice(rawPrice):rawPrice.toLocaleString();
+                subVolumePriceHTML=`
+                            <div class="val-primary">${r.volume.toLocaleString()}</div>
+                            <div class="val-secondary">${subPriceDisplay}</div>`
+            }
+
+            const assetBadgeText=isForex?subAssetLabel:isSaving?r.symbol:shortKeyword,
+                  normalizedLabel=(subAssetLabel||"").trim().toLowerCase(),
+                  badgeHtml=isForex
+                      ?orderTypeBadge("sell"===normalizedLabel?"Short":"buy"===normalizedLabel?"Long":subAssetLabel)+" "
+                      :orderTypeBadge(assetBadgeText)+" ";
+
+            logTr.innerHTML=`
+                        <td class="sub-indent" style="padding-left: 28px;">
+                            <div class="asset-cell">
+                                <span style="color: var(--text-muted); flex-shrink: 0;"><i class="bi bi-arrow-return-right"></i></span>
+                                <span class="val-primary" style="font-size: 11px; display: flex; align-items: center; gap: 6px;">
+                                    ${badgeHtml}
+                                    ${isStock?`<span class="sub-symbol" style="font-weight:600; color: var(--text-primary);">${group.symbol}</span>`:""}
+                                    <span class="full-log-text">${subAssetLabel}</span>
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="val-primary">${subExecDateStr}</div>
+                        </td>
+                        <td>
+                            ${subVolumePriceHTML}
+                        </td>
+                        <td>
+                            <div class="val-secondary" style="color: ${isSubZero?"var(--text-secondary)":isSubPositive?"var(--teal-primary)":"var(--pink-primary)"}; font-weight: 700;">
+                                ${r.actualPnl?formatPnlValue(r.actualPnl):""}
+                            </div>
+                            <div class="val-secondary" style="color: ${isSubZero?"var(--text-secondary)":isSubPositive?"var(--teal-primary)":"var(--pink-primary)"};">
+                                ${subPnlPct?formatPnlPct(subPnlPct):""}
+                            </div>
+                        </td>
+                        <td>
+                            ${isForex?`
+                                <div class="val-secondary" style="font-weight: 700; color: var(--text-primary);">${r.entryPrice?forexPrice(r.entryPrice):""}</div>
+                            `:`
+                                <div class="val-secondary" style="font-weight: 700; color: var(--text-primary);">${r.costValue?formatShortNumber(r.costValue):""}</div>
+                                <div class="val-secondary">${r.marketValue?formatShortNumber(r.marketValue):""}</div>
+                            `}
+                        </td>
+                    `,
+            tbody.appendChild(logTr)
+        })
+    })
+}),hasForexInView&&
+null!==window.forexNavBalance&&void 0!==window.forexNavBalance&&(activeMarketValVnd+=window.forexNavBalance);const totalBalanceVnd=activeMarketValVnd;document.getElementById("total-profit-bal").textContent=totalBalanceVnd.toLocaleString()+"₫",document.getElementById("total-profit-val").textContent=(totalPnlVnd>0?"+":"")+totalPnlVnd.toLocaleString()+"₫";const overallPct=totalCostVnd>0?totalPnlVnd/totalCostVnd*100:0,badgeEl=document.getElementById("total-profit-badge");badgeEl.textContent=formatPnlPct(overallPct),badgeEl.className="badge-pill "+(totalPnlVnd>=0?"badge-teal":"badge-pink"),renderActivePositionsStat(activePositions,activeIcons);var balances,pnls,CAT_KEY_DISPLAY,donutValues={},donutPnls={},donutCosts={},donutIcons={},donutHasActive={},CAT_ICONS={Stock:"https://github.com/tinsntp/investment/blob/main/stock.png?raw=true",Saving:"https://github.com/tinsntp/investment/blob/main/saving.png?raw=true",Crypto:"https://cdn-icons-png.flaticon.com/512/5968/5968260.png",Forex:"https://github.com/tinsntp/investment/blob/main/exness.png?raw=true"};(window.currentPortfolioGroups||[]).forEach(function(group){var cat=group.accountType||"Other",isStock="stock"===cat.toLowerCase(),isCrypto="crypto"===cat.toLowerCase(),isForex="forex"===cat.toLowerCase(),isSaving="saving"===cat.toLowerCase(),isOngoing=group.status.toLowerCase().includes("on-going"),mainRec=isStock||isCrypto||isForex||isSaving?group.mainRecord:null,val=mainRec?mainRec.marketValue:(group.records||[]).reduce(function(a,r){return a+(r.marketValue||0)},0)+(group.mainRecord&&group.mainRecord.marketValue||0),pnl=mainRec?mainRec.actualPnl:(group.records||[]).reduce(function(a,r){return a+(r.actualPnl||0)},0)+(group.mainRecord&&group.mainRecord.actualPnl||0),cost=mainRec?mainRec.costValue:(group.records||[]).reduce(function(a,r){return a+(r.costValue||0)},0)+(group.mainRecord&&group.mainRecord.costValue||0);isOngoing?(donutValues[cat]=(donutValues[cat]||0)+val,donutHasActive[cat]=!0):cat in donutHasActive||(donutHasActive[cat]=!1),donutPnls[cat]=(donutPnls[cat]||0)+pnl,donutCosts[cat]=(donutCosts[cat]||0)+cost,donutIcons[cat]||(donutIcons[cat]=CAT_ICONS[cat]||"")}),window.navCategoryBalances&&(balances=window.navCategoryBalances,pnls=window.navCategoryPnls,CAT_KEY_DISPLAY={FOREX:"Forex",CRYPTO:"Crypto",STOCK:"Stock",GOLD:"Gold",SAVING:"Saving"},Object.keys(balances).forEach(function(k){var dispName=CAT_KEY_DISPLAY[k]||k.charAt(0)+k.slice(1).toLowerCase();donutValues[dispName]=balances[k],donutHasActive[dispName]=!0,donutIcons[dispName]||(donutIcons[dispName]=CAT_ICONS[dispName]||"")}),pnls&&Object.keys(pnls).forEach(function(k){var dispName=CAT_KEY_DISPLAY[k]||k.charAt(0)+k.slice(1).toLowerCase();donutPnls[dispName]=pnls[k]}));var donutTotal=Object.values(donutValues).reduce(function(s,v){return s+v},0);renderNavDonut(donutValues,donutPnls,donutIcons,donutTotal,donutHasActive,donutCosts)}
     function orderTypeBadge(orderType){const type=(orderType||"").toLowerCase();let bg="var(--bg-secondary)",color="var(--text-main)";return type.includes("buy")||type.includes("long")?(bg="rgba(0, 150, 136, 0.15)",color="#009688"):type.includes("sell")||type.includes("short")?(bg="rgba(236, 64, 122, 0.12);",color="#ec407a"):type.includes("dca")?(bg="rgba(3, 169, 244, 0.15)",color="#03a9f4"):type.includes("close")&&(bg="rgba(158, 158, 158, 0.15)",color="#9e9e9e"),`<span style="background: ${bg}; color: ${color}; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; text-transform: uppercase;">${orderType}</span>`}if (typeof window.navFullCategoryValueTotals === "undefined") {window.navFullCategoryValueTotals = {};}if (typeof window.forexNavBalance === "undefined") {window.forexNavBalance = null;}
     function fetchAllNavBalances(){var csvUrl="https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=311369594&t="+Date.now();return fetch(csvUrl,{cache:"no-store"}).then(function(response){if(!response.ok)throw new Error("HTTP "+response.status);return response.text()}).then(function(text){if(!text||text.trim().startsWith("<!DOCTYPE html>"))throw new Error("Received HTML instead of CSV. Check sheet permissions or URL.");for(var lines=text.split(/\r?\n/),balances={},pnls={},i=0;i<lines.length;i++){var currentLine=lines[i];if(currentLine&&"string"==typeof currentLine&&currentLine.trim()){var cols=currentLine.split(","),catKey=(cols[1]||"").trim().toUpperCase();if(catKey)if(-1!==["STOCK","CRYPTO","FOREX","GOLD"].indexOf(catKey)||-1!==catKey.indexOf("SAVING")){var bucketKey=-1!==catKey.indexOf("SAVING")?"SAVING":catKey,bal=parseFloat((cols[2]||"").replace(/[^0-9.-]+/g,""))||0;balances[bucketKey]=(balances[bucketKey]||0)+bal}var incomeLabel=(cols[5]||"").trim().toUpperCase();if(incomeLabel){var pnlKey="INTEREST"===incomeLabel?"SAVING":incomeLabel.replace(/\s*PNL$/,"").trim();if(-1!==["STOCK","CRYPTO","FOREX","GOLD","SAVING"].indexOf(pnlKey)){var pnlVal=parseFloat((cols[6]||"").replace(/[^0-9.-]+/g,""))||0;pnls[pnlKey]=(pnls[pnlKey]||0)+pnlVal}}}}return window.navCategoryBalances=balances,window.navCategoryPnls=pnls,window.forexNavBalance=void 0!==balances.FOREX?balances.FOREX:null,"function"==typeof applyPortfolioFiltersAndRender&&applyPortfolioFiltersAndRender(),balances}).catch(function(err){return console.error("NAV balance fetch error:",err),null})}function fetchForexNavBalance(){return fetchAllNavBalances()}
     function renderNavDonut(categoryValueTotals,categoryPnlTotals,categoryIconMap,totalValue,categoryHasActiveMap,categoryCostTotals){var statList=document.getElementById("nav-stat-list"),svg=document.getElementById("nav-donut-svg");if(statList&&svg){statList.innerHTML="",svg.innerHTML="",categoryHasActiveMap=categoryHasActiveMap||{},categoryCostTotals=categoryCostTotals||{};var categoryColorMap={saving:"#a78bfa",savings:"#a78bfa",crypto:"#facc15",forex:"#fff",stock:"#7ee8a8"},palette=["#facc15","#7ee8a8","#f472b6","#a5c8f0","#c084fc","#38bdf8"],categoryKeySet={};Object.keys(categoryValueTotals).forEach(function(cat){categoryKeySet[cat]=!0}),Object.keys(categoryPnlTotals).forEach(function(cat){categoryKeySet[cat]=!0});var categories=Object.keys(categoryKeySet).map(function(cat){return{name:cat,value:categoryValueTotals[cat]||0,pnl:categoryPnlTotals[cat]||0,cost:categoryCostTotals[cat]||0,icon:categoryIconMap[cat]||"",hasActive:!!categoryHasActiveMap[cat]}}).filter(function(c){return c.value>0||0!==c.pnl}).sort(function(a,b){return b.value-a.value});if(0!==categories.length){(categories=function(arr){if(!arr.length)return[];var n=arr.length,result=new Array(n),mid=Math.floor(n/2);result[mid]=arr[0];for(var l=mid-1,r=mid+1,i=1;i<n;i++)r<n&&(l<0||i%2==1)?result[r++]=arr[i]:result[l--]=arr[i];return result}(categories)).forEach(function(c,idx){var catName,index,key;c.color=(catName=c.name,index=idx,key=(catName||"").toString().trim().toLowerCase(),categoryColorMap.hasOwnProperty(key)?categoryColorMap[key]:palette[index%palette.length])});var rInner=45,currentDeg=270,uid="p"+Math.random().toString(36).slice(2,8),defs=document.createElementNS("http://www.w3.org/2000/svg","defs"),maxIdx=0;categories.forEach(function(c,i){c.value>categories[maxIdx].value&&(maxIdx=i)}),categories.forEach(function(cat,idx){var pat=document.createElementNS("http://www.w3.org/2000/svg","pattern");pat.setAttribute("id",uid+idx),pat.setAttribute("patternUnits","userSpaceOnUse"),pat.setAttribute("width","8"),pat.setAttribute("height","8"),pat.setAttribute("patternTransform","rotate(-45 0 0)"),pat.setAttribute("overflow","visible");var bg=document.createElementNS("http://www.w3.org/2000/svg","rect");bg.setAttribute("x","-1"),bg.setAttribute("y","-1"),bg.setAttribute("width","10"),bg.setAttribute("height","10"),bg.setAttribute("fill",cat.color),bg.setAttribute("opacity","0.18"),pat.appendChild(bg);var stripe=document.createElementNS("http://www.w3.org/2000/svg","rect");stripe.setAttribute("x","0"),stripe.setAttribute("y","0"),stripe.setAttribute("width","5"),stripe.setAttribute("height","8"),stripe.setAttribute("fill",cat.color),stripe.setAttribute("opacity","0.75"),pat.appendChild(stripe);var anim=document.createElementNS("http://www.w3.org/2000/svg","animateTransform");anim.setAttribute("attributeName","patternTransform"),anim.setAttribute("type","translate"),anim.setAttribute("from","0 0"),anim.setAttribute("to","8 0"),anim.setAttribute("dur","1s"),anim.setAttribute("repeatCount","indefinite"),pat.appendChild(anim),defs.appendChild(pat)}),svg.appendChild(defs);var arcInfoByName={};categories.forEach(function(cat,i){var pct=totalValue>0&&cat.value>0?cat.value/totalValue:0,sweep=180*pct,d0=currentDeg-0,d1=currentDeg-sweep+0;currentDeg-=sweep;var color=cat.color,hasArc=cat.value>0&&d1<d0;if(hasArc){var isLargest=i===maxIdx,rOut=isLargest?85:90,path=document.createElementNS("http://www.w3.org/2000/svg","path");if(path.setAttribute("d",function(d0,d1,rOut){var o0=pt(rOut=rOut||90,d0),o1=pt(rOut,d1),i1=pt(rInner,d1),i0=pt(rInner,d0),la=d0-d1>180?1:0;return["M",o0.x.toFixed(2),o0.y.toFixed(2),"A",rOut,rOut,0,la,0,o1.x.toFixed(2),o1.y.toFixed(2),"L",i1.x.toFixed(2),i1.y.toFixed(2),"A",rInner,rInner,0,la,1,i0.x.toFixed(2),i0.y.toFixed(2),"Z"].join(" ")}(d0,d1,rOut)),path.setAttribute("fill",isLargest?"url(#"+uid+i+")":color),path.setAttribute("stroke",color),path.setAttribute("stroke-width","1"),path.setAttribute("data-seg",i),svg.appendChild(path),pct>=.05){var lp=pt((90+rInner)/2,(d0+d1)/2),text=document.createElementNS("http://www.w3.org/2000/svg","text");text.setAttribute("x",lp.x.toFixed(1)),text.setAttribute("y",lp.y.toFixed(1)),text.setAttribute("class","nav-donut-label"),text.setAttribute("font-size","13"),text.textContent="("+Math.round(100*pct)+"%)",svg.appendChild(text)}}arcInfoByName[cat.name]={segIdx:i,pct,hasArc,color}}),categories.slice().sort(function(a,b){return a.hasActive!==b.hasActive?a.hasActive?-1:1:b.value-a.value}).forEach(function(cat){var info=arcInfoByName[cat.name],i=info.segIdx,pct=info.pct,hasArc=info.hasArc,color=info.color,pnlPos=cat.pnl>0,pnlColor=0===cat.pnl?"rgba(255,255,255,0.5)":pnlPos?"#14b8a6":"#f472b6",pnlFmt=fmtPnl(cat.pnl),basis="Forex"===cat.name&&window.forexNavBalance?window.forexNavBalance:cat.cost,pnlPctFmt=(pnlPos?"+":"")+(basis>0?cat.pnl/basis*100:0).toFixed(1)+"%",pctLabelHtml=hasArc?`<span class="nav-stat-pct"> (${Math.round(100*pct)}%)</span>`:"",balanceHtml=cat.hasActive?`<div class="nav-stat-value">${fmtBalance(cat.value)}</div>`:"",item=document.createElement("div");item.className="nav-stat-item";var catName,segIdx,iconHtml=cat.icon?`<div class="nav-stat-icon" style="background-image:url('${cat.icon}');"></div>`:`<div class="nav-stat-icon" style="background:${color};color:#111;font-weight:700;font-size:12px;">${cat.name.charAt(0)}</div>`;item.innerHTML=`${iconHtml}\n              <div class="nav-stat-info">\n                  <div class="nav-stat-label-row">\n                      <div class="nav-stat-label">${cat.name}${pctLabelHtml}</div>\n                      ${balanceHtml}\n                  </div>\n                  <div class="nav-stat-pnl" style="color:${pnlColor};">${pnlFmt} (${pnlPctFmt})</div>\n              </div>`,item.setAttribute("data-seg",i),item.style.cursor="pointer",item.addEventListener("click",(catName=cat.name,segIdx=i,function(){var isSelected=window.navSelectedCatIdx===segIdx;window.navSelectedCatIdx=isSelected?null:segIdx,"undefined"!=typeof portfolioFilters&&(portfolioFilters.asset=isSelected?"all":catName.toLowerCase()),"function"==typeof applyPortfolioFiltersAndRender&&applyPortfolioFiltersAndRender();var icon=document.getElementById("asset-filter-icon");icon&&icon.classList.toggle("active-filter",!isSelected),"function"==typeof navUpdateHighlight&&navUpdateHighlight()})),statList.appendChild(item)})}}function pt(r,deg){var rad=deg*Math.PI/180;return{x:100+r*Math.cos(rad),y:100+r*Math.sin(rad)}}}
     function applyPortfolioFiltersAndRender(){if(void 0!==window.currentPortfolioGroups){var filtered=window.currentPortfolioGroups.filter(function(group){if("all"!==portfolioFilters.asset){var isOngoing=group.status.toLowerCase().includes("on-going");if("on-going"===portfolioFilters.asset&&!isOngoing)return!1;if("close"===portfolioFilters.asset&&isOngoing)return!1;if("on-going"!==portfolioFilters.asset&&"close"!==portfolioFilters.asset&&(group.accountType||"").trim().toLowerCase()!==portfolioFilters.asset.trim().toLowerCase())return!1}if("all"!==portfolioFilters.pnl){var records=group.records||[],mainRec=group.mainRecord,sumPnl=mainRec?mainRec.actualPnl:records.reduce(function(acc,r){return acc+r.actualPnl},0);if("profited"===portfolioFilters.pnl&&sumPnl<=0)return!1;if("lost"===portfolioFilters.pnl&&sumPnl>=0)return!1}if(portfolioFilters.dateFrom||portfolioFilters.dateTo){var refRec=group.mainRecord||group.records&&group.records[0],refDate=refRec?new Date(refRec.entryDate):null;if(!refDate||isNaN(refDate))return!1;if(portfolioFilters.dateFrom&&refDate<new Date(portfolioFilters.dateFrom))return!1;if(portfolioFilters.dateTo){var toDate=new Date(portfolioFilters.dateTo);if(toDate.setHours(23,59,59,999),refDate>toDate)return!1}}return!0});filtered.sort(function(a,b){var catCompare=a.accountType.localeCompare(b.accountType);if(0!==catCompare)return catCompare;var aOngoing=a.status.toLowerCase().includes("on-going"),bOngoing=b.status.toLowerCase().includes("on-going");return aOngoing&&!bOngoing?-1:!aOngoing&&bOngoing?1:latestGroupDate(b)-latestGroupDate(a)}),renderAccordion(filtered)}function latestGroupDate(group){var latest=null;function consider(dateStr){if(dateStr){var d=new Date(dateStr);isNaN(d)||latest&&!(d>latest)||(latest=d)}}return group.mainRecord&&(consider(group.mainRecord.entryDate),consider(group.mainRecord.exitDate)),(group.records||[]).forEach(function(r){consider(r.entryDate),consider(r.exitDate)}),latest||new Date(0)}}
-    
     function processAndRenderData(csvText) {
         const lines = csvText.trim().split(/\r?\n/);if (lines.length < 2) return;
         const rows = lines.slice(1).map(line => parseCSVLine(line));
