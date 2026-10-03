@@ -6279,35 +6279,12 @@ to{transform:rotate(360deg)}
       var currentRangeIndex = 3; // "current"
       var RANGE_LABELS={"-6m":"Past 6 Months","-3m":"Past 3 Months","-1m":"Previous Month",current:"Current Month","+1m":"Next Month","current-year":"Current Year","+3m":"+3 Months","+6m":"+6 Months"};
 
-      function fmtShortDec(v){var a=Math.abs(v),sign=v<0?"-":"";return a>=1e9?sign+(a/1e9).toFixed(1)+"B":a>=1e6?sign+(a/1e6).toFixed(1)+"M":a>=1e3?sign+(a/1e3).toFixed(1)+"K":sign+Math.round(a)}function injectFBAnimationStyles(){if(!document.getElementById("fb-custom-anim-styles")){var styleEl=document.createElement("style");styleEl.id="fb-custom-anim-styles",styleEl.innerHTML="\n                @keyframes fbScaleIn {\n                    0% { transform: scaleX(0); opacity: 0; }\n                    100% { transform: scaleX(1); opacity: 0.95; }\n                }\n                .fb-semicircle-anim {\n                    animation: fbScaleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;\n                    transform-origin: left center;\n                }\n                .fb-item-dimmed {\n                    opacity: 0.3 !important;\n                    transition: opacity 0.3s ease;\n                }\n                .fb-item-active {\n                    opacity: 1 !important;\n                    transition: opacity 0.3s ease;\n                }\n                .fb-inline-chips {\n                    display: flex;\n                    flex-direction: column;\n                    gap: 4px;\n                }\n                .fb-chips-row {\n                    display: flex;\n                    gap: 4px;\n                }\n                .fb-debt-chips-inline {\n                    display: flex;\n                    flex-direction: row;\n                    flex-wrap: wrap;\n                    gap: 4px;\n                }\n                .fb-chip {\n                    display: inline-flex;\n                    align-items: center;\n                    gap: 3px;\n                    background: rgba(255,255,255,0.08);\n                    border-radius: 14px;\n                    padding: 3px 6px;\n                    font-size: 13px;\n                    white-space: nowrap;\n                }\n                .fb-chip-icon {\n                    width: 14px;\n                    height: 14px;\n                    object-fit: contain;\n                }\n                .fb-chip-val {\n                    font-weight: 600;\n                }\n            ",document.head.appendChild(styleEl)}}
-      function initFinancialBreakdown(){injectFBAnimationStyles();var now=Date.now();Promise.all([fetch(FB_BASE_URL+"&gid="+GIDS.income+"&t="+now).then(r=>r.text()),fetch(FB_BASE_URL+"&gid="+GIDS.expense+"&t="+now).then(r=>r.text()),fetch(FB_BASE_URL+"&gid="+GIDS.debt+"&t="+now).then(r=>r.text())]).then(function(results){parseIncomeCSV(results[0]),parseExpenseCSV(results[1]),parseDebtCSV(results[2]),renderFBBreakdown(RANGES[currentRangeIndex])}).catch(function(err){console.error("FB Stack Chart load error:",err)})}function parseIncomeCSV(csvText){var lines=csvText.trim().split(/\r?\n/);if(!(lines.length<2)){rawData.income=[];for(var i=1;i<lines.length;i++){var cols=parseCSVLine(lines[i]),qStr=(cols[16]||"").trim();if(qStr){var d=parseMonthYear?parseMonthYear(qStr):null;if(d){var salary=Math.abs(parseAmtTopChart(cols[19]||"0")),invest=Math.abs(parseAmtTopChart(cols[20]||"0")),comp=Math.abs(parseAmtTopChart(cols[21]||"0"));rawData.income.push({date:d,salary,invest,comp,total:salary+invest+comp})}}}}}function parseExpenseCSV(csvText){var lines=csvText.trim().split(/\r?\n/);if(!(lines.length<3)){var iconRow=parseCSVLine(lines[0]);icons.expense={rental:iconRow[3]||"",bills:iconRow[6]||"",livingCost:iconRow[7]||iconRow[8]||"",family:iconRow[9]||""},rawData.expense=[];for(var i=2;i<lines.length;i++){var cols=parseCSVLine(lines[i]),parts=(cols[0]||"").split("/");if(parts.length>=2){var d=new Date(2e3+parseInt(parts[1],10),parseInt(parts[0],10)-1,1),rental=Math.abs(parseAmtTopChart(cols[3]||"0")),bills=Math.abs(parseAmtTopChart(cols[6]||"0")),living=Math.abs(parseAmtTopChart(cols[7]||"0"))+Math.abs(parseAmtTopChart(cols[8]||"0")),family=Math.abs(parseAmtTopChart(cols[9]||"0"));rawData.expense.push({date:d,rental,bills,livingCost:living,family,total:rental+bills+living+family})}}}}function parseDebtCSV(csvText){var lines=csvText.trim().split(/\r?\n/);if(!(lines.length<2)){var iconRow=parseCSVLine(lines[0]);icons.debt={shinhan:iconRow[3]||"",sc:iconRow[4]||""},rawData.debt=[];for(var i=1;i<lines.length;i++){var cols=parseCSVLine(lines[i]),dateStr=(cols[0]||"").trim();if(dateStr){var m=dateStr.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);if(m){var d=new Date(parseInt(m[3],10),parseInt(m[1],10)-1,parseInt(m[2],10)),shinhan=Math.abs(parseAmtTopChart(cols[3]||"0")),sc=Math.abs(parseAmtTopChart(cols[4]||"0"));rawData.debt.push({date:d,shinhan,sc,total:shinhan+sc})}}}}}function getDateRange(rangeKey){var now=new Date,curYear=now.getFullYear(),curMonth=now.getMonth();if("current-year"===rangeKey)return{start:new Date(curYear,0,1),end:new Date(curYear,11,31),monthsCount:12,isCurrent:!1,isYearly:!0};var start,end,mCount,offsetMap={"-6m":-6,"-3m":-3,"-1m":-1,current:0,"+1m":1,"+3m":3,"+6m":6},months=void 0!==offsetMap[rangeKey]?offsetMap[rangeKey]:0;return-1===months?(mCount=1,start=new Date(curYear,curMonth-1,1),end=new Date(curYear,curMonth,0)):months<0?(mCount=Math.abs(months),start=new Date(curYear,curMonth-mCount+1,1),end=new Date(curYear,curMonth+1,0)):months>0?(mCount=months,start=new Date(curYear,curMonth+1,1),end=new Date(curYear,curMonth+mCount+1,0)):(mCount=1,start=new Date(curYear,curMonth,1),end=new Date(curYear,curMonth+1,0)),{start,end,monthsCount:mCount,isCurrent:"current"===rangeKey,isSingleMonth:1===mCount,isFuture:rangeKey.startsWith("+")}}
+      function fmtShortDec(v){var a=Math.abs(v),sign=v<0?"-":"";return a>=1e9?sign+(a/1e9).toFixed(1)+"B":a>=1e6?sign+(a/1e6).toFixed(1)+"M":a>=1e3?sign+(a/1e3).toFixed(1)+"K":sign+Math.round(a)}function injectFBAnimationStyles(){if(!document.getElementById("fb-custom-anim-styles")){var styleEl=document.createElement("style");styleEl.id="fb-custom-anim-styles",styleEl.innerHTML="\n                @keyframes fbScaleIn {\n                    0% { transform: scaleX(0); opacity: 0; }\n                    100% { transform: scaleX(1); opacity: 0.95; }\n                }\n                .fb-semicircle-anim {\n                    animation: fbScaleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;\n                    transform-origin: left center;\n                    transition: all 0.3s ease;\n                }\n                .fb-item-dimmed {\n                    opacity: 0.3 !important;\n                    transition: opacity 0.3s ease;\n                }\n                .fb-item-active {\n                    opacity: 1 !important;\n                    transition: opacity 0.3s ease;\n                }\n                .fb-inline-chips {\n                    display: flex;\n                    flex-direction: column;\n                    gap: 4px;\n                }\n                .fb-chips-row {\n                    display: flex;\n                    gap: 4px;\n                }\n                .fb-debt-chips-inline {\n                    display: flex;\n                    flex-direction: row;\n                    flex-wrap: wrap;\n                    gap: 4px;\n                }\n                .fb-chip {\n                    display: inline-flex;\n                    align-items: center;\n                    gap: 3px;\n                    background: rgba(255,255,255,0.08);\n                    border-radius: 14px;\n                    padding: 3px 6px;\n                    font-size: 13px;\n                    white-space: nowrap;\n                }\n                .fb-chip-icon {\n                    width: 14px;\n                    height: 14px;\n                    object-fit: contain;\n                }\n                .fb-chip-val {\n                    font-weight: 600;\n                }\n            ",document.head.appendChild(styleEl)}}function initFinancialBreakdown(){injectFBAnimationStyles();var now=Date.now();Promise.all([fetch(FB_BASE_URL+"&gid="+GIDS.income+"&t="+now).then(r=>r.text()),fetch(FB_BASE_URL+"&gid="+GIDS.expense+"&t="+now).then(r=>r.text()),fetch(FB_BASE_URL+"&gid="+GIDS.debt+"&t="+now).then(r=>r.text())]).then(function(results){parseIncomeCSV(results[0]),parseExpenseCSV(results[1]),parseDebtCSV(results[2]),renderFBBreakdown(RANGES[currentRangeIndex])}).catch(function(err){console.error("FB Stack Chart load error:",err)})}function parseIncomeCSV(csvText){var lines=csvText.trim().split(/\r?\n/);if(!(lines.length<2)){rawData.income=[];for(var i=1;i<lines.length;i++){var cols=parseCSVLine(lines[i]),qStr=(cols[16]||"").trim();if(qStr){var d=parseMonthYear?parseMonthYear(qStr):null;if(d){var salary=Math.abs(parseAmtTopChart(cols[19]||"0")),invest=Math.abs(parseAmtTopChart(cols[20]||"0")),comp=Math.abs(parseAmtTopChart(cols[21]||"0"));rawData.income.push({date:d,salary,invest,comp,total:salary+invest+comp})}}}}}function parseExpenseCSV(csvText){var lines=csvText.trim().split(/\r?\n/);if(!(lines.length<3)){var iconRow=parseCSVLine(lines[0]);icons.expense={rental:iconRow[3]||"",bills:iconRow[6]||"",livingCost:iconRow[7]||iconRow[8]||"",family:iconRow[9]||""},rawData.expense=[];for(var i=2;i<lines.length;i++){var cols=parseCSVLine(lines[i]),parts=(cols[0]||"").split("/");if(parts.length>=2){var d=new Date(2e3+parseInt(parts[1],10),parseInt(parts[0],10)-1,1),rental=Math.abs(parseAmtTopChart(cols[3]||"0")),bills=Math.abs(parseAmtTopChart(cols[6]||"0")),living=Math.abs(parseAmtTopChart(cols[7]||"0"))+Math.abs(parseAmtTopChart(cols[8]||"0")),family=Math.abs(parseAmtTopChart(cols[9]||"0"));rawData.expense.push({date:d,rental,bills,livingCost:living,family,total:rental+bills+living+family})}}}}function parseDebtCSV(csvText){var lines=csvText.trim().split(/\r?\n/);if(!(lines.length<2)){var iconRow=parseCSVLine(lines[0]);icons.debt={shinhan:iconRow[3]||"",sc:iconRow[4]||""},rawData.debt=[];for(var i=1;i<lines.length;i++){var cols=parseCSVLine(lines[i]),dateStr=(cols[0]||"").trim();if(dateStr){var m=dateStr.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);if(m){var d=new Date(parseInt(m[3],10),parseInt(m[1],10)-1,parseInt(m[2],10)),shinhan=Math.abs(parseAmtTopChart(cols[3]||"0")),sc=Math.abs(parseAmtTopChart(cols[4]||"0"));rawData.debt.push({date:d,shinhan,sc,total:shinhan+sc})}}}}}function getDateRange(rangeKey){var now=new Date,curYear=now.getFullYear(),curMonth=now.getMonth();if("current-year"===rangeKey)return{start:new Date(curYear,0,1),end:new Date(curYear,11,31),monthsCount:12,isCurrent:!1,isYearly:!0};var start,end,mCount,offsetMap={"-6m":-6,"-3m":-3,"-1m":-1,current:0,"+1m":1,"+3m":3,"+6m":6},months=void 0!==offsetMap[rangeKey]?offsetMap[rangeKey]:0;return-1===months?(mCount=1,start=new Date(curYear,curMonth-1,1),end=new Date(curYear,curMonth,0)):months<0?(mCount=Math.abs(months),start=new Date(curYear,curMonth-mCount+1,1),end=new Date(curYear,curMonth+1,0)):months>0?(mCount=months,start=new Date(curYear,curMonth+1,1),end=new Date(curYear,curMonth+mCount+1,0)):(mCount=1,start=new Date(curYear,curMonth,1),end=new Date(curYear,curMonth+1,0)),{start,end,monthsCount:mCount,isCurrent:"current"===rangeKey,isSingleMonth:1===mCount,isFuture:rangeKey.startsWith("+")}}
       function renderFBBreakdown(rangeKey) {
-          var expTotals,range=getDateRange(rangeKey),now=new Date,incFiltered=rawData.income.filter(r=>r.date>=range.start&&r.date<=range.end),activeIncomeRows=incFiltered.filter(r=>r.total>0),activeDates=new Set(activeIncomeRows.map(r=>r.date.getTime())),incActiveMonths=activeIncomeRows.length,incDivisor=range.isSingleMonth?1:incActiveMonths||range.monthsCount||1,incSums=incFiltered.reduce((acc,r)=>(acc.salary+=r.salary,acc.invest+=r.invest,acc.comp+=r.comp,acc.total+=r.total,acc),{salary:0,invest:0,comp:0,total:0}),incTotals={sum:incSums,avg:{salary:incSums.salary/incDivisor,invest:incSums.invest/incDivisor,comp:incSums.comp/incDivisor,total:incSums.total/incDivisor}},expFiltered=rawData.expense.filter(r=>r.date>=range.start&&r.date<=range.end),expActiveFiltered=range.isSingleMonth?expFiltered:expFiltered.filter(r=>activeDates.has(r.date.getTime())),expDivisor=range.isSingleMonth?1:incDivisor;
-          if (range.isFuture) {
-              var currentYearExp = rawData.expense.filter(r => r.date.getFullYear() === now.getFullYear());
-              var divYear = currentYearExp.length || 1;
-              var sumsYear = currentYearExp.reduce((acc, r) => (acc.rental += r.rental, acc.bills += r.bills, acc.livingCost += r.livingCost, acc.family += r.family, acc.total += r.total, acc), { rental: 0, bills: 0, livingCost: 0, family: 0, total: 0 });
-              var avgYearMonthly = { rental: sumsYear.rental / divYear, bills: sumsYear.bills / divYear, livingCost: sumsYear.livingCost / divYear, family: sumsYear.family / divYear, total: sumsYear.total / divYear };
-              var mCount = range.monthsCount || 1;
-              expTotals = { avg: avgYearMonthly, sum: { rental: avgYearMonthly.rental * mCount, bills: avgYearMonthly.bills * mCount, livingCost: avgYearMonthly.livingCost * mCount, family: avgYearMonthly.family * mCount, total: avgYearMonthly.total * mCount } };
-          } else {
-              var expSums = expActiveFiltered.reduce((acc, r) => (acc.rental += r.rental, acc.bills += r.bills, acc.livingCost += r.livingCost, acc.family += r.family, acc.total += r.total, acc), { rental: 0, bills: 0, livingCost: 0, family: 0, total: 0 });
-              expTotals = { sum: expSums, avg: { rental: expSums.rental / expDivisor, bills: expSums.bills / expDivisor, livingCost: expSums.livingCost / expDivisor, family: expSums.family / expDivisor, total: expSums.total / expDivisor } };
-          }
-
-          var debtFiltered=rawData.debt.filter(r=>r.date>=range.start&&r.date<=range.end),debtActiveFiltered=range.isSingleMonth?debtFiltered:debtFiltered.filter(r=>activeDates.has(r.date.getTime())),debtDivisor=range.isSingleMonth?1:incDivisor,debtSums=debtActiveFiltered.reduce((acc,r)=>(acc.shinhan+=r.shinhan,acc.sc+=r.sc,acc.total+=r.total,acc),{shinhan:0,sc:0,total:0}),debtTotals={sum:debtSums,avg:{shinhan:debtSums.shinhan/debtDivisor,sc:debtSums.sc/debtDivisor,total:debtSums.total/debtDivisor}},cashflowSum=incTotals.sum.total-expTotals.sum.total-debtTotals.sum.total,cashflowAvg=cashflowSum/(range.isSingleMonth?1:range.isYearly?incActiveMonths:incActiveMonths||range.monthsCount||1),totalIncomeBasis=range.isSingleMonth?incTotals.avg.total:incTotals.sum.total,totalDenom=totalIncomeBasis>0?totalIncomeBasis:1;
-          function fmtHeader(title,sumVal,avgVal){return range.isSingleMonth||range.isYearly?title+" (₫"+fmtShortDec(avgVal)+")":title+"<br>∑₫"+fmtShortDec(sumVal)+" | ₫"+fmtShortDec(avgVal)}
-          var expBasis = range.isSingleMonth ? expTotals.avg.total : expTotals.sum.total;
-          var debtBasis = range.isSingleMonth ? debtTotals.avg.total : debtTotals.sum.total;
-          var cashflowBasis = range.isSingleMonth ? cashflowAvg : cashflowSum;
-
-          var cashflowItem = { id: "cashflow", title: "Cashflow", headerLabel: fmtHeader("Cashflow", cashflowSum, cashflowAvg), total: Math.abs(cashflowBasis), pct: (cashflowBasis / totalDenom * 100).toFixed(1), color: "#14b8a6", children: [{ name: "Salary", sumVal: incTotals.sum.salary, avgVal: incTotals.avg.salary, icon: icons.income.salary }, { name: "Invest", sumVal: incTotals.sum.invest, avgVal: incTotals.avg.invest, icon: icons.income.invest }, { name: "Comp.", sumVal: incTotals.sum.comp, avgVal: incTotals.avg.comp, icon: icons.income.comp }] },
-              expenseItem = { id: "expense", title: "Expenses", headerLabel: fmtHeader("Expenses", expTotals.sum.total, expTotals.avg.total), total: Math.abs(expBasis), pct: (expBasis / totalDenom * 100).toFixed(1), color: "#ec4899", isExpense: true, children: [{ name: "Rental", sumVal: expTotals.sum.rental, avgVal: expTotals.avg.rental, icon: icons.expense.rental }, { name: "Bills & Ins.", sumVal: expTotals.sum.bills, avgVal: expTotals.avg.bills, icon: icons.expense.bills }, { name: "Living Cost", sumVal: expTotals.sum.livingCost, avgVal: expTotals.avg.livingCost, icon: icons.expense.livingCost }, { name: "Family", sumVal: expTotals.sum.family, avgVal: expTotals.avg.family, icon: icons.expense.family }] },
-              debtItem = { id: "debts", title: "Debts", headerLabel: fmtHeader("Debts", debtTotals.sum.total, debtTotals.avg.total), total: Math.abs(debtBasis), pct: (debtBasis / totalDenom * 100).toFixed(1), color: "#a855f7", isDebt: true, children: [{ name: "Shinhan", sumVal: debtTotals.sum.shinhan, avgVal: debtTotals.avg.shinhan, icon: icons.debt.shinhan }, { name: "SC", sumVal: debtTotals.sum.sc, avgVal: debtTotals.avg.sc, icon: icons.debt.sc }] };
-
-          var allItems=[cashflowItem,expenseItem,debtItem];allItems.sort((a,b)=>a.total-b.total),allItems.forEach((item,index)=>item.segmentIndex=index);var bigItem=allItems[2],subItems=[allItems[0],allItems[1]];subItems.sort((a,b)=>"expense"===a.id?-1:1);
+          var expTotals,range=getDateRange(rangeKey),now=new Date,incFiltered=rawData.income.filter(r=>r.date>=range.start&&r.date<=range.end),activeIncomeRows=incFiltered.filter(r=>r.total>0),activeDates=new Set(activeIncomeRows.map(r=>r.date.getTime())),incActiveMonths=activeIncomeRows.length,incDivisor=range.isSingleMonth?1:incActiveMonths||range.monthsCount||1,incSums=incFiltered.reduce((acc,r)=>(acc.salary+=r.salary,acc.invest+=r.invest,acc.comp+=r.comp,acc.total+=r.total,acc),{salary:0,invest:0,comp:0,total:0}),incTotals={sum:incSums,avg:{salary:incSums.salary/incDivisor,invest:incSums.invest/incDivisor,comp:incSums.comp/incDivisor,total:incSums.total/incDivisor}},expFiltered=rawData.expense.filter(r=>r.date>=range.start&&r.date<=range.end),expActiveFiltered=range.isSingleMonth?expFiltered:expFiltered.filter(r=>activeDates.has(r.date.getTime())),expDivisor=range.isSingleMonth?1:incDivisor;if(range.isFuture){var currentYearExp=rawData.expense.filter(r=>r.date.getFullYear()===now.getFullYear()),divYear=currentYearExp.length||1,sumsYear=currentYearExp.reduce((acc,r)=>(acc.rental+=r.rental,acc.bills+=r.bills,acc.livingCost+=r.livingCost,acc.family+=r.family,acc.total+=r.total,acc),{rental:0,bills:0,livingCost:0,family:0,total:0}),avgYearMonthly={rental:sumsYear.rental/divYear,bills:sumsYear.bills/divYear,livingCost:sumsYear.livingCost/divYear,family:sumsYear.family/divYear,total:sumsYear.total/divYear},mCount=range.monthsCount||1;expTotals={avg:avgYearMonthly,sum:{rental:avgYearMonthly.rental*mCount,bills:avgYearMonthly.bills*mCount,livingCost:avgYearMonthly.livingCost*mCount,family:avgYearMonthly.family*mCount,total:avgYearMonthly.total*mCount}}}else{var expSums=expActiveFiltered.reduce((acc,r)=>(acc.rental+=r.rental,acc.bills+=r.bills,acc.livingCost+=r.livingCost,acc.family+=r.family,acc.total+=r.total,acc),{rental:0,bills:0,livingCost:0,family:0,total:0});expTotals={sum:expSums,avg:{rental:expSums.rental/expDivisor,bills:expSums.bills/expDivisor,livingCost:expSums.livingCost/expDivisor,family:expSums.family/expDivisor,total:expSums.total/expDivisor}}}
+          var debtFiltered=rawData.debt.filter(r=>r.date>=range.start&&r.date<=range.end),debtActiveFiltered=range.isSingleMonth?debtFiltered:debtFiltered.filter(r=>activeDates.has(r.date.getTime())),debtDivisor=range.isSingleMonth?1:incDivisor,debtSums=debtActiveFiltered.reduce((acc,r)=>(acc.shinhan+=r.shinhan,acc.sc+=r.sc,acc.total+=r.total,acc),{shinhan:0,sc:0,total:0}),debtTotals={sum:debtSums,avg:{shinhan:debtSums.shinhan/debtDivisor,sc:debtSums.sc/debtDivisor,total:debtSums.total/debtDivisor}},cashflowSum=incTotals.sum.total-expTotals.sum.total-debtTotals.sum.total,cashflowAvg=cashflowSum/(range.isSingleMonth?1:range.isYearly?incActiveMonths:incActiveMonths||range.monthsCount||1),totalIncomeBasis=range.isSingleMonth?incTotals.avg.total:incTotals.sum.total,totalDenom=totalIncomeBasis>0?totalIncomeBasis:1;function fmtHeader(title,sumVal,avgVal){return range.isSingleMonth||range.isYearly?title+" (₫"+fmtShortDec(avgVal)+")":title+"<br>∑₫"+fmtShortDec(sumVal)+" | ₫"+fmtShortDec(avgVal)}var expBasis=range.isSingleMonth?expTotals.avg.total:expTotals.sum.total,debtBasis=range.isSingleMonth?debtTotals.avg.total:debtTotals.sum.total,cashflowBasis=range.isSingleMonth?cashflowAvg:cashflowSum,cashflowItem={id:"cashflow",title:"Cashflow",headerLabel:fmtHeader("Cashflow",cashflowSum,cashflowAvg),total:Math.abs(cashflowBasis),pct:(cashflowBasis/totalDenom*100).toFixed(1),color:"#14b8a6",children:[{name:"Salary",sumVal:incTotals.sum.salary,avgVal:incTotals.avg.salary,icon:icons.income.salary},{name:"Invest",sumVal:incTotals.sum.invest,avgVal:incTotals.avg.invest,icon:icons.income.invest},{name:"Comp.",sumVal:incTotals.sum.comp,avgVal:incTotals.avg.comp,icon:icons.income.comp}]},expenseItem={id:"expense",title:"Expenses",headerLabel:fmtHeader("Expenses",expTotals.sum.total,expTotals.avg.total),total:Math.abs(expBasis),pct:(expBasis/totalDenom*100).toFixed(1),color:"#ec4899",isExpense:!0,children:[{name:"Rental",sumVal:expTotals.sum.rental,avgVal:expTotals.avg.rental,icon:icons.expense.rental},{name:"Bills & Ins.",sumVal:expTotals.sum.bills,avgVal:expTotals.avg.bills,icon:icons.expense.bills},{name:"Living Cost",sumVal:expTotals.sum.livingCost,avgVal:expTotals.avg.livingCost,icon:icons.expense.livingCost},{name:"Family",sumVal:expTotals.sum.family,avgVal:expTotals.avg.family,icon:icons.expense.family}]},debtItem={id:"debts",title:"Debts",headerLabel:fmtHeader("Debts",debtTotals.sum.total,debtTotals.avg.total),total:Math.abs(debtBasis),pct:(debtBasis/totalDenom*100).toFixed(1),color:"#a855f7",isDebt:!0,children:[{name:"Shinhan",sumVal:debtTotals.sum.shinhan,avgVal:debtTotals.avg.shinhan,icon:icons.debt.shinhan},{name:"SC",sumVal:debtTotals.sum.sc,avgVal:debtTotals.avg.sc,icon:icons.debt.sc}]},allItems=[cashflowItem,expenseItem,debtItem];allItems.sort((a,b)=>a.total-b.total),allItems.forEach((item,index)=>item.segmentIndex=index);var bigItem=allItems[2],subItems=[allItems[0],allItems[1]];subItems.sort((a,b)=>"expense"===a.id?-1:1);
           function buildInlineChipsHtml(item){if(item.isDebt){var dHtml='<div class="fb-inline-chips fb-debt-chips-inline">';return item.children.forEach(function(c){var avgV;c.sumVal&&!isNaN(c.sumVal)&&0!==Math.round(c.sumVal)&&(dHtml+='<span class="fb-chip">',c.icon&&(dHtml+='<img class="fb-chip-icon" src="'+c.icon+'" alt="'+c.name+'" onerror="this.style.display=\'none\'" />'),avgV=c.avgVal,dHtml+='<span class="fb-chip-val">₫'+fmtShortDec(avgV)+"</span></span>")}),dHtml+="</div>"}var childrenToRender=item.children?item.children.slice():[];if(item.isExpense){var expenseOrder={"Bills & Ins.":1,"Living Cost":2,Rental:3,Family:3};childrenToRender.sort(function(a,b){return(expenseOrder[a.name]||99)-(expenseOrder[b.name]||99)})}var html='<div class="fb-inline-chips">',chipList=[],isBigCashflow="undefined"!=typeof bigItem&&bigItem&&"cashflow"===item.id&&"cashflow"===bigItem.id,hideTextLabel="current-year"===rangeKey||"string"==typeof rangeKey&&rangeKey.startsWith("+")&&"+1m"!==rangeKey;if(childrenToRender.forEach(function(c){if(c.sumVal&&!isNaN(c.sumVal)&&0!==Math.round(c.sumVal)){var sumV=c.sumVal,avgV=c.avgVal,cHtml='<span class="fb-chip">';c.icon&&(cHtml+='<img class="fb-chip-icon" src="'+c.icon+'" alt="'+c.name+'" onerror="this.style.display=\'none\'" />'),cHtml+=(isBigCashflow&&!hideTextLabel?c.name+": ":"")+'<span class="fb-chip-val">'+(item.isExpense||range.isSingleMonth?"₫"+fmtShortDec(avgV):"∑₫"+fmtShortDec(sumV)+" | ₫"+fmtShortDec(avgV))+"</span></span>",chipList.push(cHtml)}}),isBigCashflow)chipList.forEach(function(chipHtml){html+='<div class="fb-chips-row">'+chipHtml+"</div>"});else if(item.isExpense)for(var i=0;i<chipList.length;i+=2)html+='<div class="fb-chips-row">'+chipList.slice(i,i+2).join("")+"</div>";else html+='<div class="fb-chips-row">'+chipList.join("")+"</div>";return html+="</div>"}
-          function renderSteppedSemicirclesWithText(itemsList){var maxVal=Math.max(itemsList[2].total,1),bgImages={0:"https://i.pinimg.com/736x/cb/29/bd/cb29bd3e97ee291d64c66f85030f2968.jpg",1:"https://i.pinimg.com/736x/dd/45/91/dd45914f35fb9a5cf40656b141742498.jpg",2:"https://i.pinimg.com/736x/a3/b3/56/a3b3562a288a03b7309d67413f03f996.jpg"},svg='<svg class="fb-semicircles-svg" viewBox="0 0 160 140" style="width:100%; height:140px; background:transparent; overflow:visible;">';svg+="  <defs>",itemsList.forEach(function(item,idx){svg+='    <pattern id="fbTextureBg_'+idx+'" patternUnits="userSpaceOnUse" width="160" height="140">',svg+='      <image href="'+(bgImages[idx]||bgImages[2])+'" x="0" y="0" width="160" height="140" preserveAspectRatio="xMidYMid slice" />',svg+="    </pattern>"}),svg+="  </defs>";var xOffsets=[0,30,75];return itemsList.forEach(function(item,idx){var r=Math.max(20,Math.round(item.total/maxVal*60)),startX=xOffsets[idx],animDelay=.15*idx+"s",pathD=["M",startX,70-r,"A",r,r,0,0,1,startX,70+r,"Z"].join(" ");svg+='<g class="fb-semicircle-anim" style="animation-delay:'+animDelay+'; cursor:pointer; transition:all 0.3s;" data-segment-index="'+item.segmentIndex+'">',svg+='  <path d="'+pathD+'" fill="url(#fbTextureBg_'+idx+')" opacity="0.95" />',svg+='  <path d="'+pathD+'" fill="'+item.color+'" style="mix-blend-mode: multiply;" opacity="0.85" />',svg+="</g>"}),svg+="</svg>"}
+          function renderSteppedSemicirclesWithText(itemsList){var maxVal=Math.max(itemsList[2].total,1),bgImages={0:"https://i.pinimg.com/736x/cb/29/bd/cb29bd3e97ee291d64c66f85030f2968.jpg",1:"https://i.pinimg.com/736x/dd/45/91/dd45914f35fb9a5cf40656b141742498.jpg",2:"https://i.pinimg.com/736x/a3/b3/56/a3b3562a288a03b7309d67413f03f996.jpg"},svg='<svg class="fb-semicircles-svg" viewBox="0 0 160 140" style="width:100%; height:140px; background:transparent; overflow:visible;">';svg+="  <defs>",itemsList.forEach(function(item,idx){svg+='    <pattern id="fbTextureBg_'+idx+'" patternUnits="userSpaceOnUse" width="160" height="140">',svg+='      <image href="'+(bgImages[idx]||bgImages[2])+'" x="0" y="0" width="160" height="140" preserveAspectRatio="xMidYMid slice" />',svg+="    </pattern>"}),svg+="  </defs>";var xOffsets=[0,30,75];return itemsList.forEach(function(item,idx){var r=Math.max(20,Math.round(item.total/maxVal*60)),startX=xOffsets[idx],animDelay=.15*idx+"s",pathD=["M",startX,70-r,"A",r,r,0,0,1,startX,70+r,"Z"].join(" ");svg+='<g class="fb-semicircle-anim" style="animation-delay:'+animDelay+'; cursor:pointer;" data-segment-index="'+item.segmentIndex+'">',svg+='  <path d="'+pathD+'" fill="url(#fbTextureBg_'+idx+')" opacity="0.95" />',svg+='  <path d="'+pathD+'" fill="'+item.color+'" style="mix-blend-mode: multiply;" opacity="0.85" />',svg+="</g>"}),svg+="</svg>"}
 
           var html = "";
           html += '<div class="fb-nav-bar">';
@@ -6324,7 +6301,6 @@ to{transform:rotate(360deg)}
           html +=        renderSteppedSemicirclesWithText(allItems);
           html += '    </div>';
           
-          // Increased margin-top to 40px for larger gap below semicircles
           html += '    <div class="fb-sub-items-bottom" style="margin-top:20px; display:grid; grid-template-columns: 1fr 1fr; gap:25px; width:100%;">';
           subItems.forEach(function(item) {
               html += '  <div class="fb-metric-block" data-index="' + item.segmentIndex + '" style="cursor:pointer;">';
@@ -6345,28 +6321,21 @@ to{transform:rotate(360deg)}
           html += '    </div>';
           html += '  </div>';
           html += '</div>';
-          document.getElementById("fb-content").innerHTML=html;var canvasEl=document.getElementById("fb-chart-layout-canvas");canvasEl&&canvasEl.addEventListener("click",function(e){var targetMetric=e.target.closest(".fb-metric-block"),targetPath=e.target.closest("path");if(targetMetric){var idx=parseInt(targetMetric.getAttribute("data-index"),10);fbHighlight(idx)}else if(targetPath){var pIdx=parseInt(targetPath.getAttribute("data-segment-index"),10);fbHighlight(pIdx)}else fbHighlight(null)}),document.getElementById("fb-prev-btn").addEventListener("click",function(){currentRangeIndex>0&&(currentRangeIndex--,renderFBBreakdown(RANGES[currentRangeIndex]))}),document.getElementById("fb-next-btn").addEventListener("click",function(){currentRangeIndex<RANGES.length-1&&(currentRangeIndex++,renderFBBreakdown(RANGES[currentRangeIndex]))});
+
+          document.getElementById("fb-content").innerHTML = html;
+
+          var canvasEl = document.getElementById("fb-chart-layout-canvas");
+          canvasEl&&canvasEl.addEventListener("click",function(e){var targetMetric=e.target.closest(".fb-metric-block"),targetSeg=e.target.closest("[data-segment-index]");if(targetMetric){var idx=parseInt(targetMetric.getAttribute("data-index"),10);fbHighlight(idx)}else if(targetSeg){var pIdx=parseInt(targetSeg.getAttribute("data-segment-index"),10);fbHighlight(pIdx)}else fbHighlight(null)}),document.getElementById("fb-prev-btn").addEventListener("click",function(){currentRangeIndex>0&&(currentRangeIndex--,renderFBBreakdown(RANGES[currentRangeIndex]))}),document.getElementById("fb-next-btn").addEventListener("click",function(){currentRangeIndex<RANGES.length-1&&(currentRangeIndex++,renderFBBreakdown(RANGES[currentRangeIndex]))});
       }
       window.initFinancialBreakdown = initFinancialBreakdown;
-    })(); 
+    })();
 
     var caActiveIdx = null;
-    function fbHighlight(idx){caActiveIdx=caActiveIdx===idx?null:idx;var layoutEl=document.getElementById("fb-chart-layout-canvas");layoutEl&&(null===caActiveIdx?layoutEl.classList.remove("has-selection"):layoutEl.classList.add("has-selection"),layoutEl.querySelectorAll(".fb-metric-block").forEach(function(el){var elIdx=parseInt(el.getAttribute("data-index"),10);null===caActiveIdx||elIdx===caActiveIdx?(el.classList.add("fb-item-active"),el.classList.remove("fb-item-dimmed")):(el.classList.remove("fb-item-active"),el.classList.add("fb-item-dimmed"))}),layoutEl.querySelectorAll(".fb-semicircles-svg path").forEach(function(path){var pIdx=parseInt(path.getAttribute("data-segment-index"),10);null===caActiveIdx||pIdx===caActiveIdx?(path.style.opacity="1",path.style.transform="scaleX(1.05)",path.style.transformOrigin="left center"):(path.style.opacity="0.3",path.style.transform="scaleX(1)")}))}
-    
+    function fbHighlight(idx){caActiveIdx=caActiveIdx===idx?null:idx;var layoutEl=document.getElementById("fb-chart-layout-canvas");layoutEl&&(null===caActiveIdx?layoutEl.classList.remove("has-selection"):layoutEl.classList.add("has-selection"),layoutEl.querySelectorAll(".fb-metric-block").forEach(function(el){var elIdx=parseInt(el.getAttribute("data-index"),10);null===caActiveIdx||elIdx===caActiveIdx?(el.classList.add("fb-item-active"),el.classList.remove("fb-item-dimmed")):(el.classList.remove("fb-item-active"),el.classList.add("fb-item-dimmed"))}),layoutEl.querySelectorAll(".fb-semicircles-svg [data-segment-index]").forEach(function(el){var pIdx=parseInt(el.getAttribute("data-segment-index"),10);null===caActiveIdx||pIdx===caActiveIdx?(el.style.opacity="1",el.style.transform="scaleX(1.05)",el.style.transformOrigin="left center"):(el.style.opacity="0.3",el.style.transform="scaleX(1)")}))}
+        
     const SHEET_URL = "https://docs.google.com/spreadsheets/d/1lxq_OOJNzigR-kuWDx2toke9ED5nrZcumUvLtBm2jMo/export?format=csv&gid=841568857";
 
-    let rawPayrollRows = [];
-    let selectMode = 'month';
-    let availableMonths = [];
-    let availableYears = [];
-
-    let selectedMonthKey = '';
-    let selectedYear = new Date().getFullYear();
-    let historySelectedYear = 'DEFAULT_12M';
-    let trendChartInstance = null;
-
-    const shortMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    let rawPayrollRows=[],selectMode="month",availableMonths=[],availableYears=[],selectedMonthKey="",selectedYear=(new Date).getFullYear(),historySelectedYear="DEFAULT_12M",trendChartInstance=null;const shortMonthNames=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],monthNames=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
     
     function parseNum(val){if(!val)return 0;const cleaned=String(val).replace(/[^0-9.-]+/g,""),parsed=parseFloat(cleaned);return isNaN(parsed)?0:parsed}function formatLegendAmount(num){return Math.abs(num)>=1e6?(num/1e6).toFixed(1)+"M":Math.abs(num)>=1e3?(num/1e3).toFixed(0)+"K":`${Math.round(num)}`}function formatKPIAmount(num){if(Math.abs(num)>=1e6){const parts=(num/1e6).toFixed(3).split(".");return`${parts[0].replace(/\B(?=(\d{3})+(?!\d))/g,".")}.${parts[1]||"000"}M`}if(Math.abs(num)>=1e3){return`${(num/1e3).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,".")}K`}return`${Math.round(num)}`}function formatHistoryVND(num){return Math.abs(num)>=1e9?(num/1e9).toFixed(1)+"B":Math.abs(num)>=1e6?(num/1e6).toFixed(1)+"M":new Intl.NumberFormat("vi-VN").format(Math.round(num))}function formatMonthYearMMM(monthKey){if(!monthKey||!monthKey.includes("/"))return monthKey;const parts=monthKey.split("/"),m=parseInt(parts[0],10),y=parts[1];return`${shortMonthNames[m-1]} ${y}`}function getPreviousMonthKey(monthKey){if(!monthKey||!monthKey.includes("/"))return monthKey;const parts=monthKey.split("/");let m=parseInt(parts[0],10),y=parseInt(parts[1],10);return m--,m<1&&(m=12,y--),`${m.toString().padStart(2,"0")}/${y}`}
     function loadData(){const loadingState=document.getElementById("loading-state"),errorState=document.getElementById("error-state"),mainContent=document.getElementById("main-content");loadingState&&(loadingState.style.display="flex"),errorState&&(errorState.style.display="none"),mainContent&&(mainContent.style.display="none");const csvUrl=SHEET_URL+(SHEET_URL.includes("?")?"&":"?")+"t="+Date.now();fetch(csvUrl,{cache:"no-store"}).then(function(response){if(!response.ok)throw new Error("HTTP "+response.status);return response.text()}).then(function(csvText){if(!csvText||csvText.trim().startsWith("<!DOCTYPE html>"))throw new Error("Received HTML instead of CSV. Check sheet permissions or URL.");const rows=[];csvText.split(/\r?\n/).forEach(function(line){if(!line||"string"!=typeof line||!line.trim())return;const row=[];let insideQuote=!1,currentVal="";for(let i=0;i<line.length;i++){const char=line[i];'"'===char?insideQuote=!insideQuote:","!==char||insideQuote?currentVal+=char:(row.push(currentVal.trim()),currentVal="")}row.push(currentVal.trim()),rows.push(row)}),processParsedData(rows),loadingState&&(loadingState.style.display="none"),mainContent&&(mainContent.style.display="block")}).catch(function(err){console.error("Widget load error:",err),loadingState&&(loadingState.style.display="none"),errorState&&(errorState.style.display="block");var msgEl=document.getElementById("det-msg");msgEl&&(msgEl.style.display="block",msgEl.textContent="CSV Fetch Error: "+err.message)})}
@@ -6392,706 +6361,116 @@ to{transform:rotate(360deg)}
 
 
     const TRAVEL_CSV_URL = "https://docs.google.com/spreadsheets/d/1lxq_OOJNzigR-kuWDx2toke9ED5nrZcumUvLtBm2jMo/export?format=csv&gid=567554335";
-const TRAVEL_PROXY_URL = "https://api.allorigins.win/raw?url=" + encodeURIComponent(TRAVEL_CSV_URL);
+    const TRAVEL_PROXY_URL = "https://api.allorigins.win/raw?url=" + encodeURIComponent(TRAVEL_CSV_URL);
 
-const PALETTE = ['#f2a341','#5b9cf2','#b184f2','#4fd8b0','#ff8fa3','#e2c14d','#7dd3fc','#f2789e','#9ae6b4','#c4b5fd'];
+    const PALETTE = ['#f2a341','#5b9cf2','#b184f2','#4fd8b0','#ff8fa3','#e2c14d','#7dd3fc','#f2789e','#9ae6b4','#c4b5fd'];
 
-let trips = [];
-let dayObserver = null;
-let stickyCleanup = null; // tears down the JS-driven sticky pin's scroll/resize listeners
-let LOCATION_MAP = {}; // code (e.g. HUI) -> location name (e.g. Huế), from columns J/K
-
-let monthBackgroundMap = {};
-let monthStayMap = {};
-let monthTypeMap = {}; // Column Q (Index 16) for Trip Type
-
-function parseCSV(text){
-  const rows = [];
-  let row = [], field = '', inQuotes = false;
-  for(let i=0;i<text.length;i++){
-    const c = text[i];
-    if(inQuotes){
-      if(c === '"'){
-        if(text[i+1] === '"'){ field += '"'; i++; }
-        else inQuotes = false;
-      } else field += c;
-    } else {
-      if(c === '"') inQuotes = true;
-      else if(c === ','){ row.push(field); field=''; }
-      else if(c === '\n'){ row.push(field); rows.push(row); row=[]; field=''; }
-      else if(c === '\r'){ }
-      else field += c;
-    }
-  }
-  if(field.length || row.length){ row.push(field); rows.push(row); }
-  
-  // Extract mappings from columns N (time, 13), O (stay, 14), P (background, 15), Q (type, 16)
-  monthBackgroundMap = {};
-  monthStayMap = {};
-  monthTypeMap = {};
-  
-rows.forEach(r => {
-  if(r[13]) {
-    const timeKey = r[13].trim().replace(/\s+/g, ' '); // collapse multiple spaces
-    if(timeKey) {
-      if(r[14] && r[14].trim()) monthStayMap[timeKey] = r[14].trim();
-      if(r[15] && /^https?:\/\//i.test(r[15].trim())) monthBackgroundMap[timeKey] = r[15].trim();
-      if(r[16] && r[16].trim()) monthTypeMap[timeKey] = r[16].trim();
-    }
-  }
-});
-
-  return rows;
-}
-
-function parseAmount(s){
-  if(!s) return 0;
-  s = s.trim();
-  if(!s) return 0;
-  const cleaned = s.replace(/,/g,'');
-  const n = parseFloat(cleaned);
-  return isNaN(n) ? 0 : n;
-}
-
-function parseDate(s){
-  if(!s) return null;
-  const d = new Date(s.trim());
-  return isNaN(d.getTime()) ? null : d;
-}
-
-const DEFAULT_ICON_URL = 'https://cdn-icons-png.flaticon.com/512/1706/1706227.png';
-const CAT_ICON = {
-  '✈️️ Air Ticket':'https://cdn-icons-png.flaticon.com/512/870/870194.png', '🚖 Transport':'https://cdn-icons-png.flaticon.com/512/1040/1040457.png', '🛌 Hotel':'https://cdn-icons-png.flaticon.com/512/535/535165.png', '🍽️ F&B':'https://cdn-icons-png.flaticon.com/512/10479/10479094.png',
-  '🥤Drink':'🥤', '🥤 Drink':'🥤', '🛍 Shopping':'🛍️', '💆 Services':'💆','🏂 Shop & Fun':'https://cdn-icons-png.flaticon.com/512/1074/1074584.png',
-  '🏂 Experience':'🏂', '🍓 Fruit & Plant 🪴':'🍓', '🪴Plant':'🪴','🚖 Transport':'https://cdn-icons-png.flaticon.com/512/1040/1040457.png'
-};
-
-function iconFor(cat){
-  if(!cat) return '📍';
-  const t = cat.trim();
-  return CAT_ICON[t] || (t.match(/\p{Emoji}/u) ? t.match(/\p{Emoji}/u)[0] : '📍');
-}
-
-function iconHTML(a){
-  const url = (a.icon && /^https?:\/\//i.test(a.icon)) ? a.icon : iconFor(a.category);
-  return `<img src="${url}" alt="" loading="lazy" onerror="this.src='${DEFAULT_ICON_URL}';">`;
-}
-
-function catIconHTML(cat, acts){
-  const hit = acts.find(a => (a.category?a.category.trim():'Other') === cat && a.icon && /^https?:\/\//i.test(a.icon));
-  const url = hit ? hit.icon : iconFor(cat);
-  return `<img src="${url}" alt="" onerror="this.src='${DEFAULT_ICON_URL}';">`;
-}
-
-function isAirportCode(code){
-  return /^[A-Z]{2,4}$/.test(code);
-}
-
-function getMonthYearKey(date){
-  return `${date.toLocaleString('en-US', { month: 'short' })} ${date.getFullYear()}`;
-}
-
-function buildTripCover(acts, startDate){
-  const myKey = getMonthYearKey(startDate);
-  if(monthBackgroundMap[myKey] && /^https?:\/\//i.test(monthBackgroundMap[myKey])){
-    return monthBackgroundMap[myKey];
-  }
-  const hotel = acts.find(a => a.category && /hotel|accommodation/i.test(a.category) && a.coverUrl && /^https?:\/\//i.test(a.coverUrl));
-  return hotel ? hotel.coverUrl : null;
-}
-
-function buildTripHotel(acts, startDate){
-  const myKey = getMonthYearKey(startDate);
-  if(monthStayMap[myKey]) {
-    const hotel = acts.find(a => a.category && /hotel|accommodation/i.test(a.category));
-    return {
-      name: monthStayMap[myKey],
-      icon: hotel ? ((hotel.icon && /^https?:\/\//i.test(hotel.icon)) ? hotel.icon : (hotel.coverUrl && /^https?:\/\//i.test(hotel.coverUrl) ? hotel.coverUrl : null)) : null
+    let trips=[],dayObserver=null,stickyCleanup=null,LOCATION_MAP={},monthBackgroundMap={},monthStayMap={},monthTypeMap={};function parseCSV(text){const rows=[];let row=[],field="",inQuotes=!1;for(let i=0;i<text.length;i++){const c=text[i];inQuotes?'"'===c?'"'===text[i+1]?(field+='"',i++):inQuotes=!1:field+=c:'"'===c?inQuotes=!0:","===c?(row.push(field),field=""):"\n"===c?(row.push(field),rows.push(row),row=[],field=""):"\r"===c||(field+=c)}return(field.length||row.length)&&(row.push(field),rows.push(row)),monthBackgroundMap={},monthStayMap={},monthTypeMap={},rows.forEach(r=>{if(r[13]){const timeKey=r[13].trim().replace(/\s+/g," ");timeKey&&(r[14]&&r[14].trim()&&(monthStayMap[timeKey]=r[14].trim()),r[15]&&/^https?:\/\//i.test(r[15].trim())&&(monthBackgroundMap[timeKey]=r[15].trim()),r[16]&&r[16].trim()&&(monthTypeMap[timeKey]=r[16].trim()))}}),rows}function parseAmount(s){if(!s)return 0;if(!(s=s.trim()))return 0;const cleaned=s.replace(/,/g,""),n=parseFloat(cleaned);return isNaN(n)?0:n}function parseDate(s){if(!s)return null;const d=new Date(s.trim());return isNaN(d.getTime())?null:d}
+    let EXCLUDE_CODES = new Set();
+    const DEFAULT_ICON_URL = 'https://cdn-icons-png.flaticon.com/512/1706/1706227.png';
+    const DEFAULT_COVER_URL = 'https://i.pinimg.com/736x/fa/74/c3/fa74c3b5e05e56f23b9cee40f4b25326.jpg';
+    const CAT_ICON = {
+      '✈️️ Air Ticket':'https://cdn-icons-png.flaticon.com/512/870/870194.png', '🚖 Transport':'https://cdn-icons-png.flaticon.com/512/1040/1040457.png', '🛌 Hotel':'https://cdn-icons-png.flaticon.com/512/535/535165.png', '🍽️ F&B':'https://cdn-icons-png.flaticon.com/512/10479/10479094.png',
+      '🥤Drink':'🥤', '🥤 Drink':'🥤', '🛍 Shopping':'🛍️', '💆 Services':'💆','🏂 Shop & Fun':'https://cdn-icons-png.flaticon.com/512/1074/1074584.png',
+      '🏂 Experience':'🏂', '🍓 Fruit & Plant 🪴':'🍓', '🪴Plant':'🪴','🚖 Transport':'https://cdn-icons-png.flaticon.com/512/1040/1040457.png'
     };
-  }
 
-  const hotel = acts.find(a => a.category && /hotel|accommodation/i.test(a.category));
-  if(!hotel) return null;
-  return {
-    name: hotel.activity,
-    icon: (hotel.icon && /^https?:\/\//i.test(hotel.icon)) ? hotel.icon : (hotel.coverUrl && /^https?:\/\//i.test(hotel.coverUrl) ? hotel.coverUrl : null)
-  };
-}
+    function iconFor(cat){if(!cat)return"📍";const t=cat.trim();return CAT_ICON[t]||(t.match(/\p{Emoji}/u)?t.match(/\p{Emoji}/u)[0]:"📍")}function iconHTML(a){return`<img src="${a.icon&&/^https?:\/\//i.test(a.icon)?a.icon:iconFor(a.category)}" alt="" loading="lazy" onerror="this.src='${DEFAULT_ICON_URL}';">`}function catIconHTML(cat,acts){const hit=acts.find(a=>(a.category?a.category.trim():"Other")===cat&&a.icon&&/^https?:\/\//i.test(a.icon));return`<img src="${hit?hit.icon:iconFor(cat)}" alt="" onerror="this.src='${DEFAULT_ICON_URL}';">`}function isAirportCode(code){return/^[A-Z]{2,4}$/.test(code)}function getMonthYearKey(date){return`${date.toLocaleString("en-US",{month:"short"})} ${date.getFullYear()}`}function buildTripCover(acts,startDate){const myKey=getMonthYearKey(startDate);if(monthBackgroundMap[myKey]&&/^https?:\/\//i.test(monthBackgroundMap[myKey]))return monthBackgroundMap[myKey];const hotel=acts.find(a=>a.category&&/hotel|accommodation/i.test(a.category)&&a.coverUrl&&/^https?:\/\//i.test(a.coverUrl));return hotel?hotel.coverUrl:null}function buildTripHotel(acts,startDate){const myKey=getMonthYearKey(startDate);if(monthStayMap[myKey]){const hotel=acts.find(a=>a.category&&/hotel|accommodation/i.test(a.category));return{name:monthStayMap[myKey],icon:hotel?hotel.icon&&/^https?:\/\//i.test(hotel.icon)?hotel.icon:hotel.coverUrl&&/^https?:\/\//i.test(hotel.coverUrl)?hotel.coverUrl:null:null}}const hotel=acts.find(a=>a.category&&/hotel|accommodation/i.test(a.category));return hotel?{name:hotel.activity,icon:hotel.icon&&/^https?:\/\//i.test(hotel.icon)?hotel.icon:hotel.coverUrl&&/^https?:\/\//i.test(hotel.coverUrl)?hotel.coverUrl:null}:null}function fmtVND(n){return 0===n?"—":Math.round(n).toLocaleString("en-US")}function fmtShort(n){if(!n)return"0";const sign=n<0?"-":"",abs=Math.abs(n);return abs>=1e9?sign+(abs/1e9).toFixed(0)+"B":abs>=1e6?sign+(abs/1e6).toFixed(0)+"M":abs>=1e3?sign+(abs/1e3).toFixed(0)+"K":sign+Math.round(abs).toString()}function buildTripName(acts,startDate){const codeChain=[];for(const a of acts){if(!a.category||!a.category.includes("Air Ticket")&&!a.category.includes("Transport"))continue;const m=a.activity.match(/^([A-Z]{2,4})[\s\-]+([A-Z]{2,4})\b/);if(!m)continue;const[_,c1,c2]=m;isAirportCode(c1)&&isAirportCode(c2)&&(codeChain[codeChain.length-1]!==c1&&codeChain.push(c1),codeChain.push(c2))}let validChain=codeChain.filter((c,i)=>c!==codeChain[i-1]).filter(c=>!EXCLUDE_CODES.has(c));validChain.length>=3&&validChain[0]===validChain[validChain.length-1]&&(validChain=validChain.slice(1,validChain.length-1));let baseName="";if(validChain.length>=1){const names=validChain.map(c=>"IUH"===c?"Quy Nhơn":LOCATION_MAP[c]||c),deduped=[];names.forEach(n=>{0!==deduped.length&&deduped[deduped.length-1]===n||deduped.push(n)}),baseName=deduped.join(" – ")}else baseName=acts[0].activity.slice(0,30);const myKey=getMonthYearKey(startDate);return(monthTypeMap[myKey]||"").toLowerCase().includes("company")&&!baseName.includes("💼")&&(baseName+=" 💼"),baseName}
+    function buildTrips(records){const dated=records.filter(r=>r.date).sort((a,b)=>a.date-b.date),clusters=[];let cur=[];for(const r of dated){if(0===cur.length){cur.push(r);continue}const prev=cur[cur.length-1].date;r.date-prev>3456e5?(clusters.push(cur),cur=[r]):cur.push(r)}return cur.length&&clusters.push(cur),clusters.map((acts,idx)=>{const start=acts[0].date,end=acts[acts.length-1].date,myKey=getMonthYearKey(start),isCompany=(monthTypeMap[myKey]||"").toLowerCase().includes("company"),total=acts.reduce((s,a)=>s+a.expense,0);return{id:"trip-"+idx,name:buildTripName(acts,start),cover:buildTripCover(acts,start),hotel:buildTripHotel(acts,start),activities:acts,start,end,total,nights:Math.max(1,Math.round((end-start)/864e5)),year:start.getFullYear(),isCompany}}).sort((a,b)=>b.start-a.start)}
+    function dowShort(d){return d.toLocaleDateString("en-US",{weekday:"short"})}function fmtDateShort(d){return d.toLocaleDateString("en-US",{month:"short",day:"numeric"})}function fmtDateFull(d){return d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"})}function fmtRange(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()?`${a.toLocaleDateString("en-US",{month:"short"})} ${a.getDate()}–${b.getDate()}, ${a.getFullYear()}`:a.getFullYear()===b.getFullYear()?`${fmtDateShort(a)} – ${fmtDateShort(b)}, ${a.getFullYear()}`:`${fmtDateShort(a)} ${a.getFullYear()} – ${fmtDateShort(b)} ${b.getFullYear()}`}
+    function renderYearChart(yearsAsc,currentYear){const totals=yearsAsc.map(y=>trips.filter(t=>t.year===y&&!t.isCompany).reduce((s,t)=>s+t.total,0)),max=Math.max(...totals,1),grand=totals.reduce((a,b)=>a+b,0),cols=yearsAsc.map((y,i)=>{const h=Math.max(6,Math.round(totals[i]/max*76));return`<div class="year-bar-col ${y===currentYear?"current":""}">\n          <div class="year-bar-amt figure">${fmtShort(totals[i])}</div>\n          <div class="year-bar-track"><div class="year-bar-fill" style="height:${h}px"></div></div>\n          <div class="year-bar-label">${y}</div>\n        </div>`}).join("");return`<div class="year-chart">\n        <div class="year-chart-head"><span class="yc-title">Spend by year</span><span class="yc-total figure">${fmtVND(grand)}₫</span></div>\n        <div class="year-bar-row">${cols}</div>\n      </div>`}
+    function renderDashboard(){const el=document.getElementById("dashContent");if(!trips.length)return void(el.innerHTML='<div class="empty">No trips found.</div>');const years=[...new Set(trips.map(t=>t.year))].sort((a,b)=>b-a),yearsAsc=[...years].sort((a,b)=>a-b);let html=renderYearChart(yearsAsc);for(const y of years){const yTrips=trips.filter(t=>t.year===y),yTotal=yTrips.filter(t=>!t.isCompany).reduce((s,t)=>s+t.total,0);html+=`<div class="year-head">\n          <h2>${y}</h2>\n          <span class="chip-trips">${yTrips.length} trip${yTrips.length>1?"s":""}</span>\n          <span class="chip-total figure">${fmtVND(yTotal)}₫</span>\n        </div>`,html+='<div class="trip-grid">',yTrips.forEach((t,ci)=>{const coverStyle=` style="background-image:url('${t.cover&&/^https?:\/\//i.test(t.cover)?t.cover:DEFAULT_COVER_URL}')"`;html+=`<div class="trip-card" data-id="${t.id}" style="animation-delay:${40*Math.min(ci,10)}ms">\n            <div class="trip-cover"${coverStyle}></div>\n            <div class="trip-body">\n              <h3>${t.name}</h3>\n              ${t.hotel?`<div class="trip-hotel">${t.hotel.icon?`<img src="${t.hotel.icon}" style="width:14px; height:14px; object-fit:cover; vertical-align:middle; margin-right:4px; border-radius:3px;">`:""} ${t.hotel.name}</div>`:""}\n              <div class="trip-dates">${fmtRange(t.start,t.end)}</div>\n              <div class="trip-meta"><span class="nights-chip">${t.nights} night${t.nights>1?"s":""}</span><span class="spend figure">${t.total?fmtVND(t.total)+"₫":"—"}</span></div>\n            </div>\n          </div>`}),html+="</div>"}el.innerHTML=html,el.querySelectorAll(".trip-card").forEach(c=>c.addEventListener("click",()=>openTrip(c.dataset.id)))}
+    function groupByDay(t){const byDay={};for(const a of t.activities){const key=a.date.toDateString();byDay[key]||(byDay[key]={date:a.date,items:[]}),byDay[key].items.push(a)}return Object.values(byDay).sort((a,b)=>a.date-b.date)}function splitPeriods(items){const n=items.length;if(0===n)return[];const third=Math.ceil(n/3);return[{key:"morning",label:"Morning",items:items.slice(0,third)},{key:"afternoon",label:"Afternoon",items:items.slice(third,2*third)},{key:"evening",label:"Evening",items:items.slice(2*third)}].filter(b=>b.items.length)}function annotateLocations(days){let current=null;for(const day of days){for(const a of day.items){if(!a.category||!a.category.includes("Air Ticket")&&!a.category.includes("Transport"))continue;const m=a.activity.match(/^([A-Z]{2,4})[\s\-]+([A-Z]{2,4})\b/);if(!m)continue;const[_,c1,c2]=m;isAirportCode(c1)&&isAirportCode(c2)&&(null===current&&(current=c1),current=c2)}day.locationName=current?LOCATION_MAP[current]||current:null}}function renderCatStack(catEntries,totalSpend,acts){if(!catEntries.length)return"";let segs="",legend="";return catEntries.forEach(([cat,amt],i)=>{const pct=totalSpend?amt/totalSpend*100:0,color=PALETTE[i%PALETTE.length],label=cat.replace(/^[^\wÀ-ỹ]+/,"").trim()||"Other",rawIcon=iconFor(cat),isImgUrl=/^https?:\/\//i.test(rawIcon),segText=pct>12?`${isImgUrl?`<img src="${rawIcon}" style="width:12px; height:12px; object-fit:cover; border-radius:2px; vertical-align:middle; margin-right:3px;">`:`<span style="margin-right:3px;">${rawIcon}</span>`}${fmtShort(amt)}`:"";segs+=`<div class="stack-seg" style="width:calc(${pct}% + 12px); background:${color}" title="${label}: ${fmtVND(amt)}">${segText}</div>`,legend+=`<div class="stack-legend-item"><span class="dot" style="background:${color}"></span>${catIconHTML(cat,acts)} ${label} <b>${fmtShort(amt)}</b></div>`}),`<div class="stack-wrap"><div class="stack-bar" style="overflow:hidden; border-radius:14px;margin-top:10px;">${segs}</div><div class="stack-legend">${legend}</div></div>`}
+    function openTrip(id){const t=trips.find(x=>x.id===id);if(!t)return;const el=document.getElementById("detailContent"),days=groupByDay(t);annotateLocations(days);const catTotals={};for(const a of t.activities){if(!a.expense)continue;let rawCat=a.category?a.category.trim().toLowerCase():"other",key=a.category?a.category.trim():"Other";/hotel|accommodation/i.test(rawCat)?key="🛌 Hotel":/transport/i.test(rawCat)?key="🚖 Transport":/snack|food|fruit|kem bo|banh truyen thong|banh mi|drink/i.test(rawCat)?key="🍽️ F&B":/experience|museum|shop|plant/i.test(rawCat)&&(key="🏂 Shop & Fun"),catTotals[key]=(catTotals[key]||0)+a.expense}const catEntries=Object.entries(catTotals).sort((a,b)=>b[1]-a[1]);let html=`<div class="det-sticky-container">\n      <div class="det-topbar">\n        <button class="back-btn" id="backBtn">‹</button>\n        <div class="det-title"><h2>${t.name}</h2></div>\n        <div class="det-total"><div class="amt figure">${t.total?fmtVND(t.total)+"₫":"—"}</div><div class="lbl">total spend</div></div>\n      </div>\n      \n      <div class="day-strip-wrap">\n        <div class="day-strip">`;days.forEach((d,i)=>{html+=`<div class="day-pill ${0===i?"active":""}" data-day="${i}" data-target="day-${i}">\n      <div class="dow">${dowShort(d.date)}</div>\n      <div class="dnum">${d.date.getDate()}</div>\n    </div>`}),html+="</div></div></div>",html+=renderCatStack(catEntries,t.total,t.activities),html+='<div id="daysScroll">',days.forEach((day,i)=>{const dTotal=day.items.reduce((s,a)=>s+a.expense,0);html+=`<div class="day-section" id="day-${i}" data-day="${i}">\n      <div class="day-banner">\n        <div class="full">${fmtDateFull(day.date)}</div>\n        <div class="sub-row">\n          <span class="sub">Day ${i+1} of ${days.length}</span>\n          ${day.locationName?`<span class="loc-badge"><img src="https://cdn-icons-png.flaticon.com/512/4219/4219585.png" alt=""> ${day.locationName}</span>`:""}\n          ${dTotal?`<span class="spent-chip figure">${fmtVND(dTotal)}₫ spent</span>`:""}\n        </div>\n      </div>`;const periods=splitPeriods(day.items);for(const band of periods)html+=`<div class="period">\n        <div class="period-head"><span class="period-dot ${band.key}"></span><span class="period-label">${band.label}</span></div>\n        <div class="period-items">`,band.items.forEach((a,ai)=>{const hasExtra=a.notes||a.code;html+=`<div class="act-card ${hasExtra?"":"centered"}" style="animation-delay:${30*Math.min(ai,8)}ms">\n          <div class="act-ic">${iconHTML(a)}</div>\n          <div class="act-body">\n            <div class="act-name">${a.activity}${a.review?`<span class="rev">${a.review}</span>`:""}</div>\n            ${a.notes?`<div class="act-note">${a.notes}</div>`:""}\n          </div>\n          <div class="act-side">\n            ${a.code?`<span class="code-chip">${a.code}</span>`:""}\n            <div class="act-amt ${a.expense?"":"zero"}">${a.expense?fmtVND(a.expense)+"₫":""}</div>\n          </div>\n        </div>`}),html+="</div></div>";html+="</div>"}),html+="</div>",el.innerHTML=html,stickyCleanup&&(stickyCleanup(),stickyCleanup=null),document.getElementById("backBtn").addEventListener("click",()=>{dayObserver&&(dayObserver.disconnect(),dayObserver=null),stickyCleanup&&(stickyCleanup(),stickyCleanup=null),document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active")),document.getElementById("panel-dashboard").classList.add("active")});const pills=el.querySelectorAll(".day-pill");el.querySelector(".day-strip-wrap");let suppressObserverUntil=0;const scrollRoot=function(node){let p=node?node.parentElement:null;for(;p&&p!==document.body&&p!==document.documentElement;){const cs=getComputedStyle(p);if(("auto"===cs.overflowY||"scroll"===cs.overflowY)&&p.scrollHeight>p.clientHeight+1)return p;p=p.parentElement}return document.scrollingElement||document.documentElement}(el),usesWindow=scrollRoot===document.documentElement||scrollRoot===document.body;!function(){const stickyEl=el.querySelector(".det-sticky-container");if(!stickyEl)return;const getScrollTop=()=>usesWindow?window.pageYOffset||document.documentElement.scrollTop:scrollRoot.scrollTop,scrollTarget=usesWindow?window:scrollRoot;let naturalTop=stickyEl.getBoundingClientRect().top-scrollRoot.getBoundingClientRect().top+getScrollTop();function update(){const shift=Math.max(0,getScrollTop()-naturalTop);stickyEl.style.transform=shift>0?`translateY(${shift}px)`:"",stickyEl.classList.toggle("js-pinned",shift>0)}function recalc(){stickyEl.style.transform="",naturalTop=stickyEl.getBoundingClientRect().top-scrollRoot.getBoundingClientRect().top+getScrollTop(),update()}scrollTarget.addEventListener("scroll",update,{passive:!0}),window.addEventListener("resize",recalc);const ro="ResizeObserver"in window?new ResizeObserver(recalc):null;ro&&ro.observe(stickyEl),update(),stickyCleanup=function(){scrollTarget.removeEventListener("scroll",update),window.removeEventListener("resize",recalc),ro&&ro.disconnect()}}(),pills.forEach(p=>{p.addEventListener("click",()=>{const target=document.getElementById(p.dataset.target);target&&(pills.forEach(pp=>pp.classList.toggle("active",pp===p)),suppressObserverUntil=Date.now()+900,function(target){const stickyContainer=el.querySelector(".det-sticky-container"),stickyH=stickyContainer?stickyContainer.getBoundingClientRect().height:110;if(usesWindow){const top=target.getBoundingClientRect().top+window.pageYOffset-stickyH-12;window.scrollTo({top,behavior:"smooth"})}else{const delta=target.getBoundingClientRect().top-scrollRoot.getBoundingClientRect().top,top=scrollRoot.scrollTop+delta-stickyH-12;scrollRoot.scrollTo({top,behavior:"smooth"})}}(target))})}),dayObserver&&dayObserver.disconnect();const sections=el.querySelectorAll(".day-section");dayObserver=new IntersectionObserver(entries=>{Date.now()<suppressObserverUntil||entries.forEach(entry=>{if(entry.isIntersecting){const idx=entry.target.dataset.day;pills.forEach(p=>p.classList.toggle("active",p.dataset.day===idx))}})},{root:usesWindow?null:scrollRoot,rootMargin:"-70px 0px -70% 0px",threshold:0}),sections.forEach(s=>dayObserver.observe(s)),document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active")),document.getElementById("panel-detail").classList.add("active"),usesWindow?window.scrollTo(0,0):scrollRoot.scrollTop=0}
+    function setStatus(state,text){document.getElementById("statusDot").className="status-dot "+state,document.getElementById("statusText").textContent=text}
+    function buildTripName(acts){const codeChain=[];for(const a of acts){if(!a.category||!a.category.includes("Air Ticket")&&!a.category.includes("Transport"))continue;const m=a.activity.match(/^([A-Z]{2,4})[\s\-]+([A-Z]{2,4})\b/);if(!m)continue;const[_,c1,c2]=m;isAirportCode(c1)&&isAirportCode(c2)&&(codeChain[codeChain.length-1]!==c1&&codeChain.push(c1),codeChain.push(c2))}const validChain=codeChain.filter((c,i)=>c!==codeChain[i-1]).filter(c=>!EXCLUDE_CODES.has(c));if(validChain.length>=1){const names=validChain.map(c=>"IUH"===c?"Quy Nhơn":LOCATION_MAP[c]||c),deduped=names.filter((n,i)=>n!==names[i-1]);if(deduped.length>0)return deduped.join(" – ")}return acts[0].activity.slice(0,30)}document.getElementById("reloadBtn").addEventListener("click",loadTravelData),document.addEventListener("DOMContentLoaded",()=>{const dayPills=document.querySelectorAll(".day-pill");dayPills.forEach(pill=>{pill.addEventListener("click",function(){dayPills.forEach(p=>p.classList.remove("active")),this.classList.add("active");const targetDayId=this.getAttribute("data-target")||this.dataset.day,targetSection=document.getElementById(targetDayId);targetSection&&targetSection.scrollIntoView({behavior:"smooth",block:"start"})})})});
 
-function fmtVND(n){
-  if(n === 0) return '—';
-  return Math.round(n).toLocaleString('en-US');
-}
-
-function fmtShort(n){
-  if(!n) return '0';
-  const sign = n < 0 ? '-' : '';
-  const abs = Math.abs(n);
-  
-  if(abs >= 1e9) return sign + (abs / 1e9).toFixed(0) + 'B';
-  if(abs >= 1e6) return sign + (abs / 1e6).toFixed(0) + 'M';
-  if(abs >= 1e3) return sign + (abs / 1e3).toFixed(0) + 'K';
-  return sign + Math.round(abs).toString();
-}
-
-function buildTripName(acts, startDate){
-  const codeChain = [];
-  for(const a of acts){
-    if(!a.category || !(a.category.includes('Air Ticket') || a.category.includes('Transport'))) continue;
-    const m = a.activity.match(/^([A-Z]{2,4})[\s\-]+([A-Z]{2,4})\b/);
-    if(!m) continue;
-    const [_, c1, c2] = m;
-    if(!isAirportCode(c1) || !isAirportCode(c2)) continue;
-    if(codeChain[codeChain.length-1] !== c1) codeChain.push(c1);
-    codeChain.push(c2);
-  }
-  const chain = codeChain.filter((c,i)=> c !== codeChain[i-1]);
-  let validChain = chain.filter(c => !EXCLUDE_CODES.has(c));
-
-  // Handle round trips (e.g. PHL -> JFK -> PHL becomes JFK)
-  if(validChain.length >= 3 && validChain[0] === validChain[validChain.length - 1]){
-    validChain = validChain.slice(1, validChain.length - 1);
-  }
-
-  let baseName = '';
-  if(validChain.length >= 1){
-    const names = validChain.map(c => {
-      if (c === 'IUH') return 'Quy Nhơn';
-      return LOCATION_MAP[c] || c;
-    });
-    const deduped = [];
-    names.forEach(n => {
-      if(deduped.length === 0 || deduped[deduped.length - 1] !== n){
-        deduped.push(n);
+    async function loadTravelData(){
+      setStatus('loading','Loading sheet…');
+      document.getElementById('dashContent').innerHTML = '<div class="loading-msg"></div>';
+      let text = null, usedProxy = false;
+      try{
+        const r = await fetch(TRAVEL_CSV_URL);
+        if(!r.ok) throw new Error('status '+r.status);
+        text = await r.text();
+        if(text.trim().startsWith('<')) throw new Error('non-csv response');
+      }catch(e){
+        try{
+          const r2 = await fetch(TRAVEL_PROXY_URL);
+          if(!r2.ok) throw new Error('proxy status '+r2.status);
+          text = await r2.text();
+          usedProxy = true;
+        }catch(e2){
+          setStatus('err','Could not load sheet');
+          document.getElementById('dashContent').innerHTML = `<div class="err-box">Could not fetch the Google Sheet (direct fetch and proxy fallback both failed). The sheet may not be shared as "Anyone with the link can view". Try Refresh, or check sharing settings.</div>`;
+          return;
+        }
       }
-    });
-    baseName = deduped.join(' – ');
-  } else {
-    baseName = acts[0].activity.slice(0,30);
-  }
 
-  // Append 💼 if trip type is company based on Column Q mapping
-  const myKey = getMonthYearKey(startDate);
-  const rawType = monthTypeMap[myKey] || '';
-  if(rawType.toLowerCase().includes('company') && !baseName.includes('💼')){
-    baseName += ' 💼';
-  }
+      const rows = parseCSV(text).filter(r => r.length>1 && r.some(c=>c && c.trim()));
+      if(!rows.length){ setStatus('err','Empty sheet'); return; }
+      const header = rows[0].map(h=>h.trim().toLowerCase());
+      const idx = {
+        activity: header.findIndex(h=>h.startsWith('activity')),
+        category: header.findIndex(h=>h.startsWith('category')),
+        code: header.findIndex(h=>h.startsWith('code')),
+        date: header.findIndex(h=>h.startsWith('date')),
+        expense: header.findIndex(h=>h.startsWith('expense')),
+        notes: header.findIndex(h=>h.startsWith('notes')),
+        review: header.findIndex(h=>h.startsWith('review')),
+        icon: (()=>{ const f = header.findIndex(h=>h.startsWith('icon')); return f>=0 ? f : 7; })(),
+        coverUrl: (()=>{ const f = header.findIndex((h,i)=>(h.startsWith('cover')||h.startsWith('image')||h.startsWith('photo')||h.startsWith('url')) && i===8); return f>=0 ? f : 8; })(),
+        locName: (()=>{ const f = header.findIndex((h,i)=>h.startsWith('location') && i>3); return f>=0 ? f : 9; })(),
+        locCode: (()=>{ const f = header.findIndex((h,i)=>h.startsWith('code') && i>3); return f>=0 ? f : 10; })(),
+        locExclude: 11, // Column L (0-indexed position 11) for codes to exclude
+      };
 
-  return baseName;
-}
-
-function buildTrips(records){
-  const dated = records.filter(r => r.date).sort((a,b)=>a.date-b.date);
-  const GAP_MS = 4*24*3600*1000;
-  const clusters = [];
-  let cur = [];
-  for(const r of dated){
-    if(cur.length === 0){ cur.push(r); continue; }
-    const prev = cur[cur.length-1].date;
-    if(r.date - prev > GAP_MS){
-      clusters.push(cur);
-      cur = [r];
-    } else cur.push(r);
-  }
-  if(cur.length) clusters.push(cur);
-
-  return clusters.map((acts, idx) => {
-    const start = acts[0].date, end = acts[acts.length-1].date;
-    const myKey = getMonthYearKey(start);
-    const rawType = monthTypeMap[myKey] || '';
-    const isCompany = rawType.toLowerCase().includes('company');
-    
-    const total = acts.reduce((s,a)=>s+a.expense,0);
-    const name = buildTripName(acts, start);
-    const cover = buildTripCover(acts, start);
-    const hotel = buildTripHotel(acts, start); 
-    const nights = Math.max(1, Math.round((end-start)/(24*3600*1000)));
-    return {
-      id: 'trip-'+idx,
-      name, cover, hotel, activities: acts, start, end, total, nights,
-      year: start.getFullYear(),
-      isCompany
-    };
-  }).sort((a,b)=>b.start-a.start);
-}
-
-function dowShort(d){ return d.toLocaleDateString('en-US',{weekday:'short'}); }
-function fmtDateShort(d){ return d.toLocaleDateString('en-US',{month:'short',day:'numeric'}); }
-function fmtDateFull(d){ return d.toLocaleDateString('en-US',{weekday:'long', month:'long',day:'numeric',year:'numeric'}); }
-function fmtRange(a,b){
-  if(a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth())
-    return `${a.toLocaleDateString('en-US',{month:'short'})} ${a.getDate()}–${b.getDate()}, ${a.getFullYear()}`;
-  if(a.getFullYear()===b.getFullYear())
-    return `${fmtDateShort(a)} – ${fmtDateShort(b)}, ${a.getFullYear()}`;
-  return `${fmtDateShort(a)} ${a.getFullYear()} – ${fmtDateShort(b)} ${b.getFullYear()}`;
-}
-
-function renderYearChart(yearsAsc, currentYear){
-  const totals = yearsAsc.map(y => trips.filter(t=>t.year===y && !t.isCompany).reduce((s,t)=>s+t.total,0));
-  const max = Math.max(...totals, 1);
-  const grand = totals.reduce((a,b)=>a+b,0);
-  const cols = yearsAsc.map((y,i)=>{
-    const h = Math.max(6, Math.round((totals[i]/max)*76));
-    return `<div class="year-bar-col ${y===currentYear?'current':''}">
-      <div class="year-bar-amt figure">${fmtShort(totals[i])}</div>
-      <div class="year-bar-track"><div class="year-bar-fill" style="height:${h}px"></div></div>
-      <div class="year-bar-label">${y}</div>
-    </div>`;
-  }).join('');
-  return `<div class="year-chart">
-    <div class="year-chart-head"><span class="yc-title">Spend by year</span><span class="yc-total figure">${fmtVND(grand)}₫</span></div>
-    <div class="year-bar-row">${cols}</div>
-  </div>`;
-}
-
-const DEFAULT_COVER_URL = 'https://i.pinimg.com/736x/fa/74/c3/fa74c3b5e05e56f23b9cee40f4b25326.jpg';
-
-function renderDashboard(){
-  const el = document.getElementById('dashContent');
-  if(!trips.length){ el.innerHTML = '<div class="empty">No trips found.</div>'; return; }
-
-  const years = [...new Set(trips.map(t=>t.year))].sort((a,b)=>b-a);
-  const yearsAsc = [...years].sort((a,b)=>a-b);
-
-  let html = renderYearChart(yearsAsc);
-
-  for(const y of years){
-    const yTrips = trips.filter(t=>t.year===y);
-    const yTotal = yTrips.filter(t=>!t.isCompany).reduce((s,t)=>s+t.total,0);
-    html += `<div class="year-head">
-      <h2>${y}</h2>
-      <span class="chip-trips">${yTrips.length} trip${yTrips.length>1?'s':''}</span>
-      <span class="chip-total figure">${fmtVND(yTotal)}₫</span>
-    </div>`;
-    html += `<div class="trip-grid">`;
-    yTrips.forEach((t, ci)=>{
-      const coverImg = (t.cover && /^https?:\/\//i.test(t.cover)) ? t.cover : DEFAULT_COVER_URL;
-      const coverStyle = ` style="background-image:url('${coverImg}')"`;
+      // Build the code -> location-name lookup and collect column L exclusions into a Set
+      LOCATION_MAP = {};
+      EXCLUDE_CODES = new Set();
       
-      html += `<div class="trip-card" data-id="${t.id}" style="animation-delay:${Math.min(ci,10)*40}ms">
-        <div class="trip-cover"${coverStyle}></div>
-        <div class="trip-body">
-          <h3>${t.name}</h3>
-          ${t.hotel ? `<div class="trip-hotel">${t.hotel.icon ? `<img src="${t.hotel.icon}" style="width:14px; height:14px; object-fit:cover; vertical-align:middle; margin-right:4px; border-radius:3px;">` : ''} ${t.hotel.name}</div>` : ''}
-          <div class="trip-dates">${fmtRange(t.start,t.end)}</div>
-          <div class="trip-meta"><span class="nights-chip">${t.nights} night${t.nights>1?'s':''}</span><span class="spend figure">${t.total?fmtVND(t.total)+'₫':'—'}</span></div>
-        </div>
-      </div>`;
-    });
-    html += `</div>`;
-  }
-  el.innerHTML = html;
-  el.querySelectorAll('.trip-card').forEach(c=>c.addEventListener('click',()=>openTrip(c.dataset.id)));
-}
-
-function groupByDay(t){
-  const byDay = {};
-  for(const a of t.activities){
-    const key = a.date.toDateString();
-    if(!byDay[key]) byDay[key] = { date: a.date, items: [] };
-    byDay[key].items.push(a);
-  }
-  return Object.values(byDay).sort((a,b)=>a.date-b.date);
-}
-
-// no time column in the sheet: split each day's items into three even bands
-// (Morning / Afternoon / Evening) so the itinerary still reads as a day-plan.
-function splitPeriods(items){
-  const n = items.length;
-  if(n === 0) return [];
-  const third = Math.ceil(n/3);
-  const bands = [
-    { key:'morning', label:'Morning', items: items.slice(0, third) },
-    { key:'afternoon', label:'Afternoon', items: items.slice(third, third*2) },
-    { key:'evening', label:'Evening', items: items.slice(third*2) },
-  ];
-  return bands.filter(b => b.items.length);
-}
-
-// tags each day with the "current location" by walking the trip's transport/flight
-// legs in order and carrying the last arrival code forward until the next one
-function annotateLocations(days){
-  let current = null;
-  for(const day of days){
-    for(const a of day.items){
-      if(!a.category || !(a.category.includes('Air Ticket') || a.category.includes('Transport'))) continue;
-      const m = a.activity.match(/^([A-Z]{2,4})[\s\-]+([A-Z]{2,4})\b/);
-      if(!m) continue;
-      const [_, c1, c2] = m;
-      if(!isAirportCode(c1) || !isAirportCode(c2)) continue;
-      if(current === null) current = c1;
-      current = c2;
-    }
-    day.locationName = current ? (LOCATION_MAP[current] || current) : null;
-  }
-}
-
-function renderCatStack(catEntries, totalSpend, acts){
-  if(!catEntries.length) return '';
-  let segs = '', legend = '';
-  catEntries.forEach(([cat,amt], i)=>{
-    const pct = totalSpend ? (amt/totalSpend*100) : 0;
-    const color = PALETTE[i % PALETTE.length];
-    const label = cat.replace(/^[^\wÀ-ỹ]+/,'').trim() || 'Other';
-    
-    // Get the category icon (emoji or image URL fallback)
-    const rawIcon = iconFor(cat);
-    const isImgUrl = /^https?:\/\//i.test(rawIcon);
-    const iconMarkup = isImgUrl 
-      ? `<img src="${rawIcon}" style="width:12px; height:12px; object-fit:cover; border-radius:2px; vertical-align:middle; margin-right:3px;">` 
-      : `<span style="margin-right:3px;">${rawIcon}</span>`;
-
-    // Only show text and icon if the segment is wide enough
-    const segText = pct > 12 ? `${iconMarkup}${fmtShort(amt)}` : '';
-    
-    segs += `<div class="stack-seg" style="width:calc(${pct}% + 12px); background:${color}" title="${label}: ${fmtVND(amt)}">${segText}</div>`;
-    legend += `<div class="stack-legend-item"><span class="dot" style="background:${color}"></span>${catIconHTML(cat, acts)} ${label} <b>${fmtShort(amt)}</b></div>`;
-  });
-  return `<div class="stack-wrap"><div class="stack-bar" style="overflow:hidden; border-radius:14px;margin-top:10px;">${segs}</div><div class="stack-legend">${legend}</div></div>`;
-}
-
-function openTrip(id){
-  const t = trips.find(x=>x.id===id);
-  if(!t) return;
-  const el = document.getElementById('detailContent');
-  const days = groupByDay(t);
-  annotateLocations(days);
-
-const catTotals = {};
-  for(const a of t.activities){
-    if(!a.expense) continue;
-    let rawCat = a.category ? a.category.trim().toLowerCase() : 'other';
-    
-    let key = a.category ? a.category.trim() : 'Other';
-    
-    // Grouping rules based on keywords
-    if(/hotel|accommodation/i.test(rawCat)){
-      key = '🛌 Hotel';
-    } else if(/transport/i.test(rawCat)){
-      key = '🚖 Transport';
-    } else if(/snack|food|fruit|kem bo|banh truyen thong|banh mi|drink/i.test(rawCat)){
-      key = '🍽️ F&B';
-    } else if(/experience|museum|shop|plant/i.test(rawCat)){
-      key = '🏂 Shop & Fun';
-    }
-    
-    catTotals[key] = (catTotals[key]||0) + a.expense;
-  }
-  const catEntries = Object.entries(catTotals).sort((a,b)=>b[1]-a[1]);
-
-// Single unified sticky wrapper for both header and day-strip
-  let html = `<div class="det-sticky-container">
-      <div class="det-topbar">
-        <button class="back-btn" id="backBtn">‹</button>
-        <div class="det-title"><h2>${t.name}</h2></div>
-        <div class="det-total"><div class="amt figure">${t.total?fmtVND(t.total)+'₫':'—'}</div><div class="lbl">total spend</div></div>
-      </div>
-      
-      <div class="day-strip-wrap">
-        <div class="day-strip">`;
-  days.forEach((d,i)=>{
-    html += `<div class="day-pill ${i===0?'active':''}" data-day="${i}" data-target="day-${i}">
-      <div class="dow">${dowShort(d.date)}</div>
-      <div class="dnum">${d.date.getDate()}</div>
-    </div>`;
-  });
-  html += `</div></div></div>`; // Close both day-strip and sticky container
-
-  // Chart and legend scroll away normally below it
-  html += renderCatStack(catEntries, t.total, t.activities);
-
-  html += `<div id="daysScroll">`;
-  days.forEach((day,i)=>{
-    const dTotal = day.items.reduce((s,a)=>s+a.expense,0);
-    html += `<div class="day-section" id="day-${i}" data-day="${i}">
-      <div class="day-banner">
-        <div class="full">${fmtDateFull(day.date)}</div>
-        <div class="sub-row">
-          <span class="sub">Day ${i+1} of ${days.length}</span>
-          ${day.locationName ? `<span class="loc-badge"><img src="https://cdn-icons-png.flaticon.com/512/4219/4219585.png" alt=""> ${day.locationName}</span>` : ''}
-          ${dTotal ? `<span class="spent-chip figure">${fmtVND(dTotal)}₫ spent</span>` : ''}
-        </div>
-      </div>`;
-    const periods = splitPeriods(day.items);
-    for(const band of periods){
-      html += `<div class="period">
-        <div class="period-head"><span class="period-dot ${band.key}"></span><span class="period-label">${band.label}</span></div>
-        <div class="period-items">`;
-band.items.forEach((a, ai)=>{
-        const hasExtra = a.notes || a.code;
-        html += `<div class="act-card ${hasExtra ? '' : 'centered'}" style="animation-delay:${Math.min(ai,8)*30}ms">
-          <div class="act-ic">${iconHTML(a)}</div>
-          <div class="act-body">
-            <div class="act-name">${a.activity}${a.review?`<span class="rev">${a.review}</span>`:''}</div>
-            ${a.notes?`<div class="act-note">${a.notes}</div>`:''}
-          </div>
-          <div class="act-side">
-            ${a.code?`<span class="code-chip">${a.code}</span>`:''}
-            <div class="act-amt ${a.expense?'':'zero'}">${a.expense?fmtVND(a.expense)+'₫':''}</div>
-          </div>
-        </div>`;
-      });
-      html += `</div></div>`;
-    }
-    html += `</div>`;
-  });
-  html += `</div>`;
-
-  el.innerHTML = html;
-
-  if(stickyCleanup){ stickyCleanup(); stickyCleanup = null; }
-
-  document.getElementById('backBtn').addEventListener('click', ()=>{
-    if(dayObserver){ dayObserver.disconnect(); dayObserver = null; }
-    if(stickyCleanup){ stickyCleanup(); stickyCleanup = null; }
-    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-    document.getElementById('panel-dashboard').classList.add('active');
-  });
-
-  const pills = el.querySelectorAll('.day-pill');
-  const stripWrap = el.querySelector('.day-strip-wrap');
-  let suppressObserverUntil = 0;
-
-
-  function findScrollParent(node){
-    let p = node ? node.parentElement : null;
-    while(p && p !== document.body && p !== document.documentElement){
-      const cs = getComputedStyle(p);
-      const canScrollY = (cs.overflowY === 'auto' || cs.overflowY === 'scroll');
-      if(canScrollY && p.scrollHeight > p.clientHeight + 1) return p;
-      p = p.parentElement;
-    }
-    return document.scrollingElement || document.documentElement;
-  }
-  const scrollRoot = findScrollParent(el);
-  const usesWindow = scrollRoot === document.documentElement || scrollRoot === document.body;
-
-
-  (function initStickyPin(){
-    const stickyEl = el.querySelector('.det-sticky-container');
-    if(!stickyEl) return;
-    const getScrollTop = () => usesWindow ? (window.pageYOffset || document.documentElement.scrollTop) : scrollRoot.scrollTop;
-    const scrollTarget = usesWindow ? window : scrollRoot;
-
-    // natural distance from the top of the scroll container's content to this element
-    let naturalTop = stickyEl.getBoundingClientRect().top - scrollRoot.getBoundingClientRect().top + getScrollTop();
-
-    function update(){
-      const shift = Math.max(0, getScrollTop() - naturalTop);
-      stickyEl.style.transform = shift > 0 ? `translateY(${shift}px)` : '';
-      stickyEl.classList.toggle('js-pinned', shift > 0);
-    }
-    function recalc(){
-      // re-measure in case content above it (fonts/images) reflowed after first paint
-      stickyEl.style.transform = '';
-      naturalTop = stickyEl.getBoundingClientRect().top - scrollRoot.getBoundingClientRect().top + getScrollTop();
-      update();
-    }
-
-    scrollTarget.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', recalc);
-    const ro = ('ResizeObserver' in window) ? new ResizeObserver(recalc) : null;
-    if(ro) ro.observe(stickyEl);
-    update();
-
-    stickyCleanup = function(){
-      scrollTarget.removeEventListener('scroll', update);
-      window.removeEventListener('resize', recalc);
-      if(ro) ro.disconnect();
-    };
-  })();
-
-  function jumpToDay(target){
-    const stickyContainer = el.querySelector('.det-sticky-container');
-    const stickyH = stickyContainer ? stickyContainer.getBoundingClientRect().height : 110;
-    if(usesWindow){
-      const top = target.getBoundingClientRect().top + window.pageYOffset - stickyH - 12;
-      window.scrollTo({ top, behavior:'smooth' });
-    } else {
-      // offset of target relative to the scrolling container's own content box
-      const delta = target.getBoundingClientRect().top - scrollRoot.getBoundingClientRect().top;
-      const top = scrollRoot.scrollTop + delta - stickyH - 12;
-      scrollRoot.scrollTo({ top, behavior:'smooth' });
-    }
-  }
-
-  pills.forEach(p=>{
-    p.addEventListener('click', ()=>{
-      const target = document.getElementById(p.dataset.target);
-      if(!target) return;
-      pills.forEach(pp=>pp.classList.toggle('active', pp===p));
-      suppressObserverUntil = Date.now() + 900;
-      jumpToDay(target);
-    });
-  });
-  if(dayObserver) dayObserver.disconnect();
-  const sections = el.querySelectorAll('.day-section');
-  dayObserver = new IntersectionObserver((entries)=>{
-    if(Date.now() < suppressObserverUntil) return;
-    entries.forEach(entry=>{
-      if(entry.isIntersecting){
-        const idx = entry.target.dataset.day;
-        pills.forEach(p=>p.classList.toggle('active', p.dataset.day===idx));
+      for(let i=1;i<rows.length;i++){
+        const r = rows[i];
+        const locName = (r[idx.locName]||'').trim();
+        const locCode = (r[idx.locCode]||'').trim().toUpperCase();
+        const excludeText = (r[idx.locExclude]||'').trim().toUpperCase(); // Column L value
+        
+        if(locName && locCode) LOCATION_MAP[locCode] = locName;
+        if(excludeText) EXCLUDE_CODES.add(excludeText);
       }
-    });
-  }, { root: usesWindow ? null : scrollRoot, rootMargin: '-70px 0px -70% 0px', threshold: 0 });
-  sections.forEach(s=>dayObserver.observe(s));
 
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('panel-detail').classList.add('active');
-  if(usesWindow){ window.scrollTo(0,0); } else { scrollRoot.scrollTop = 0; }
-}
-
-function setStatus(state, text){
-  const dot = document.getElementById('statusDot');
-  dot.className = 'status-dot ' + state;
-  document.getElementById('statusText').textContent = text;
-}
-
-let EXCLUDE_CODES = new Set(); // Global Set for column L exclusion codes
-
-async function loadTravelData(){
-  setStatus('loading','Loading sheet…');
-  document.getElementById('dashContent').innerHTML = '<div class="loading-msg"></div>';
-  let text = null, usedProxy = false;
-  try{
-    const r = await fetch(TRAVEL_CSV_URL);
-    if(!r.ok) throw new Error('status '+r.status);
-    text = await r.text();
-    if(text.trim().startsWith('<')) throw new Error('non-csv response');
-  }catch(e){
-    try{
-      const r2 = await fetch(TRAVEL_PROXY_URL);
-      if(!r2.ok) throw new Error('proxy status '+r2.status);
-      text = await r2.text();
-      usedProxy = true;
-    }catch(e2){
-      setStatus('err','Could not load sheet');
-      document.getElementById('dashContent').innerHTML = `<div class="err-box">Could not fetch the Google Sheet (direct fetch and proxy fallback both failed). The sheet may not be shared as "Anyone with the link can view". Try Refresh, or check sharing settings.</div>`;
-      return;
-    }
-  }
-
-  const rows = parseCSV(text).filter(r => r.length>1 && r.some(c=>c && c.trim()));
-  if(!rows.length){ setStatus('err','Empty sheet'); return; }
-  const header = rows[0].map(h=>h.trim().toLowerCase());
-  const idx = {
-    activity: header.findIndex(h=>h.startsWith('activity')),
-    category: header.findIndex(h=>h.startsWith('category')),
-    code: header.findIndex(h=>h.startsWith('code')),
-    date: header.findIndex(h=>h.startsWith('date')),
-    expense: header.findIndex(h=>h.startsWith('expense')),
-    notes: header.findIndex(h=>h.startsWith('notes')),
-    review: header.findIndex(h=>h.startsWith('review')),
-    icon: (()=>{ const f = header.findIndex(h=>h.startsWith('icon')); return f>=0 ? f : 7; })(),
-    coverUrl: (()=>{ const f = header.findIndex((h,i)=>(h.startsWith('cover')||h.startsWith('image')||h.startsWith('photo')||h.startsWith('url')) && i===8); return f>=0 ? f : 8; })(),
-    locName: (()=>{ const f = header.findIndex((h,i)=>h.startsWith('location') && i>3); return f>=0 ? f : 9; })(),
-    locCode: (()=>{ const f = header.findIndex((h,i)=>h.startsWith('code') && i>3); return f>=0 ? f : 10; })(),
-    locExclude: 11, // Column L (0-indexed position 11) for codes to exclude
-  };
-
-  // Build the code -> location-name lookup and collect column L exclusions into a Set
-  LOCATION_MAP = {};
-  EXCLUDE_CODES = new Set();
-  
-  for(let i=1;i<rows.length;i++){
-    const r = rows[i];
-    const locName = (r[idx.locName]||'').trim();
-    const locCode = (r[idx.locCode]||'').trim().toUpperCase();
-    const excludeText = (r[idx.locExclude]||'').trim().toUpperCase(); // Column L value
-    
-    if(locName && locCode) LOCATION_MAP[locCode] = locName;
-    if(excludeText) EXCLUDE_CODES.add(excludeText);
-  }
-
-  const records = [];
-  for(let i=1;i<rows.length;i++){
-    const r = rows[i];
-    const activity = (r[idx.activity]||'').trim();
-    const date = parseDate(r[idx.date]||'');
-    if(!activity || !date) continue;
-    records.push({
-      activity,
-      category: (r[idx.category]||'').trim(),
-      code: (r[idx.code]||'').trim(),
-      date,
-      expense: parseAmount(r[idx.expense]||''),
-      notes: (r[idx.notes]||'').trim(),
-      review: (r[idx.review]||'').trim(),
-      icon: (r[idx.icon]||'').trim(),
-      coverUrl: (r[idx.coverUrl]||'').trim(),
-    });
-  }
-  trips = buildTrips(records);
-
-  const visitedCities = new Set();
-  trips.forEach(t => {
-    const days = groupByDay(t);
-    annotateLocations(days);
-    days.forEach(d => {
-      if(d.locationName) visitedCities.add(d.locationName);
-    });
-  });
-
-//console.log("Visited Cities:", Array.from(visitedCities));
-
-  setStatus('ok', `${trips.length} trips · ${visitedCities.size} cities${usedProxy?' (via proxy)':''}`);
-  renderDashboard();
-}
-
-// Updated buildTripName: Handles single or multi-location trips properly after exclusions
-function buildTripName(acts){
-  const codeChain = [];
-  for(const a of acts){
-    if(!a.category || !(a.category.includes('Air Ticket') || a.category.includes('Transport'))) continue;
-    const m = a.activity.match(/^([A-Z]{2,4})[\s\-]+([A-Z]{2,4})\b/);
-    if(!m) continue;
-    const [_, c1, c2] = m;
-    if(!isAirportCode(c1) || !isAirportCode(c2)) continue;
-    if(codeChain[codeChain.length-1] !== c1) codeChain.push(c1);
-    codeChain.push(c2);
-  }
-  const chain = codeChain.filter((c,i)=> c !== codeChain[i-1]);
-  
-  // Filter out any codes specified in Column L
-  const validChain = chain.filter(c => !EXCLUDE_CODES.has(c));
-
-  if(validChain.length >= 1){
-    const names = validChain.map(c => {
-      if (c === 'IUH') return 'Quy Nhơn';
-      return LOCATION_MAP[c] || c;
-    });
-    const deduped = names.filter((n,i)=> n !== names[i-1]);
-    if(deduped.length > 0) return deduped.join(' – ');
-  }
-  
-  return acts[0].activity.slice(0,30);
-}
-document.getElementById('reloadBtn').addEventListener('click', loadTravelData);
-document.addEventListener('DOMContentLoaded', () => {
-  const dayPills = document.querySelectorAll('.day-pill');
-  
-  dayPills.forEach(pill => {
-    pill.addEventListener('click', function() {
-      // Remove active class from all pills
-      dayPills.forEach(p => p.classList.remove('active'));
-      // Add active class to clicked pill
-      this.classList.add('active');
-      
-      // Get target day section ID or data attribute (e.g., data-day="day-1")
-      const targetDayId = this.getAttribute('data-target') || this.dataset.day;
-      const targetSection = document.getElementById(targetDayId);
-      
-      if (targetSection) {
-        targetSection.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
+      const records = [];
+      for(let i=1;i<rows.length;i++){
+        const r = rows[i];
+        const activity = (r[idx.activity]||'').trim();
+        const date = parseDate(r[idx.date]||'');
+        if(!activity || !date) continue;
+        records.push({
+          activity,
+          category: (r[idx.category]||'').trim(),
+          code: (r[idx.code]||'').trim(),
+          date,
+          expense: parseAmount(r[idx.expense]||''),
+          notes: (r[idx.notes]||'').trim(),
+          review: (r[idx.review]||'').trim(),
+          icon: (r[idx.icon]||'').trim(),
+          coverUrl: (r[idx.coverUrl]||'').trim(),
         });
       }
-    });
-  });
-});
+      trips = buildTrips(records);
 
+      const visitedCities = new Set();
+      trips.forEach(t => {
+        const days = groupByDay(t);
+        annotateLocations(days);
+        days.forEach(d => {
+          if(d.locationName) visitedCities.add(d.locationName);
+        });
+      });
+    //console.log("Visited Cities:", Array.from(visitedCities));
+      setStatus('ok', `${trips.length} trips · ${visitedCities.size} cities${usedProxy?' (via proxy)':''}`);
+      renderDashboard();
+    }
 
     // Touch events
     window.addEventListener('touchstart', onStart, { passive: true });
