@@ -15,9 +15,8 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;500;600;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
-<link href="https://fonts.googleapis.com/icon?family=Lora" rel="stylesheet">
-<link href="https://fonts.googleapis.com/icon?family=Manrope" rel="stylesheet">
-<link href="https://fonts.googleapis.com/icon?family=IBM+Plex+Mono" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Sacramento" rel="stylesheet"><link href="https://fonts.googleapis.com/icon?family=League+Script" rel="stylesheet"><link href="https://fonts.googleapis.com/icon?family=Corinthia" rel="stylesheet"><link href="https://fonts.googleapis.com/icon?family=Satisfy" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Manrope" rel="stylesheet"><link href="https://fonts.googleapis.com/icon?family=IBM+Plex+Mono" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Alegreya" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -101,16 +100,23 @@ h1,h2,h3,.num{font-family:'Manrope',sans-serif;}
 
 /* header */
 .topbar{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px;}
-.title-block h1{font-size:1.3rem; margin:0; letter-spacing:-.01em;}
-.title-block p{margin:2px 0 0; color:var(--fg-dim); font-size:.8rem;}
+.title-block h1{font-family:Sacramento;font-size:1.8em; margin:0; letter-spacing:-.01em;}
+.title-block p{margin:-4px 0 0; color:var(--fg-dim); font-size:.8rem;}
 .status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;}
 .status-dot.ok{background:var(--highlight);}
 .status-dot.err{background:#e8615f;}
 .status-dot.loading{background:var(--accent); animation:pulse 1s infinite ease-in-out;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.reload{background:var(--bg-elev); color:var(--fg-dim); border-radius:8px; padding:7px 10px; font-size:13px; cursor:pointer; box-shadow:var(--shadow); border:none; transition:.15s;}
+.reload{font-family:DM Sans;background:var(--bg-elev); color:var(--fg-dim); border-radius:8px; padding:7px 10px; font-size:13px; cursor:pointer; box-shadow:var(--shadow); border:none; transition:.15s;}
 .reload:hover{color:var(--fg);}
-
+/* Add this to your CSS file */
+#overviewBtn.active {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+    border-color: #475569 !important;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15), 0 0 0 2px rgba(71, 85, 105, 0.2) !important;
+    transform: translateY(-1px);
+}
 @keyframes fadeInUp{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
 @keyframes fadeIn{from{opacity:0;} to{opacity:1;}}
 @media (prefers-reduced-motion: reduce){
@@ -220,7 +226,7 @@ h1,h2,h3,.num{font-family:'Manrope',sans-serif;}
 /* day sections */
 .day-section{scroll-margin-top:64px; margin-bottom:26px;}
 .day-banner{margin-bottom:12px;}
-.day-banner .full{color:var(--accent); font-weight:700; font-size:1rem;}
+.day-banner .full{font-family:Corinthia;color:var(--accent); font-weight:700; font-size:1.8rem;}
 .day-banner .sub-row{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:8px;}
 .loc-badge{display:inline-flex; align-items:center; gap:5px; background:#3a2d1d; color:#f2a341; font-size:.7rem; font-weight:700; padding:4px 10px; border-radius:20px;}
 .loc-badge img{width:12px; height:12px; display:block; }
@@ -699,7 +705,7 @@ background:url(https://i.pinimg.com/1200x/ad/b5/35/adb5354c118545e8cd17b63f19575
 .add-field label{font-size:12px;font-weight:300;color:rgba(255,255,255,0.5);margin-bottom:1.5vw}
 .add-field input[type="text"],.add-field input[type="number"],.add-field input[type="date"]{-webkit-appearance:none;-moz-appearance:none;appearance:none;width:100% !important;height:11vw !important;background:#2a2a2a !important;border:0px solid rgba(255,255,255,0.1) !important;border-radius:12px !important;color:#fff !important;padding:0 3vw !important;font-size:18px!important;font-family:"DM Sans"!important;outline:none;box-sizing:border-box !important;display:flex !important;align-items:center !important;justify-content:center !important;text-align:center !important}
 
-.add-field .add-sub-date-trigger{-webkit-appearance:none;-moz-appearance:none;appearance:none;width:100%!important;height:11vw!important;background:#2a2a2a!important;border:0 solid rgba(255,255,255,.1)!important;border-radius:12px!important;color:#fff!important;padding:0 3vw!important;font-size:3.5vw!important;font-family:"DM Sans"!important;outline:0;box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:space-between!important;text-align:left!important;cursor:pointer}#cash-modal-cancel:hover,#cash-modal-submit:hover{transform:scale(1.08)}#cash-modal-cancel:active{transform:scale(.92)}#cash-modal-cancel{position:absolute;top:16px;right:16px;width:18px;height:18px;border-radius:50%;border:0!important;outline:0!important;background:rgba(255,255,255,.2)!important;-webkit-backdrop-filter:blur(16px) saturate(180%);backdrop-filter:blur(16px) saturate(180%);color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1;padding:0;font-size:13px;cursor:pointer;z-index:10;transition:background .2s ease,transform .15s ease}#cash-modal-submit{position:absolute;right:5px;width:30px;font-family:Lexend;font-size:25px;height:30px;border-radius:50%;border:0!important;outline:0!important;background:rgba(255,255,255,.2)!important;-webkit-backdrop-filter:blur(16px) saturate(180%);backdrop-filter:blur(16px) saturate(180%);color:#fff;font-weight:300!important;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .15s ease,opacity .2s ease}#cash-modal-input{width:100%;padding:12px 46px 12px;border:0!important;font-family:Lora!important;outline:0!important;color:#fff;text-align:left!important;background:0 0!important;border-width:medium medium 2px!important;border-style:none none dashed!important;border-color:currentcolor currentcolor rgba(255,255,255,.3)!important;border-image:none;padding:0 0 2px;color:#fff;font-size:18px;font-weight:300}#cash-modal-status{font-family:Lora;margin-top:10px}
+.add-field .add-sub-date-trigger{-webkit-appearance:none;-moz-appearance:none;appearance:none;width:100%!important;height:11vw!important;background:#2a2a2a!important;border:0 solid rgba(255,255,255,.1)!important;border-radius:12px!important;color:#fff!important;padding:0 3vw!important;font-size:3.5vw!important;font-family:"DM Sans"!important;outline:0;box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:space-between!important;text-align:left!important;cursor:pointer}#cash-modal-cancel:hover,#cash-modal-submit:hover{transform:scale(1.08)}#cash-modal-cancel:active{transform:scale(.92)}#cash-modal-cancel{position:absolute;top:16px;right:16px;width:18px;height:18px;border-radius:50%;border:0!important;outline:0!important;background:rgba(255,255,255,.2)!important;-webkit-backdrop-filter:blur(16px) saturate(180%);backdrop-filter:blur(16px) saturate(180%);color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1;padding:0;font-size:13px;cursor:pointer;z-index:10;transition:background .2s ease,transform .15s ease}#cash-modal-submit{position:absolute;right:5px;width:30px;font-family:Lexend;font-size:28px;height:30px;border-radius:50%;border:0!important;outline:0!important;background:rgba(255,255,255,.2)!important;-webkit-backdrop-filter:blur(16px) saturate(180%);backdrop-filter:blur(16px) saturate(180%);color:#fff;font-weight:400!important;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .15s ease,opacity .2s ease}#cash-modal-input{width:100%;padding:12px 46px 12px;border:0!important;font-family:'League Script'!important;outline:0!important;color:#fff;text-align:left!important;background:0 0!important;border-width:medium medium 2px!important;border-style:none none dashed!important;border-color:currentcolor currentcolor rgba(255,255,255,.3)!important;border-image:none;padding:0 0 2px;color:#fff;font-size:18px;font-weight:300}#cash-modal-status{font-family:Lora;margin-top:10px}
 @media (max-width:400px){.add-cancel-btn,.add-submit-btn,.add-field label,.add-field input{font-size:13px!important;font-weight:300!important;}}
 @media (min-width:401px){.form-row-2col{gap:15px !important;margin-bottom:16px}
 .add-field label{font-size:13px;margin-bottom:6px}
@@ -1084,7 +1090,7 @@ to{transform:rotate(360deg)}
 </div>
 <div class="tab-bar" id="tab-bar">
     <img class="profile-icon" src="https://i.pinimg.com/736x/c1/de/26/c1de261375437d0323551e96c19ee810.jpg" />
-    <h4 style="font-family:Alegreya;text-align:left;font-size:18px;font-weight:300; flex:1; margin:0;">Hi hayashi!</h4>
+    <h4 style="font-family:Corinthia;text-align:left;font-size:28px;font-weight:300; flex:1; margin:0;">Hi hayashi!</h4>
     <div id="today-jp"><span></span></div>
     <div class="tab-btn-group">
         <div class="tab-btn" id="tab-btn-x"><i class="bi bi-activity"></i><span></span></div>
@@ -1332,7 +1338,8 @@ to{transform:rotate(360deg)}
                             <h1>Travel Planner</h1>
                             <p><span class="status-dot loading" id="statusDot"></span><span id="statusText"></span></p>
                           </div>
-                          <button class="reload" id="reloadBtn"><i class="bi bi-arrow-clockwise" style="margin-right:2px;font-size:13px!important;"></i> Refresh</button>
+                          <button class="reload" id="overviewBtn"><i class="bi bi-graph-up" style="margin-right:2px;font-size:15px!important;"></i></button>
+                          <button class="reload" id="reloadBtn"><i class="bi bi-arrow-clockwise" style="margin-right:2px;font-size:15px!important;"></i></button>
                         </div>
 
                         <div class="panel active" id="panel-dashboard">
@@ -2014,7 +2021,7 @@ to{transform:rotate(360deg)}
                     <source src="https://v1.pinimg.com/videos/iht/expMp4/f8/3c/83/f83c83244da173c71d71d422d909dccd_720w.mp4" type="video/mp4">
                 </video>
                 <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6)); pointer-events: none;"></div>
-                <h2 style="position: absolute; top: 45%; transform: translateY(-50%); left: 16px; font-family: Alegreya; text-align: left; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8); color: #fff; margin: 0; white-space: nowrap; font-size: 22px; z-index: 5;">Add today cash expense...</h2>
+                <h2 style="position: absolute; top: 45%; transform: translateY(-50%); left: 16px; font-family: Sacramento; text-align: left; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8); color: #fff; margin: 0; white-space: nowrap; font-size: 32px; z-index: 5;">Add today cash expense...</h2>
                 <span class="material-icons-round" id="cash-modal-cancel" style="display: flex; align-items: center; justify-content: center; position: absolute; right: 12px; top: 40%; transform: translateY(-50%); color: rgba(255, 255, 255, 0.85); font-size: 18px; cursor: pointer; user-select: none; z-index: 9999!important; background: rgba(0, 0, 0, 0.35); border-radius: 50%; width: 24px; height: 24px; transition: color 0.2s ease;">cancel</span>
             </div>
             <div style="padding: 66px 16px 20px 16px; box-sizing: border-box;">
@@ -5944,7 +5951,7 @@ to{transform:rotate(360deg)}
           modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:9999;font-family:sans-serif;';
           
           modal.innerHTML = `
-              <div style="font-family:'DM Sans', sans-serif;background:rgba(20, 23, 31, 0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:0px solid rgba(255,255,255,0.08);color:#f8f9fa;padding:16px;border-radius:16px;width:440px;box-shadow:0 8px 32px rgba(0,0,0,0.5);">
+              <div style="font-family:'DM Sans', sans-serif;background:rgba(20, 23, 31, 0.6);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:0px solid rgba(255,255,255,0.08);color:#f8f9fa;padding:16px;border-radius:16px;width:440px;box-shadow:0 8px 32px rgba(0,0,0,0.5);">
                   <!-- Header Nav & Controls -->
                   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
                       <div style="display:flex;align-items:center;gap:12px;">
@@ -6378,98 +6385,98 @@ to{transform:rotate(360deg)}
     function iconFor(cat){if(!cat)return"📍";const t=cat.trim();return CAT_ICON[t]||(t.match(/\p{Emoji}/u)?t.match(/\p{Emoji}/u)[0]:"📍")}function iconHTML(a){return`<img src="${a.icon&&/^https?:\/\//i.test(a.icon)?a.icon:iconFor(a.category)}" alt="" loading="lazy" onerror="this.src='${DEFAULT_ICON_URL}';">`}function catIconHTML(cat,acts){const hit=acts.find(a=>(a.category?a.category.trim():"Other")===cat&&a.icon&&/^https?:\/\//i.test(a.icon));return`<img src="${hit?hit.icon:iconFor(cat)}" alt="" onerror="this.src='${DEFAULT_ICON_URL}';">`}function isAirportCode(code){return/^[A-Z]{2,4}$/.test(code)}function getMonthYearKey(date){return`${date.toLocaleString("en-US",{month:"short"})} ${date.getFullYear()}`}function buildTripCover(acts,startDate){const myKey=getMonthYearKey(startDate);if(monthBackgroundMap[myKey]&&/^https?:\/\//i.test(monthBackgroundMap[myKey]))return monthBackgroundMap[myKey];const hotel=acts.find(a=>a.category&&/hotel|accommodation/i.test(a.category)&&a.coverUrl&&/^https?:\/\//i.test(a.coverUrl));return hotel?hotel.coverUrl:null}function buildTripHotel(acts,startDate){const myKey=getMonthYearKey(startDate);if(monthStayMap[myKey]){const hotel=acts.find(a=>a.category&&/hotel|accommodation/i.test(a.category));return{name:monthStayMap[myKey],icon:hotel?hotel.icon&&/^https?:\/\//i.test(hotel.icon)?hotel.icon:hotel.coverUrl&&/^https?:\/\//i.test(hotel.coverUrl)?hotel.coverUrl:null:null}}const hotel=acts.find(a=>a.category&&/hotel|accommodation/i.test(a.category));return hotel?{name:hotel.activity,icon:hotel.icon&&/^https?:\/\//i.test(hotel.icon)?hotel.icon:hotel.coverUrl&&/^https?:\/\//i.test(hotel.coverUrl)?hotel.coverUrl:null}:null}function fmtVND(n){return 0===n?"—":Math.round(n).toLocaleString("en-US")}function fmtShort(n){if(!n)return"0";const sign=n<0?"-":"",abs=Math.abs(n);return abs>=1e9?sign+(abs/1e9).toFixed(0)+"B":abs>=1e6?sign+(abs/1e6).toFixed(0)+"M":abs>=1e3?sign+(abs/1e3).toFixed(0)+"K":sign+Math.round(abs).toString()}function buildTripName(acts,startDate){const codeChain=[];for(const a of acts){if(!a.category||!a.category.includes("Air Ticket")&&!a.category.includes("Transport"))continue;const m=a.activity.match(/^([A-Z]{2,4})[\s\-]+([A-Z]{2,4})\b/);if(!m)continue;const[_,c1,c2]=m;isAirportCode(c1)&&isAirportCode(c2)&&(codeChain[codeChain.length-1]!==c1&&codeChain.push(c1),codeChain.push(c2))}let validChain=codeChain.filter((c,i)=>c!==codeChain[i-1]).filter(c=>!EXCLUDE_CODES.has(c));validChain.length>=3&&validChain[0]===validChain[validChain.length-1]&&(validChain=validChain.slice(1,validChain.length-1));let baseName="";if(validChain.length>=1){const names=validChain.map(c=>"IUH"===c?"Quy Nhơn":LOCATION_MAP[c]||c),deduped=[];names.forEach(n=>{0!==deduped.length&&deduped[deduped.length-1]===n||deduped.push(n)}),baseName=deduped.join(" – ")}else baseName=acts[0].activity.slice(0,30);const myKey=getMonthYearKey(startDate);return(monthTypeMap[myKey]||"").toLowerCase().includes("company")&&!baseName.includes("💼")&&(baseName+=" 💼"),baseName}
     function buildTrips(records){const dated=records.filter(r=>r.date).sort((a,b)=>a.date-b.date),clusters=[];let cur=[];for(const r of dated){if(0===cur.length){cur.push(r);continue}const prev=cur[cur.length-1].date;r.date-prev>3456e5?(clusters.push(cur),cur=[r]):cur.push(r)}return cur.length&&clusters.push(cur),clusters.map((acts,idx)=>{const start=acts[0].date,end=acts[acts.length-1].date,myKey=getMonthYearKey(start),isCompany=(monthTypeMap[myKey]||"").toLowerCase().includes("company"),total=acts.reduce((s,a)=>s+a.expense,0);return{id:"trip-"+idx,name:buildTripName(acts,start),cover:buildTripCover(acts,start),hotel:buildTripHotel(acts,start),activities:acts,start,end,total,nights:Math.max(1,Math.round((end-start)/864e5)),year:start.getFullYear(),isCompany}}).sort((a,b)=>b.start-a.start)}
     function dowShort(d){return d.toLocaleDateString("en-US",{weekday:"short"})}function fmtDateShort(d){return d.toLocaleDateString("en-US",{month:"short",day:"numeric"})}function fmtDateFull(d){return d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"})}function fmtRange(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()?`${a.toLocaleDateString("en-US",{month:"short"})} ${a.getDate()}–${b.getDate()}, ${a.getFullYear()}`:a.getFullYear()===b.getFullYear()?`${fmtDateShort(a)} – ${fmtDateShort(b)}, ${a.getFullYear()}`:`${fmtDateShort(a)} ${a.getFullYear()} – ${fmtDateShort(b)} ${b.getFullYear()}`}
-    function renderYearChart(yearsAsc,currentYear){const totals=yearsAsc.map(y=>trips.filter(t=>t.year===y&&!t.isCompany).reduce((s,t)=>s+t.total,0)),max=Math.max(...totals,1),grand=totals.reduce((a,b)=>a+b,0),cols=yearsAsc.map((y,i)=>{const h=Math.max(6,Math.round(totals[i]/max*76));return`<div class="year-bar-col ${y===currentYear?"current":""}">\n          <div class="year-bar-amt figure">${fmtShort(totals[i])}</div>\n          <div class="year-bar-track"><div class="year-bar-fill" style="height:${h}px"></div></div>\n          <div class="year-bar-label">${y}</div>\n        </div>`}).join("");return`<div class="year-chart">\n        <div class="year-chart-head"><span class="yc-title">Spend by year</span><span class="yc-total figure">${fmtVND(grand)}₫</span></div>\n        <div class="year-bar-row">${cols}</div>\n      </div>`}
-    function renderDashboard(){const el=document.getElementById("dashContent");if(!trips.length)return void(el.innerHTML='<div class="empty">No trips found.</div>');const years=[...new Set(trips.map(t=>t.year))].sort((a,b)=>b-a),yearsAsc=[...years].sort((a,b)=>a-b);let html=renderYearChart(yearsAsc);for(const y of years){const yTrips=trips.filter(t=>t.year===y),yTotal=yTrips.filter(t=>!t.isCompany).reduce((s,t)=>s+t.total,0);html+=`<div class="year-head">\n          <h2>${y}</h2>\n          <span class="chip-trips">${yTrips.length} trip${yTrips.length>1?"s":""}</span>\n          <span class="chip-total figure">${fmtVND(yTotal)}₫</span>\n        </div>`,html+='<div class="trip-grid">',yTrips.forEach((t,ci)=>{const coverStyle=` style="background-image:url('${t.cover&&/^https?:\/\//i.test(t.cover)?t.cover:DEFAULT_COVER_URL}')"`;html+=`<div class="trip-card" data-id="${t.id}" style="animation-delay:${40*Math.min(ci,10)}ms">\n            <div class="trip-cover"${coverStyle}></div>\n            <div class="trip-body">\n              <h3>${t.name}</h3>\n              ${t.hotel?`<div class="trip-hotel">${t.hotel.icon?`<img src="${t.hotel.icon}" style="width:14px; height:14px; object-fit:cover; vertical-align:middle; margin-right:4px; border-radius:3px;">`:""} ${t.hotel.name}</div>`:""}\n              <div class="trip-dates">${fmtRange(t.start,t.end)}</div>\n              <div class="trip-meta"><span class="nights-chip">${t.nights} night${t.nights>1?"s":""}</span><span class="spend figure">${t.total?fmtVND(t.total)+"₫":"—"}</span></div>\n            </div>\n          </div>`}),html+="</div>"}el.innerHTML=html,el.querySelectorAll(".trip-card").forEach(c=>c.addEventListener("click",()=>openTrip(c.dataset.id)))}
+    function renderYearChart(yearsAsc,currentYear){const totals=yearsAsc.map(y=>trips.filter(t=>t.year===y&&!t.isCompany).reduce((s,t)=>s+t.total,0)),max=Math.max(...totals,1),grand=totals.reduce((a,b)=>a+b,0),cols=yearsAsc.map((y,i)=>{const h=Math.max(6,Math.round(totals[i]/max*76)),isCurrent=y===currentYear,fillStyle=isCurrent?`height:${h}px; background: rgba(255, 255, 255, 0.88); border: 1px solid rgba(255, 255, 255, 0.95); box-shadow: 0 0 12px rgba(255, 255, 255, 0.35);`:`height:${h}px; background: rgba(255, 255, 255, 0.45); border: 1px solid rgba(255, 255, 255, 0.25);`;return`<div class="year-bar-col ${isCurrent?"current":""}">\n                  <div class="year-bar-amt figure" style="color: rgba(255, 255, 255, 0.95);">${fmtShort(totals[i])}</div>\n                  <div class="year-bar-track" style="background: rgba(255, 255, 255, 0.08); border-radius: 4px; overflow: hidden;"><div class="year-bar-fill" style="${fillStyle}"></div></div>\n                  <div class="year-bar-label" style="color: rgba(255, 255, 255, 0.85);">${y}</div>\n              </div>`}).join("");return`<div id="yearChartContainer" style="display: none;">\n        <div class="year-chart" style="background: linear-gradient(rgba(15, 23, 42, 0.84), rgba(15, 23, 42, 0.84)), url('https://i.pinimg.com/736x/fa/74/c3/fa74c3b5e05e56f23b9cee40f4b25326.jpg'); background-size: cover; background-position: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 12px; padding: 16px;">\n            <div class="year-chart-head"><span class="yc-title" style="color: #f8fafc; font-weight: 600;">Spend by year</span><span class="yc-total figure" style="color: #f8fafc; font-weight: 600;">${fmtVND(grand)}₫</span></div>\n            <div class="year-bar-row">${cols}</div>\n        </div>\n    </div>`}
+    function renderDashboard(){const el=document.getElementById("dashContent");if(!trips.length)return void(el.innerHTML='<div class="empty">No trips found.</div>');const years=[...new Set(trips.map(t=>t.year))].sort((a,b)=>b-a),yearsAsc=[...years].sort((a,b)=>a-b);let html=renderYearChart(yearsAsc);for(const y of years){const yTrips=trips.filter(t=>t.year===y),yTotal=yTrips.filter(t=>!t.isCompany).reduce((s,t)=>s+t.total,0);html+=`<div class="year-head">\n            <h2>${y}</h2>\n            <span class="chip-trips">${yTrips.length} trip${yTrips.length>1?"s":""}</span>\n            <span class="chip-total figure">${fmtVND(yTotal)}₫</span>\n        </div>`,html+='<div class="trip-grid">',yTrips.forEach((t,ci)=>{const coverStyle=` style="background-image:url('${t.cover&&/^https?:\/\//i.test(t.cover)?t.cover:DEFAULT_COVER_URL}')"`;html+=`<div class="trip-card" data-id="${t.id}" style="animation-delay:${40*Math.min(ci,10)}ms">\n                <div class="trip-cover"${coverStyle}></div>\n                <div class="trip-body">\n                  <h3>${t.name}</h3>\n                  ${t.hotel?`<div class="trip-hotel">${t.hotel.icon?`<img src="${t.hotel.icon}" style="width:14px; height:14px; object-fit:cover; vertical-align:middle; margin-right:4px; border-radius:3px;">`:""} ${t.hotel.name}</div>`:""}\n                  <div class="trip-dates">${fmtRange(t.start,t.end)}</div>\n                  <div class="trip-meta"><span class="nights-chip">${t.nights} night${t.nights>1?"s":""}</span><span class="spend figure">${t.total?fmtVND(t.total)+"₫":"—"}</span></div>\n                </div>\n            </div>`}),html+="</div>"}el.innerHTML=html,el.querySelectorAll(".trip-card").forEach(c=>c.addEventListener("click",()=>openTrip(c.dataset.id)));const overviewBtn=document.getElementById("overviewBtn"),reloadBtn=document.getElementById("reloadBtn");if(overviewBtn&&reloadBtn){const parent=overviewBtn.parentNode;let actionWrapper=document.getElementById("headerActionsWrapper");actionWrapper||(actionWrapper=document.createElement("div"),actionWrapper.id="headerActionsWrapper",actionWrapper.style.cssText="display: flex; gap: 8px; justify-content: flex-end; align-items: center; margin-left: auto;",parent.insertBefore(overviewBtn,reloadBtn),parent.insertBefore(actionWrapper,overviewBtn),actionWrapper.appendChild(overviewBtn),actionWrapper.appendChild(reloadBtn))}overviewBtn&&(overviewBtn.style.transition="all 0.2s ease-in-out",overviewBtn.onclick=()=>{const chartContainer=document.getElementById("yearChartContainer");if(chartContainer){const isHidden="none"===chartContainer.style.display;chartContainer.style.display=isHidden?"block":"none",isHidden?(overviewBtn.style.background="#1e293b",overviewBtn.style.color="#f8fafc",overviewBtn.style.borderColor="#475569",overviewBtn.style.boxShadow="0 2px 8px rgba(15, 23, 42, 0.15), 0 0 0 2px rgba(71, 85, 105, 0.2)",overviewBtn.style.transform="translateY(-1px)"):(overviewBtn.style.background="",overviewBtn.style.color="",overviewBtn.style.borderColor="",overviewBtn.style.boxShadow="",overviewBtn.style.transform="")}}),reloadBtn&&(reloadBtn.onclick=()=>{if(el){let skeletonHtml="\n                    <style>\n                        @keyframes cardPulse {\n                            0% { opacity: 0.4; }\n                            50% { opacity: 0.8; }\n                            100% { opacity: 0.4; }\n                        }\n                    </style>\n                ";for(const y of years){const yTrips=trips.filter(t=>t.year===y);skeletonHtml+=`<div class="year-head">\n                        <h2>${y}</h2>\n                        <span class="chip-trips">${yTrips.length} trip${yTrips.length>1?"s":""}</span>\n                    </div>`,skeletonHtml+='<div class="trip-grid" style="animation: cardPulse 1.2s infinite ease-in-out;">',yTrips.forEach(()=>{skeletonHtml+='\n                            <div class="trip-card" style="pointer-events: none;">\n                                <div class="trip-cover" style="background: #334155; opacity: 0.5;"></div>\n                                <div class="trip-body">\n                                    <div style="height: 18px; background: #334155; border-radius: 4px; margin-bottom: 10px; width: 75%;"></div>\n                                    <div style="height: 14px; background: #334155; border-radius: 4px; margin-bottom: 8px; width: 50%;"></div>\n                                    <div style="height: 14px; background: #334155; border-radius: 4px; width: 35%;"></div>\n                                </div>\n                            </div>\n                        '}),skeletonHtml+="</div>"}el.innerHTML=skeletonHtml}setTimeout(()=>{"function"==typeof loadTrips?loadTrips():renderDashboard()},600)})}
     function groupByDay(t){const byDay={};for(const a of t.activities){const key=a.date.toDateString();byDay[key]||(byDay[key]={date:a.date,items:[]}),byDay[key].items.push(a)}return Object.values(byDay).sort((a,b)=>a.date-b.date)}function splitPeriods(items){const n=items.length;if(0===n)return[];const third=Math.ceil(n/3);return[{key:"morning",label:"Morning",items:items.slice(0,third)},{key:"afternoon",label:"Afternoon",items:items.slice(third,2*third)},{key:"evening",label:"Evening",items:items.slice(2*third)}].filter(b=>b.items.length)}function annotateLocations(days){let current=null;for(const day of days){for(const a of day.items){if(!a.category||!a.category.includes("Air Ticket")&&!a.category.includes("Transport"))continue;const m=a.activity.match(/^([A-Z]{2,4})[\s\-]+([A-Z]{2,4})\b/);if(!m)continue;const[_,c1,c2]=m;isAirportCode(c1)&&isAirportCode(c2)&&(null===current&&(current=c1),current=c2)}day.locationName=current?LOCATION_MAP[current]||current:null}}function renderCatStack(catEntries,totalSpend,acts){if(!catEntries.length)return"";let segs="",legend="";return catEntries.forEach(([cat,amt],i)=>{const pct=totalSpend?amt/totalSpend*100:0,color=PALETTE[i%PALETTE.length],label=cat.replace(/^[^\wÀ-ỹ]+/,"").trim()||"Other",rawIcon=iconFor(cat),isImgUrl=/^https?:\/\//i.test(rawIcon),segText=pct>12?`${isImgUrl?`<img src="${rawIcon}" style="width:12px; height:12px; object-fit:cover; border-radius:2px; vertical-align:middle; margin-right:3px;">`:`<span style="margin-right:3px;">${rawIcon}</span>`}${fmtShort(amt)}`:"";segs+=`<div class="stack-seg" style="width:calc(${pct}% + 12px); background:${color}" title="${label}: ${fmtVND(amt)}">${segText}</div>`,legend+=`<div class="stack-legend-item"><span class="dot" style="background:${color}"></span>${catIconHTML(cat,acts)} ${label} <b>${fmtShort(amt)}</b></div>`}),`<div class="stack-wrap"><div class="stack-bar" style="overflow:hidden; border-radius:14px;margin-top:10px;">${segs}</div><div class="stack-legend">${legend}</div></div>`}
     function openTrip(id){const t=trips.find(x=>x.id===id);if(!t)return;const el=document.getElementById("detailContent"),days=groupByDay(t);annotateLocations(days);const catTotals={};for(const a of t.activities){if(!a.expense)continue;let rawCat=a.category?a.category.trim().toLowerCase():"other",key=a.category?a.category.trim():"Other";/hotel|accommodation/i.test(rawCat)?key="🛌 Hotel":/transport/i.test(rawCat)?key="🚖 Transport":/snack|food|fruit|kem bo|banh truyen thong|banh mi|drink/i.test(rawCat)?key="🍽️ F&B":/experience|museum|shop|plant/i.test(rawCat)&&(key="🏂 Shop & Fun"),catTotals[key]=(catTotals[key]||0)+a.expense}const catEntries=Object.entries(catTotals).sort((a,b)=>b[1]-a[1]);let html=`<div class="det-sticky-container">\n      <div class="det-topbar">\n        <button class="back-btn" id="backBtn">‹</button>\n        <div class="det-title"><h2>${t.name}</h2></div>\n        <div class="det-total"><div class="amt figure">${t.total?fmtVND(t.total)+"₫":"—"}</div><div class="lbl">total spend</div></div>\n      </div>\n      \n      <div class="day-strip-wrap">\n        <div class="day-strip">`;days.forEach((d,i)=>{html+=`<div class="day-pill ${0===i?"active":""}" data-day="${i}" data-target="day-${i}">\n      <div class="dow">${dowShort(d.date)}</div>\n      <div class="dnum">${d.date.getDate()}</div>\n    </div>`}),html+="</div></div></div>",html+=renderCatStack(catEntries,t.total,t.activities),html+='<div id="daysScroll">',days.forEach((day,i)=>{const dTotal=day.items.reduce((s,a)=>s+a.expense,0);html+=`<div class="day-section" id="day-${i}" data-day="${i}">\n      <div class="day-banner">\n        <div class="full">${fmtDateFull(day.date)}</div>\n        <div class="sub-row">\n          <span class="sub">Day ${i+1} of ${days.length}</span>\n          ${day.locationName?`<span class="loc-badge"><img src="https://cdn-icons-png.flaticon.com/512/4219/4219585.png" alt=""> ${day.locationName}</span>`:""}\n          ${dTotal?`<span class="spent-chip figure">${fmtVND(dTotal)}₫ spent</span>`:""}\n        </div>\n      </div>`;const periods=splitPeriods(day.items);for(const band of periods)html+=`<div class="period">\n        <div class="period-head"><span class="period-dot ${band.key}"></span><span class="period-label">${band.label}</span></div>\n        <div class="period-items">`,band.items.forEach((a,ai)=>{const hasExtra=a.notes||a.code;html+=`<div class="act-card ${hasExtra?"":"centered"}" style="animation-delay:${30*Math.min(ai,8)}ms">\n          <div class="act-ic">${iconHTML(a)}</div>\n          <div class="act-body">\n            <div class="act-name">${a.activity}${a.review?`<span class="rev">${a.review}</span>`:""}</div>\n            ${a.notes?`<div class="act-note">${a.notes}</div>`:""}\n          </div>\n          <div class="act-side">\n            ${a.code?`<span class="code-chip">${a.code}</span>`:""}\n            <div class="act-amt ${a.expense?"":"zero"}">${a.expense?fmtVND(a.expense)+"₫":""}</div>\n          </div>\n        </div>`}),html+="</div></div>";html+="</div>"}),html+="</div>",el.innerHTML=html,stickyCleanup&&(stickyCleanup(),stickyCleanup=null),document.getElementById("backBtn").addEventListener("click",()=>{dayObserver&&(dayObserver.disconnect(),dayObserver=null),stickyCleanup&&(stickyCleanup(),stickyCleanup=null),document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active")),document.getElementById("panel-dashboard").classList.add("active")});const pills=el.querySelectorAll(".day-pill");el.querySelector(".day-strip-wrap");let suppressObserverUntil=0;const scrollRoot=function(node){let p=node?node.parentElement:null;for(;p&&p!==document.body&&p!==document.documentElement;){const cs=getComputedStyle(p);if(("auto"===cs.overflowY||"scroll"===cs.overflowY)&&p.scrollHeight>p.clientHeight+1)return p;p=p.parentElement}return document.scrollingElement||document.documentElement}(el),usesWindow=scrollRoot===document.documentElement||scrollRoot===document.body;!function(){const stickyEl=el.querySelector(".det-sticky-container");if(!stickyEl)return;const getScrollTop=()=>usesWindow?window.pageYOffset||document.documentElement.scrollTop:scrollRoot.scrollTop,scrollTarget=usesWindow?window:scrollRoot;let naturalTop=stickyEl.getBoundingClientRect().top-scrollRoot.getBoundingClientRect().top+getScrollTop();function update(){const shift=Math.max(0,getScrollTop()-naturalTop);stickyEl.style.transform=shift>0?`translateY(${shift}px)`:"",stickyEl.classList.toggle("js-pinned",shift>0)}function recalc(){stickyEl.style.transform="",naturalTop=stickyEl.getBoundingClientRect().top-scrollRoot.getBoundingClientRect().top+getScrollTop(),update()}scrollTarget.addEventListener("scroll",update,{passive:!0}),window.addEventListener("resize",recalc);const ro="ResizeObserver"in window?new ResizeObserver(recalc):null;ro&&ro.observe(stickyEl),update(),stickyCleanup=function(){scrollTarget.removeEventListener("scroll",update),window.removeEventListener("resize",recalc),ro&&ro.disconnect()}}(),pills.forEach(p=>{p.addEventListener("click",()=>{const target=document.getElementById(p.dataset.target);target&&(pills.forEach(pp=>pp.classList.toggle("active",pp===p)),suppressObserverUntil=Date.now()+900,function(target){const stickyContainer=el.querySelector(".det-sticky-container"),stickyH=stickyContainer?stickyContainer.getBoundingClientRect().height:110;if(usesWindow){const top=target.getBoundingClientRect().top+window.pageYOffset-stickyH-12;window.scrollTo({top,behavior:"smooth"})}else{const delta=target.getBoundingClientRect().top-scrollRoot.getBoundingClientRect().top,top=scrollRoot.scrollTop+delta-stickyH-12;scrollRoot.scrollTo({top,behavior:"smooth"})}}(target))})}),dayObserver&&dayObserver.disconnect();const sections=el.querySelectorAll(".day-section");dayObserver=new IntersectionObserver(entries=>{Date.now()<suppressObserverUntil||entries.forEach(entry=>{if(entry.isIntersecting){const idx=entry.target.dataset.day;pills.forEach(p=>p.classList.toggle("active",p.dataset.day===idx))}})},{root:usesWindow?null:scrollRoot,rootMargin:"-70px 0px -70% 0px",threshold:0}),sections.forEach(s=>dayObserver.observe(s)),document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active")),document.getElementById("panel-detail").classList.add("active"),usesWindow?window.scrollTo(0,0):scrollRoot.scrollTop=0}
     function setStatus(state,text){document.getElementById("statusDot").className="status-dot "+state,document.getElementById("statusText").textContent=text}
     function buildTripName(acts){const codeChain=[];for(const a of acts){if(!a.category||!a.category.includes("Air Ticket")&&!a.category.includes("Transport"))continue;const m=a.activity.match(/^([A-Z]{2,4})[\s\-]+([A-Z]{2,4})\b/);if(!m)continue;const[_,c1,c2]=m;isAirportCode(c1)&&isAirportCode(c2)&&(codeChain[codeChain.length-1]!==c1&&codeChain.push(c1),codeChain.push(c2))}const validChain=codeChain.filter((c,i)=>c!==codeChain[i-1]).filter(c=>!EXCLUDE_CODES.has(c));if(validChain.length>=1){const names=validChain.map(c=>"IUH"===c?"Quy Nhơn":LOCATION_MAP[c]||c),deduped=names.filter((n,i)=>n!==names[i-1]);if(deduped.length>0)return deduped.join(" – ")}return acts[0].activity.slice(0,30)}document.getElementById("reloadBtn").addEventListener("click",loadTravelData),document.addEventListener("DOMContentLoaded",()=>{const dayPills=document.querySelectorAll(".day-pill");dayPills.forEach(pill=>{pill.addEventListener("click",function(){dayPills.forEach(p=>p.classList.remove("active")),this.classList.add("active");const targetDayId=this.getAttribute("data-target")||this.dataset.day,targetSection=document.getElementById(targetDayId);targetSection&&targetSection.scrollIntoView({behavior:"smooth",block:"start"})})})});
 
     async function loadTravelData(){
-      setStatus('loading','Loading sheet…');
-      document.getElementById('dashContent').innerHTML = '<div class="loading-msg"></div>';
-      let text = null, usedProxy = false;
-      try{
-        const r = await fetch(TRAVEL_CSV_URL);
-        if(!r.ok) throw new Error('status '+r.status);
-        text = await r.text();
-        if(text.trim().startsWith('<')) throw new Error('non-csv response');
-      }catch(e){
+        setStatus('loading','Loading trips…');
+        document.getElementById('dashContent').innerHTML = '<div class="loading-msg"></div>';
+        let text = null, usedProxy = false;
         try{
-          const r2 = await fetch(TRAVEL_PROXY_URL);
-          if(!r2.ok) throw new Error('proxy status '+r2.status);
-          text = await r2.text();
-          usedProxy = true;
-        }catch(e2){
-          setStatus('err','Could not load sheet');
-          document.getElementById('dashContent').innerHTML = `<div class="err-box">Could not fetch the Google Sheet (direct fetch and proxy fallback both failed). The sheet may not be shared as "Anyone with the link can view". Try Refresh, or check sharing settings.</div>`;
-          return;
+          const r = await fetch(TRAVEL_CSV_URL);
+          if(!r.ok) throw new Error('status '+r.status);
+          text = await r.text();
+          if(text.trim().startsWith('<')) throw new Error('non-csv response');
+        }catch(e){
+          try{
+            const r2 = await fetch(TRAVEL_PROXY_URL);
+            if(!r2.ok) throw new Error('proxy status '+r2.status);
+            text = await r2.text();
+            usedProxy = true;
+          }catch(e2){
+            setStatus('err','Could not load trips');
+            document.getElementById('dashContent').innerHTML = `<div class="err-box">Could not fetch the Google Sheet (direct fetch and proxy fallback both failed). The sheet may not be shared as "Anyone with the link can view". Try Refresh, or check sharing settings.</div>`;
+            return;
+          }
         }
-      }
 
-      const rows = parseCSV(text).filter(r => r.length>1 && r.some(c=>c && c.trim()));
-      if(!rows.length){ setStatus('err','Empty sheet'); return; }
-      const header = rows[0].map(h=>h.trim().toLowerCase());
-      const idx = {
-        activity: header.findIndex(h=>h.startsWith('activity')),
-        category: header.findIndex(h=>h.startsWith('category')),
-        code: header.findIndex(h=>h.startsWith('code')),
-        date: header.findIndex(h=>h.startsWith('date')),
-        expense: header.findIndex(h=>h.startsWith('expense')),
-        notes: header.findIndex(h=>h.startsWith('notes')),
-        review: header.findIndex(h=>h.startsWith('review')),
-        icon: (()=>{ const f = header.findIndex(h=>h.startsWith('icon')); return f>=0 ? f : 7; })(),
-        coverUrl: (()=>{ const f = header.findIndex((h,i)=>(h.startsWith('cover')||h.startsWith('image')||h.startsWith('photo')||h.startsWith('url')) && i===8); return f>=0 ? f : 8; })(),
-        locName: (()=>{ const f = header.findIndex((h,i)=>h.startsWith('location') && i>3); return f>=0 ? f : 9; })(),
-        locCode: (()=>{ const f = header.findIndex((h,i)=>h.startsWith('code') && i>3); return f>=0 ? f : 10; })(),
-        locExclude: 11, // Column L (0-indexed position 11) for codes to exclude
-      };
+        const rows = parseCSV(text).filter(r => r.length>1 && r.some(c=>c && c.trim()));
+        if(!rows.length){ setStatus('err','Empty sheet'); return; }
+        const header = rows[0].map(h=>h.trim().toLowerCase());
+        const idx = {
+          activity: header.findIndex(h=>h.startsWith('activity')),
+          category: header.findIndex(h=>h.startsWith('category')),
+          code: header.findIndex(h=>h.startsWith('code')),
+          date: header.findIndex(h=>h.startsWith('date')),
+          expense: header.findIndex(h=>h.startsWith('expense')),
+          notes: header.findIndex(h=>h.startsWith('notes')),
+          review: header.findIndex(h=>h.startsWith('review')),
+          icon: (()=>{ const f = header.findIndex(h=>h.startsWith('icon')); return f>=0 ? f : 7; })(),
+          coverUrl: (()=>{ const f = header.findIndex((h,i)=>(h.startsWith('cover')||h.startsWith('image')||h.startsWith('photo')||h.startsWith('url')) && i===8); return f>=0 ? f : 8; })(),
+          locName: (()=>{ const f = header.findIndex((h,i)=>h.startsWith('location') && i>3); return f>=0 ? f : 9; })(),
+          locCode: (()=>{ const f = header.findIndex((h,i)=>h.startsWith('code') && i>3); return f>=0 ? f : 10; })(),
+          locExclude: 11, // Column L (0-indexed position 11) for codes to exclude
+        };
 
-      // Build the code -> location-name lookup and collect column L exclusions into a Set
-      LOCATION_MAP = {};
-      EXCLUDE_CODES = new Set();
-      
-      for(let i=1;i<rows.length;i++){
-        const r = rows[i];
-        const locName = (r[idx.locName]||'').trim();
-        const locCode = (r[idx.locCode]||'').trim().toUpperCase();
-        const excludeText = (r[idx.locExclude]||'').trim().toUpperCase(); // Column L value
+        // Build the code -> location-name lookup and collect column L exclusions into a Set
+        LOCATION_MAP = {};
+        EXCLUDE_CODES = new Set();
         
-        if(locName && locCode) LOCATION_MAP[locCode] = locName;
-        if(excludeText) EXCLUDE_CODES.add(excludeText);
-      }
+        for(let i=1;i<rows.length;i++){
+          const r = rows[i];
+          const locName = (r[idx.locName]||'').trim();
+          const locCode = (r[idx.locCode]||'').trim().toUpperCase();
+          const excludeText = (r[idx.locExclude]||'').trim().toUpperCase(); // Column L value
+          
+          if(locName && locCode) LOCATION_MAP[locCode] = locName;
+          if(excludeText) EXCLUDE_CODES.add(excludeText);
+        }
 
-      const records = [];
-      for(let i=1;i<rows.length;i++){
-        const r = rows[i];
-        const activity = (r[idx.activity]||'').trim();
-        const date = parseDate(r[idx.date]||'');
-        if(!activity || !date) continue;
-        records.push({
-          activity,
-          category: (r[idx.category]||'').trim(),
-          code: (r[idx.code]||'').trim(),
-          date,
-          expense: parseAmount(r[idx.expense]||''),
-          notes: (r[idx.notes]||'').trim(),
-          review: (r[idx.review]||'').trim(),
-          icon: (r[idx.icon]||'').trim(),
-          coverUrl: (r[idx.coverUrl]||'').trim(),
-        });
-      }
-      trips = buildTrips(records);
+        const records = [];
+        for(let i=1;i<rows.length;i++){
+          const r = rows[i];
+          const activity = (r[idx.activity]||'').trim();
+          const date = parseDate(r[idx.date]||'');
+          if(!activity || !date) continue;
+          records.push({
+            activity,
+            category: (r[idx.category]||'').trim(),
+            code: (r[idx.code]||'').trim(),
+            date,
+            expense: parseAmount(r[idx.expense]||''),
+            notes: (r[idx.notes]||'').trim(),
+            review: (r[idx.review]||'').trim(),
+            icon: (r[idx.icon]||'').trim(),
+            coverUrl: (r[idx.coverUrl]||'').trim(),
+          });
+        }
+        trips = buildTrips(records);
 
-      const visitedCities = new Set();
-      trips.forEach(t => {
-        const days = groupByDay(t);
-        annotateLocations(days);
-        days.forEach(d => {
-          if(d.locationName) visitedCities.add(d.locationName);
+        const visitedCities = new Set();
+        trips.forEach(t => {
+          const days = groupByDay(t);
+          annotateLocations(days);
+          days.forEach(d => {
+            if(d.locationName) visitedCities.add(d.locationName);
+          });
         });
-      });
-    //console.log("Visited Cities:", Array.from(visitedCities));
-      setStatus('ok', `${trips.length} trips · ${visitedCities.size} cities${usedProxy?' (via proxy)':''}`);
-      renderDashboard();
+      //console.log("Visited Cities:", Array.from(visitedCities));
+        setStatus('ok', `✈️ ${trips.length} trips 📍 ${visitedCities.size} cities${usedProxy?' (via proxy)':''}`);
+        renderDashboard();
     }
 
     // Touch events
