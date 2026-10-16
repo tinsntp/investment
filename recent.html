@@ -1751,7 +1751,7 @@ to{transform:rotate(360deg)}
                                             <span>TradingView</span>
                                         </button>
 
-                                        <button type="button" class="budget-subtab" onclick="switchBudgetTab(this, 'portfolio-pnl'); if (window.innerWidth <= 400) this.parentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });">
+                                        <button type="button" class="budget-subtab" onclick="switchBudgetTab(this, 'portfolio-pnl'); document.getElementById('budget-view-portfolio').scrollIntoView({ behavior: 'smooth', block: 'start' });">
                                             <span class="material-icons-round" style="font-size: 16px;">data_usage</span>
                                             <span>Portfolio</span>
                                         </button>
