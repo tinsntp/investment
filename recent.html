@@ -1066,7 +1066,9 @@ to{transform:rotate(360deg)}
 .sub-digit-reel{display:flex;flex-direction:column;position:absolute;top:0;left:0;width:100%;transition:transform .8s cubic-bezier(.16,1,.3,1);animation:slotRoll .85s cubic-bezier(.16,1,.3,1) forwards}
 .sub-digit-item{display:block;height:1.2em;line-height:1.2em;text-align:center}@keyframes slotRoll{0%{transform:translateY(0);filter:blur(2px)}to{transform:translateY(var(--target-y));filter:blur(0)}}@keyframes subLoadingPulse{0%{opacity:.3}50%{opacity:.8}to{opacity:.3}}.sub-loading-pulse{animation:subLoadingPulse 1.2s infinite ease-in-out;color:rgba(255,255,255,.4)!important}.pnl-animated-cell{animation:pnlTilePopIn .35s cubic-bezier(.34,1.56,.64,1) forwards;will-change:transform,opacity}.invest-bar-wave{transition:filter .2s ease}.invest-bar-wave:hover{filter:brightness(1.25)}#pnl-input-dialog{background:rgba(0,0,0,.4)!important;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}#pnl-input-dialog>div{background:rgba(30,34,43,.65)!important;backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);box-shadow:0 16px 40px rgba(0,0,0,.6)}
 .stacked-bar-segment.seg-animate{transition:width .6s cubic-bezier(.16,1,.3,1)}.legend-item.legend-animate{opacity:0;animation:legendFadeIn .4s ease forwards}@keyframes legendFadeIn{0%{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}.cat-card.cat-card-animate{opacity:0;animation:cardSlideUp .4s cubic-bezier(.16,1,.3,1) forwards}@keyframes cardSlideUp{0%{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}.cat-bar-fill.bar-fill-animate{transition:width .8s cubic-bezier(.16,1,.3,1)}
-
+@keyframes spinChart {
+    to { transform: rotate(360deg); }
+}
 </style>
 </head>
 <body >
@@ -1770,85 +1772,124 @@ to{transform:rotate(360deg)}
                                     </div>
                                     <!-- Tab 3: Portfolio PNL -->
                                     <div class="budget-tab-content" id="budget-view-portfolio-pnl" style="display: none;">
-                                        <div class="portfolio-card">
-                                            <div class="table-wrapper" style="border-radius: 30px !important; overflow: hidden;">
-                                                <table>
-                                                    <colgroup>
-                                                        <col class="col-asset">
-                                                        <col class="col-duration">
-                                                        <col class="col-volprice">
-                                                        <col class="col-pnl">
-                                                        <col class="col-costmarket">
-                                                    </colgroup>
-                                                    <thead>
-                                                        <tr>
-                                                            <th>
-                                                                <div class="th-filter-wrap" onclick="toggleColMenu(event, 'asset')">
-                                                                    <span style="padding-left:4px">Asset</span>
-                                                                    <i class="bi bi-funnel-fill th-filter-icon" id="asset-filter-icon"></i>
-                                                                    <div class="col-menu" id="col-menu-asset">
-                                                                        <div class="col-menu-item" data-filter-type="asset" data-filter-value="all">
-                                                                            All
-                                                                        </div>
-                                                                        <div class="col-menu-item" data-filter-type="asset" data-filter-value="on-going">
-                                                                            On-going
-                                                                        </div>
-                                                                        <div class="col-menu-item" data-filter-type="asset" data-filter-value="close">
-                                                                            Close
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </th>
-                                                            <th>
-                                                                <div class="th-filter-wrap" onclick="toggleColMenu(event, 'date')">
-                                                                    <span>Date</span>
-                                                                    <i class="bi bi-funnel-fill th-filter-icon" id="date-filter-icon"></i>
-                                                                    <div class="col-menu col-menu-date-range" id="col-menu-date">
-                                                                        <div class="cal-header">
-                                                                            <button type="button" class="cal-nav-btn" onclick="calNavigate(event, -1)"><i class="bi bi-chevron-left"></i></button>
-                                                                            <div class="cal-month-label" id="cal-month-label">—</div>
-                                                                            <button type="button" class="cal-nav-btn" onclick="calNavigate(event, 1)"><i class="bi bi-chevron-right"></i></button>
-                                                                        </div>
-                                                                        <div class="cal-range-display" id="cal-range-display">Select a date range</div>
-                                                                        <div class="cal-weekdays">
-                                                                            <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
-                                                                        </div>
-                                                                        <div class="cal-grid" id="cal-grid"></div>
-                                                                        <div class="col-menu-divider"></div>
-                                                                        <div class="cal-quick-row">
-                                                                            <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,7)">7d</button>
-                                                                            <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,30)">30d</button>
-                                                                            <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,90)">3m</button>
-                                                                            <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,365)">1y</button>
-                                                                        </div>
-                                                                        <div class="date-range-actions">
-                                                                            <button type="button" class="date-range-btn date-range-clear" onclick="clearDateFilter(event)">Clear</button>
-                                                                            <button type="button" class="date-range-btn date-range-apply" onclick="applyDateFilter(event)">Apply</button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </th>
-                                                            <th>Vol/Price</th>
-                                                            <th>
-                                                                <div class="th-filter-wrap" onclick="toggleColMenu(event, 'pnl')">
-                                                                    <span>PnL</span>
-                                                                    <i class="bi bi-funnel-fill th-filter-icon" id="pnl-filter-icon"></i>
-                                                                    <div class="col-menu" id="col-menu-pnl">
-                                                                        <div class="col-menu-item" data-filter-type="pnl" data-filter-value="all">All</div>
-                                                                        <div class="col-menu-item" data-filter-type="pnl" data-filter-value="profited">Profited</div>
-                                                                        <div class="col-menu-item" data-filter-type="pnl" data-filter-value="lost">Lost</div>
-                                                                    </div>
-                                                                </div>
-                                                            </th>
-                                                            <th>Val/Price</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="portfolio-tbody">
-                                                        <!-- Dynamic Insertion -->
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
+                                        <div class="portfolio-mode-container" style="width: 100%;">
+                                          <!-- View Mode Toggle Bar (Icon + Text with Grey Active Background) -->
+                                          <div class="portfolio-view-toggle-bar" style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 16px;">
+                                              <div style="background: rgba(255,255,255,0.06); padding: 4px; border-radius: 20px; display: flex; border: 1px solid rgba(255,255,255,0.1); gap: 4px;">
+                                                  <button type="button" id="btn-mode-chart" onclick="switchPortfolioView('chart')" style="background: rgba(255,255,255,0.15); color: #fff; border: none; padding: 6px 14px; border-radius: 16px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s;">
+                                                      <i class="bi bi-grid-fill" style="font-size: 13px;"></i> Card & Chart
+                                                  </button>
+                                                  <button type="button" id="btn-mode-table" onclick="switchPortfolioView('table')" style="background: transparent; color: #94a3b8; border: none; padding: 6px 14px; border-radius: 16px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s;">
+                                                      <i class="bi bi-table" style="font-size: 13px;"></i> Table
+                                                  </button>
+                                              </div>
+                                          </div>
+
+                                          <!-- CARD / CHART MODE VIEW (DEFAULT) -->
+                                          <div id="portfolio-view-chart-mode" class="portfolio-mode-view" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                                              
+                                              <!-- Left Chart: Active Items Column Chart (Side Summary Box Removed) -->
+                                              <div class="chart-panel-card" style="background: #161b22; border: 1px solid rgba(255,255,255,0.08); border-radius: 30px; padding: 16px; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; height: 320px; box-sizing: border-box;">
+                                                  <!-- Loading Overlay -->
+                                                  <div id="chart-left-loading" style="display: none; position: absolute; inset: 0; background: rgba(22,27,34,0.85); backdrop-filter: blur(4px); z-index: 10; align-items: center; justify-content: center;">
+                                                      <div class="chart-spinner" style="width: 24px; height: 24px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #8b5cf6; border-radius: 50%; animation: spinChart 0.8s linear infinite;"></div>
+                                                  </div>
+
+                                                  <div id="chart-bars-container" style="display: flex; justify-content: flex-start; gap: 12px; align-items: flex-end; height: 100%; overflow-x: auto; padding: 4px 0; width: 100%;">
+                                                      <!-- Rendered Dynamically -->
+                                                  </div>
+                                              </div>
+
+                                              <!-- Right Chart: Group Summary Cards -->
+                                              <div class="chart-panel-card" style="position: relative; height: 320px; box-sizing: border-box;">
+                                                  <!-- Loading Overlay -->
+                                                  <div id="chart-right-loading" style="display: none; position: absolute; inset: 0; background: rgba(22,27,34,0.85); backdrop-filter: blur(4px); z-index: 10; align-items: center; justify-content: center; border-radius: 30px;">
+                                                      <div class="chart-spinner" style="width: 24px; height: 24px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #facc15; border-radius: 50%; animation: spinChart 0.8s linear infinite;"></div>
+                                                  </div>
+
+                                                  <div id="group-summary-blocks-container">
+                                                      <!-- Rendered Dynamically -->
+                                                  </div>
+                                              </div>
+                                          </div>
+
+                                          <!-- TABLE MODE VIEW -->
+                                          <div id="portfolio-view-table-mode" class="portfolio-mode-view" style="display: none;">
+                                              <div class="portfolio-card">
+                                                  <div class="table-wrapper" style="border-radius: 30px !important; overflow: hidden;">
+                                                      <table>
+                                                          <colgroup>
+                                                              <col class="col-asset">
+                                                              <col class="col-duration">
+                                                              <col class="col-volprice">
+                                                              <col class="col-pnl">
+                                                              <col class="col-costmarket">
+                                                          </colgroup>
+                                                          <thead>
+                                                              <tr>
+                                                                  <th>
+                                                                      <div class="th-filter-wrap" onclick="toggleColMenu(event, 'asset')">
+                                                                          <span style="padding-left:4px">Asset</span>
+                                                                          <i class="bi bi-funnel-fill th-filter-icon" id="asset-filter-icon"></i>
+                                                                          <div class="col-menu" id="col-menu-asset">
+                                                                              <div class="col-menu-item" data-filter-type="asset" data-filter-value="all">All</div>
+                                                                              <div class="col-menu-item" data-filter-type="asset" data-filter-value="on-going">On-going</div>
+                                                                              <div class="col-menu-item" data-filter-type="asset" data-filter-value="close">Close</div>
+                                                                          </div>
+                                                                      </div>
+                                                                  </th>
+                                                                  <th>
+                                                                      <div class="th-filter-wrap" onclick="toggleColMenu(event, 'date')">
+                                                                          <span>Date</span>
+                                                                          <i class="bi bi-funnel-fill th-filter-icon" id="date-filter-icon"></i>
+                                                                          <div class="col-menu col-menu-date-range" id="col-menu-date">
+                                                                              <div class="cal-header">
+                                                                                  <button type="button" class="cal-nav-btn" onclick="calNavigate(event, -1)"><i class="bi bi-chevron-left"></i></button>
+                                                                                  <div class="cal-month-label" id="cal-month-label">—</div>
+                                                                                  <button type="button" class="cal-nav-btn" onclick="calNavigate(event, 1)"><i class="bi bi-chevron-right"></i></button>
+                                                                              </div>
+                                                                              <div class="cal-range-display" id="cal-range-display">Select a date range</div>
+                                                                              <div class="cal-weekdays">
+                                                                                  <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                                                                              </div>
+                                                                              <div class="cal-grid" id="cal-grid"></div>
+                                                                              <div class="col-menu-divider"></div>
+                                                                              <div class="cal-quick-row">
+                                                                                  <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,7)">7d</button>
+                                                                                  <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,30)">30d</button>
+                                                                                  <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,90)">3m</button>
+                                                                                  <button type="button" class="cal-quick-btn" onclick="calQuickRange(event,365)">1y</button>
+                                                                              </div>
+                                                                              <div class="date-range-actions">
+                                                                                  <button type="button" class="date-range-btn date-range-clear" onclick="clearDateFilter(event)">Clear</button>
+                                                                                  <button type="button" class="date-range-btn date-range-apply" onclick="applyDateFilter(event)">Apply</button>
+                                                                              </div>
+                                                                          </div>
+                                                                      </div>
+                                                                  </th>
+                                                                  <th>Vol/Price</th>
+                                                                  <th>
+                                                                      <div class="th-filter-wrap" onclick="toggleColMenu(event, 'pnl')">
+                                                                          <span>PnL</span>
+                                                                          <i class="bi bi-funnel-fill th-filter-icon" id="pnl-filter-icon"></i>
+                                                                          <div class="col-menu" id="col-menu-pnl">
+                                                                              <div class="col-menu-item" data-filter-type="pnl" data-filter-value="all">All</div>
+                                                                              <div class="col-menu-item" data-filter-type="pnl" data-filter-value="profited">Profited</div>
+                                                                              <div class="col-menu-item" data-filter-type="pnl" data-filter-value="lost">Lost</div>
+                                                                          </div>
+                                                                      </div>
+                                                                  </th>
+                                                                  <th>Val/Price</th>
+                                                              </tr>
+                                                          </thead>
+                                                          <tbody id="portfolio-tbody">
+                                                              <!-- Dynamic Insertion -->
+                                                          </tbody>
+                                                      </table>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
                                     </div>
                                 </div>
                             </div>
@@ -4559,6 +4600,28 @@ to{transform:rotate(360deg)}
         pnl: "all"
     };  
 
+    function switchPortfolioView(mode) {
+        var chartView = document.getElementById('portfolio-view-chart-mode');
+        var tableView = document.getElementById('portfolio-view-table-mode');
+        var btnChart = document.getElementById('btn-mode-chart');
+        var btnTable = document.getElementById('btn-mode-table');
+
+        if (mode === 'chart') {
+            chartView.style.display = 'grid';
+            tableView.style.display = 'none';
+            btnChart.style.background = '#6d28d9';
+            btnChart.style.color = '#fff';
+            btnTable.style.background = 'transparent';
+            btnTable.style.color = '#94a3b8';
+        } else {
+            chartView.style.display = 'none';
+            tableView.style.display = 'block';
+            btnTable.style.background = '#6d28d9';
+            btnTable.style.color = '#fff';
+            btnChart.style.background = 'transparent';
+            btnChart.style.color = '#94a3b8';
+        }
+    }
     var calState={viewYear:(new Date).getFullYear(),viewMonth:(new Date).getMonth(),rangeStart:null,rangeEnd:null,hoverDate:null},MONTH_NAMES=["January","February","March","April","May","June","July","August","September","October","November","December"];function formatDateShort(d){return d?d.getMonth()+1+"/"+d.getDate()+"/"+d.getFullYear():""}function isSameDay(a,b){return a&&b&&a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate()}
     function renderCalendar(){var label=document.getElementById("cal-month-label"),grid=document.getElementById("cal-grid");document.getElementById("cal-range-display");if(label&&grid){label.textContent=MONTH_NAMES[calState.viewMonth]+" "+calState.viewYear,updateRangeDisplay(),grid.innerHTML="";for(var startDow=new Date(calState.viewYear,calState.viewMonth,1).getDay(),daysInMonth=new Date(calState.viewYear,calState.viewMonth+1,0).getDate(),daysInPrevMonth=new Date(calState.viewYear,calState.viewMonth,0).getDate(),today=new Date,i=0;i<42;i++){var cellDate,isOtherMonth=!1,dayNum=i-startDow+1;dayNum<1?(cellDate=new Date(calState.viewYear,calState.viewMonth-1,daysInPrevMonth+dayNum),isOtherMonth=!0):dayNum>daysInMonth?(cellDate=new Date(calState.viewYear,calState.viewMonth+1,dayNum-daysInMonth),isOtherMonth=!0):cellDate=new Date(calState.viewYear,calState.viewMonth,dayNum);var cellEl=document.createElement("div");cellEl.className="cal-day"+(isOtherMonth?" other-month":""),cellEl.dataset.time=cellDate.getTime(),isSameDay(cellDate,today)&&cellEl.classList.add("today"),cellEl.textContent=cellDate.getDate(),function(d,el){el.addEventListener("click",function(e){e.stopPropagation(),calSelectDate(d)}),el.addEventListener("mouseenter",function(){calState.rangeStart&&!calState.rangeEnd&&(calState.hoverDate=d,updateRangeClassesOnly())})}(cellDate,cellEl),grid.appendChild(cellEl)}updateRangeClassesOnly()}}
     function updateRangeClassesOnly(){var grid=document.getElementById("cal-grid");if(grid){var cells=grid.querySelectorAll(".cal-day"),effectiveEnd=calState.rangeEnd||calState.hoverDate;cells.forEach(function(cellEl){cellEl.classList.remove("in-range","range-start","range-end");var cellDate=new Date(parseInt(cellEl.dataset.time,10));if(calState.rangeStart&&effectiveEnd){var rs=calState.rangeStart<effectiveEnd?calState.rangeStart:effectiveEnd,re=calState.rangeStart<effectiveEnd?effectiveEnd:calState.rangeStart;cellDate>=rs&&cellDate<=re&&cellEl.classList.add("in-range"),isSameDay(cellDate,rs)&&cellEl.classList.add("range-start"),isSameDay(cellDate,re)&&cellEl.classList.add("range-end")}else calState.rangeStart&&isSameDay(cellDate,calState.rangeStart)&&cellEl.classList.add("range-start")}),updateRangeDisplay()}}function updateRangeDisplay(){var display=document.getElementById("cal-range-display");display&&(calState.rangeStart&&calState.rangeEnd?display.textContent=formatDateShort(calState.rangeStart)+"  →  "+formatDateShort(calState.rangeEnd):calState.rangeStart?display.textContent=formatDateShort(calState.rangeStart)+"  →  Select end date":display.textContent="Select a date range")}function calSelectDate(d){!calState.rangeStart||calState.rangeStart&&calState.rangeEnd?(calState.rangeStart=d,calState.rangeEnd=null,calState.hoverDate=null):(d<calState.rangeStart?(calState.rangeEnd=calState.rangeStart,calState.rangeStart=d):calState.rangeEnd=d,calState.hoverDate=null),updateRangeClassesOnly()}function calSelectDate(d){!calState.rangeStart||calState.rangeStart&&calState.rangeEnd?(calState.rangeStart=d,calState.rangeEnd=null,calState.hoverDate=null):(d<calState.rangeStart?(calState.rangeEnd=calState.rangeStart,calState.rangeStart=d):calState.rangeEnd=d,calState.hoverDate=null),renderCalendar()}function calNavigate(e,dir){e.stopPropagation(),calState.viewMonth+=dir,calState.viewMonth>11&&(calState.viewMonth=0,calState.viewYear++),calState.viewMonth<0&&(calState.viewMonth=11,calState.viewYear--),renderCalendar()}
@@ -4571,203 +4634,207 @@ to{transform:rotate(360deg)}
     document.addEventListener("click",function(){document.querySelectorAll(".col-menu").forEach(function(m){m.classList.remove("open")})});
     document.addEventListener("click",function(e){var item=e.target.closest(".col-menu-item");if(item){e.stopPropagation();var filterType=item.getAttribute("data-filter-type"),filterValue=item.getAttribute("data-filter-value");portfolioFilters[filterType]=filterValue;var menu=item.closest(".col-menu");menu.querySelectorAll(".col-menu-item").forEach(function(el){el.classList.remove("selected")}),item.classList.add("selected");var icon=document.getElementById(filterType+"-filter-icon");if(icon){var isDefault="date"!==filterType&&"all"===filterValue;icon.classList.toggle("active-filter",!isDefault)}menu.classList.remove("open"),applyPortfolioFiltersAndRender()}});
     function getForexDisplaySymbol(symbol){return{BTCUSD:"BTC",XAUUSD:"XAU"}[symbol]||symbol}
-    function renderAccordion(portfolioGroups){const tbody=document.getElementById("portfolio-tbody");tbody.innerHTML="";let totalPnlVnd=0,totalMarketValVnd=0,totalCostVnd=0,activeMarketValVnd=0,activePositions=0;const activeIcons=[],now=new Date;let lastRenderedCategory=null;const hasForexInView=portfolioGroups.some(function(g){return"forex"===(g.accountType||"").toLowerCase()});var ACCOUNT_TYPE_ICONS={Stock:"https://github.com/tinsntp/investment/blob/main/stock.png?raw=true",Saving:"https://github.com/tinsntp/investment/blob/main/saving.png?raw=true",Crypto:"https://cdn-icons-png.flaticon.com/512/5968/5968260.png",Forex:"https://github.com/tinsntp/investment/blob/main/exness.png?raw=true"};const categoryPnlTotals={},categoryValueTotals={},categoryIconMap={};portfolioGroups.forEach(group=>{const records=group.records||[],isStock="stock"===group.accountType.toLowerCase(),isCrypto="crypto"===group.accountType.toLowerCase(),isForex="forex"===group.accountType.toLowerCase(),isSaving="saving"===group.accountType.toLowerCase(),mainRec=(isStock||isCrypto||isForex||isSaving)&&group.mainRecord?group.mainRecord:null,sumPnl=mainRec?mainRec.actualPnl:records.reduce((acc,r)=>acc+r.actualPnl,0)+(group.mainRecord?group.mainRecord.actualPnl:0),sumValue=mainRec?mainRec.marketValue:records.reduce((acc,r)=>acc+r.marketValue,0)+(group.mainRecord?group.mainRecord.marketValue:0),cat=group.accountType||"Other";categoryPnlTotals[cat]=(categoryPnlTotals[cat]||0)+sumPnl,categoryValueTotals[cat]=(categoryValueTotals[cat]||0)+sumValue,categoryIconMap[cat]||(categoryIconMap[cat]=ACCOUNT_TYPE_ICONS[cat]||"")}),window.navFullCategoryValueTotals=Object.assign({},categoryValueTotals),window.navFullCategoryPnlTotals=Object.assign({},categoryPnlTotals),window.navFullCategoryIconMap=Object.assign({},categoryIconMap),window.navFullTotalValue=Object.values(categoryValueTotals).reduce(function(s,v){return s+v},0),portfolioGroups.forEach((group,index)=>{
-        const records=group.records||[],
-            isSaving="saving"===group.accountType.toLowerCase(),
-            isStock="stock"===group.accountType.toLowerCase(),
-            isCrypto="crypto"===group.accountType.toLowerCase(),
-            isForex="forex"===group.accountType.toLowerCase();
+    function renderAccordion(portfolioGroups){
+        const tbody=document.getElementById("portfolio-tbody");
+        if(tbody) tbody.innerHTML="";
+        let totalPnlVnd=0,totalMarketValVnd=0,totalCostVnd=0,activeMarketValVnd=0,activePositions=0;
+        const activeIcons=[],now=new Date();let lastRenderedCategory=null;
+        const hasForexInView=portfolioGroups.some(function(g){return"forex"===(g.accountType||"").toLowerCase()});
+        var ACCOUNT_TYPE_ICONS={Stock:"https://github.com/tinsntp/investment/blob/main/stock.png?raw=true",Saving:"https://github.com/tinsntp/investment/blob/main/saving.png?raw=true",Crypto:"https://cdn-icons-png.flaticon.com/512/5968/5968260.png",Forex:"https://github.com/tinsntp/investment/blob/main/exness.png?raw=true"};
+        const categoryPnlTotals={},categoryValueTotals={},categoryIconMap={};
+        
+        portfolioGroups.forEach(group=>{
+            const records=group.records||[],isStock="stock"===group.accountType.toLowerCase(),isCrypto="crypto"===group.accountType.toLowerCase(),isForex="forex"===group.accountType.toLowerCase(),isSaving="saving"===group.accountType.toLowerCase(),mainRec=(isStock||isCrypto||isForex||isSaving)&&group.mainRecord?group.mainRecord:null,sumPnl=mainRec?mainRec.actualPnl:records.reduce((acc,r)=>acc+r.actualPnl,0)+(group.mainRecord?group.mainRecord.actualPnl:0),sumValue=mainRec?mainRec.marketValue:records.reduce((acc,r)=>acc+r.marketValue,0)+(group.mainRecord?group.mainRecord.marketValue:0),cat=group.accountType||"Other";
+            categoryPnlTotals[cat]=(categoryPnlTotals[cat]||0)+sumPnl,categoryValueTotals[cat]=(categoryValueTotals[cat]||0)+sumValue,categoryIconMap[cat]||(categoryIconMap[cat]=ACCOUNT_TYPE_ICONS[cat]||"")
+        });
 
-        function forexPrice(v){return "$"+Math.round(Number(v||0)).toLocaleString()}
+        window.navFullCategoryValueTotals=Object.assign({},categoryValueTotals);
+        window.navFullCategoryPnlTotals=Object.assign({},categoryPnlTotals);
+        window.navFullCategoryIconMap=Object.assign({},categoryIconMap);
+        window.navFullTotalValue=Object.values(categoryValueTotals).reduce(function(s,v){return s+v},0);
 
-        const categoryLabel=group.accountType||"Other",
-            categoryKey=categoryLabel.toLowerCase().replace(/\s+/g,"-");
+        // Render Active Card/Chart Mode Visuals
+        renderActiveChartCards(portfolioGroups);
 
-        if(categoryLabel!==lastRenderedCategory){
-            lastRenderedCategory=categoryLabel;
-            const headerTr=document.createElement("tr");
-            headerTr.className="portfolio-group-hdr-row",
-            headerTr.setAttribute("data-category-key",categoryKey),
-            headerTr.setAttribute("onclick",`toggleCategoryGroup('${categoryKey}', this)`),
-            headerTr.innerHTML=`
-                        <td class="portfolio-group-hdr" colspan="5">
-                            <div class="portfolio-group-hdr-inner">
-                                <span class="portfolio-group-hdr-label">
-                                    ${categoryLabel}
-                                </span>
-                                <span class="portfolio-group-hdr-chevron"><i class="bi bi-chevron-down"></i></span>
-                            </div>
-                        </td>
-                    `,
-            tbody.appendChild(headerTr)
-    }
+        portfolioGroups.forEach((group,index)=>{
+            const records=group.records||[],
+                isSaving="saving"===group.accountType.toLowerCase(),
+                isStock="stock"===group.accountType.toLowerCase(),
+                isCrypto="crypto"===group.accountType.toLowerCase(),
+                isForex="forex"===group.accountType.toLowerCase();
 
-    function splitRecordsIntoCycles(recs,liveMainRecord){const result=[];let bucket=[];return recs.forEach(r=>{bucket.push(r);const noteUp=(r.note||"").toUpperCase(),statusUp=(r.status||"").toUpperCase();(-1!==noteUp.indexOf("CLOSE")||-1!==statusUp.indexOf("CLOSE"))&&(result.push({records:bucket,mainRecord:r,isOpen:!1}),bucket=[])}),bucket.length>0&&result.push({records:bucket,mainRecord:liveMainRecord||null,isOpen:!0}),0===result.length&&result.push({records:recs,mainRecord:liveMainRecord||null,isOpen:!0}),result}
+            function forexPrice(v){return "$"+Math.round(Number(v||0)).toLocaleString()}
 
-    const cycles=(isStock||isCrypto)
-        ?splitRecordsIntoCycles(records,group.mainRecord).reverse()
-        :[{records:records,mainRecord:(isForex||isSaving)&&group.mainRecord?group.mainRecord:null,isOpen:!0}];
+            const categoryLabel=group.accountType||"Other",
+                categoryKey=categoryLabel.toLowerCase().replace(/\s+/g,"-");
 
-        cycles.forEach((cycle,cycleIdx)=>{
-            const groupGroupId=`group-${index}-${cycleIdx}`,
-                cycleRecords=cycle.records||[],
-                visibleRecords=isForex?cycleRecords.filter(r=>""!==(r.status||"").toLowerCase()):cycleRecords;
-
-            const mainRec=cycle.mainRecord,
-                sumMarketValue=mainRec?mainRec.marketValue:cycleRecords.reduce((acc,r)=>acc+r.marketValue,0),
-                sumCost=mainRec?mainRec.costValue:cycleRecords.reduce((acc,r)=>acc+r.costValue,0),
-                sumPnl=mainRec?mainRec.actualPnl:cycleRecords.reduce((acc,r)=>acc+r.actualPnl,0);
-
-            let overallPnlPct=0;
-            overallPnlPct=mainRec?mainRec.colCPnlPct:(isSaving&&cycleRecords.length>0?cycleRecords[0].colCPnlPct:(sumCost>0?sumPnl/sumCost*100:0)),
-            totalPnlVnd+=sumPnl,totalMarketValVnd+=sumMarketValue,totalCostVnd+=sumCost;
-
-            const isOngoing=!!cycle.isOpen&&group.status.toLowerCase().includes("on-going");
-            if(isOngoing){
-                isForex||(activeMarketValVnd+=sumMarketValue),activePositions++;
-                const hasIconUrlForStack=group.iconUrl&&group.iconUrl.trim().startsWith("http");
-                activeIcons.push({iconUrl:hasIconUrlForStack?group.iconUrl:null,symbol:group.symbol||"?"})
+            if(categoryLabel!==lastRenderedCategory && tbody){
+                lastRenderedCategory=categoryLabel;
+                const headerTr=document.createElement("tr");
+                headerTr.className="portfolio-group-hdr-row",
+                headerTr.setAttribute("data-category-key",categoryKey),
+                headerTr.setAttribute("onclick",`toggleCategoryGroup('${categoryKey}', this)`),
+                headerTr.innerHTML=`
+                            <td class="portfolio-group-hdr" colspan="5">
+                                <div class="portfolio-group-hdr-inner">
+                                    <span class="portfolio-group-hdr-label">
+                                        ${categoryLabel}
+                                    </span>
+                                    <span class="portfolio-group-hdr-chevron"><i class="bi bi-chevron-down"></i></span>
+                                </div>
+                            </td>
+                        `,
+                tbody.appendChild(headerTr)
             }
 
-            const dotClass=isOngoing?"ongoing":"close",
-                pnlColorStyle=0===sumPnl?"var(--text-secondary)":sumPnl>0?"var(--teal-primary)":"var(--pink-primary)",
-                hasIconUrl=group.iconUrl&&group.iconUrl.trim().startsWith("http"),
-                iconStyle=hasIconUrl?`background-image: url('${group.iconUrl}');`:"background-color: #21262D;",
-                iconText=hasIconUrl?"":group.symbol.slice(0,4);
+            function splitRecordsIntoCycles(recs,liveMainRecord){const result=[];let bucket=[];return recs.forEach(r=>{bucket.push(r);const noteUp=(r.note||"").toUpperCase(),statusUp=(r.status||"").toUpperCase();(-1!==noteUp.indexOf("CLOSE")||-1!==statusUp.indexOf("CLOSE"))&&(result.push({records:bucket,mainRecord:r,isOpen:!1}),bucket=[])}),bucket.length>0&&result.push({records:bucket,mainRecord:liveMainRecord||null,isOpen:!0}),0===result.length&&result.push({records:recs,mainRecord:liveMainRecord||null,isOpen:!0}),result}
 
-            let displayAccountTitle=group.accountType;
-            if(isSaving&&cycleRecords.length>0){
-                const maxRec=cycleRecords.reduce((max,r)=>r.costValue>max.costValue?r:max,cycleRecords[0]);
-                maxRec&&maxRec.accountType&&(displayAccountTitle=maxRec.accountType)
-            }
+            const cycles=(isStock||isCrypto)?splitRecordsIntoCycles(records,group.mainRecord).reverse():[{records:records,mainRecord:(isForex||isSaving)&&group.mainRecord?group.mainRecord:null,isOpen:!0}];
 
-            let activeSavingSubrowsCount=0;
-            isSaving&&cycleRecords.forEach(r=>{
-                const sDate=parseDate(r.entryDate);
-                let eDate=null;
-                sDate&&r.volume>0?(eDate=new Date(sDate),eDate.setMonth(eDate.getMonth()+parseInt(r.volume,10))):r.exitDate&&(eDate=parseDate(r.exitDate)),
-                (!eDate||eDate>=now)&&activeSavingSubrowsCount++
-            });
+            cycles.forEach((cycle,cycleIdx)=>{
+                const groupGroupId=`group-${index}-${cycleIdx}`,
+                    cycleRecords=cycle.records||[],
+                    visibleRecords=isForex?cycleRecords.filter(r=>""!==(r.status||"").toLowerCase()):cycleRecords;
 
-            const rawLive=mainRec?mainRec.livePrice:group.livePrice;
-            let volumePriceHTML="";
-            if(isSaving)
-                volumePriceHTML=`
-                        <div class="val-primary">${activeSavingSubrowsCount}/${cycleRecords.length}</div>
-                        <div class="val-secondary" style="text-transform: lowercase;">${isOngoing?group.status:"Closed"}</div>`;
-            else if(isCrypto){
-                const rawEntry=mainRec?mainRec.entryPrice||mainRec.execPrice:cycleRecords[0]?.entryPrice||cycleRecords[0]?.execPrice||0;
-                volumePriceHTML=`
-                        <div class="val-primary">${"$"+formatCryptoPrice(rawEntry)}</div>
-                        <div class="val-secondary" style="color: ${pnlColorStyle}; font-weight: 600;">${isOngoing?"$"+formatCryptoPrice(rawLive):"-"}</div>`
-            }else if(isStock){
-                const displayVol=mainRec?mainRec.volume:cycleRecords.reduce((acc,r)=>acc+r.volume,0),
-                    rawEntry=mainRec?mainRec.entryPrice||mainRec.execPrice:cycleRecords[0]?.entryPrice||0,
-                    strEntry=formatStockPrice(rawEntry),
-                    strLive=isOngoing?formatStockPrice(rawLive):"",
-                    displayPriceCombined=isOngoing?`${strEntry}/<span style="color: ${pnlColorStyle}; font-weight: 600;">${strLive}</span>`:strEntry;
-                volumePriceHTML=`
-                        <div class="val-primary">${displayVol.toLocaleString()}</div>
-                        <div class="val-secondary">${displayPriceCombined}</div>`
-            }else if(isForex)
-                volumePriceHTML=`
-                        <div class="val-primary"></div>
-                        <div class="val-secondary"></div>`;
-            else{
-                const totalVol=cycleRecords.reduce((acc,r)=>acc+r.volume,0),
-                    avgPrice=cycleRecords[0]?.entryPrice||cycleRecords[0]?.execPrice||0;
-                volumePriceHTML=`
-                        <div class="val-primary">${totalVol.toLocaleString()}</div>
-                        <div class="val-secondary">${avgPrice.toLocaleString()}</div>`
-            }
+                const mainRec=cycle.mainRecord,
+                    sumMarketValue=mainRec?mainRec.marketValue:cycleRecords.reduce((acc,r)=>acc+r.marketValue,0),
+                    sumCost=mainRec?mainRec.costValue:cycleRecords.reduce((acc,r)=>acc+r.costValue,0),
+                    sumPnl=mainRec?mainRec.actualPnl:cycleRecords.reduce((acc,r)=>acc+r.actualPnl,0);
 
-            const mainTr=document.createElement("tr");
-            mainTr.className="main-row",
-            mainTr.setAttribute("onclick",`toggleGroup('${groupGroupId}', this)`),
-            mainTr.setAttribute("data-category-key",categoryKey);
+                let overallPnlPct=0;
+                overallPnlPct=mainRec?mainRec.colCPnlPct:(isSaving&&cycleRecords.length>0?cycleRecords[0].colCPnlPct:(sumCost>0?sumPnl/sumCost*100:0)),
+                totalPnlVnd+=sumPnl,totalMarketValVnd+=sumMarketValue,totalCostVnd+=sumCost;
 
-            const firstRec=cycleRecords[0],
-                lastRec=mainRec||cycleRecords[cycleRecords.length-1],
-                startDate=firstRec?.entryDate,
-                endDate=cycle.isOpen?lastRec?.exitDate:(lastRec?.exitDate||lastRec?.entryDate),
-                durationHTML=formatDateRangeTwoLinesNoYear(startDate,endDate,isSaving,lastRec?.volume);
+                // -------------------------------------------------------------
+                // SAVING MATURITY DATE & YEAR COMPARISON & LIVE STATUS FIX
+                // -------------------------------------------------------------
+                let activeSavingSubrowsCount=0;
+                isSaving&&cycleRecords.forEach(r=>{
+                    const sDate=parseDate(r.entryDate);
+                    let eDate=null;
+                    if(sDate && r.volume > 0){
+                        eDate = new Date(sDate.getFullYear(), sDate.getMonth() + parseInt(r.volume, 10), sDate.getDate());
+                    } else if(r.exitDate){
+                        eDate = parseDate(r.exitDate);
+                    }
+                    const isMatured = eDate && eDate.getTime() < now.getTime();
+                    if(!isMatured){
+                        activeSavingSubrowsCount++;
+                    }
+                });
 
-            mainTr.innerHTML=`
-                    <td>
-                        <div class="asset-cell">
-                            <span class="chevron-icon">
-                                ${visibleRecords.length>0?'<i class="bi bi-chevron-right"></i>':'<i class="bi bi-dot"></i>'}
-                            </span>
-                            <div class="asset-icon-wrapper">
-                                <div class="asset-icon" style="${iconStyle}">${iconText}</div>
-                                <span class="status-dot ${dotClass}" title="${isOngoing?group.status:"Closed"}"></span>
-                            </div>
-                            <div style="overflow: hidden;">
-                                <div class="val-primary">${isForex?getForexDisplaySymbol(group.symbol):group.symbol}</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        ${durationHTML}
-                    </td>
-                    <td>
-                        ${volumePriceHTML}
-                    </td>
-                    <td>
-                        <div class="val-primary" style="color: ${pnlColorStyle};">
-                            ${formatPnlValue(sumPnl)}
-                        </div>
-                        <div class="val-secondary" style="color: ${pnlColorStyle};">
-                            ${isForex?"":formatPnlPct(overallPnlPct)}
-                        </div>
-                    </td>
-                    <td>
-                        ${isForex?`
-                            <div class="val-primary">${forexPrice((mainRec||group.mainRecord).livePrice)}</div>
-                        `:`
-                            <div class="val-primary">${formatShortNumber(sumCost)}</div>
-                            <div class="val-secondary">${formatShortNumber(sumMarketValue)}</div>
-                        `}
-                    </td>
-                `,
-            tbody.appendChild(mainTr),
-
-            visibleRecords.length>0&&visibleRecords.forEach(r=>{
-                const logTr=document.createElement("tr");
-                logTr.className=`log-row ${groupGroupId}`,
-                logTr.setAttribute("data-category-key",categoryKey);
-
-                const subPnlPct=isSaving||isStock||isCrypto||isForex?r.colCPnlPct:(r.costValue>0?r.actualPnl/r.costValue*100:0),
-                    isSubPositive=r.actualPnl>0,
-                    isSubZero=0===r.actualPnl,
-                    execDateObj=parseDate(r.entryDate),
-                    subExecDateStr=execDateObj?formatNoYearDate(execDateObj):"-",
-                    cleanedDetailNote=cleanNoteText(r.note,r.status),
-                    shortKeyword=getShortLogKeyword(cleanedDetailNote),
-                    subAssetLabel=isSaving?r.symbol:cleanedDetailNote;
-
-                let subVolumePriceHTML="";
-                if(isSaving)
-                    subVolumePriceHTML=`
-                                <div class="val-primary">${r.volume} Mos</div>`;
-                else if(isForex)
-                    subVolumePriceHTML=`
-                                <div class="val-secondary">${r.volume.toLocaleString()}</div>`;
-                else{
-                    const rawPrice=r.execPrice||r.entryPrice||0,
-                        subPriceDisplay=isCrypto?"$"+formatCryptoPrice(rawPrice):isStock?formatStockPrice(rawPrice):rawPrice.toLocaleString();
-                    subVolumePriceHTML=`
-                                <div class="val-primary">${r.volume.toLocaleString()}</div>
-                                <div class="val-secondary">${subPriceDisplay}</div>`
+                const isOngoing=!!cycle.isOpen&&(group.status.toLowerCase().includes("on-going")||activeSavingSubrowsCount>0);
+                if(isOngoing){
+                    isForex||(activeMarketValVnd+=sumMarketValue),activePositions++;
+                    const hasIconUrlForStack=group.iconUrl&&group.iconUrl.trim().startsWith("http");
+                    activeIcons.push({iconUrl:hasIconUrlForStack?group.iconUrl:null,symbol:group.symbol||"?"})
                 }
 
-                const assetBadgeText=isForex?subAssetLabel:isSaving?r.symbol:shortKeyword,
-                    normalizedLabel=(subAssetLabel||"").trim().toLowerCase(),
-                    badgeHtml=isForex
-                        ?orderTypeBadge("sell"===normalizedLabel?"Short":"buy"===normalizedLabel?"Long":subAssetLabel)+" "
-                        :orderTypeBadge(assetBadgeText)+" ";
+                const dotClass=isOngoing?"ongoing":"close",
+                    pnlColorStyle=0===sumPnl?"var(--text-secondary)":sumPnl>0?"var(--teal-primary)":"var(--pink-primary)",
+                    hasIconUrl=group.iconUrl&&group.iconUrl.trim().startsWith("http"),
+                    iconStyle=hasIconUrl?`background-image: url('${group.iconUrl}');`:"background-color: #21262D;",
+                    iconText=hasIconUrl?"":group.symbol.slice(0,4);
 
-                logTr.innerHTML=`
+                let displayAccountTitle=group.accountType;
+                if(isSaving&&cycleRecords.length>0){
+                    const maxRec=cycleRecords.reduce((max,r)=>r.costValue>max.costValue?r:max,cycleRecords[0]);
+                    maxRec&&maxRec.accountType&&(displayAccountTitle=maxRec.accountType)
+                }
+
+                const rawLive=mainRec?mainRec.livePrice:group.livePrice;
+                let volumePriceHTML="";
+                if(isSaving){
+                    const isSavingOngoing = activeSavingSubrowsCount > 0;
+                    volumePriceHTML=`<div class="val-primary">${activeSavingSubrowsCount}/${cycleRecords.length}</div><div class="val-secondary" style="text-transform: lowercase;">${isSavingOngoing?"on-going":"closed"}</div>`;
+                }
+                else if(isCrypto){
+                    const rawEntry=mainRec?mainRec.entryPrice||mainRec.execPrice:cycleRecords[0]?.entryPrice||cycleRecords[0]?.execPrice||0;
+                    volumePriceHTML=`<div class="val-primary">${"$"+formatCryptoPrice(rawEntry)}</div><div class="val-secondary" style="color: ${pnlColorStyle}; font-weight: 600;">${isOngoing?"$"+formatCryptoPrice(rawLive):"-"}</div>`
+                }else if(isStock){
+                    const displayVol=mainRec?mainRec.volume:cycleRecords.reduce((acc,r)=>acc+r.volume,0),
+                        rawEntry=mainRec?mainRec.entryPrice||mainRec.execPrice:cycleRecords[0]?.entryPrice||0,
+                        strEntry=formatStockPrice(rawEntry),
+                        strLive=isOngoing?formatStockPrice(rawLive):"",
+                        displayPriceCombined=isOngoing?`${strEntry}/<span style="color: ${pnlColorStyle}; font-weight: 600;">${strLive}</span>`:strEntry;
+                    volumePriceHTML=`<div class="val-primary">${displayVol.toLocaleString()}</div><div class="val-secondary">${displayPriceCombined}</div>`
+                }else if(isForex)
+                    volumePriceHTML=`<div class="val-primary"></div><div class="val-secondary"></div>`;
+                else{
+                    const totalVol=cycleRecords.reduce((acc,r)=>acc+r.volume,0),
+                        avgPrice=cycleRecords[0]?.entryPrice||cycleRecords[0]?.execPrice||0;
+                    volumePriceHTML=`<div class="val-primary">${totalVol.toLocaleString()}</div><div class="val-secondary">${avgPrice.toLocaleString()}</div>`
+                }
+
+                if(tbody){
+                    const mainTr=document.createElement("tr");
+                    mainTr.className="main-row",
+                    mainTr.setAttribute("onclick",`toggleGroup('${groupGroupId}', this)`),
+                    mainTr.setAttribute("data-category-key",categoryKey);
+
+                    const firstRec=cycleRecords[0],
+                        lastRec=mainRec||cycleRecords[cycleRecords.length-1],
+                        startDate=firstRec?.entryDate,
+                        endDate=cycle.isOpen?lastRec?.exitDate:(lastRec?.exitDate||lastRec?.entryDate),
+                        durationHTML=formatDateRangeTwoLinesNoYear(startDate,endDate,isSaving,lastRec?.volume);
+
+                    mainTr.innerHTML=`
+                        <td>
+                            <div class="asset-cell">
+                                <span class="chevron-icon">
+                                    ${visibleRecords.length>0?'<i class="bi bi-chevron-right"></i>':'<i class="bi bi-dot"></i>'}
+                                </span>
+                                <div class="asset-icon-wrapper">
+                                    <div class="asset-icon" style="${iconStyle}">${iconText}</div>
+                                    <span class="status-dot ${dotClass}" title="${isOngoing?group.status:"Closed"}"></span>
+                                </div>
+                                <div style="overflow: hidden;">
+                                    <div class="val-primary">${isForex?getForexDisplaySymbol(group.symbol):group.symbol}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${durationHTML}</td>
+                        <td>${volumePriceHTML}</td>
+                        <td>
+                            <div class="val-primary" style="color: ${pnlColorStyle};">${formatPnlValue(sumPnl)}</div>
+                            <div class="val-secondary" style="color: ${pnlColorStyle};">${isForex?"":formatPnlPct(overallPnlPct)}</div>
+                        </td>
+                        <td>
+                            ${isForex?`<div class="val-primary">${forexPrice((mainRec||group.mainRecord).livePrice)}</div>`:`<div class="val-primary">${formatShortNumber(sumCost)}</div><div class="val-secondary">${formatShortNumber(sumMarketValue)}</div>`}
+                        </td>
+                    `;
+                    tbody.appendChild(mainTr);
+
+                    visibleRecords.length>0&&visibleRecords.forEach(r=>{
+                        const logTr=document.createElement("tr");
+                        logTr.className=`log-row ${groupGroupId}`,
+                        logTr.setAttribute("data-category-key",categoryKey);
+
+                        const subPnlPct=isSaving||isStock||isCrypto||isForex?r.colCPnlPct:(r.costValue>0?r.actualPnl/r.costValue*100:0),
+                            isSubPositive=r.actualPnl>0,
+                            isSubZero=0===r.actualPnl,
+                            execDateObj=parseDate(r.entryDate),
+                            subExecDateStr=execDateObj?formatNoYearDate(execDateObj):"-",
+                            cleanedDetailNote=cleanNoteText(r.note,r.status),
+                            shortKeyword=getShortLogKeyword(cleanedDetailNote),
+                            subAssetLabel=isSaving?r.symbol:cleanedDetailNote;
+
+                        let subVolumePriceHTML="";
+                        if(isSaving)
+                            subVolumePriceHTML=`<div class="val-primary">${r.volume} Mos</div>`;
+                        else if(isForex)
+                            subVolumePriceHTML=`<div class="val-secondary">${r.volume.toLocaleString()}</div>`;
+                        else{
+                            const rawPrice=r.execPrice||r.entryPrice||0,
+                                subPriceDisplay=isCrypto?"$"+formatCryptoPrice(rawPrice):isStock?formatStockPrice(rawPrice):rawPrice.toLocaleString();
+                            subVolumePriceHTML=`<div class="val-primary">${r.volume.toLocaleString()}</div><div class="val-secondary">${subPriceDisplay}</div>`
+                        }
+
+                        const assetBadgeText=isForex?subAssetLabel:isSaving?r.symbol:shortKeyword,
+                            normalizedLabel=(subAssetLabel||"").trim().toLowerCase(),
+                            badgeHtml=isForex?orderTypeBadge("sell"===normalizedLabel?"Short":"buy"===normalizedLabel?"Long":subAssetLabel)+" ":orderTypeBadge(assetBadgeText)+" ";
+
+                        logTr.innerHTML=`
                             <td class="sub-indent" style="padding-left: 28px;">
                                 <div class="asset-cell">
                                     <span style="color: var(--text-muted); flex-shrink: 0;"><i class="bi bi-arrow-return-right"></i></span>
@@ -4778,37 +4845,441 @@ to{transform:rotate(360deg)}
                                     </span>
                                 </div>
                             </td>
+                            <td><div class="val-primary">${subExecDateStr}</div></td>
+                            <td>${subVolumePriceHTML}</td>
                             <td>
-                                <div class="val-primary">${subExecDateStr}</div>
+                                <div class="val-secondary" style="color: ${isSubZero?"var(--text-secondary)":isSubPositive?"var(--teal-primary)":"var(--pink-primary)"}; font-weight: 700;">${r.actualPnl?formatPnlValue(r.actualPnl):""}</div>
+                                <div class="val-secondary" style="color: ${isSubZero?"var(--text-secondary)":isSubPositive?"var(--teal-primary)":"var(--pink-primary)"};">${subPnlPct?formatPnlPct(subPnlPct):""}</div>
                             </td>
                             <td>
-                                ${subVolumePriceHTML}
+                                ${isForex?`<div class="val-secondary" style="font-weight: 700; color: var(--text-primary);">${r.entryPrice?forexPrice(r.entryPrice):""}</div>`:`<div class="val-secondary" style="font-weight: 700; color: var(--text-primary);">${r.costValue?formatShortNumber(r.costValue):""}</div><div class="val-secondary">${r.marketValue?formatShortNumber(r.marketValue):""}</div>`}
                             </td>
-                            <td>
-                                <div class="val-secondary" style="color: ${isSubZero?"var(--text-secondary)":isSubPositive?"var(--teal-primary)":"var(--pink-primary)"}; font-weight: 700;">
-                                    ${r.actualPnl?formatPnlValue(r.actualPnl):""}
-                                </div>
-                                <div class="val-secondary" style="color: ${isSubZero?"var(--text-secondary)":isSubPositive?"var(--teal-primary)":"var(--pink-primary)"};">
-                                    ${subPnlPct?formatPnlPct(subPnlPct):""}
-                                </div>
-                            </td>
-                            <td>
-                                ${isForex?`
-                                    <div class="val-secondary" style="font-weight: 700; color: var(--text-primary);">${r.entryPrice?forexPrice(r.entryPrice):""}</div>
-                                `:`
-                                    <div class="val-secondary" style="font-weight: 700; color: var(--text-primary);">${r.costValue?formatShortNumber(r.costValue):""}</div>
-                                    <div class="val-secondary">${r.marketValue?formatShortNumber(r.marketValue):""}</div>
-                                `}
-                            </td>
-                        `,
-                tbody.appendChild(logTr)
+                        `;
+                        tbody.appendChild(logTr);
+                    });
+                }
+            });
+        });
+
+        hasForexInView&&null!==window.forexNavBalance&&void 0!==window.forexNavBalance&&(activeMarketValVnd+=window.forexNavBalance);
+        if(typeof renderActivePositionsStat === 'function') renderActivePositionsStat(activePositions,activeIcons);
+        
+        var balances,pnls,CAT_KEY_DISPLAY,donutValues={},donutPnls={},donutCosts={},donutIcons={},donutHasActive={},CAT_ICONS={Stock:"https://github.com/tinsntp/investment/blob/main/stock.png?raw=true",Saving:"https://github.com/tinsntp/investment/blob/main/saving.png?raw=true",Crypto:"https://cdn-icons-png.flaticon.com/512/5968/5968260.png",Forex:"https://github.com/tinsntp/investment/blob/main/exness.png?raw=true"};
+        
+        (window.currentPortfolioGroups||[]).forEach(function(group){
+            var cat=group.accountType||"Other",isStock="stock"===cat.toLowerCase(),isCrypto="crypto"===cat.toLowerCase(),isForex="forex"===cat.toLowerCase(),isSaving="saving"===cat.toLowerCase(),isOngoing=group.status.toLowerCase().includes("on-going"),mainRec=isStock||isCrypto||isForex||isSaving?group.mainRecord:null,val=mainRec?mainRec.marketValue:(group.records||[]).reduce(function(a,r){return a+(r.marketValue||0)},0)+(group.mainRecord&&group.mainRecord.marketValue||0),pnl=mainRec?mainRec.actualPnl:(group.records||[]).reduce(function(a,r){return a+(r.actualPnl||0)},0)+(group.mainRecord&&group.mainRecord.actualPnl||0),cost=mainRec?mainRec.costValue:(group.records||[]).reduce(function(a,r){return a+(r.costValue||0)},0)+(group.mainRecord&&group.mainRecord.costValue||0);
+            isOngoing?(donutValues[cat]=(donutValues[cat]||0)+val,donutHasActive[cat]=!0):cat in donutHasActive||(donutHasActive[cat]=!1),donutPnls[cat]=(donutPnls[cat]||0)+pnl,donutCosts[cat]=(donutCosts[cat]||0)+cost,donutIcons[cat]||(donutIcons[cat]=CAT_ICONS[cat]||"")
+        });
+
+        if(window.navCategoryBalances){
+            balances=window.navCategoryBalances,pnls=window.navCategoryPnls,CAT_KEY_DISPLAY={FOREX:"Forex",CRYPTO:"Crypto",STOCK:"Stock",GOLD:"Gold",SAVING:"Saving"},
+            Object.keys(balances).forEach(function(k){var dispName=CAT_KEY_DISPLAY[k]||k.charAt(0)+k.slice(1).toLowerCase();donutValues[dispName]=balances[k],donutHasActive[dispName]=!0,donutIcons[dispName]||(donutIcons[dispName]=CAT_ICONS[dispName]||"")}),
+            pnls&&Object.keys(pnls).forEach(function(k){var dispName=CAT_KEY_DISPLAY[k]||k.charAt(0)+k.slice(1).toLowerCase();donutPnls[dispName]=pnls[k]})
+        }
+        
+        var donutTotal=Object.values(donutValues).reduce(function(s,v){return s+v},0),navTotalBalVnd=donutTotal,navTotalPnlVnd=Object.values(donutPnls).reduce(function(s,v){return s+v},0),navTotalCostVnd=Object.values(donutCosts).reduce(function(s,v){return s+v},0);
+        var balEl=document.getElementById("total-profit-bal"); if(balEl) balEl.textContent=navTotalBalVnd.toLocaleString()+"₫";
+        var valEl=document.getElementById("total-profit-val"); if(valEl) valEl.textContent=(navTotalPnlVnd>0?"+":"")+navTotalPnlVnd.toLocaleString()+"₫";
+        
+        var navOverallPct=navTotalCostVnd>0?navTotalPnlVnd/navTotalCostVnd*100:0,badgeEl=document.getElementById("total-profit-badge");
+        if(badgeEl){badgeEl.textContent=formatPnlPct(navOverallPct);badgeEl.className="badge-pill "+(navTotalPnlVnd>=0?"badge-teal":"badge-pink")}
+        
+        if(typeof renderNavDonut === 'function') renderNavDonut(donutValues,donutPnls,donutIcons,donutTotal,donutHasActive,donutCosts);
+    }
+
+// Clean short number formatter for column chart (e.g. 100M)
+function formatCleanShortNumber(val) {
+    if (val === null || val === undefined || isNaN(val)) return '0';
+    var absVal = Math.abs(val);
+    if (absVal >= 1000000) {
+        return (val / 1000000).toFixed(1).replace(/\.?0+$/, '') + 'M';
+    } else if (absVal >= 1000) {
+        return (val / 1000).toFixed(1).replace(/\.?0+$/, '') + 'K';
+    }
+    return val.toLocaleString();
+}
+
+// Precise formatter maintaining 3 decimal places for VAL in group cards
+function formatPreciseShortNumber(val) {
+    if (val === null || val === undefined || isNaN(val)) return '0';
+    var absVal = Math.abs(val);
+    if (absVal >= 1000000) {
+        return (val / 1000000).toFixed(3) + 'M';
+    } else if (absVal >= 1000) {
+        return (val / 1000).toFixed(3) + 'K';
+    }
+    return val.toLocaleString();
+}
+
+function renderActiveChartCards(portfolioGroups) {
+    const barsContainer = document.getElementById('chart-bars-container');
+    const groupContainer = document.getElementById('group-summary-blocks-container');
+    const leftLoading = document.getElementById('chart-left-loading');
+    const rightLoading = document.getElementById('chart-right-loading');
+
+    if (!barsContainer || !groupContainer) return;
+
+    if (leftLoading) leftLoading.style.display = 'flex';
+    if (rightLoading) rightLoading.style.display = 'flex';
+
+    setTimeout(() => {
+        barsContainer.innerHTML = '';
+        groupContainer.innerHTML = '';
+
+        const activeFilter = (typeof portfolioFilters !== 'undefined' && portfolioFilters.asset) ? portfolioFilters.asset.toLowerCase() : 'all';
+        const isForexFilteredOut = activeFilter !== 'all' && activeFilter !== 'forex' && activeFilter !== 'on-going';
+        const hasForexNav = !isForexFilteredOut && window.forexNavBalance && window.forexNavBalance > 0;
+
+        const activeItems = portfolioGroups.filter(g => {
+            const statusStr = (g.status || '').toLowerCase();
+            const isSaving = (g.accountType || '').toLowerCase() === 'saving';
+            const hasActiveSavingSub = isSaving && (g.records || []).some(r => {
+                const sDate = parseDate(r.entryDate);
+                let eDate = null;
+                if (sDate && r.volume > 0) {
+                    eDate = new Date(sDate.getFullYear(), sDate.getMonth() + parseInt(r.volume, 10), sDate.getDate());
+                } else if (r.exitDate) {
+                    eDate = parseDate(r.exitDate);
+                }
+                return !eDate || eDate.getTime() >= new Date().getTime();
+            });
+
+            const isOngoing = statusStr.includes('on-going') || hasActiveSavingSub;
+            if (!isOngoing) return false;
+            if (activeFilter === 'all' || activeFilter === 'on-going') return true;
+            return (g.accountType || '').toLowerCase() === activeFilter;
+        });
+
+        // -----------------------------------------------------------------
+        // 1. LEFT COLUMN CHART (Accurate individual item PnL & Cost calculation)
+        // -----------------------------------------------------------------
+        const rawColumnMap = {};
+        const shouldConsolidateSavings = activeFilter === 'all' || activeFilter === 'on-going';
+
+        activeItems.forEach(item => {
+            const isSaving = (item.accountType || '').toLowerCase() === 'saving';
+            const groupingKey = (isSaving && shouldConsolidateSavings) ? 'SAVING' : (item.symbol || 'UNKNOWN');
+
+            const costVal = item.mainRecord ? (item.mainRecord.costValue || 0) : (item.records || []).reduce((acc, r) => acc + (r.costValue || 0), 0);
+            const marketVal = item.mainRecord ? (item.mainRecord.marketValue || 0) : (item.records || []).reduce((acc, r) => acc + (r.marketValue || 0), 0);
+            
+            // Derive exact PnL independently per asset to prevent global aggregate leakage
+            const pnlVal = marketVal > 0 ? (marketVal - costVal) : (item.mainRecord ? (item.mainRecord.actualPnl || 0) : (item.records || []).reduce((acc, r) => acc + (r.actualPnl || 0), 0));
+
+            if (!rawColumnMap[groupingKey]) {
+                rawColumnMap[groupingKey] = {
+                    symbol: (isSaving && shouldConsolidateSavings) ? 'SAVING' : item.symbol,
+                    accountType: item.accountType || '',
+                    iconUrls: [],
+                    cost: 0,
+                    pnl: 0,
+                    isConsolidatedSaving: (isSaving && shouldConsolidateSavings)
+                };
+            }
+
+            rawColumnMap[groupingKey].cost += costVal;
+            rawColumnMap[groupingKey].pnl += pnlVal;
+
+            const targetIcon = item.iconUrl || (isSaving ? 'https://github.com/tinsntp/investment/blob/main/saving.png?raw=true' : '');
+            if (targetIcon && targetIcon.trim().startsWith('http') && !rawColumnMap[groupingKey].iconUrls.includes(targetIcon)) {
+                rawColumnMap[groupingKey].iconUrls.push(targetIcon);
+            }
+        });
+
+        Object.keys(rawColumnMap).forEach(k => {
+            if (rawColumnMap[k].isConsolidatedSaving && rawColumnMap[k].iconUrls.length === 0) {
+                rawColumnMap[k].iconUrls.push('https://github.com/tinsntp/investment/blob/main/saving.png?raw=true');
+            }
+        });
+
+        const displayColumnItems = Object.values(rawColumnMap);
+
+        if (hasForexNav) {
+            const forexPnl = (window.navCategoryPnls && window.navCategoryPnls.FOREX) ? window.navCategoryPnls.FOREX : 0;
+            displayColumnItems.push({
+                symbol: 'FX',
+                accountType: 'Forex',
+                iconUrls: ['https://github.com/tinsntp/investment/blob/main/exness.png?raw=true'],
+                cost: window.forexNavBalance,
+                pnl: forexPnl,
+                isConsolidatedSaving: false
+            });
+        }
+
+        let totalActiveInvested = displayColumnItems.reduce((s, i) => s + i.cost, 0);
+        let totalActivePnl = displayColumnItems.reduce((s, i) => s + i.pnl, 0);
+
+        const overallPnlPct = totalActiveInvested > 0 ? (totalActivePnl / totalActiveInvested) * 100 : 0;
+        const pnlColorStyle = overallPnlPct >= 0 ? '#00bfa5' : '#f472b6';
+
+        let chartParentPanel = barsContainer.closest('.chart-panel-card');
+        if (chartParentPanel) {
+            let headerBar = chartParentPanel.querySelector('.chart-top-header');
+            if (!headerBar) {
+                headerBar = document.createElement('div');
+                headerBar.className = 'chart-top-header';
+                chartParentPanel.prepend(headerBar);
+            }
+            headerBar.style.cssText = 'display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; width: 100%; z-index: 5; flex-shrink: 0;';
+            headerBar.innerHTML = `
+                <div style="display: flex; gap: 8px; font-size: 9px; color: #8b949e; font-weight: 600;">
+                    <span style="display: flex; align-items: center; gap: 3px;"><span style="width: 6px; height: 6px; background: #8b5cf6; border-radius: 50%;"></span> Invested</span>
+                    <span style="display: flex; align-items: center; gap: 3px;"><span style="width: 6px; height: 6px; background: #facc15; border-radius: 50%;"></span> PnL</span>
+                </div>
+                <div style="font-size: 11px; font-weight: 700; color: ${pnlColorStyle}; background: rgba(255,255,255,0.06); padding: 2px 8px; border-radius: 10px;">
+                    ${overallPnlPct >= 0 ? '+' : ''}${overallPnlPct.toFixed(1)}%
+                </div>
+            `;
+        }
+
+        if (displayColumnItems.length === 0) {
+            barsContainer.innerHTML = '<div style="color: #8b949e; font-size: 12px; margin: auto;">No active positions</div>';
+        } else {
+            // Find the maximum magnitude across ALL costs and absolute PnLs so the scale is unified
+            let maxVal = 1;
+            displayColumnItems.forEach(item => {
+                const safeCost = Math.abs(item.cost || 0);
+                const safeAbsPnl = Math.abs(item.pnl || 0);
+                if (safeCost > maxVal) maxVal = safeCost;
+                if (safeAbsPnl > maxVal) maxVal = safeAbsPnl;
+            });
+
+            barsContainer.style.cssText = 'display: flex; justify-content: space-around; align-items: flex-end; height: 215px; overflow: visible; padding-top: 28px; width: 100%; box-sizing: border-box; position: relative;';
+
+            displayColumnItems.forEach(item => {
+                const safeCost = item.cost || 0;
+                const safePnl = item.pnl || 0;
+                const itemPnlPct = safeCost > 0 ? (safePnl / safeCost) * 100 : 0;
+                const itemPnlColor = itemPnlPct >= 0 ? '#00bfa5' : '#f472b6';
+
+                // Both bars now scale strictly and proportionally against the unified maxVal (up to 80%)
+                const costPct = Math.max(14, Math.min(80, (Math.abs(safeCost) / maxVal) * 80));
+                const pnlPct = Math.max(12, Math.min(80, (Math.abs(safePnl) / maxVal) * 80));
+                
+                const tallestBarPct = Math.max(costPct, pnlPct);
+                const labelBottomPct = Math.max(28, tallestBarPct + 12);
+
+                const barGroup = document.createElement('div');
+                barGroup.style.cssText = 'display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; flex-shrink: 0; position: relative; width: 38px;';
+
+                const topLabelWrap = document.createElement('div');
+                topLabelWrap.style.cssText = `position: absolute; bottom: ${labelBottomPct}%; display: flex; flex-direction: column; align-items: center; z-index: 10; text-align: center; width: 64px; left: 50%; transform: translateX(-50%); pointer-events: none;`;
+                topLabelWrap.innerHTML = `
+                    <div style="font-size: 10px; color: ${itemPnlColor}; font-weight: 800; line-height: 1.1; text-shadow: 0 1px 3px rgba(0,0,0,0.9);">${itemPnlPct >= 0 ? '+' : ''}${itemPnlPct.toFixed(1)}%</div>
+                    <div style="font-size: 8px; color: #94a3b8; font-weight: 700; margin-top: 1px;">${formatCleanShortNumber(safeCost)}</div>
+                `;
+
+                const barsRow = document.createElement('div');
+                barsRow.style.cssText = 'display: flex; gap: 2px; align-items: flex-end; height: 165px; flex-shrink: 0; margin-bottom: 24px;';
+
+                const purpleBar = `
+                    <div style="width: 8px; height: ${costPct}%; border-radius: 4px; overflow: hidden; display: flex; flex-direction: column; background: #6d28d9;">
+                        <div style="flex: 1; background: #a78bfa;"></div>
+                        <div style="flex: 1; background: #8b5cf6;"></div>
+                        <div style="flex: 1; background: #6d28d9;"></div>
+                    </div>`;
+
+                const yellowBar = `
+                    <div style="width: 8px; height: ${pnlPct}%; border-radius: 4px; overflow: hidden; display: flex; flex-direction: column; background: #ca8a04;">
+                        <div style="flex: 1; background: #fde047;"></div>
+                        <div style="flex: 1; background: #facc15;"></div>
+                        <div style="flex: 1; background: #eab308;"></div>
+                    </div>`;
+
+                barsRow.innerHTML = purpleBar + yellowBar;
+
+                const iconFooter = document.createElement('div');
+                iconFooter.style.cssText = 'position: absolute; bottom: 2px; width: 22px; height: 18px; display: flex; align-items: center; justify-content: center; z-index: 5;';
+
+                if (item.iconUrls && item.iconUrls.length > 1) {
+                    iconFooter.innerHTML = `
+                        <div style="position: relative; width: 22px; height: 16px;">
+                            <div style="position: absolute; left: 0; top: 0; width: 14px; height: 14px; border-radius: 50%; background-image: url('${item.iconUrls[0]}'); background-size: cover; background-position: center; border: 1px solid #161b22;"></div>
+                            <div style="position: absolute; right: 0; top: 0; width: 14px; height: 14px; border-radius: 50%; background-image: url('${item.iconUrls[1]}'); background-size: cover; background-position: center; border: 1px solid #161b22;"></div>
+                        </div>
+                    `;
+                } else if (item.iconUrls && item.iconUrls.length === 1) {
+                    iconFooter.innerHTML = `<div style="width: 16px; height: 16px; border-radius: 50%; background-image: url('${item.iconUrls[0]}'); background-size: cover; background-position: center; background-color: #21262d;"></div>`;
+                } else {
+                    iconFooter.innerHTML = `<div style="width: 16px; height: 16px; border-radius: 50%; background: #21262d; color: #fff; font-size: 7px; display: flex; align-items: center; justify-content: center; font-weight: bold;">${(item.symbol || '?').slice(0, 3)}</div>`;
+                }
+
+                barGroup.appendChild(topLabelWrap);
+                barGroup.appendChild(barsRow);
+                barGroup.appendChild(iconFooter);
+                barsContainer.appendChild(barGroup);
+            });
+        }
+
+        // -----------------------------------------------------------------
+        // 2. RIGHT GROUP CARDS
+        // -----------------------------------------------------------------
+        const catMap = {};
+        const catPnlMap = {};
+        const catInvestedMap = {};
+        
+        portfolioGroups.forEach(g => {
+            const statusStr = (g.status || '').toLowerCase();
+            const isSaving = (g.accountType || '').toLowerCase() === 'saving';
+            const hasActiveSavingSub = isSaving && (g.records || []).some(r => {
+                const sDate = parseDate(r.entryDate);
+                let eDate = null;
+                if (sDate && r.volume > 0) {
+                    eDate = new Date(sDate.getFullYear(), sDate.getMonth() + parseInt(r.volume, 10), sDate.getDate());
+                } else if (r.exitDate) {
+                    eDate = parseDate(r.exitDate);
+                }
+                return !eDate || eDate.getTime() >= new Date().getTime();
+            });
+
+            const isOngoing = statusStr.includes('on-going') || hasActiveSavingSub;
+            if (isOngoing) {
+                const cat = g.accountType || 'Saving';
+                const val = g.mainRecord ? g.mainRecord.marketValue : (g.records || []).reduce((acc, r) => acc + (r.marketValue || 0), 0);
+                const cost = g.mainRecord ? g.mainRecord.costValue : (g.records || []).reduce((acc, r) => acc + (r.costValue || 0), 0);
+                const pnl = g.mainRecord ? g.mainRecord.actualPnl : (g.records || []).reduce((acc, r) => acc + (r.actualPnl || 0), 0);
+                
+                catMap[cat] = (catMap[cat] || 0) + val;
+                catInvestedMap[cat] = (catInvestedMap[cat] || 0) + cost;
+                catPnlMap[cat] = (catPnlMap[cat] || 0) + pnl;
+            }
+        });
+
+        if (!isForexFilteredOut && window.forexNavBalance && window.forexNavBalance > 0) {
+            catMap['Forex'] = window.forexNavBalance;
+            catInvestedMap['Forex'] = window.forexNavBalance;
+            catPnlMap['Forex'] = window.navCategoryPnls && window.navCategoryPnls.FOREX ? window.navCategoryPnls.FOREX : 0;
+        }
+
+        const grandTotalVal = Object.keys(catMap).reduce((a, b) => a + catMap[b], 0);
+
+        const activeCategories = Object.keys(catMap)
+            .filter(k => {
+                if (activeFilter === 'all' || activeFilter === 'on-going') return true;
+                return k.toLowerCase() === activeFilter;
             })
-        })
-    }),hasForexInView&&
-    null!==window.forexNavBalance&&void 0!==window.forexNavBalance&&(activeMarketValVnd+=window.forexNavBalance);renderActivePositionsStat(activePositions,activeIcons);var balances,pnls,CAT_KEY_DISPLAY,donutValues={},donutPnls={},donutCosts={},donutIcons={},donutHasActive={},CAT_ICONS={Stock:"https://github.com/tinsntp/investment/blob/main/stock.png?raw=true",Saving:"https://github.com/tinsntp/investment/blob/main/saving.png?raw=true",Crypto:"https://cdn-icons-png.flaticon.com/512/5968/5968260.png",Forex:"https://github.com/tinsntp/investment/blob/main/exness.png?raw=true"};(window.currentPortfolioGroups||[]).forEach(function(group){var cat=group.accountType||"Other",isStock="stock"===cat.toLowerCase(),isCrypto="crypto"===cat.toLowerCase(),isForex="forex"===cat.toLowerCase(),isSaving="saving"===cat.toLowerCase(),isOngoing=group.status.toLowerCase().includes("on-going"),mainRec=isStock||isCrypto||isForex||isSaving?group.mainRecord:null,val=mainRec?mainRec.marketValue:(group.records||[]).reduce(function(a,r){return a+(r.marketValue||0)},0)+(group.mainRecord&&group.mainRecord.marketValue||0),pnl=mainRec?mainRec.actualPnl:(group.records||[]).reduce(function(a,r){return a+(r.actualPnl||0)},0)+(group.mainRecord&&group.mainRecord.actualPnl||0),cost=mainRec?mainRec.costValue:(group.records||[]).reduce(function(a,r){return a+(r.costValue||0)},0)+(group.mainRecord&&group.mainRecord.costValue||0);isOngoing?(donutValues[cat]=(donutValues[cat]||0)+val,donutHasActive[cat]=!0):cat in donutHasActive||(donutHasActive[cat]=!1),donutPnls[cat]=(donutPnls[cat]||0)+pnl,donutCosts[cat]=(donutCosts[cat]||0)+cost,donutIcons[cat]||(donutIcons[cat]=CAT_ICONS[cat]||"")}),window.navCategoryBalances&&(balances=window.navCategoryBalances,pnls=window.navCategoryPnls,CAT_KEY_DISPLAY={FOREX:"Forex",CRYPTO:"Crypto",STOCK:"Stock",GOLD:"Gold",SAVING:"Saving"},Object.keys(balances).forEach(function(k){var dispName=CAT_KEY_DISPLAY[k]||k.charAt(0)+k.slice(1).toLowerCase();donutValues[dispName]=balances[k],donutHasActive[dispName]=!0,donutIcons[dispName]||(donutIcons[dispName]=CAT_ICONS[dispName]||"")}),pnls&&Object.keys(pnls).forEach(function(k){var dispName=CAT_KEY_DISPLAY[k]||k.charAt(0)+k.slice(1).toLowerCase();donutPnls[dispName]=pnls[k]}));var donutTotal=Object.values(donutValues).reduce(function(s,v){return s+v},0),navTotalBalVnd=donutTotal,navTotalPnlVnd=Object.values(donutPnls).reduce(function(s,v){return s+v},0),navTotalCostVnd=Object.values(donutCosts).reduce(function(s,v){return s+v},0);document.getElementById("total-profit-bal").textContent=navTotalBalVnd.toLocaleString()+"₫",document.getElementById("total-profit-val").textContent=(navTotalPnlVnd>0?"+":"")+navTotalPnlVnd.toLocaleString()+"₫";var navOverallPct=navTotalCostVnd>0?navTotalPnlVnd/navTotalCostVnd*100:0,badgeEl=document.getElementById("total-profit-badge");badgeEl.textContent=formatPnlPct(navOverallPct),badgeEl.className="badge-pill "+(navTotalPnlVnd>=0?"badge-teal":"badge-pink"),renderNavDonut(donutValues,donutPnls,donutIcons,donutTotal,donutHasActive,donutCosts)}
+            .map(k => ({
+                name: k,
+                val: catMap[k],
+                cost: catInvestedMap[k] || 0,
+                pnl: catPnlMap[k] || 0,
+                pct: grandTotalVal > 0 ? Math.round((catMap[k] / grandTotalVal) * 100) : 0
+            }))
+            .filter(c => c.val > 0 || c.pnl !== 0)
+            .sort((a, b) => b.val - a.val);
+
+        const blockColors = { Stock: '#7ee8a8', Saving: '#a78bfa', Forex: '#ffffff', Crypto: '#facc15' };
+        const ACCOUNT_TYPE_ICONS = {
+            Stock: 'https://github.com/tinsntp/investment/blob/main/stock.png?raw=true',
+            Saving: 'https://github.com/tinsntp/investment/blob/main/saving.png?raw=true',
+            Crypto: 'https://cdn-icons-png.flaticon.com/512/5968/5968260.png',
+            Forex: 'https://github.com/tinsntp/investment/blob/main/exness.png?raw=true'
+        };
+
+        groupContainer.style.cssText = 'background: #161b22; border: 1px solid rgba(255,255,255,0.08); border-radius: 30px; padding: 10px; display: flex; flex-direction: column; gap: 6px; justify-content: space-between; overflow: hidden; box-sizing: border-box; height: 100%;';
+
+        const totalHeaderHtml = `
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 4px 4px 4px; border-bottom: 1px solid rgba(255,255,255,0.08); flex-shrink: 0;">
+                <span style="font-size: 9px; color: #8b949e; font-weight: 700; text-transform: uppercase;">Active Total</span>
+                <span style="font-size: 13px; color: #fff; font-weight: 800;">${formatPreciseShortNumber(totalActiveInvested)}</span>
+            </div>
+        `;
+        groupContainer.innerHTML = totalHeaderHtml;
+
+        if (activeCategories.length === 0) {
+            const emptyDiv = document.createElement('div');
+            emptyDiv.style.cssText = 'color: #8b949e; font-size: 12px; text-align: center; padding: 16px;';
+            emptyDiv.textContent = 'No active categories';
+            groupContainer.appendChild(emptyDiv);
+        } else {
+            activeCategories.forEach(cat => {
+                const fillColor = blockColors[cat.name] || '#facc15';
+                const iconUrl = ACCOUNT_TYPE_ICONS[cat.name] || '';
+                const pnlColor = cat.pnl >= 0 ? '#00bfa5' : '#f43f5e';
+
+                const investedProportion = Math.max(15, Math.min(100, cat.pct));
+
+                const card = document.createElement('div');
+                card.style.cssText = `
+                    background: #373e47; 
+                    border: 1px solid rgba(255,255,255,0.15);
+                    border-radius: 12px; 
+                    position: relative;
+                    overflow: hidden;
+                    padding: 7px 10px; 
+                    display: flex; 
+                    flex-direction: column; 
+                    justify-content: space-between; 
+                    box-shadow: 0 3px 10px rgba(0,0,0,0.3); 
+                    cursor: pointer; 
+                    transition: transform 0.1s ease; 
+                    flex: 1; 
+                    box-sizing: border-box;
+                `;
+
+                card.onmouseover = () => card.style.transform = 'scale(1.01)';
+                card.onmouseout = () => card.style.transform = 'scale(1)';
+
+                card.onclick = function() {
+                    if (typeof portfolioFilters !== 'undefined') {
+                        const isSelected = portfolioFilters.asset === cat.name.toLowerCase();
+                        portfolioFilters.asset = isSelected ? 'all' : cat.name.toLowerCase();
+                        if (typeof applyPortfolioFiltersAndRender === 'function') {
+                            applyPortfolioFiltersAndRender();
+                        }
+                        var icon = document.getElementById('asset-filter-icon');
+                        if (icon) icon.classList.toggle('active-filter', !isSelected);
+                    }
+                };
+
+                const waveOverlay = `
+                    <div style="position: absolute; bottom: 0; left: 0; right: 0; height: ${investedProportion}%; background: ${fillColor}; opacity: 0.22; border-radius: 0 0 12px 12px; pointer-events: none; z-index: 1;">
+                        <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="position: absolute; top: -8px; left: 0; width: 100%; height: 10px;">
+                            <path d="M0,0 C150,90 350,-40 500,0 L500,150 L0,150 Z" fill="${fillColor}"></path>
+                        </svg>
+                    </div>
+                `;
+
+                card.innerHTML = `
+                    ${waveOverlay}
+                    <div style="position: relative; z-index: 2; color: #fff; height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+                        <!-- Row 1: Icon + Title + Inv -->
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <div style="width: 20px; height: 20px; border-radius: 5px; background-image: url('${iconUrl}'); background-size: cover; background-position: center; background-color: rgba(0,0,0,0.3); flex-shrink: 0;"></div>
+                                <div>
+                                    <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px; color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">${cat.name} <span style="font-weight: 700; color: #e2e8f0;">(${cat.pct}%)</span></div>
+                                    <div style="font-size: 9.5px; font-weight: 600; color: #cbd5e1; margin-top: 1px;">Inv: ${formatPreciseShortNumber(cat.cost)}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 2: P/L & VAL -->
+                        <div style="display: flex; flex-direction: column; gap: 1px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 3px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 9px; font-weight: 700; color: #cbd5e1; text-transform: uppercase;">P/L</span>
+                                <span style="font-size: 13.5px; font-weight: 800; color: ${pnlColor}; text-shadow: 0 1px 3px rgba(0,0,0,0.9);">${formatPnlValue(cat.pnl)}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 9px; font-weight: 700; color: #cbd5e1; text-transform: uppercase;">VAL</span>
+                                <span style="font-size: 13px; font-weight: 800; color: #ffffff; text-shadow: 0 1px 3px rgba(0,0,0,0.9);">${formatPreciseShortNumber(cat.val)}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                groupContainer.appendChild(card);
+            });
+        }
+
+        if (leftLoading) leftLoading.style.display = 'none';
+        if (rightLoading) rightLoading.style.display = 'none';
+    }, 150);
+}
+
+    function orderTypeBadge(orderType){const type=(orderType||"").toLowerCase();let bg="var(--bg-secondary)",color="var(--text-main)";return type.includes("buy")||type.includes("long")?(bg="rgba(0, 150, 136, 0.15)",color="#009688"):type.includes("sell")||type.includes("short")?(bg="rgba(236, 64, 122, 0.12);",color="#ec407a"):type.includes("dca")?(bg="rgba(3, 169, 244, 0.15)",color="#03a9f4"):type.includes("close")&&(bg="rgba(158, 158, 158, 0.15)",color="#9e9e9e"),`<span style="background: ${bg}; color: ${color}; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; text-transform: uppercase;">${orderType}</span>`}
+    if (typeof window.navFullCategoryValueTotals === "undefined") {window.navFullCategoryValueTotals = {};}if (typeof window.forexNavBalance === "undefined") {window.forexNavBalance = null;}
     
-    function orderTypeBadge(orderType){const type=(orderType||"").toLowerCase();let bg="var(--bg-secondary)",color="var(--text-main)";return type.includes("buy")||type.includes("long")?(bg="rgba(0, 150, 136, 0.15)",color="#009688"):type.includes("sell")||type.includes("short")?(bg="rgba(236, 64, 122, 0.12);",color="#ec407a"):type.includes("dca")?(bg="rgba(3, 169, 244, 0.15)",color="#03a9f4"):type.includes("close")&&(bg="rgba(158, 158, 158, 0.15)",color="#9e9e9e"),`<span style="background: ${bg}; color: ${color}; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; text-transform: uppercase;">${orderType}</span>`}if (typeof window.navFullCategoryValueTotals === "undefined") {window.navFullCategoryValueTotals = {};}if (typeof window.forexNavBalance === "undefined") {window.forexNavBalance = null;}
-    function fetchAllNavBalances(){var csvUrl="https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=311369594&t="+Date.now();return fetch(csvUrl,{cache:"no-store"}).then(function(response){if(!response.ok)throw new Error("HTTP "+response.status);return response.text()}).then(function(text){if(!text||text.trim().startsWith("<!DOCTYPE html>"))throw new Error("Received HTML instead of CSV. Check sheet permissions or URL.");for(var lines=text.split(/\r?\n/),balances={},pnls={},i=0;i<lines.length;i++){var currentLine=lines[i];if(currentLine&&"string"==typeof currentLine&&currentLine.trim()){var cols=currentLine.split(","),catKey=(cols[1]||"").trim().toUpperCase();if(catKey)if(-1!==["STOCK","CRYPTO","FOREX","GOLD"].indexOf(catKey)||-1!==catKey.indexOf("SAVING")){var bucketKey=-1!==catKey.indexOf("SAVING")?"SAVING":catKey,bal=parseFloat((cols[2]||"").replace(/[^0-9.-]+/g,""))||0;balances[bucketKey]=(balances[bucketKey]||0)+bal}var incomeLabel=(cols[5]||"").trim().toUpperCase();if(incomeLabel){var pnlKey="INTEREST"===incomeLabel?"SAVING":incomeLabel.replace(/\s*PNL$/,"").trim();if(-1!==["STOCK","CRYPTO","FOREX","GOLD","SAVING"].indexOf(pnlKey)){var pnlVal=parseFloat((cols[6]||"").replace(/[^0-9.-]+/g,""))||0;pnls[pnlKey]=(pnls[pnlKey]||0)+pnlVal}}}}return window.navCategoryBalances=balances,window.navCategoryPnls=pnls,window.forexNavBalance=void 0!==balances.FOREX?balances.FOREX:null,"function"==typeof applyPortfolioFiltersAndRender&&applyPortfolioFiltersAndRender(),balances}).catch(function(err){return console.error("NAV balance fetch error:",err),null})}function fetchForexNavBalance(){return fetchAllNavBalances()}
+    function fetchAllNavBalances(){var csvUrl="https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=311369594&t="+Date.now();return fetch(csvUrl,{cache:"no-store"}).then(function(response){if(!response.ok)throw new Error("HTTP "+response.status);return response.text()}).then(function(text){if(!text||text.trim().startsWith("<!DOCTYPE html>"))throw new Error("Received HTML instead of CSV.");for(var lines=text.split(/\r?\n/),balances={},pnls={},i=0;i<lines.length;i++){var currentLine=lines[i];if(currentLine&&"string"==typeof currentLine&&currentLine.trim()){var cols=currentLine.split(","),catKey=(cols[1]||"").trim().toUpperCase();if(catKey)if(-1!==["STOCK","CRYPTO","FOREX","GOLD"].indexOf(catKey)||-1!==catKey.indexOf("SAVING")){var bucketKey=-1!==catKey.indexOf("SAVING")?"SAVING":catKey,bal=parseFloat((cols[2]||"").replace(/[^0-9.-]+/g,""))||0;balances[bucketKey]=(balances[bucketKey]||0)+bal}var incomeLabel=(cols[5]||"").trim().toUpperCase();if(incomeLabel){var pnlKey="INTEREST"===incomeLabel?"SAVING":incomeLabel.replace(/\s*PNL$/,"").trim();if(-1!==["STOCK","CRYPTO","FOREX","GOLD","SAVING"].indexOf(pnlKey)){var pnlVal=parseFloat((cols[6]||"").replace(/[^0-9.-]+/g,""))||0;pnls[pnlKey]=(pnls[pnlKey]||0)+pnlVal}}}}return window.navCategoryBalances=balances,window.navCategoryPnls=pnls,window.forexNavBalance=void 0!==balances.FOREX?balances.FOREX:null,"function"==typeof applyPortfolioFiltersAndRender&&applyPortfolioFiltersAndRender(),balances}).catch(function(err){return console.error("NAV balance fetch error:",err),null})}function fetchForexNavBalance(){return fetchAllNavBalances()}
     function renderNavDonut(categoryValueTotals,categoryPnlTotals,categoryIconMap,totalValue,categoryHasActiveMap,categoryCostTotals){var statList=document.getElementById("nav-stat-list"),svg=document.getElementById("nav-donut-svg");if(statList&&svg){statList.innerHTML="",svg.innerHTML="",categoryHasActiveMap=categoryHasActiveMap||{},categoryCostTotals=categoryCostTotals||{};var categoryColorMap={saving:"#a78bfa",savings:"#a78bfa",crypto:"#facc15",forex:"#fff",stock:"#7ee8a8"},palette=["#facc15","#7ee8a8","#f472b6","#a5c8f0","#c084fc","#38bdf8"],categoryKeySet={};Object.keys(categoryValueTotals).forEach(function(cat){categoryKeySet[cat]=!0}),Object.keys(categoryPnlTotals).forEach(function(cat){categoryKeySet[cat]=!0});var categories=Object.keys(categoryKeySet).map(function(cat){return{name:cat,value:categoryValueTotals[cat]||0,pnl:categoryPnlTotals[cat]||0,cost:categoryCostTotals[cat]||0,icon:categoryIconMap[cat]||"",hasActive:!!categoryHasActiveMap[cat]}}).filter(function(c){return c.value>0||0!==c.pnl}).sort(function(a,b){return b.value-a.value});if(0!==categories.length){(categories=function(arr){if(!arr.length)return[];var n=arr.length,result=new Array(n),mid=Math.floor(n/2);result[mid]=arr[0];for(var l=mid-1,r=mid+1,i=1;i<n;i++)r<n&&(l<0||i%2==1)?result[r++]=arr[i]:result[l--]=arr[i];return result}(categories)).forEach(function(c,idx){var catName,index,key;c.color=(catName=c.name,index=idx,key=(catName||"").toString().trim().toLowerCase(),categoryColorMap.hasOwnProperty(key)?categoryColorMap[key]:palette[index%palette.length])});var rInner=45,currentDeg=270,uid="p"+Math.random().toString(36).slice(2,8),defs=document.createElementNS("http://www.w3.org/2000/svg","defs"),maxIdx=0;categories.forEach(function(c,i){c.value>categories[maxIdx].value&&(maxIdx=i)}),categories.forEach(function(cat,idx){var pat=document.createElementNS("http://www.w3.org/2000/svg","pattern");pat.setAttribute("id",uid+idx),pat.setAttribute("patternUnits","userSpaceOnUse"),pat.setAttribute("width","8"),pat.setAttribute("height","8"),pat.setAttribute("patternTransform","rotate(-45 0 0)"),pat.setAttribute("overflow","visible");var bg=document.createElementNS("http://www.w3.org/2000/svg","rect");bg.setAttribute("x","-1"),bg.setAttribute("y","-1"),bg.setAttribute("width","10"),bg.setAttribute("height","10"),bg.setAttribute("fill",cat.color),bg.setAttribute("opacity","0.18"),pat.appendChild(bg);var stripe=document.createElementNS("http://www.w3.org/2000/svg","rect");stripe.setAttribute("x","0"),stripe.setAttribute("y","0"),stripe.setAttribute("width","5"),stripe.setAttribute("height","8"),stripe.setAttribute("fill",cat.color),stripe.setAttribute("opacity","0.75"),pat.appendChild(stripe);var anim=document.createElementNS("http://www.w3.org/2000/svg","animateTransform");anim.setAttribute("attributeName","patternTransform"),anim.setAttribute("type","translate"),anim.setAttribute("from","0 0"),anim.setAttribute("to","8 0"),anim.setAttribute("dur","1s"),anim.setAttribute("repeatCount","indefinite"),pat.appendChild(anim),defs.appendChild(pat)}),svg.appendChild(defs);var arcInfoByName={};categories.forEach(function(cat,i){var pct=totalValue>0&&cat.value>0?cat.value/totalValue:0,sweep=180*pct,d0=currentDeg-0,d1=currentDeg-sweep+0;currentDeg-=sweep;var color=cat.color,hasArc=cat.value>0&&d1<d0;if(hasArc){var isLargest=i===maxIdx,rOut=isLargest?85:90,path=document.createElementNS("http://www.w3.org/2000/svg","path");if(path.setAttribute("d",function(d0,d1,rOut){var o0=pt(rOut=rOut||90,d0),o1=pt(rOut,d1),i1=pt(rInner,d1),i0=pt(rInner,d0),la=d0-d1>180?1:0;return["M",o0.x.toFixed(2),o0.y.toFixed(2),"A",rOut,rOut,0,la,0,o1.x.toFixed(2),o1.y.toFixed(2),"L",i1.x.toFixed(2),i1.y.toFixed(2),"A",rInner,rInner,0,la,1,i0.x.toFixed(2),i0.y.toFixed(2),"Z"].join(" ")}(d0,d1,rOut)),path.setAttribute("fill",isLargest?"url(#"+uid+i+")":color),path.setAttribute("stroke",color),path.setAttribute("stroke-width","1"),path.setAttribute("data-seg",i),svg.appendChild(path),pct>=.05){var lp=pt((90+rInner)/2,(d0+d1)/2),text=document.createElementNS("http://www.w3.org/2000/svg","text");text.setAttribute("x",lp.x.toFixed(1)),text.setAttribute("y",lp.y.toFixed(1)),text.setAttribute("class","nav-donut-label"),text.setAttribute("font-size","13"),text.textContent="("+Math.round(100*pct)+"%)",svg.appendChild(text)}}arcInfoByName[cat.name]={segIdx:i,pct,hasArc,color}}),categories.slice().sort(function(a,b){return a.hasActive!==b.hasActive?a.hasActive?-1:1:b.value-a.value}).forEach(function(cat){var info=arcInfoByName[cat.name],i=info.segIdx,pct=info.pct,hasArc=info.hasArc,color=info.color,pnlPos=cat.pnl>0,pnlColor=0===cat.pnl?"rgba(255,255,255,0.5)":pnlPos?"#14b8a6":"#f472b6",pnlFmt=fmtPnl(cat.pnl),basis="Forex"===cat.name&&window.forexNavBalance?window.forexNavBalance:cat.cost,pnlPctFmt=(pnlPos?"+":"")+(basis>0?cat.pnl/basis*100:0).toFixed(1)+"%",pctLabelHtml=hasArc?`<span class="nav-stat-pct"> (${Math.round(100*pct)}%)</span>`:"",balanceHtml=cat.hasActive?`<div class="nav-stat-value">${fmtBalance(cat.value)}</div>`:"",item=document.createElement("div");item.className="nav-stat-item";var catName,segIdx,iconHtml=cat.icon?`<div class="nav-stat-icon" style="background-image:url('${cat.icon}');"></div>`:`<div class="nav-stat-icon" style="background:${color};color:#111;font-weight:700;font-size:12px;">${cat.name.charAt(0)}</div>`;item.innerHTML=`${iconHtml}\n              <div class="nav-stat-info">\n                  <div class="nav-stat-label-row">\n                      <div class="nav-stat-label">${cat.name}${pctLabelHtml}</div>\n                      ${balanceHtml}\n                  </div>\n                  <div class="nav-stat-pnl" style="color:${pnlColor};">${pnlFmt} (${pnlPctFmt})</div>\n              </div>`,item.setAttribute("data-seg",i),item.style.cursor="pointer",item.addEventListener("click",(catName=cat.name,segIdx=i,function(){var isSelected=window.navSelectedCatIdx===segIdx;window.navSelectedCatIdx=isSelected?null:segIdx,"undefined"!=typeof portfolioFilters&&(portfolioFilters.asset=isSelected?"all":catName.toLowerCase()),"function"==typeof applyPortfolioFiltersAndRender&&applyPortfolioFiltersAndRender();var icon=document.getElementById("asset-filter-icon");icon&&icon.classList.toggle("active-filter",!isSelected),"function"==typeof navUpdateHighlight&&navUpdateHighlight()})),statList.appendChild(item)})}}function pt(r,deg){var rad=deg*Math.PI/180;return{x:100+r*Math.cos(rad),y:100+r*Math.sin(rad)}}}
     function applyPortfolioFiltersAndRender(){if(void 0!==window.currentPortfolioGroups){var filtered=window.currentPortfolioGroups.filter(function(group){if("all"!==portfolioFilters.asset){var isOngoing=group.status.toLowerCase().includes("on-going");if("on-going"===portfolioFilters.asset&&!isOngoing)return!1;if("close"===portfolioFilters.asset&&isOngoing)return!1;if("on-going"!==portfolioFilters.asset&&"close"!==portfolioFilters.asset&&(group.accountType||"").trim().toLowerCase()!==portfolioFilters.asset.trim().toLowerCase())return!1}if("all"!==portfolioFilters.pnl){var records=group.records||[],mainRec=group.mainRecord,sumPnl=mainRec?mainRec.actualPnl:records.reduce(function(acc,r){return acc+r.actualPnl},0);if("profited"===portfolioFilters.pnl&&sumPnl<=0)return!1;if("lost"===portfolioFilters.pnl&&sumPnl>=0)return!1}if(portfolioFilters.dateFrom||portfolioFilters.dateTo){var refRec=group.mainRecord||group.records&&group.records[0],refDate=refRec?new Date(refRec.entryDate):null;if(!refDate||isNaN(refDate))return!1;if(portfolioFilters.dateFrom&&refDate<new Date(portfolioFilters.dateFrom))return!1;if(portfolioFilters.dateTo){var toDate=new Date(portfolioFilters.dateTo);if(toDate.setHours(23,59,59,999),refDate>toDate)return!1}}return!0});filtered.sort(function(a,b){var catCompare=a.accountType.localeCompare(b.accountType);if(0!==catCompare)return catCompare;var aOngoing=a.status.toLowerCase().includes("on-going"),bOngoing=b.status.toLowerCase().includes("on-going");return aOngoing&&!bOngoing?-1:!aOngoing&&bOngoing?1:latestGroupDate(b)-latestGroupDate(a)}),renderAccordion(filtered)}function latestGroupDate(group){var latest=null;function consider(dateStr){if(dateStr){var d=new Date(dateStr);isNaN(d)||latest&&!(d>latest)||(latest=d)}}return group.mainRecord&&(consider(group.mainRecord.entryDate),consider(group.mainRecord.exitDate)),(group.records||[]).forEach(function(r){consider(r.entryDate),consider(r.exitDate)}),latest||new Date(0)}}
 
