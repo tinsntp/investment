@@ -6043,18 +6043,23 @@ function renderActiveChartCards(portfolioGroups) {
       // 3. Set Modal Header
       title.innerHTML = `
         <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
-            <div style="display:flex; align-items:center; gap:12px;">
-                <button id="pnl-prev-nav" style="background:none; border:none; color:#94a3b8; cursor:pointer; font-size:16px;"><i class="bi bi-chevron-left"></i></button>
-                <span id="pnl-nav-title" style="font-weight:600; font-size:16px; color:#f8f9fa; cursor:pointer;"></span>
-                <button id="pnl-next-nav" style="background:none; border:none; color:#94a3b8; cursor:pointer; font-size:16px;"><i class="bi bi-chevron-right"></i></button>
+            <div style="display:flex; align-items:center; gap:4px; flex-shrink:0;">
+                <button id="pnl-prev-nav" style="padding:0 2px; background:none; border:none; color:#94a3b8; cursor:pointer; font-size:16px;"><i class="bi bi-chevron-left"></i></button>
+                <span id="pnl-nav-title" style="white-space:nowrap; font-weight:600; font-size:15px; color:#f8f9fa; cursor:pointer;"></span>
+                <button id="pnl-next-nav" style="padding:0 2px; background:none; border:none; color:#94a3b8; cursor:pointer; font-size:16px;"><i class="bi bi-chevron-right"></i></button>
             </div>
-            <div style="display:flex; align-items:center; gap:10px;">
-                <div style="background:#1e222b; padding:2px; border-radius:8px; display:flex; gap:2px;">
-                    <button id="pnl-view-daily" style="background:#00bfa5; border:none; color:#000; font-weight:600; font-size:13px; padding:4px 8px; border-radius:6px; cursor:pointer; font-family:'DM Sans',sans-serif;">Daily</button>
-                    <button id="pnl-view-monthly" style="background:none; border:none; color:#94a3b8; font-weight:600; font-size:13px; padding:4px 8px; border-radius:6px; cursor:pointer; font-family:'DM Sans',sans-serif;">Monthly</button>
-                    <button id="pnl-view-yearly" style="background:none; border:none; color:#94a3b8; font-weight:600; font-size:13px; padding:4px 8px; border-radius:6px; cursor:pointer; font-family:'DM Sans',sans-serif;">Yearly</button>
+            <div style="display:flex; align-items:center; gap:6px;">
+                <div style="background:#1e222b; padding:2px; border-radius:8px; display:flex; gap:1px;">
+                    <button id="pnl-type-all" title="All types" aria-pressed="true" style="background:#00bfa5; color:#000; border:none; font-weight:600; font-size:12px; padding:4px 6px; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:3px; line-height:1.2; white-space:nowrap; font-family:'DM Sans',sans-serif;"><i class="bi bi-check-circle-fill" style="font-size:13px; color:#000;"></i><span>All</span></button>
+                    <button id="pnl-type-forex" title="Forex only" aria-pressed="false" style="background:none; color:#94a3b8; border:none; font-weight:600; font-size:12px; padding:4px 6px; border-radius:6px; cursor:pointer; display:inline-flex; align-items:center; gap:3px; line-height:1.2; white-space:nowrap; font-family:'DM Sans',sans-serif;"><img src="${(typeof ACCOUNT_TYPE_ICONS !== 'undefined' && ACCOUNT_TYPE_ICONS.Forex) || 'https://github.com/tinsntp/investment/blob/main/exness.png?raw=true'}" alt="Forex" style="width:15px; height:15px; border-radius:4px; object-fit:cover;" /><span>only</span></button>
                 </div>
-                <button onclick="closeModal()" id="pnl-close-modal" style="background:none; border:none; color:#94a3b8; cursor:pointer; font-size:18px;"><i class="bi bi-x-lg"></i></button>
+                <div style="background:#1e222b; padding:2px; border-radius:8px; display:flex; gap:1px;">
+                    <button id="pnl-view-daily" title="Daily" style="background:#00bfa5; border:none; color:#000; font-weight:600; font-size:13px; padding:4px 8px; min-width:24px; border-radius:6px; cursor:pointer; font-family:'DM Sans',sans-serif;">D</button>
+                    <button id="pnl-view-monthly" title="Monthly" style="background:none; border:none; color:#94a3b8; font-weight:600; font-size:13px; padding:4px 8px; min-width:24px; border-radius:6px; cursor:pointer; font-family:'DM Sans',sans-serif;">M</button>
+                    <button id="pnl-view-quarterly" title="Quarterly" style="background:none; border:none; color:#94a3b8; font-weight:600; font-size:13px; padding:4px 8px; min-width:24px; border-radius:6px; cursor:pointer; font-family:'DM Sans',sans-serif;">Q</button>
+                    <button id="pnl-view-yearly" title="Yearly" style="background:none; border:none; color:#94a3b8; font-weight:600; font-size:13px; padding:4px 8px; min-width:24px; border-radius:6px; cursor:pointer; font-family:'DM Sans',sans-serif;">Y</button>
+                </div>
+                <button onclick="closeModal()" id="pnl-close-modal" style="padding:0 2px; background:none; border:none; color:#94a3b8; cursor:pointer; font-size:18px;"><i class="bi bi-x-lg"></i></button>
             </div>
         </div>
       `;
@@ -6174,6 +6179,69 @@ function renderActiveChartCards(portfolioGroups) {
       let pnlData = {};
       let selectedDateStr = '';
       let symbolIconMap = {};
+      let pnlRows = [];            // raw rows from the sheet (incl. type = column C)
+      let forexOnly = false;       // toggle: false = All, true = Forex only (column C)
+      const isForex = r => (r.type || '').trim().toLowerCase() === 'forex';
+      const rebuildPnlData = () => {
+        pnlData = {};
+        pnlRows.forEach(r => {
+          if (forexOnly && !isForex(r)) return;
+          const e = pnlData[r.dateKey];
+          if (e) {
+            e.amount += r.amount;
+            if (r.symbol) e.symbol = r.symbol;
+            if (r.volume) e.volume = r.volume;
+            if (r.entryPrice) e.entryPrice = r.entryPrice;
+            if (r.exitPrice) e.exitPrice = r.exitPrice;
+            if (r.action) e.action = r.action;
+          } else {
+            pnlData[r.dateKey] = { amount: r.amount, symbol: r.symbol, volume: r.volume, entryPrice: r.entryPrice, exitPrice: r.exitPrice, action: r.action };
+          }
+        });
+      };
+      const updateTypeBtn = () => {
+        const allB = document.getElementById('pnl-type-all'), fxB = document.getElementById('pnl-type-forex');
+        if (!allB || !fxB) return;
+        const paint = (btn, active) => {
+          btn.style.background = active ? '#00bfa5' : 'none';
+          btn.style.color = active ? '#000' : '#94a3b8';
+          btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+        };
+        paint(allB, !forexOnly);
+        paint(fxB, forexOnly);
+        const chk = allB.querySelector('i'); if (chk) chk.style.color = !forexOnly ? '#000' : '#00bfa5';
+      };
+      const initTypeFilter = () => {
+        const allB = document.getElementById('pnl-type-all'), fxB = document.getElementById('pnl-type-forex');
+        if (!allB || !fxB) return;
+        const setFilter = v => { if (forexOnly === v) return; forexOnly = v; rebuildPnlData(); updateTypeBtn(); renderView(); };
+        allB.onclick = () => setFilter(false);
+        fxB.onclick = () => setFilter(true);
+        updateTypeBtn();
+      };
+      const openPnlDialog = dateStr => {
+        selectedDateStr = dateStr;
+        const entryData = pnlData[dateStr], hasData = entryData !== undefined && entryData.amount !== undefined;
+        const dateTitle = document.getElementById("pnl-input-date-title");
+        if (dateTitle) dateTitle.innerText = `Add P/L for ${dateStr}`;
+        const currentSymbol = hasData && entryData.symbol ? entryData.symbol : "XAUUSD";
+        const currentVol = hasData && entryData.volume ? entryData.volume : "0.05";
+        const amtInput = document.getElementById("pnl-amount-input"); if (amtInput) amtInput.value = hasData ? formatAmountValue(entryData.amount) : "";
+        const symInput = document.getElementById("pnl-symbol-input"); if (symInput) symInput.value = currentSymbol;
+        updateSymbolIcon(currentSymbol);
+        const volInput = document.getElementById("pnl-vol-input"); if (volInput) volInput.value = currentVol;
+        const entryInput = document.getElementById("pnl-entry-price-input"); if (entryInput) entryInput.value = hasData && entryData.entryPrice ? formatAmountValue(entryData.entryPrice) : "";
+        const exitInput = document.getElementById("pnl-exit-price-input"); if (exitInput) exitInput.value = hasData && entryData.exitPrice ? formatAmountValue(entryData.exitPrice) : "";
+        setPnLAction(hasData && entryData.action ? entryData.action : "BUY");
+        const inputDlg = document.getElementById("pnl-input-dialog"); if (inputDlg) inputDlg.style.display = "flex";
+      };
+      const saveRowLocally = row => {
+        const existing = pnlRows.find(r => r.dateKey === selectedDateStr && (!forexOnly || isForex(r)));
+        const rowType = existing ? existing.type : (forexOnly ? 'Forex' : '');
+        pnlRows = pnlRows.filter(r => !(r.dateKey === selectedDateStr && (!forexOnly || isForex(r))));
+        pnlRows.push(Object.assign({ dateKey: selectedDateStr, type: rowType }, row));
+        rebuildPnlData(); updateTypeBtn();
+      };
       const defaultSymbols = ["BTCUSD", "XAUUSD", "XAGUSD", "ETHUSD", "USDJPY"];
       const fetchSymbolIcons=async()=>{try{const res=await fetch(`${GOOGLE_SHEET_CSV_URL}1012065455`);(await res.text()).split("\n").forEach(row=>{if(!row.trim())return;const cols=row.split(",").map(col=>col.trim().replace(/^["']|["']$/g,""));if(cols.length>=2){const sym=cols[0].toUpperCase(),url=cols[1];sym&&url&&(symbolIconMap[sym]=url)}})}catch(err){console.error("Error fetching symbol icons",err)}};window.updateSymbolIcon=function(symbol){const iconEl=document.getElementById("pnl-modal-icon")||document.getElementById("portfolioModalIcon");if(!iconEl)return;const cleanSymbol=symbol.trim().toUpperCase();symbolIconMap[cleanSymbol]?iconEl.src=symbolIconMap[cleanSymbol]:iconEl.src="https://github.com/tinsntp/investment/blob/main/stock.png?raw=true"};
       const symbolInput = document.getElementById('pnl-symbol-input');
@@ -6182,20 +6250,176 @@ function renderActiveChartCards(portfolioGroups) {
       const entryPriceInput = document.getElementById('pnl-entry-price-input');
       const exitPriceInput = document.getElementById('pnl-exit-price-input');
       entryPriceInput&&(entryPriceInput.oninput=e=>{e.target.value=formatAmountValue(e.target.value)}),exitPriceInput&&(exitPriceInput.oninput=e=>{e.target.value=formatAmountValue(e.target.value)}),window.formatAmountValue=function(val){if(null==val||""===val)return"";let parts=String(val).replace(/[^0-9.-]/g,"").split(".");return parts[0]=parts[0].replace(/\B(?=(\d{3})+(?!\d))/g,","),parts.join(".")};const amountInput=document.getElementById("pnl-amount-input");amountInput&&(amountInput.oninput=e=>{e.target.value=formatAmountValue(e.target.value)}),window.setPnLAction=function(action){const longBtn=document.getElementById("pnl-action-long"),shortBtn=document.getElementById("pnl-action-short"),hiddenInput=document.getElementById("pnl-action-type");longBtn&&shortBtn&&hiddenInput&&("BUY"===action||"LONG"===action?(longBtn.style.background="#14b8a6",longBtn.style.color="#fff",shortBtn.style.background="transparent",shortBtn.style.color="#94a3b8",hiddenInput.value="BUY"):(shortBtn.style.background="#ec4899",shortBtn.style.color="#fff",longBtn.style.background="transparent",longBtn.style.color="#94a3b8",hiddenInput.value="SELL"))};
-      const formatVndShort=val=>{const num=parseFloat(val);if(isNaN(num)||0===num)return"+0.0M";const absVal=Math.abs(num);let formatted=absVal>=1e9?(absVal/1e9).toFixed(1)+"B":(absVal/1e6).toFixed(1)+"M";return num>=0?"+"+formatted:"-"+formatted},setView=view=>{currentView=view,["daily","monthly","yearly"].forEach(v=>{const btn=document.getElementById(`pnl-view-${v}`);btn&&(v===view?(btn.style.background="#00bfa5",btn.style.color="#000"):(btn.style.background="none",btn.style.color="#94a3b8"))});const daysHeader=document.getElementById("pnl-days-header");daysHeader&&(daysHeader.style.display="daily"===view?"grid":"none"),renderView()};
+      const formatVndShort=val=>{const num=parseFloat(val);if(isNaN(num)||0===num)return"+0.0M";const absVal=Math.abs(num);let formatted=absVal>=1e9?(absVal/1e9).toFixed(1)+"B":(absVal/1e6).toFixed(1)+"M";return num>=0?"+"+formatted:"-"+formatted},setView=view=>{currentView=view,["daily","monthly","quarterly","yearly"].forEach(v=>{const btn=document.getElementById(`pnl-view-${v}`);btn&&(v===view?(btn.style.background="#00bfa5",btn.style.color="#000"):(btn.style.background="none",btn.style.color="#94a3b8"))});const daysHeader=document.getElementById("pnl-days-header");daysHeader&&(daysHeader.style.display="daily"===view?"grid":"none"),renderView()};
       const viewDailyBtn = document.getElementById('pnl-view-daily');
       if (viewDailyBtn) viewDailyBtn.onclick = () => setView('daily');
       const viewMonthlyBtn = document.getElementById('pnl-view-monthly');
       if (viewMonthlyBtn) viewMonthlyBtn.onclick = () => setView('monthly');
+      const viewQuarterlyBtn = document.getElementById('pnl-view-quarterly');
+      if (viewQuarterlyBtn) viewQuarterlyBtn.onclick = () => setView('quarterly');
       const viewYearlyBtn = document.getElementById('pnl-view-yearly');
       if (viewYearlyBtn) viewYearlyBtn.onclick = () => setView('yearly');
       
-      const fetchPnlData=async()=>{try{const res=await fetch(`${GOOGLE_SHEET_CSV_URL}1158462025`),text=await res.text();pnlData={},text.split("\n").forEach(row=>{if(!row.trim())return;const cols=row.split(",").map(col=>col.trim().replace(/^["']|["']$/g,""));if(cols.length>=2){const dateKey=cols[0].split("T")[0].split(" ")[0],cleanAmountStr=cols[1].replace(/,/g,""),amountVal=parseFloat(cleanAmountStr);dateKey&&!isNaN(amountVal)&&(pnlData[dateKey]?(pnlData[dateKey].amount+=amountVal,cols[3]&&(pnlData[dateKey].symbol=cols[3].toUpperCase()),cols[4]&&(pnlData[dateKey].volume=cols[4]),cols[5]&&(pnlData[dateKey].entryPrice=parseFloat(cols[5])),cols[6]&&(pnlData[dateKey].exitPrice=parseFloat(cols[6])),cols[7]&&(pnlData[dateKey].action=cols[7].toUpperCase())):pnlData[dateKey]={amount:amountVal,symbol:cols[3]?cols[3].toUpperCase():"",volume:cols[4]||"",entryPrice:parseFloat(cols[5])||"",exitPrice:parseFloat(cols[6])||"",action:cols[7]?cols[7].toUpperCase():""})}})}catch(err){console.error("Error fetching PnL data",err)}renderView()};
+      const fetchPnlData=async()=>{try{const res=await fetch(`${GOOGLE_SHEET_CSV_URL}1158462025`),text=await res.text();pnlRows=[],text.split("\n").forEach(row=>{if(!row.trim())return;const cols=row.split(",").map(col=>col.trim().replace(/^["']|["']$/g,""));if(cols.length>=2){const dateKey=cols[0].split("T")[0].split(" ")[0],amountVal=parseFloat(cols[1].replace(/,/g,""));dateKey&&!isNaN(amountVal)&&pnlRows.push({dateKey:dateKey,amount:amountVal,type:(cols[2]||"").trim(),symbol:cols[3]?cols[3].toUpperCase():"",volume:cols[4]||"",entryPrice:parseFloat(cols[5])||"",exitPrice:parseFloat(cols[6])||"",action:cols[7]?cols[7].toUpperCase():""})}}),rebuildPnlData(),updateTypeBtn()}catch(err){console.error("Error fetching PnL data",err)}renderView()};
+
+      // ===== Quarterly (infinite scroll) view =====
+      const Q_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const qRange = { start: 0, end: 0 };           // loaded month indexes (year*12 + month)
+      const qScale = { maxPos: 1, maxNeg: 1 };       // color scale from ALL data so colors stay stable while scrolling
+      const isoWeekNum = (y, m, d) => {
+        const dt = new Date(Date.UTC(y, m, d));
+        const day = dt.getUTCDay() || 7;
+        dt.setUTCDate(dt.getUTCDate() + 4 - day);
+        const yStart = new Date(Date.UTC(dt.getUTCFullYear(), 0, 1));
+        return Math.ceil(((dt - yStart) / 86400000 + 1) / 7);
+      };
+      const computeQScale = () => {
+        const pos = [], neg = [];
+        Object.values(pnlData).forEach(e => { if (e && e.amount > 0) pos.push(e.amount); else if (e && e.amount < 0) neg.push(-e.amount); });
+        qScale.maxPos = pos.length ? Math.max(...pos) : 1;
+        qScale.maxNeg = neg.length ? Math.max(...neg) : 1;
+      };
+      const qBg = (val, has) => {
+        if (!has || val === 0) return "#1a1e29";
+        if (val > 0) {
+          const r = Math.min(val / qScale.maxPos, 1);
+          if (r > 0.80) return "#042f2e";
+          if (r > 0.60) return "#155e75";
+          if (r > 0.30) return "#84cc16";
+          if (r > 0.10) return "#0f766e";
+          return "#0d9488";
+        }
+        const r = Math.min(Math.abs(val) / qScale.maxNeg, 1);
+        if (r > 0.66) return "#450a1b";
+        if (r > 0.33) return "#2d1622";
+        return "#231825";
+      };
+      const buildQMonth = mi => {
+        const y = Math.floor(mi / 12), m = ((mi % 12) + 12) % 12;
+        const totalDays = new Date(y, m + 1, 0).getDate();
+        const keyOf = d => `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+        const CELL_H = "24px";
+
+        let monthSum = 0, monthHas = false;
+        for (let d = 1; d <= totalDays; d++) {
+          const e = pnlData[keyOf(d)];
+          if (e && e.amount !== undefined) { monthSum += e.amount; monthHas = true; }
+        }
+        const block = document.createElement("div");
+        block.className = "pnl-q-month";
+        block.dataset.mi = mi;
+        block.style.cssText = "margin-bottom:10px;";
+        const mColor = monthHas ? (monthSum < 0 ? "#ec4899" : "#2dd4bf") : "#475569";
+        block.innerHTML = `
+          <div style="display:flex;justify-content:space-between;align-items:baseline;padding:0 2px 6px;">
+            <span style="font-size:13px;font-weight:700;color:#f8f9fa;">${Q_MONTHS[m]} ${y}</span>
+            <span style="font-size:12px;font-weight:600;color:${mColor};">${monthHas ? formatVndShort(monthSum) : "+0.0M"}</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:4px;text-align:center;font-size:10px;color:#64748b;font-weight:600;margin-bottom:3px;">
+            <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>WK</span>
+          </div>`;
+
+        const g = document.createElement("div");
+        g.style.cssText = "display:grid;grid-template-columns:repeat(6,1fr);gap:4px;";
+        const now = new Date();
+        let weekSum = 0, weekHas = false, inWeek = 0, lastD = 1;
+
+        const addWeek = () => {
+          const bg = qBg(weekSum, weekHas), lemon = bg === "#84cc16";
+          const valColor = weekHas ? (weekSum < 0 ? "#ec4899" : lemon ? "#0f172a" : "#2dd4bf") : "#475569";
+          const c = document.createElement("div");
+          c.style.cssText = `height:${CELL_H};background:${bg};border-radius:6px;display:flex;align-items:center;justify-content:space-between;gap:3px;padding:0 5px;box-sizing:border-box;overflow:hidden;white-space:nowrap;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.12);`;
+          c.title = `Week ${isoWeekNum(y, m, lastD)}`;
+          c.innerHTML = `<span style="font-size:8px;line-height:1;font-weight:600;color:${lemon ? "#0f172a" : "#94a3b8"};">W${isoWeekNum(y, m, lastD)}</span>${weekHas ? `<span style="font-size:9px;line-height:1;font-weight:600;color:${valColor};">${formatVndShort(weekSum)}</span>` : ""}`;
+          g.appendChild(c);
+          weekSum = 0; weekHas = false; inWeek = 0;
+        };
+
+        const firstIdx = (new Date(y, m, 1).getDay() + 6) % 7;
+        if (firstIdx < 5) for (let i = 0; i < firstIdx; i++) { g.appendChild(document.createElement("div")); inWeek++; }
+
+        for (let d = 1; d <= totalDays; d++) {
+          const dow = new Date(y, m, d).getDay();
+          if (dow === 0 || dow === 6) continue;
+          const dateStr = keyOf(d), e = pnlData[dateStr];
+          const has = e !== undefined && e.amount !== undefined, amt = has ? e.amount : 0;
+          if (has) { weekSum += amt; weekHas = true; }
+          lastD = d;
+          const bg = qBg(amt, has), lemon = bg === "#84cc16";
+          const isToday = y === now.getFullYear() && m === now.getMonth() && d === now.getDate();
+          const valColor = has ? (amt < 0 ? "#ec4899" : lemon ? "#0f172a" : "#2dd4bf") : "#64748b";
+          const dateColor = isToday && !lemon ? "#fbbf24" : valColor;
+          const cell = document.createElement("div");
+          cell.style.cssText = `height:${CELL_H};background:${bg};border-radius:6px;display:flex;align-items:center;justify-content:space-between;gap:3px;padding:0 5px;box-sizing:border-box;overflow:hidden;white-space:nowrap;cursor:pointer;transition:background 0.2s;${isToday ? "box-shadow:0 0 0 1.5px #fbbf24;" : ""}`;
+          cell.title = `${dateStr}${has ? " \u00b7 " + formatVndShort(amt) : ""}`;
+          cell.onmouseover = () => cell.style.background = "#222733";
+          cell.onmouseout = () => cell.style.background = bg;
+          cell.onclick = () => openPnlDialog(dateStr);
+          cell.innerHTML = `<span style="font-size:8px;line-height:1;font-weight:${isToday ? 700 : 600};color:${dateColor};opacity:${has ? 0.85 : 1};">${d}</span>${has ? `<span style="font-size:9px;line-height:1;font-weight:600;color:${valColor};">${formatVndShort(amt)}</span>` : ""}`;
+          g.appendChild(cell);
+          inWeek++;
+          if (dow === 5) addWeek();
+        }
+        if (inWeek > 0) {
+          while (inWeek < 5) { g.appendChild(document.createElement("div")); inWeek++; }
+          addWeek();
+        }
+        block.appendChild(g);
+        return block;
+      };
+      const updateQTitle = wrap => {
+        const top = wrap.getBoundingClientRect().top;
+        for (let i = 0; i < wrap.children.length; i++) {
+          if (wrap.children[i].getBoundingClientRect().bottom > top + 40) {
+            const mi = parseInt(wrap.children[i].dataset.mi, 10), y = Math.floor(mi / 12), m = mi % 12;
+            const t = document.getElementById("pnl-nav-title");
+            if (t) t.innerText = `${Q_MONTHS[m]} ${y}`;
+            currentNavDate = new Date(y, m, 1);   // so switching to D / M / Y follows where the user scrolled
+            break;
+          }
+        }
+      };
+      const onQScroll = wrap => {
+        if (currentView !== "quarterly" || !wrap.isConnected) return;
+        if (wrap.scrollTop + wrap.clientHeight >= wrap.scrollHeight - 250 && qRange.end < 2100 * 12) {
+          for (let i = 0; i < 3; i++) wrap.appendChild(buildQMonth(++qRange.end));
+        }
+        if (wrap.scrollTop <= 150 && qRange.start > 2000 * 12) {
+          const prevH = wrap.scrollHeight, prevTop = wrap.scrollTop;
+          const frag = document.createDocumentFragment(), newStart = qRange.start - 3;
+          for (let mi = newStart; mi < qRange.start; mi++) frag.appendChild(buildQMonth(mi));
+          qRange.start = newStart;
+          wrap.insertBefore(frag, wrap.firstChild);
+          wrap.scrollTop = prevTop + (wrap.scrollHeight - prevH);   // keep the same month in view after prepending
+        }
+        updateQTitle(wrap);
+      };
+      const renderQuarterly = grid => {
+        computeQScale();
+        const mi0 = currentNavDate.getFullYear() * 12 + currentNavDate.getMonth();
+        const wrap = document.createElement("div");
+        wrap.id = "pnl-q-wrap";
+        wrap.style.cssText = "max-height:560px;overflow-y:auto;overflow-x:hidden;overflow-anchor:none;scrollbar-width:thin;";
+        grid.appendChild(wrap);
+        qRange.start = mi0 - 2; qRange.end = mi0 + 3;
+        for (let mi = qRange.start; mi <= qRange.end; mi++) wrap.appendChild(buildQMonth(mi));
+        const cur = wrap.querySelector(`[data-mi="${mi0}"]`);
+        if (cur) wrap.scrollTop = cur.getBoundingClientRect().top - wrap.getBoundingClientRect().top + wrap.scrollTop;
+        updateQTitle(wrap);
+        let ticking = false;
+        wrap.onscroll = () => { if (ticking) return; ticking = true; requestAnimationFrame(() => { ticking = false; onQScroll(wrap); }); };
+      };
 
       const renderView = () => {
         const grid = document.getElementById("pnl-calendar-grid");
         if (!grid) return;
         grid.innerHTML = "";
+        grid.style.gap = "8px";
+        grid.style.display = "quarterly" === currentView ? "block" : "grid";
+        const navVis = "quarterly" === currentView ? "hidden" : "visible";
+        const pnBtn = document.getElementById("pnl-prev-nav"), nnBtn = document.getElementById("pnl-next-nav");
+        if (pnBtn) pnBtn.style.visibility = navVis;
+        if (nnBtn) nnBtn.style.visibility = navVis;
         const year = currentNavDate.getFullYear(), month = currentNavDate.getMonth();
         const navTitle = document.getElementById("pnl-nav-title");
 
@@ -6419,6 +6643,8 @@ function renderActiveChartCards(portfolioGroups) {
                 <span style="font-size:16px;color:${qTitleColor};font-weight:600;">∑Q${qNum}</span>
                 <span style="font-size:18px;color:${qValueColor};margin-top:6px;font-weight:600;">${qHasData ? formatVndShort(qSum) : "+0.0M"}</span>
               `;
+              qCell.style.cursor = "pointer";
+              qCell.onclick = () => { currentNavDate.setDate(1); currentNavDate.setMonth(mIdx - 2); setView("quarterly"); };
               grid.appendChild(qCell);
 
               qSum = 0;
@@ -6434,6 +6660,10 @@ function renderActiveChartCards(portfolioGroups) {
           updateChartSummaryHeader(currYearData, prevYearData, false, year, month);
 
           setTimeout(() => drawPnlChart(monthNames, currYearData, prevYearData, 1.7, false), 50);
+        } else if ("quarterly" === currentView) {
+          const qChart = document.getElementById('pnl-chart-container');
+          if (qChart) qChart.style.display = 'none';
+          renderQuarterly(grid);
         } else if ("yearly" === currentView) {
           const chartContainer = document.getElementById('pnl-chart-container');
           if (chartContainer) chartContainer.style.display = 'none';
@@ -6465,7 +6695,7 @@ function renderActiveChartCards(portfolioGroups) {
           }
         }
 
-        if ("yearly" !== currentView) {
+        if ("yearly" !== currentView && "quarterly" !== currentView) {
             const chartContainer = document.getElementById('pnl-chart-container');
             if (chartContainer) chartContainer.style.display = 'block';
         }
@@ -6495,8 +6725,9 @@ function renderActiveChartCards(portfolioGroups) {
           };
       }
       const saveInputBtn = document.getElementById("pnl-save-input");
-      saveInputBtn&&(saveInputBtn.onclick=()=>{const cleanAmountVal=(document.getElementById("pnl-amount-input")?.value||"").replace(/,/g,""),symbolVal=document.getElementById("pnl-symbol-input")?.value||"",volVal=document.getElementById("pnl-vol-input")?.value||"",entryPriceVal=(document.getElementById("pnl-entry-price-input")?.value||"").replace(/,/g,""),exitPriceVal=(document.getElementById("pnl-exit-price-input")?.value||"").replace(/,/g,""),actionVal=document.getElementById("pnl-action-type")?.value||"BUY",dropdown=document.getElementById("pnl-symbol-dropdown");dropdown&&(dropdown.style.display="none");const errorEl=document.getElementById("pnl-error-message");if(""===cleanAmountVal||isNaN(parseFloat(cleanAmountVal)))return void(errorEl&&(errorEl.textContent="Please enter a P/L amount.",errorEl.style.display="block"));errorEl&&(errorEl.style.display="none");const inputDlg=document.getElementById("pnl-input-dialog");inputDlg&&(inputDlg.style.display="none"),"function"==typeof closeModal?closeModal():backdrop.classList.remove("active"),pnlData[selectedDateStr]={amount:parseFloat(cleanAmountVal)||0,symbol:symbolVal.toUpperCase(),volume:volVal,entryPrice:entryPriceVal,exitPrice:exitPriceVal,action:actionVal},renderView(),"function"==typeof triggerPaperFirework&&triggerPaperFirework(null);const payload={action:"portfolio_calendar_pnl_close_forex",date:selectedDateStr,amount:cleanAmountVal,symbol:symbolVal,volume:volVal,entryPrice:entryPriceVal,exitPrice:exitPriceVal,tradeAction:actionVal};fetch(EXPENSE_APPS_SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)}).catch(function(err){console.error("Failed to sync with Apps Script",err)})});
+      saveInputBtn&&(saveInputBtn.onclick=()=>{const cleanAmountVal=(document.getElementById("pnl-amount-input")?.value||"").replace(/,/g,""),symbolVal=document.getElementById("pnl-symbol-input")?.value||"",volVal=document.getElementById("pnl-vol-input")?.value||"",entryPriceVal=(document.getElementById("pnl-entry-price-input")?.value||"").replace(/,/g,""),exitPriceVal=(document.getElementById("pnl-exit-price-input")?.value||"").replace(/,/g,""),actionVal=document.getElementById("pnl-action-type")?.value||"BUY",dropdown=document.getElementById("pnl-symbol-dropdown");dropdown&&(dropdown.style.display="none");const errorEl=document.getElementById("pnl-error-message");if(""===cleanAmountVal||isNaN(parseFloat(cleanAmountVal)))return void(errorEl&&(errorEl.textContent="Please enter a P/L amount.",errorEl.style.display="block"));errorEl&&(errorEl.style.display="none");const inputDlg=document.getElementById("pnl-input-dialog");inputDlg&&(inputDlg.style.display="none"),"function"==typeof closeModal?closeModal():backdrop.classList.remove("active"),saveRowLocally({amount:parseFloat(cleanAmountVal)||0,symbol:symbolVal.toUpperCase(),volume:volVal,entryPrice:entryPriceVal,exitPrice:exitPriceVal,action:actionVal}),renderView(),"function"==typeof triggerPaperFirework&&triggerPaperFirework(null);const payload={action:"portfolio_calendar_pnl_close_forex",date:selectedDateStr,amount:cleanAmountVal,symbol:symbolVal,volume:volVal,entryPrice:entryPriceVal,exitPrice:exitPriceVal,tradeAction:actionVal};fetch(EXPENSE_APPS_SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)}).catch(function(err){console.error("Failed to sync with Apps Script",err)})});
 
+      initTypeFilter();
       fetchSymbolIcons();
       fetchPnlData();
     }
