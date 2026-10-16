@@ -944,7 +944,9 @@ tbody tr.current-row td{font-weight:600;}
 #vnindex-reload-btn.spinning i{animation:spinCircle .8s linear infinite}
 #pnl-calendar-btn{color:#64ffda;width:23px;height:23px;margin-right:-5px;z-index:10}
 #pnl-calendar-btn:hover{background:rgba(255,255,255,.15);color:#1de9b6}
-
+#portfolio-table {
+    border-collapse: collapse;
+}
 .portfolio-group-hdr{padding:10px 10px 6px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-secondary);background:0 0;border-bottom:none;text-align:left}.portfolio-group-hdr-pnl{margin-left:8px;font-weight:700;text-transform:none;letter-spacing:normal}.portfolio-group-hdr-row:first-child .portfolio-group-hdr{padding-top:10}.portfolio-group-hdr-row{cursor:pointer}.portfolio-group-hdr-inner{display:flex;align-items:center;justify-content:space-between}.portfolio-group-hdr-label{display:flex;align-items:center}.portfolio-group-hdr-chevron{font-size:12px;color:var(--text-secondary);transition:transform .2s ease;flex-shrink:0}.portfolio-group-hdr-row.collapsed .portfolio-group-hdr-chevron{transform:rotate(-90deg)}
 .portfolio-card{border-radius:24px;}.portfolio-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.portfolio-title{font-size:18px;font-weight:700;color:var(--text-primary)}.interactive-hint{font-size:12px;color:var(--teal-primary);display:flex;align-items:center;gap:6px;background:var(--teal-bg);padding:6px 12px;border-radius:12px}
 .table-wrapper{overflow-x:auto;margin-top:10px!important}table{width:100%;border-collapse:collapse;text-align:left;table-layout:fixed}col.col-asset{width:27%}col.col-duration{width:17%}col.col-volprice{width:22%}col.col-pnl{width:18%}col.col-costmarket{width:16%}th{font-size:13px;text-transform:uppercase;letter-spacing:.8px;color:var(--text-secondary);padding:12px 10px;border-bottom:1px solid var(--border-color);font-weight:700;white-space:nowrap}thead{position:relative;z-index:10}td{padding:14px 10px;font-size:13px;vertical-align:middle;overflow:hidden}tr.main-row{cursor:pointer;transition:background .2s ease;border-bottom:1px solid var(--border-color)}tr.main-row:hover{background:var(--bg-card-hover)}tr.main-row.expanded{background:rgba(20,184,166,.04);border-bottom:none}tr.log-row{display:none;background:var(--bg-subrow);border-bottom:1px dashed rgba(255,255,255,.06);font-size:11px}tr.log-row td{padding:6px 10px}tr.log-row.visible{display:table-row}tr.log-row:last-child{border-bottom:1px solid var(--border-color)}.chevron-icon{display:inline-block;transition:transform .25s ease;font-size:12px;color:var(--text-secondary);margin-right:4px;flex-shrink:0}.expanded .chevron-icon{transform:rotate(90deg)}.asset-cell{display:flex;align-items:center;gap:8px;overflow:hidden}.asset-icon-wrapper{position:relative;display:inline-block;flex-shrink:0}.asset-icon{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:9px;color:#fff;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.3);object-fit:cover;background-color:#21262d;background-size:cover;background-position:center}.status-dot{position:absolute;bottom:1px;right:-1px;width:8px;height:8px;border-radius:50%;border:1.5px solid var(--bg-card)}.status-dot.ongoing{background-color:var(--status-ongoing);box-shadow:0 0 4px var(--status-ongoing)}.status-dot.close{background-color:var(--status-close)}
@@ -1776,8 +1778,8 @@ to{transform:rotate(360deg)}
                                           <!-- View Mode Toggle Bar (Icon + Text with Grey Active Background) -->
                                           <div class="portfolio-view-toggle-bar" style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 16px;">
                                               <div style="background: rgba(255,255,255,0.06); padding: 4px; border-radius: 20px; display: flex; border: 1px solid rgba(255,255,255,0.1); gap: 4px;">
-                                                  <button type="button" id="btn-mode-chart" onclick="switchPortfolioView('chart')" style="background: rgba(255,255,255,0.15); color: #fff; border: none; padding: 6px 14px; border-radius: 16px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s;">
-                                                      <i class="bi bi-grid-fill" style="font-size: 13px;"></i> Card & Chart
+                                                  <button type="button" id="btn-mode-chart" onclick="switchPortfolioView('chart')" style="background: #374151; color: #fff; border: none; padding: 6px 14px; border-radius: 16px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s;">
+                                                      <i class="bi bi-grid-fill" style="font-size: 13px;"></i> Card
                                                   </button>
                                                   <button type="button" id="btn-mode-table" onclick="switchPortfolioView('table')" style="background: transparent; color: #94a3b8; border: none; padding: 6px 14px; border-radius: 16px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s;">
                                                       <i class="bi bi-table" style="font-size: 13px;"></i> Table
@@ -1789,7 +1791,7 @@ to{transform:rotate(360deg)}
                                           <div id="portfolio-view-chart-mode" class="portfolio-mode-view" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
                                               
                                               <!-- Left Chart: Active Items Column Chart (Side Summary Box Removed) -->
-                                              <div class="chart-panel-card" style="background: #161b22; border: 1px solid rgba(255,255,255,0.08); border-radius: 30px; padding: 16px; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; height: 320px; box-sizing: border-box;">
+                                              <div class="chart-panel-card" style="background: #161b22; border: 1px solid rgba(255,255,255,0.08); border-radius: 30px; padding: 10px; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; height: 320px; box-sizing: border-box;">
                                                   <!-- Loading Overlay -->
                                                   <div id="chart-left-loading" style="display: none; position: absolute; inset: 0; background: rgba(22,27,34,0.85); backdrop-filter: blur(4px); z-index: 10; align-items: center; justify-content: center;">
                                                       <div class="chart-spinner" style="width: 24px; height: 24px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #8b5cf6; border-radius: 50%; animation: spinChart 0.8s linear infinite;"></div>
@@ -4609,14 +4611,14 @@ to{transform:rotate(360deg)}
         if (mode === 'chart') {
             chartView.style.display = 'grid';
             tableView.style.display = 'none';
-            btnChart.style.background = '#6d28d9';
+            btnChart.style.background = '#374151';
             btnChart.style.color = '#fff';
             btnTable.style.background = 'transparent';
             btnTable.style.color = '#94a3b8';
         } else {
             chartView.style.display = 'none';
             tableView.style.display = 'block';
-            btnTable.style.background = '#6d28d9';
+            btnTable.style.background = '#374151';
             btnTable.style.color = '#fff';
             btnChart.style.background = 'transparent';
             btnChart.style.color = '#94a3b8';
@@ -4805,42 +4807,60 @@ to{transform:rotate(360deg)}
                     `;
                     tbody.appendChild(mainTr);
 
-                    visibleRecords.length>0&&visibleRecords.forEach(r=>{
-                        const logTr=document.createElement("tr");
-                        logTr.className=`log-row ${groupGroupId}`,
-                        logTr.setAttribute("data-category-key",categoryKey);
+                    // Force visible solid bottom border on every td in main row
+                    mainTr.querySelectorAll('td').forEach(td => {
+                        td.style.setProperty('border-bottom', '1px solid rgba(255, 255, 255, 0.08)', 'important');
+                    });
 
-                        const subPnlPct=isSaving||isStock||isCrypto||isForex?r.colCPnlPct:(r.costValue>0?r.actualPnl/r.costValue*100:0),
-                            isSubPositive=r.actualPnl>0,
-                            isSubZero=0===r.actualPnl,
-                            execDateObj=parseDate(r.entryDate),
-                            subExecDateStr=execDateObj?formatNoYearDate(execDateObj):"-",
-                            cleanedDetailNote=cleanNoteText(r.note,r.status),
-                            shortKeyword=getShortLogKeyword(cleanedDetailNote),
-                            subAssetLabel=isSaving?r.symbol:cleanedDetailNote;
+                    visibleRecords.length > 0 && visibleRecords.forEach((r, subIdx) => {
+                        const logTr = document.createElement("tr");
+                        logTr.className = `log-row ${groupGroupId}`;
+                        logTr.setAttribute("data-category-key", categoryKey);
+                        
+                        logTr.style.backgroundColor = "rgba(0, 0, 0, 0.2)";
+                        
+                        // Add smooth hover effect via JS so it lights up when hovered
+                        logTr.onmouseover = () => {
+                            logTr.style.backgroundColor = "rgba(255, 255, 255, 0.05)";
+                        };
+                        logTr.onmouseout = () => {
+                            logTr.style.backgroundColor = "rgba(0, 0, 0, 0.2)";
+                        };
+                        const subBorder = (subIdx < visibleRecords.length - 1) 
+                            ? "1px dashed rgba(255, 255, 255, 0.08)" 
+                            : "1px solid rgba(255, 255, 255, 0.12)";
 
-                        let subVolumePriceHTML="";
-                        if(isSaving)
-                            subVolumePriceHTML=`<div class="val-primary">${r.volume} Mos</div>`;
-                        else if(isForex)
-                            subVolumePriceHTML=`<div class="val-secondary">${r.volume.toLocaleString()}</div>`;
-                        else{
-                            const rawPrice=r.execPrice||r.entryPrice||0,
-                                subPriceDisplay=isCrypto?"$"+formatCryptoPrice(rawPrice):isStock?formatStockPrice(rawPrice):rawPrice.toLocaleString();
-                            subVolumePriceHTML=`<div class="val-primary">${r.volume.toLocaleString()}</div><div class="val-secondary">${subPriceDisplay}</div>`
+                        const subPnlPct = isSaving || isStock || isCrypto || isForex ? r.colCPnlPct : (r.costValue > 0 ? r.actualPnl / r.costValue * 100 : 0),
+                            isSubPositive = r.actualPnl > 0,
+                            isSubZero = 0 === r.actualPnl,
+                            execDateObj = parseDate(r.entryDate),
+                            subExecDateStr = execDateObj ? formatNoYearDate(execDateObj) : "-",
+                            cleanedDetailNote = cleanNoteText(r.note, r.status),
+                            shortKeyword = getShortLogKeyword(cleanedDetailNote),
+                            subAssetLabel = isSaving ? r.symbol : cleanedDetailNote;
+
+                        let subVolumePriceHTML = "";
+                        if (isSaving)
+                            subVolumePriceHTML = `<div class="val-primary">${r.volume} Mos</div>`;
+                        else if (isForex)
+                            subVolumePriceHTML = `<div class="val-secondary">${r.volume.toLocaleString()}</div>`;
+                        else {
+                            const rawPrice = r.execPrice || r.entryPrice || 0,
+                                subPriceDisplay = isCrypto ? "$" + formatCryptoPrice(rawPrice) : isStock ? formatStockPrice(rawPrice) : rawPrice.toLocaleString();
+                            subVolumePriceHTML = `<div class="val-primary">${r.volume.toLocaleString()}</div><div class="val-secondary">${subPriceDisplay}</div>`;
                         }
 
-                        const assetBadgeText=isForex?subAssetLabel:isSaving?r.symbol:shortKeyword,
-                            normalizedLabel=(subAssetLabel||"").trim().toLowerCase(),
-                            badgeHtml=isForex?orderTypeBadge("sell"===normalizedLabel?"Short":"buy"===normalizedLabel?"Long":subAssetLabel)+" ":orderTypeBadge(assetBadgeText)+" ";
+                        const assetBadgeText = isForex ? subAssetLabel : isSaving ? r.symbol : shortKeyword,
+                            normalizedLabel = (subAssetLabel || "").trim().toLowerCase(),
+                            badgeHtml = isForex ? orderTypeBadge("sell" === normalizedLabel ? "Short" : "buy" === normalizedLabel ? "Long" : subAssetLabel) + " " : orderTypeBadge(assetBadgeText) + " ";
 
-                        logTr.innerHTML=`
+                        logTr.innerHTML = `
                             <td class="sub-indent" style="padding-left: 28px;">
                                 <div class="asset-cell">
                                     <span style="color: var(--text-muted); flex-shrink: 0;"><i class="bi bi-arrow-return-right"></i></span>
                                     <span class="val-primary" style="font-size: 11px; display: flex; align-items: center; gap: 6px;">
                                         ${badgeHtml}
-                                        ${isStock?`<span class="sub-symbol" style="font-weight:600; color: var(--text-primary);">${group.symbol}</span>`:""}
+                                        ${isStock ? `<span class="sub-symbol" style="font-weight:600; color: var(--text-primary);">${group.symbol}</span>` : ""}
                                         <span class="full-log-text">${subAssetLabel}</span>
                                     </span>
                                 </div>
@@ -4848,14 +4868,19 @@ to{transform:rotate(360deg)}
                             <td><div class="val-primary">${subExecDateStr}</div></td>
                             <td>${subVolumePriceHTML}</td>
                             <td>
-                                <div class="val-secondary" style="color: ${isSubZero?"var(--text-secondary)":isSubPositive?"var(--teal-primary)":"var(--pink-primary)"}; font-weight: 700;">${r.actualPnl?formatPnlValue(r.actualPnl):""}</div>
-                                <div class="val-secondary" style="color: ${isSubZero?"var(--text-secondary)":isSubPositive?"var(--teal-primary)":"var(--pink-primary)"};">${subPnlPct?formatPnlPct(subPnlPct):""}</div>
+                                <div class="val-secondary" style="color: ${isSubZero ? "var(--text-secondary)" : isSubPositive ? "var(--teal-primary)" : "var(--pink-primary)"}; font-weight: 700;">${r.actualPnl ? formatPnlValue(r.actualPnl) : ""}</div>
+                                <div class="val-secondary" style="color: ${isSubZero ? "var(--text-secondary)" : isSubPositive ? "var(--teal-primary)" : "var(--pink-primary)"};">${subPnlPct ? formatPnlPct(subPnlPct) : ""}</div>
                             </td>
                             <td>
-                                ${isForex?`<div class="val-secondary" style="font-weight: 700; color: var(--text-primary);">${r.entryPrice?forexPrice(r.entryPrice):""}</div>`:`<div class="val-secondary" style="font-weight: 700; color: var(--text-primary);">${r.costValue?formatShortNumber(r.costValue):""}</div><div class="val-secondary">${r.marketValue?formatShortNumber(r.marketValue):""}</div>`}
+                                ${isForex ? `<div class="val-secondary" style="font-weight: 700; color: var(--text-primary);">${r.entryPrice ? forexPrice(r.entryPrice) : ""}</div>` : `<div class="val-secondary" style="font-weight: 700; color: var(--text-primary);">${r.costValue ? formatShortNumber(r.costValue) : ""}</div><div class="val-secondary">${r.marketValue ? formatShortNumber(r.marketValue) : ""}</div>`}
                             </td>
                         `;
                         tbody.appendChild(logTr);
+
+                        // 2. Force apply the border-bottom directly to every cell in this sub-row
+                        logTr.querySelectorAll('td').forEach(td => {
+                            td.style.setProperty('border-bottom', subBorder, 'important');
+                        });
                     });
                 }
             });
@@ -4922,6 +4947,24 @@ function renderActiveChartCards(portfolioGroups) {
     if (leftLoading) leftLoading.style.display = 'flex';
     if (rightLoading) rightLoading.style.display = 'flex';
 
+    if (!document.getElementById('chart-anim-styles')) {
+        const styleEl = document.createElement('style');
+        styleEl.id = 'chart-anim-styles';
+        styleEl.innerHTML = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(15px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(styleEl);
+    }
+
     setTimeout(() => {
         barsContainer.innerHTML = '';
         groupContainer.innerHTML = '';
@@ -4951,7 +4994,7 @@ function renderActiveChartCards(portfolioGroups) {
         });
 
         // -----------------------------------------------------------------
-        // 1. LEFT COLUMN CHART (Accurate individual item PnL & Cost calculation)
+        // 1. LEFT COLUMN CHART
         // -----------------------------------------------------------------
         const rawColumnMap = {};
         const shouldConsolidateSavings = activeFilter === 'all' || activeFilter === 'on-going';
@@ -4963,7 +5006,6 @@ function renderActiveChartCards(portfolioGroups) {
             const costVal = item.mainRecord ? (item.mainRecord.costValue || 0) : (item.records || []).reduce((acc, r) => acc + (r.costValue || 0), 0);
             const marketVal = item.mainRecord ? (item.mainRecord.marketValue || 0) : (item.records || []).reduce((acc, r) => acc + (r.marketValue || 0), 0);
             
-            // Derive exact PnL independently per asset to prevent global aggregate leakage
             const pnlVal = marketVal > 0 ? (marketVal - costVal) : (item.mainRecord ? (item.mainRecord.actualPnl || 0) : (item.records || []).reduce((acc, r) => acc + (r.actualPnl || 0), 0));
 
             if (!rawColumnMap[groupingKey]) {
@@ -5035,32 +5077,52 @@ function renderActiveChartCards(portfolioGroups) {
         if (displayColumnItems.length === 0) {
             barsContainer.innerHTML = '<div style="color: #8b949e; font-size: 12px; margin: auto;">No active positions</div>';
         } else {
-            // Find the maximum magnitude across ALL costs and absolute PnLs so the scale is unified
-            let maxVal = 1;
+            let maxGlobalVal = 1;
             displayColumnItems.forEach(item => {
-                const safeCost = Math.abs(item.cost || 0);
-                const safeAbsPnl = Math.abs(item.pnl || 0);
-                if (safeCost > maxVal) maxVal = safeCost;
-                if (safeAbsPnl > maxVal) maxVal = safeAbsPnl;
+                if (item.cost > maxGlobalVal) maxGlobalVal = item.cost;
+                if (Math.abs(item.pnl) > maxGlobalVal) maxGlobalVal = Math.abs(item.pnl);
             });
 
             barsContainer.style.cssText = 'display: flex; justify-content: space-around; align-items: flex-end; height: 215px; overflow: visible; padding-top: 28px; width: 100%; box-sizing: border-box; position: relative;';
 
-            displayColumnItems.forEach(item => {
+            displayColumnItems.forEach((item, idx) => {
                 const safeCost = item.cost || 0;
                 const safePnl = item.pnl || 0;
                 const itemPnlPct = safeCost > 0 ? (safePnl / safeCost) * 100 : 0;
-                const itemPnlColor = itemPnlPct >= 0 ? '#00bfa5' : '#f472b6';
+                const isNegativePnl = safePnl < 0;
+                const itemPnlColor = isNegativePnl ? '#f472b6' : '#00bfa5';
 
-                // Both bars now scale strictly and proportionally against the unified maxVal (up to 80%)
-                const costPct = Math.max(14, Math.min(80, (Math.abs(safeCost) / maxVal) * 80));
-                const pnlPct = Math.max(12, Math.min(80, (Math.abs(safePnl) / maxVal) * 80));
+                const costPct = Math.max(12, Math.min(85, (safeCost / maxGlobalVal) * 85));
+                const pnlPct = safePnl === 0 ? 0 : Math.max(6, Math.min(85, (Math.abs(safePnl) / maxGlobalVal) * 85));
                 
                 const tallestBarPct = Math.max(costPct, pnlPct);
                 const labelBottomPct = Math.max(28, tallestBarPct + 12);
 
                 const barGroup = document.createElement('div');
-                barGroup.style.cssText = 'display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; flex-shrink: 0; position: relative; width: 38px;';
+                barGroup.style.cssText = `
+                    display: flex; 
+                    flex-direction: column; 
+                    align-items: center; 
+                    justify-content: flex-end; 
+                    height: 100%; 
+                    flex-shrink: 0; 
+                    position: relative; 
+                    width: 38px;
+                    cursor: pointer;
+                    transition: transform 0.2s ease, filter 0.2s ease;
+                    animation: fadeInUp 0.4s ease forwards;
+                    opacity: 0;
+                    animation-delay: ${idx * 0.05}s;
+                `;
+
+                barGroup.onmouseover = () => {
+                    barGroup.style.transform = 'translateY(-4px) scale(1.04)';
+                    barGroup.style.filter = 'brightness(1.2)';
+                };
+                barGroup.onmouseout = () => {
+                    barGroup.style.transform = 'translateY(0) scale(1)';
+                    barGroup.style.filter = 'brightness(1)';
+                };
 
                 const topLabelWrap = document.createElement('div');
                 topLabelWrap.style.cssText = `position: absolute; bottom: ${labelBottomPct}%; display: flex; flex-direction: column; align-items: center; z-index: 10; text-align: center; width: 64px; left: 50%; transform: translateX(-50%); pointer-events: none;`;
@@ -5079,14 +5141,21 @@ function renderActiveChartCards(portfolioGroups) {
                         <div style="flex: 1; background: #6d28d9;"></div>
                     </div>`;
 
-                const yellowBar = `
+                const pnlBarGradient = isNegativePnl ? `
+                    <div style="width: 8px; height: ${pnlPct}%; border-radius: 4px; overflow: hidden; display: flex; flex-direction: column; background: #be185d;">
+                        <div style="flex: 1; background: #f472b6;"></div>
+                        <div style="flex: 1; background: #ec4899;"></div>
+                        <div style="flex: 1; background: #db2777;"></div>
+                    </div>
+                ` : `
                     <div style="width: 8px; height: ${pnlPct}%; border-radius: 4px; overflow: hidden; display: flex; flex-direction: column; background: #ca8a04;">
                         <div style="flex: 1; background: #fde047;"></div>
                         <div style="flex: 1; background: #facc15;"></div>
                         <div style="flex: 1; background: #eab308;"></div>
-                    </div>`;
+                    </div>
+                `;
 
-                barsRow.innerHTML = purpleBar + yellowBar;
+                barsRow.innerHTML = purpleBar + pnlBarGradient;
 
                 const iconFooter = document.createElement('div');
                 iconFooter.style.cssText = 'position: absolute; bottom: 2px; width: 22px; height: 18px; display: flex; align-items: center; justify-content: center; z-index: 5;';
@@ -5112,7 +5181,7 @@ function renderActiveChartCards(portfolioGroups) {
         }
 
         // -----------------------------------------------------------------
-        // 2. RIGHT GROUP CARDS
+        // 2. RIGHT GROUP CARDS (Custom Theme Colors applied)
         // -----------------------------------------------------------------
         const catMap = {};
         const catPnlMap = {};
@@ -5168,7 +5237,22 @@ function renderActiveChartCards(portfolioGroups) {
             .filter(c => c.val > 0 || c.pnl !== 0)
             .sort((a, b) => b.val - a.val);
 
-        const blockColors = { Stock: '#7ee8a8', Saving: '#a78bfa', Forex: '#ffffff', Crypto: '#facc15' };
+// 1. Brighter, more saturated theme colors
+        const blockColors = { 
+            Stock: '#7ee8a8',   // Mint Green
+            Saving: '#a78bfa',  // Lavender Purple
+            Forex: '#38bdf8',   // Bright Sky Blue (or #cbd5e1 if you prefer grey)
+            Crypto: '#facc15'   // Vibrant Yellow
+        };
+
+        // 2. High-vibrancy gradient definitions (higher opacity at the top for a shining effect)
+        const cardGradientMap = {
+            Stock: 'linear-gradient(135deg, rgba(126, 232, 168, 0.45), rgba(6, 78, 59, 0.22))',
+            Saving: 'linear-gradient(135deg, rgba(167, 139, 250, 0.45), rgba(88, 28, 135, 0.22))',
+            Forex: 'linear-gradient(135deg, rgba(56, 189, 248, 0.45), rgba(12, 74, 110, 0.22))',
+            Crypto: 'linear-gradient(135deg, rgba(250, 204, 21, 0.45), rgba(113, 63, 18, 0.22))'
+        };
+
         const ACCOUNT_TYPE_ICONS = {
             Stock: 'https://github.com/tinsntp/investment/blob/main/stock.png?raw=true',
             Saving: 'https://github.com/tinsntp/investment/blob/main/saving.png?raw=true',
@@ -5176,49 +5260,63 @@ function renderActiveChartCards(portfolioGroups) {
             Forex: 'https://github.com/tinsntp/investment/blob/main/exness.png?raw=true'
         };
 
-        groupContainer.style.cssText = 'background: #161b22; border: 1px solid rgba(255,255,255,0.08); border-radius: 30px; padding: 10px; display: flex; flex-direction: column; gap: 6px; justify-content: space-between; overflow: hidden; box-sizing: border-box; height: 100%;';
+        groupContainer.style.cssText = 'background: #0f172a; border: 1px solid rgba(255,255,255,0.08); border-radius: 30px; padding: 10px; display: flex; flex-direction: column; gap: 6px; justify-content: space-between; overflow: hidden; box-sizing: border-box; height: 100%;';
 
         const totalHeaderHtml = `
             <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 4px 4px 4px; border-bottom: 1px solid rgba(255,255,255,0.08); flex-shrink: 0;">
-                <span style="font-size: 9px; color: #8b949e; font-weight: 700; text-transform: uppercase;">Active Total</span>
-                <span style="font-size: 13px; color: #fff; font-weight: 800;">${formatPreciseShortNumber(totalActiveInvested)}</span>
+                <span style="font-size: 9px; color: #9ca3af; font-weight: 700; text-transform: uppercase;">Active Total</span>
+                <span style="font-size: 13px; color: #ffffff; font-weight: 800;">${formatPreciseShortNumber(totalActiveInvested)}</span>
             </div>
         `;
         groupContainer.innerHTML = totalHeaderHtml;
 
         if (activeCategories.length === 0) {
             const emptyDiv = document.createElement('div');
-            emptyDiv.style.cssText = 'color: #8b949e; font-size: 12px; text-align: center; padding: 16px;';
+            emptyDiv.style.cssText = 'color: #9ca3af; font-size: 12px; text-align: center; padding: 16px;';
             emptyDiv.textContent = 'No active categories';
             groupContainer.appendChild(emptyDiv);
         } else {
             activeCategories.forEach(cat => {
-                const fillColor = blockColors[cat.name] || '#facc15';
+                const fillColor = blockColors[cat.name] || '#cbd5e1';
+                const cardGradient = cardGradientMap[cat.name] || 'linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02))';
                 const iconUrl = ACCOUNT_TYPE_ICONS[cat.name] || '';
-                const pnlColor = cat.pnl >= 0 ? '#00bfa5' : '#f43f5e';
+                const pnlColor = cat.pnl >= 0 ? '#2dd4bf' : '#fb7185';
+                const investedProportion = Math.max(18, Math.min(100, cat.pct));
 
-                const investedProportion = Math.max(15, Math.min(100, cat.pct));
+                // Calculate PnL Percentage for the Group Card
+                const catPnlPct = cat.cost > 0 ? (cat.pnl / cat.cost) * 100 : 0;
+                const formattedCatPnlPct = `${catPnlPct >= 0 ? '+' : ''}${catPnlPct.toFixed(1)}%`;
 
                 const card = document.createElement('div');
                 card.style.cssText = `
-                    background: #373e47; 
-                    border: 1px solid rgba(255,255,255,0.15);
-                    border-radius: 12px; 
+                    background: ${cardGradientMap[cat.name] || cardGradient}; 
+                    border: 1px solid ${fillColor}66;
+                    border-radius: 14px; 
                     position: relative;
                     overflow: hidden;
-                    padding: 7px 10px; 
+                    padding: 8px 12px; 
                     display: flex; 
                     flex-direction: column; 
                     justify-content: space-between; 
-                    box-shadow: 0 3px 10px rgba(0,0,0,0.3); 
+                    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 0 16px ${fillColor}26; 
+                    backdrop-filter: blur(14px);
+                    -webkit-backdrop-filter: blur(14px);
                     cursor: pointer; 
-                    transition: transform 0.1s ease; 
+                    transition: all 0.2s ease; 
                     flex: 1; 
                     box-sizing: border-box;
                 `;
 
-                card.onmouseover = () => card.style.transform = 'scale(1.01)';
-                card.onmouseout = () => card.style.transform = 'scale(1)';
+                card.onmouseover = () => {
+                    card.style.transform = 'translateY(-2px)';
+                    card.style.borderColor = fillColor;
+                    card.style.boxShadow = `0 6px 20px rgba(0,0,0,0.35), 0 0 12px ${fillColor}33`;
+                };
+                card.onmouseout = () => {
+                    card.style.transform = 'translateY(0)';
+                    card.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+                    card.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.12)';
+                };
 
                 card.onclick = function() {
                     if (typeof portfolioFilters !== 'undefined') {
@@ -5233,8 +5331,8 @@ function renderActiveChartCards(portfolioGroups) {
                 };
 
                 const waveOverlay = `
-                    <div style="position: absolute; bottom: 0; left: 0; right: 0; height: ${investedProportion}%; background: ${fillColor}; opacity: 0.22; border-radius: 0 0 12px 12px; pointer-events: none; z-index: 1;">
-                        <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="position: absolute; top: -8px; left: 0; width: 100%; height: 10px;">
+                    <div style="position: absolute; bottom: 0; left: 0; right: 0; height: ${investedProportion}%; background: ${fillColor}; opacity: 0.30; border-radius: 0 0 14px 14px; pointer-events: none; z-index: 1; filter: saturate(1.5);">
+                        <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="position: absolute; top: -10px; left: 0; width: 100%; height: 12px;">
                             <path d="M0,0 C150,90 350,-40 500,0 L500,150 L0,150 Z" fill="${fillColor}"></path>
                         </svg>
                     </div>
@@ -5245,24 +5343,27 @@ function renderActiveChartCards(portfolioGroups) {
                     <div style="position: relative; z-index: 2; color: #fff; height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
                         <!-- Row 1: Icon + Title + Inv -->
                         <div style="display: flex; align-items: center; justify-content: space-between;">
-                            <div style="display: flex; align-items: center; gap: 6px;">
-                                <div style="width: 20px; height: 20px; border-radius: 5px; background-image: url('${iconUrl}'); background-size: cover; background-position: center; background-color: rgba(0,0,0,0.3); flex-shrink: 0;"></div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <div style="width: 22px; height: 22px; border-radius: 6px; background-image: url('${iconUrl}'); background-size: cover; background-position: center; background-color: rgba(255,255,255,0.1); flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.3);"></div>
                                 <div>
-                                    <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px; color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">${cat.name} <span style="font-weight: 700; color: #e2e8f0;">(${cat.pct}%)</span></div>
+                                    <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; color: #ffffff; text-shadow: 0 1px 3px rgba(0,0,0,0.8);">${cat.name} <span style="font-weight: 700; color: ${fillColor};">(${cat.pct}%)</span></div>
                                     <div style="font-size: 9.5px; font-weight: 600; color: #cbd5e1; margin-top: 1px;">Inv: ${formatPreciseShortNumber(cat.cost)}</div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Row 2: P/L & VAL -->
-                        <div style="display: flex; flex-direction: column; gap: 1px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 3px;">
+                        <!-- Row 2: P/L (with PnL%) & VAL -->
+                        <div style="display: flex; flex-direction: column; gap: 2px; border-top: 1px solid rgba(255,255,255,0.12); padding-top: 4px; margin-top: 4px;">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-size: 9px; font-weight: 700; color: #cbd5e1; text-transform: uppercase;">P/L</span>
-                                <span style="font-size: 13.5px; font-weight: 800; color: ${pnlColor}; text-shadow: 0 1px 3px rgba(0,0,0,0.9);">${formatPnlValue(cat.pnl)}</span>
+                                <span style="font-size: 9px; font-weight: 700; color: #94a3b8; text-transform: uppercase;">P/L</span>
+                                <div style="display: flex; align-items: center; gap: 6px;">
+                                    <span style="font-size: 10.5px; font-weight: 700; color: ${pnlColor}; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">${formattedCatPnlPct}</span>
+                                    <span style="font-size: 13.5px; font-weight: 800; color: ${pnlColor}; text-shadow: 0 1px 3px rgba(0,0,0,0.8);">${formatPnlValue(cat.pnl)}</span>
+                                </div>
                             </div>
                             <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-size: 9px; font-weight: 700; color: #cbd5e1; text-transform: uppercase;">VAL</span>
-                                <span style="font-size: 13px; font-weight: 800; color: #ffffff; text-shadow: 0 1px 3px rgba(0,0,0,0.9);">${formatPreciseShortNumber(cat.val)}</span>
+                                <span style="font-size: 9px; font-weight: 700; color: #94a3b8; text-transform: uppercase;">VAL</span>
+                                <span style="font-size: 13px; font-weight: 800; color: #ffffff; text-shadow: 0 1px 3px rgba(0,0,0,0.8);">${formatPreciseShortNumber(cat.val)}</span>
                             </div>
                         </div>
                     </div>
