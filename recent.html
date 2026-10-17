@@ -457,15 +457,16 @@ h1,h2,h3,.num{font-family:'Manrope',sans-serif;}
 #slide-1{position:relative}
 .tab-header{display:flex;justify-content:flex-end;align-items:center;}
 #add-fab{margin-left:auto;margin-right:10px;top:5px;right:10px;z-index:10;width:30px;height:30px;font-family:monospace!important;font-size:20px;font-weight:500;border-radius:50%;position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(45,212,191,.95)0,rgba(20,184,166,.9) 100%);color:#fff;border:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s cubic-bezier(.4,0,.2,1)} 
-#add-cash,#add-order,#expense-calendar-btn{margin-left:0;margin-right:10px;top:5px;right:10px;z-index:10;width:30px;height:30px;font-family:monospace!important;font-size:20px;font-weight:500;border-radius:50%;position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(45,212,191,.95)0,rgba(20,184,166,.9) 100%);color:#fff;border:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s cubic-bezier(.4,0,.2,1)}
+#add-cash,#add-order,#overview-btn,#expense-calendar-btn{margin-left:0;margin-right:10px;top:5px;right:10px;z-index:10;width:30px;height:30px;font-family:monospace!important;font-size:20px;font-weight:500;border-radius:50%;position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(45,212,191,.95)0,rgba(20,184,166,.9) 100%);color:#fff;border:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s cubic-bezier(.4,0,.2,1)}
 #add-cash{margin-right: -10px;}
 #add-cash::before,#add-fab::before,#add-order::before{content:"";position:absolute;top:-35%;left:-10%;width:120%;height:65%;background:linear-gradient(180deg,rgba(255,255,255,.75)0,rgba(255,255,255,0) 100%);border-radius:50%;pointer-events:none}
 #add-cash::before,#add-fab::before,#add-order::after{content:"";position:absolute;top:12%;left:18%;width:22%;height:22%;background:radial-gradient(circle,rgba(255,255,255,.9)0,rgba(255,255,255,0) 70%);border-radius:50%;pointer-events:none}
 #add-cash:hover ,#add-fab:hover ,#add-order:hover{background: linear-gradient(135deg, rgba(94,234,212,0.98) 0%, rgba(20,184,166,0.92) 100%);}
 #add-cash:active,#add-fab:active,#add-order:active{background:linear-gradient(135deg,rgba(20,184,166,.95)0,rgba(13,148,136,.9) 100%)}.stat-cycles-row-wrap-v2{display:flex;gap:8px}.stat-cycles-row-wrap{display:flex;align-items:right;justify-content:space-between;gap:8px}
-#expense-calendar-btn::before { content: ""; position: absolute; top: -35%; left: -10%; width: 120%; height: 65%; background: linear-gradient(180deg, rgba(255,255,255,.75) 0, rgba(255,255,255,0) 100%); border-radius: 50%; pointer-events: none; }
-#expense-calendar-btn::after { content: ""; position: absolute; top: 12%; left: 18%; width: 22%; height: 22%; background: radial-gradient(circle, rgba(255,255,255,.9) 0, rgba(255,255,255,0) 70%); border-radius: 50%; pointer-events: none; }
+#overview-btn::before,#expense-calendar-btn::before { content: ""; position: absolute; top: -35%; left: -10%; width: 120%; height: 65%; background: linear-gradient(180deg, rgba(255,255,255,.75) 0, rgba(255,255,255,0) 100%); border-radius: 50%; pointer-events: none; }
+#overview-btn::after,#expense-calendar-btn::after { content: ""; position: absolute; top: 12%; left: 18%; width: 22%; height: 22%; background: radial-gradient(circle, rgba(255,255,255,.9) 0, rgba(255,255,255,0) 70%); border-radius: 50%; pointer-events: none; }
 #expense-calendar-btn { background: linear-gradient(135deg, rgba(244,114,182,.95) 0, rgba(236,72,153,.9) 100%); margin-right:1px;}
+#overview-btn{ background: linear-gradient(135deg, rgba(59,130,246,.95) 0, rgba(37,99,235,.9) 100%); margin-right:1px; } #overview-btn:hover { background: linear-gradient(135deg, rgba(96,165,250,0.98) 0%, rgba(37,99,235,0.92) 100%); } #overview-btn:active { background: linear-gradient(135deg, rgba(37,99,235,.95) 0, rgba(29,78,216,.9) 100%); }
 #expense-calendar-btn:hover { background: linear-gradient(135deg, rgba(247,141,196,0.98) 0%, rgba(236,72,153,0.92) 100%); }
 #expense-calendar-btn:active { background: linear-gradient(135deg, rgba(236,72,153,.95) 0, rgba(219,39,119,.9) 100%); }
 
@@ -938,7 +939,7 @@ tbody tr.current-row td{font-weight:600;}
   background-repeat: no-repeat;filter: saturate(110%) contrast(1.1);}
 .metric-label,.hero-balance{font-size:10px;color:var(--text-secondary);font-weight:700;margin-bottom:4px;text-align:left;text-transform:uppercase;letter-spacing:.5px}.metric-value{font-size:16px;font-weight:700;color:var(--text-primary)}
 #vnindex-reload-btn,#vnindex-watchlist-btn,#pnl-calendar-btn{width:20px;height:20px;border-radius:50%;border:0;background:rgba(255,255,255,.08);color:rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background .15s,transform .15s}
-#vnindex-reload-btn .bi,#vnindex-watchlist-btn .bi,#pnl-calendar-btn .bi,#expense-calendar-btn .bi{font-size:16px!important}
+#vnindex-reload-btn .bi,#vnindex-watchlist-btn .bi,#pnl-calendar-btn .bi,#overview-btn .bi,#expense-calendar-btn .bi{font-size:16px!important}
 .bi-arrow-clockwise{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;line-height:1}
 #vnindex-reload-btn:hover,#vnindex-watchlist-btn:hover{background:rgba(255,255,255,.15);color:#fff}
 #vnindex-reload-btn.spinning i{animation:spinCircle .8s linear infinite}
@@ -1231,6 +1232,9 @@ to{transform:rotate(360deg)}
                         </div>
                         <div class="tab-header">
                             <div style="display: flex; align-items: center; gap: 8px; margin-left: auto; margin-right: 10px;">
+                                <button type="button" id="overview-btn" onclick="openOverviewModal()">
+                                    <i class="bi bi-stars"></i>
+                                </button>
                                 <button type="button" id="expense-calendar-btn" onclick="openExpenseCalendarModal()">
                                     <i class="bi bi-calendar2-week"></i>
                                 </button>
@@ -7215,7 +7219,142 @@ function renderActiveChartCards(portfolioGroups) {
     function renderYearChart(yearsAsc,currentYear){const totals=yearsAsc.map(y=>trips.filter(t=>t.year===y&&!t.isCompany).reduce((s,t)=>s+t.total,0)),max=Math.max(...totals,1),grand=totals.reduce((a,b)=>a+b,0),cols=yearsAsc.map((y,i)=>{const h=Math.max(6,Math.round(totals[i]/max*76)),isCurrent=y===currentYear,fillStyle=isCurrent?`height:${h}px; background: rgba(255, 255, 255, 0.88); border: 1px solid rgba(255, 255, 255, 0.95); box-shadow: 0 0 12px rgba(255, 255, 255, 0.35);`:`height:${h}px; background: rgba(255, 255, 255, 0.45); border: 1px solid rgba(255, 255, 255, 0.25);`;return`<div class="year-bar-col ${isCurrent?"current":""}">\n                  <div class="year-bar-amt figure" style="color: rgba(255, 255, 255, 0.95);">${fmtShort(totals[i])}</div>\n                  <div class="year-bar-track" style="background: rgba(255, 255, 255, 0.08); border-radius: 4px; overflow: hidden;"><div class="year-bar-fill" style="${fillStyle}"></div></div>\n                  <div class="year-bar-label" style="color: rgba(255, 255, 255, 0.85);">${y}</div>\n              </div>`}).join("");return`<div id="yearChartContainer" style="display: none;">\n        <div class="year-chart" style="background: linear-gradient(rgba(15, 23, 42, 0.84), rgba(15, 23, 42, 0.84)), url('https://i.pinimg.com/736x/fa/74/c3/fa74c3b5e05e56f23b9cee40f4b25326.jpg'); background-size: cover; background-position: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 12px; padding: 16px;">\n            <div class="year-chart-head"><span class="yc-title" style="color: #f8fafc; font-weight: 600;">Spend by year</span><span class="yc-total figure" style="color: #f8fafc; font-weight: 600;">${fmtVND(grand)}₫</span></div>\n            <div class="year-bar-row">${cols}</div>\n        </div>\n    </div>`}
     function renderDashboard(){const el=document.getElementById("dashContent");if(!trips.length)return void(el.innerHTML='<div class="empty">No trips found.</div>');const years=[...new Set(trips.map(t=>t.year))].sort((a,b)=>b-a),yearsAsc=[...years].sort((a,b)=>a-b);let html=renderYearChart(yearsAsc);for(const y of years){const yTrips=trips.filter(t=>t.year===y),yTotal=yTrips.filter(t=>!t.isCompany).reduce((s,t)=>s+t.total,0);html+=`<div class="year-head">\n            <h2>${y}</h2>\n            <span class="chip-trips">${yTrips.length} trip${yTrips.length>1?"s":""}</span>\n            <span class="chip-total figure">${fmtVND(yTotal)}₫</span>\n        </div>`,html+='<div class="trip-grid">',yTrips.forEach((t,ci)=>{const coverStyle=` style="background-image:url('${t.cover&&/^https?:\/\//i.test(t.cover)?t.cover:DEFAULT_COVER_URL}')"`;html+=`<div class="trip-card" data-id="${t.id}" style="animation-delay:${40*Math.min(ci,10)}ms">\n                <div class="trip-cover"${coverStyle}></div>\n                <div class="trip-body">\n                  <h3>${t.name}</h3>\n                  ${t.hotel?`<div class="trip-hotel">${t.hotel.icon?`<img src="${t.hotel.icon}" style="width:14px; height:14px; object-fit:cover; vertical-align:middle; margin-right:4px; border-radius:3px;">`:""} ${t.hotel.name}</div>`:""}\n                  <div class="trip-dates">${fmtRange(t.start,t.end)}</div>\n                  <div class="trip-meta"><span class="nights-chip">${t.nights} night${t.nights>1?"s":""}</span><span class="spend figure">${t.total?fmtVND(t.total)+"₫":"—"}</span></div>\n                </div>\n            </div>`}),html+="</div>"}el.innerHTML=html,el.querySelectorAll(".trip-card").forEach(c=>c.addEventListener("click",()=>openTrip(c.dataset.id)));const overviewBtn=document.getElementById("overviewBtn"),reloadBtn=document.getElementById("reloadBtn");if(overviewBtn&&reloadBtn){const parent=overviewBtn.parentNode;let actionWrapper=document.getElementById("headerActionsWrapper");actionWrapper||(actionWrapper=document.createElement("div"),actionWrapper.id="headerActionsWrapper",actionWrapper.style.cssText="display: flex; gap: 8px; justify-content: flex-end; align-items: center; margin-left: auto;",parent.insertBefore(overviewBtn,reloadBtn),parent.insertBefore(actionWrapper,overviewBtn),actionWrapper.appendChild(overviewBtn),actionWrapper.appendChild(reloadBtn))}overviewBtn&&(overviewBtn.style.transition="all 0.2s ease-in-out",overviewBtn.onclick=()=>{const chartContainer=document.getElementById("yearChartContainer");if(chartContainer){const isHidden="none"===chartContainer.style.display;chartContainer.style.display=isHidden?"block":"none",isHidden?(overviewBtn.style.background="#1e293b",overviewBtn.style.color="#f8fafc",overviewBtn.style.borderColor="#475569",overviewBtn.style.boxShadow="0 2px 8px rgba(15, 23, 42, 0.15), 0 0 0 2px rgba(71, 85, 105, 0.2)",overviewBtn.style.transform="translateY(-1px)"):(overviewBtn.style.background="",overviewBtn.style.color="",overviewBtn.style.borderColor="",overviewBtn.style.boxShadow="",overviewBtn.style.transform="")}}),reloadBtn&&(reloadBtn.onclick=()=>{if(el){let skeletonHtml="\n                    <style>\n                        @keyframes cardPulse {\n                            0% { opacity: 0.4; }\n                            50% { opacity: 0.8; }\n                            100% { opacity: 0.4; }\n                        }\n                    </style>\n                ";for(const y of years){const yTrips=trips.filter(t=>t.year===y);skeletonHtml+=`<div class="year-head">\n                        <h2>${y}</h2>\n                        <span class="chip-trips">${yTrips.length} trip${yTrips.length>1?"s":""}</span>\n                    </div>`,skeletonHtml+='<div class="trip-grid" style="animation: cardPulse 1.2s infinite ease-in-out;">',yTrips.forEach(()=>{skeletonHtml+='\n                            <div class="trip-card" style="pointer-events: none;">\n                                <div class="trip-cover" style="background: #334155; opacity: 0.5;"></div>\n                                <div class="trip-body">\n                                    <div style="height: 18px; background: #334155; border-radius: 4px; margin-bottom: 10px; width: 75%;"></div>\n                                    <div style="height: 14px; background: #334155; border-radius: 4px; margin-bottom: 8px; width: 50%;"></div>\n                                    <div style="height: 14px; background: #334155; border-radius: 4px; width: 35%;"></div>\n                                </div>\n                            </div>\n                        '}),skeletonHtml+="</div>"}el.innerHTML=skeletonHtml}setTimeout(()=>{"function"==typeof loadTrips?loadTrips():renderDashboard()},600)})}
     function groupByDay(t){const byDay={};for(const a of t.activities){const key=a.date.toDateString();byDay[key]||(byDay[key]={date:a.date,items:[]}),byDay[key].items.push(a)}return Object.values(byDay).sort((a,b)=>a.date-b.date)}function splitPeriods(items){const n=items.length;if(0===n)return[];const third=Math.ceil(n/3);return[{key:"morning",label:"Morning",items:items.slice(0,third)},{key:"afternoon",label:"Afternoon",items:items.slice(third,2*third)},{key:"evening",label:"Evening",items:items.slice(2*third)}].filter(b=>b.items.length)}function annotateLocations(days){let current=null;for(const day of days){for(const a of day.items){if(!a.category||!a.category.includes("Air Ticket")&&!a.category.includes("Transport"))continue;const m=a.activity.match(/^([A-Z]{2,4})[\s\-]+([A-Z]{2,4})\b/);if(!m)continue;const[_,c1,c2]=m;isAirportCode(c1)&&isAirportCode(c2)&&(null===current&&(current=c1),current=c2)}day.locationName=current?LOCATION_MAP[current]||current:null}}function renderCatStack(catEntries,totalSpend,acts){if(!catEntries.length)return"";let segs="",legend="";return catEntries.forEach(([cat,amt],i)=>{const pct=totalSpend?amt/totalSpend*100:0,color=PALETTE[i%PALETTE.length],label=cat.replace(/^[^\wÀ-ỹ]+/,"").trim()||"Other",rawIcon=iconFor(cat),isImgUrl=/^https?:\/\//i.test(rawIcon),segText=pct>12?`${isImgUrl?`<img src="${rawIcon}" style="width:12px; height:12px; object-fit:cover; border-radius:2px; vertical-align:middle; margin-right:3px;">`:`<span style="margin-right:3px;">${rawIcon}</span>`}${fmtShort(amt)}`:"";segs+=`<div class="stack-seg" style="width:calc(${pct}% + 12px); background:${color}" title="${label}: ${fmtVND(amt)}">${segText}</div>`,legend+=`<div class="stack-legend-item"><span class="dot" style="background:${color}"></span>${catIconHTML(cat,acts)} ${label} <b>${fmtShort(amt)}</b></div>`}),`<div class="stack-wrap"><div class="stack-bar" style="overflow:hidden; border-radius:14px;margin-top:10px;">${segs}</div><div class="stack-legend">${legend}</div></div>`}
-    function openTrip(id){const t=trips.find(x=>x.id===id);if(!t)return;const el=document.getElementById("detailContent"),days=groupByDay(t);annotateLocations(days);const catTotals={};for(const a of t.activities){if(!a.expense)continue;let rawCat=a.category?a.category.trim().toLowerCase():"other",key=a.category?a.category.trim():"Other";/hotel|accommodation/i.test(rawCat)?key="🛌 Hotel":/transport/i.test(rawCat)?key="🚖 Transport":/snack|food|fruit|kem bo|banh truyen thong|banh mi|drink/i.test(rawCat)?key="🍽️ F&B":/experience|museum|shop|plant/i.test(rawCat)&&(key="🏂 Shop & Fun"),catTotals[key]=(catTotals[key]||0)+a.expense}const catEntries=Object.entries(catTotals).sort((a,b)=>b[1]-a[1]);let html=`<div class="det-sticky-container">\n      <div class="det-topbar">\n        <button class="back-btn" id="backBtn">‹</button>\n        <div class="det-title"><h2>${t.name}</h2></div>\n        <div class="det-total"><div class="amt figure">${t.total?fmtVND(t.total)+"₫":"—"}</div><div class="lbl">total spend</div></div>\n      </div>\n      \n      <div class="day-strip-wrap">\n        <div class="day-strip">`;days.forEach((d,i)=>{html+=`<div class="day-pill ${0===i?"active":""}" data-day="${i}" data-target="day-${i}">\n      <div class="dow">${dowShort(d.date)}</div>\n      <div class="dnum">${d.date.getDate()}</div>\n    </div>`}),html+="</div></div></div>",html+=renderCatStack(catEntries,t.total,t.activities),html+='<div id="daysScroll">',days.forEach((day,i)=>{const dTotal=day.items.reduce((s,a)=>s+a.expense,0);html+=`<div class="day-section" id="day-${i}" data-day="${i}">\n      <div class="day-banner">\n        <div class="full">${fmtDateFull(day.date)}</div>\n        <div class="sub-row">\n          <span class="sub">Day ${i+1} of ${days.length}</span>\n          ${day.locationName?`<span class="loc-badge"><img src="https://cdn-icons-png.flaticon.com/512/4219/4219585.png" alt=""> ${day.locationName}</span>`:""}\n          ${dTotal?`<span class="spent-chip figure">${fmtVND(dTotal)}₫ spent</span>`:""}\n        </div>\n      </div>`;const periods=splitPeriods(day.items);for(const band of periods)html+=`<div class="period">\n        <div class="period-head"><span class="period-dot ${band.key}"></span><span class="period-label">${band.label}</span></div>\n        <div class="period-items">`,band.items.forEach((a,ai)=>{const hasExtra=a.notes||a.code;html+=`<div class="act-card ${hasExtra?"":"centered"}" style="animation-delay:${30*Math.min(ai,8)}ms">\n          <div class="act-ic">${iconHTML(a)}</div>\n          <div class="act-body">\n            <div class="act-name">${a.activity}${a.review?`<span class="rev">${a.review}</span>`:""}</div>\n            ${a.notes?`<div class="act-note">${a.notes}</div>`:""}\n          </div>\n          <div class="act-side">\n            ${a.code?`<span class="code-chip">${a.code}</span>`:""}\n            <div class="act-amt ${a.expense?"":"zero"}">${a.expense?fmtVND(a.expense)+"₫":""}</div>\n          </div>\n        </div>`}),html+="</div></div>";html+="</div>"}),html+="</div>",el.innerHTML=html,stickyCleanup&&(stickyCleanup(),stickyCleanup=null),document.getElementById("backBtn").addEventListener("click",()=>{dayObserver&&(dayObserver.disconnect(),dayObserver=null),stickyCleanup&&(stickyCleanup(),stickyCleanup=null),document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active")),document.getElementById("panel-dashboard").classList.add("active")});const pills=el.querySelectorAll(".day-pill");el.querySelector(".day-strip-wrap");let suppressObserverUntil=0;const scrollRoot=function(node){let p=node?node.parentElement:null;for(;p&&p!==document.body&&p!==document.documentElement;){const cs=getComputedStyle(p);if(("auto"===cs.overflowY||"scroll"===cs.overflowY)&&p.scrollHeight>p.clientHeight+1)return p;p=p.parentElement}return document.scrollingElement||document.documentElement}(el),usesWindow=scrollRoot===document.documentElement||scrollRoot===document.body;!function(){const stickyEl=el.querySelector(".det-sticky-container");if(!stickyEl)return;const getScrollTop=()=>usesWindow?window.pageYOffset||document.documentElement.scrollTop:scrollRoot.scrollTop,scrollTarget=usesWindow?window:scrollRoot;let naturalTop=stickyEl.getBoundingClientRect().top-scrollRoot.getBoundingClientRect().top+getScrollTop();function update(){const shift=Math.max(0,getScrollTop()-naturalTop);stickyEl.style.transform=shift>0?`translateY(${shift}px)`:"",stickyEl.classList.toggle("js-pinned",shift>0)}function recalc(){stickyEl.style.transform="",naturalTop=stickyEl.getBoundingClientRect().top-scrollRoot.getBoundingClientRect().top+getScrollTop(),update()}scrollTarget.addEventListener("scroll",update,{passive:!0}),window.addEventListener("resize",recalc);const ro="ResizeObserver"in window?new ResizeObserver(recalc):null;ro&&ro.observe(stickyEl),update(),stickyCleanup=function(){scrollTarget.removeEventListener("scroll",update),window.removeEventListener("resize",recalc),ro&&ro.disconnect()}}(),pills.forEach(p=>{p.addEventListener("click",()=>{const target=document.getElementById(p.dataset.target);target&&(pills.forEach(pp=>pp.classList.toggle("active",pp===p)),suppressObserverUntil=Date.now()+900,function(target){const stickyContainer=el.querySelector(".det-sticky-container"),stickyH=stickyContainer?stickyContainer.getBoundingClientRect().height:110;if(usesWindow){const top=target.getBoundingClientRect().top+window.pageYOffset-stickyH-12;window.scrollTo({top,behavior:"smooth"})}else{const delta=target.getBoundingClientRect().top-scrollRoot.getBoundingClientRect().top,top=scrollRoot.scrollTop+delta-stickyH-12;scrollRoot.scrollTo({top,behavior:"smooth"})}}(target))})}),dayObserver&&dayObserver.disconnect();const sections=el.querySelectorAll(".day-section");dayObserver=new IntersectionObserver(entries=>{Date.now()<suppressObserverUntil||entries.forEach(entry=>{if(entry.isIntersecting){const idx=entry.target.dataset.day;pills.forEach(p=>p.classList.toggle("active",p.dataset.day===idx))}})},{root:usesWindow?null:scrollRoot,rootMargin:"-70px 0px -70% 0px",threshold:0}),sections.forEach(s=>dayObserver.observe(s)),document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active")),document.getElementById("panel-detail").classList.add("active"),usesWindow?window.scrollTo(0,0):scrollRoot.scrollTop=0}
+    function openTrip(id){
+  const t = trips.find(x => x.id === id);
+  if(!t) return;
+  const el = document.getElementById("detailContent"), days = groupByDay(t);
+  annotateLocations(days);
+  const catTotals = {};
+  for(const a of t.activities){
+    if(!a.expense) continue;
+    let rawCat = a.category ? a.category.trim().toLowerCase() : "other", key = a.category ? a.category.trim() : "Other";
+    /hotel|accommodation/i.test(rawCat) ? key = "🛌 Hotel" : /transport/i.test(rawCat) ? key = "🚖 Transport" : /snack|food|fruit|kem bo|banh truyen thong|banh mi|drink/i.test(rawCat) ? key = "🍽️ F&B" : /experience|museum|shop|plant/i.test(rawCat) && (key = "🏂 Shop & Fun");
+    catTotals[key] = (catTotals[key] || 0) + a.expense;
+  }
+  const catEntries = Object.entries(catTotals).sort((a, b) => b[1] - a[1]);
+  let html = `<div class="det-sticky-container">\n      <div class="det-topbar">\n        <button class="back-btn" id="backBtn">‹</button>\n        <div class="det-title"><h2>${t.name}</h2></div>\n        <div class="det-total"><div class="amt figure">${t.total ? fmtVND(t.total) + "₫" : "—"}</div><div class="lbl">total spend</div></div>\n      </div>\n      \n      <div class="day-strip-wrap">\n        <div class="day-strip">`;
+  days.forEach((d, i) => {
+    html += `<div class="day-pill ${0 === i ? "active" : ""}" data-day="${i}" data-target="day-${i}">\n      <div class="dow">${dowShort(d.date)}</div>\n      <div class="dnum">${d.date.getDate()}</div>\n    </div>`;
+  });
+  html += "</div></div></div>" + renderCatStack(catEntries, t.total, t.activities) + '<div id="daysScroll">';
+  
+  days.forEach((day, i) => {
+    const dTotal = day.items.reduce((s, a) => s + a.expense, 0);
+    html += `<div class="day-section" id="day-${i}" data-day="${i}">\n      <div class="day-banner">\n        <div class="full">${fmtDateFull(day.date)}</div>\n        <div class="sub-row">\n          <span class="sub">Day ${i+1} of ${days.length}</span>\n          ${day.locationName ? `<span class="loc-badge"><img src="https://cdn-icons-png.flaticon.com/512/4219/4219585.png" alt=""> ${day.locationName}</span>` : ""}\n          ${dTotal ? `<span class="spent-chip figure">${fmtVND(dTotal)}₫ spent</span>` : ""}\n        </div>\n      </div>`;
+    
+    const periods = splitPeriods(day.items);
+    for(const band of periods){
+      html += `<div class="period">\n        <div class="period-head"><span class="period-dot ${band.key}"></span><span class="period-label">${band.label}</span></div>\n        <div class="period-items">`;
+      band.items.forEach((a, ai) => {
+        const hasExtra = a.notes || a.code;
+        // Added data-item-id, cursor pointer, and title for editing
+        html += `<div class="act-card ${hasExtra ? "" : "centered"}" data-item-id="${a.id}" style="animation-delay:${30 * Math.min(ai, 8)}ms; cursor: pointer;" title="Click to edit item">\n          <div class="act-ic">${iconHTML(a)}</div>\n          <div class="act-body">\n            <div class="act-name">${a.activity}${a.review ? `<span class="rev">${a.review}</span>` : ""}</div>\n            ${a.notes ? `<div class="act-note">${a.notes}</div>` : ""}\n          </div>\n          <div class="act-side">\n            ${a.code ? `<span class="code-chip">${a.code}</span>` : ""}\n            <div class="act-amt ${a.expense ? "" : "zero"}">${a.expense ? fmtVND(a.expense) + "₫" : ""}</div>\n          </div>\n        </div>`;
+      });
+      html += "</div></div>";
+    }
+    html += "</div>";
+  });
+  html += "</div>";
+  el.innerHTML = html;
+
+  // Bind click listener to open edit modal when clicking any item card
+  el.querySelectorAll(".act-card").forEach(card => {
+    card.addEventListener("click", () => {
+      const itemId = card.dataset.itemId;
+      const targetItem = t.activities.find(x => x.id === itemId);
+      if(targetItem){
+        openEditModal(targetItem, t.id);
+      }
+    });
+  });
+
+  stickyCleanup && (stickyCleanup(), stickyCleanup = null);
+  document.getElementById("backBtn").addEventListener("click", () => {
+    dayObserver && (dayObserver.disconnect(), dayObserver = null);
+    stickyCleanup && (stickyCleanup(), stickyCleanup = null);
+    document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+    document.getElementById("panel-dashboard").classList.add("active");
+  });
+
+  const pills = el.querySelectorAll(".day-pill");
+  el.querySelector(".day-strip-wrap");
+  let suppressObserverUntil = 0;
+  const scrollRoot = function(node){
+    let p = node ? node.parentElement : null;
+    for(; p && p !== document.body && p !== document.documentElement;){
+      const cs = getComputedStyle(p);
+      if(("auto" === cs.overflowY || "scroll" === cs.overflowY) && p.scrollHeight > p.clientHeight + 1) return p;
+      p = p.parentElement;
+    }
+    return document.scrollingElement || document.documentElement;
+  }(el), usesWindow = scrollRoot === document.documentElement || scrollRoot === document.body;
+
+  !function(){
+    const stickyEl = el.querySelector(".det-sticky-container");
+    if(!stickyEl) return;
+    const getScrollTop = () => usesWindow ? window.pageYOffset || document.documentElement.scrollTop : scrollRoot.scrollTop,
+          scrollTarget = usesWindow ? window : scrollRoot;
+    let naturalTop = stickyEl.getBoundingClientRect().top - scrollRoot.getBoundingClientRect().top + getScrollTop();
+    function update(){
+      const shift = Math.max(0, getScrollTop() - naturalTop);
+      stickyEl.style.transform = shift > 0 ? `translateY(${shift}px)` : "";
+      stickyEl.classList.toggle("js-pinned", shift > 0);
+    }
+    function recalc(){
+      stickyEl.style.transform = "";
+      naturalTop = stickyEl.getBoundingClientRect().top - scrollRoot.getBoundingClientRect().top + getScrollTop();
+      update();
+    }
+    scrollTarget.addEventListener("scroll", update, {passive: !0});
+    window.addEventListener("resize", recalc);
+    const ro = "ResizeObserver" in window ? new ResizeObserver(recalc) : null;
+    ro && ro.observe(stickyEl);
+    update();
+    stickyCleanup = function(){
+      scrollTarget.removeEventListener("scroll", update);
+      window.removeEventListener("resize", recalc);
+      ro && ro.disconnect();
+    };
+  }();
+
+  pills.forEach(p => {
+    p.addEventListener("click", () => {
+      const target = document.getElementById(p.dataset.target);
+      if(target){
+        pills.forEach(pp => pp.classList.toggle("active", pp === p));
+        suppressObserverUntil = Date.now() + 900;
+        (function(target){
+          const stickyContainer = el.querySelector(".det-sticky-container"),
+                stickyH = stickyContainer ? stickyContainer.getBoundingClientRect().height : 110;
+          if(usesWindow){
+            const top = target.getBoundingClientRect().top + window.pageYOffset - stickyH - 12;
+            window.scrollTo({top, behavior: "smooth"});
+          } else {
+            const delta = target.getBoundingClientRect().top - scrollRoot.getBoundingClientRect().top,
+                  top = scrollRoot.scrollTop + delta - stickyH - 12;
+            scrollRoot.scrollTo({top, behavior: "smooth"});
+          }
+        })(target);
+      }
+    });
+  });
+
+  dayObserver && dayObserver.disconnect();
+  const sections = el.querySelectorAll(".day-section");
+  dayObserver = new IntersectionObserver(entries => {
+    Date.now() < suppressObserverUntil || entries.forEach(entry => {
+      if(entry.isIntersecting){
+        const idx = entry.target.dataset.day;
+        pills.forEach(p => p.classList.toggle("active", p.dataset.day === idx));
+      }
+    });
+  }, {root: usesWindow ? null : scrollRoot, rootMargin: "-70px 0px -70% 0px", threshold: 0});
+  sections.forEach(s => dayObserver.observe(s));
+
+  document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+  document.getElementById("panel-detail").classList.add("active");
+  usesWindow ? window.scrollTo(0, 0) : scrollRoot.scrollTop = 0;
+}
     function setStatus(state,text){document.getElementById("statusDot").className="status-dot "+state,document.getElementById("statusText").textContent=text}
     function buildTripName(acts){const codeChain=[];for(const a of acts){if(!a.category||!a.category.includes("Air Ticket")&&!a.category.includes("Transport"))continue;const m=a.activity.match(/^([A-Z]{2,4})[\s\-]+([A-Z]{2,4})\b/);if(!m)continue;const[_,c1,c2]=m;isAirportCode(c1)&&isAirportCode(c2)&&(codeChain[codeChain.length-1]!==c1&&codeChain.push(c1),codeChain.push(c2))}const validChain=codeChain.filter((c,i)=>c!==codeChain[i-1]).filter(c=>!EXCLUDE_CODES.has(c));if(validChain.length>=1){const names=validChain.map(c=>"IUH"===c?"Quy Nhơn":LOCATION_MAP[c]||c),deduped=names.filter((n,i)=>n!==names[i-1]);if(deduped.length>0)return deduped.join(" – ")}return acts[0].activity.slice(0,30)}document.getElementById("reloadBtn").addEventListener("click",loadTravelData),document.addEventListener("DOMContentLoaded",()=>{const dayPills=document.querySelectorAll(".day-pill");dayPills.forEach(pill=>{pill.addEventListener("click",function(){dayPills.forEach(p=>p.classList.remove("active")),this.classList.add("active");const targetDayId=this.getAttribute("data-target")||this.dataset.day,targetSection=document.getElementById(targetDayId);targetSection&&targetSection.scrollIntoView({behavior:"smooth",block:"start"})})})});
 
@@ -7274,12 +7413,13 @@ function renderActiveChartCards(portfolioGroups) {
         }
 
         const records = [];
-        for(let i=1;i<rows.length;i++){
+        for(let i=1; i<rows.length; i++){
           const r = rows[i];
           const activity = (r[idx.activity]||'').trim();
           const date = parseDate(r[idx.date]||'');
           if(!activity || !date) continue;
           records.push({
+            id: 'item-' + i + '-' + Math.random().toString(36).substr(2, 9), // 👈 ADDED: Unique ID
             activity,
             category: (r[idx.category]||'').trim(),
             code: (r[idx.code]||'').trim(),
@@ -7305,6 +7445,259 @@ function renderActiveChartCards(portfolioGroups) {
         setStatus('ok', `✈️ ${trips.length} trips 📍 ${visitedCities.size} cities${usedProxy?' (via proxy)':''}`);
         renderDashboard();
     }
+    function openEditModal(item, tripId) {
+  let modalOverlay = document.getElementById('editItemModalOverlay');
+  if (!modalOverlay) {
+    modalOverlay = document.createElement('div');
+    modalOverlay.id = 'editItemModalOverlay';
+    modalOverlay.style.cssText = `
+  position: fixed; inset: 0; width: 100vw; height: 100vh;
+  background: rgba(15, 23, 42, 0.1); backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px); display: flex; align-items: center; 
+  justify-content: center; z-index: 2147483647; padding: 10px;
+`;
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) {
+        modalOverlay.style.display = 'none';
+      }
+    });
+    document.body.appendChild(modalOverlay);
+  }
+
+  // Format date and time for <input type="datetime-local">
+  let isoDateTime = '';
+  if (item.date instanceof Date && !isNaN(item.date)) {
+    const pad = (n) => String(n).padStart(2, '0');
+    const yyyy = item.date.getFullYear();
+    const mm = pad(item.date.getMonth() + 1);
+    const dd = pad(item.date.getDate());
+    const hh = pad(item.date.getHours());
+    const min = pad(item.date.getMinutes());
+    isoDateTime = `${yyyy}-${mm}-${dd}T${hh}:${min}`;
+  }
+
+  const uniqueCategories = [...new Set(trips.flatMap(t => t.activities.map(a => a.category).filter(Boolean)))];
+  const datalistOptions = uniqueCategories.map(cat => `<option value="${cat}">`).join('');
+
+  const rawAmount = item.expense || 0;
+  const formattedInitialAmount = rawAmount ? Math.round(rawAmount).toLocaleString("en-US") : "";
+  const itemIconSrc = item.icon && /^https?:\/\//i.test(item.icon) ? item.icon : iconFor(item.category);
+
+  modalOverlay.innerHTML = `
+    <style>      
+.ticket-modal {
+        font-family: 'DM Sans', sans-serif;
+        background: rgba(30, 41, 59, 0.75); /* 👈 Highly transparent glass background */
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        color: #f8fafc;
+        width: 100%;
+        max-width: 440px;
+        border-radius: 24px;
+        padding: 32px 28px;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        position: relative;
+      }
+      
+      /* Ticket Left & Right Side Circular Cutouts matching overlay background */
+      .ticket-modal::before, .ticket-modal::after {
+        content: '';
+        position: absolute;
+        top: 110px;
+        width: 24px;
+        height: 24px;
+        background: rgba(15, 23, 42, 0.75);
+        border-radius: 50%;
+        z-index: 5;
+        border: 2px dashed rgba(255, 255, 255, 0.25);
+      }
+      .ticket-modal::before { left: -14px; }
+      .ticket-modal::after { right: -14px; }
+
+      /* Ticket Bottom Scalloped Cutouts Edge */
+      .ticket-bottom-scallops {
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        right: 0;
+        height: 12px;
+        background-image: radial-gradient(circle, rgba(15, 23, 42, 0.75) 6px, transparent 7px);
+        background-size: 20px 14px;
+        background-repeat: repeat-x;
+        z-index: 4;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+      }
+
+      .ticket-input {
+        width: 100%;
+        background: rgba(15, 23, 42, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #fff;
+        padding: 10px 36px 10px 14px;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-family: inherit;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      .ticket-input:focus {
+        border-color: #3b82f6;
+        background: rgba(15, 23, 42, 0.8);
+      }
+      .ticket-label {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        display: block;
+        margin-bottom: 4px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      
+      .clear-btn {
+        position: absolute;
+        right: 10px;
+        background: transparent;
+        border: none;
+        color: #94a3b8;
+        font-size: 0.95rem;
+        cursor: pointer;
+        padding: 4px;
+      }
+      .clear-btn:hover { color: #ef4444; }
+    </style>
+
+    <div class="ticket-modal">
+      
+      <!-- Header: Icon & Description at top with dashed underline -->
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px;">
+        <img src="${itemIconSrc}" alt="" style="width: 38px; height: 38px; object-fit: contain; flex-shrink: 0;" onerror="this.src='${DEFAULT_ICON_URL}';">
+        <div style="flex: 1; position: relative; display: flex; align-items: center;">
+          <input type="text" id="activityInput" name="activity" value="${item.activity || ''}" required placeholder="Enter description..." class="ticket-input" style="border: none; border-bottom: 2px dashed rgba(255, 255, 255, 0.35); border-radius: 0; background: transparent; padding: 6px 32px 6px 4px; font-size: 1.2rem; font-weight: 700; color: #ffffff;">
+          <button type="button" id="clearActivityBtn" class="clear-btn" style="right: 4px;" title="Clear">✕</button>
+        </div>
+      </div>
+
+      <!-- Perforated Divider Line -->
+      <div style="border-top: 1px dashed rgba(255, 255, 255, 0.25); margin: 0 -28px 18px -28px;"></div>
+
+      <form id="editItemForm" style="display: flex; flex-direction: column; gap: 14px; padding-bottom: 12px;">
+        
+        <!-- Category (Positioned below description, reduced font size) -->
+        <div>
+          <label class="ticket-label">Category</label>
+          <div style="position: relative; display: flex; align-items: center;">
+            <input type="text" id="categoryInput" name="category" list="categoryOptions" value="${item.category || ''}" placeholder="Select or type category..." class="ticket-input" style="font-size: 0.95rem; font-weight: 400; padding: 10px 36px 10px 14px;">
+            <button type="button" id="clearCategoryBtn" class="clear-btn" title="Clear">✕</button>
+          </div>
+          <datalist id="categoryOptions">
+            ${datalistOptions}
+          </datalist>
+        </div>
+
+        <!-- Code -->
+        <div>
+          <label class="ticket-label">Code</label>
+          <div style="position: relative; display: flex; align-items: center;">
+            <input type="text" id="codeInput" name="code" value="${item.code || ''}" placeholder="" class="ticket-input">
+            <button type="button" id="clearCodeBtn" class="clear-btn" title="Clear">✕</button>
+          </div>
+        </div>
+
+        <!-- Date & Time Picker -->
+        <div>
+          <label class="ticket-label">Date & Time</label>
+          <div style="position: relative; display: flex; align-items: center;">
+            <input type="datetime-local" id="datetimeInput" name="datetime" value="${isoDateTime}" class="ticket-input" style="cursor: pointer; color-scheme: dark;">
+          </div>
+        </div>
+
+        <!-- Amount (White Text, Large Font, Formatted like 44,000) -->
+        <div>
+          <label class="ticket-label">Amount (VND)</label>
+          <div style="position: relative; display: flex; align-items: center;">
+            <input type="text" id="formattedAmountInput" value="${formattedInitialAmount}" placeholder="0" class="ticket-input" style="color: #ffffff; font-size: 1.5rem; font-weight: 700; padding: 12px 36px 12px 14px;">
+            <button type="button" id="clearAmountBtn" class="clear-btn" title="Clear">✕</button>
+          </div>
+          <input type="hidden" name="expense" id="rawAmountInput" value="${rawAmount}">
+        </div>
+
+        <!-- Note / Address -->
+        <div>
+          <label class="ticket-label">Note / Address</label>
+          <div style="position: relative; display: flex; align-items: flex-start;">
+            <textarea id="notesInput" name="notes" rows="2" placeholder="Add optional notes..." class="ticket-input" style="resize: vertical; padding-top: 10px;"></textarea>
+            <button type="button" id="clearNotesBtn" class="clear-btn" style="top: 8px;" title="Clear">✕</button>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px; border-top: 1px dashed rgba(255, 255, 255, 0.25); padding-top: 16px;">
+          <button type="button" id="cancelEditBtn" style="background: transparent; border: 1px solid rgba(255, 255, 255, 0.25); color: #94a3b8; padding: 9px 18px; border-radius: 10px; cursor: pointer; font-size: 0.95rem; font-family: inherit;">Cancel</button>
+          <button type="submit" style="background: #f1f5f9; border: none; color: #0f172a; padding: 9px 22px; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 0.95rem; font-family: inherit; box-shadow: 0 2px 6px rgba(0,0,0,0.2);">Save Changes</button>
+        </div>
+      </form>
+
+      <!-- Ticket Bottom Scalloped Cutouts -->
+      <div class="ticket-bottom-scallops"></div>
+    </div>
+  `;
+
+  modalOverlay.style.display = 'flex';
+
+  document.getElementById('notesInput').value = item.notes || '';
+
+  // Clear button handlers
+  document.getElementById('clearCategoryBtn').onclick = () => { document.getElementById('categoryInput').value = ''; document.getElementById('categoryInput').focus(); };
+  document.getElementById('clearActivityBtn').onclick = () => { document.getElementById('activityInput').value = ''; document.getElementById('activityInput').focus(); };
+  document.getElementById('clearCodeBtn').onclick = () => { document.getElementById('codeInput').value = ''; document.getElementById('codeInput').focus(); };
+  document.getElementById('clearAmountBtn').onclick = () => { 
+    document.getElementById('formattedAmountInput').value = ''; 
+    document.getElementById('rawAmountInput').value = '0'; 
+    document.getElementById('formattedAmountInput').focus(); 
+  };
+  document.getElementById('clearNotesBtn').onclick = () => { document.getElementById('notesInput').value = ''; document.getElementById('notesInput').focus(); };
+
+  // Amount formatting and input handling
+  const formattedInput = document.getElementById('formattedAmountInput');
+  const rawInput = document.getElementById('rawAmountInput');
+
+  formattedInput.addEventListener('input', (e) => {
+    const cleanVal = e.target.value.replace(/[^0-9]/g, '');
+    const num = parseFloat(cleanVal) || 0;
+    rawInput.value = num;
+    e.target.value = num ? num.toLocaleString("en-US") : '';
+  });
+
+  document.getElementById('cancelEditBtn').onclick = () => {
+    modalOverlay.style.display = 'none';
+  };
+
+  document.getElementById('editItemForm').onsubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+
+    item.category = formData.get('category').trim();
+    item.activity = formData.get('activity').trim();
+    
+    const dtVal = formData.get('datetime');
+    if (dtVal) {
+      item.date = new Date(dtVal);
+    }
+
+    item.code = formData.get('code').trim();
+    item.expense = parseFloat(rawInput.value) || 0;
+    item.notes = formData.get('notes').trim();
+
+    trips = buildTrips(trips.flatMap(t => t.activities));
+    modalOverlay.style.display = 'none';
+    
+    openTrip(tripId);
+  };
+}
+    
 
     // Touch events
     window.addEventListener('touchstart', onStart, { passive: true });
