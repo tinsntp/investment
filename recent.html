@@ -108,8 +108,28 @@ h1,h2,h3,.num{font-family:'Manrope',sans-serif;}
 .status-dot.err{background:#e8615f;}
 .status-dot.loading{background:var(--accent); animation:pulse 1s infinite ease-in-out;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.reload{font-family:DM Sans;background:var(--bg-elev); color:var(--fg-dim); border-radius:8px; padding:7px 10px; font-size:13px; cursor:pointer; box-shadow:var(--shadow); border:none; transition:.15s;}
-.reload:hover{color:var(--fg);}
+.reload {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg-elev); 
+  color: var(--fg-dim); 
+  width: 30px;
+  height: 30px;
+  border-radius: 50%; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0; 
+  font-size: 14px; 
+  cursor: pointer; 
+  box-shadow: var(--shadow); 
+  border: none; 
+  transition: all 0.2s ease-in-out;
+  flex-shrink: 0;
+}
+.reload:hover {
+  color: var(--fg);
+  background: var(--bg-elev-hover, rgba(255, 255, 255, 0.1));
+}
 /* Add this to your CSS file */
 #overviewBtn.active {
     background-color: #1e293b !important;
@@ -169,8 +189,6 @@ h1,h2,h3,.num{font-family:'Manrope',sans-serif;}
 .det-topbar{display:flex; align-items:center; gap:1px; margin-bottom:14px;}
 .back-btn{display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:50%; background:var(--bg-elev); color:var(--fg); cursor:pointer; flex-shrink:0; font-size:1.5rem; box-shadow:var(--shadow); border:none;}
 .back-btn:hover{color:var(--accent);}
-.det-title{flex:1; min-width:0;}
-.det-title h2{margin:0; font-size:1.05rem; overflow:hidden; text-overflow:ellipsis;}
 .det-total{text-align:right; flex-shrink:0;}
 .det-total .amt{font-weight:700; font-size:.85rem; color:var(--highlight);}
 .det-total .lbl{font-size:.62rem; color:var(--fg-faint); text-transform:uppercase; letter-spacing:.05em;}
@@ -187,43 +205,182 @@ h1,h2,h3,.num{font-family:'Manrope',sans-serif;}
 .det-sticky-container {
   position: relative;
   top: 0;
-  background: #0a0a0c;
+  background-size: cover !important;
+  background-position: center !important;
   z-index: 999;
   margin: 0;
-  padding: 14px 5px 10px 5px;
+  padding: 16px 14px 14px 14px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
   will-change: transform;
-}
-.det-sticky-container.js-pinned{ box-shadow: 0 4px 20px rgba(0, 0, 0, 0.85); }
-.det-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.day-strip-wrap {
-  width: 100%;
+  border-radius: 16px !important;
   overflow: hidden;
 }
+
+/* Lớp phủ gradient tối nhẹ nhàng */
+.det-sticky-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(15, 23, 42, 0.65) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.det-sticky-container > * {
+  position: relative;
+  z-index: 2;
+}
+
+.det-sticky-container.js-pinned { 
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.85); 
+}
+
+.det-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  gap: 10px;
+}
+
+/* Nút Back hình tròn */
+.det-topbar .back-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #ffffff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1.25rem !important;
+  cursor: pointer;
+  padding: 0 !important;
+  flex-shrink: 0;margin-bottom:1px;
+  transition: background 0.2s;
+}
+.det-topbar .back-btn:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* 1. Tên trip: Cho phép rớt hàng tự nhiên, không bị cắt cụt */
+.det-title {
+  flex: 1;
+  min-width: 0;
+  padding: 0 8px;
+}
+.det-title h2 {
+  font-size: 1rem !important; /* Kích thước chuẩn, cho phép xuống dòng khi dài */
+  font-weight: 700;
+  color: #f8fafc;
+  margin: 0;
+  line-height: 1.3;
+  white-space: normal !important; /* Cho phép rớt hàng */
+  word-break: break-word;
+}
+
+/* Phần Tổng chi phí (Total spend) */
+.det-total {
+  flex-shrink: 0;
+  text-align: right;
+}
+.det-total .amt {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+.det-total .lbl {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #38bdf8;
+  text-transform: uppercase;
+  margin-top: 1px;
+}
+
+.day-strip-wrap {
+  width: 100%;
+  overflow: visible;
+  position: relative;
+}
+
 .day-strip {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   overflow-x: auto;
-  scrollbar-width: none; /* Hide scrollbar for clean look */
+  overflow-y: hidden;
+  scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
-  padding: 4px ;
+  padding: 4px 2px;
+  width: 100%;
 }
+
 .day-strip::-webkit-scrollbar {
   display: none;
 }
+
+/* 2. Các cell days: Hiệu ứng transparent (kính mờ) cho cả trạng thái thường lẫn active */
 .day-pill {
-  flex-shrink: 0;
+  flex: 0 0 52px;
   min-width: 52px;
+  width: 52px;
+  height: 58px;
   text-align: center;
-  padding: 8px 6px;
+  padding: 8px 4px;
   border-radius: 12px;
-  background: var(--bg-elev);
+  background: rgba(15, 23, 42, 0.45); /* Nền kính mờ trong suốt */
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   cursor: pointer;
   transition: transform 0.15s, background 0.15s;
-  box-shadow: var(--shadow);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  flex-shrink: 0;
 }
-.day-pill:hover{transform:translateY(-2px)}.day-pill .dow{font-size:.8rem;color:var(--fg-faint);text-transform:uppercase;letter-spacing:.04em}.day-pill .dnum{font-size:1.3rem;font-weight:700;margin-top:2px}.day-pill.active{background:var(--accent)}.day-pill.active .dow,.day-pill.active .dnum{color:var(--accent-ink)}
 
+.day-pill:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.day-pill .dow {
+  font-size: 0.65rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.day-pill .dnum {
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin-top: 2px;
+  color: #f8fafc;
+  line-height: 1.2;
+}
+
+/* Trạng thái Active: Vẫn giữ hiệu ứng transparent kính mờ nhưng phối màu accent nổi bật */
+.day-pill.active {
+  background: rgba(56, 189, 248, 0.35) !important; /* Transparent với tone màu accent (ví dụ xanh nhạt) */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-color: rgba(56, 189, 248, 0.8) !important;
+}
+
+.day-pill.active .dow {
+  color: #38bdf8 !important;
+}
+
+.day-pill.active .dnum {
+  color: #ffffff !important;
+}
 /* day sections */
 .day-section{scroll-margin-top:64px; margin-bottom:26px;}
 .day-banner{margin-bottom:12px;}
@@ -471,7 +628,7 @@ h1,h2,h3,.num{font-family:'Manrope',sans-serif;}
 #expense-calendar-btn:hover { background: linear-gradient(135deg, rgba(247,141,196,0.98) 0%, rgba(236,72,153,0.92) 100%); }
 #expense-calendar-btn:active { background: linear-gradient(135deg, rgba(236,72,153,.95) 0, rgba(219,39,119,.9) 100%); }
 
-.stat-cycles-row-wrap #add-order{width:20px;height:20px;font-size:16px;margin-left:0;margin-right:0}
+.stat-cycles-row-wrap-v2 #add-order{width:20px;height:20px;font-size:16px;margin-left:0;margin-right:0}
 #add-cash.loading,#add-fab.loading{pointer-events:none;display:flex;align-items:center;justify-content:center}
 .cash-modal-overlay,.add-modal-overlay,.edit-subs-modal-overlay{-webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);display:none;position:fixed;inset:0; z-index:600;align-items:flex-start;justify-content:center;padding-top:10vh;overflow-y:auto;}
 .add-modal-overlay{padding-top:5vh;}
@@ -921,7 +1078,7 @@ tbody tr.current-row td{font-weight:600;}
 .nav-card-body{display:grid;grid-template-columns:1fr auto;gap:0px;align-items:start}.nav-card-left{display:flex;flex-direction:column;gap:12px;min-width:0}.nav-stat-list{display:flex;flex-direction:column;margin-left:5px;gap:14px;flex:1;min-width:0}.nav-stat-item{display:flex;align-items:center;gap:10px}.nav-stat-icon{width:25px;height:25px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;background-size:cover;background-position:center}.nav-stat-info{display:flex;flex-direction:column;min-width:0}.nav-stat-label-row{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
 .nav-stat-label{font-size:13px;color:rgba(255,255,255,.5)}.nav-stat-pct{color:rgba(255,255,255,.35);font-weight:500}
 .nav-stat-value{font-size:14px;font-weight:700;color:#fff}.nav-stat-pnl{font-size:13px;text-align:left;font-weight:600}
-.nav-donut-wrap{position:relative;width:90px;height:180px;flex-shrink:0;margin-right:32px;margin-top:-15px;overflow:visible}
+.nav-donut-wrap{position:relative;width:90px;height:180px;flex-shrink:0;margin-right:32px;margin-top:-30px;overflow:visible}
 #nav-donut-svg{width:130px;height:288px;position:static;top:auto;left:auto;z-index:-10;}.nav-donut-label{font-family:"DM Sans",sans-serif;font-weight:700;fill:#fff;text-anchor:middle;dominant-baseline:middle}@media (max-width:400px){.nav-stat-icon{width:20px;height:20px}.nav-stat-item{gap:8px}}.dashboard-grid{display:flex;flex-direction:column}
 .hero-card-port{background:0 0;position:relative;overflow:hidden}.hero-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}.hero-title-group h2{font-size:13px;font-weight:700;color:var(--teal-primary);text-transform:uppercase;letter-spacing:1px}.hero-title-group .date-range{font-size:12px;color:var(--text-secondary);margin-top:2px}.hero-main-stat{display:flex;align-items:baseline;gap:12px;margin-bottom:12px;flex-wrap:wrap}
 .hero-amount{font-weight:800;letter-spacing:-1px;background:linear-gradient(90deg,#fff 0,#14b8a6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
@@ -1348,9 +1505,9 @@ to{transform:rotate(360deg)}
                             <h1>Travel Planner</h1>
                             <p><span class="status-dot loading" id="statusDot"></span><span id="statusText"></span></p>
                           </div>
-                          <button class="reload" id="addTravelBtn"><i class="bi bi-patch-plus-fill" style="font-size:15px!important;"></i></button>
-                          <button class="reload" id="overviewBtn"><i class="bi bi-graph-up" style="font-size:15px!important;"></i></button>
-                          <button class="reload" id="reloadBtn"><i class="bi bi-arrow-clockwise" style="font-size:15px!important;"></i></button>
+                          <button class="reload" id="addTravelBtn" title="Add Travel"><i class="bi bi-plus-circle-fill" style="font-size:16px!important;"></i></button>
+                          <button class="reload" id="overviewBtn" title="Overview Chart"><i class="bi bi-bar-chart-fill" style="font-size:15px!important;"></i></button>
+                          <button class="reload" id="reloadBtn" title="Reload Data"><i class="bi bi-arrow-clockwise" style="font-size:15px!important;"></i></button>
                         </div>
 
                         <div class="panel active" id="panel-dashboard">
@@ -1695,7 +1852,9 @@ to{transform:rotate(360deg)}
                                                     </div>
                                                     <div class="stat-cycles-row-wrap-v2" style="margin-left:5px">
                                                         <div class="hero-amount" id="total-profit-val">0</div>
-                                                        <div class="badge-pill badge-teal" id="total-profit-badge">▲ +0.00%</div>
+                                                        <div class="badge-pill badge-teal" id="total-profit-badge" style="margin-right:10px">▲ +0.00%</div>
+                                                        <button type="button" id="pnl-calendar-btn" onclick="openPnlCalendarModal()" style="margin-right:10px"> <i class="bi bi-calendar2-week-fill"></i></button>
+                                                        <button type="button" id="add-order" onclick="openPortfolioModal()" style="margin-top:-4px">+</button>
                                                     </div>
                                                 </div>
                                                 <div class="nav-stat-list" id="nav-stat-list"></div>
@@ -1707,7 +1866,7 @@ to{transform:rotate(360deg)}
                                     </div>
                                 </div>
                                 <div class="metrics-grid">
-                                    <div class="metric-card">
+                                    <div class="metric-card" style="display:none">
                                         <div class="stat-cycles-row-wrap-v2">
                                             <div style="display:flex; align-items:center; gap:6px;">
                                                 <img class="stat-stack-icon" style="border:none;" src="https://media.licdn.com/dms/image/v2/C560BAQHmH86Q4SeGmQ/company-logo_200_200/company-logo_200_200/0/1631231281847?e=2147483647&v=beta&t=ODrzN6-FGWaBdwhmtBJEQ2m-HUR3oL_OTgnHYR1fxWA" />
@@ -1728,18 +1887,6 @@ to{transform:rotate(360deg)}
                                             <button type="button" id="vnindex-watchlist-btn" onclick="openWatchlistModal()" title="Open Watchlist">
                                                 <i class="bi bi-bookmark-star-fill"></i>
                                             </button>
-                                        </div>
-                                    </div>
-                                    <div class="metric-card">
-                                        <div class="stat-cycles-row-wrap">
-                                            <div class="metric-label" style="margin-top:4px;">Active</div>
-                                            <button type="button" id="pnl-calendar-btn" onclick="openPnlCalendarModal()">
-                                                <i class="bi bi-calendar2-week-fill"></i>
-                                            </button>
-                                            <button type="button" id="add-order" onclick="openPortfolioModal()" style="margin-top:-4px">+</button>
-                                        </div>
-                                        <div class="stat-cycles-row-wrap">
-                                            <div class="metric-value" id="stat-cycles" style="margin-top:3px">0</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1782,7 +1929,11 @@ to{transform:rotate(360deg)}
                                     <div class="budget-tab-content" id="budget-view-portfolio-pnl" style="display: none;">
                                         <div class="portfolio-mode-container" style="width: 100%;">
                                           <!-- View Mode Toggle Bar (Icon + Text with Grey Active Background) -->
-                                          <div class="portfolio-view-toggle-bar" style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 10px;">
+                                          <div class="portfolio-view-toggle-bar" style="display: flex; justify-content: flex-end;justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                              <div class="stat-cycles-row-wrap">
+                                                <div class="metric-label" style="margin:4px 0 0 4px;">Active</div>
+                                                <div class="metric-value" id="stat-cycles" style="margin-top:3px">0</div>
+                                              </div>
                                               <div style="background: rgba(255,255,255,0.06); padding: 4px; border-radius: 20px; display: flex; border: 1px solid rgba(255,255,255,0.1); gap: 4px;">
                                                   <button type="button" id="btn-mode-chart" onclick="switchPortfolioView('chart')" style="background: #374151; color: #fff; border: none; padding: 6px 14px; border-radius: 16px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s;">
                                                       <i class="bi bi-grid-fill" style="font-size: 13px;"></i> Card
@@ -4910,7 +5061,7 @@ to{transform:rotate(360deg)}
         
         var donutTotal=Object.values(donutValues).reduce(function(s,v){return s+v},0),navTotalBalVnd=donutTotal,navTotalPnlVnd=Object.values(donutPnls).reduce(function(s,v){return s+v},0),navTotalCostVnd=Object.values(donutCosts).reduce(function(s,v){return s+v},0);
         var balEl=document.getElementById("total-profit-bal"); if(balEl) balEl.textContent=navTotalBalVnd.toLocaleString()+"₫";
-        var valEl=document.getElementById("total-profit-val"); if(valEl) valEl.textContent=(navTotalPnlVnd>0?"+":"")+navTotalPnlVnd.toLocaleString()+"₫";
+        var valEl=document.getElementById("total-profit-val"); if(valEl) valEl.textContent=(navTotalPnlVnd>0?"+":"")+formatCleanShortNumber(navTotalPnlVnd)+"₫";
         
         var navOverallPct=navTotalCostVnd>0?navTotalPnlVnd/navTotalCostVnd*100:0,badgeEl=document.getElementById("total-profit-badge");
         if(badgeEl){badgeEl.textContent=formatPnlPct(navOverallPct);badgeEl.className="badge-pill "+(navTotalPnlVnd>=0?"badge-teal":"badge-pink")}
@@ -7234,7 +7385,13 @@ function renderActiveChartCards(portfolioGroups) {
     catTotals[key] = (catTotals[key] || 0) + a.expense;
   }
   const catEntries = Object.entries(catTotals).sort((a, b) => b[1] - a[1]);
-  let html = `<div class="det-sticky-container">\n      <div class="det-topbar">\n        <button class="back-btn" id="backBtn">‹</button>\n        <div class="det-title"><h2>${t.name}</h2></div>\n        <div class="det-total"><div class="amt figure">${t.total ? fmtVND(t.total) + "₫" : "—"}</div><div class="lbl">total spend</div></div>\n      </div>\n      \n      <div class="day-strip-wrap">\n        <div class="day-strip">`;
+
+  const coverImgUrl = t.cover && /^https?:\/\//i.test(t.cover) ? t.cover : DEFAULT_COVER_URL;
+
+  // Thêm border-radius: 16px trực tiếp vào style của .det-sticky-container
+  let html = `<div class="det-sticky-container" style="background-image: url('${coverImgUrl}'); border-radius: 16px;">\n` +
+      `      <div class="det-topbar">\n        <button class="back-btn" id="backBtn">‹</button>\n        <div class="det-title"><h2>${t.name}</h2></div>\n        <div class="det-total"><div class="amt figure">${t.total ? fmtVND(t.total) + "₫" : "—"}</div><div class="lbl">TOTAL SPEND</div></div>\n      </div>\n      \n      <div class="day-strip-wrap">\n        <div class="day-strip">`;
+  
   days.forEach((d, i) => {
     html += `<div class="day-pill ${0 === i ? "active" : ""}" data-day="${i}" data-target="day-${i}">\n      <div class="dow">${dowShort(d.date)}</div>\n      <div class="dnum">${d.date.getDate()}</div>\n    </div>`;
   });
@@ -7249,7 +7406,6 @@ function renderActiveChartCards(portfolioGroups) {
       html += `<div class="period">\n        <div class="period-head"><span class="period-dot ${band.key}"></span><span class="period-label">${band.label}</span></div>\n        <div class="period-items">`;
       band.items.forEach((a, ai) => {
         const hasExtra = a.notes || a.code;
-        // Added data-item-id, cursor pointer, and title for editing
         html += `<div class="act-card ${hasExtra ? "" : "centered"}" data-item-id="${a.id}" style="animation-delay:${30 * Math.min(ai, 8)}ms; cursor: pointer;" title="Click to edit item">\n          <div class="act-ic">${iconHTML(a)}</div>\n          <div class="act-body">\n            <div class="act-name">${a.activity}${a.review ? `<span class="rev">${a.review}</span>` : ""}</div>\n            ${a.notes ? `<div class="act-note">${a.notes}</div>` : ""}\n          </div>\n          <div class="act-side">\n            ${a.code ? `<span class="code-chip">${a.code}</span>` : ""}\n            <div class="act-amt ${a.expense ? "" : "zero"}">${a.expense ? fmtVND(a.expense) + "₫" : ""}</div>\n          </div>\n        </div>`;
       });
       html += "</div></div>";
@@ -7258,6 +7414,8 @@ function renderActiveChartCards(portfolioGroups) {
   });
   html += "</div>";
   el.innerHTML = html;
+
+  // Giữ nguyên các event listener và observer phía dưới của bạn...
 
   // Bind click listener to open edit modal when clicking any item card
   el.querySelectorAll(".act-card").forEach(card => {
@@ -7347,7 +7505,19 @@ function renderActiveChartCards(portfolioGroups) {
     Date.now() < suppressObserverUntil || entries.forEach(entry => {
       if(entry.isIntersecting){
         const idx = entry.target.dataset.day;
-        pills.forEach(p => p.classList.toggle("active", p.dataset.day === idx));
+        pills.forEach(p => {
+          const isActive = p.dataset.day === idx;
+          p.classList.toggle("active", isActive);
+          
+          // Tự động cuộn thanh ngang day-strip để đưa day-pill đang active vào giữa khung nhìn
+          if(isActive && typeof p.scrollIntoView === 'function'){
+            p.scrollIntoView({
+              behavior: 'smooth',
+              inline: 'center',
+              block: 'nearest'
+            });
+          }
+        });
       }
     });
   }, {root: usesWindow ? null : scrollRoot, rootMargin: "-70px 0px -70% 0px", threshold: 0});
@@ -7360,572 +7530,154 @@ function renderActiveChartCards(portfolioGroups) {
     function setStatus(state,text){document.getElementById("statusDot").className="status-dot "+state,document.getElementById("statusText").textContent=text}
     function buildTripName(acts){const codeChain=[];for(const a of acts){if(!a.category||!a.category.includes("Air Ticket")&&!a.category.includes("Transport"))continue;const m=a.activity.match(/^([A-Z]{2,4})[\s\-]+([A-Z]{2,4})\b/);if(!m)continue;const[_,c1,c2]=m;isAirportCode(c1)&&isAirportCode(c2)&&(codeChain[codeChain.length-1]!==c1&&codeChain.push(c1),codeChain.push(c2))}const validChain=codeChain.filter((c,i)=>c!==codeChain[i-1]).filter(c=>!EXCLUDE_CODES.has(c));if(validChain.length>=1){const names=validChain.map(c=>"IUH"===c?"Quy Nhơn":LOCATION_MAP[c]||c),deduped=names.filter((n,i)=>n!==names[i-1]);if(deduped.length>0)return deduped.join(" – ")}return acts[0].activity.slice(0,30)}document.getElementById("reloadBtn").addEventListener("click",loadTravelData),document.addEventListener("DOMContentLoaded",()=>{const dayPills=document.querySelectorAll(".day-pill");dayPills.forEach(pill=>{pill.addEventListener("click",function(){dayPills.forEach(p=>p.classList.remove("active")),this.classList.add("active");const targetDayId=this.getAttribute("data-target")||this.dataset.day,targetSection=document.getElementById(targetDayId);targetSection&&targetSection.scrollIntoView({behavior:"smooth",block:"start"})})})});
 
-    async function loadTravelData(){
-        setStatus('loading','Loading trips…');
-        document.getElementById('dashContent').innerHTML = '<div class="loading-msg"></div>';
-        let text = null, usedProxy = false;
-        try{
-          const r = await fetch(TRAVEL_CSV_URL);
-          if(!r.ok) throw new Error('status '+r.status);
-          text = await r.text();
-          if(text.trim().startsWith('<')) throw new Error('non-csv response');
-        }catch(e){
-          try{
-            const r2 = await fetch(TRAVEL_PROXY_URL);
-            if(!r2.ok) throw new Error('proxy status '+r2.status);
-            text = await r2.text();
-            usedProxy = true;
-          }catch(e2){
-            setStatus('err','Could not load trips');
-            document.getElementById('dashContent').innerHTML = `<div class="err-box">Could not fetch the Google Sheet (direct fetch and proxy fallback both failed). The sheet may not be shared as "Anyone with the link can view". Try Refresh, or check sharing settings.</div>`;
-            return;
-          }
-        }
+    // Biến toàn cục lưu trữ bản đồ Icon theo Category được load từ Google Sheet
+let CATEGORY_ICON_MAP = {};
 
-        const rows = parseCSV(text).filter(r => r.length>1 && r.some(c=>c && c.trim()));
-        if(!rows.length){ setStatus('err','Empty sheet'); return; }
-        const header = rows[0].map(h=>h.trim().toLowerCase());
-        const idx = {
-          activity: header.findIndex(h=>h.startsWith('activity')),
-          category: header.findIndex(h=>h.startsWith('category')),
-          code: header.findIndex(h=>h.startsWith('code')),
-          date: header.findIndex(h=>h.startsWith('date')),
-          expense: header.findIndex(h=>h.startsWith('expense')),
-          notes: header.findIndex(h=>h.startsWith('notes')),
-          review: header.findIndex(h=>h.startsWith('review')),
-          icon: (()=>{ const f = header.findIndex(h=>h.startsWith('icon')); return f>=0 ? f : 7; })(),
-          coverUrl: (()=>{ const f = header.findIndex((h,i)=>(h.startsWith('cover')||h.startsWith('image')||h.startsWith('photo')||h.startsWith('url')) && i===8); return f>=0 ? f : 8; })(),
-          locName: (()=>{ const f = header.findIndex((h,i)=>h.startsWith('location') && i>3); return f>=0 ? f : 9; })(),
-          locCode: (()=>{ const f = header.findIndex((h,i)=>h.startsWith('code') && i>3); return f>=0 ? f : 10; })(),
-          locExclude: 11, // Column L (0-indexed position 11) for codes to exclude
-        };
+/* ==========================================================
+   1. HÀM ICONFOR CẬP NHẬT (Ưu tiên load từ dữ liệu Sheet)
+   ================================================---------- */
+function iconFor(category) {
+  if (!category) return typeof DEFAULT_ICON_URL !== 'undefined' ? DEFAULT_ICON_URL : '';
+  const catKey = category.trim();
+  const catLower = catKey.toLowerCase();
 
-        // Build the code -> location-name lookup and collect column L exclusions into a Set
-        LOCATION_MAP = {};
-        EXCLUDE_CODES = new Set();
-        
-        for(let i=1;i<rows.length;i++){
-          const r = rows[i];
-          const locName = (r[idx.locName]||'').trim();
-          const locCode = (r[idx.locCode]||'').trim().toUpperCase();
-          const excludeText = (r[idx.locExclude]||'').trim().toUpperCase(); // Column L value
-          
-          if(locName && locCode) LOCATION_MAP[locCode] = locName;
-          if(excludeText) EXCLUDE_CODES.add(excludeText);
-        }
-
-        const records = [];
-        for(let i=1; i<rows.length; i++){
-          const r = rows[i];
-          const activity = (r[idx.activity]||'').trim();
-          const date = parseDate(r[idx.date]||'');
-          if(!activity || !date) continue;
-          records.push({
-            id: 'item-' + i + '-' + Math.random().toString(36).substr(2, 9), // 👈 ADDED: Unique ID
-            activity,
-            category: (r[idx.category]||'').trim(),
-            code: (r[idx.code]||'').trim(),
-            date,
-            expense: parseAmount(r[idx.expense]||''),
-            notes: (r[idx.notes]||'').trim(),
-            review: (r[idx.review]||'').trim(),
-            icon: (r[idx.icon]||'').trim(),
-            coverUrl: (r[idx.coverUrl]||'').trim(),
-          });
-        }
-        trips = buildTrips(records);
-
-        const visitedCities = new Set();
-        trips.forEach(t => {
-          const days = groupByDay(t);
-          annotateLocations(days);
-          days.forEach(d => {
-            if(d.locationName) visitedCities.add(d.locationName);
-          });
-        });
-      //console.log("Visited Cities:", Array.from(visitedCities));
-        setStatus('ok', `✈️ ${trips.length} trips 📍 ${visitedCities.size} cities${usedProxy?' (via proxy)':''}`);
-        renderDashboard();
-    }
-    function openEditModal(item, tripId) {
-  let modalOverlay = document.getElementById('editItemModalOverlay');
-  if (!modalOverlay) {
-    modalOverlay = document.createElement('div');
-    modalOverlay.id = 'editItemModalOverlay';
-    modalOverlay.style.cssText = `
-      position: fixed; inset: 0; width: 100vw; height: 100vh;
-      background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px); display: flex; align-items: center; 
-      justify-content: center; z-index: 2147483647; padding: 12px;
-    `;
-    modalOverlay.addEventListener('click', (e) => {
-      if (e.target === modalOverlay) {
-        modalOverlay.style.display = 'none';
-      }
-    });
-    document.body.appendChild(modalOverlay);
+  // 1. Kiểm tra trong bản đồ đã được load trực tiếp từ Google Sheet
+  if (CATEGORY_ICON_MAP[catKey]) {
+    return CATEGORY_ICON_MAP[catKey];
   }
-
-  let itemDate = item.date instanceof Date && !isNaN(item.date) ? item.date : new Date();
-  const pad = (n) => String(n).padStart(2, '0');
-  let currentYear = itemDate.getFullYear();
-  let currentMonth = itemDate.getMonth();
-  let currentDay = itemDate.getDate();
-  let selectedHour = pad(itemDate.getHours());
-  let selectedMin = pad(itemDate.getMinutes());
-
-  const uniqueCategories = [...new Set(trips.flatMap(t => t.activities.map(a => a.category).filter(Boolean)))];
-
-  const rawAmount = item.expense || 0;
-  const formattedInitialAmount = rawAmount ? Math.round(rawAmount).toLocaleString("en-US") : "";
-  const itemIconSrc = item.icon && /^https?:\/\//i.test(item.icon) ? item.icon : iconFor(item.category);
-
-  const reviewIcons = ['⭐', '🌟', '👍', '📌', '❤️', '🏆', '🔥', '✈️', '🏨', '🍽️'];
-  let currentReview = item.review || '⭐';
-
-  modalOverlay.innerHTML = `
-    <style>      
-      .ticket-modal {
-        font-family: 'DM Sans', sans-serif;
-        background: rgba(30, 41, 59, 0.55);
-        backdrop-filter: blur(28px);
-        -webkit-backdrop-filter: blur(28px);
-        color: #f8fafc;
-        width: 100%;
-        max-width: 500px;
-        border-radius: 28px;
-        padding: 36px 32px 42px 32px;
-        box-shadow: 0 35px 75px rgba(0, 0, 0, 0.85);
-        border: 2px dashed rgba(255, 255, 255, 0.25);
-        position: relative;
-        overflow: visible;
-        z-index: 2147483648;
-      }
-      .ticket-modal::before, .ticket-modal::after {
-        content: '';
-        position: absolute;
-        top: 115px;
-        width: 28px;
-        height: 28px;
-        background: rgba(15, 23, 42, 0.5);
-        border-radius: 50%;
-        z-index: 5;
-        border: 2px dashed rgba(255, 255, 255, 0.25);
-      }
-      .ticket-modal::before { left: -16px; }
-      .ticket-modal::after { right: -16px; }
-      .ticket-bottom-scallops {
-        position: absolute;
-        bottom: -1px; left: 0; right: 0; height: 12px;
-        background-image: radial-gradient(circle, rgba(15, 23, 42, 0.5) 6px, transparent 7px);
-        background-size: 22px 14px; background-repeat: repeat-x;
-        z-index: 4; border-bottom-left-radius: 28px; border-bottom-right-radius: 28px;
-      }
-      .ticket-input-wrapper { position: relative; display: flex; align-items: center; }
-      .ticket-input {
-        width: 100%; background: rgba(15, 23, 42, 0.4);
-        border: 1px solid rgba(255, 255, 255, 0.18); color: #fff;
-        padding: 11px 38px 11px 14px; border-radius: 12px;
-        font-size: 1rem; font-family: inherit; outline: none; transition: all 0.2s;
-      }
-      .ticket-input:focus { border-color: #f8fafc; background: rgba(15, 23, 42, 0.75); }
-      .ticket-input-wrapper .clear-btn { opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
-      .ticket-input-wrapper:hover .clear-btn, .ticket-input-wrapper:focus-within .clear-btn { opacity: 1; pointer-events: auto; }
-      .ticket-label { font-size: 0.75rem; color: #94a3b8; display: block; margin-bottom: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
-      .clear-btn { position: absolute; right: 12px; background: transparent; border: none; color: #94a3b8; font-size: 1rem; cursor: pointer; padding: 4px; z-index: 2; }
-      .clear-btn:hover { color: #ef4444; }
-      .custom-dt-popup {
-        display: none; position: absolute; top: calc(100% + 8px); left: 0; right: 0;
-        background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.25);
-        border-radius: 18px; padding: 16px; z-index: 30; box-shadow: 0 30px 60px rgba(0,0,0,0.85);
-      }
-      .dt-picker-container { display: flex; gap: 12px; }
-      .calendar-left { flex: 2.2; background: rgba(30, 41, 59, 0.6); border-radius: 12px; padding: 12px; border: 1px solid rgba(255,255,255,0.15); }
-      .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-weight: 700; font-size: 1.05rem; color: #f8fafc; }
-      .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; font-size: 0.95rem; }
-      .cal-day-name { color: #94a3b8; font-weight: 700; padding-bottom: 4px; font-size: 0.85rem; }
-      .cal-cell { padding: 5px 0; border-radius: 6px; cursor: pointer; color: #f8fafc; transition: background 0.2s; }
-      .cal-cell:hover { background: rgba(255, 255, 255, 0.2); }
-      .cal-cell.selected { background: #f1f5f9; color: #0f172a; font-weight: 700; }
-      .cal-cell.muted { color: #475569; }
-      .time-scroll-right { flex: 0.7; display: flex; flex-direction: column; background: rgba(30, 41, 59, 0.6); border-radius: 12px; padding: 12px 6px; border: 1px solid rgba(255,255,255,0.15); }
-      .time-scroll-box { display: flex; justify-content: center; gap: 2px; height: 160px; overflow-y: auto; }
-      .time-column { display: flex; flex-direction: column; gap: 3px; overflow-y: auto; max-height: 150px; padding-right: 2px; }
-      .time-column::-webkit-scrollbar { width: 2px; }
-      .time-column::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 2px; }
-      .time-item { padding: 4px 4px; text-align: center; border-radius: 6px; cursor: pointer; font-size: 0.75rem; color: #94a3b8; transition: all 0.2s; }
-      .time-item:hover { background: rgba(255, 255, 255, 0.2); color: #fff; }
-      .time-item.selected { background: #f1f5f9; color: #0f172a; font-weight: 700; }
-
-      .review-dropdown-btn {
-        background: rgba(15, 23, 42, 0.4);
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        border-radius: 8px;
-        padding: 7px 10px;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1rem;
-        color: #fff;
-        transition: background 0.2s;
-      }
-      .review-dropdown-btn:hover {
-        background: rgba(15, 23, 42, 0.75);
-      }
-    </style>
-
-    <div class="ticket-modal">
-      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 22px;">
-        <img src="${itemIconSrc}" alt="" style="width: 42px; height: 42px; object-fit: contain; flex-shrink: 0;" onerror="this.src='${DEFAULT_ICON_URL}';">
-        <div class="ticket-input-wrapper" style="flex: 1;">
-          <input type="text" id="activityInput" name="activity" value="${item.activity || ''}" required placeholder="Enter description..." class="ticket-input" style="border: none; border-bottom: 2px dashed rgba(255, 255, 255, 0.4); border-radius: 0; background: transparent; padding: 6px 32px 6px 4px; font-size: 1.25rem; font-weight: 700; color: #ffffff;">
-          <button type="button" id="clearActivityBtn" class="clear-btn" style="right: 4px;" title="Clear">✕</button>
-        </div>
-      </div>
-
-      <div style="border-top: 1px dashed rgba(255, 255, 255, 0.25); margin: 0 -32px 20px -32px;"></div>
-
-      <form id="editItemForm" style="display: flex; flex-direction: column; gap: 16px;">
-        
-        <!-- Category -->
-        <div style="position: relative;" id="editCategoryContainer">
-          <label class="ticket-label">Category</label>
-          <div class="ticket-input-wrapper">
-            <input type="text" id="categoryInput" name="category" autocomplete="off" value="${item.category || ''}" placeholder="Select or type category..." class="ticket-input">
-            <button type="button" id="clearCategoryBtn" class="clear-btn" title="Clear">✕</button>
-          </div>
-          <div id="editCategoryDropdown" style="display: none; position: absolute; top: calc(100% + 6px); left: 0; right: 0; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; max-height: 160px; overflow-y: auto; z-index: 40; box-shadow: 0 15px 30px rgba(0,0,0,0.6); padding: 4px;">
-            ${uniqueCategories.map(cat => `<div class="cat-option" style="padding: 8px 12px; border-radius: 8px; cursor: pointer; color: #f8fafc; font-size: 0.9rem; transition: background 0.2s;" data-value="${cat}">${cat}</div>`).join('')}
-          </div>
-        </div>
-
-        <div>
-          <label class="ticket-label">Code</label>
-          <div class="ticket-input-wrapper">
-            <input type="text" id="codeInput" name="code" value="${item.code || ''}" placeholder="" class="ticket-input">
-            <button type="button" id="clearCodeBtn" class="clear-btn" title="Clear">✕</button>
-          </div>
-        </div>
-
-        <div style="position: relative;">
-          <label class="ticket-label">Date & Time</label>
-          <div class="ticket-input-wrapper" id="dtDisplayWrapper" style="cursor: pointer;">
-            <input type="text" id="dtDisplayText" readonly value="${pad(currentDay)}/${pad(currentMonth + 1)}/${currentYear}, ${selectedHour}:${selectedMin}" class="ticket-input" style="cursor: pointer; padding-right: 40px;">
-            <span style="position: absolute; right: 14px; color: #94a3b8; pointer-events: none; font-size: 1rem;">📅</span>
-          </div>
-
-          <div id="customDtPopup" class="custom-dt-popup">
-            <div class="dt-picker-container">
-              <div class="calendar-left">
-                <div class="cal-header">
-                  <button type="button" id="prevMonthBtn" style="background:none; border:none; color:#fff; cursor:pointer; font-weight:bold; font-size: 1.1rem;">‹</button>
-                  <span id="calMonthYearTitle"></span>
-                  <button type="button" id="nextMonthBtn" style="background:none; border:none; color:#fff; cursor:pointer; font-weight:bold; font-size: 1.1rem;">›</button>
-                </div>
-                <div class="cal-grid">
-                  <div class="cal-day-name">M</div><div class="cal-day-name">T</div><div class="cal-day-name">W</div><div class="cal-day-name">T</div><div class="cal-day-name">F</div><div class="cal-day-name">S</div><div class="cal-day-name">S</div>
-                </div>
-                <div id="calDaysGrid" class="cal-grid" style="margin-top: 4px;"></div>
-              </div>
-
-              <div class="time-scroll-right">
-                <div style="font-size: 0.65rem; color: #94a3b8; font-weight: 700; text-align: center; margin-bottom: 4px;">TIME</div>
-                <div class="time-scroll-box">
-                  <div id="hoursColumn" class="time-column"></div>
-                  <span style="color: #94a3b8; font-weight: bold; align-self: center; font-size: 0.8rem;">:</span>
-                  <div id="minutesColumn" class="time-column"></div>
-                </div>
-              </div>
-            </div>
-
-            <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 10px;">
-              <button type="button" id="dtCancelBtn" style="background: transparent; border: 1px solid rgba(255,255,255,0.25); color: #94a3b8; padding: 6px 14px; border-radius: 8px; font-size: 0.85rem; cursor: pointer;">Cancel</button>
-              <button type="button" id="dtConfirmBtn" style="background: #f1f5f9; border: none; color: #0f172a; padding: 6px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.85rem;">Apply</button>
-            </div>
-          </div>
-
-          <input type="hidden" id="finalDateVal" value="${currentYear}-${pad(currentMonth + 1)}-${pad(currentDay)}T${selectedHour}:${selectedMin}">
-        </div>
-
-        <div>
-          <label class="ticket-label">Amount (VND)</label>
-          <div class="ticket-input-wrapper">
-            <input type="text" id="formattedAmountInput" value="${formattedInitialAmount}" placeholder="0" class="ticket-input" style="color: #ffffff; font-size: 1.6rem; font-weight: 700; padding: 12px 38px 12px 14px;">
-            <button type="button" id="clearAmountBtn" class="clear-btn" title="Clear">✕</button>
-          </div>
-          <input type="hidden" name="expense" id="rawAmountInput" value="${rawAmount}">
-        </div>
-
-        <div>
-          <label class="ticket-label">Note / Address</label>
-          <div class="ticket-input-wrapper" style="align-items: flex-start;">
-            <textarea id="notesInput" name="notes" rows="2" placeholder="Add optional notes..." class="ticket-input" style="resize: vertical; padding-top: 10px;"></textarea>
-            <button type="button" id="clearNotesBtn" class="clear-btn" style="top: 8px;" title="Clear">✕</button>
-          </div>
-        </div>
-
-        <!-- Action Buttons Footer: Cancel, Save Changes, View Dropdown, Delete Button -->
-        <div style="display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin-top: 10px; border-top: 1px dashed rgba(255, 255, 255, 0.25); padding-top: 16px;">
-          <button type="button" id="cancelEditBtn" style="background: transparent; border: 1px solid rgba(255, 255, 255, 0.25); color: #94a3b8; padding: 7px 14px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-family: inherit;">Cancel</button>
-          <button type="submit" style="background: #f1f5f9; border: none; color: #0f172a; padding: 7px 16px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.85rem; font-family: inherit; box-shadow: 0 2px 6px rgba(0,0,0,0.2);">Save</button>
-          
-          <!-- Nút View (Dạng icon chọn review) nằm cạnh trái nút Delete -->
-          <div style="position: relative;" id="reviewDropdownContainer">
-            <button type="button" id="reviewBtn" class="review-dropdown-btn" title="Select Review Icon">
-              <span id="selectedReviewIcon">${currentReview}</span>
-            </button>
-            <input type="hidden" name="review" id="reviewInputVal" value="${currentReview}">
-            <div id="reviewDropdownMenu" style="display: none; position: absolute; bottom: calc(100% + 6px); right: 0; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 10px; padding: 6px; z-index: 50; gap: 6px; flex-wrap: wrap; width: 160px; box-shadow: 0 10px 25px rgba(0,0,0,0.6);">
-              ${reviewIcons.map(ic => `<div class="review-opt" style="padding: 6px 8px; border-radius: 6px; cursor: pointer; font-size: 1.1rem; text-align: center; transition: background 0.2s;" data-icon="${ic}">${ic}</div>`).join('')}
-            </div>
-          </div>
-
-          <!-- Nút Delete (Thùng rác) -->
-          <button type="button" id="triggerDeleteBtn" title="Delete Item" style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; padding: 7px 10px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; transition: background 0.2s;" onmouseover="this.style.background='rgba(239, 68, 68, 0.3)'" onmouseout="this.style.background='rgba(239, 68, 68, 0.15)'">
-            <i class="bi bi-trash"></i>
-          </button>
-        </div>
-      </form>
-      <div class="ticket-bottom-scallops"></div>
-    </div>
-  `;
-
-  modalOverlay.style.display = 'flex';
-  document.getElementById('notesInput').value = item.notes || '';
-
-  // --- Review Icon Dropdown Logic ---
-  const reviewBtn = document.getElementById('reviewBtn');
-  const reviewMenu = document.getElementById('reviewDropdownMenu');
-  const reviewInputVal = document.getElementById('reviewInputVal');
-  const selectedReviewIcon = document.getElementById('selectedReviewIcon');
-
-  reviewBtn.onclick = (e) => {
-    e.stopPropagation();
-    const isShowing = reviewMenu.style.display === 'flex';
-    reviewMenu.style.display = isShowing ? 'none' : 'flex';
-  };
-
-  reviewMenu.querySelectorAll('.review-opt').forEach(opt => {
-    opt.onmouseover = () => opt.style.background = 'rgba(255, 255, 255, 0.15)';
-    opt.onmouseout = () => opt.style.background = 'transparent';
-    opt.onclick = (e) => {
-      e.stopPropagation();
-      const chosenIcon = opt.getAttribute('data-icon');
-      selectedReviewIcon.textContent = chosenIcon;
-      reviewInputVal.value = chosenIcon;
-      reviewMenu.style.display = 'none';
-    };
-  });
-
-  document.addEventListener('click', (e) => {
-    if (!document.getElementById('reviewDropdownContainer').contains(e.target)) {
-      reviewMenu.style.display = 'none';
-    }
-  });
-
-  // --- Confirm Deletion Modal ---
-  document.getElementById('triggerDeleteBtn').onclick = () => {
-    let confirmOverlay = document.getElementById('customConfirmOverlay');
-    if (!confirmOverlay) {
-      confirmOverlay = document.createElement('div');
-      confirmOverlay.id = 'customConfirmOverlay';
-      confirmOverlay.style.cssText = `
-        position: fixed; inset: 0; width: 100vw; height: 100vh;
-        background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px); display: flex; align-items: center; 
-        justify-content: center; z-index: 2147483649; padding: 12px;
-      `;
-      confirmOverlay.innerHTML = `
-        <div style="background: rgba(30, 41, 59, 0.92); backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 24px; width: 100%; max-width: 340px; color: #f8fafc; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.8); font-family: 'DM Sans', sans-serif;">
-          <div style="font-size: 2rem; margin-bottom: 8px;">⚠️</div>
-          <div style="font-size: 1.1rem; font-weight: 700; margin-bottom: 8px;">Confirm Deletion</div>
-          <div style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 20px;">Are you sure you want to delete this item from your itinerary?</div>
-          <div style="display: flex; gap: 10px; justify-content: center;">
-            <button type="button" id="confirmNoBtn" style="background: transparent; border: 1px solid rgba(255, 255, 255, 0.25); color: #94a3b8; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-family: inherit;">Cancel</button>
-            <button type="button" id="confirmYesBtn" style="background: #ef4444; border: none; color: #fff; padding: 8px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.9rem; font-family: inherit;">Delete</button>
-          </div>
-        </div>
-      `;
-      document.body.appendChild(confirmOverlay);
-    } else {
-      confirmOverlay.style.display = 'flex';
-    }
-
-    document.getElementById('confirmNoBtn').onclick = () => {
-      confirmOverlay.style.display = 'none';
-    };
-
-    document.getElementById('confirmYesBtn').onclick = () => {
-      confirmOverlay.style.display = 'none';
-      deleteActivity(item.id, tripId);
-    };
-  };
-
-  // --- Category Dropdown Logic ---
-  const editCatInput = document.getElementById('categoryInput');
-  const editCatDropdown = document.getElementById('editCategoryDropdown');
-  editCatInput.addEventListener('focus', () => { editCatDropdown.style.display = 'block'; });
-  editCatInput.addEventListener('input', (e) => {
-    const val = e.target.value.toLowerCase();
-    const options = editCatDropdown.querySelectorAll('.cat-option');
-    let hasVisible = false;
-    options.forEach(opt => {
-      if (opt.textContent.toLowerCase().includes(val)) {
-        opt.style.display = 'block'; hasVisible = true;
-      } else { opt.style.display = 'none'; }
-    });
-    editCatDropdown.style.display = hasVisible ? 'block' : 'none';
-  });
-
-  editCatDropdown.querySelectorAll('.cat-option').forEach(opt => {
-    opt.addEventListener('mouseenter', () => opt.style.background = 'rgba(255, 255, 255, 0.15)');
-    opt.addEventListener('mouseleave', () => opt.style.background = 'transparent');
-    opt.addEventListener('click', () => {
-      editCatInput.value = opt.getAttribute('data-value');
-      editCatDropdown.style.display = 'none';
-    });
-  });
-
-  document.addEventListener('click', (e) => {
-    if (!document.getElementById('editCategoryContainer').contains(e.target)) {
-      editCatDropdown.style.display = 'none';
-    }
-  });
-
-  // --- Calendar & Time Scroll Logic ---
-  let tempYear = currentYear;
-  let tempMonth = currentMonth;
-  let tempDay = currentDay;
-  const shortMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-  function renderCalendar() {
-    document.getElementById('calMonthYearTitle').textContent = `${shortMonthNames[tempMonth]} ${tempYear}`;
-    const daysGrid = document.getElementById('calDaysGrid');
-    daysGrid.innerHTML = '';
-    const firstDayIndex = (new Date(tempYear, tempMonth, 1).getDay() + 6) % 7;
-    const totalDays = new Date(tempYear, tempMonth + 1, 0).getDate();
-    const prevTotalDays = new Date(tempYear, tempMonth, 0).getDate();
-
-    for (let i = firstDayIndex; i > 0; i--) {
-      const dDiv = document.createElement('div');
-      dDiv.className = 'cal-cell muted';
-      dDiv.textContent = prevTotalDays - i + 1;
-      daysGrid.appendChild(dDiv);
-    }
-    for (let d = 1; d <= totalDays; d++) {
-      const dDiv = document.createElement('div');
-      dDiv.className = `cal-cell ${d === tempDay && tempMonth === currentMonth && tempYear === currentYear ? 'selected' : ''}`;
-      dDiv.textContent = d;
-      dDiv.onclick = () => { tempDay = d; renderCalendar(); };
-      daysGrid.appendChild(dDiv);
+  // Kiểm tra không phân biệt hoa thường
+  for (const key in CATEGORY_ICON_MAP) {
+    if (key.toLowerCase() === catLower) {
+      return CATEGORY_ICON_MAP[key];
     }
   }
 
-  document.getElementById('prevMonthBtn').onclick = () => {
-    tempMonth--; if (tempMonth < 0) { tempMonth = 11; tempYear--; } renderCalendar();
-  };
-  document.getElementById('nextMonthBtn').onclick = () => {
-    tempMonth++; if (tempMonth > 11) { tempMonth = 0; tempYear++; } renderCalendar();
+  // 2. Dự phòng các từ khóa mặc định nếu sheet chưa có icon riêng
+  const defaultIconMap = {
+    'flight': 'https://cdn-icons-png.flaticon.com/512/3125/3125852.png',
+    'transport': 'https://cdn-icons-png.flaticon.com/512/3097/3097144.png',
+    'bus': 'https://cdn-icons-png.flaticon.com/512/3097/3097144.png',
+    'train': 'https://cdn-icons-png.flaticon.com/512/2991/2991148.png',
+    'hotel': 'https://cdn-icons-png.flaticon.com/512/3009/3009489.png',
+    'stay': 'https://cdn-icons-png.flaticon.com/512/3009/3009489.png',
+    'food': 'https://cdn-icons-png.flaticon.com/512/3174/3174880.png',
+    'dining': 'https://cdn-icons-png.flaticon.com/512/3174/3174880.png',
+    'cafe': 'https://cdn-icons-png.flaticon.com/512/3174/3174880.png',
+    'entertainment': 'https://cdn-icons-png.flaticon.com/512/3163/3163478.png',
+    'activity': 'https://cdn-icons-png.flaticon.com/512/3163/3163478.png',
+    'shopping': 'https://cdn-icons-png.flaticon.com/512/3081/3081559.png'
   };
 
-  const hoursCol = document.getElementById('hoursColumn');
-  const minsCol = document.getElementById('minutesColumn');
-  for (let h = 0; h < 24; h++) {
-    const hStr = pad(h);
-    const itemDiv = document.createElement('div');
-    itemDiv.className = `time-item ${hStr === selectedHour ? 'selected' : ''}`;
-    itemDiv.textContent = hStr;
-    itemDiv.onclick = () => {
-      hoursCol.querySelectorAll('.time-item').forEach(el => el.classList.remove('selected'));
-      itemDiv.classList.add('selected'); selectedHour = hStr;
-    };
-    hoursCol.appendChild(itemDiv);
+  for (const key in defaultIconMap) {
+    if (catLower.includes(key)) {
+      return defaultIconMap[key];
+    }
   }
 
-  for (let m = 0; m < 60; m += 5) {
-    const mStr = pad(m);
-    const itemDiv = document.createElement('div');
-    itemDiv.className = `time-item ${mStr === selectedMin ? 'selected' : ''}`;
-    itemDiv.textContent = mStr;
-    itemDiv.onclick = () => {
-      minsCol.querySelectorAll('.time-item').forEach(el => el.classList.remove('selected'));
-      itemDiv.classList.add('selected'); selectedMin = mStr;
-    };
-    minsCol.appendChild(itemDiv);
-  }
-
-  const dtWrapper = document.getElementById('dtDisplayWrapper');
-  const dtPopup = document.getElementById('customDtPopup');
-  dtWrapper.onclick = (e) => {
-    e.stopPropagation();
-    const isOpen = dtPopup.style.display === 'block';
-    dtPopup.style.display = isOpen ? 'none' : 'block';
-    if (!isOpen) renderCalendar();
-  };
-
-  document.addEventListener('click', (e) => {
-    if (!dtPopup.contains(e.target) && !dtWrapper.contains(e.target)) {
-      dtPopup.style.display = 'none';
-    }
-  });
-
-  document.getElementById('dtCancelBtn').onclick = () => { dtPopup.style.display = 'none'; };
-  document.getElementById('dtConfirmBtn').onclick = () => {
-    currentYear = tempYear; currentMonth = tempMonth; currentDay = tempDay;
-    document.getElementById('dtDisplayText').value = `${pad(currentDay)}/${pad(currentMonth + 1)}/${currentYear}, ${selectedHour}:${selectedMin}`;
-    document.getElementById('finalDateVal').value = `${currentYear}-${pad(currentMonth + 1)}-${pad(currentDay)}T${selectedHour}:${selectedMin}`;
-    dtPopup.style.display = 'none';
-  };
-
-  document.getElementById('clearCategoryBtn').onclick = () => { document.getElementById('categoryInput').value = ''; document.getElementById('categoryInput').focus(); };
-  document.getElementById('clearActivityBtn').onclick = () => { document.getElementById('activityInput').value = ''; document.getElementById('activityInput').focus(); };
-  document.getElementById('clearCodeBtn').onclick = () => { document.getElementById('codeInput').value = ''; document.getElementById('codeInput').focus(); };
-  document.getElementById('clearAmountBtn').onclick = () => { 
-    document.getElementById('formattedAmountInput').value = ''; 
-    document.getElementById('rawAmountInput').value = '0'; 
-    document.getElementById('formattedAmountInput').focus(); 
-  };
-  document.getElementById('clearNotesBtn').onclick = () => { document.getElementById('notesInput').value = ''; document.getElementById('notesInput').focus(); };
-
-  const formattedInput = document.getElementById('formattedAmountInput');
-  const rawInput = document.getElementById('rawAmountInput');
-  formattedInput.addEventListener('input', (e) => {
-    const cleanVal = e.target.value.replace(/[^0-9]/g, '');
-    const num = parseFloat(cleanVal) || 0;
-    rawInput.value = num;
-    e.target.value = num ? num.toLocaleString("en-US") : '';
-  });
-
-  document.getElementById('cancelEditBtn').onclick = () => { modalOverlay.style.display = 'none'; };
-
-  document.getElementById('editItemForm').onsubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-
-    item.category = formData.get('category').trim();
-    item.activity = formData.get('activity').trim();
-    item.review = formData.get('review') || currentReview;
-    
-    const finalDt = document.getElementById('finalDateVal').value;
-    if (finalDt) {
-      item.date = new Date(finalDt);
-    }
-
-    item.code = formData.get('code').trim();
-    item.expense = parseFloat(rawInput.value) || 0;
-    item.notes = formData.get('notes').trim();
-
-    trips = buildTrips(trips.flatMap(t => t.activities));
-    modalOverlay.style.display = 'none';
-    openTrip(tripId);
-  };
+  return typeof DEFAULT_ICON_URL !== 'undefined' ? DEFAULT_ICON_URL : 'https://cdn-icons-png.flaticon.com/512/2921/2921222.png';
 }
 
 
 /* ==========================================================
-   2. HÀM THÊM MỚI (openAddModal) VỚI GIAO DIỆN HÓA ĐƠN & CUSTOM CATEGORY
+   2. HÀM LOAD TRAVEL DATA (Thu thập Category & Icon map)
+   ================================================---------- */
+async function loadTravelData(){
+    setStatus('loading','Loading trips…');
+    document.getElementById('dashContent').innerHTML = '<div class="loading-msg"></div>';
+    let text = null, usedProxy = false;
+    try{
+      const r = await fetch(TRAVEL_CSV_URL);
+      if(!r.ok) throw new Error('status '+r.status);
+      text = await r.text();
+      if(text.trim().startsWith('<')) throw new Error('non-csv response');
+    }catch(e){
+      try{
+        const r2 = await fetch(TRAVEL_PROXY_URL);
+        if(!r2.ok) throw new Error('proxy status '+r2.status);
+        text = await r2.text();
+        usedProxy = true;
+      }catch(e2){
+        setStatus('err','Could not load trips');
+        document.getElementById('dashContent').innerHTML = `<div class="err-box">Could not fetch the Google Sheet (direct fetch and proxy fallback both failed). The sheet may not be shared as "Anyone with the link can view". Try Refresh, or check sharing settings.</div>`;
+        return;
+      }
+    }
+
+    const rows = parseCSV(text).filter(r => r.length>1 && r.some(c=>c && c.trim()));
+    if(!rows.length){ setStatus('err','Empty sheet'); return; }
+    const header = rows[0].map(h=>h.trim().toLowerCase());
+    const idx = {
+      activity: header.findIndex(h=>h.startsWith('activity')),
+      category: header.findIndex(h=>h.startsWith('category')),
+      code: header.findIndex(h=>h.startsWith('code')),
+      date: header.findIndex(h=>h.startsWith('date')),
+      expense: header.findIndex(h=>h.startsWith('expense')),
+      notes: header.findIndex(h=>h.startsWith('notes')),
+      review: header.findIndex(h=>h.startsWith('review')),
+      icon: (()=>{ const f = header.findIndex(h=>h.startsWith('icon')); return f>=0 ? f : 7; })(),
+      coverUrl: (()=>{ const f = header.findIndex((h,i)=>(h.startsWith('cover')||h.startsWith('image')||h.startsWith('photo')||h.startsWith('url')) && i===8); return f>=0 ? f : 8; })(),
+      locName: (()=>{ const f = header.findIndex((h,i)=>h.startsWith('location') && i>3); return f>=0 ? f : 9; })(),
+      locCode: (()=>{ const f = header.findIndex((h,i)=>h.startsWith('code') && i>3); return f>=0 ? f : 10; })(),
+      locExclude: 11,
+    };
+
+    LOCATION_MAP = {};
+    EXCLUDE_CODES = new Set();
+    CATEGORY_ICON_MAP = {}; // Reset lại bản đồ icon khi load mới[cite: 3]
+    
+    for(let i=1;i<rows.length;i++){
+      const r = rows[i];
+      const locName = (r[idx.locName]||'').trim();
+      const locCode = (r[idx.locCode]||'').trim().toUpperCase();
+      const excludeText = (r[idx.locExclude]||'').trim().toUpperCase();
+      
+      if(locName && locCode) LOCATION_MAP[locCode] = locName;
+      if(excludeText) EXCLUDE_CODES.add(excludeText);
+
+      // Thu thập mapping giữa Category và Icon từ Google Sheet[cite: 3]
+      const catVal = (r[idx.category] || '').trim();
+      const iconVal = (r[idx.icon] || '').trim();
+      if (catVal && iconVal && /^https?:\/\//i.test(iconVal)) {
+        CATEGORY_ICON_MAP[catVal] = iconVal;
+      }
+    }
+
+    const records = [];
+    for(let i=1; i<rows.length; i++){
+      const r = rows[i];
+      const activity = (r[idx.activity]||'').trim();
+      const date = parseDate(r[idx.date]||'');
+      if(!activity || !date) continue;
+      records.push({
+        id: 'item-' + i + '-' + Math.random().toString(36).substr(2, 9),
+        activity,
+        category: (r[idx.category]||'').trim(),
+        code: (r[idx.code]||'').trim(),
+        date,
+        expense: parseAmount(r[idx.expense]||''),
+        notes: (r[idx.notes]||'').trim(),
+        review: (r[idx.review]||'').trim(),
+        icon: (r[idx.icon]||'').trim(),
+        coverUrl: (r[idx.coverUrl]||'').trim(),
+      });
+    }
+    trips = buildTrips(records);
+
+    const visitedCities = new Set();
+    trips.forEach(t => {
+      const days = groupByDay(t);
+      annotateLocations(days);
+      days.forEach(d => {
+        if(d.locationName) visitedCities.add(d.locationName);
+      });
+    });
+    setStatus('ok', `✈️ ${trips.length} trips 📍 ${visitedCities.size} cities${usedProxy?' (via proxy)':''}`);
+    renderDashboard();
+}
+
+
+/* ==========================================================
+   3. HÀM OPEN ADD MODAL (Cập nhật real-time icon khi đổi category)
    ================================================---------- */
 function openAddModal() {
   let modalOverlay = document.getElementById('addItemModalOverlay');
@@ -7955,6 +7707,8 @@ function openAddModal() {
   let selectedMin = pad(now.getMinutes());
 
   const uniqueCategories = [...new Set(trips.flatMap(t => t.activities.map(a => a.category).filter(Boolean)))];
+  const initialCategory = uniqueCategories[0] || 'General';
+  const initialIconSrc = iconFor(initialCategory);
 
   modalOverlay.innerHTML = `
     <style>      
@@ -8030,12 +7784,24 @@ function openAddModal() {
       .time-item { padding: 4px 4px; text-align: center; border-radius: 6px; cursor: pointer; font-size: 0.75rem; color: #94a3b8; transition: all 0.2s; }
       .time-item:hover { background: rgba(255, 255, 255, 0.2); color: #fff; }
       .time-item.selected { background: #f1f5f9; color: #0f172a; font-weight: 700; }
+
+      .ticket-modal button[type="submit"] {
+        transition: background 0.2s ease;
+      }
+      .ticket-modal button[type="submit"]:hover {
+        background: rgba(255, 255, 255, 0.9) !important;
+      }
+      .ticket-modal button[type="button"]:not(.clear-btn):not(.review-dropdown-btn):not(#triggerDeleteBtn):hover {
+        background: rgba(255, 255, 255, 0.1) !important;
+        color: #ffffff !important;
+      }
     </style>
 
     <div class="ticket-modal">
       <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 22px;">
+        <img id="addModalHeaderIcon" src="${initialIconSrc}" alt="" style="width: 42px; height: 42px; object-fit: contain; flex-shrink: 0;" onerror="this.src='${DEFAULT_ICON_URL}';">
         <div class="ticket-input-wrapper" style="flex: 1;">
-          <input type="text" id="newActivityInput" name="activity" required placeholder="Enter new activity..." class="ticket-input" style="border: none; border-bottom: 2px dashed rgba(255, 255, 255, 0.4); border-radius: 0; background: transparent; padding: 6px 32px 6px 4px; font-size: 1.25rem; font-weight: 700; color: #ffffff;">
+          <input type="text" id="newActivityInput" name="activity" required placeholder="Enter activity..." class="ticket-input" style="border: none; border-bottom: 2px dashed rgba(255, 255, 255, 0.4); border-radius: 0; background: transparent; padding: 6px 32px 6px 4px; font-size: 1.25rem; font-weight: 700; color: #ffffff;">
           <button type="button" id="clearNewActivityBtn" class="clear-btn" style="right: 4px;" title="Clear">✕</button>
         </div>
       </div>
@@ -8044,14 +7810,13 @@ function openAddModal() {
 
       <form id="addItemForm" style="display: flex; flex-direction: column; gap: 16px;">
         
-        <!-- Category (Custom Dropdown - Không có mũi tên chevron) -->
         <div style="position: relative;" id="addCategoryContainer">
           <label class="ticket-label">Category</label>
           <div class="ticket-input-wrapper">
-            <input type="text" id="newCategoryInput" name="category" autocomplete="off" placeholder="Select or type category..." class="ticket-input">
+            <input type="text" id="newCategoryInput" name="category" autocomplete="off" value="${initialCategory}" placeholder="Select or type category..." class="ticket-input">
             <button type="button" id="clearNewCategoryBtn" class="clear-btn" title="Clear">✕</button>
           </div>
-          <div id="addCategoryDropdown" style="display: none; position: absolute; top: calc(100% + 6px); left: 0; right: 0; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; max-height: 160px; overflow-y: auto; z-index: 40; box-shadow: 0 15px 30px rgba(0,0,0,0.6); padding: 4px;">
+          <div id="addCategoryDropdown" style="display: none; position: absolute; top: calc(100% + 6px); left: 0; right: 0; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; max-height: 160px; overflow-y: auto; z-index: 40; box-shadow: 0 15px 30px rgba(0,0,0,0.6); padding: 4px;">
             ${uniqueCategories.map(cat => `<div class="cat-option" style="padding: 8px 12px; border-radius: 8px; cursor: pointer; color: #f8fafc; font-size: 0.9rem; transition: background 0.2s;" data-value="${cat}">${cat}</div>`).join('')}
           </div>
         </div>
@@ -8068,7 +7833,7 @@ function openAddModal() {
           <label class="ticket-label">Date & Time</label>
           <div class="ticket-input-wrapper" id="newDtDisplayWrapper" style="cursor: pointer;">
             <input type="text" id="newDtDisplayText" readonly value="${pad(currentDay)}/${pad(currentMonth + 1)}/${currentYear}, ${selectedHour}:${selectedMin}" class="ticket-input" style="cursor: pointer; padding-right: 40px;">
-            <span style="position: absolute; right: 14px; color: #94a3b8; pointer-events: none; font-size: 1rem;">📅</span>
+            <span style="position: absolute; right: 14px; color: #94a3b8; pointer-events: none; font-size: 1rem;"><i class="bi bi-calendar3"></i></span>
           </div>
 
           <div id="newCustomDtPopup" class="custom-dt-popup">
@@ -8132,10 +7897,17 @@ function openAddModal() {
 
   modalOverlay.style.display = 'flex';
 
-  // --- Custom Category Dropdown Logic ---
+  // Lắng nghe sự kiện đổi icon real-time khi user gõ hoặc chọn category
   const addCatInput = document.getElementById('newCategoryInput');
+  const addModalHeaderIcon = document.getElementById('addModalHeaderIcon');
   const addCatDropdown = document.getElementById('addCategoryDropdown');
   
+  if (addCatInput && addModalHeaderIcon) {
+    addCatInput.addEventListener('input', () => {
+      addModalHeaderIcon.src = iconFor(addCatInput.value);
+    });
+  }
+
   addCatInput.addEventListener('focus', () => {
     addCatDropdown.style.display = 'block';
   });
@@ -8159,7 +7931,11 @@ function openAddModal() {
     opt.addEventListener('mouseenter', () => opt.style.background = 'rgba(255, 255, 255, 0.15)');
     opt.addEventListener('mouseleave', () => opt.style.background = 'transparent');
     opt.addEventListener('click', () => {
-      addCatInput.value = opt.getAttribute('data-value');
+      const chosenCat = opt.getAttribute('data-value');
+      addCatInput.value = chosenCat;
+      if (addModalHeaderIcon) {
+        addModalHeaderIcon.src = iconFor(chosenCat);
+      }
       addCatDropdown.style.display = 'none';
     });
   });
@@ -8170,7 +7946,6 @@ function openAddModal() {
     }
   });
 
-  // --- Calendar & Time logic ---
   let tempYear = currentYear;
   let tempMonth = currentMonth;
   let tempDay = currentDay;
@@ -8299,6 +8074,495 @@ function openAddModal() {
   };
 }
 
+function openEditModal(item, tripId) {
+  let modalOverlay = document.getElementById('editItemModalOverlay');
+  if (!modalOverlay) {
+    modalOverlay = document.createElement('div');
+    modalOverlay.id = 'editItemModalOverlay';
+    modalOverlay.style.cssText = `
+      position: fixed; inset: 0; width: 100vw; height: 100vh;
+      background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px); display: flex; align-items: center; 
+      justify-content: center; z-index: 2147483647; padding: 12px;
+    `;
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) {
+        modalOverlay.style.display = 'none';
+      }
+    });
+    document.body.appendChild(modalOverlay);
+  }
+
+  let itemDate = item.date instanceof Date && !isNaN(item.date) ? item.date : new Date();
+  const pad = (n) => String(n).padStart(2, '0');
+  let currentYear = itemDate.getFullYear();
+  let currentMonth = itemDate.getMonth();
+  let currentDay = itemDate.getDate();
+  let selectedHour = pad(itemDate.getHours());
+  let selectedMin = pad(itemDate.getMinutes());
+
+  const uniqueCategories = [...new Set(trips.flatMap(t => t.activities.map(a => a.category).filter(Boolean)))];
+
+  const rawAmount = item.expense || 0;
+  const formattedInitialAmount = rawAmount ? Math.round(rawAmount).toLocaleString("en-US") : "";
+  const itemIconSrc = item.icon && /^https?:\/\//i.test(item.icon) ? item.icon : iconFor(item.category);
+
+  const reviewIcons = ['⭐', '👍', '❤️', '🏆', '🔥','🤩'];
+  let currentReview = item.review || '⭐';
+
+  modalOverlay.innerHTML = `
+    <style>      
+      .ticket-modal {
+        font-family: 'DM Sans', sans-serif;
+        background: rgba(30, 41, 59, 0.55);
+        backdrop-filter: blur(28px);
+        -webkit-backdrop-filter: blur(28px);
+        color: #f8fafc;
+        width: 100%;
+        max-width: 500px;
+        border-radius: 28px;
+        padding: 36px 28px 42px 28px;
+        box-shadow: 0 35px 75px rgba(0, 0, 0, 0.85);
+        border: 2px dashed rgba(255, 255, 255, 0.25);
+        position: relative;
+        overflow: visible;
+        z-index: 2147483648;
+      }
+      .ticket-modal::before, .ticket-modal::after {
+        content: '';
+        position: absolute;
+        top: 115px;
+        width: 28px;
+        height: 28px;
+        background: rgba(15, 23, 42, 0.5);
+        border-radius: 50%;
+        z-index: 5;
+        border: 2px dashed rgba(255, 255, 255, 0.25);
+      }
+      .ticket-modal::before { left: -16px; }
+      .ticket-modal::after { right: -16px; }
+      .ticket-bottom-scallops {
+        position: absolute;
+        bottom: -1px; left: 0; right: 0; height: 12px;
+        background-image: radial-gradient(circle, rgba(15, 23, 42, 0.5) 6px, transparent 7px);
+        background-size: 22px 14px; background-repeat: repeat-x;
+        z-index: 4; border-bottom-left-radius: 28px; border-bottom-right-radius: 28px;
+      }
+      .ticket-input-wrapper { position: relative; display: flex; align-items: center; }
+      .ticket-input {
+        width: 100%; background: rgba(15, 23, 42, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.18); color: #fff;
+        padding: 11px 38px 11px 14px; border-radius: 12px;
+        font-size: 1rem; font-family: inherit; outline: none; transition: all 0.2s;
+      }
+      .ticket-input:focus { border-color: #f8fafc; background: rgba(15, 23, 42, 0.75); }
+      .ticket-input-wrapper .clear-btn { opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
+      .ticket-input-wrapper:hover .clear-btn, .ticket-input-wrapper:focus-within .clear-btn { opacity: 1; pointer-events: auto; }
+      .ticket-label { font-size: 0.75rem; color: #94a3b8; display: block; margin-bottom: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+      .clear-btn { position: absolute; right: 12px; background: transparent; border: none; color: #94a3b8; font-size: 1rem; cursor: pointer; padding: 4px; z-index: 2; }
+      .clear-btn:hover { color: #ef4444; }
+      .custom-dt-popup {
+        display: none; position: absolute; top: calc(100% + 8px); left: 0; right: 0;
+        background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 18px; padding: 16px; z-index: 30; box-shadow: 0 30px 60px rgba(0,0,0,0.85);
+      }
+      .dt-picker-container { display: flex; gap: 12px; }
+      .calendar-left { flex: 2.2; background: rgba(30, 41, 59, 0.6); border-radius: 12px; padding: 12px; border: 1px solid rgba(255,255,255,0.15); }
+      .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-weight: 700; font-size: 1.05rem; color: #f8fafc; }
+      .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; font-size: 0.95rem; }
+      .cal-day-name { color: #94a3b8; font-weight: 700; padding-bottom: 4px; font-size: 0.85rem; }
+      .cal-cell { padding: 5px 0; border-radius: 6px; cursor: pointer; color: #f8fafc; transition: background 0.2s; }
+      .cal-cell:hover { background: rgba(255, 255, 255, 0.2); }
+      .cal-cell.selected { background: #f1f5f9; color: #0f172a; font-weight: 700; }
+      .cal-cell.muted { color: #475569; }
+      .time-scroll-right { flex: 0.7; display: flex; flex-direction: column; background: rgba(30, 41, 59, 0.6); border-radius: 12px; padding: 12px 6px; border: 1px solid rgba(255,255,255,0.15); }
+      .time-scroll-box { display: flex; justify-content: center; gap: 2px; height: 160px; overflow-y: auto; }
+      .time-column { display: flex; flex-direction: column; gap: 3px; overflow-y: auto; max-height: 150px; padding-right: 2px; }
+      .time-column::-webkit-scrollbar { width: 2px; }
+      .time-column::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 2px; }
+      .time-item { padding: 4px 4px; text-align: center; border-radius: 6px; cursor: pointer; font-size: 0.75rem; color: #94a3b8; transition: all 0.2s; }
+      .time-item:hover { background: rgba(255, 255, 255, 0.2); color: #fff; }
+      .time-item.selected { background: #f1f5f9; color: #0f172a; font-weight: 700; }
+
+      .review-dropdown-btn {
+        background: rgba(15, 23, 42, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 8px;
+        padding: 7px 10px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        color: #fff;
+        transition: background 0.2s;
+      }
+      .review-dropdown-btn:hover {
+        background: rgba(15, 23, 42, 0.75);
+      }
+
+      /* Hover Effects cho các nút bấm */
+      .ticket-modal button[type="submit"], .ticket-modal #addModalSubmitBtn {
+        transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+      }
+      .ticket-modal button[type="submit"]:hover, .ticket-modal #addModalSubmitBtn:hover {
+        background: #ffffff !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2) !important;
+      }
+      .ticket-modal button[type="button"]:not(.clear-btn):not(.review-dropdown-btn):not(#triggerDeleteBtn):hover {
+        background: rgba(255, 255, 255, 0.1) !important;
+        color: #ffffff !important;
+      }
+    </style>
+
+    <div class="ticket-modal">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 22px;">
+        <img id="editModalHeaderIcon" src="${itemIconSrc}" alt="" style="width: 42px; height: 42px; object-fit: contain; flex-shrink: 0;" onerror="this.src='${DEFAULT_ICON_URL}';">
+        <div class="ticket-input-wrapper" style="flex: 1;">
+          <input type="text" id="activityInput" name="activity" value="${item.activity || ''}" required placeholder="Enter description..." class="ticket-input" style="border: none; border-bottom: 2px dashed rgba(255, 255, 255, 0.4); border-radius: 0; background: transparent; padding: 6px 32px 6px 4px; font-size: 1.25rem; font-weight: 700; color: #ffffff;">
+          <button type="button" id="clearActivityBtn" class="clear-btn" style="right: 4px;" title="Clear">✕</button>
+        </div>
+      </div>
+
+      <div style="border-top: 1px dashed rgba(255, 255, 255, 0.25); margin: 0 -32px 20px -32px;"></div>
+
+      <form id="editItemForm" style="display: flex; flex-direction: column; gap: 16px;">
+        
+        <div style="position: relative;" id="editCategoryContainer">
+          <label class="ticket-label">Category</label>
+          <div class="ticket-input-wrapper">
+            <input type="text" id="categoryInput" name="category" autocomplete="off" value="${item.category || ''}" placeholder="Select or type category..." class="ticket-input">
+            <button type="button" id="clearCategoryBtn" class="clear-btn" title="Clear">✕</button>
+          </div>
+          <div id="editCategoryDropdown" style="display: none; position: absolute; top: calc(100% + 6px); left: 0; right: 0; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; max-height: 160px; overflow-y: auto; z-index: 40; box-shadow: 0 15px 30px rgba(0,0,0,0.6); padding: 4px;">
+            ${uniqueCategories.map(cat => `<div class="cat-option" style="padding: 8px 12px; border-radius: 8px; cursor: pointer; color: #f8fafc; font-size: 0.9rem; transition: background 0.2s;" data-value="${cat}">${cat}</div>`).join('')}
+          </div>
+        </div>
+
+        <div>
+          <label class="ticket-label">Code</label>
+          <div class="ticket-input-wrapper">
+            <input type="text" id="codeInput" name="code" value="${item.code || ''}" placeholder="" class="ticket-input">
+            <button type="button" id="clearCodeBtn" class="clear-btn" title="Clear">✕</button>
+          </div>
+        </div>
+
+        <div style="position: relative;">
+          <label class="ticket-label">Date & Time</label>
+          <div class="ticket-input-wrapper" id="dtDisplayWrapper" style="cursor: pointer;">
+            <input type="text" id="dtDisplayText" readonly value="${pad(currentDay)}/${pad(currentMonth + 1)}/${currentYear}, ${selectedHour}:${selectedMin}" class="ticket-input" style="cursor: pointer; padding-right: 40px;">
+            <span style="position: absolute; right: 14px; color: #94a3b8; pointer-events: none; font-size: 1rem;"><i class="bi bi-calendar3"></i></span>
+          </div>
+
+          <div id="customDtPopup" class="custom-dt-popup">
+            <div class="dt-picker-container">
+              <div class="calendar-left">
+                <div class="cal-header">
+                  <button type="button" id="prevMonthBtn" style="background:none; border:none; color:#fff; cursor:pointer; font-weight:bold; font-size: 1.1rem;">‹</button>
+                  <span id="calMonthYearTitle"></span>
+                  <button type="button" id="nextMonthBtn" style="background:none; border:none; color:#fff; cursor:pointer; font-weight:bold; font-size: 1.1rem;">›</button>
+                </div>
+                <div class="cal-grid">
+                  <div class="cal-day-name">M</div><div class="cal-day-name">T</div><div class="cal-day-name">W</div><div class="cal-day-name">T</div><div class="cal-day-name">F</div><div class="cal-day-name">S</div><div class="cal-day-name">S</div>
+                </div>
+                <div id="calDaysGrid" class="cal-grid" style="margin-top: 4px;"></div>
+              </div>
+
+              <div class="time-scroll-right">
+                <div style="font-size: 0.65rem; color: #94a3b8; font-weight: 700; text-align: center; margin-bottom: 4px;">TIME</div>
+                <div class="time-scroll-box">
+                  <div id="hoursColumn" class="time-column"></div>
+                  <span style="color: #94a3b8; font-weight: bold; align-self: center; font-size: 0.8rem;">:</span>
+                  <div id="minutesColumn" class="time-column"></div>
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 10px;">
+              <button type="button" id="dtCancelBtn" style="background: transparent; border: 1px solid rgba(255,255,255,0.25); color: #94a3b8; padding: 6px 14px; border-radius: 8px; font-size: 0.85rem; cursor: pointer;">Cancel</button>
+              <button type="button" id="dtConfirmBtn" style="background: #f1f5f9; border: none; color: #0f172a; padding: 6px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.85rem;">Apply</button>
+            </div>
+          </div>
+
+          <input type="hidden" id="finalDateVal" value="${currentYear}-${pad(currentMonth + 1)}-${pad(currentDay)}T${selectedHour}:${selectedMin}">
+        </div>
+
+        <div>
+          <label class="ticket-label">Amount (VND)</label>
+          <div class="ticket-input-wrapper">
+            <input type="text" id="formattedAmountInput" value="${formattedInitialAmount}" placeholder="0" class="ticket-input" style="color: #ffffff; font-size: 1.6rem; font-weight: 700; padding: 12px 38px 12px 14px;">
+            <button type="button" id="clearAmountBtn" class="clear-btn" title="Clear">✕</button>
+          </div>
+          <input type="hidden" name="expense" id="rawAmountInput" value="${rawAmount}">
+        </div>
+
+        <div>
+          <label class="ticket-label">Note / Address</label>
+          <div class="ticket-input-wrapper" style="align-items: flex-start;">
+            <textarea id="notesInput" name="notes" rows="2" placeholder="Add optional notes..." class="ticket-input" style="resize: vertical; padding-top: 10px;"></textarea>
+            <button type="button" id="clearNotesBtn" class="clear-btn" style="top: 8px;" title="Clear">✕</button>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin-top: 10px; border-top: 1px dashed rgba(255, 255, 255, 0.25); padding-top: 16px;">
+          <button type="button" id="cancelEditBtn" style="background: transparent; border: 1px solid rgba(255, 255, 255, 0.25); color: #94a3b8; padding: 7px 14px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-family: inherit;">Cancel</button>
+          <button type="submit" style="background: #f1f5f9; border: none; color: #0f172a; padding: 7px 16px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.85rem; font-family: inherit; box-shadow: 0 2px 6px rgba(0,0,0,0.2);">Save</button>
+          
+          <div style="position: relative;" id="reviewDropdownContainer">
+            <button type="button" id="reviewBtn" class="review-dropdown-btn" title="Select Review Icon">
+              <span id="selectedReviewIcon">${currentReview}</span>
+            </button>
+            <input type="hidden" name="review" id="reviewInputVal" value="${currentReview}">
+            <div id="reviewDropdownMenu" style="display: none; position: absolute; bottom: calc(100% + 6px); right: 0; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 10px; padding: 6px; z-index: 50; gap: 6px; flex-wrap: wrap; width: 160px; box-shadow: 0 10px 25px rgba(0,0,0,0.6);">
+              ${reviewIcons.map(ic => `<div class="review-opt" style="padding: 6px 8px; border-radius: 6px; cursor: pointer; font-size: 1.1rem; text-align: center; transition: background 0.2s;" data-icon="${ic}">${ic}</div>`).join('')}
+            </div>
+          </div>
+
+          <button type="button" id="triggerDeleteBtn" title="Delete Item" style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; padding: 7px 10px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; transition: background 0.2s;" onmouseover="this.style.background='rgba(239, 68, 68, 0.3)'" onmouseout="this.style.background='rgba(239, 68, 68, 0.15)'">
+            <i style="font-size:15px!important" class="bi bi-trash"></i>
+          </button>
+        </div>
+      </form>
+      <div class="ticket-bottom-scallops"></div>
+    </div>
+  `;
+
+  modalOverlay.style.display = 'flex';
+  document.getElementById('notesInput').value = item.notes || '';
+
+  const categoryInputEl = document.getElementById('categoryInput');
+  categoryInputEl.addEventListener('input', () => {
+    const iconImg = document.getElementById('editModalHeaderIcon');
+    if (iconImg) iconImg.src = iconFor(categoryInputEl.value);
+  });
+
+  const reviewBtn = document.getElementById('reviewBtn');
+  const reviewMenu = document.getElementById('reviewDropdownMenu');
+  const reviewInputVal = document.getElementById('reviewInputVal');
+  const selectedReviewIcon = document.getElementById('selectedReviewIcon');
+
+  reviewBtn.onclick = (e) => {
+    e.stopPropagation();
+    const isShowing = reviewMenu.style.display === 'flex';
+    reviewMenu.style.display = isShowing ? 'none' : 'flex';
+  };
+
+  reviewMenu.querySelectorAll('.review-opt').forEach(opt => {
+    opt.onmouseover = () => opt.style.background = 'rgba(255, 255, 255, 0.15)';
+    opt.onmouseout = () => opt.style.background = 'transparent';
+    opt.onclick = (e) => {
+      e.stopPropagation();
+      const chosenIcon = opt.getAttribute('data-icon');
+      selectedReviewIcon.textContent = chosenIcon;
+      reviewInputVal.value = chosenIcon;
+      reviewMenu.style.display = 'none';
+    };
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!document.getElementById('reviewDropdownContainer').contains(e.target)) {
+      reviewMenu.style.display = 'none';
+    }
+  });
+
+  document.getElementById('triggerDeleteBtn').onclick = () => {
+    let confirmOverlay = document.getElementById('customConfirmOverlay');
+    if (!confirmOverlay) {
+      confirmOverlay = document.createElement('div');
+      confirmOverlay.id = 'customConfirmOverlay';
+      confirmOverlay.style.cssText = `
+        position: fixed; inset: 0; width: 100vw; height: 100vh;
+        background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px); display: flex; align-items: center; 
+        justify-content: center; z-index: 2147483649; padding: 12px;
+      `;
+      confirmOverlay.innerHTML = `
+        <div style="background: rgba(30, 41, 59, 0.92); backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 24px; width: 100%; max-width: 340px; color: #f8fafc; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.8); font-family: 'DM Sans', sans-serif;">
+          <div style="font-size: 2rem; margin-bottom: 8px;">⚠️</div>
+          <div style="font-size: 1.1rem; font-weight: 700; margin-bottom: 8px;">Confirm Deletion</div>
+          <div style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 20px;">Are you sure you want to delete this item from your itinerary?</div>
+          <div style="display: flex; gap: 10px; justify-content: center;">
+            <button type="button" id="confirmNoBtn" style="background: transparent; border: 1px solid rgba(255, 255, 255, 0.25); color: #94a3b8; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-family: inherit;">Cancel</button>
+            <button type="button" id="confirmYesBtn" style="background: #ef4444; border: none; color: #fff; padding: 8px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.9rem; font-family: inherit;">Delete</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(confirmOverlay);
+    } else {
+      confirmOverlay.style.display = 'flex';
+    }
+
+    document.getElementById('confirmNoBtn').onclick = () => { confirmOverlay.style.display = 'none'; };
+    document.getElementById('confirmYesBtn').onclick = () => {
+      confirmOverlay.style.display = 'none';
+      deleteActivity(item.id, tripId);
+    };
+  };
+
+  const editCatInput = document.getElementById('categoryInput');
+  const editCatDropdown = document.getElementById('editCategoryDropdown');
+  editCatInput.addEventListener('focus', () => { editCatDropdown.style.display = 'block'; });
+  editCatInput.addEventListener('input', (e) => {
+    const val = e.target.value.toLowerCase();
+    const options = editCatDropdown.querySelectorAll('.cat-option');
+    let hasVisible = false;
+    options.forEach(opt => {
+      if (opt.textContent.toLowerCase().includes(val)) {
+        opt.style.display = 'block'; hasVisible = true;
+      } else { opt.style.display = 'none'; }
+    });
+    editCatDropdown.style.display = hasVisible ? 'block' : 'none';
+  });
+
+  editCatDropdown.querySelectorAll('.cat-option').forEach(opt => {
+    opt.addEventListener('mouseenter', () => opt.style.background = 'rgba(255, 255, 255, 0.15)');
+    opt.addEventListener('mouseleave', () => opt.style.background = 'transparent');
+    opt.addEventListener('click', () => {
+      editCatInput.value = opt.getAttribute('data-value');
+      document.getElementById('editModalHeaderIcon').src = iconFor(editCatInput.value);
+      editCatDropdown.style.display = 'none';
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!document.getElementById('editCategoryContainer').contains(e.target)) {
+      editCatDropdown.style.display = 'none';
+    }
+  });
+
+  let tempYear = currentYear;
+  let tempMonth = currentMonth;
+  let tempDay = currentDay;
+  const shortMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  function renderCalendar() {
+    document.getElementById('calMonthYearTitle').textContent = `${shortMonthNames[tempMonth]} ${tempYear}`;
+    const daysGrid = document.getElementById('calDaysGrid');
+    daysGrid.innerHTML = '';
+    const firstDayIndex = (new Date(tempYear, tempMonth, 1).getDay() + 6) % 7;
+    const totalDays = new Date(tempYear, tempMonth + 1, 0).getDate();
+    const prevTotalDays = new Date(tempYear, tempMonth, 0).getDate();
+
+    for (let i = firstDayIndex; i > 0; i--) {
+      const dDiv = document.createElement('div');
+      dDiv.className = 'cal-cell muted';
+      dDiv.textContent = prevTotalDays - i + 1;
+      daysGrid.appendChild(dDiv);
+    }
+    for (let d = 1; d <= totalDays; d++) {
+      const dDiv = document.createElement('div');
+      dDiv.className = `cal-cell ${d === tempDay && tempMonth === currentMonth && tempYear === currentYear ? 'selected' : ''}`;
+      dDiv.textContent = d;
+      dDiv.onclick = () => { tempDay = d; renderCalendar(); };
+      daysGrid.appendChild(dDiv);
+    }
+  }
+
+  document.getElementById('prevMonthBtn').onclick = () => {
+    tempMonth--; if (tempMonth < 0) { tempMonth = 11; tempYear--; } renderCalendar();
+  };
+  document.getElementById('nextMonthBtn').onclick = () => {
+    tempMonth++; if (tempMonth > 11) { tempMonth = 0; tempYear++; } renderCalendar();
+  };
+
+  const hoursCol = document.getElementById('hoursColumn');
+  const minsCol = document.getElementById('minutesColumn');
+  for (let h = 0; h < 24; h++) {
+    const hStr = pad(h);
+    const itemDiv = document.createElement('div');
+    itemDiv.className = `time-item ${hStr === selectedHour ? 'selected' : ''}`;
+    itemDiv.textContent = hStr;
+    itemDiv.onclick = () => {
+      hoursCol.querySelectorAll('.time-item').forEach(el => el.classList.remove('selected'));
+      itemDiv.classList.add('selected'); selectedHour = hStr;
+    };
+    hoursCol.appendChild(itemDiv);
+  }
+
+  for (let m = 0; m < 60; m += 5) {
+    const mStr = pad(m);
+    const itemDiv = document.createElement('div');
+    itemDiv.className = `time-item ${mStr === selectedMin ? 'selected' : ''}`;
+    itemDiv.textContent = mStr;
+    itemDiv.onclick = () => {
+      minsCol.querySelectorAll('.time-item').forEach(el => el.classList.remove('selected'));
+      itemDiv.classList.add('selected'); selectedMin = mStr;
+    };
+    minsCol.appendChild(itemDiv);
+  }
+
+  const dtWrapper = document.getElementById('dtDisplayWrapper');
+  const dtPopup = document.getElementById('customDtPopup');
+  dtWrapper.onclick = (e) => {
+    e.stopPropagation();
+    const isOpen = dtPopup.style.display === 'block';
+    dtPopup.style.display = isOpen ? 'none' : 'block';
+    if (!isOpen) renderCalendar();
+  };
+
+  document.addEventListener('click', (e) => {
+    if (!dtPopup.contains(e.target) && !dtWrapper.contains(e.target)) {
+      dtPopup.style.display = 'none';
+    }
+  });
+
+  document.getElementById('dtCancelBtn').onclick = () => { dtPopup.style.display = 'none'; };
+  document.getElementById('dtConfirmBtn').onclick = () => {
+    currentYear = tempYear; currentMonth = tempMonth; currentDay = tempDay;
+    document.getElementById('dtDisplayText').value = `${pad(currentDay)}/${pad(currentMonth + 1)}/${currentYear}, ${selectedHour}:${selectedMin}`;
+    document.getElementById('finalDateVal').value = `${currentYear}-${pad(currentMonth + 1)}-${pad(currentDay)}T${selectedHour}:${selectedMin}`;
+    dtPopup.style.display = 'none';
+  };
+
+  document.getElementById('clearCategoryBtn').onclick = () => { document.getElementById('categoryInput').value = ''; document.getElementById('categoryInput').focus(); };
+  document.getElementById('clearActivityBtn').onclick = () => { document.getElementById('activityInput').value = ''; document.getElementById('activityInput').focus(); };
+  document.getElementById('clearCodeBtn').onclick = () => { document.getElementById('codeInput').value = ''; document.getElementById('codeInput').focus(); };
+  document.getElementById('clearAmountBtn').onclick = () => { 
+    document.getElementById('formattedAmountInput').value = ''; 
+    document.getElementById('rawAmountInput').value = '0'; 
+    document.getElementById('formattedAmountInput').focus(); 
+  };
+  document.getElementById('clearNotesBtn').onclick = () => { document.getElementById('notesInput').value = ''; document.getElementById('notesInput').focus(); };
+
+  const formattedInput = document.getElementById('formattedAmountInput');
+  const rawInput = document.getElementById('rawAmountInput');
+  formattedInput.addEventListener('input', (e) => {
+    const cleanVal = e.target.value.replace(/[^0-9]/g, '');
+    const num = parseFloat(cleanVal) || 0;
+    rawInput.value = num;
+    e.target.value = num ? num.toLocaleString("en-US") : '';
+  });
+
+  document.getElementById('cancelEditBtn').onclick = () => { modalOverlay.style.display = 'none'; };
+
+  document.getElementById('editItemForm').onsubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+
+    item.category = formData.get('category').trim();
+    item.activity = formData.get('activity').trim();
+    item.review = formData.get('review') || currentReview;
+    
+    const finalDt = document.getElementById('finalDateVal').value;
+    if (finalDt) {
+      item.date = new Date(finalDt);
+    }
+
+    item.code = formData.get('code').trim();
+    item.expense = parseFloat(rawInput.value) || 0;
+    item.notes = formData.get('notes').trim();
+
+    trips = buildTrips(trips.flatMap(t => t.activities));
+    modalOverlay.style.display = 'none';
+    openTrip(tripId);
+  };
+}
+
+document.getElementById('addTravelBtn').addEventListener('click', () => {
+  openAddModal();
+});
 
 /* ==========================================================
    3. HÀM XÓA HOẠT ĐỘNG (deleteActivity)
