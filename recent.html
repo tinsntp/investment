@@ -553,6 +553,10 @@ h1,h2,h3,.num{font-family:'Manrope',sans-serif;}
 .slides-outer{flex:1;overflow:hidden;position:relative}
 .slides-wrap{display:flex;width:700%;height:100%;transition:transform 0.3s cubic-bezier(0.4,0,0.2,1)}
 .slide{width:calc(100% / 7);height:100%;padding:0vw;flex-shrink:0}
+@media (min-width:401px){.slide{overflow-y: auto;}}
+
+
+
 .sub-slides-outer{width:100%;overflow:hidden}
 .sub-slides-wrap{display:flex;width:200%;transition:transform 0.3s cubic-bezier(0.4,0,0.2,1)}
 .sub-slide{width:50%;flex-shrink:0}
@@ -6699,33 +6703,77 @@ function renderActiveChartCards(portfolioGroups) {
       };
       const onQScroll = wrap => {
         if (currentView !== "quarterly" || !wrap.isConnected) return;
+        
+        // Chặn không cho cuộn vượt quá tháng cũ nhất có dữ liệu thực tế
+        const dataMonths = Object.keys(pnlData).map(k => {
+          const parts = k.split("-");
+          return parseInt(parts[0], 10) * 12 + (parseInt(parts[1], 10) - 1);
+        });
+        const minDataMi = dataMonths.length ? Math.min(...dataMonths) : (2023 * 12);
+        const oldestAllowedMi = Math.max(minDataMi - 2, 2000 * 12);
+
+        // Cuộn xuống dưới (tải thêm tháng tương lai, tối đa đến năm 2100)
         if (wrap.scrollTop + wrap.clientHeight >= wrap.scrollHeight - 250 && qRange.end < 2100 * 12) {
           for (let i = 0; i < 3; i++) wrap.appendChild(buildQMonth(++qRange.end));
         }
-        if (wrap.scrollTop <= 150 && qRange.start > 2000 * 12) {
+        
+        // Cuộn lên trên (chặn tại oldestAllowedMi để tránh trôi quá xa)
+        if (wrap.scrollTop <= 150 && qRange.start > oldestAllowedMi) {
           const prevH = wrap.scrollHeight, prevTop = wrap.scrollTop;
-          const frag = document.createDocumentFragment(), newStart = qRange.start - 3;
-          for (let mi = newStart; mi < qRange.start; mi++) frag.appendChild(buildQMonth(mi));
-          qRange.start = newStart;
-          wrap.insertBefore(frag, wrap.firstChild);
-          wrap.scrollTop = prevTop + (wrap.scrollHeight - prevH);   // keep the same month in view after prepending
+          const frag = document.createDocumentFragment(), newStart = Math.max(qRange.start - 3, oldestAllowedMi);
+          if (newStart < qRange.start) {
+            for (let mi = newStart; mi < qRange.start; mi++) frag.appendChild(buildQMonth(mi));
+            qRange.start = newStart;
+            wrap.insertBefore(frag, wrap.firstChild);
+            wrap.scrollTop = prevTop + (wrap.scrollHeight - prevH);
+          }
         }
         updateQTitle(wrap);
       };
       const renderQuarterly = grid => {
         computeQScale();
+        
+        // Tính toán để tháng hiện tại (mi0) nằm ở cuối (dưới cùng) viewport, 
+        // giúp hiển thị trọn vẹn 2 tháng trước đó ở phía trên.
         const mi0 = currentNavDate.getFullYear() * 12 + currentNavDate.getMonth();
+        
         const wrap = document.createElement("div");
         wrap.id = "pnl-q-wrap";
         wrap.style.cssText = "max-height:560px;overflow-y:auto;overflow-x:hidden;overflow-anchor:none;scrollbar-width:thin;";
         grid.appendChild(wrap);
-        qRange.start = mi0 - 2; qRange.end = mi0 + 3;
-        for (let mi = qRange.start; mi <= qRange.end; mi++) wrap.appendChild(buildQMonth(mi));
-        const cur = wrap.querySelector(`[data-mi="${mi0}"]`);
-        if (cur) wrap.scrollTop = cur.getBoundingClientRect().top - wrap.getBoundingClientRect().top + wrap.scrollTop;
+        
+        // Xác định giới hạn dữ liệu cũ nhất
+        const dataMonths = Object.keys(pnlData).map(k => {
+          const parts = k.split("-");
+          return parseInt(parts[0], 10) * 12 + (parseInt(parts[1], 10) - 1);
+        });
+        const minDataMi = dataMonths.length ? Math.min(...dataMonths) : (2023 * 12);
+        const oldestAllowedMi = Math.max(minDataMi - 2, 2000 * 12);
+
+        qRange.start = Math.max(mi0 - 2, oldestAllowedMi); 
+        qRange.end = mi0; // Set tháng hiện tại ở cuối danh sách load ban đầu
+
+        for (let mi = qRange.start; mi <= qRange.end; mi++) {
+          wrap.appendChild(buildQMonth(mi));
+        }
+
+        // Tự động cuộn xuống tận cùng để tháng hiện tại nằm ở vị trí dưới cùng, hiện rõ 2 tháng trước ở trên
+        setTimeout(() => {
+          wrap.scrollTop = wrap.scrollHeight;
+        }, 10);
+
         updateQTitle(wrap);
+
+        // Giảm độ nhạy (debounce/throttle) khi vuốt nhanh để tránh trôi quá xa
         let ticking = false;
-        wrap.onscroll = () => { if (ticking) return; ticking = true; requestAnimationFrame(() => { ticking = false; onQScroll(wrap); }); };
+        wrap.onscroll = () => { 
+          if (ticking) return; 
+          ticking = true; 
+          setTimeout(() => { 
+            ticking = false; 
+            onQScroll(wrap); 
+          }, 80); // Tăng độ trễ lên 80ms giúp chống trôi khi vuốt lẹ
+        };
       };
 
       const renderView = () => {
