@@ -5382,7 +5382,6 @@ function renderActiveChartCards(portfolioGroups) {
         const overallPnlPct = totalActiveInvested > 0 ? (totalActivePnl / totalActiveInvested) * 100 : 0;
         const pnlColorStyle = overallPnlPct >= 0 ? '#00bfa5' : '#f472b6';
 
-        // Set chart-panel-card height to auto, remove header bar from top since PnL % is now back at bottom
         let chartParentPanel = barsContainer.closest('.chart-panel-card');
         if (chartParentPanel) {
             chartParentPanel.style.height = 'auto';
@@ -5408,12 +5407,12 @@ function renderActiveChartCards(portfolioGroups) {
                 const isNegativePnl = safePnl < 0;
                 const itemPnlColor = isNegativePnl ? '#f472b6' : '#00bfa5';
 
-                const toPct = (v) => v > 0 ? Math.max(1.5, (v / maxGlobalVal) * 85) : 0;
+                const toPct = (v) => v > 0 ? Math.max(1.5, (v / maxGlobalVal) * 75) : 0;
                 const costPct = toPct(safeCost);
                 const pnlPct = toPct(Math.abs(safePnl));
 
                 const tallestBarPct = Math.max(costPct, pnlPct);
-                const labelBottomPct = Math.max(28, tallestBarPct + 12);
+                const labelBottomPct = Math.max(28, tallestBarPct + 20);
 
                 const barGroup = document.createElement('div');
                 barGroup.style.cssText = `
@@ -5441,15 +5440,17 @@ function renderActiveChartCards(portfolioGroups) {
                     barGroup.style.filter = 'brightness(1)';
                 };
 
+                // Label hiển thị PnL % và PnL Amount ở ĐỈNH cột
                 const topLabelWrap = document.createElement('div');
                 topLabelWrap.style.cssText = `position: absolute; bottom: ${labelBottomPct}%; display: flex; flex-direction: column; align-items: center; z-index: 10; text-align: center; width: 64px; left: 50%; transform: translateX(-50%); pointer-events: none;`;
                 topLabelWrap.innerHTML = `
                     <div style="font-size: 13.5px; color: ${itemPnlColor}; font-weight: 800; line-height: 1.1; text-shadow: 0 1px 3px rgba(0,0,0,0.9);">${itemPnlPct >= 0 ? '+' : ''}${itemPnlPct.toFixed(1)}%</div>
-                    <div style="font-size: 8px; color: #94a3b8; font-weight: 700; margin-top: 1px;">${formatCleanShortNumber(safeCost)}</div>
+                    <div style="font-size: 9px; color: ${itemPnlColor}; font-weight: 700; margin-top: 1px; text-shadow: 0 1px 2px rgba(0,0,0,0.9);">${formatPnlValue(safePnl)}</div>
                 `;
 
+                // Tăng margin-bottom để chừa khoảng trống cho Invested Amount hiển thị phía dưới cột
                 const barsRow = document.createElement('div');
-                barsRow.style.cssText = 'position: relative; width: 14px; height: 165px; flex-shrink: 0; margin-bottom: 24px;';
+                barsRow.style.cssText = 'position: relative; width: 14px; height: 165px; flex-shrink: 0; margin-bottom: 34px;';
 
                 const layeredBar = (heightPct, c1, c2, c3, z) => `
                     <div style="position: absolute; bottom: 0; left: 0; width: 14px; height: ${heightPct}%; border-radius: 5px; overflow: hidden; display: flex; flex-direction: column; background: ${c3}; z-index: ${z};">
@@ -5465,8 +5466,13 @@ function renderActiveChartCards(portfolioGroups) {
 
                 barsRow.innerHTML = investedLayer + pnlLayer;
 
+                // CHUYỂN INVESTED AMOUNT XUỐNG DƯỚI CỘT, NGAY TRÊN ICON FOOTER
+                const bottomInvestedWrap = document.createElement('div');
+                bottomInvestedWrap.style.cssText = 'position: absolute; bottom: 20px; font-size: 8px; color: #94a3b8; font-weight: 700; text-align: center; width: 64px; left: 50%; transform: translateX(-50%); pointer-events: none; z-index: 10; line-height: 1;';
+                bottomInvestedWrap.textContent = formatCleanShortNumber(safeCost);
+
                 const iconFooter = document.createElement('div');
-                iconFooter.style.cssText = 'position: absolute; bottom: 2px; width: 22px; height: 18px; display: flex; align-items: center; justify-content: center; z-index: 5;';
+                iconFooter.style.cssText = 'position: absolute; bottom: 0px; width: 22px; height: 18px; display: flex; align-items: center; justify-content: center; z-index: 5;';
 
                 if (item.iconUrls && item.iconUrls.length > 1) {
                     iconFooter.innerHTML = `
@@ -5483,13 +5489,14 @@ function renderActiveChartCards(portfolioGroups) {
 
                 barGroup.appendChild(topLabelWrap);
                 barGroup.appendChild(barsRow);
+                barGroup.appendChild(bottomInvestedWrap);
                 barGroup.appendChild(iconFooter);
                 barsContainer.appendChild(barGroup);
             });
         }
 
         // -----------------------------------------------------------------
-        // 2. RIGHT GROUP CARDS & LEGEND FOOTER
+        // 2. RIGHT GROUP CARDS
         // -----------------------------------------------------------------
         const catMap = {};
         const catPnlMap = {};
@@ -5642,7 +5649,6 @@ function renderActiveChartCards(portfolioGroups) {
                     }
                 };
 
-                // Humidity-style interactive visualization overlay on click/selection
                 const humidityGlow = isCardSelected ? `
                     <div style="position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, ${fillColor}33 0%, transparent 70%); pointer-events: none; z-index: 1;"></div>
                 ` : '';
@@ -5688,7 +5694,6 @@ function renderActiveChartCards(portfolioGroups) {
             });
         }
 
-        // Render Legend Footer at the bottom with PnL percentage badge restored to bottom right
         if (chartParentPanel) {
             let legendFooter = chartParentPanel.querySelector('.chart-bottom-legend');
             if (!legendFooter) {
