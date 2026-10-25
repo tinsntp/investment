@@ -107,6 +107,7 @@ h1,h2,h3,.num{font-family:'Manrope',sans-serif;}
 .status-dot.ok{background:var(--highlight);}
 .status-dot.err{background:#e8615f;}
 .status-dot.loading{background:var(--accent); animation:pulse 1s infinite ease-in-out;}
+
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .reload {
   font-family: 'DM Sans', sans-serif;
@@ -130,6 +131,77 @@ h1,h2,h3,.num{font-family:'Manrope',sans-serif;}
   color: var(--fg);
   background: var(--bg-elev-hover, rgba(255, 255, 255, 0.1));
 }
+/* Style cho nút addTravelBtn khi chuyển sang dạng floating button ở góc dưới bên phải */
+#panel-detail.active ~ #addTravelBtn,
+.panel#panel-detail[style*="display: block"] ~ #addTravelBtn,
+#panel-detail:not([style*="display: none"]) ~ #addTravelBtn {
+  position: fixed !important;
+  bottom: 30px !important;
+  right: 30px !important;
+  width: 56px !important;
+  height: 56px !important;
+  border-radius: 50% !important;
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
+  z-index: 9999 !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hoặc nếu bạn quản lý việc ẩn/hiện bằng JS khi mở trip, có thể thêm class .fab-mode cho nút addTravelBtn */
+.fab-mode {
+  position: fixed !important;
+  bottom: 30px !important;
+  right: 30px !important;
+  width: 56px !important;
+  height: 56px !important;
+  border-radius: 50% !important;
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
+  z-index: 99999 !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+/* Style nút nổi (FAB) trong suốt, kích thước lớn và hiện đại */
+.reload.fab-mode {
+  position: fixed !important;
+  bottom: 32px !important;
+  right: 32px !important;
+  width: 66px !important;
+  height: 66px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.05) !important; /* Hiệu ứng trong suốt sáng nổi bật trên nền tối */
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  color: #ffffff !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5) !important;
+  z-index: 2147483646 !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.reload.fab-mode:hover {
+  transform: scale(1.08) translateY(-2px);
+  background: rgba(255, 255, 255, 0.25) !important; /* Sáng hơn chút khi hover */
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7) !important;
+}
+
+/* Kích thước icon */
+.reload .bi {
+  font-size: 18px !important; 
+}
+.reload.fab-mode .bi {
+  font-size: 32px !important;
+  opacity: 0.95 !important;
+}
+
 /* Add this to your CSS file */
 #overviewBtn.active {
     background-color: #1e293b !important;
@@ -137,6 +209,27 @@ h1,h2,h3,.num{font-family:'Manrope',sans-serif;}
     border-color: #475569 !important;
     box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15), 0 0 0 2px rgba(71, 85, 105, 0.2) !important;
     transform: translateY(-1px);
+}
+/* Tùy chỉnh thanh cuộn mỏng đẹp cho dropdown category */
+#addCategoryDropdown::-webkit-scrollbar,
+#editCategoryDropdown::-webkit-scrollbar {
+  width: 5px;
+}
+
+#addCategoryDropdown::-webkit-scrollbar-track,
+#editCategoryDropdown::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#addCategoryDropdown::-webkit-scrollbar-thumb,
+#editCategoryDropdown::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+}
+
+#addCategoryDropdown::-webkit-scrollbar-thumb:hover,
+#editCategoryDropdown::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.45);
 }
 @keyframes fadeInUp{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
 @keyframes fadeIn{from{opacity:0;} to{opacity:1;}}
@@ -865,7 +958,7 @@ background:url(https://i.pinimg.com/1200x/ad/b5/35/adb5354c118545e8cd17b63f19575
 .add-field input[type="text"],.add-field input[type="number"],.add-field input[type="date"]{-webkit-appearance:none;-moz-appearance:none;appearance:none;width:100% !important;height:11vw !important;background:#2a2a2a !important;border:0px solid rgba(255,255,255,0.1) !important;border-radius:12px !important;color:#fff !important;padding:0 3vw !important;font-size:18px!important;font-family:"DM Sans"!important;outline:none;box-sizing:border-box !important;display:flex !important;align-items:center !important;justify-content:center !important;text-align:center !important}
 
 .add-field .add-sub-date-trigger{-webkit-appearance:none;-moz-appearance:none;appearance:none;width:100%!important;height:11vw!important;background:#2a2a2a!important;border:0 solid rgba(255,255,255,.1)!important;border-radius:12px!important;color:#fff!important;padding:0 3vw!important;font-size:3.5vw!important;font-family:"DM Sans"!important;outline:0;box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:space-between!important;text-align:left!important;cursor:pointer}#cash-modal-cancel:hover,#cash-modal-submit:hover{transform:scale(1.08)}#cash-modal-cancel:active{transform:scale(.92)}#cash-modal-cancel{position:absolute;top:16px;right:16px;width:18px;height:18px;border-radius:50%;border:0!important;outline:0!important;background:rgba(255,255,255,.2)!important;-webkit-backdrop-filter:blur(16px) saturate(180%);backdrop-filter:blur(16px) saturate(180%);color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1;padding:0;font-size:13px;cursor:pointer;z-index:10;transition:background .2s ease,transform .15s ease}#cash-modal-submit{position:absolute;right:5px;width:30px;font-family:Lexend;font-size:28px;height:30px;border-radius:50%;border:0!important;outline:0!important;background:rgba(255,255,255,.2)!important;-webkit-backdrop-filter:blur(16px) saturate(180%);backdrop-filter:blur(16px) saturate(180%);color:#fff;font-weight:400!important;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .15s ease,opacity .2s ease}
-#cash-modal-input{width:100%;padding:12px 46px 12px;border:0!important;font-family:'League Script'!important;outline:0!important;color:#fff;text-align:left!important;background:0 0!important;border-width:medium medium 2px!important;border-style:none none dashed!important;border-color:currentcolor currentcolor rgba(255,255,255,.3)!important;border-image:none;padding:0 0 2px;color:#fff;font-size:20px;font-weight:600}#cash-modal-status{font-family:Lora;margin-top:10px}
+#cash-modal-input{width:100%;padding:12px 46px 12px;border:0!important;font-family:'Alegreya'!important;outline:0!important;color:#fff;text-align:left!important;background:0 0!important;border-width:medium medium 2px!important;border-style:none none dashed!important;border-color:currentcolor currentcolor rgba(255,255,255,.3)!important;border-image:none;padding:0 0 2px;color:#fff;font-size:20px;font-weight:600}#cash-modal-status{font-family:Lora;margin-top:10px}
 @media (max-width:400px){.add-cancel-btn,.add-submit-btn,.add-field label,.add-field input{font-size:13px!important;font-weight:300!important;}}
 @media (min-width:401px){.form-row-2col{gap:15px !important;margin-bottom:16px}
 .add-field label{font-size:13px;margin-bottom:6px}
@@ -1499,13 +1592,14 @@ to{transform:rotate(360deg)}
                     </div>
                     <!-- Tab 4: Travel View -->
                     <div class="budget-tab-content" id="budget-view-travel" style="display: none;">
-                      <div class="wrap">
+                      <div class="wrap" style="position: relative;">
                         <div class="topbar">
                           <div class="title-block">
                             <h1>Travel Planner</h1>
                             <p><span class="status-dot loading" id="statusDot"></span><span id="statusText"></span></p>
                           </div>
-                          <button class="reload" id="addTravelBtn" title="Add Travel"><i class="bi bi-plus-circle-fill" style="font-size:16px!important;"></i></button>
+                          <!-- Nút Add Travel (nếu ở dashboard nằm ở topbar, khi sang detail bạn có thể thêm class 'fab-mode' cho nút này thông qua hàm openTrip() của bạn) -->
+                          <button class="reload" id="addTravelBtn" title="Add Travel"><i class="bi bi-plus-circle-fill"></i></button>
                           <button class="reload" id="overviewBtn" title="Overview Chart"><i class="bi bi-bar-chart-fill" style="font-size:15px!important;"></i></button>
                           <button class="reload" id="reloadBtn" title="Reload Data"><i class="bi bi-arrow-clockwise" style="font-size:15px!important;"></i></button>
                         </div>
@@ -1518,7 +1612,7 @@ to{transform:rotate(360deg)}
                           <div id="detailContent"></div>
                         </div>
                       </div>
-                    </div>                    
+                    </div>                   
                 </div>
 
             </div>
@@ -2216,7 +2310,7 @@ to{transform:rotate(360deg)}
     </div>
     <!-- CASH TRANSACTION MODAL POPUP -->
     <div id="cash-modal-overlay" class="cash-modal-overlay">
-        <div class="add-modal-expense" style="position:relative; padding: 0 !important; overflow: hidden; height: auto; min-height: 380px; max-height: 85vh;" onclick="event.stopPropagation()">
+        <div class="add-modal-expense" style="position:relative; padding: 0 !important; overflow: hidden; height: auto; min-height: 460px; max-height: 100vh;" onclick="event.stopPropagation()">
             <div style="position: relative; width: 100%; height: 60px; overflow: hidden; border-top-left-radius: inherit; border-top-right-radius: inherit;">
                 <video autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover; display: block;">
                     <source src="https://v1.pinimg.com/videos/iht/expMp4/f8/3c/83/f83c83244da173c71d71d422d909dccd_720w.mp4" type="video/mp4">
@@ -2227,13 +2321,13 @@ to{transform:rotate(360deg)}
             </div>
             <div style="padding: 66px 16px 20px 16px; box-sizing: border-box;">
                 <div class="add-field" style="position: relative; width: 100%; box-sizing: border-box; margin-top: -20px;">
-                    <textarea id="cash-modal-input" rows="1" style="width: 100%; resize: none; overflow-x: hidden; overflow-y: hidden; min-height: 36px; line-height: 20px; padding: 6px 45px 6px 10px; box-sizing: border-box; word-brlur=" this.style.setProperty('border-color', 'currentcolor currentcolor rgba(255, 255, 255, 0.2)' , 'important' );"></textarea>
+                    <textarea id="cash-modal-input" rows="1" style="width: 100%; resize: none; overflow-x: hidden; overflow-y: hidden; min-height: 36px; line-height: 20px; padding: 6px 45px 6px 10px; box-sizing: border-box;"></textarea>
                     <button id="cash-modal-submit" type="button" style="position: absolute; right: 6px; top: 40%; transform: translateY(-50%); height: 28px; width: 28px; min-width: 28px; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 22px;line-height: 1; border-radius: 50%; background: rgba(255,255,255,0.25); border: 1px solid rgba(255,255,255,0.4); color: #fff; cursor: pointer; z-index: 10;">+</button>
                 </div>
-                <div id="cash-modal-icons" style="display:flex; align-items:center; margin-top:10px; padding-left:2px; height:36px; min-height:36px;"></div>
+                <!-- Container hiển thị danh sách item dạng dòng và tổng tiền ở cuối -->
+                <div id="cash-modal-icons" style="display:flex; flex-direction: column; margin-top:10px; width:100%;"></div>
                 <div id="cash-modal-status" class="add-status"></div>
             </div>
-
         </div>
     </div>
 
@@ -2853,7 +2947,7 @@ to{transform:rotate(360deg)}
     var cachedTxData = null; 
             
     function renderTxRows(subCatName,containerEl){containerEl.innerHTML="";var cleanStr=function(str){return(str||"").toLowerCase().replace(/[\u200B-\u200D\uFEFF]/g,"").replace(/\s+/g," ").trim()},targetName=cleanStr(subCatName),filtered=cachedTxData.filter(function(tx){if(cleanStr(tx.subCat)!==targetName)return!1;if(!tx.date)return!1;var d=new Date(tx.date);return!isNaN(d.getTime())&&d.getFullYear()===monthPickerState.selectedYear&&d.getMonth()===monthPickerState.selectedMonth});0!==filtered.length?filtered.forEach(function(tx){var row=document.createElement("div");row.className="tx-detail-row";var shortDay="";if(tx.date){var parts=tx.date.split(" ")[0].split(/[\/\-\.]/);if(parts.length>=2){var dayPart=parts[1];parts[0].length>2&&(dayPart=parts[2]),dayPart&&1===dayPart.length&&(dayPart="0"+dayPart),shortDay=dayPart||""}}var iconHtml;iconHtml=tx.iconUrl&&0===tx.iconUrl.indexOf("http")?`<img src="${tx.iconUrl}" class="cat-ico" style="width:3vw; height:3vw; margin-right:1vw; border-radius:50%; object-fit:cover; flex-shrink:0;" onerror="this.outerHTML='<div class=&quot;cat-ico-fb&quot; style=&quot;width:3vw; height:3vw; font-size:1.6vw; margin-right:1vw; flex-shrink:0;&quot;>&bull;</div>'">`:'<div class="cat-ico-fb" style="width:3vw; height:3vw; font-size:1.6vw; margin-right:1vw; flex-shrink:0;">&bull;</div>',row.innerHTML=`\n            <div class="td-desc">\n                ${iconHtml}\n                <span class="td-detail">${tx.detail?cleanDetail(tx.detail):"—"}</span>\n            </div>\n            <div class="td-amt">${fmtK(tx.amount)}</div>\n            <div class="td-date">\n                ${shortDay?`<span class="tx-date-badge">${shortDay}</span>`:"—"}\n            </div>\n            `,containerEl.appendChild(row)}):containerEl.innerHTML="<div class='tx-detail-row'><div class='td-desc' style='color:rgba(255,255,255,0.4)'>No transactions found</div></div>"}
-    function fetchTransactionDetails(subCatName,containerEl){cachedTxData?renderTxRows(subCatName,containerEl):(containerEl.innerHTML="<div class='tx-detail-row'><div class='td-desc'>Loading details...</div></div>",fetch(DETAIL_SHEET_URL).then(res=>res.text()).then(text=>{var lines=text.split(/\r?\n/);cachedTxData=[];for(var skippedRows=0,i=1;i<lines.length;i++)if(lines[i].trim()){var cols=parseCsvRow(lines[i]);cols.length>=9?cachedTxData.push({date:cols[2],subCat:cols[4],detail:cols[6],cleanDetail:cols[6]||"",amount:parseNum(cols[5]),iconUrl:cols[8]}):skippedRows++}console.log("Total rows fetched:",cachedTxData.length),console.log("Rows skipped (cols.length < 9):",skippedRows),console.log("Date range in data:",cachedTxData.map(t=>t.date).sort()[0],"to",cachedTxData.map(t=>t.date).sort().slice(-1)[0]),console.log("Sample rows:",cachedTxData.slice(0,5)),renderTxRows(subCatName,containerEl)}).catch(err=>{containerEl.innerHTML="<div class='tx-detail-row'><div class='td-desc'>Error loading data</div></div>",console.error("Fetch error:",err)}))}
+    function fetchTransactionDetails(subCatName,containerEl){cachedTxData?renderTxRows(subCatName,containerEl):(containerEl.innerHTML="<div class='tx-detail-row'><div class='td-desc'>Loading details...</div></div>",fetch(DETAIL_SHEET_URL).then(res=>res.text()).then(text=>{var lines=text.split(/\r?\n/);cachedTxData=[];for(var skippedRows=0,i=1;i<lines.length;i++)if(lines[i].trim()){var cols=parseCsvRow(lines[i]);cols.length>=9?cachedTxData.push({date:cols[2],subCat:cols[4],detail:cols[6],cleanDetail:cols[6]||"",amount:parseNum(cols[5]),iconUrl:cols[8]}):skippedRows++}renderTxRows(subCatName,containerEl)}).catch(err=>{containerEl.innerHTML="<div class='tx-detail-row'><div class='td-desc'>Error loading data</div></div>",console.error("Fetch error:",err)}))}
     function toggleSubCategoryTx(subRowEl,subCatName){var nextEl=subRowEl.nextSibling;if(!(nextEl&&nextEl.classList&&nextEl.classList.contains("tx-details-container"))){var container=document.createElement("div");container.className="tx-details-container",subRowEl.parentNode.insertBefore(container,nextEl),nextEl=container}nextEl.classList.contains("visible")?(nextEl.classList.remove("visible"),subRowEl.classList.remove("visible-tx")):(nextEl.classList.add("visible"),subRowEl.classList.add("visible-tx"),fetchTransactionDetails(subCatName,nextEl))}
     function makeIcon(iconUrl,fallback){if(iconUrl&&0===iconUrl.indexOf("http")){var img=document.createElement("img");return img.className="cat-ico",img.src=iconUrl,img.onerror=(fb=fallback,function(){var d=document.createElement("div");d.className="cat-ico-fb",d.textContent=fb||"•",this.parentNode.replaceChild(d,this)}),img}var fb,d=document.createElement("div");return d.className="cat-ico-fb",d.textContent=iconUrl||fallback||"•",d}
     function buildCatRow(item,isSub,gid){var row=document.createElement("div");row.className="cat-row"+(isSub?" sub-row":" main-row"),isSub?row.dataset.group=gid:(row.dataset.id=gid,row.dataset.open="0");var p=pctInfo(item.curr,item.last),nameCell=document.createElement("div");if(nameCell.className="name-cell",isSub){var subChev=document.createElement("span");subChev.className="chevron sub-chev bi bi-chevron-right",subChev.style.fontSize="2.5vw",nameCell.appendChild(subChev)}else{var chev=document.createElement("span");chev.className="chevron bi bi-chevron-right",nameCell.appendChild(chev)}nameCell.appendChild(makeIcon(item.icon,item.name?item.name.charAt(0):"•"));var nameSpan=document.createElement("span");nameSpan.className="cat-name",nameSpan.textContent=item.name,nameCell.appendChild(nameSpan);var amtEl=document.createElement("div");amtEl.className="amt-val",amtEl.textContent=fmtK(item.curr);var pctEl=document.createElement("div");return pctEl.className="pct-val "+p.cls,pctEl.innerHTML=p.html,row.appendChild(nameCell),row.appendChild(amtEl),row.appendChild(pctEl),isSub?row.addEventListener("click",function(e){e.stopPropagation(),toggleSubCategoryTx(row,item.name)}):row.addEventListener("click",function(){var g=this.dataset.id,isOpen="1"===this.dataset.open;this.dataset.open=isOpen?"0":"1";var chev2=document.getElementById("chev-"+g);chev2&&(chev2.className=isOpen?"bi bi-chevron-right":"bi bi-chevron-down"),document.querySelectorAll(".sub-row[data-group='"+g+"']").forEach(function(s){isOpen?(s.classList.remove("visible"),s.classList.contains("visible-tx")&&toggleSubCategoryTx(s,"")):s.classList.add("visible")})}),row}
@@ -3611,7 +3705,7 @@ to{transform:rotate(360deg)}
           return null;
       }
 
-      // Render detected icons with increased size (36px x 36px)
+      // Render detected items line by line with Icon, Description, Amount & Total Amount
       function updateLiveIcons() {
           if (!cashIconsContainer) return;
           cashIconsContainer.innerHTML = "";
@@ -3619,31 +3713,93 @@ to{transform:rotate(360deg)}
           if (!rawText) return;
 
           var items = rawText.split(";");
-          var detectedIcons = [];
+          var parsedItems = [];
+          var totalAmount = 0;
 
           items.forEach(function(item) {
               var trimmed = item.trim();
               if (trimmed) {
                   var parts = trimmed.split("-");
-                  var detail = parts[0].trim();
-                  var iconUrl = getIconForDetail(detail);
-                  if (iconUrl && detectedIcons.indexOf(iconUrl) === -1) {
-                      detectedIcons.push(iconUrl);
+                  if (parts.length >= 2) {
+                      var detail = parts[0].trim();
+                      var rawAmount = parseFloat(parts[1].trim());
+                      var iconUrl = getIconForDetail(detail);
+
+                      if (!isNaN(rawAmount)) {
+                          totalAmount += rawAmount;
+                      }
+
+                      parsedItems.push({
+                          detail: detail,
+                          amount: isNaN(rawAmount) ? parts[1].trim() : rawAmount,
+                          iconUrl: iconUrl
+                      });
+                  } else {
+                      var detail = trimmed;
+                      var iconUrl = getIconForDetail(detail);
+                      parsedItems.push({
+                          detail: detail,
+                          amount: "",
+                          iconUrl: iconUrl
+                      });
                   }
               }
           });
 
-          // Render larger overlapping icon stack
-          detectedIcons.forEach(function(url, idx) {
+          if (parsedItems.length === 0) return;
+
+          // Wrapper chứa danh sách các dòng item (có thanh cuộn nếu danh sách dài)
+          var listWrapper = document.createElement("div");
+          listWrapper.style.cssText = "display: flex; flex-direction: column; gap: 6px; max-height: 180px; overflow-y: auto; width: 100%; padding-right: 2px;font-family:'Alegreya'!important;";
+
+          parsedItems.forEach(function(item) {
+              var row = document.createElement("div");
+              row.style.cssText = "display: flex; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.06); padding: 0px 10px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1);";
+
+              // Phần trái: Icon + Mô tả
+              var leftSide = document.createElement("div");
+              leftSide.style.cssText = "display: flex; align-items: center; gap: 10px; overflow: hidden;";
+
               var img = document.createElement("img");
-              img.src = url;
-              img.className = "cat-ico";
-              img.style.cssText = "width:42px; height:42px; border-radius:50%; border:2px solid #14171f; background:#1e222b; object-fit:cover; box-shadow:0 2px 4px rgba(0,0,0,0.4);";
-              if (idx > 0) {
-                  img.style.marginLeft = "-12px";
-              }
-              cashIconsContainer.appendChild(img);
+              img.src = item.iconUrl || "";
+              img.style.cssText = "width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); background: #1e222b; object-fit: cover; flex-shrink: 0;" + (item.iconUrl ? "" : "display: none;");
+
+              var descSpan = document.createElement("span");
+              descSpan.style.cssText = "color: #fff; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;";
+              descSpan.innerText = item.detail || "";
+
+              leftSide.appendChild(img);
+              leftSide.appendChild(descSpan);
+
+              // Phần phải: Số tiền
+              var amountSpan = document.createElement("span");
+              amountSpan.style.cssText = "color: #fff; font-weight: 600; font-size: 16px; flex-shrink: 0; margin-left: 10px;";
+              amountSpan.innerText = item.amount !== "" ? (typeof item.amount === 'number' ? item.amount + "k" : item.amount) : "";
+
+              row.appendChild(leftSide);
+              row.appendChild(amountSpan);
+              listWrapper.appendChild(row);
           });
+
+          cashIconsContainer.appendChild(listWrapper);
+
+          // Dòng hiển thị tổng tiền (Total amount) ở phía cuối
+          if (totalAmount > 0) {
+              var totalRow = document.createElement("div");
+              totalRow.style.cssText = "display: flex; align-items: center; justify-content: space-between; margin-top: 8px; padding: 8px 10px; background: rgba(74, 222, 128, 0.12); border: 1px solid rgba(74, 222, 128, 0.35); border-radius: 8px;font-family:'Alegreya'!important;";
+              
+              var totalLabel = document.createElement("span");
+              totalLabel.style.cssText = "color: #fff; font-weight: 600; font-size: 16px;";
+              totalLabel.innerText = "Total amount:";
+
+              var totalValue = document.createElement("span");
+              totalValue.style.cssText = "color: #fff; font-weight: 700; font-size: 16px;";
+              totalValue.innerText = totalAmount + "k";
+
+              totalRow.appendChild(totalLabel);
+              totalRow.appendChild(totalValue);
+              cashIconsContainer.appendChild(totalRow);
+          }
       }
 
       // Textarea input event + Enter key handler to submit
@@ -3723,7 +3879,7 @@ to{transform:rotate(360deg)}
                   setTimeout(function() {
                       "function" == typeof loadRecent && loadRecent();
                       cashStatus && (cashStatus.innerText = "Successfully added!");
-                      addCashBtn && (addCashBtn.classList.remove("loading"), addCashBtn.classList.add("success-confirm"), addCashBtn.innerHTML = "&#10003;");
+                      addCashBtn && (addCashBtn.classList.remove("loading"), addAddCashBtnSuccess = true, addCashBtn.classList.add("success-confirm"), addCashBtn.innerHTML = "&#10003;");
 
                       setTimeout(function() {
                           addCashBtn && (addCashBtn.classList.remove("success-confirm"), addCashBtn.innerHTML = "+");
@@ -7372,7 +7528,20 @@ function renderActiveChartCards(portfolioGroups) {
     function renderYearChart(yearsAsc,currentYear){const totals=yearsAsc.map(y=>trips.filter(t=>t.year===y&&!t.isCompany).reduce((s,t)=>s+t.total,0)),max=Math.max(...totals,1),grand=totals.reduce((a,b)=>a+b,0),cols=yearsAsc.map((y,i)=>{const h=Math.max(6,Math.round(totals[i]/max*76)),isCurrent=y===currentYear,fillStyle=isCurrent?`height:${h}px; background: rgba(255, 255, 255, 0.88); border: 1px solid rgba(255, 255, 255, 0.95); box-shadow: 0 0 12px rgba(255, 255, 255, 0.35);`:`height:${h}px; background: rgba(255, 255, 255, 0.45); border: 1px solid rgba(255, 255, 255, 0.25);`;return`<div class="year-bar-col ${isCurrent?"current":""}">\n                  <div class="year-bar-amt figure" style="color: rgba(255, 255, 255, 0.95);">${fmtShort(totals[i])}</div>\n                  <div class="year-bar-track" style="background: rgba(255, 255, 255, 0.08); border-radius: 4px; overflow: hidden;"><div class="year-bar-fill" style="${fillStyle}"></div></div>\n                  <div class="year-bar-label" style="color: rgba(255, 255, 255, 0.85);">${y}</div>\n              </div>`}).join("");return`<div id="yearChartContainer" style="display: none;">\n        <div class="year-chart" style="background: linear-gradient(rgba(15, 23, 42, 0.84), rgba(15, 23, 42, 0.84)), url('https://i.pinimg.com/736x/fa/74/c3/fa74c3b5e05e56f23b9cee40f4b25326.jpg'); background-size: cover; background-position: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 12px; padding: 16px;">\n            <div class="year-chart-head"><span class="yc-title" style="color: #f8fafc; font-weight: 600;">Spend by year</span><span class="yc-total figure" style="color: #f8fafc; font-weight: 600;">${fmtVND(grand)}₫</span></div>\n            <div class="year-bar-row">${cols}</div>\n        </div>\n    </div>`}
     function renderDashboard(){const el=document.getElementById("dashContent");if(!trips.length)return void(el.innerHTML='<div class="empty">No trips found.</div>');const years=[...new Set(trips.map(t=>t.year))].sort((a,b)=>b-a),yearsAsc=[...years].sort((a,b)=>a-b);let html=renderYearChart(yearsAsc);for(const y of years){const yTrips=trips.filter(t=>t.year===y),yTotal=yTrips.filter(t=>!t.isCompany).reduce((s,t)=>s+t.total,0);html+=`<div class="year-head">\n            <h2>${y}</h2>\n            <span class="chip-trips">${yTrips.length} trip${yTrips.length>1?"s":""}</span>\n            <span class="chip-total figure">${fmtVND(yTotal)}₫</span>\n        </div>`,html+='<div class="trip-grid">',yTrips.forEach((t,ci)=>{const coverStyle=` style="background-image:url('${t.cover&&/^https?:\/\//i.test(t.cover)?t.cover:DEFAULT_COVER_URL}')"`;html+=`<div class="trip-card" data-id="${t.id}" style="animation-delay:${40*Math.min(ci,10)}ms">\n                <div class="trip-cover"${coverStyle}></div>\n                <div class="trip-body">\n                  <h3>${t.name}</h3>\n                  ${t.hotel?`<div class="trip-hotel">${t.hotel.icon?`<img src="${t.hotel.icon}" style="width:14px; height:14px; object-fit:cover; vertical-align:middle; margin-right:4px; border-radius:3px;">`:""} ${t.hotel.name}</div>`:""}\n                  <div class="trip-dates">${fmtRange(t.start,t.end)}</div>\n                  <div class="trip-meta"><span class="nights-chip">${t.nights} night${t.nights>1?"s":""}</span><span class="spend figure">${t.total?fmtVND(t.total)+"₫":"—"}</span></div>\n                </div>\n            </div>`}),html+="</div>"}el.innerHTML=html,el.querySelectorAll(".trip-card").forEach(c=>c.addEventListener("click",()=>openTrip(c.dataset.id)));const overviewBtn=document.getElementById("overviewBtn"),reloadBtn=document.getElementById("reloadBtn");if(overviewBtn&&reloadBtn){const parent=overviewBtn.parentNode;let actionWrapper=document.getElementById("headerActionsWrapper");actionWrapper||(actionWrapper=document.createElement("div"),actionWrapper.id="headerActionsWrapper",actionWrapper.style.cssText="display: flex; gap: 8px; justify-content: flex-end; align-items: center; margin-left: auto;",parent.insertBefore(overviewBtn,reloadBtn),parent.insertBefore(actionWrapper,overviewBtn),actionWrapper.appendChild(overviewBtn),actionWrapper.appendChild(reloadBtn))}overviewBtn&&(overviewBtn.style.transition="all 0.2s ease-in-out",overviewBtn.onclick=()=>{const chartContainer=document.getElementById("yearChartContainer");if(chartContainer){const isHidden="none"===chartContainer.style.display;chartContainer.style.display=isHidden?"block":"none",isHidden?(overviewBtn.style.background="#1e293b",overviewBtn.style.color="#f8fafc",overviewBtn.style.borderColor="#475569",overviewBtn.style.boxShadow="0 2px 8px rgba(15, 23, 42, 0.15), 0 0 0 2px rgba(71, 85, 105, 0.2)",overviewBtn.style.transform="translateY(-1px)"):(overviewBtn.style.background="",overviewBtn.style.color="",overviewBtn.style.borderColor="",overviewBtn.style.boxShadow="",overviewBtn.style.transform="")}}),reloadBtn&&(reloadBtn.onclick=()=>{if(el){let skeletonHtml="\n                    <style>\n                        @keyframes cardPulse {\n                            0% { opacity: 0.4; }\n                            50% { opacity: 0.8; }\n                            100% { opacity: 0.4; }\n                        }\n                    </style>\n                ";for(const y of years){const yTrips=trips.filter(t=>t.year===y);skeletonHtml+=`<div class="year-head">\n                        <h2>${y}</h2>\n                        <span class="chip-trips">${yTrips.length} trip${yTrips.length>1?"s":""}</span>\n                    </div>`,skeletonHtml+='<div class="trip-grid" style="animation: cardPulse 1.2s infinite ease-in-out;">',yTrips.forEach(()=>{skeletonHtml+='\n                            <div class="trip-card" style="pointer-events: none;">\n                                <div class="trip-cover" style="background: #334155; opacity: 0.5;"></div>\n                                <div class="trip-body">\n                                    <div style="height: 18px; background: #334155; border-radius: 4px; margin-bottom: 10px; width: 75%;"></div>\n                                    <div style="height: 14px; background: #334155; border-radius: 4px; margin-bottom: 8px; width: 50%;"></div>\n                                    <div style="height: 14px; background: #334155; border-radius: 4px; width: 35%;"></div>\n                                </div>\n                            </div>\n                        '}),skeletonHtml+="</div>"}el.innerHTML=skeletonHtml}setTimeout(()=>{"function"==typeof loadTrips?loadTrips():renderDashboard()},600)})}
     function groupByDay(t){const byDay={};for(const a of t.activities){const key=a.date.toDateString();byDay[key]||(byDay[key]={date:a.date,items:[]}),byDay[key].items.push(a)}return Object.values(byDay).sort((a,b)=>a.date-b.date)}function splitPeriods(items){const n=items.length;if(0===n)return[];const third=Math.ceil(n/3);return[{key:"morning",label:"Morning",items:items.slice(0,third)},{key:"afternoon",label:"Afternoon",items:items.slice(third,2*third)},{key:"evening",label:"Evening",items:items.slice(2*third)}].filter(b=>b.items.length)}function annotateLocations(days){let current=null;for(const day of days){for(const a of day.items){if(!a.category||!a.category.includes("Air Ticket")&&!a.category.includes("Transport"))continue;const m=a.activity.match(/^([A-Z]{2,4})[\s\-]+([A-Z]{2,4})\b/);if(!m)continue;const[_,c1,c2]=m;isAirportCode(c1)&&isAirportCode(c2)&&(null===current&&(current=c1),current=c2)}day.locationName=current?LOCATION_MAP[current]||current:null}}function renderCatStack(catEntries,totalSpend,acts){if(!catEntries.length)return"";let segs="",legend="";return catEntries.forEach(([cat,amt],i)=>{const pct=totalSpend?amt/totalSpend*100:0,color=PALETTE[i%PALETTE.length],label=cat.replace(/^[^\wÀ-ỹ]+/,"").trim()||"Other",rawIcon=iconFor(cat),isImgUrl=/^https?:\/\//i.test(rawIcon),segText=pct>12?`${isImgUrl?`<img src="${rawIcon}" style="width:12px; height:12px; object-fit:cover; border-radius:2px; vertical-align:middle; margin-right:3px;">`:`<span style="margin-right:3px;">${rawIcon}</span>`}${fmtShort(amt)}`:"";segs+=`<div class="stack-seg" style="width:calc(${pct}% + 12px); background:${color}" title="${label}: ${fmtVND(amt)}">${segText}</div>`,legend+=`<div class="stack-legend-item"><span class="dot" style="background:${color}"></span>${catIconHTML(cat,acts)} ${label} <b>${fmtShort(amt)}</b></div>`}),`<div class="stack-wrap"><div class="stack-bar" style="overflow:hidden; border-radius:14px;margin-top:10px;">${segs}</div><div class="stack-legend">${legend}</div></div>`}
-    function openTrip(id){
+    // Biến toàn cục lưu vị trí gốc của nút Add trên topbar
+let addBtnOriginalParent = null;
+let addBtnNextSibling = null;
+
+// Lưu lại vị trí ban đầu khi trang vừa tải xong
+document.addEventListener('DOMContentLoaded', () => {
+  const addBtn = document.getElementById('addTravelBtn');
+  if (addBtn && addBtn.parentNode) {
+    addBtnOriginalParent = addBtn.parentNode;
+    addBtnNextSibling = addBtn.nextSibling;
+  }
+});
+
+function openTrip(id){
   const t = trips.find(x => x.id === id);
   if(!t) return;
   const el = document.getElementById("detailContent"), days = groupByDay(t);
@@ -7388,7 +7557,6 @@ function renderActiveChartCards(portfolioGroups) {
 
   const coverImgUrl = t.cover && /^https?:\/\//i.test(t.cover) ? t.cover : DEFAULT_COVER_URL;
 
-  // Thêm border-radius: 16px trực tiếp vào style của .det-sticky-container
   let html = `<div class="det-sticky-container" style="background-image: url('${coverImgUrl}');">\n` +
       `      <div class="det-topbar">\n        <button class="back-btn" id="backBtn"><span style="margin-top:-1px;font-size:20px">‹</span></button>\n        <div class="det-title"><h2>${t.name}</h2></div>\n        <div class="det-total"><div class="amt figure">${t.total ? fmtVND(t.total) + "₫" : "—"}</div><div class="lbl">TOTAL SPEND</div></div>\n      </div>\n      \n      <div class="day-strip-wrap">\n        <div class="day-strip">`;
   
@@ -7406,7 +7574,10 @@ function renderActiveChartCards(portfolioGroups) {
       html += `<div class="period">\n        <div class="period-head"><span class="period-dot ${band.key}"></span><span class="period-label">${band.label}</span></div>\n        <div class="period-items">`;
       band.items.forEach((a, ai) => {
         const hasExtra = a.notes || a.code;
-        html += `<div class="act-card ${hasExtra ? "" : "centered"}" data-item-id="${a.id}" style="animation-delay:${30 * Math.min(ai, 8)}ms; cursor: pointer;" title="Click to edit item">\n          <div class="act-ic">${iconHTML(a)}</div>\n          <div class="act-body">\n            <div class="act-name">${a.activity}${a.review ? `<span class="rev">${a.review}</span>` : ""}</div>\n            ${a.notes ? `<div class="act-note">${a.notes}</div>` : ""}\n          </div>\n          <div class="act-side">\n            ${a.code ? `<span class="code-chip">${a.code}</span>` : ""}\n            <div class="act-amt ${a.expense ? "" : "zero"}">${a.expense ? fmtVND(a.expense) + "₫" : ""}</div>\n          </div>\n        </div>`;
+        html += `<div class="act-card ${hasExtra ? "" : "centered"}" data-item-id="${a.id}" style="animation-delay:${30 * Math.min(ai, 8)}ms; cursor: pointer;" title="Click to edit item">\n          <div class="act-ic">${iconHTML(a)}</div>\n          <div class="act-body">\n            <div class="act-name">
+  ${a.activity}
+  ${a.review ? `<span class="rev" style="margin-left: 6px; display: inline-flex; vertical-align: middle;">${a.review.startsWith('bi-') ? `<i class="bi ${a.review}" style="font-size: 1.1rem; color: ${getReviewColor(a.review)};"></i>` : a.review}</span>` : ""}
+</div>\n            ${a.notes ? `<div class="act-note">${a.notes}</div>` : ""}\n          </div>\n          <div class="act-side">\n            ${a.code ? `<span class="code-chip">${a.code}</span>` : ""}\n            <div class="act-amt ${a.expense ? "" : "zero"}">${a.expense ? fmtVND(a.expense) + "₫" : ""}</div>\n          </div>\n        </div>`;
       });
       html += "</div></div>";
     }
@@ -7415,9 +7586,6 @@ function renderActiveChartCards(portfolioGroups) {
   html += "</div>";
   el.innerHTML = html;
 
-  // Giữ nguyên các event listener và observer phía dưới của bạn...
-
-  // Bind click listener to open edit modal when clicking any item card
   el.querySelectorAll(".act-card").forEach(card => {
     card.addEventListener("click", () => {
       const itemId = card.dataset.itemId;
@@ -7429,15 +7597,29 @@ function renderActiveChartCards(portfolioGroups) {
   });
 
   stickyCleanup && (stickyCleanup(), stickyCleanup = null);
+  
+  // Xử lý nút Back: Trả nút addTravelBtn về vị trí gốc trên topbar
   document.getElementById("backBtn").addEventListener("click", () => {
     dayObserver && (dayObserver.disconnect(), dayObserver = null);
     stickyCleanup && (stickyCleanup(), stickyCleanup = null);
     document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
     document.getElementById("panel-dashboard").classList.add("active");
+    
+    const addTravelBtn = document.getElementById('addTravelBtn');
+    if (addTravelBtn) {
+      addTravelBtn.classList.remove('fab-mode');
+      if (addBtnOriginalParent) {
+        if (addBtnNextSibling) {
+          addBtnOriginalParent.insertBefore(addTravelBtn, addBtnNextSibling);
+        } else {
+          addBtnOriginalParent.appendChild(addTravelBtn);
+        }
+      }
+    }
   });
 
+  // (Phần code observer / scroll giữ nguyên như cũ của anh...)
   const pills = el.querySelectorAll(".day-pill");
-  el.querySelector(".day-strip-wrap");
   let suppressObserverUntil = 0;
   const scrollRoot = function(node){
     let p = node ? node.parentElement : null;
@@ -7508,14 +7690,8 @@ function renderActiveChartCards(portfolioGroups) {
         pills.forEach(p => {
           const isActive = p.dataset.day === idx;
           p.classList.toggle("active", isActive);
-          
-          // Tự động cuộn thanh ngang day-strip để đưa day-pill đang active vào giữa khung nhìn
           if(isActive && typeof p.scrollIntoView === 'function'){
-            p.scrollIntoView({
-              behavior: 'smooth',
-              inline: 'center',
-              block: 'nearest'
-            });
+            p.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
           }
         });
       }
@@ -7526,6 +7702,17 @@ function renderActiveChartCards(portfolioGroups) {
   document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
   document.getElementById("panel-detail").classList.add("active");
   usesWindow ? window.scrollTo(0, 0) : scrollRoot.scrollTop = 0;
+
+  // ➡️ Đưa nút addTravelBtn ra thẳng document.body và gán class fab-mode để nổi lên góc phải
+  const addTravelBtn = document.getElementById('addTravelBtn');
+  if (addTravelBtn) {
+    if (!addBtnOriginalParent && addTravelBtn.parentNode) {
+      addBtnOriginalParent = addTravelBtn.parentNode;
+      addBtnNextSibling = addTravelBtn.nextSibling;
+    }
+    document.body.appendChild(addTravelBtn);
+    addTravelBtn.classList.add('fab-mode');
+  }
 }
     function setStatus(state,text){document.getElementById("statusDot").className="status-dot "+state,document.getElementById("statusText").textContent=text}
     function buildTripName(acts){const codeChain=[];for(const a of acts){if(!a.category||!a.category.includes("Air Ticket")&&!a.category.includes("Transport"))continue;const m=a.activity.match(/^([A-Z]{2,4})[\s\-]+([A-Z]{2,4})\b/);if(!m)continue;const[_,c1,c2]=m;isAirportCode(c1)&&isAirportCode(c2)&&(codeChain[codeChain.length-1]!==c1&&codeChain.push(c1),codeChain.push(c2))}const validChain=codeChain.filter((c,i)=>c!==codeChain[i-1]).filter(c=>!EXCLUDE_CODES.has(c));if(validChain.length>=1){const names=validChain.map(c=>"IUH"===c?"Quy Nhơn":LOCATION_MAP[c]||c),deduped=names.filter((n,i)=>n!==names[i-1]);if(deduped.length>0)return deduped.join(" – ")}return acts[0].activity.slice(0,30)}document.getElementById("reloadBtn").addEventListener("click",loadTravelData),document.addEventListener("DOMContentLoaded",()=>{const dayPills=document.querySelectorAll(".day-pill");dayPills.forEach(pill=>{pill.addEventListener("click",function(){dayPills.forEach(p=>p.classList.remove("active")),this.classList.add("active");const targetDayId=this.getAttribute("data-target")||this.dataset.day,targetSection=document.getElementById(targetDayId);targetSection&&targetSection.scrollIntoView({behavior:"smooth",block:"start"})})})});
@@ -7708,6 +7895,11 @@ function openAddModal() {
 
   const uniqueCategories = [...new Set(trips.flatMap(t => t.activities.map(a => a.category).filter(Boolean)))];
   const initialCategory = uniqueCategories[0] || 'General';
+  
+  // 👉 ĐỊNH NGHĨA HÀM CLEAN TRƯỚC KHI SỬ DỤNG
+  const cleanCat = (str) => str ? str.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD00-\uDDFF])/g, '').trim() : '';
+  
+  const cleanInitialCat = cleanCat(initialCategory);
   const initialIconSrc = iconFor(initialCategory);
 
   modalOverlay.innerHTML = `
@@ -7810,22 +8002,33 @@ function openAddModal() {
 
       <form id="addItemForm" style="display: flex; flex-direction: column; gap: 16px;">
         
-        <div style="position: relative;" id="addCategoryContainer">
-          <label class="ticket-label">Category</label>
-          <div class="ticket-input-wrapper">
-            <input type="text" id="newCategoryInput" name="category" autocomplete="off" value="${initialCategory}" placeholder="Select or type category..." class="ticket-input">
-            <button type="button" id="clearNewCategoryBtn" class="clear-btn" title="Clear">✕</button>
+        <!-- Gom Category và Code chung 1 dòng (chia 50-50) -->
+        <div style="display: flex; gap: 12px;">
+          <div style="position: relative; flex: 1;" id="addCategoryContainer">
+            <label class="ticket-label">Category</label>
+            <div class="ticket-input-wrapper">
+              <input type="text" id="newCategoryInput" name="category" autocomplete="off" value="${cleanInitialCat}" placeholder="Select or type category..." class="ticket-input">
+              <button type="button" id="clearNewCategoryBtn" class="clear-btn" title="Clear">✕</button>
+            </div>
+            <div id="addCategoryDropdown" style="display: none; position: absolute; top: calc(100% + 6px); left: 0; min-width: 240px; width: max-content; max-width: 320px; background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 14px; max-height: 200px; overflow-y: auto; z-index: 50; box-shadow: 0 20px 40px rgba(0,0,0,0.8); padding: 6px;">
+              ${uniqueCategories.map(cat => {
+                const displayName = cleanCat(cat);
+                return `
+                  <div class="cat-option" style="padding: 9px 14px; border-radius: 8px; cursor: pointer; color: #f8fafc; font-size: 0.95rem; display: flex; align-items: center; gap: 10px; transition: background 0.2s; white-space: nowrap;" data-value="${cat}">
+                    <img src="${iconFor(cat)}" style="width: 22px; height: 22px; object-fit: contain; border-radius: 50%; flex-shrink: 0;" onerror="this.src='${DEFAULT_ICON_URL}';">
+                    <span>${displayName || cat}</span>
+                  </div>
+                `;
+              }).join('')}
+            </div>
           </div>
-          <div id="addCategoryDropdown" style="display: none; position: absolute; top: calc(100% + 6px); left: 0; right: 0; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; max-height: 160px; overflow-y: auto; z-index: 40; box-shadow: 0 15px 30px rgba(0,0,0,0.6); padding: 4px;">
-            ${uniqueCategories.map(cat => `<div class="cat-option" style="padding: 8px 12px; border-radius: 8px; cursor: pointer; color: #f8fafc; font-size: 0.9rem; transition: background 0.2s;" data-value="${cat}">${cat}</div>`).join('')}
-          </div>
-        </div>
 
-        <div>
-          <label class="ticket-label">Code</label>
-          <div class="ticket-input-wrapper">
-            <input type="text" id="newCodeInput" name="code" placeholder="Optional code..." class="ticket-input">
-            <button type="button" id="clearNewCodeBtn" class="clear-btn" title="Clear">✕</button>
+          <div style="flex: 1;">
+            <label class="ticket-label">Code</label>
+            <div class="ticket-input-wrapper">
+              <input type="text" id="newCodeInput" name="code" placeholder="Optional" class="ticket-input">
+              <button type="button" id="clearNewCodeBtn" class="clear-btn" title="Clear">✕</button>
+            </div>
           </div>
         </div>
 
@@ -7897,7 +8100,6 @@ function openAddModal() {
 
   modalOverlay.style.display = 'flex';
 
-  // Lắng nghe sự kiện đổi icon real-time khi user gõ hoặc chọn category
   const addCatInput = document.getElementById('newCategoryInput');
   const addModalHeaderIcon = document.getElementById('addModalHeaderIcon');
   const addCatDropdown = document.getElementById('addCategoryDropdown');
@@ -7918,7 +8120,7 @@ function openAddModal() {
     let hasVisible = false;
     options.forEach(opt => {
       if (opt.textContent.toLowerCase().includes(val)) {
-        opt.style.display = 'block';
+        opt.style.display = 'flex';
         hasVisible = true;
       } else {
         opt.style.display = 'none';
@@ -7927,12 +8129,16 @@ function openAddModal() {
     addCatDropdown.style.display = hasVisible ? 'block' : 'none';
   });
 
+  // 👉 Xử lý click chọn option: Cập nhật giá trị sạch và đồng bộ icon ngay lập tức
   addCatDropdown.querySelectorAll('.cat-option').forEach(opt => {
     opt.addEventListener('mouseenter', () => opt.style.background = 'rgba(255, 255, 255, 0.15)');
     opt.addEventListener('mouseleave', () => opt.style.background = 'transparent');
     opt.addEventListener('click', () => {
-      const chosenCat = opt.getAttribute('data-value');
-      addCatInput.value = chosenCat;
+      const chosenCat = opt.getAttribute('data-value'); // Lấy giá trị gốc đầy đủ khi submit
+      // Lọc bỏ emoji để ô input hiển thị dạng text sạch gọn gàng
+      const cleanText = chosenCat.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD00-\uDDFF])/g, '').trim();
+      
+      addCatInput.value = cleanText || chosenCat;
       if (addModalHeaderIcon) {
         addModalHeaderIcon.src = iconFor(chosenCat);
       }
@@ -8105,10 +8311,40 @@ function openEditModal(item, tripId) {
 
   const rawAmount = item.expense || 0;
   const formattedInitialAmount = rawAmount ? Math.round(rawAmount).toLocaleString("en-US") : "";
-  const itemIconSrc = item.icon && /^https?:\/\//i.test(item.icon) ? item.icon : iconFor(item.category);
+  
+  // 👉 ĐỊNH NGHĨA HÀM CLEAN VÀ GÁN DỮ LIỆU SẠCH CHO ITEM CATEGORY
+  const cleanCat = (str) => str ? str.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD00-\uDDFF])/g, '').trim() : '';
+  
+  const rawCategory = item.category || '';
+  const cleanEditCat = cleanCat(rawCategory);
+  const itemIconSrc = item.icon && /^https?:\/\//i.test(item.icon) ? item.icon : iconFor(rawCategory);
 
-  const reviewIcons = ['⭐', '👍', '❤️', '🏆', '🔥','🤩'];
-  let currentReview = item.review || '⭐';
+  // Danh sách Bootstrap Icon kèm màu sắc sinh động
+  const reviewIcons = [
+    { cls: 'bi-star-fill', color: '#fbbf24' },        // Vàng sao
+    { cls: 'bi-hand-thumbs-up-fill', color: '#3b82f6' }, // Xanh dương
+    { cls: 'bi-heart-fill', color: '#ef4444' },      // Đỏ tim
+    { cls: 'bi-trophy-fill', color: '#f59e0b' },     // Vàng cúp
+    { cls: 'bi-fire', color: '#f97316' },            // Cam lửa
+    { cls: 'bi-emoji-smile-fill', color: '#eab308' } // Vàng cười
+  ];
+
+  let currentReview = item.review || 'bi-star-fill';
+
+  // Hàm lấy màu tương ứng cho icon
+  const getReviewColor = (cls) => {
+    const found = reviewIcons.find(item => item.cls === cls);
+    return found ? found.color : '#f8fafc';
+  };
+
+  const renderReviewHtml = (val) => {
+    if (!val) return '';
+    if (val.startsWith('bi-')) {
+      const color = getReviewColor(val);
+      return `<i class="bi ${val}" style="font-size: 1rem!important; color: ${color};"></i>`;
+    }
+    return val; // Fallback emoji cũ
+  };
 
   modalOverlay.innerHTML = `
     <style>      
@@ -8202,7 +8438,6 @@ function openEditModal(item, tripId) {
         background: rgba(15, 23, 42, 0.75);
       }
 
-      /* Hover Effects cho các nút bấm */
       .ticket-modal button[type="submit"], .ticket-modal #addModalSubmitBtn {
         transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
       }
@@ -8230,22 +8465,32 @@ function openEditModal(item, tripId) {
 
       <form id="editItemForm" style="display: flex; flex-direction: column; gap: 16px;">
         
-        <div style="position: relative;" id="editCategoryContainer">
-          <label class="ticket-label">Category</label>
-          <div class="ticket-input-wrapper">
-            <input type="text" id="categoryInput" name="category" autocomplete="off" value="${item.category || ''}" placeholder="Select or type category..." class="ticket-input">
-            <button type="button" id="clearCategoryBtn" class="clear-btn" title="Clear">✕</button>
+        <div style="display: flex; gap: 12px;">
+          <div style="position: relative; flex: 1;" id="editCategoryContainer">
+            <label class="ticket-label">Category</label>
+            <div class="ticket-input-wrapper">
+              <input type="text" id="categoryInput" name="category" autocomplete="off" value="${cleanEditCat}" placeholder="Select or type category..." class="ticket-input">
+              <button type="button" id="clearCategoryBtn" class="clear-btn" title="Clear">✕</button>
+            </div>
+            <div id="editCategoryDropdown" style="display: none; position: absolute; top: calc(100% + 6px); left: 0; min-width: 240px; width: max-content; max-width: 320px; background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 14px; max-height: 200px; overflow-y: auto; z-index: 50; box-shadow: 0 20px 40px rgba(0,0,0,0.8); padding: 6px;">
+              ${uniqueCategories.map(cat => {
+                const displayName = cleanCat(cat);
+                return `
+                  <div class="cat-option" style="padding: 9px 14px; border-radius: 8px; cursor: pointer; color: #f8fafc; font-size: 0.95rem; display: flex; align-items: center; gap: 10px; transition: background 0.2s; white-space: nowrap;" data-value="${cat}">
+                    <img src="${iconFor(cat)}" style="width: 22px; height: 22px; object-fit: contain; border-radius: 50%; flex-shrink: 0;" onerror="this.src='${DEFAULT_ICON_URL}';">
+                    <span>${displayName || cat}</span>
+                  </div>
+                `;
+              }).join('')}
+            </div>
           </div>
-          <div id="editCategoryDropdown" style="display: none; position: absolute; top: calc(100% + 6px); left: 0; right: 0; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; max-height: 160px; overflow-y: auto; z-index: 40; box-shadow: 0 15px 30px rgba(0,0,0,0.6); padding: 4px;">
-            ${uniqueCategories.map(cat => `<div class="cat-option" style="padding: 8px 12px; border-radius: 8px; cursor: pointer; color: #f8fafc; font-size: 0.9rem; transition: background 0.2s;" data-value="${cat}">${cat}</div>`).join('')}
-          </div>
-        </div>
 
-        <div>
-          <label class="ticket-label">Code</label>
-          <div class="ticket-input-wrapper">
-            <input type="text" id="codeInput" name="code" value="${item.code || ''}" placeholder="" class="ticket-input">
-            <button type="button" id="clearCodeBtn" class="clear-btn" title="Clear">✕</button>
+          <div style="flex: 1;">
+            <label class="ticket-label">Code</label>
+            <div class="ticket-input-wrapper">
+              <input type="text" id="codeInput" name="code" value="${item.code || ''}" placeholder="" class="ticket-input">
+              <button type="button" id="clearCodeBtn" class="clear-btn" title="Clear">✕</button>
+            </div>
           </div>
         </div>
 
@@ -8311,12 +8556,18 @@ function openEditModal(item, tripId) {
           <button type="submit" style="background: #f1f5f9; border: none; color: #0f172a; padding: 7px 16px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.85rem; font-family: inherit; box-shadow: 0 2px 6px rgba(0,0,0,0.2);">Save</button>
           
           <div style="position: relative;" id="reviewDropdownContainer">
-            <button type="button" id="reviewBtn" class="review-dropdown-btn" title="Select Review Icon">
-              <span id="selectedReviewIcon">${currentReview}</span>
+            <button type="button" id="reviewBtn" class="review-dropdown-btn" title="Select Review Icon" style="padding: 6px 12px; height: 38px;">
+              <span id="selectedReviewIcon">${renderReviewHtml(currentReview)}</span>
             </button>
             <input type="hidden" name="review" id="reviewInputVal" value="${currentReview}">
-            <div id="reviewDropdownMenu" style="display: none; position: absolute; bottom: calc(100% + 6px); right: 0; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 10px; padding: 6px; z-index: 50; gap: 6px; flex-wrap: wrap; width: 160px; box-shadow: 0 10px 25px rgba(0,0,0,0.6);">
-              ${reviewIcons.map(ic => `<div class="review-opt" style="padding: 6px 8px; border-radius: 6px; cursor: pointer; font-size: 1.1rem; text-align: center; transition: background 0.2s;" data-icon="${ic}">${ic}</div>`).join('')}
+            
+            <!-- Menu 2 HÀNG x 3 CỘT = 6 ICON -->
+            <div id="reviewDropdownMenu" style="display: none; position: absolute; bottom: calc(100% + 8px); right: 0; background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 14px; padding: 10px; z-index: 50; box-shadow: 0 20px 40px rgba(0,0,0,0.8); grid-template-columns: repeat(3, 1fr); gap: 8px; width: 175px;">
+              ${reviewIcons.map(item => `
+                <div class="review-opt" style="padding: 10px 6px; border-radius: 10px; cursor: pointer; text-align: center; transition: background 0.2s; display: flex; align-items: center; justify-content: center;" data-icon="${item.cls}">
+                  <i class="bi ${item.cls}" style="font-size: 1rem!important; color: ${item.color};"></i>
+                </div>
+              `).join('')}
             </div>
           </div>
 
@@ -8345,8 +8596,9 @@ function openEditModal(item, tripId) {
 
   reviewBtn.onclick = (e) => {
     e.stopPropagation();
-    const isShowing = reviewMenu.style.display === 'flex';
-    reviewMenu.style.display = isShowing ? 'none' : 'flex';
+    // 👉 Đổi từ 'flex' sang 'grid' để hiển thị chuẩn 2 hàng x 3 cột
+    const isShowing = reviewMenu.style.display === 'grid';
+    reviewMenu.style.display = isShowing ? 'none' : 'grid';
   };
 
   reviewMenu.querySelectorAll('.review-opt').forEach(opt => {
@@ -8355,7 +8607,8 @@ function openEditModal(item, tripId) {
     opt.onclick = (e) => {
       e.stopPropagation();
       const chosenIcon = opt.getAttribute('data-icon');
-      selectedReviewIcon.textContent = chosenIcon;
+      const color = getReviewColor(chosenIcon);
+      selectedReviewIcon.innerHTML = `<i class="bi ${chosenIcon}" style="font-size: 1.4rem; color: ${color};"></i>`;
       reviewInputVal.value = chosenIcon;
       reviewMenu.style.display = 'none';
     };
@@ -8403,6 +8656,7 @@ function openEditModal(item, tripId) {
 
   const editCatInput = document.getElementById('categoryInput');
   const editCatDropdown = document.getElementById('editCategoryDropdown');
+  
   editCatInput.addEventListener('focus', () => { editCatDropdown.style.display = 'block'; });
   editCatInput.addEventListener('input', (e) => {
     const val = e.target.value.toLowerCase();
@@ -8410,18 +8664,28 @@ function openEditModal(item, tripId) {
     let hasVisible = false;
     options.forEach(opt => {
       if (opt.textContent.toLowerCase().includes(val)) {
-        opt.style.display = 'block'; hasVisible = true;
-      } else { opt.style.display = 'none'; }
+        opt.style.display = 'flex'; 
+        hasVisible = true;
+      } else { 
+        opt.style.display = 'none'; 
+      }
     });
     editCatDropdown.style.display = hasVisible ? 'block' : 'none';
   });
 
+  // 👉 Xử lý click chọn option cho modal Edit: Cập nhật text sạch và đổi icon header
   editCatDropdown.querySelectorAll('.cat-option').forEach(opt => {
     opt.addEventListener('mouseenter', () => opt.style.background = 'rgba(255, 255, 255, 0.15)');
     opt.addEventListener('mouseleave', () => opt.style.background = 'transparent');
     opt.addEventListener('click', () => {
-      editCatInput.value = opt.getAttribute('data-value');
-      document.getElementById('editModalHeaderIcon').src = iconFor(editCatInput.value);
+      const chosenCat = opt.getAttribute('data-value'); // Giữ giá trị gốc để submit update payload
+      const cleanText = chosenCat.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD00-\uDDFF])/g, '').trim();
+      
+      editCatInput.value = cleanText || chosenCat;
+      const headerIcon = document.getElementById('editModalHeaderIcon');
+      if (headerIcon) {
+        headerIcon.src = iconFor(chosenCat);
+      }
       editCatDropdown.style.display = 'none';
     });
   });
