@@ -6861,7 +6861,7 @@ function renderActiveChartCards(portfolioGroups) {
             if (hasData) {weekSum += amount;weekHasData = true;}
             const nowRef = new Date();
             const isToday = year === nowRef.getFullYear() && month === nowRef.getMonth() && day === nowRef.getDate();
-            const todayIndicator=isToday?'<span style="position:absolute;top:4px;right:5px;width:5px;height:5px;background:#fbbf24;border-radius:50%;box-shadow:0 0 5px #fbbf24;"></span>':"",cellBg=getPnlBgColor(amount,hasData),isLemonBg="#84cc16"===cellBg,primaryTextColor=isToday?"#fbbf24":hasData?isNegative?"#ec4899":isLemonBg?"#0f172a":"#2dd4bf":"#94a3b8",valueTextColor=hasData?isNegative?"#ec4899":isLemonBg?"#0f172a":"#2dd4bf":"#475569",cell=document.createElement("div");cell.style.cssText=`height:33px;background:${cellBg};border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:background 0.2s;`,cell.onmouseover=()=>cell.style.background="#222733",cell.onmouseout=()=>cell.style.background=cellBg;
+            const todayIndicator=isToday?'<span style="position:absolute;top:4px;right:5px;width:5px;height:5px;background:#fbbf24;border-radius:50%;box-shadow:0 0 5px #fbbf24;"></span>':"",cellBg=getPnlBgColor(amount,hasData),isLemonBg="#84cc16"===cellBg,primaryTextColor=isToday?"#fbbf24":hasData?isNegative?"#ec4899":isLemonBg?"#0f172a":"#2dd4bf":"#94a3b8",valueTextColor=hasData?isNegative?"#ec4899":isLemonBg?"#0f172a":"#2dd4bf":"#475569",cell=document.createElement("div");cell.style.cssText=`height:42px;background:${cellBg};border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:background 0.2s;`,cell.onmouseover=()=>cell.style.background="#222733",cell.onmouseout=()=>cell.style.background=cellBg;
 
             // 4. Safely render innerHTML with todayIndicator defined above (compact sizes for space saving)
             cell.innerHTML = `
@@ -6887,7 +6887,7 @@ function renderActiveChartCards(portfolioGroups) {
               const isTotLemonBg = totalBg === "#84cc16";
               const totalValColor = weekHasData ? (isTotNeg ? '#ec4899' : (isTotLemonBg ? '#0f172a' : '#2dd4bf')) : '#475569';
 
-              totalCell.style.cssText = `height:33px;background:${totalBg};border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:0px solid #334155;`;
+              totalCell.style.cssText = `height:42px;background:${totalBg};border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:0px solid #334155;`;
               totalCell.innerHTML = `
                 <span style="font-size:11px;line-height:1.1;color:${isTotLemonBg ? '#0f172a' : '#94a3b8'};font-weight:600;">∑</span>
                 <span style="font-size:12px;line-height:1.1;color:${totalValColor};margin-top:1px;font-weight:600;">${weekHasData ? formatVndShort(weekSum) : '+0.0M'}</span>
@@ -6908,7 +6908,7 @@ function renderActiveChartCards(portfolioGroups) {
             const totalCell = document.createElement("div");
             const isTotNeg = weekHasData && weekSum < 0;
             const totalBg = getPnlBgColor(weekSum, weekHasData);
-            totalCell.style.cssText = `height:38px;background:${totalBg};border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:0px solid #334155;`;
+            totalCell.style.cssText = `height:40px;background:${totalBg};border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:0px solid #334155;`;
             totalCell.innerHTML = `
               <span style="font-size:11px;line-height:1.1;color:#94a3b8;font-weight:600;">∑</span>
               <span style="font-size:12px;line-height:1.1;color:${weekHasData ? (isTotNeg ? '#ec4899' : '#2dd4bf') : '#475569'};margin-top:1px;font-weight:600;">${weekHasData ? formatVndShort(weekSum) : '+0.0M'}</span>
@@ -6981,13 +6981,13 @@ function renderActiveChartCards(portfolioGroups) {
             const { titleColor, valueColor } = getCellTextColors(defaultBg, hasData, monthlyTotal);
 
             const cell = document.createElement("div");
-            cell.style.cssText = `height:46px;background:${defaultBg};border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
+            cell.style.cssText = `height:60px;background:${defaultBg};border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s;`;
             cell.onmouseover = () => cell.style.background = "#222733";
             cell.onmouseout = () => cell.style.background = defaultBg;
             
             cell.innerHTML = `
-              <span style="font-size: 13px; line-height:1.1; color: ${titleColor}; font-weight: 600;">${mName}</span>
-              <span style="font-size: 13px; line-height:1.1; color: ${valueColor}; margin-top: 2px; font-weight: 600;">${hasData ? formatVndShort(monthlyTotal) : "+0.0M"}</span>
+              <span style="font-size: 14px; line-height:1.1; color: ${titleColor}; font-weight: 600;">${mName}</span>
+              <span style="font-size: 16px; line-height:1.1; color: ${valueColor}; margin-top: 2px; font-weight: 600;">${hasData ? formatVndShort(monthlyTotal) : "+0.0M"}</span>
             `;
             cell.onclick = () => { currentNavDate.setMonth(mIdx); setView("daily"); };
 
@@ -7005,10 +7005,10 @@ function renderActiveChartCards(portfolioGroups) {
               const { titleColor: qTitleColor, valueColor: qValueColor } = getCellTextColors(qBg, qHasData, qSum);
 
               const qCell = document.createElement("div");
-              qCell.style.cssText = `height:46px;background:${qBg};border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:0px solid #334155;`;
+              qCell.style.cssText = `height:60px;background:${qBg};border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:0px solid #334155;`;
               qCell.innerHTML = `
-                <span style="font-size:13px;line-height:1.1;color:${qTitleColor};font-weight:600;">∑Q${qNum}</span>
-                <span style="font-size:13px;line-height:1.1;color:${qValueColor};margin-top:2px;font-weight:600;">${qHasData ? formatVndShort(qSum) : "+0.0M"}</span>
+                <span style="font-size:15px;line-height:1.1;color:${qTitleColor};font-weight:600;">∑Q${qNum}</span>
+                <span style="font-size:17px;line-height:1.1;color:${qValueColor};margin-top:2px;font-weight:600;">${qHasData ? formatVndShort(qSum) : "+0.0M"}</span>
               `;
               qCell.style.cursor = "pointer";
               qCell.onclick = () => { currentNavDate.setDate(1); currentNavDate.setMonth(mIdx - 2); setView("quarterly"); };
