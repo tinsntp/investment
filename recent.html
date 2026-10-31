@@ -728,7 +728,7 @@ h1,h2,h3,.num{font-family:'Manrope',sans-serif;}
 
 .stat-cycles-row-wrap-v2 #add-order{width:20px;height:20px;font-size:16px;margin-left:0;margin-right:0}
 #add-cash.loading,#add-fab.loading{pointer-events:none;display:flex;align-items:center;justify-content:center}
-.cash-modal-overlay,.add-modal-overlay,.edit-subs-modal-overlay{-webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);display:none;position:fixed;inset:0; z-index:600;align-items:flex-start;justify-content:center;padding-top:10vh;overflow-y:auto;}
+.cash-modal-overlay,.add-modal-overlay,.edit-subs-modal-overlay{-webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);display:none;position:fixed;inset:0; z-index:600;align-items:flex-start;justify-content:center;overflow-y:auto;}
 .add-modal-overlay{padding-top:5vh;}
 .cash-modal-overlay.open,.add-modal-overlay.open{display:flex!important;}
 .btn-spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,0.3);border-top-color:#ffffff;border-radius:50%;animation:spinCircle 0.8s linear infinite;display:inline-block}
@@ -777,8 +777,8 @@ background:
 .pocket-header .material-icons-round{font-size:16px;}
 .total-balance-value{font-size:28px;font-family:"JetBrains Mono";font-weight:700;margin-top:2px;letter-spacing:-0.5px;position:relative;z-index:15}
 .usd-equivalence{font-family:"Manrope";display:flex;align-items:center;gap:6px;font-size:14px;color:var(--text-muted);margin-top:-1px;position:relative;z-index:15}
-.preview-section{margin-top:15px;width:100%;display:flex;flex-direction:column;gap:6px;position:relative;z-index:15}
-.preview-row{font-family:"IBM Plex Mono";display:flex;align-items:center;justify-content:space-between;font-size:12.5px;color:var(--text-muted);padding-top:6px;border-top:1px dashed rgba(255,255,255,0.08)}
+.preview-section{margin-top:10px;width:100%;display:flex;flex-direction:column;gap:6px;position:relative;z-index:15}
+.preview-row{font-family:"IBM Plex Mono";display:flex;align-items:center;justify-content:space-between;font-size:12.5px;color:var(--text-muted);padding-top:4px;border-top:1px dashed rgba(255,255,255,0.08)}
 .preview-row-left{display:flex;align-items:center;gap:6px}
 .preview-row:first-child {border-top: none;}
 .preview-row:last-child {margin-top: -0px!important;}
@@ -1205,8 +1205,8 @@ tbody tr.current-row td{font-weight:600;}
 .portfolio-group-hdr{padding:10px 10px 6px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-secondary);background:0 0;border-bottom:none;text-align:left}.portfolio-group-hdr-pnl{margin-left:8px;font-weight:700;text-transform:none;letter-spacing:normal}.portfolio-group-hdr-row:first-child .portfolio-group-hdr{padding-top:10}.portfolio-group-hdr-row{cursor:pointer}.portfolio-group-hdr-inner{display:flex;align-items:center;justify-content:space-between}.portfolio-group-hdr-label{display:flex;align-items:center}.portfolio-group-hdr-chevron{font-size:12px;color:var(--text-secondary);transition:transform .2s ease;flex-shrink:0}.portfolio-group-hdr-row.collapsed .portfolio-group-hdr-chevron{transform:rotate(-90deg)}
 .portfolio-card{border-radius:24px;}.portfolio-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.portfolio-title{font-size:18px;font-weight:700;color:var(--text-primary)}.interactive-hint{font-size:12px;color:var(--teal-primary);display:flex;align-items:center;gap:6px;background:var(--teal-bg);padding:6px 12px;border-radius:12px}
 .table-wrapper{overflow-x:auto;margin-top:10px!important}table{width:100%;border-collapse:collapse;text-align:left;table-layout:fixed}col.col-asset{width:27%}col.col-duration{width:17%}col.col-volprice{width:22%}col.col-pnl{width:18%}col.col-costmarket{width:16%}th{font-size:13px;text-transform:uppercase;letter-spacing:.8px;color:var(--text-secondary);padding:12px 10px;border-bottom:1px solid var(--border-color);font-weight:700;white-space:nowrap}thead{position:relative;z-index:10}td{padding:14px 10px;font-size:13px;vertical-align:middle;overflow:hidden}tr.main-row{cursor:pointer;transition:background .2s ease;border-bottom:1px solid var(--border-color)}tr.main-row:hover{background:var(--bg-card-hover)}tr.main-row.expanded{background:rgba(20,184,166,.04);border-bottom:none}tr.log-row{display:none;background:var(--bg-subrow);border-bottom:1px dashed rgba(255,255,255,.06);font-size:11px}tr.log-row td{padding:6px 10px}tr.log-row.visible{display:table-row}tr.log-row:last-child{border-bottom:1px solid var(--border-color)}.chevron-icon{display:inline-block;transition:transform .25s ease;font-size:12px;color:var(--text-secondary);margin-right:4px;flex-shrink:0}.expanded .chevron-icon{transform:rotate(90deg)}.asset-cell{display:flex;align-items:center;gap:8px;overflow:hidden}.asset-icon-wrapper{position:relative;display:inline-block;flex-shrink:0}.asset-icon{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:9px;color:#fff;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,.3);object-fit:cover;background-color:#21262d;background-size:cover;background-position:center}.status-dot{position:absolute;bottom:1px;right:-1px;width:8px;height:8px;border-radius:50%;border:1.5px solid var(--bg-card)}.status-dot.ongoing{background-color:var(--status-ongoing);box-shadow:0 0 4px var(--status-ongoing)}.status-dot.close{background-color:var(--status-close)}
-.val-primary{font-size:12px;font-weight:700;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.val-secondary{font-size:11px;padding-top:2px;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.full-log-text{display:inline}.short-log-text{display:none}#det-msg{display:none;padding:12px;margin-bottom:16px;background:rgba(255,105,180,.15);border-radius:12px;color:var(--pink-primary);font-size:13px}
+.val-primary{font-size:12.5px;font-weight:700;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.val-secondary{font-size:11.5px;padding-top:2px;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.full-log-text{display:inline}.short-log-text{display:none}#det-msg{display:none;padding:12px;margin-bottom:16px;background:rgba(255,105,180,.15);border-radius:12px;color:var(--pink-primary);font-size:13px}
 @media (max-width:480px){.portfolio-card,.hero-card-port{padding-left:5px;padding-right:2px}
 .table-wrapper{margin:0 0-6px -6px;padding-right:0}
 col.col-asset{width:25%}
@@ -3655,7 +3655,7 @@ to{transform:rotate(360deg)}
           return;
       }
 
-      Object.assign(cashOverlay.style,{position:"fixed",top:"0",left:"0",width:"100%",height:"100%",backgroundColor:"rgba(0, 0, 0, 0.75)",backdropFilter:"blur(4px)",webkitBackdropFilter:"blur(4px)",zIndex:"999",display:"none",alignItems:"flex-start",justifyContent:"center",paddingTop:"150px",opacity:"1",overflowX:"hidden"});
+      Object.assign(cashOverlay.style,{position:"fixed",top:"0",left:"0",width:"100%",height:"100%",backgroundColor:"rgba(0, 0, 0, 0.75)",backdropFilter:"blur(4px)",webkitBackdropFilter:"blur(4px)",zIndex:"999",display:"none",alignItems:"flex-start",justifyContent:"center",paddingTop:"30px",opacity:"1",overflowX:"hidden"});
 
       // 1. Click outside overlay to close modal
       cashOverlay.addEventListener("click", function(e) {
@@ -6867,7 +6867,7 @@ function renderActiveChartCards(portfolioGroups) {
             cell.innerHTML = `
               ${todayIndicator}
               <span style="font-size:11px;line-height:1.1;color:${primaryTextColor};font-weight:${isToday ? '700' : '600'};">${day}</span>
-              <span style="font-size:11px;line-height:1.1;color:${valueTextColor};margin-top:1px;font-weight:600;">${hasData ? formatVndShort(amount) : '+0.0M'}</span>
+              <span style="font-size:13px;line-height:1.1;color:${valueTextColor};margin-top:1px;font-weight:600;">${hasData ? formatVndShort(amount) : '+0.0M'}</span>
             `;
 
             cell.onclick=()=>{selectedDateStr=dateStr;const dateTitle=document.getElementById("pnl-input-date-title");dateTitle&&(dateTitle.innerText=`Add P/L for ${dateStr}`);const currentSymbol=hasData&&entryData.symbol?entryData.symbol:"XAUUSD",currentVol=hasData&&entryData.volume?entryData.volume:"0.05",amtInput=document.getElementById("pnl-amount-input");amtInput&&(amtInput.value=hasData?formatAmountValue(amount):"");const symInput=document.getElementById("pnl-symbol-input");symInput&&(symInput.value=currentSymbol),updateSymbolIcon(currentSymbol);const volInput=document.getElementById("pnl-vol-input");volInput&&(volInput.value=currentVol);const entryInput=document.getElementById("pnl-entry-price-input");entryInput&&(entryInput.value=hasData&&entryData.entryPrice?formatAmountValue(entryData.entryPrice):"");const exitInput=document.getElementById("pnl-exit-price-input");exitInput&&(exitInput.value=hasData&&entryData.exitPrice?formatAmountValue(entryData.exitPrice):""),setPnLAction(hasData&&entryData.action?entryData.action:"BUY");const inputDlg=document.getElementById("pnl-input-dialog");inputDlg&&(inputDlg.style.display="flex")};
@@ -6890,7 +6890,7 @@ function renderActiveChartCards(portfolioGroups) {
               totalCell.style.cssText = `height:42px;background:${totalBg};border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:0px solid #334155;`;
               totalCell.innerHTML = `
                 <span style="font-size:11px;line-height:1.1;color:${isTotLemonBg ? '#0f172a' : '#94a3b8'};font-weight:600;">∑</span>
-                <span style="font-size:12px;line-height:1.1;color:${totalValColor};margin-top:1px;font-weight:600;">${weekHasData ? formatVndShort(weekSum) : '+0.0M'}</span>
+                <span style="font-size:15px;line-height:1.1;color:${totalValColor};margin-top:1px;font-weight:600;">${weekHasData ? formatVndShort(weekSum) : '+0.0M'}</span>
               `;
               grid.appendChild(totalCell);
 
@@ -6910,8 +6910,8 @@ function renderActiveChartCards(portfolioGroups) {
             const totalBg = getPnlBgColor(weekSum, weekHasData);
             totalCell.style.cssText = `height:40px;background:${totalBg};border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:0px solid #334155;`;
             totalCell.innerHTML = `
-              <span style="font-size:11px;line-height:1.1;color:#94a3b8;font-weight:600;">∑</span>
-              <span style="font-size:12px;line-height:1.1;color:${weekHasData ? (isTotNeg ? '#ec4899' : '#2dd4bf') : '#475569'};margin-top:1px;font-weight:600;">${weekHasData ? formatVndShort(weekSum) : '+0.0M'}</span>
+              <span style="font-size:12px;line-height:1.1;color:#94a3b8;font-weight:600;">∑</span>
+              <span style="font-size:15px;line-height:1.1;color:${weekHasData ? (isTotNeg ? '#ec4899' : '#2dd4bf') : '#475569'};margin-top:1px;font-weight:600;">${weekHasData ? formatVndShort(weekSum) : '+0.0M'}</span>
             `;
             grid.appendChild(totalCell);
           }
@@ -7055,7 +7055,7 @@ function renderActiveChartCards(portfolioGroups) {
             cell.onmouseout = () => cell.style.background = hasData ? isNegative ? "#2d1622" : "#042f2e" : "#1a1e29";
             cell.innerHTML = `
               <span style="font-size:14px;color:#f8f9fa;font-weight:600;">${y}</span>
-              <span style="font-size:15px;color:${hasData?isNegative?"#ec4899":"#2dd4bf":"#475569"};margin-top:4px;font-weight:600;">${hasData?formatVndShort(yearlyTotal):"+0.0M"}</span>
+              <span style="font-size:18px;color:${hasData?isNegative?"#ec4899":"#2dd4bf":"#475569"};margin-top:4px;font-weight:600;">${hasData?formatVndShort(yearlyTotal):"+0.0M"}</span>
             `;
             cell.onclick = () => { currentNavDate.setFullYear(y); setView("monthly"); };
             grid.appendChild(cell);
