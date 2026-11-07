@@ -177,7 +177,18 @@ html.light-mode .theme-menu-item.active { color: var(--accent-teal); }
 html.light-mode .reload { background: #e8e8ec; color: #6b7280; }
 html.light-mode .reload:hover { background: #dcdce0; color: #1a1a1a; }
 
-/* header */
+/* ============================================================
+   GLOBAL GUARD
+   Chặn scroll ngang - nguyên nhân làm cả panel detail
+   bị đẩy lệch sang trái khi scroll xuống cuối
+   ============================================================ */
+html, body {
+  overflow-x: hidden;
+}
+ 
+/* ============================================================
+   HEADER
+   ============================================================ */
 .topbar{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:16px;}
 .title-block h1{font-family:Sacramento;font-size:1.8em; margin:0; letter-spacing:-.01em;}
 .title-block p{margin:-4px 0 0; color:var(--fg-dim); font-size:.8rem;}
@@ -186,23 +197,24 @@ html.light-mode .reload:hover { background: #dcdce0; color: #1a1a1a; }
 .status-dot.ok{background:var(--highlight);}
 .status-dot.err{background:#e8615f;}
 .status-dot.loading{background:var(--accent); animation:pulse 1s infinite ease-in-out;}
-
+ 
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+ 
 .reload {
   font-family: 'DM Sans', sans-serif;
-  background: var(--bg-elev); 
-  color: var(--fg-dim); 
+  background: var(--bg-elev);
+  color: var(--fg-dim);
   width: 30px;
   height: 30px;
-  border-radius: 50%; 
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0; 
-  font-size: 14px; 
-  cursor: pointer; 
-  box-shadow: var(--shadow); 
-  border: none; 
+  padding: 0;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  border: none;
   transition: all 0.2s ease-in-out;
   flex-shrink: 0;
 }
@@ -210,26 +222,10 @@ html.light-mode .reload:hover { background: #dcdce0; color: #1a1a1a; }
   color: var(--fg);
   background: var(--bg-elev-hover, rgba(255, 255, 255, 0.1));
 }
-/* Style cho nút addTravelBtn khi chuyển sang dạng floating button ở góc dưới bên phải */
-#panel-detail.active ~ #addTravelBtn,
-.panel#panel-detail[style*="display: block"] ~ #addTravelBtn,
-#panel-detail:not([style*="display: none"]) ~ #addTravelBtn {
-  position: fixed !important;
-  bottom: 30px !important;
-  right: 30px !important;
-  width: 56px !important;
-  height: 56px !important;
-  border-radius: 50% !important;
-  background: #f1f5f9 !important;
-  color: #0f172a !important;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
-  z-index: 9999 !important;
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Hoặc nếu bạn quản lý việc ẩn/hiện bằng JS khi mở trip, có thể thêm class .fab-mode cho nút addTravelBtn */
+ 
+/* ============================================================
+   FLOATING ACTION BUTTON
+   ============================================================ */
 .fab-mode {
   position: fixed !important;
   bottom: 30px !important;
@@ -245,7 +241,7 @@ html.light-mode .reload:hover { background: #dcdce0; color: #1a1a1a; }
   align-items: center;
   justify-content: center;
 }
-/* Style nút nổi (FAB) trong suốt, kích thước lớn và hiện ₫ại */
+ 
 .reload.fab-mode {
   position: fixed !important;
   bottom: 32px !important;
@@ -253,7 +249,7 @@ html.light-mode .reload:hover { background: #dcdce0; color: #1a1a1a; }
   width: 66px !important;
   height: 66px !important;
   border-radius: 50% !important;
-  background: rgba(255, 255, 255, 0.05) !important; /* Hiệu ứng trong suốt sáng nổi bật trên nền tối */
+  background: rgba(255, 255, 255, 0.05) !important;
   backdrop-filter: blur(16px) !important;
   -webkit-backdrop-filter: blur(16px) !important;
   color: #ffffff !important;
@@ -264,62 +260,63 @@ html.light-mode .reload:hover { background: #dcdce0; color: #1a1a1a; }
   justify-content: center;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
-
+ 
 .reload.fab-mode:hover {
   transform: scale(1.08) translateY(-2px);
-  background: rgba(255, 255, 255, 0.25) !important; /* Sáng hơn chút khi hover */
+  background: rgba(255, 255, 255, 0.25) !important;
   border-color: rgba(255, 255, 255, 0.5) !important;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7) !important;
 }
-
-/* Kích thước icon */
-.reload .bi {
-  font-size: 18px !important; 
-}
-.reload.fab-mode .bi {
-  font-size: 32px !important;
-  opacity: 0.95 !important;
-}
-
-/* Add this to your CSS file */
+ 
+.reload .bi { font-size: 18px !important; }
+.reload.fab-mode .bi { font-size: 32px !important; opacity: 0.95 !important; }
+ 
 #overviewBtn.active {
-    background-color: #1e293b !important;
-    color: #f8fafc !important;
-    border-color: #475569 !important;
-    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15), 0 0 0 2px rgba(71, 85, 105, 0.2) !important;
-    transform: translateY(-1px);
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+  border-color: #475569 !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15), 0 0 0 2px rgba(71, 85, 105, 0.2) !important;
+  transform: translateY(-1px);
 }
-/* Tùy chỉnh thanh cuộn mỏng ₫ẹp cho dropdown category */
+ 
+/* ============================================================
+   SCROLLBAR DROPDOWN
+   ============================================================ */
 #addCategoryDropdown::-webkit-scrollbar,
-#editCategoryDropdown::-webkit-scrollbar {
-  width: 5px;
-}
-
+#editCategoryDropdown::-webkit-scrollbar { width: 5px; }
+ 
 #addCategoryDropdown::-webkit-scrollbar-track,
-#editCategoryDropdown::-webkit-scrollbar-track {
-  background: transparent;
-}
-
+#editCategoryDropdown::-webkit-scrollbar-track { background: transparent; }
+ 
 #addCategoryDropdown::-webkit-scrollbar-thumb,
 #editCategoryDropdown::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.25);
   border-radius: 10px;
 }
-
+ 
 #addCategoryDropdown::-webkit-scrollbar-thumb:hover,
 #editCategoryDropdown::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.45);
 }
+ 
+/* ============================================================
+   ANIMATIONS / PANELS
+   ============================================================ */
 @keyframes fadeInUp{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
 @keyframes fadeIn{from{opacity:0;} to{opacity:1;}}
+@keyframes growUp{from{transform:scaleY(0); opacity:0;} to{transform:scaleY(1); opacity:1;}}
+@keyframes growRight{from{transform:scaleX(0);} to{transform:scaleX(1);}}
+ 
 @media (prefers-reduced-motion: reduce){
   .trip-card, .act-card, .panel.active{animation:none !important;}
 }
-
+ 
 .panel{display:none;}
 .panel.active{display:block; animation:fadeIn .3s ease;}
-
-/* year-over-year spend chart (replaces old Trips/Nights/Total tiles) */
+ 
+/* ============================================================
+   YEAR CHART
+   ============================================================ */
 .year-chart{background:var(--card); border-radius:16px; padding:16px 14px; margin-bottom:22px; box-shadow:var(--shadow);}
 .year-chart-head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px;}
 .yc-title{font-size:.7rem; text-transform:uppercase; letter-spacing:.07em; color:var(--fg-faint); font-weight:700;}
@@ -331,19 +328,19 @@ html.light-mode .reload:hover { background: #dcdce0; color: #1a1a1a; }
 .year-bar-fill{width:100%; background:linear-gradient(180deg,var(--accent),var(--highlight)); border-radius:8px 8px 2px 2px; transform-origin:bottom; animation:growUp .6s cubic-bezier(.2,.8,.3,1) both;}
 .year-bar-col.current .year-bar-fill{background:linear-gradient(180deg,var(--money),var(--accent));}
 .year-bar-label{font-size:.7rem; color:var(--fg-faint); font-weight:700;}
-@keyframes growUp{from{transform:scaleY(0); opacity:0;} to{transform:scaleY(1); opacity:1;}}
-@keyframes growRight{from{transform:scaleX(0);} to{transform:scaleX(1);}}
-
-/* year groups */
+ 
+/* ============================================================
+   YEAR GROUPS / TRIP CARDS
+   ============================================================ */
 .year-head{display:flex; align-items:center; gap:8px; margin:22px 0 12px; padding-top:4px; flex-wrap:wrap;}
 .year-head h2{font-size:1.4rem; margin:0; margin-right:2px;}
 .chip-trips, .chip-total{font-size:.7rem; font-weight:700; padding:4px 10px; border-radius:20px;}
 .chip-trips{background:#212226; color:#f1f2f6;}
 .chip-total{background:#212226; color:#e5e7eb; margin-left:auto;}
-
+ 
 .trip-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
 @media (max-width:480px){.trip-grid{grid-template-columns:1fr 1fr; gap:8px;}}
-
+ 
 .trip-card{background:var(--card); border-radius:14px; overflow:hidden; cursor:pointer; transition:transform .12s; box-shadow:var(--shadow); animation:fadeInUp .4s ease both;}
 .trip-card:hover{transform:translateY(-2px) scale(1.015);}
 .trip-cover{height:64px; background:linear-gradient(135deg,#2a2410,var(--accent)); background-size:cover; background-position:center; position:relative;}
@@ -356,39 +353,50 @@ html.light-mode .reload:hover { background: #dcdce0; color: #1a1a1a; }
 .trip-meta{display:flex; justify-content:space-between; align-items:center;}
 .nights-chip{font-size:.66rem; background:#3a2d1d; color:#f2a341; padding:3px 6px; border-radius:20px; font-weight:700;}
 .trip-meta .spend{font-size:.8rem; font-weight:700; color:var(--highlight);}
-
-/* ---- detail (continuous itinerary) ---- */
-.det-topbar{display:flex; align-items:center; gap:1px; margin-bottom:14px;}
-.back-btn{display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:50%; background:var(--bg-elev); color:var(--fg); cursor:pointer; flex-shrink:0; font-size:1.5rem; box-shadow:var(--shadow); border:none;}
-.back-btn:hover{color:var(--accent);}
-.det-total{text-align:right; flex-shrink:0;}
-.det-total .amt{font-weight:700; font-size:.85rem; color:var(--highlight);}
-.det-total .lbl{font-size:.62rem; color:var(--fg-faint); text-transform:uppercase; letter-spacing:.05em;}
-
-.stack-wrap{margin-bottom:18px}.stack-bar{display:flex;width:100%;height:24px;border-radius:14px;overflow:visible;background:var(--bg-elev);padding:2px;position:relative}.stack-seg{height:24px;border-radius:12px;transform-origin:left;animation:growRight .6s ease both;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;font-family:"JetBrains Mono",monospace;color:#12131a;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;padding-inline:6px;position:relative;margin-right:-12px;mix-blend-mode:lighten;box-shadow:0 0 10px rgba(0,0,0,.1)}
-.stack-seg{height:100%; border-radius:12px; transform-origin:left; animation:growRight .6s ease both; display:flex; align-items:center; justify-content:center; font-size:.7rem; font-weight:700; font-family:'JetBrains Mono',monospace; color:#12131a; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; padding-inline:4px;}
+ 
+/* ============================================================
+   STACK BAR
+   ============================================================ */
+.stack-wrap{margin-bottom:18px;}
+.stack-bar{display:flex; width:100%; height:24px; border-radius:14px; overflow:visible; background:var(--bg-elev); padding:2px; position:relative;}
+.stack-seg{
+  height:100%; border-radius:12px; transform-origin:left; animation:growRight .6s ease both;
+  display:flex; align-items:center; justify-content:center; font-size:.7rem; font-weight:700;
+  font-family:'JetBrains Mono',monospace; color:#12131a; overflow:hidden; white-space:nowrap;
+  text-overflow:ellipsis; padding-inline:6px; position:relative; margin-right:-12px;
+  mix-blend-mode:lighten; box-shadow:0 0 10px rgba(0,0,0,.1);
+}
 .stack-legend{display:flex; flex-wrap:wrap; gap:7px; margin-top:10px;}
 .stack-legend-item{display:flex; align-items:center; gap:5px; background:var(--bg-elev); border-radius:20px; padding:5px 10px; font-size:.7rem; color:var(--fg-dim); transition:transform .12s, box-shadow .12s; cursor:default;}
 .stack-legend-item:hover{transform:translateY(-1px); box-shadow:var(--shadowf);}
 .stack-legend-item .dot{width:7px;height:7px;border-radius:50%; flex-shrink:0;}
 .stack-legend-item img{width:14px;height:14px;border-radius:4px;object-fit:cover;}
 .stack-legend-item b{color:var(--fg); font-family:'JetBrains Mono',monospace;}
-
-.det-sticky-container {
+ 
+/* ============================================================
+   DETAIL PANEL - STICKY HEADER
+   ============================================================ */
+#panel-detail {
   position: relative;
+  overflow-x: hidden;
+  padding-bottom: 110px; /* chừa chỗ cho FAB khỏi che item cuối */
+}
+ 
+.det-sticky-container {
+  position: sticky;   /* trước đây là relative nên không thực sự dính */
   top: 0;
   background-size: cover !important;
   background-position: center !important;
   z-index: 999;
   margin: 0;
   padding: 16px 14px 14px 14px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
-  will-change: transform;
-  border-radius: 16px !important;
+  border-radius: 16px;
   overflow: hidden;
+  box-sizing: border-box;
+  max-width: 100%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
 }
-
-/* Lớp phủ gradient tối nhẹ nhàng */
+ 
 .det-sticky-container::before {
   content: '';
   position: absolute;
@@ -397,16 +405,22 @@ html.light-mode .reload:hover { background: #dcdce0; color: #1a1a1a; }
   z-index: 1;
   pointer-events: none;
 }
-
+ 
 .det-sticky-container > * {
   position: relative;
   z-index: 2;
 }
-
-.det-sticky-container.js-pinned { 
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.85); 
+ 
+.det-sticky-container.js-pinned {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.85);
 }
-
+ 
+.det-sticky-container.js-pinned::before {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.55) 0%, rgba(15, 23, 42, 0.45) 100%);
+}
+ 
 .det-topbar {
   display: flex;
   align-items: center;
@@ -414,8 +428,7 @@ html.light-mode .reload:hover { background: #dcdce0; color: #1a1a1a; }
   margin-bottom: 14px;
   gap: 10px;
 }
-
-/* Nút Back hình tròn */
+ 
 .det-topbar .back-btn {
   width: 30px;
   height: 30px;
@@ -429,29 +442,28 @@ html.light-mode .reload:hover { background: #dcdce0; color: #1a1a1a; }
   cursor: pointer;
   padding: 0 !important;
   flex-shrink: 0;
+  border: none;
   transition: background 0.2s;
 }
 .det-topbar .back-btn:hover {
   background: rgba(255, 255, 255, 0.25) !important;
 }
-
-/* 1. Tên trip: Cho phép rớt hàng tự nhiên, không bị cắt cụt */
+ 
 .det-title {
   flex: 1;
   min-width: 0;
   padding: 0 8px;
 }
 .det-title h2 {
-  font-size: 1rem !important; /* Kích thước chuẩn, cho phép xuống dòng khi dài */
+  font-size: 1rem !important;
   font-weight: 700;
   color: #f8fafc;
   margin: 0;
   line-height: 1.3;
-  white-space: normal !important; /* Cho phép rớt hàng */
+  white-space: normal !important;
   word-break: break-word;
 }
-
-/* Phần Tổng chi phí (Total spend) */
+ 
 .det-total {
   flex-shrink: 0;
   text-align: right;
@@ -470,13 +482,17 @@ html.light-mode .reload:hover { background: #dcdce0; color: #1a1a1a; }
   text-transform: uppercase;
   margin-top: 1px;
 }
-
+ 
+/* ============================================================
+   DAY STRIP
+   ============================================================ */
 .day-strip-wrap {
   width: 100%;
-  overflow: visible;
+  max-width: 100%;
+  overflow: hidden;   /* trước đây là visible -> pill tràn ra ngoài gây scroll ngang */
   position: relative;
 }
-
+ 
 .day-strip {
   display: flex;
   gap: 8px;
@@ -487,12 +503,9 @@ html.light-mode .reload:hover { background: #dcdce0; color: #1a1a1a; }
   padding: 4px 2px;
   width: 100%;
 }
-
-.day-strip::-webkit-scrollbar {
-  display: none;
-}
-
-/* 2. Các cell days: Hiệu ứng transparent (kính mờ) cho cả trạng thái thường lẫn active */
+ 
+.day-strip::-webkit-scrollbar { display: none; }
+ 
 .day-pill {
   flex: 0 0 52px;
   min-width: 52px;
@@ -501,7 +514,7 @@ html.light-mode .reload:hover { background: #dcdce0; color: #1a1a1a; }
   text-align: center;
   padding: 8px 4px;
   border-radius: 12px;
-  background: rgba(15, 23, 42, 0.45); /* Nền kính mờ trong suốt */
+  background: rgba(15, 23, 42, 0.45);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border: 1px solid rgba(255, 255, 255, 0.15);
@@ -515,12 +528,12 @@ html.light-mode .reload:hover { background: #dcdce0; color: #1a1a1a; }
   box-sizing: border-box;
   flex-shrink: 0;
 }
-
+ 
 .day-pill:hover {
   transform: translateY(-2px);
   background: rgba(255, 255, 255, 0.18);
 }
-
+ 
 .day-pill .dow {
   font-size: 0.65rem;
   color: #94a3b8;
@@ -529,7 +542,7 @@ html.light-mode .reload:hover { background: #dcdce0; color: #1a1a1a; }
   font-weight: 700;
   line-height: 1.1;
 }
-
+ 
 .day-pill .dnum {
   font-size: 1.05rem;
   font-weight: 800;
@@ -537,32 +550,35 @@ html.light-mode .reload:hover { background: #dcdce0; color: #1a1a1a; }
   color: #f8fafc;
   line-height: 1.2;
 }
-
-/* Trạng thái Active: Vẫn giữ hiệu ứng transparent kính mờ nhưng phối màu accent nổi bật */
+ 
 .day-pill.active {
-  background: rgba(56, 189, 248, 0.35) !important; /* Transparent với tone màu accent (ví dụ xanh nhạt) */
+  background: rgba(56, 189, 248, 0.35) !important;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-color: rgba(56, 189, 248, 0.8) !important;
 }
-
-.day-pill.active .dow {
-  color: #38bdf8 !important;
+.day-pill.active .dow { color: #38bdf8 !important; }
+.day-pill.active .dnum { color: #ffffff !important; }
+ 
+/* ============================================================
+   DAY SECTIONS
+   ============================================================ */
+.day-section {
+  scroll-margin-top: 170px; /* phải lớn hơn chiều cao header (~150px) */
+  margin-bottom: 26px;
 }
-
-.day-pill.active .dnum {
-  color: #ffffff !important;
-}
-/* day sections */
-.day-section{scroll-margin-top:64px; margin-bottom:26px;}
+ 
 .day-banner{margin-bottom:12px;}
 .day-banner .full{font-family:Corinthia;color:var(--accent); font-weight:700; font-size:1.8rem;}
 .day-banner .sub-row{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:8px;}
 .loc-badge{display:inline-flex; align-items:center; gap:5px; background:#3a2d1d; color:#f2a341; font-size:.7rem; font-weight:700; padding:4px 10px; border-radius:20px;}
-.loc-badge img{width:12px; height:12px; display:block; }
+.loc-badge img{width:12px; height:12px; display:block;}
 .day-banner .sub{color:var(--fg-dim); font-size:.76rem;}
 .day-banner .spent-chip{background:#212226; color:#e5e7eb; font-size:.7rem; font-weight:700; padding:4px 10px; border-radius:20px;}
-
+ 
+/* ============================================================
+   PERIODS / TIMELINE
+   ============================================================ */
 .period{margin-bottom:14px;}
 .period:last-child{margin-bottom:0;}
 .period-head{display:flex; align-items:center; gap:8px; margin-bottom:8px;}
@@ -571,15 +587,15 @@ html.light-mode .reload:hover { background: #dcdce0; color: #1a1a1a; }
 .period-dot.afternoon{background:var(--afternoon);}
 .period-dot.evening{background:var(--evening);}
 .period-label{font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--fg-dim);}
+ 
 .period-items{
-  display:flex; 
-  flex-direction:column; 
-  gap:8px; 
-  padding-left:18px; 
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  padding-left:18px;
   position: relative;
 }
-
-/* The vertical timeline bar */
+ 
 .period-items::before {
   content: '';
   position: absolute;
@@ -590,6 +606,7 @@ html.light-mode .reload:hover { background: #dcdce0; color: #1a1a1a; }
   background: #a1a1aa;
   opacity: 0.4;
 }
+
 .act-card{display:flex; gap:10px; align-items:flex-start; background:var(--card); border-radius:12px; padding:10px 12px; box-shadow:var(--shadow); animation:fadeInUp .35s ease both; transition:transform .12s;}
 .act-card.centered{align-items:center;}
 .act-card:hover{transform:translateX(2px);}
@@ -736,7 +753,7 @@ html.light-mode .reload:hover { background: #dcdce0; color: #1a1a1a; }
 @media (max-width:480px){.tx-detail-row{display:flex !important;flex-direction:row;justify-content:space-between;font-size:2.7vw;padding:0.8vw}
 .tx-detail-row .td-desc{flex:1;padding-left:10vw}
 .tx-detail-row .cat-ico,.tx-detail-row .cat-ico-fb{width:5vw !important;height:5vw !important;flex-shrink:0}
-.tx-detail-row .td-amt{width:auto;padding-right:9vw;flex-shrink:0}
+.tx-detail-row .td-amt{width:auto;padding-right:vw;flex-shrink:0}
 .tx-detail-row .td-date{width:6vw;text-align:right;flex-shrink:0}
 .tx-detail-row .td-empty{display:none !important}}
 .sub-row.visible-tx .chevron{transform:rotate(90deg)}
@@ -1298,7 +1315,7 @@ col.col-costmarket{width:19%}
 .metric-card{padding:8px}.metric-value{font-size:14px}.interactive-hint{font-size:10px;padding:4px 8px}.full-log-text{display:none}.short-log-text{display:inline}}
 @media (min-width:481px){.hero-card-port,.portfolio-card{padding:2px}td,th{padding:10px 6px}.metrics-grid{grid-template-columns:repeat(2,1fr)}col.col-asset{width:26%}col.col-duration{width:16%}col.col-volprice{width:19%}col.col-pnl{width:20%}col.col-costmarket{width:19%}}.stat-cycles-row{display:flex;align-items:center;gap:8px}.stat-icon-stack{display:flex;align-items:center}.stat-stack-icon{width:20px;height:20px;border-radius:50%;background-size:cover;background-position:center;background-color:#21262d;border:2px solid var(--bg-primary, #0d1117);margin-left:-8px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:rgba(255,255,255,.8);flex-shrink:0}.stat-stack-icon:first-child{margin-left:0}.stat-stack-icon-more{background-color:#2a2e39;color:rgba(255,255,255,.7);font-size:8px}.stat-cycles-num{font-weight:700;font-size:14px}.th-filter-wrap{display:flex;align-items:center;gap:4px;cursor:pointer;position:relative;user-select:none}.th-filter-icon{font-size:10px;color:var(--text-secondary);opacity:.6;transition:opacity .2s,color .2s}.th-filter-wrap:hover .th-filter-icon{opacity:1}.th-filter-icon.active-filter{opacity:1;color:var(--teal-primary)}.col-menu{display:none;position:fixed;background:var(--bg-card, #161b22);border:1px solid var(--border-color);border-radius:10px;min-width:130px;box-shadow:0 8px 24px rgba(0,0,0,.5);z-index:10000;overflow:hidden;text-transform:none;letter-spacing:normal}.col-menu.open{display:block}.col-menu-item{padding:9px 12px;gap:8px;display:flex;align-items:center;font-size:12px;font-weight:500;color:var(--text-primary);cursor:pointer;white-space:nowrap;transition:background .15s}.col-menu-icon{width:18px;height:18px;border-radius:4px;object-fit:cover;flex-shrink:0}.col-menu-item:hover{background:var(--bg-card-hover, rgba(255,255,255,0.06))}.col-menu-item.selected{color:var(--teal-primary);font-weight:700}.col-menu-date-range{width:260px;padding:12px}.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.cal-nav-btn{width:26px;height:26px;border-radius:50%;border:0;background:rgba(255,255,255,.05);color:var(--text-secondary);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;transition:background .15s}.cal-nav-btn:hover{background:rgba(255,255,255,.1);color:var(--text-primary)}.col-menu-date-single{width:260px;padding:12px;box-sizing:border-box}.cal-month-label{font-size:13px;font-weight:700;color:var(--text-primary);min-width:140px;text-align:center;font-family:"DM Sans",sans-serif}.cal-range-display{font-size:11px;color:var(--teal-primary);text-align:center;margin-bottom:10px;font-weight:600;min-height:14px}.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:4px}.cal-weekdays span{text-align:center;font-size:12px;color:var(--text-secondary);font-weight:700;font-family:"DM Sans",sans-serif}.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}.cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--text-primary);cursor:pointer;border-radius:6px;position:relative;transition:background .1s;font-family:"DM Sans",sans-serif;font-weight:500}.cal-day.other-month{color:var(--text-secondary);opacity:.3}.cal-day:hover{background:rgba(255,255,255,.08)}.cal-day.in-range{background:rgba(20,184,166,.15);border-radius:0}.cal-day.range-start{background:var(--teal-primary);color:#fff;font-weight:700;border-radius:6px 0 0 6px}.cal-day.range-end{background:var(--teal-primary);color:#fff;font-weight:700;border-radius:0 6px 6px 0}.cal-day.range-start.range-end{border-radius:6px}.cal-day.today::after{content:"";position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:3px;height:3px;border-radius:50%;background:var(--teal-primary)}.cal-day.range-start.today::after,.cal-day.range-end.today::after{background:#fff}.cal-quick-row{display:flex;gap:6px;margin:10px 0}.cal-quick-btn,.date-range-btn{font-family:Lexend!important}.cal-quick-btn{flex:1;padding:6px 0;font-size:11px;font-weight:600;color:var(--text-secondary);background:rgba(255,255,255,.04);border:1px solid var(--border-color);border-radius:8px;cursor:pointer;transition:all .15s}.cal-quick-btn:hover{background:rgba(255,255,255,.08);color:var(--text-primary)}.date-range-actions{display:flex;gap:8px;margin-top:4px}.date-range-btn{flex:1;padding:8px 0;border-radius:8px;border:0;font-size:12px;font-weight:700;cursor:pointer}.date-range-clear{background:rgba(255,255,255,.06);color:var(--text-secondary)}.date-range-clear:hover{background:rgba(255,255,255,.1)}.date-range-apply{background:var(--teal-primary);color:#fff}.date-range-apply:hover{opacity:.9}.col-menu-divider{height:1px;background:var(--border-color);margin:8px 0}
 
-#watchlist-modal.tv-modal-overlay{position:fixed!important;top:0!important;left:0!important;right:0!important;bottom:0!important;width:100vw!important;height:100vh!important;background:rgba(15,23,42,.85)!important;backdrop-filter:blur(4px)!important;z-index:2147483647!important;display:none;align-items:center!important;justify-content:center!important;margin:0!important;padding:20px!important;box-sizing:border-box!important}.tv-modal-content{border-radius:12px!important;width:100%!important;max-width:480px!important;max-height:80vh!important;display:flex!important;flex-direction:column!important;box-shadow:0 25px 50px -12px rgba(0,0,0,.7)!important;overflow:hidden!important;margin:auto!important}.tv-modal-header{padding:14px 16px;background:#121212;display:flex;justify-content:space-between;align-items:center;opacity:.6}.tv-close-btn{background:0 0;border:0;color:#94a3b8;font-size:20px;cursor:pointer}.tv-close-btn:hover{color:#fff}.tv-modal-body{overflow-y:auto;display:flex;flex-direction:column}.tv-item-row{display:flex;align-items:center;justify-content:space-between;padding:10px 5px 10px 10px;border:0!important;border-bottom:1px solid rgba(255,255,255,.05)!important;border-radius:0!important;cursor:pointer;transition:background .15s ease;opacity:.85}.tv-item-row:last-child{border-bottom:none!important}.tv-item-row:hover{background:rgba(255,255,255,.04)!important}.tv-item-left{display:flex;align-items:center;gap:10px}.tv-item-icon{width:36px;height:36px;border-radius:50%;object-fit:cover;background:#334155}.tv-item-symbol-wrap{display:flex;flex-direction:column}.tv-symbol-title{font-weight:600;font-size:14px;color:#f8fafc;display:flex;align-items:center;gap:6px;line-height:1.2}.tv-symbol-badge{font-size:8px;background:rgba(255,255,255,.08);color:#94a3b8;padding:1px 3px;border-radius:3px;font-weight:500}.tv-symbol-desc{font-size:12px;color:#64748b;max-width:180px;white-space:nowrap;overflow:hidden;padding-top:3px;text-overflow:ellipsis;line-height:1.3}.tv-item-right{text-align:right;display:flex;flex-direction:column;padding-right:5px;align-items:flex-end;min-width:30%}.tv-item-price{font-weight:600!important;font-size:13px!important;font-family:IBM Plex Mono!important;color:#f8fafc;line-height:1.2}.tv-item-changes{font-size:12.5px!important;font-weight:500!important;font-family:IBM Plex Mono!important;display:flex;gap:6px;justify-content:flex-end;line-height:1.3}.tv-live-dot-wrap{display:inline-flex;align-items:center;gap:4px;background:rgba(45,212,191,.1);padding:1px 6px;border-radius:4px;border:1px solid rgba(45,212,191,.2);vertical-align:middle}.tv-live-text{font-size:8px;font-weight:700;color:#2dd4bf;letter-spacing:.5px;line-height:1}.tv-live-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-left:6px;vertical-align:middle}.tv-live-dot.active{background-color:#2dd4bf;box-shadow:0 0 8px #2dd4bf;animation:tv-pulse 1.5s infinite}.tv-live-dot.closed{background-color:#64748b;opacity:.5}@keyframes tv-pulse{0%{transform:scale(.95);opacity:.8}50%{transform:scale(1.25);opacity:1}to{transform:scale(.95);opacity:.8}}
+#watchlist-modal.tv-modal-overlay{position:fixed!important;top:0!important;left:0!important;right:0!important;bottom:0!important;width:100vw!important;height:100vh!important;background:rgba(15,23,42,.85)!important;backdrop-filter:blur(4px)!important;z-index:2147483647!important;display:none;align-items:center!important;justify-content:center!important;margin:0!important;padding:20px!important;box-sizing:border-box!important}.tv-modal-content{border-radius:12px!important;width:100%!important;max-width:480px!important;max-height:80vh!important;display:flex!important;flex-direction:column!important;box-shadow:0 25px 50px -12px rgba(0,0,0,.7)!important;overflow:hidden!important;margin:auto!important}.tv-modal-header{padding:14px 16px;background:#121212;display:flex;justify-content:space-between;align-items:center;opacity:.6}.tv-close-btn{background:0 0;border:0;color:#94a3b8;font-size:20px;cursor:pointer}.tv-close-btn:hover{color:#fff}.tv-modal-body{overflow-y:auto;display:flex;flex-direction:column}.tv-item-row{display:flex;align-items:center;justify-content:space-between;padding:10px 5px 10px 10px;border:0!important;border-bottom:1px solid rgba(255,255,255,.05)!important;border-radius:0!important;cursor:pointer;transition:background .15s ease;opacity:.85}.tv-item-row:last-child{border-bottom:none!important}.tv-item-row:hover{background:rgba(255,255,255,.04)!important}.tv-item-left{display:flex;align-items:center;gap:10px}.tv-item-icon{width:36px;height:36px;border-radius:50%;object-fit:cover;background:#334155}.tv-item-symbol-wrap{display:flex;flex-direction:column}.tv-symbol-title{font-weight:600;font-size:14px;color:#f8fafc;display:flex;align-items:center;gap:6px;line-height:1.2}.tv-symbol-badge{font-size:8px;background:rgba(255,255,255,.08);color:#94a3b8;padding:1px 3px;border-radius:3px;font-weight:500}.tv-symbol-desc{font-size:12px;color:#64748b;max-width:180px;white-space:nowrap;overflow:hidden;padding-top:3px;text-overflow:ellipsis;line-height:1.3}.tv-item-right{text-align:right;display:flex;flex-direction:column;padding-right:5px;align-items:flex-end;min-width:30%}.tv-item-price{font-weight:600!important;font-size:13.5px!important;font-family:IBM Plex Mono!important;color:#f8fafc;line-height:1.2}.tv-item-changes{font-size:13px!important;font-weight:500!important;font-family:IBM Plex Mono!important;display:flex;gap:6px;justify-content:flex-end;line-height:1.3}.tv-live-dot-wrap{display:inline-flex;align-items:center;gap:4px;background:rgba(45,212,191,.1);padding:1px 6px;border-radius:4px;border:1px solid rgba(45,212,191,.2);vertical-align:middle}.tv-live-text{font-size:8px;font-weight:700;color:#2dd4bf;letter-spacing:.5px;line-height:1}.tv-live-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-left:6px;vertical-align:middle}.tv-live-dot.active{background-color:#2dd4bf;box-shadow:0 0 8px #2dd4bf;animation:tv-pulse 1.5s infinite}.tv-live-dot.closed{background-color:#64748b;opacity:.5}@keyframes tv-pulse{0%{transform:scale(.95);opacity:.8}50%{transform:scale(1.25);opacity:1}to{transform:scale(.95);opacity:.8}}
 
 /*TOP CHART*/
 .card-top{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
@@ -1444,7 +1461,7 @@ to{transform:rotate(360deg)}
         <div class="firework-particle" style="--dx: 70px; --dy: 100px;"></div>
         <div class="firework-particle" style="--dx: 0px; --dy: -120px;"></div>
     </div>
-loader-logo-wrapper    <div class="">
+    <div class="loader-logo-wrapper">
         <div class="loader-logo" style="position: relative; z-index: 2;">
             <img src="https://github.com/tinsntp/investment/blob/main/banner/loading-guy.png?raw=true">
         </div>
@@ -1573,7 +1590,7 @@ loader-logo-wrapper    <div class="">
                             <span class="material-icons-round" style="font-size: 16px;">cloud</span>
                             <span>Subs</span>
                         </button>
-                        <button type="button" class="budget-subtab" onclick="switchBudgetTab(this, 'travel');if (window.innerWidth <= 400) this.parentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });">
+                        <button type="button" class="budget-subtab" onclick="switchBudgetTab(this, 'travel');if (window.innerWidth <= 480) this.parentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });">
                             <span class="material-icons-round" style="font-size: 16px;">flight_takeoff</span>
                             <span>Travel</span>
                         </button>                        
@@ -3626,7 +3643,7 @@ loader-logo-wrapper    <div class="">
     window.addEventListener("resize",function(){globalSubItems&&globalSubItems.length&&renderSubscriptions(globalSubItems)}),window.addEventListener("resize",function(){globalTxItems&&globalTxItems.length&&buildTxRow(globalTxItems)});
 
     /* ══ ADD RECORD (writes to the sheet via Apps Script Web App) ══ */
-    var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbylW9rWUDL6OkPqJhS4zIiK-tJgN_apQZGs-KuuX3Pv2cmQEe8q__BtAWve4pb8toqG/exec";
+    var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyf9VthS27FWsY9HyrQVJO6dJ-LMM8IrUktv6M4XnIorHN_eUEKtVdIjXiWoj2oPfVI/exec";
     var EXPENSE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzyQQ3gTY3beE1ZFtb0Ft_EELa3GtEbuvYTS0JUq9OOYkxQzxjaRcTRXYbWwVtMn7vERQ/exec";
 
     var addOverlay = document.getElementById("add-modal-overlay");
@@ -8039,7 +8056,7 @@ loader-logo-wrapper    <div class="">
     const TRAVEL_PROXY_URL = "https://api.allorigins.win/raw?url=" + encodeURIComponent(TRAVEL_CSV_URL);
 
     const PALETTE = ['#f2a341','#5b9cf2','#b184f2','#4fd8b0','#ff8fa3','#e2c14d','#7dd3fc','#f2789e','#9ae6b4','#c4b5fd'];
-
+ 
     let trips=[],dayObserver=null,stickyCleanup=null,LOCATION_MAP={},monthBackgroundMap={},monthStayMap={},monthTypeMap={};function parseCSV(text){const rows=[];let row=[],field="",inQuotes=!1;for(let i=0;i<text.length;i++){const c=text[i];inQuotes?'"'===c?'"'===text[i+1]?(field+='"',i++):inQuotes=!1:field+=c:'"'===c?inQuotes=!0:","===c?(row.push(field),field=""):"\n"===c?(row.push(field),rows.push(row),row=[],field=""):"\r"===c||(field+=c)}return(field.length||row.length)&&(row.push(field),rows.push(row)),monthBackgroundMap={},monthStayMap={},monthTypeMap={},rows.forEach(r=>{if(r[13]){const timeKey=r[13].trim().replace(/\s+/g," ");timeKey&&(r[14]&&r[14].trim()&&(monthStayMap[timeKey]=r[14].trim()),r[15]&&/^https?:\/\//i.test(r[15].trim())&&(monthBackgroundMap[timeKey]=r[15].trim()),r[16]&&r[16].trim()&&(monthTypeMap[timeKey]=r[16].trim()))}}),rows}function parseAmount(s){if(!s)return 0;if(!(s=s.trim()))return 0;const cleaned=s.replace(/,/g,""),n=parseFloat(cleaned);return isNaN(n)?0:n}function parseDate(s){if(!s)return null;const d=new Date(s.trim());return isNaN(d.getTime())?null:d}
     let EXCLUDE_CODES = new Set();
     const DEFAULT_ICON_URL = 'https://cdn-icons-png.flaticon.com/512/1706/1706227.png';
@@ -8049,7 +8066,7 @@ loader-logo-wrapper    <div class="">
       '🥤Drink':'🥤', '🥤 Drink':'🥤', '🛍 Shopping':'🛍️', '💆 Services':'💆','🏂 Shop & Fun':'https://cdn-icons-png.flaticon.com/512/1074/1074584.png',
       '🏂 Experience':'🏂', '🍓 Fruit & Plant 🪴':'🍓', '🪴Plant':'🪴','🚖 Transport':'https://cdn-icons-png.flaticon.com/512/1040/1040457.png'
     };
-
+ 
     function iconFor(cat){if(!cat)return"📍";const t=cat.trim();return CAT_ICON[t]||(t.match(/\p{Emoji}/u)?t.match(/\p{Emoji}/u)[0]:"📍")}function iconHTML(a){return`<img src="${a.icon&&/^https?:\/\//i.test(a.icon)?a.icon:iconFor(a.category)}" alt="" loading="lazy" onerror="this.src='${DEFAULT_ICON_URL}';">`}function catIconHTML(cat,acts){const hit=acts.find(a=>(a.category?a.category.trim():"Other")===cat&&a.icon&&/^https?:\/\//i.test(a.icon));return`<img src="${hit?hit.icon:iconFor(cat)}" alt="" onerror="this.src='${DEFAULT_ICON_URL}';">`}function isAirportCode(code){return/^[A-Z]{2,4}$/.test(code)}function getMonthYearKey(date){return`${date.toLocaleString("en-US",{month:"short"})} ${date.getFullYear()}`}function buildTripCover(acts,startDate){const myKey=getMonthYearKey(startDate);if(monthBackgroundMap[myKey]&&/^https?:\/\//i.test(monthBackgroundMap[myKey]))return monthBackgroundMap[myKey];const hotel=acts.find(a=>a.category&&/hotel|accommodation/i.test(a.category)&&a.coverUrl&&/^https?:\/\//i.test(a.coverUrl));return hotel?hotel.coverUrl:null}function buildTripHotel(acts,startDate){const myKey=getMonthYearKey(startDate);if(monthStayMap[myKey]){const hotel=acts.find(a=>a.category&&/hotel|accommodation/i.test(a.category));return{name:monthStayMap[myKey],icon:hotel?hotel.icon&&/^https?:\/\//i.test(hotel.icon)?hotel.icon:hotel.coverUrl&&/^https?:\/\//i.test(hotel.coverUrl)?hotel.coverUrl:null:null}}const hotel=acts.find(a=>a.category&&/hotel|accommodation/i.test(a.category));return hotel?{name:hotel.activity,icon:hotel.icon&&/^https?:\/\//i.test(hotel.icon)?hotel.icon:hotel.coverUrl&&/^https?:\/\//i.test(hotel.coverUrl)?hotel.coverUrl:null}:null}function fmtVND(n){return 0===n?"—":Math.round(n).toLocaleString("en-US")}function fmtShort(n){if(!n)return"0";const sign=n<0?"-":"",abs=Math.abs(n);return abs>=1e9?sign+(abs/1e9).toFixed(0)+"B":abs>=1e6?sign+(abs/1e6).toFixed(0)+"M":abs>=1e3?sign+(abs/1e3).toFixed(0)+"K":sign+Math.round(abs).toString()}function buildTripName(acts,startDate){const codeChain=[];for(const a of acts){if(!a.category||!a.category.includes("Air Ticket")&&!a.category.includes("Transport"))continue;const m=a.activity.match(/^([A-Z]{2,4})[\s\-]+([A-Z]{2,4})\b/);if(!m)continue;const[_,c1,c2]=m;isAirportCode(c1)&&isAirportCode(c2)&&(codeChain[codeChain.length-1]!==c1&&codeChain.push(c1),codeChain.push(c2))}let validChain=codeChain.filter((c,i)=>c!==codeChain[i-1]).filter(c=>!EXCLUDE_CODES.has(c));validChain.length>=3&&validChain[0]===validChain[validChain.length-1]&&(validChain=validChain.slice(1,validChain.length-1));let baseName="";if(validChain.length>=1){const names=validChain.map(c=>"IUH"===c?"Quy Nhơn":LOCATION_MAP[c]||c),deduped=[];names.forEach(n=>{0!==deduped.length&&deduped[deduped.length-1]===n||deduped.push(n)}),baseName=deduped.join(" – ")}else baseName=acts[0].activity.slice(0,30);const myKey=getMonthYearKey(startDate);return(monthTypeMap[myKey]||"").toLowerCase().includes("company")&&!baseName.includes("💼")&&(baseName+=" 💼"),baseName}
     function buildTrips(records){const dated=records.filter(r=>r.date).sort((a,b)=>a.date-b.date),clusters=[];let cur=[];for(const r of dated){if(0===cur.length){cur.push(r);continue}const prev=cur[cur.length-1].date;r.date-prev>3456e5?(clusters.push(cur),cur=[r]):cur.push(r)}return cur.length&&clusters.push(cur),clusters.map((acts,idx)=>{const start=acts[0].date,end=acts[acts.length-1].date,myKey=getMonthYearKey(start),isCompany=(monthTypeMap[myKey]||"").toLowerCase().includes("company"),total=acts.reduce((s,a)=>s+a.expense,0);return{id:"trip-"+idx,name:buildTripName(acts,start),cover:buildTripCover(acts,start),hotel:buildTripHotel(acts,start),activities:acts,start,end,total,nights:Math.max(1,Math.round((end-start)/864e5)),year:start.getFullYear(),isCompany}}).sort((a,b)=>b.start-a.start)}
     function dowShort(d){return d.toLocaleDateString("en-US",{weekday:"short"})}function fmtDateShort(d){return d.toLocaleDateString("en-US",{month:"short",day:"numeric"})}function fmtDateFull(d){return d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric",year:"numeric"})}function fmtRange(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()?`${a.toLocaleDateString("en-US",{month:"short"})} ${a.getDate()}–${b.getDate()}, ${a.getFullYear()}`:a.getFullYear()===b.getFullYear()?`${fmtDateShort(a)} – ${fmtDateShort(b)}, ${a.getFullYear()}`:`${fmtDateShort(a)} ${a.getFullYear()} – ${fmtDateShort(b)} ${b.getFullYear()}`}
@@ -8059,7 +8076,7 @@ loader-logo-wrapper    <div class="">
     // Biến toàn cục lưu vị trí gốc của nút Add trên topbar
 let addBtnOriginalParent = null;
 let addBtnNextSibling = null;
-
+ 
 // Lưu lại vị trí ban ₫ầu khi trang vừa tải xong
 document.addEventListener('DOMContentLoaded', () => {
   const addBtn = document.getElementById('addTravelBtn');
@@ -8068,7 +8085,7 @@ document.addEventListener('DOMContentLoaded', () => {
     addBtnNextSibling = addBtn.nextSibling;
   }
 });
-
+ 
 function openTrip(id){
   const t = trips.find(x => x.id === id);
   if(!t) return;
@@ -8082,9 +8099,9 @@ function openTrip(id){
     catTotals[key] = (catTotals[key] || 0) + a.expense;
   }
   const catEntries = Object.entries(catTotals).sort((a, b) => b[1] - a[1]);
-
+ 
   const coverImgUrl = t.cover && /^https?:\/\//i.test(t.cover) ? t.cover : DEFAULT_COVER_URL;
-
+ 
   let html = `<div class="det-sticky-container" style="background-image: url('${coverImgUrl}');">\n` +
       `      <div class="det-topbar">\n        <button class="back-btn" id="backBtn"><span style="margin-top:-1px;font-size:20px">‹</span></button>\n        <div class="det-title"><h2>${t.name}</h2></div>\n        <div class="det-total"><div class="amt figure">${t.total ? fmtVND(t.total) + "₫" : "—"}</div><div class="lbl">TOTAL SPEND</div></div>\n      </div>\n      \n      <div class="day-strip-wrap">\n        <div class="day-strip">`;
   
@@ -8113,7 +8130,7 @@ function openTrip(id){
   });
   html += "</div>";
   el.innerHTML = html;
-
+ 
   el.querySelectorAll(".act-card").forEach(card => {
     card.addEventListener("click", () => {
       const itemId = card.dataset.itemId;
@@ -8123,7 +8140,7 @@ function openTrip(id){
       }
     });
   });
-
+ 
   stickyCleanup && (stickyCleanup(), stickyCleanup = null);
   
   // Xử lý nút Back: Trả nút addTravelBtn về vị trí gốc trên topbar
@@ -8145,7 +8162,7 @@ function openTrip(id){
       }
     }
   });
-
+ 
   // (Phần code observer / scroll giữ nguyên như cũ của anh...)
   const pills = el.querySelectorAll(".day-pill");
   let suppressObserverUntil = 0;
@@ -8158,7 +8175,7 @@ function openTrip(id){
     }
     return document.scrollingElement || document.documentElement;
   }(el), usesWindow = scrollRoot === document.documentElement || scrollRoot === document.body;
-
+ 
   !function(){
     const stickyEl = el.querySelector(".det-sticky-container");
     if(!stickyEl) return;
@@ -8186,12 +8203,23 @@ function openTrip(id){
       ro && ro.disconnect();
     };
   }();
-
+ 
+  // FIX: scrollIntoView cuộn MỌI ancestor cuộn được, kể cả document theo trục
+  // ngang -> cả trang bị đẩy lệch sang trái. Chỉ cuộn riêng .day-strip.
+  const centerPillInStrip = (pill) => {
+    const strip = pill.closest(".day-strip");
+    if(!strip) return;
+    const target = pill.offsetLeft - (strip.clientWidth - pill.offsetWidth) / 2;
+    const max = strip.scrollWidth - strip.clientWidth;
+    strip.scrollTo({ left: Math.max(0, Math.min(target, max)), behavior: "smooth" });
+  };
+ 
   pills.forEach(p => {
     p.addEventListener("click", () => {
       const target = document.getElementById(p.dataset.target);
       if(target){
         pills.forEach(pp => pp.classList.toggle("active", pp === p));
+        centerPillInStrip(p);
         suppressObserverUntil = Date.now() + 900;
         (function(target){
           const stickyContainer = el.querySelector(".det-sticky-container"),
@@ -8208,7 +8236,7 @@ function openTrip(id){
       }
     });
   });
-
+ 
   dayObserver && dayObserver.disconnect();
   const sections = el.querySelectorAll(".day-section");
   dayObserver = new IntersectionObserver(entries => {
@@ -8218,19 +8246,17 @@ function openTrip(id){
         pills.forEach(p => {
           const isActive = p.dataset.day === idx;
           p.classList.toggle("active", isActive);
-          if(isActive && typeof p.scrollIntoView === 'function'){
-            p.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-          }
+          if(isActive) centerPillInStrip(p);
         });
       }
     });
   }, {root: usesWindow ? null : scrollRoot, rootMargin: "-70px 0px -70% 0px", threshold: 0});
   sections.forEach(s => dayObserver.observe(s));
-
+ 
   document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
   document.getElementById("panel-detail").classList.add("active");
   usesWindow ? window.scrollTo(0, 0) : scrollRoot.scrollTop = 0;
-
+ 
   // ➡️ ₫ưa nút addTravelBtn ra thẳng document.body và gán class fab-mode ₫ể nổi lên góc phải
   const addTravelBtn = document.getElementById('addTravelBtn');
   if (addTravelBtn) {
@@ -8243,11 +8269,11 @@ function openTrip(id){
   }
 }
     function setStatus(state,text){document.getElementById("statusDot").className="status-dot "+state,document.getElementById("statusText").textContent=text}
-    function buildTripName(acts){const codeChain=[];for(const a of acts){if(!a.category||!a.category.includes("Air Ticket")&&!a.category.includes("Transport"))continue;const m=a.activity.match(/^([A-Z]{2,4})[\s\-]+([A-Z]{2,4})\b/);if(!m)continue;const[_,c1,c2]=m;isAirportCode(c1)&&isAirportCode(c2)&&(codeChain[codeChain.length-1]!==c1&&codeChain.push(c1),codeChain.push(c2))}const validChain=codeChain.filter((c,i)=>c!==codeChain[i-1]).filter(c=>!EXCLUDE_CODES.has(c));if(validChain.length>=1){const names=validChain.map(c=>"IUH"===c?"Quy Nhơn":LOCATION_MAP[c]||c),deduped=names.filter((n,i)=>n!==names[i-1]);if(deduped.length>0)return deduped.join(" – ")}return acts[0].activity.slice(0,30)}document.getElementById("reloadBtn").addEventListener("click",loadTravelData),document.addEventListener("DOMContentLoaded",()=>{const dayPills=document.querySelectorAll(".day-pill");dayPills.forEach(pill=>{pill.addEventListener("click",function(){dayPills.forEach(p=>p.classList.remove("active")),this.classList.add("active");const targetDayId=this.getAttribute("data-target")||this.dataset.day,targetSection=document.getElementById(targetDayId);targetSection&&targetSection.scrollIntoView({behavior:"smooth",block:"start"})})})});
-
+    function buildTripName(acts){const codeChain=[];for(const a of acts){if(!a.category||!a.category.includes("Air Ticket")&&!a.category.includes("Transport"))continue;const m=a.activity.match(/^([A-Z]{2,4})[\s\-]+([A-Z]{2,4})\b/);if(!m)continue;const[_,c1,c2]=m;isAirportCode(c1)&&isAirportCode(c2)&&(codeChain[codeChain.length-1]!==c1&&codeChain.push(c1),codeChain.push(c2))}const validChain=codeChain.filter((c,i)=>c!==codeChain[i-1]).filter(c=>!EXCLUDE_CODES.has(c));if(validChain.length>=1){const names=validChain.map(c=>"IUH"===c?"Quy Nhơn":LOCATION_MAP[c]||c),deduped=names.filter((n,i)=>n!==names[i-1]);if(deduped.length>0)return deduped.join(" – ")}return acts[0].activity.slice(0,30)}document.getElementById("reloadBtn").addEventListener("click",loadTravelData);
+ 
     // Biến toàn cục lưu trữ bản ₫ồ Icon theo Category ₫ược load từ Google Sheet
 let CATEGORY_ICON_MAP = {};
-
+ 
 /* ==========================================================
    1. HÀM ICONFOR CẬP NHẬT (Ưu tiên load từ dữ liệu Sheet)
    ================================================---------- */
@@ -8255,7 +8281,7 @@ function iconFor(category) {
   if (!category) return typeof DEFAULT_ICON_URL !== 'undefined' ? DEFAULT_ICON_URL : '';
   const catKey = category.trim();
   const catLower = catKey.toLowerCase();
-
+ 
   // 1. Kiểm tra trong bản ₫ồ ₫ã ₫ược load trực tiếp từ Google Sheet
   if (CATEGORY_ICON_MAP[catKey]) {
     return CATEGORY_ICON_MAP[catKey];
@@ -8266,7 +8292,7 @@ function iconFor(category) {
       return CATEGORY_ICON_MAP[key];
     }
   }
-
+ 
   // 2. Dự phòng các từ khóa mặc ₫ịnh nếu sheet chưa có icon riêng
   const defaultIconMap = {
     'flight': 'https://cdn-icons-png.flaticon.com/512/3125/3125852.png',
@@ -8282,17 +8308,17 @@ function iconFor(category) {
     'activity': 'https://cdn-icons-png.flaticon.com/512/3163/3163478.png',
     'shopping': 'https://cdn-icons-png.flaticon.com/512/3081/3081559.png'
   };
-
+ 
   for (const key in defaultIconMap) {
     if (catLower.includes(key)) {
       return defaultIconMap[key];
     }
   }
-
+ 
   return typeof DEFAULT_ICON_URL !== 'undefined' ? DEFAULT_ICON_URL : 'https://cdn-icons-png.flaticon.com/512/2921/2921222.png';
 }
-
-
+ 
+ 
 /* ==========================================================
    2. HÀM LOAD TRAVEL DATA (Thu thập Category & Icon map)
    ================================================---------- */
@@ -8317,7 +8343,7 @@ async function loadTravelData(){
         return;
       }
     }
-
+ 
     const rows = parseCSV(text).filter(r => r.length>1 && r.some(c=>c && c.trim()));
     if(!rows.length){ setStatus('err','Empty sheet'); return; }
     const header = rows[0].map(h=>h.trim().toLowerCase());
@@ -8335,7 +8361,7 @@ async function loadTravelData(){
       locCode: (()=>{ const f = header.findIndex((h,i)=>h.startsWith('code') && i>3); return f>=0 ? f : 10; })(),
       locExclude: 11,
     };
-
+ 
     LOCATION_MAP = {};
     EXCLUDE_CODES = new Set();
     CATEGORY_ICON_MAP = {}; // Reset lại bản ₫ồ icon khi load mới[cite: 3]
@@ -8348,7 +8374,7 @@ async function loadTravelData(){
       
       if(locName && locCode) LOCATION_MAP[locCode] = locName;
       if(excludeText) EXCLUDE_CODES.add(excludeText);
-
+ 
       // Thu thập mapping giữa Category và Icon từ Google Sheet[cite: 3]
       const catVal = (r[idx.category] || '').trim();
       const iconVal = (r[idx.icon] || '').trim();
@@ -8356,7 +8382,7 @@ async function loadTravelData(){
         CATEGORY_ICON_MAP[catVal] = iconVal;
       }
     }
-
+ 
     const records = [];
     for(let i=1; i<rows.length; i++){
       const r = rows[i];
@@ -8364,7 +8390,8 @@ async function loadTravelData(){
       const date = parseDate(r[idx.date]||'');
       if(!activity || !date) continue;
       records.push({
-        id: 'item-' + i + '-' + Math.random().toString(36).substr(2, 9),
+        id: 'item-' + i + '-' + Math.random().toString(36).slice(2, 11),
+        rowIndex: i + 1,   // rows[0] là header -> dòng thật trên sheet = i + 1
         activity,
         category: (r[idx.category]||'').trim(),
         code: (r[idx.code]||'').trim(),
@@ -8377,7 +8404,7 @@ async function loadTravelData(){
       });
     }
     trips = buildTrips(records);
-
+ 
     const visitedCities = new Set();
     trips.forEach(t => {
       const days = groupByDay(t);
@@ -8389,8 +8416,8 @@ async function loadTravelData(){
     setStatus('ok', `✈️ ${trips.length} trips 📍 ${visitedCities.size} cities${usedProxy?' (via proxy)':''}`);
     renderDashboard();
 }
-
-
+ 
+ 
 /* ==========================================================
    3. HÀM OPEN ADD MODAL (Cập nhật real-time icon khi ₫ổi category)
    ================================================---------- */
@@ -8401,9 +8428,9 @@ function openAddModal() {
     modalOverlay.id = 'addItemModalOverlay';
     modalOverlay.style.cssText = `
       position: fixed; inset: 0; width: 100vw; height: 100vh;
-      background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px); display: flex; align-items: center; 
-      justify-content: center; z-index: 2147483647; padding: 12px;
+      background: rgba(15, 23, 42, 0.55); backdrop-filter: blur(26px) saturate(1.3);
+      -webkit-backdrop-filter: blur(26px) saturate(1.3); display: flex; align-items: center; 
+      justify-content: center; z-index: 2147483647; padding: 24px 12px; overflow-y: auto;
     `;
     modalOverlay.addEventListener('click', (e) => {
       if (e.target === modalOverlay) {
@@ -8412,7 +8439,7 @@ function openAddModal() {
     });
     document.body.appendChild(modalOverlay);
   }
-
+ 
   const now = new Date();
   const pad = (n) => String(n).padStart(2, '0');
   let currentYear = now.getFullYear();
@@ -8420,7 +8447,7 @@ function openAddModal() {
   let currentDay = now.getDate();
   let selectedHour = pad(now.getHours());
   let selectedMin = pad(now.getMinutes());
-
+ 
   const uniqueCategories = [...new Set(trips.flatMap(t => t.activities.map(a => a.category).filter(Boolean)))];
   const initialCategory = uniqueCategories[0] || 'General';
   
@@ -8429,105 +8456,131 @@ function openAddModal() {
   
   const cleanInitialCat = cleanCat(initialCategory);
   const initialIconSrc = iconFor(initialCategory);
-
+ 
+  // Popup lần mở trước đã được nhấc ra body, innerHTML không xoá được nó -> dọn tay
+  document.querySelectorAll('body > #newCustomDtPopup, body > #customDtPopup').forEach(el => el.remove());
+ 
   modalOverlay.innerHTML = `
-    <style>      
+    <style>
+      /* Đồng bộ với pnlModal: nền đặc, bo 16px, accent teal, bỏ hiệu ứng vé rách */
+      /* .ticket-modal KHÔNG được có backdrop-filter / mask / overflow:auto.
+         Cả ba đều biến nó thành containing block + clip cho con position:fixed,
+         làm datepicker bị neo sai chỗ và bị cắt.
+         -> Đẩy toàn bộ nền + răng cưa xuống lớp ::before phía sau. */
       .ticket-modal {
         font-family: 'DM Sans', sans-serif;
-        background: rgba(30, 41, 59, 0.55);
-        backdrop-filter: blur(28px);
-        -webkit-backdrop-filter: blur(28px);
-        color: #f8fafc;
+        color: #f8f9fa;
         width: 100%;
-        max-width: 500px;
-        border-radius: 28px;
-        padding: 36px 32px 42px 32px;
-        box-shadow: 0 35px 75px rgba(0, 0, 0, 0.85);
-        border: 2px dashed rgba(255, 255, 255, 0.25);
+        max-width: 520px;
+        padding: 26px 20px;
         position: relative;
         overflow: visible;
+        background: transparent;
+        border: none;
+        box-sizing: border-box;
         z-index: 2147483648;
       }
-      .ticket-modal::before, .ticket-modal::after {
+      .ticket-modal::before {
         content: '';
         position: absolute;
-        top: 115px;
-        width: 28px;
-        height: 28px;
-        background: rgba(15, 23, 42, 0.5);
-        border-radius: 50%;
-        z-index: 5;
-        border: 2px dashed rgba(255, 255, 255, 0.25);
+        inset: 0;
+        z-index: -1;
+        border-radius: 16px;
+        /* KHÔNG đặt backdrop-filter ở đây: Chrome bỏ qua mask-image khi
+           phần tử có backdrop-filter -> mất răng cưa. Phần blur kính
+           đã do modalOverlay đảm nhiệm. */
+        background: rgba(30, 34, 43, 0.92);
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+ 
+        /* Răng cưa mép trên + mép dưới, chỉ khoét lớp nền này nên
+           không ảnh hưởng gì tới các phần tử con */
+        --scallop-r: 9px;
+        --scallop-tile: 22px;
+        -webkit-mask-image:
+          radial-gradient(circle at var(--scallop-r) 0, transparent var(--scallop-r), #000 calc(var(--scallop-r) + 0.5px)),
+          radial-gradient(circle at var(--scallop-r) 100%, transparent var(--scallop-r), #000 calc(var(--scallop-r) + 0.5px));
+        mask-image:
+          radial-gradient(circle at var(--scallop-r) 0, transparent var(--scallop-r), #000 calc(var(--scallop-r) + 0.5px)),
+          radial-gradient(circle at var(--scallop-r) 100%, transparent var(--scallop-r), #000 calc(var(--scallop-r) + 0.5px));
+        -webkit-mask-size: var(--scallop-tile) 100%;
+        mask-size: var(--scallop-tile) 100%;
+        -webkit-mask-repeat: repeat-x;
+        mask-repeat: repeat-x;
+        -webkit-mask-composite: source-in;
+        mask-composite: intersect;
       }
-      .ticket-modal::before { left: -16px; }
-      .ticket-modal::after { right: -16px; }
-      .ticket-bottom-scallops {
-        position: absolute;
-        bottom: -1px; left: 0; right: 0; height: 12px;
-        background-image: radial-gradient(circle, rgba(15, 23, 42, 0.5) 6px, transparent 7px);
-        background-size: 22px 14px; background-repeat: repeat-x;
-        z-index: 4; border-bottom-left-radius: 28px; border-bottom-right-radius: 28px;
-      }
+      .ticket-modal::-webkit-scrollbar { width: 6px; }
+      .ticket-modal::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
+ 
       .ticket-input-wrapper { position: relative; display: flex; align-items: center; }
       .ticket-input {
-        width: 100%; background: rgba(15, 23, 42, 0.4);
-        border: 1px solid rgba(255, 255, 255, 0.18); color: #fff;
-        padding: 11px 38px 11px 14px; border-radius: 12px;
-        font-size: 1rem; font-family: inherit; outline: none; transition: all 0.2s;
+        width: 100%; background: rgba(15, 23, 42, 0.45);
+        border: none; color: #fff;
+        padding: 10px 32px 10px 12px; border-radius: 8px;
+        font-size: 0.95rem; font-family: inherit; outline: none;
+        box-sizing: border-box; transition: border-color 0.2s, background 0.2s;
       }
-      .ticket-input:focus { border-color: #f8fafc; background: rgba(15, 23, 42, 0.75); }
+      .ticket-input::placeholder { color: #64748b; }
+      .ticket-input:focus { background: rgba(15, 23, 42, 0.75); box-shadow: inset 0 0 0 1px #00bfa5; }
       .ticket-input-wrapper .clear-btn { opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
       .ticket-input-wrapper:hover .clear-btn, .ticket-input-wrapper:focus-within .clear-btn { opacity: 1; pointer-events: auto; }
-      .ticket-label { font-size: 0.75rem; color: #94a3b8; display: block; margin-bottom: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
-      .clear-btn { position: absolute; right: 12px; background: transparent; border: none; color: #94a3b8; font-size: 1rem; cursor: pointer; padding: 4px; z-index: 2; }
-      .clear-btn:hover { color: #ef4444; }
+      .ticket-label { font-size: 0.7rem; color: #94a3b8; display: block; margin-bottom: 5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+      .clear-btn { position: absolute; right: 10px; background: transparent; border: none; color: #94a3b8; font-size: 0.95rem; cursor: pointer; padding: 4px; z-index: 2; line-height: 1; }
+      .clear-btn:hover { color: #f43f5e; }
+ 
       .custom-dt-popup {
-        display: none; position: absolute; top: calc(100% + 8px); left: 0; right: 0;
-        background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.25);
-        border-radius: 18px; padding: 16px; z-index: 30; box-shadow: 0 30px 60px rgba(0,0,0,0.85);
+        display: none; position: fixed; min-width: 330px; max-width: 360px;
+        background: rgba(20, 23, 31, 0.94); backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px); border: none;
+        border-radius: 14px; padding: 14px; z-index: 30; box-shadow: 0 12px 32px rgba(0,0,0,0.6);
       }
-      .dt-picker-container { display: flex; gap: 12px; }
-      .calendar-left { flex: 2.2; background: rgba(30, 41, 59, 0.6); border-radius: 12px; padding: 12px; border: 1px solid rgba(255,255,255,0.15); }
-      .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-weight: 700; font-size: 1.05rem; color: #f8fafc; }
-      .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; font-size: 0.95rem; }
-      .cal-day-name { color: #94a3b8; font-weight: 700; padding-bottom: 4px; font-size: 0.85rem; }
-      .cal-cell { padding: 5px 0; border-radius: 6px; cursor: pointer; color: #f8fafc; transition: background 0.2s; }
-      .cal-cell:hover { background: rgba(255, 255, 255, 0.2); }
-      .cal-cell.selected { background: #f1f5f9; color: #0f172a; font-weight: 700; }
+      .dt-picker-container { display: flex; gap: 10px; }
+      .calendar-left { flex: 2.2; background: rgba(255, 255, 255, 0.04); border-radius: 10px; padding: 10px; }
+      .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-weight: 600; font-size: 0.95rem; color: #f8f9fa; }
+      .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; text-align: center; font-size: 0.85rem; }
+      .cal-day-name { color: #64748b; font-weight: 600; padding-bottom: 4px; font-size: 0.72rem; }
+      .cal-cell { padding: 5px 0; border-radius: 6px; cursor: pointer; color: #f8f9fa; transition: background 0.2s; }
+      .cal-cell:hover { background: rgba(255, 255, 255, 0.14); }
+      .cal-cell.selected { background: #00bfa5; color: #000; font-weight: 700; }
       .cal-cell.muted { color: #475569; }
-      .time-scroll-right { flex: 0.7; display: flex; flex-direction: column; background: rgba(30, 41, 59, 0.6); border-radius: 12px; padding: 12px 6px; border: 1px solid rgba(255,255,255,0.15); }
-      .time-scroll-box { display: flex; justify-content: center; gap: 2px; height: 160px; overflow-y: auto; }
-      .time-column { display: flex; flex-direction: column; gap: 3px; overflow-y: auto; max-height: 150px; padding-right: 2px; }
+      .time-scroll-right { flex: 0.8; display: flex; flex-direction: column; background: rgba(255, 255, 255, 0.04); border-radius: 10px; padding: 10px 6px; }
+      .time-scroll-box { display: flex; justify-content: center; gap: 2px; height: 160px; }
+      .time-column { display: flex; flex-direction: column; gap: 2px; overflow-y: auto; max-height: 155px; padding-right: 2px; scrollbar-width: thin; }
       .time-column::-webkit-scrollbar { width: 2px; }
-      .time-column::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 2px; }
-      .time-item { padding: 4px 4px; text-align: center; border-radius: 6px; cursor: pointer; font-size: 0.75rem; color: #94a3b8; transition: all 0.2s; }
-      .time-item:hover { background: rgba(255, 255, 255, 0.2); color: #fff; }
-      .time-item.selected { background: #f1f5f9; color: #0f172a; font-weight: 700; }
-
+      .time-column::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+      .time-item { padding: 4px; text-align: center; border-radius: 5px; cursor: pointer; font-size: 0.75rem; color: #94a3b8; transition: all 0.2s; }
+      .time-item:hover { background: rgba(255, 255, 255, 0.14); color: #fff; }
+      .time-item.selected { background: #00bfa5; color: #000; font-weight: 700; }
+ 
+      .review-dropdown-btn {
+        background: rgba(15, 23, 42, 0.45); border: none;
+        border-radius: 8px; padding: 7px 10px; cursor: pointer;
+        display: inline-flex; align-items: center; justify-content: center;
+        font-size: 1rem; color: #fff; transition: background 0.2s;
+      }
+      .review-dropdown-btn:hover { background: rgba(255, 255, 255, 0.14); }
+ 
       .ticket-modal button[type="submit"] {
-        transition: background 0.2s ease;
+        background: #00bfa5; border: none; color: #000;
+        transition: filter 0.2s, transform 0.1s;
       }
-      .ticket-modal button[type="submit"]:hover {
-        background: rgba(255, 255, 255, 0.9) !important;
-      }
+      .ticket-modal button[type="submit"]:hover { filter: brightness(1.1); transform: translateY(-1px); }
       .ticket-modal button[type="button"]:not(.clear-btn):not(.review-dropdown-btn):not(#triggerDeleteBtn):hover {
-        background: rgba(255, 255, 255, 0.1) !important;
-        color: #ffffff !important;
+        background: rgba(255, 255, 255, 0.12) !important; color: #ffffff !important;
       }
     </style>
-
+ 
     <div class="ticket-modal">
       <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 22px;">
         <img id="addModalHeaderIcon" src="${initialIconSrc}" alt="" style="width: 42px; height: 42px; object-fit: contain; flex-shrink: 0;" onerror="this.src='${DEFAULT_ICON_URL}';">
         <div class="ticket-input-wrapper" style="flex: 1;">
-          <input type="text" id="newActivityInput" name="activity" required placeholder="Enter activity..." class="ticket-input" style="border: none; border-bottom: 2px dashed rgba(255, 255, 255, 0.4); border-radius: 0; background: transparent; padding: 6px 32px 6px 4px; font-size: 1.25rem; font-weight: 700; color: #ffffff;">
+          <input type="text" id="newActivityInput" name="activity" required placeholder="Enter activity..." class="ticket-input" style="border: none; border-bottom: 1px solid rgba(255, 255, 255, 0.15); border-radius: 0; background: transparent; padding: 6px 32px 6px 4px; font-size: 1.25rem; font-weight: 700; color: #ffffff;">
           <button type="button" id="clearNewActivityBtn" class="clear-btn" style="right: 4px;" title="Clear">✕</button>
         </div>
       </div>
-
-      <div style="border-top: 1px dashed rgba(255, 255, 255, 0.25); margin: 0 -32px 20px -32px;"></div>
-
+ 
+      <div style="border-top: 1px solid rgba(255, 255, 255, 0.08); margin: 0 -20px 18px -20px;"></div>
+ 
       <form id="addItemForm" style="display: flex; flex-direction: column; gap: 16px;">
         
         <!-- Gom Category và Code chung 1 dòng (chia 50-50) -->
@@ -8538,7 +8591,7 @@ function openAddModal() {
               <input type="text" id="newCategoryInput" name="category" autocomplete="off" value="${cleanInitialCat}" placeholder="Select or type category..." class="ticket-input">
               <button type="button" id="clearNewCategoryBtn" class="clear-btn" title="Clear">✕</button>
             </div>
-            <div id="addCategoryDropdown" style="display: none; position: absolute; top: calc(100% + 6px); left: 0; min-width: 240px; width: max-content; max-width: 320px; background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 14px; max-height: 200px; overflow-y: auto; z-index: 50; box-shadow: 0 20px 40px rgba(0,0,0,0.8); padding: 6px;">
+            <div id="addCategoryDropdown" style="display: none; position: absolute; top: calc(100% + 6px); left: 0; min-width: 240px; width: max-content; max-width: 320px; background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(20px); border: none; border-radius: 14px; max-height: 200px; overflow-y: auto; z-index: 50; box-shadow: 0 20px 40px rgba(0,0,0,0.8); padding: 6px;">
               ${uniqueCategories.map(cat => {
                 const displayName = cleanCat(cat);
                 return `
@@ -8550,7 +8603,7 @@ function openAddModal() {
               }).join('')}
             </div>
           </div>
-
+ 
           <div style="flex: 1;">
             <label class="ticket-label">Code</label>
             <div class="ticket-input-wrapper">
@@ -8559,14 +8612,14 @@ function openAddModal() {
             </div>
           </div>
         </div>
-
+ 
         <div style="position: relative;">
           <label class="ticket-label">Date & Time</label>
           <div class="ticket-input-wrapper" id="newDtDisplayWrapper" style="cursor: pointer;">
             <input type="text" id="newDtDisplayText" readonly value="${pad(currentDay)}/${pad(currentMonth + 1)}/${currentYear}, ${selectedHour}:${selectedMin}" class="ticket-input" style="cursor: pointer; padding-right: 40px;">
             <span style="position: absolute; right: 14px; color: #94a3b8; pointer-events: none; font-size: 1rem;"><i class="bi bi-calendar3"></i></span>
           </div>
-
+ 
           <div id="newCustomDtPopup" class="custom-dt-popup">
             <div class="dt-picker-container">
               <div class="calendar-left">
@@ -8580,7 +8633,7 @@ function openAddModal() {
                 </div>
                 <div id="newCalDaysGrid" class="cal-grid" style="margin-top: 4px;"></div>
               </div>
-
+ 
               <div class="time-scroll-right">
                 <div style="font-size: 0.65rem; color: #94a3b8; font-weight: 700; text-align: center; margin-bottom: 4px;">TIME</div>
                 <div class="time-scroll-box">
@@ -8590,25 +8643,25 @@ function openAddModal() {
                 </div>
               </div>
             </div>
-
-            <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 10px;">
-              <button type="button" id="newDtCancelBtn" style="background: transparent; border: 1px solid rgba(255,255,255,0.25); color: #94a3b8; padding: 6px 14px; border-radius: 8px; font-size: 0.85rem; cursor: pointer;">Cancel</button>
-              <button type="button" id="newDtConfirmBtn" style="background: #f1f5f9; border: none; color: #0f172a; padding: 6px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.85rem;">Apply</button>
+ 
+            <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px;">
+              <button type="button" id="newDtCancelBtn" style="background: rgba(255,255,255,0.06); border: none; color: #94a3b8; padding: 6px 14px; border-radius: 8px; font-size: 0.85rem; cursor: pointer;">Cancel</button>
+              <button type="button" id="newDtConfirmBtn" style="background: #00bfa5; border: none; color: #000; padding: 6px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.85rem;">Apply</button>
             </div>
           </div>
-
+ 
           <input type="hidden" id="newFinalDateVal" value="${currentYear}-${pad(currentMonth + 1)}-${pad(currentDay)}T${selectedHour}:${selectedMin}">
         </div>
-
+ 
         <div>
           <label class="ticket-label">Amount (VND)</label>
           <div class="ticket-input-wrapper">
-            <input type="text" id="newFormattedAmountInput" placeholder="0" class="ticket-input" style="color: #ffffff; font-size: 1.6rem; font-weight: 700; padding: 12px 38px 12px 14px;">
+            <input type="text" id="newFormattedAmountInput" placeholder="0" class="ticket-input" style="color: #ffffff; font-size: 1.1rem; font-weight: 700;">
             <button type="button" id="clearNewAmountBtn" class="clear-btn" title="Clear">✕</button>
           </div>
           <input type="hidden" name="expense" id="newRawAmountInput" value="0">
         </div>
-
+ 
         <div>
           <label class="ticket-label">Note / Address</label>
           <div class="ticket-input-wrapper" style="align-items: flex-start;">
@@ -8616,18 +8669,17 @@ function openAddModal() {
             <button type="button" id="clearNewNotesBtn" class="clear-btn" style="top: 8px;" title="Clear">✕</button>
           </div>
         </div>
-
-        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px; border-top: 1px dashed rgba(255, 255, 255, 0.25); padding-top: 16px;">
-          <button type="button" id="cancelAddBtn" style="background: transparent; border: 1px solid rgba(255, 255, 255, 0.25); color: #94a3b8; padding: 9px 18px; border-radius: 10px; cursor: pointer; font-size: 0.95rem; font-family: inherit;">Cancel</button>
-          <button type="submit" style="background: #f1f5f9; border: none; color: #0f172a; padding: 9px 22px; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 0.95rem; font-family: inherit; box-shadow: 0 2px 6px rgba(0,0,0,0.2);">Add Item</button>
+ 
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 14px;">
+          <button type="button" id="cancelAddBtn" style="background: rgba(255,255,255,0.06); border: none; color: #94a3b8; padding: 9px 18px; border-radius: 10px; cursor: pointer; font-size: 0.95rem; font-family: inherit;">Cancel</button>
+          <button type="submit" style="padding: 9px 22px; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 0.95rem; font-family: inherit; box-shadow: 0 2px 6px rgba(0,0,0,0.2);">Add Item</button>
         </div>
       </form>
-      <div class="ticket-bottom-scallops"></div>
     </div>
   `;
-
+ 
   modalOverlay.style.display = 'flex';
-
+ 
   const addCatInput = document.getElementById('newCategoryInput');
   const addModalHeaderIcon = document.getElementById('addModalHeaderIcon');
   const addCatDropdown = document.getElementById('addCategoryDropdown');
@@ -8637,11 +8689,11 @@ function openAddModal() {
       addModalHeaderIcon.src = iconFor(addCatInput.value);
     });
   }
-
+ 
   addCatInput.addEventListener('focus', () => {
     addCatDropdown.style.display = 'block';
   });
-
+ 
   addCatInput.addEventListener('input', (e) => {
     const val = e.target.value.toLowerCase();
     const options = addCatDropdown.querySelectorAll('.cat-option');
@@ -8656,7 +8708,7 @@ function openAddModal() {
     });
     addCatDropdown.style.display = hasVisible ? 'block' : 'none';
   });
-
+ 
   // 👉 Xử lý click chọn option: Cập nhật giá trị sạch và ₫ồng bộ icon ngay lập tức
   addCatDropdown.querySelectorAll('.cat-option').forEach(opt => {
     opt.addEventListener('mouseenter', () => opt.style.background = 'rgba(255, 255, 255, 0.15)');
@@ -8673,18 +8725,18 @@ function openAddModal() {
       addCatDropdown.style.display = 'none';
     });
   });
-
+ 
   document.addEventListener('click', (e) => {
     if (!document.getElementById('addCategoryContainer').contains(e.target)) {
       addCatDropdown.style.display = 'none';
     }
   });
-
+ 
   let tempYear = currentYear;
   let tempMonth = currentMonth;
   let tempDay = currentDay;
   const shortMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
+ 
   function renderCalendar() {
     document.getElementById('newCalMonthYearTitle').textContent = `${shortMonthNames[tempMonth]} ${tempYear}`;
     const daysGrid = document.getElementById('newCalDaysGrid');
@@ -8692,7 +8744,7 @@ function openAddModal() {
     const firstDayIndex = (new Date(tempYear, tempMonth, 1).getDay() + 6) % 7;
     const totalDays = new Date(tempYear, tempMonth + 1, 0).getDate();
     const prevTotalDays = new Date(tempYear, tempMonth, 0).getDate();
-
+ 
     for (let i = firstDayIndex; i > 0; i--) {
       const dDiv = document.createElement('div');
       dDiv.className = 'cal-cell muted';
@@ -8707,14 +8759,14 @@ function openAddModal() {
       daysGrid.appendChild(dDiv);
     }
   }
-
+ 
   document.getElementById('newPrevMonthBtn').onclick = () => {
     tempMonth--; if (tempMonth < 0) { tempMonth = 11; tempYear--; } renderCalendar();
   };
   document.getElementById('newNextMonthBtn').onclick = () => {
     tempMonth++; if (tempMonth > 11) { tempMonth = 0; tempYear++; } renderCalendar();
   };
-
+ 
   const hoursCol = document.getElementById('newHoursColumn');
   const minsCol = document.getElementById('newMinutesColumn');
   for (let h = 0; h < 24; h++) {
@@ -8739,20 +8791,29 @@ function openAddModal() {
     };
     minsCol.appendChild(div);
   }
-
+ 
   const dtWrapper = document.getElementById('newDtDisplayWrapper');
   const dtPopup = document.getElementById('newCustomDtPopup');
   dtWrapper.onclick = (e) => {
     e.stopPropagation();
     let isOpen = dtPopup.style.display === 'block';
-    dtPopup.style.display = isOpen ? 'none' : 'block';
-    if (!isOpen) renderCalendar();
+    if (isOpen) { dtPopup.style.display = 'none'; return; }
+    renderCalendar();
+    placeDtPopup(dtWrapper, dtPopup);
   };
-
-  document.addEventListener('click', (e) => {
-    if (!dtPopup.contains(e.target) && !dtWrapper.contains(e.target)) dtPopup.style.display = 'none';
-  });
-
+ 
+  // FIX: trước đây mỗi lần mở modal lại addEventListener một lần nữa -> rò rỉ listener.
+  // Giờ gắn 1 lần duy nhất và tự bỏ qua khi popup đã bị gỡ khỏi DOM.
+  if (!window.__travelDtOutsideBound) {
+    window.__travelDtOutsideBound = true;
+    document.addEventListener('click', (e) => {
+      document.querySelectorAll('#newCustomDtPopup, #customDtPopup').forEach(pop => {
+        const wrap = pop.__dtWrapper;   // KHÔNG dùng parentElement: popup đã nằm ở body
+        if (!pop.contains(e.target) && !(wrap && wrap.contains(e.target))) pop.style.display = 'none';
+      });
+    });
+  }
+ 
   document.getElementById('newDtCancelBtn').onclick = () => { dtPopup.style.display = 'none'; };
   document.getElementById('newDtConfirmBtn').onclick = () => {
     currentYear = tempYear; currentMonth = tempMonth; currentDay = tempDay;
@@ -8760,7 +8821,7 @@ function openAddModal() {
     document.getElementById('newFinalDateVal').value = `${currentYear}-${pad(currentMonth + 1)}-${pad(currentDay)}T${selectedHour}:${selectedMin}`;
     dtPopup.style.display = 'none';
   };
-
+ 
   document.getElementById('clearNewCategoryBtn').onclick = () => document.getElementById('newCategoryInput').value = '';
   document.getElementById('clearNewActivityBtn').onclick = () => document.getElementById('newActivityInput').value = '';
   document.getElementById('clearNewCodeBtn').onclick = () => document.getElementById('newCodeInput').value = '';
@@ -8769,7 +8830,7 @@ function openAddModal() {
     document.getElementById('newRawAmountInput').value = '0';
   };
   document.getElementById('clearNewNotesBtn').onclick = () => document.getElementById('newNotesInput').value = '';
-
+ 
   const fmtInput = document.getElementById('newFormattedAmountInput');
   const rawInput = document.getElementById('newRawAmountInput');
   fmtInput.addEventListener('input', (e) => {
@@ -8778,27 +8839,43 @@ function openAddModal() {
     rawInput.value = num;
     e.target.value = num ? num.toLocaleString("en-US") : '';
   });
-
+ 
+  pairDateAmountSideBySide('addItemForm', 'newDtDisplayWrapper', 'newFormattedAmountInput');
+ 
   document.getElementById('cancelAddBtn').onclick = () => { modalOverlay.style.display = 'none'; };
-
+ 
   document.getElementById('addItemForm').onsubmit = (e) => {
     e.preventDefault();
     const fd = new FormData(e.target);
+ 
+    const rawCat = (document.getElementById('newCategoryRawVal')?.value || '').trim();
+    const shownCat = (fd.get('category') || '').trim();
 
     const newItem = {
-      id: 'item_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
-      category: fd.get('category').trim() || 'General',
-      activity: fd.get('activity').trim(),
+      id: 'item_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+      category: rawCat || shownCat || 'General',
+      activity: (document.getElementById('newActivityInput')?.value || '').trim(),
       date: new Date(document.getElementById('newFinalDateVal').value),
-      code: fd.get('code').trim(),
+      code: (fd.get('code') || '').trim(),
       expense: parseFloat(rawInput.value) || 0,
-      notes: fd.get('notes').trim()
+      notes: (fd.get('notes') || '').trim()
     };
-
+ 
+    postTravel({
+      action: 'add-travel',
+      activity: newItem.activity,   // cột A
+      category: newItem.category,   // cột B
+      code: newItem.code,           // cột C
+      date: toSheetDate(newItem.date), // cột D
+      expense: newItem.expense,     // cột E
+      notes: newItem.notes,         // cột F
+      review: newItem.review || ''  // cột G
+    });
+    triggerPaperFirework(null);
     const allActivities = trips.flatMap(t => t.activities);
     allActivities.push(newItem);
     trips = buildTrips(allActivities);
-
+ 
     modalOverlay.style.display = 'none';
     if (typeof renderTripsView === 'function') {
       renderTripsView();
@@ -8808,6 +8885,144 @@ function openAddModal() {
   };
 }
 
+ 
+function postTravel(payload) {
+  return new Promise((resolve) => {
+    if (!APPS_SCRIPT_URL) {
+      resolve(false);
+      return;
+    }
+
+    const cb = 'travelCb_' + Date.now() + '_' + Math.floor(Math.random() * 1e6);
+    const qs = new URLSearchParams({ callback: cb, payload: JSON.stringify(payload) });
+    const url = APPS_SCRIPT_URL + '?' + qs.toString();
+
+    const script = document.createElement('script');
+    const timer = setTimeout(() => {
+      cleanup(); resolve(false);
+    }, 15000);
+
+    function cleanup() {
+      clearTimeout(timer);
+      delete window[cb];
+      script.remove();
+    }
+
+    window[cb] = (res) => {
+      cleanup();
+      if (res && res.status === 'error') {
+        showTravelError(res.message);
+        resolve(false);
+      } else {
+        resolve(res);
+      }
+    };
+
+    script.src = url;
+    script.onerror = () => {
+      cleanup();
+      resolve(false);
+    };
+    triggerPaperFirework(null);
+    document.body.appendChild(script);
+  });
+}
+
+ 
+// Date -> chuỗi "YYYY-MM-DD HH:mm" để ghi xuống sheet
+function toSheetDate(d) {
+  if (!(d instanceof Date) || isNaN(d)) return '';
+  const p = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+ 
+function placeDtPopup(wrapperEl, popupEl) {
+  if (!wrapperEl || !popupEl) return;
+ 
+  // QUAN TRỌNG: .ticket-modal có backdrop-filter + mask-image. Cả hai đều biến
+  // nó thành containing block cho con position:fixed VÀ clip mọi thứ tràn ra
+  // ngoài. Nên popup dù fixed vẫn bị neo vào modal và bị cắt.
+  // Cách duy nhất là nhấc popup ra thẳng document.body.
+  if (popupEl.parentElement !== document.body) {
+    document.body.appendChild(popupEl);
+  }
+  popupEl.__dtWrapper = wrapperEl;            // để biết click ở đâu là "trong"
+  popupEl.style.zIndex = '2147483650';        // nổi trên cả modal
+ 
+  popupEl.style.visibility = 'hidden';
+  popupEl.style.display = 'block';
+  const r = wrapperEl.getBoundingClientRect();
+  const ph = popupEl.offsetHeight, pw = popupEl.offsetWidth;
+  const gap = 6;
+  let top = r.bottom + gap;
+  if (top + ph > window.innerHeight - 8) {
+    top = Math.max(8, r.top - gap - ph); // không đủ chỗ dưới -> lật lên trên
+  }
+  let left = r.left;
+  if (left + pw > window.innerWidth - 8) left = window.innerWidth - pw - 8;
+  popupEl.style.top = top + 'px';
+  popupEl.style.left = Math.max(8, left) + 'px';
+  popupEl.style.visibility = '';
+}
+ 
+/* ==========================================================
+   REVIEW ICONS - phải ở scope toàn cục
+   FIX: trước đây reviewIcons + getReviewColor là const bên trong
+   openEditModal, nhưng renderTrip cũng gọi getReviewColor khi dựng
+   act-card -> ReferenceError: getReviewColor is not defined
+   ========================================================== */
+const REVIEW_ICONS = [
+  { cls: 'bi-star-fill', color: '#fbbf24' },
+  { cls: 'bi-hand-thumbs-up-fill', color: '#3b82f6' },
+  { cls: 'bi-heart-fill', color: '#ef4444' },
+  { cls: 'bi-trophy-fill', color: '#f59e0b' },
+  { cls: 'bi-fire', color: '#f97316' },
+  { cls: 'bi-emoji-smile-fill', color: '#eab308' }
+];
+ 
+function getReviewColor(cls) {
+  const found = REVIEW_ICONS.find(i => i.cls === cls);
+  return found ? found.color : '#f8fafc';
+}
+window.getReviewColor = getReviewColor;
+window.REVIEW_ICONS = REVIEW_ICONS;
+ 
+// Gom ô Date & Time và Amount vào chung 1 hàng.
+// Dùng cho modal Add vì HTML của nó được render ở nơi khác.
+function pairDateAmountSideBySide(formId, dtWrapperId, amountInputId) {
+  const form = document.getElementById(formId);
+  const dtEl = document.getElementById(dtWrapperId);
+  const amtEl = document.getElementById(amountInputId);
+  if (!form || !dtEl || !amtEl) return;
+ 
+  // Lấy block cha trực tiếp của form chứa từng field
+  const blockOf = (el) => {
+    let node = el;
+    while (node && node.parentElement !== form) node = node.parentElement;
+    return node;
+  };
+  const dtBlock = blockOf(dtEl);
+  const amtBlock = blockOf(amtEl);
+  if (!dtBlock || !amtBlock || dtBlock === amtBlock) return;
+  if (dtBlock.parentElement && dtBlock.parentElement.dataset.pairedRow === '1') return;
+ 
+  const row = document.createElement('div');
+  row.dataset.pairedRow = '1';
+  row.style.cssText = 'display: flex; gap: 12px; align-items: flex-start;';
+  form.insertBefore(row, dtBlock);
+  dtBlock.style.flex = '1.15';
+  amtBlock.style.flex = '1';
+  row.appendChild(dtBlock);
+  row.appendChild(amtBlock);
+ 
+  // Thu nhỏ font Amount cho cân với ô ngày bên cạnh
+  amtEl.style.fontSize = '1.1rem';
+  amtEl.style.padding = '10px 32px 10px 12px';
+  // Popup lịch không bị bóp theo ô cha hẹp
+  const dtPopup = document.getElementById('newCustomDtPopup') || document.getElementById('customDtPopup');
+  if (dtPopup) dtPopup.style.minWidth = '330px';
+}
+ 
 function openEditModal(item, tripId) {
   let modalOverlay = document.getElementById('editItemModalOverlay');
   if (!modalOverlay) {
@@ -8815,9 +9030,9 @@ function openEditModal(item, tripId) {
     modalOverlay.id = 'editItemModalOverlay';
     modalOverlay.style.cssText = `
       position: fixed; inset: 0; width: 100vw; height: 100vh;
-      background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px); display: flex; align-items: center; 
-      justify-content: center; z-index: 2147483647; padding: 12px;
+      background: rgba(15, 23, 42, 0.55); backdrop-filter: blur(26px) saturate(1.3);
+      -webkit-backdrop-filter: blur(26px) saturate(1.3); display: flex; align-items: center; 
+      justify-content: center; z-index: 2147483647; padding: 24px 12px; overflow-y: auto;
     `;
     modalOverlay.addEventListener('click', (e) => {
       if (e.target === modalOverlay) {
@@ -8826,7 +9041,7 @@ function openEditModal(item, tripId) {
     });
     document.body.appendChild(modalOverlay);
   }
-
+ 
   let itemDate = item.date instanceof Date && !isNaN(item.date) ? item.date : new Date();
   const pad = (n) => String(n).padStart(2, '0');
   let currentYear = itemDate.getFullYear();
@@ -8834,9 +9049,9 @@ function openEditModal(item, tripId) {
   let currentDay = itemDate.getDate();
   let selectedHour = pad(itemDate.getHours());
   let selectedMin = pad(itemDate.getMinutes());
-
+ 
   const uniqueCategories = [...new Set(trips.flatMap(t => t.activities.map(a => a.category).filter(Boolean)))];
-
+ 
   const rawAmount = item.expense || 0;
   const formattedInitialAmount = rawAmount ? Math.round(rawAmount).toLocaleString("en-US") : "";
   
@@ -8846,25 +9061,10 @@ function openEditModal(item, tripId) {
   const rawCategory = item.category || '';
   const cleanEditCat = cleanCat(rawCategory);
   const itemIconSrc = item.icon && /^https?:\/\//i.test(item.icon) ? item.icon : iconFor(rawCategory);
-
-  // Danh sách Bootstrap Icon kèm màu sắc sinh ₫ộng
-  const reviewIcons = [
-    { cls: 'bi-star-fill', color: '#fbbf24' },        // Vàng sao
-    { cls: 'bi-hand-thumbs-up-fill', color: '#3b82f6' }, // Xanh dương
-    { cls: 'bi-heart-fill', color: '#ef4444' },      // ₫ỏ tim
-    { cls: 'bi-trophy-fill', color: '#f59e0b' },     // Vàng cúp
-    { cls: 'bi-fire', color: '#f97316' },            // Cam lửa
-    { cls: 'bi-emoji-smile-fill', color: '#eab308' } // Vàng cười
-  ];
-
+ 
+  const reviewIcons = REVIEW_ICONS;
   let currentReview = item.review || 'bi-star-fill';
-
-  // Hàm lấy màu tương ứng cho icon
-  const getReviewColor = (cls) => {
-    const found = reviewIcons.find(item => item.cls === cls);
-    return found ? found.color : '#f8fafc';
-  };
-
+ 
   const renderReviewHtml = (val) => {
     if (!val) return '';
     if (val.startsWith('bi-')) {
@@ -8873,124 +9073,131 @@ function openEditModal(item, tripId) {
     }
     return val; // Fallback emoji cũ
   };
-
+ 
+  // Popup lần mở trước đã được nhấc ra body, innerHTML không xoá được nó -> dọn tay
+  document.querySelectorAll('body > #newCustomDtPopup, body > #customDtPopup').forEach(el => el.remove());
+ 
   modalOverlay.innerHTML = `
-    <style>      
+    <style>
+      /* Đồng bộ với pnlModal: nền đặc, bo 16px, accent teal, bỏ hiệu ứng vé rách */
+      /* .ticket-modal KHÔNG được có backdrop-filter / mask / overflow:auto.
+         Cả ba đều biến nó thành containing block + clip cho con position:fixed,
+         làm datepicker bị neo sai chỗ và bị cắt.
+         -> Đẩy toàn bộ nền + răng cưa xuống lớp ::before phía sau. */
       .ticket-modal {
         font-family: 'DM Sans', sans-serif;
-        background: rgba(30, 41, 59, 0.55);
-        backdrop-filter: blur(28px);
-        -webkit-backdrop-filter: blur(28px);
-        color: #f8fafc;
+        color: #f8f9fa;
         width: 100%;
-        max-width: 500px;
-        border-radius: 28px;
-        padding: 36px 28px 42px 28px;
-        box-shadow: 0 35px 75px rgba(0, 0, 0, 0.85);
-        border: 2px dashed rgba(255, 255, 255, 0.25);
+        max-width: 520px;
+        padding: 26px 20px;
         position: relative;
         overflow: visible;
+        background: transparent;
+        border: none;
+        box-sizing: border-box;
         z-index: 2147483648;
       }
-      .ticket-modal::before, .ticket-modal::after {
+      .ticket-modal::before {
         content: '';
         position: absolute;
-        top: 115px;
-        width: 28px;
-        height: 28px;
-        background: rgba(15, 23, 42, 0.5);
-        border-radius: 50%;
-        z-index: 5;
-        border: 2px dashed rgba(255, 255, 255, 0.25);
+        inset: 0;
+        z-index: -1;
+        border-radius: 16px;
+        /* KHÔNG đặt backdrop-filter ở đây: Chrome bỏ qua mask-image khi
+           phần tử có backdrop-filter -> mất răng cưa. Phần blur kính
+           đã do modalOverlay đảm nhiệm. */
+        background: rgba(30, 34, 43, 0.92);
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+ 
+        /* Răng cưa mép trên + mép dưới, chỉ khoét lớp nền này nên
+           không ảnh hưởng gì tới các phần tử con */
+        --scallop-r: 9px;
+        --scallop-tile: 22px;
+        -webkit-mask-image:
+          radial-gradient(circle at var(--scallop-r) 0, transparent var(--scallop-r), #000 calc(var(--scallop-r) + 0.5px)),
+          radial-gradient(circle at var(--scallop-r) 100%, transparent var(--scallop-r), #000 calc(var(--scallop-r) + 0.5px));
+        mask-image:
+          radial-gradient(circle at var(--scallop-r) 0, transparent var(--scallop-r), #000 calc(var(--scallop-r) + 0.5px)),
+          radial-gradient(circle at var(--scallop-r) 100%, transparent var(--scallop-r), #000 calc(var(--scallop-r) + 0.5px));
+        -webkit-mask-size: var(--scallop-tile) 100%;
+        mask-size: var(--scallop-tile) 100%;
+        -webkit-mask-repeat: repeat-x;
+        mask-repeat: repeat-x;
+        -webkit-mask-composite: source-in;
+        mask-composite: intersect;
       }
-      .ticket-modal::before { left: -16px; }
-      .ticket-modal::after { right: -16px; }
-      .ticket-bottom-scallops {
-        position: absolute;
-        bottom: -1px; left: 0; right: 0; height: 12px;
-        background-image: radial-gradient(circle, rgba(15, 23, 42, 0.5) 6px, transparent 7px);
-        background-size: 22px 14px; background-repeat: repeat-x;
-        z-index: 4; border-bottom-left-radius: 28px; border-bottom-right-radius: 28px;
-      }
+      .ticket-modal::-webkit-scrollbar { width: 6px; }
+      .ticket-modal::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
+ 
       .ticket-input-wrapper { position: relative; display: flex; align-items: center; }
       .ticket-input {
-        width: 100%; background: rgba(15, 23, 42, 0.4);
-        border: 1px solid rgba(255, 255, 255, 0.18); color: #fff;
-        padding: 11px 38px 11px 14px; border-radius: 12px;
-        font-size: 1rem; font-family: inherit; outline: none; transition: all 0.2s;
+        width: 100%; background: rgba(15, 23, 42, 0.45);
+        border: none; color: #fff;
+        padding: 10px 32px 10px 12px; border-radius: 8px;
+        font-size: 0.95rem; font-family: inherit; outline: none;
+        box-sizing: border-box; transition: border-color 0.2s, background 0.2s;
       }
-      .ticket-input:focus { border-color: #f8fafc; background: rgba(15, 23, 42, 0.75); }
+      .ticket-input::placeholder { color: #64748b; }
+      .ticket-input:focus { background: rgba(15, 23, 42, 0.75); box-shadow: inset 0 0 0 1px #00bfa5; }
       .ticket-input-wrapper .clear-btn { opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
       .ticket-input-wrapper:hover .clear-btn, .ticket-input-wrapper:focus-within .clear-btn { opacity: 1; pointer-events: auto; }
-      .ticket-label { font-size: 0.75rem; color: #94a3b8; display: block; margin-bottom: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
-      .clear-btn { position: absolute; right: 12px; background: transparent; border: none; color: #94a3b8; font-size: 1rem; cursor: pointer; padding: 4px; z-index: 2; }
-      .clear-btn:hover { color: #ef4444; }
+      .ticket-label { font-size: 0.7rem; color: #94a3b8; display: block; margin-bottom: 5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+      .clear-btn { position: absolute; right: 10px; background: transparent; border: none; color: #94a3b8; font-size: 0.95rem; cursor: pointer; padding: 4px; z-index: 2; line-height: 1; }
+      .clear-btn:hover { color: #f43f5e; }
+ 
       .custom-dt-popup {
-        display: none; position: absolute; top: calc(100% + 8px); left: 0; right: 0;
-        background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.25);
-        border-radius: 18px; padding: 16px; z-index: 30; box-shadow: 0 30px 60px rgba(0,0,0,0.85);
+        display: none; position: fixed; min-width: 330px; max-width: 360px;
+        background: rgba(20, 23, 31, 0.94); backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px); border: none;
+        border-radius: 14px; padding: 14px; z-index: 30; box-shadow: 0 12px 32px rgba(0,0,0,0.6);
       }
-      .dt-picker-container { display: flex; gap: 12px; }
-      .calendar-left { flex: 2.2; background: rgba(30, 41, 59, 0.6); border-radius: 12px; padding: 12px; border: 1px solid rgba(255,255,255,0.15); }
-      .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-weight: 700; font-size: 1.05rem; color: #f8fafc; }
-      .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; font-size: 0.95rem; }
-      .cal-day-name { color: #94a3b8; font-weight: 700; padding-bottom: 4px; font-size: 0.85rem; }
-      .cal-cell { padding: 5px 0; border-radius: 6px; cursor: pointer; color: #f8fafc; transition: background 0.2s; }
-      .cal-cell:hover { background: rgba(255, 255, 255, 0.2); }
-      .cal-cell.selected { background: #f1f5f9; color: #0f172a; font-weight: 700; }
+      .dt-picker-container { display: flex; gap: 10px; }
+      .calendar-left { flex: 2.2; background: rgba(255, 255, 255, 0.04); border-radius: 10px; padding: 10px; }
+      .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-weight: 600; font-size: 0.95rem; color: #f8f9fa; }
+      .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; text-align: center; font-size: 0.85rem; }
+      .cal-day-name { color: #64748b; font-weight: 600; padding-bottom: 4px; font-size: 0.72rem; }
+      .cal-cell { padding: 5px 0; border-radius: 6px; cursor: pointer; color: #f8f9fa; transition: background 0.2s; }
+      .cal-cell:hover { background: rgba(255, 255, 255, 0.14); }
+      .cal-cell.selected { background: #00bfa5; color: #000; font-weight: 700; }
       .cal-cell.muted { color: #475569; }
-      .time-scroll-right { flex: 0.7; display: flex; flex-direction: column; background: rgba(30, 41, 59, 0.6); border-radius: 12px; padding: 12px 6px; border: 1px solid rgba(255,255,255,0.15); }
-      .time-scroll-box { display: flex; justify-content: center; gap: 2px; height: 160px; overflow-y: auto; }
-      .time-column { display: flex; flex-direction: column; gap: 3px; overflow-y: auto; max-height: 150px; padding-right: 2px; }
+      .time-scroll-right { flex: 0.8; display: flex; flex-direction: column; background: rgba(255, 255, 255, 0.04); border-radius: 10px; padding: 10px 6px; }
+      .time-scroll-box { display: flex; justify-content: center; gap: 2px; height: 160px; }
+      .time-column { display: flex; flex-direction: column; gap: 2px; overflow-y: auto; max-height: 155px; padding-right: 2px; scrollbar-width: thin; }
       .time-column::-webkit-scrollbar { width: 2px; }
-      .time-column::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 2px; }
-      .time-item { padding: 4px 4px; text-align: center; border-radius: 6px; cursor: pointer; font-size: 0.75rem; color: #94a3b8; transition: all 0.2s; }
-      .time-item:hover { background: rgba(255, 255, 255, 0.2); color: #fff; }
-      .time-item.selected { background: #f1f5f9; color: #0f172a; font-weight: 700; }
-
+      .time-column::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+      .time-item { padding: 4px; text-align: center; border-radius: 5px; cursor: pointer; font-size: 0.75rem; color: #94a3b8; transition: all 0.2s; }
+      .time-item:hover { background: rgba(255, 255, 255, 0.14); color: #fff; }
+      .time-item.selected { background: #00bfa5; color: #000; font-weight: 700; }
+ 
       .review-dropdown-btn {
-        background: rgba(15, 23, 42, 0.4);
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        border-radius: 8px;
-        padding: 7px 10px;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1rem;
-        color: #fff;
-        transition: background 0.2s;
+        background: rgba(15, 23, 42, 0.45); border: none;
+        border-radius: 8px; padding: 7px 10px; cursor: pointer;
+        display: inline-flex; align-items: center; justify-content: center;
+        font-size: 1rem; color: #fff; transition: background 0.2s;
       }
-      .review-dropdown-btn:hover {
-        background: rgba(15, 23, 42, 0.75);
+      .review-dropdown-btn:hover { background: rgba(255, 255, 255, 0.14); }
+ 
+      .ticket-modal button[type="submit"] {
+        background: #00bfa5; border: none; color: #000;
+        transition: filter 0.2s, transform 0.1s;
       }
-
-      .ticket-modal button[type="submit"], .ticket-modal #addModalSubmitBtn {
-        transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
-      }
-      .ticket-modal button[type="submit"]:hover, .ticket-modal #addModalSubmitBtn:hover {
-        background: #ffffff !important;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2) !important;
-      }
+      .ticket-modal button[type="submit"]:hover { filter: brightness(1.1); transform: translateY(-1px); }
       .ticket-modal button[type="button"]:not(.clear-btn):not(.review-dropdown-btn):not(#triggerDeleteBtn):hover {
-        background: rgba(255, 255, 255, 0.1) !important;
-        color: #ffffff !important;
+        background: rgba(255, 255, 255, 0.12) !important; color: #ffffff !important;
       }
     </style>
-
+ 
     <div class="ticket-modal">
       <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 22px;">
         <img id="editModalHeaderIcon" src="${itemIconSrc}" alt="" style="width: 42px; height: 42px; object-fit: contain; flex-shrink: 0;" onerror="this.src='${DEFAULT_ICON_URL}';">
         <div class="ticket-input-wrapper" style="flex: 1;">
-          <input type="text" id="activityInput" name="activity" value="${item.activity || ''}" required placeholder="Enter description..." class="ticket-input" style="border: none; border-bottom: 2px dashed rgba(255, 255, 255, 0.4); border-radius: 0; background: transparent; padding: 6px 32px 6px 4px; font-size: 1.25rem; font-weight: 700; color: #ffffff;">
+          <input type="text" id="activityInput" name="activity" value="${item.activity || ''}" required placeholder="Enter description..." class="ticket-input" style="border: none; border-bottom: 1px solid rgba(255, 255, 255, 0.15); border-radius: 0; background: transparent; padding: 6px 32px 6px 4px; font-size: 1.25rem; font-weight: 700; color: #ffffff;">
           <button type="button" id="clearActivityBtn" class="clear-btn" style="right: 4px;" title="Clear">✕</button>
         </div>
       </div>
-
-      <div style="border-top: 1px dashed rgba(255, 255, 255, 0.25); margin: 0 -32px 20px -32px;"></div>
-
+ 
+      <div style="border-top: 1px solid rgba(255, 255, 255, 0.08); margin: 0 -20px 18px -20px;"></div>
+ 
       <form id="editItemForm" style="display: flex; flex-direction: column; gap: 16px;">
         
         <div style="display: flex; gap: 12px;">
@@ -8998,6 +9205,7 @@ function openEditModal(item, tripId) {
             <label class="ticket-label">Category</label>
             <div class="ticket-input-wrapper">
               <input type="text" id="categoryInput" name="category" autocomplete="off" value="${cleanEditCat}" placeholder="Select or type category..." class="ticket-input">
+              <input type="hidden" id="categoryRawVal" value="${rawCategory}">
               <button type="button" id="clearCategoryBtn" class="clear-btn" title="Clear">✕</button>
             </div>
             <div id="editCategoryDropdown" style="display: none; position: absolute; top: calc(100% + 6px); left: 0; min-width: 240px; width: max-content; max-width: 320px; background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 14px; max-height: 200px; overflow-y: auto; z-index: 50; box-shadow: 0 20px 40px rgba(0,0,0,0.8); padding: 6px;">
@@ -9012,7 +9220,7 @@ function openEditModal(item, tripId) {
               }).join('')}
             </div>
           </div>
-
+ 
           <div style="flex: 1;">
             <label class="ticket-label">Code</label>
             <div class="ticket-input-wrapper">
@@ -9021,14 +9229,15 @@ function openEditModal(item, tripId) {
             </div>
           </div>
         </div>
-
-        <div style="position: relative;">
+ 
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+        <div style="position: relative; flex: 1.15;">
           <label class="ticket-label">Date & Time</label>
           <div class="ticket-input-wrapper" id="dtDisplayWrapper" style="cursor: pointer;">
             <input type="text" id="dtDisplayText" readonly value="${pad(currentDay)}/${pad(currentMonth + 1)}/${currentYear}, ${selectedHour}:${selectedMin}" class="ticket-input" style="cursor: pointer; padding-right: 40px;">
             <span style="position: absolute; right: 14px; color: #94a3b8; pointer-events: none; font-size: 1rem;"><i class="bi bi-calendar3"></i></span>
           </div>
-
+ 
           <div id="customDtPopup" class="custom-dt-popup">
             <div class="dt-picker-container">
               <div class="calendar-left">
@@ -9042,7 +9251,7 @@ function openEditModal(item, tripId) {
                 </div>
                 <div id="calDaysGrid" class="cal-grid" style="margin-top: 4px;"></div>
               </div>
-
+ 
               <div class="time-scroll-right">
                 <div style="font-size: 0.65rem; color: #94a3b8; font-weight: 700; text-align: center; margin-bottom: 4px;">TIME</div>
                 <div class="time-scroll-box">
@@ -9052,25 +9261,26 @@ function openEditModal(item, tripId) {
                 </div>
               </div>
             </div>
-
+ 
             <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 10px;">
               <button type="button" id="dtCancelBtn" style="background: transparent; border: 1px solid rgba(255,255,255,0.25); color: #94a3b8; padding: 6px 14px; border-radius: 8px; font-size: 0.85rem; cursor: pointer;">Cancel</button>
-              <button type="button" id="dtConfirmBtn" style="background: #f1f5f9; border: none; color: #0f172a; padding: 6px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.85rem;">Apply</button>
+              <button type="button" id="dtConfirmBtn" style="background: #00bfa5; border: none; color: #000; padding: 6px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.85rem;">Apply</button>
             </div>
           </div>
-
+ 
           <input type="hidden" id="finalDateVal" value="${currentYear}-${pad(currentMonth + 1)}-${pad(currentDay)}T${selectedHour}:${selectedMin}">
         </div>
-
-        <div>
-          <label class="ticket-label">Amount (VND)</label>
-          <div class="ticket-input-wrapper">
-            <input type="text" id="formattedAmountInput" value="${formattedInitialAmount}" placeholder="0" class="ticket-input" style="color: #ffffff; font-size: 1.6rem; font-weight: 700; padding: 12px 38px 12px 14px;">
-            <button type="button" id="clearAmountBtn" class="clear-btn" title="Clear">✕</button>
+ 
+          <div style="flex: 1;">
+            <label class="ticket-label">Amount (VND)</label>
+            <div class="ticket-input-wrapper">
+              <input type="text" id="formattedAmountInput" value="${formattedInitialAmount}" placeholder="0" class="ticket-input" style="color: #ffffff; font-size: 1.1rem; font-weight: 700;">
+              <button type="button" id="clearAmountBtn" class="clear-btn" title="Clear">✕</button>
+            </div>
+            <input type="hidden" name="expense" id="rawAmountInput" value="${rawAmount}">
           </div>
-          <input type="hidden" name="expense" id="rawAmountInput" value="${rawAmount}">
         </div>
-
+ 
         <div>
           <label class="ticket-label">Note / Address</label>
           <div class="ticket-input-wrapper" style="align-items: flex-start;">
@@ -9078,10 +9288,10 @@ function openEditModal(item, tripId) {
             <button type="button" id="clearNotesBtn" class="clear-btn" style="top: 8px;" title="Clear">✕</button>
           </div>
         </div>
-
-        <div style="display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin-top: 10px; border-top: 1px dashed rgba(255, 255, 255, 0.25); padding-top: 16px;">
+ 
+        <div style="display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 14px;">
           <button type="button" id="cancelEditBtn" style="background: transparent; border: 1px solid rgba(255, 255, 255, 0.25); color: #94a3b8; padding: 7px 14px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; font-family: inherit;">Cancel</button>
-          <button type="submit" style="background: #f1f5f9; border: none; color: #0f172a; padding: 7px 16px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.85rem; font-family: inherit; box-shadow: 0 2px 6px rgba(0,0,0,0.2);">Save</button>
+          <button type="submit" style="padding: 7px 18px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.85rem; font-family: inherit; box-shadow: 0 2px 6px rgba(0,0,0,0.2);">Save</button>
           
           <div style="position: relative;" id="reviewDropdownContainer">
             <button type="button" id="reviewBtn" class="review-dropdown-btn" title="Select Review Icon" style="padding: 6px 12px; height: 38px;">
@@ -9098,37 +9308,36 @@ function openEditModal(item, tripId) {
               `).join('')}
             </div>
           </div>
-
+ 
           <button type="button" id="triggerDeleteBtn" title="Delete Item" style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; padding: 7px 10px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; transition: background 0.2s;" onmouseover="this.style.background='rgba(239, 68, 68, 0.3)'" onmouseout="this.style.background='rgba(239, 68, 68, 0.15)'">
             <i style="font-size:15px!important" class="bi bi-trash"></i>
           </button>
         </div>
       </form>
-      <div class="ticket-bottom-scallops"></div>
     </div>
   `;
-
+ 
   modalOverlay.style.display = 'flex';
   document.getElementById('notesInput').value = item.notes || '';
-
+ 
   const categoryInputEl = document.getElementById('categoryInput');
   categoryInputEl.addEventListener('input', () => {
     const iconImg = document.getElementById('editModalHeaderIcon');
     if (iconImg) iconImg.src = iconFor(categoryInputEl.value);
   });
-
+ 
   const reviewBtn = document.getElementById('reviewBtn');
   const reviewMenu = document.getElementById('reviewDropdownMenu');
   const reviewInputVal = document.getElementById('reviewInputVal');
   const selectedReviewIcon = document.getElementById('selectedReviewIcon');
-
+ 
   reviewBtn.onclick = (e) => {
     e.stopPropagation();
     // 👉 ₫ổi từ 'flex' sang 'grid' ₫ể hiển thị chuẩn 2 hàng x 3 cột
     const isShowing = reviewMenu.style.display === 'grid';
     reviewMenu.style.display = isShowing ? 'none' : 'grid';
   };
-
+ 
   reviewMenu.querySelectorAll('.review-opt').forEach(opt => {
     opt.onmouseover = () => opt.style.background = 'rgba(255, 255, 255, 0.15)';
     opt.onmouseout = () => opt.style.background = 'transparent';
@@ -9141,13 +9350,13 @@ function openEditModal(item, tripId) {
       reviewMenu.style.display = 'none';
     };
   });
-
+ 
   document.addEventListener('click', (e) => {
     if (!document.getElementById('reviewDropdownContainer').contains(e.target)) {
       reviewMenu.style.display = 'none';
     }
   });
-
+ 
   document.getElementById('triggerDeleteBtn').onclick = () => {
     let confirmOverlay = document.getElementById('customConfirmOverlay');
     if (!confirmOverlay) {
@@ -9156,7 +9365,7 @@ function openEditModal(item, tripId) {
       confirmOverlay.style.cssText = `
         position: fixed; inset: 0; width: 100vw; height: 100vh;
         background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px); display: flex; align-items: center; 
+        -webkit-backdrop-filter: blur(26px) saturate(1.3); display: flex; align-items: center; 
         justify-content: center; z-index: 2147483649; padding: 12px;
       `;
       confirmOverlay.innerHTML = `
@@ -9174,19 +9383,20 @@ function openEditModal(item, tripId) {
     } else {
       confirmOverlay.style.display = 'flex';
     }
-
+ 
     document.getElementById('confirmNoBtn').onclick = () => { confirmOverlay.style.display = 'none'; };
     document.getElementById('confirmYesBtn').onclick = () => {
       confirmOverlay.style.display = 'none';
       deleteActivity(item.id, tripId);
     };
   };
-
+ 
   const editCatInput = document.getElementById('categoryInput');
   const editCatDropdown = document.getElementById('editCategoryDropdown');
   
   editCatInput.addEventListener('focus', () => { editCatDropdown.style.display = 'block'; });
   editCatInput.addEventListener('input', (e) => {
+    document.getElementById('categoryRawVal').value = '';
     const val = e.target.value.toLowerCase();
     const options = editCatDropdown.querySelectorAll('.cat-option');
     let hasVisible = false;
@@ -9200,7 +9410,7 @@ function openEditModal(item, tripId) {
     });
     editCatDropdown.style.display = hasVisible ? 'block' : 'none';
   });
-
+ 
   // 👉 Xử lý click chọn option cho modal Edit: Cập nhật text sạch và ₫ổi icon header
   editCatDropdown.querySelectorAll('.cat-option').forEach(opt => {
     opt.addEventListener('mouseenter', () => opt.style.background = 'rgba(255, 255, 255, 0.15)');
@@ -9210,6 +9420,7 @@ function openEditModal(item, tripId) {
       const cleanText = chosenCat.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD00-\uDDFF])/g, '').trim();
       
       editCatInput.value = cleanText || chosenCat;
+      document.getElementById('categoryRawVal').value = chosenCat;
       const headerIcon = document.getElementById('editModalHeaderIcon');
       if (headerIcon) {
         headerIcon.src = iconFor(chosenCat);
@@ -9217,18 +9428,18 @@ function openEditModal(item, tripId) {
       editCatDropdown.style.display = 'none';
     });
   });
-
+ 
   document.addEventListener('click', (e) => {
     if (!document.getElementById('editCategoryContainer').contains(e.target)) {
       editCatDropdown.style.display = 'none';
     }
   });
-
+ 
   let tempYear = currentYear;
   let tempMonth = currentMonth;
   let tempDay = currentDay;
   const shortMonthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
+ 
   function renderCalendar() {
     document.getElementById('calMonthYearTitle').textContent = `${shortMonthNames[tempMonth]} ${tempYear}`;
     const daysGrid = document.getElementById('calDaysGrid');
@@ -9236,7 +9447,7 @@ function openEditModal(item, tripId) {
     const firstDayIndex = (new Date(tempYear, tempMonth, 1).getDay() + 6) % 7;
     const totalDays = new Date(tempYear, tempMonth + 1, 0).getDate();
     const prevTotalDays = new Date(tempYear, tempMonth, 0).getDate();
-
+ 
     for (let i = firstDayIndex; i > 0; i--) {
       const dDiv = document.createElement('div');
       dDiv.className = 'cal-cell muted';
@@ -9251,14 +9462,14 @@ function openEditModal(item, tripId) {
       daysGrid.appendChild(dDiv);
     }
   }
-
+ 
   document.getElementById('prevMonthBtn').onclick = () => {
     tempMonth--; if (tempMonth < 0) { tempMonth = 11; tempYear--; } renderCalendar();
   };
   document.getElementById('nextMonthBtn').onclick = () => {
     tempMonth++; if (tempMonth > 11) { tempMonth = 0; tempYear++; } renderCalendar();
   };
-
+ 
   const hoursCol = document.getElementById('hoursColumn');
   const minsCol = document.getElementById('minutesColumn');
   for (let h = 0; h < 24; h++) {
@@ -9272,7 +9483,7 @@ function openEditModal(item, tripId) {
     };
     hoursCol.appendChild(itemDiv);
   }
-
+ 
   for (let m = 0; m < 60; m += 5) {
     const mStr = pad(m);
     const itemDiv = document.createElement('div');
@@ -9284,22 +9495,19 @@ function openEditModal(item, tripId) {
     };
     minsCol.appendChild(itemDiv);
   }
-
+ 
   const dtWrapper = document.getElementById('dtDisplayWrapper');
   const dtPopup = document.getElementById('customDtPopup');
   dtWrapper.onclick = (e) => {
     e.stopPropagation();
     const isOpen = dtPopup.style.display === 'block';
-    dtPopup.style.display = isOpen ? 'none' : 'block';
-    if (!isOpen) renderCalendar();
+    if (isOpen) { dtPopup.style.display = 'none'; return; }
+    renderCalendar();
+    placeDtPopup(dtWrapper, dtPopup);
   };
-
-  document.addEventListener('click', (e) => {
-    if (!dtPopup.contains(e.target) && !dtWrapper.contains(e.target)) {
-      dtPopup.style.display = 'none';
-    }
-  });
-
+ 
+  // FIX: xem ghi chú ở openAddModal - listener đóng popup đã được gắn 1 lần ở scope window.
+ 
   document.getElementById('dtCancelBtn').onclick = () => { dtPopup.style.display = 'none'; };
   document.getElementById('dtConfirmBtn').onclick = () => {
     currentYear = tempYear; currentMonth = tempMonth; currentDay = tempDay;
@@ -9307,7 +9515,7 @@ function openEditModal(item, tripId) {
     document.getElementById('finalDateVal').value = `${currentYear}-${pad(currentMonth + 1)}-${pad(currentDay)}T${selectedHour}:${selectedMin}`;
     dtPopup.style.display = 'none';
   };
-
+ 
   document.getElementById('clearCategoryBtn').onclick = () => { document.getElementById('categoryInput').value = ''; document.getElementById('categoryInput').focus(); };
   document.getElementById('clearActivityBtn').onclick = () => { document.getElementById('activityInput').value = ''; document.getElementById('activityInput').focus(); };
   document.getElementById('clearCodeBtn').onclick = () => { document.getElementById('codeInput').value = ''; document.getElementById('codeInput').focus(); };
@@ -9317,7 +9525,7 @@ function openEditModal(item, tripId) {
     document.getElementById('formattedAmountInput').focus(); 
   };
   document.getElementById('clearNotesBtn').onclick = () => { document.getElementById('notesInput').value = ''; document.getElementById('notesInput').focus(); };
-
+ 
   const formattedInput = document.getElementById('formattedAmountInput');
   const rawInput = document.getElementById('rawAmountInput');
   formattedInput.addEventListener('input', (e) => {
@@ -9326,53 +9534,73 @@ function openEditModal(item, tripId) {
     rawInput.value = num;
     e.target.value = num ? num.toLocaleString("en-US") : '';
   });
-
+ 
   document.getElementById('cancelEditBtn').onclick = () => { modalOverlay.style.display = 'none'; };
-
+ 
   document.getElementById('editItemForm').onsubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
 
-    item.category = formData.get('category').trim();
-    item.activity = formData.get('activity').trim();
+    // Ưu tiên giá trị gốc có emoji, nếu user gõ tay thì dùng text trong ô
+    const rawCat = (document.getElementById('categoryRawVal')?.value || '').trim();
+    const shownCat = (formData.get('category') || '').trim();
+    item.category = rawCat || shownCat;
+
+    item.activity = (document.getElementById('activityInput')?.value || '').trim();
     item.review = formData.get('review') || currentReview;
     
     const finalDt = document.getElementById('finalDateVal').value;
     if (finalDt) {
       item.date = new Date(finalDt);
     }
-
-    item.code = formData.get('code').trim();
+ 
+    item.code = (formData.get('code') || '').trim();
     item.expense = parseFloat(rawInput.value) || 0;
-    item.notes = formData.get('notes').trim();
-
+    item.notes = (formData.get('notes') || '').trim();
+ 
+    postTravel({
+      action: 'edit-travel',
+      rowIndex: item.rowIndex,
+      activity: item.activity,
+      category: item.category,
+      code: item.code,
+      date: toSheetDate(item.date),
+      expense: item.expense,
+      notes: item.notes,
+      review: item.review || ''
+    });
+    triggerPaperFirework(null);
     trips = buildTrips(trips.flatMap(t => t.activities));
     modalOverlay.style.display = 'none';
     openTrip(tripId);
   };
 }
-
+ 
 document.getElementById('addTravelBtn').addEventListener('click', () => {
   openAddModal();
 });
-
+ 
 /* ==========================================================
    3. HÀM XÓA HOẠT ₫ỘNG (deleteActivity)
    ================================================---------- */
 function deleteActivity(itemId, tripId) {
-  if (!confirm('Bạn có chắc chắn muốn xóa mục này khỏi hành trình không?')) {
-    return;
-  }
-
+  // Không dùng confirm() nữa: triggerDeleteBtn đã mở modal xác nhận riêng,
+  // để nguyên sẽ bị hỏi hai lần.
   let allActivities = trips.flatMap(t => t.activities);
+  const target = allActivities.find(item => item.id === itemId);
+ 
+  if (target && target.rowIndex) {
+    postTravel({ action: 'delete-travel', rowIndex: target.rowIndex });
+  }
+ 
   allActivities = allActivities.filter(item => item.id !== itemId);
   trips = buildTrips(allActivities);
-
+ 
   const editModalOverlay = document.getElementById('editItemModalOverlay');
   if (editModalOverlay) {
     editModalOverlay.style.display = 'none';
   }
-
+ 
   if (typeof openTrip === 'function' && tripId) {
     openTrip(tripId);
   } else if (typeof renderTripsView === 'function') {
@@ -9381,7 +9609,10 @@ function deleteActivity(itemId, tripId) {
     location.reload();
   }
 }
-   
+// Đưa ra global để file render (renderTrip / act-card click) gọi được
+window.openEditModal = openEditModal;
+window.deleteActivity = deleteActivity;
+if (typeof openAddModal === 'function') window.openAddModal = openAddModal;
 
     // Touch events
     window.addEventListener('touchstart', onStart, { passive: true });
@@ -9408,11 +9639,16 @@ function deleteActivity(itemId, tripId) {
     document.getElementById("vnindex-reload-btn").addEventListener("click", function() {fetchVnIndexData(true);});
     window.addEventListener("resize", function() {if (typeof buildColHdr === "function") buildColHdr(); if (typeof applyLayout === "function") applyLayout();});
     window.addEventListener("DOMContentLoaded", async () => {
+  // Bấm giờ ngay từ đầu, chạy song song với việc load data
+  const minDisplay = new Promise(resolve => setTimeout(resolve, 1000));
+
   try {
     await Promise.all([loadBalanceHistoryTC(), loadRecent()]);
   } catch (error) {
     console.error("Failed to load data:", error);
   } finally {
+    // Data xong rồi vẫn phải đợi cho đủ 1s; nếu data lâu hơn 1s thì timer đã xong sẵn, không delay thêm
+    await minDisplay;
     const loader = document.getElementById("loader-overlay");
     if (loader) loader.classList.add("fade-out");
   }
