@@ -644,7 +644,7 @@ html, body {
 @media (max-width: 480px) {.tab-btn span {display: none;}.tab-btn i{font-size:4.0vw!important;}}
 
 .big-wrap{overflow-y: auto;overflow-x: hidden;min-height:0}
-@media (max-width: 480px) {.card,.det-col-hdr,.wallet-container,.sub-slide,#cat-list{padding:0 2vw 0 2vw;}}
+@media (max-width: 480px) {.card,.det-col-hdr,.wallet-container,.sub-slide,#cat-list{padding:0 3vw 0 3vw;}}
 /* ── Slides ── */
 .slides-outer{flex:1;overflow:hidden;position:relative}
 .slides-wrap{display:flex;width:700%;height:100%;transition:transform 0.3s cubic-bezier(0.4,0,0.2,1)}
@@ -1748,9 +1748,9 @@ to{transform:rotate(360deg)}
                             <p><span class="status-dot loading" id="statusDot"></span><span id="statusText"></span></p>
                           </div>
                           <!-- Nút Add Travel (nếu ở dashboard nằm ở topbar, khi sang detail bạn có thể thêm class 'fab-mode' cho nút này thông qua hàm openTrip() của bạn) -->
-                          <button class="reload" id="addTravelBtn" title="Add Travel"><i class="bi bi-plus-circle-fill"></i></button>
-                          <button class="reload" id="overviewBtn" title="Overview Chart"><i class="bi bi-bar-chart-fill" style="font-size:15px!important;"></i></button>
-                          <button class="reload" id="reloadBtn" title="Reload Data"><i class="bi bi-arrow-clockwise" style="font-size:15px!important;"></i></button>
+                          <button class="reload" id="addTravelBtn" style="color:aqua;"><i class="bi bi-plus-circle-fill"></i></button>
+                          <button class="reload" id="overviewBtn"><i class="bi bi-bar-chart-fill" style="font-size:15px!important;"></i></button>
+                          <button class="reload" id="reloadBtn"><i class="bi bi-arrow-clockwise" style="font-size:15px!important;"></i></button>
                         </div>
 
                         <div class="panel active" id="panel-dashboard">
@@ -5527,7 +5527,7 @@ to{transform:rotate(360deg)}
         
         var donutTotal=Object.values(donutValues).reduce(function(s,v){return s+v},0),navTotalBalVnd=donutTotal,navTotalPnlVnd=Object.values(donutPnls).reduce(function(s,v){return s+v},0),navTotalCostVnd=Object.values(donutCosts).reduce(function(s,v){return s+v},0);
         var balEl=document.getElementById("total-profit-bal"); if(balEl) balEl.textContent=navTotalBalVnd.toLocaleString()+"₫";
-        var valEl=document.getElementById("total-profit-val"); if(valEl) valEl.textContent=(navTotalPnlVnd>0?"+":"")+formatShortNumber(navTotalPnlVnd)+"₫";
+        var valEl=document.getElementById("total-profit-val"); if(valEl) valEl.textContent=fmtPnl(navTotalPnlVnd);
         
         var navOverallPct=navTotalCostVnd>0?navTotalPnlVnd/navTotalCostVnd*100:0,badgeEl=document.getElementById("total-profit-badge");
         if(badgeEl){badgeEl.textContent=formatPnlPct(navOverallPct);badgeEl.className="badge-pill "+(navTotalPnlVnd>=0?"badge-teal":"badge-pink")}
@@ -5912,7 +5912,7 @@ to{transform:rotate(360deg)}
             const totalHeaderHtml = `
                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 4px 4px 4px; border-bottom: 1px solid rgba(255,255,255,0.08); flex-shrink: 0;">
                     <span style="font-size: 9px; color: #9ca3af; font-weight: 700; text-transform: uppercase;">Active Total</span>
-                    <span style="font-size: 13px; color: #ffffff; font-weight: 800;">${formatPreciseShortNumber(totalActiveInvested)}</span>
+                    <span style="font-size: 13px; color: #ffffff; font-weight: 800;">${fmtBalance(totalActiveInvested)}</span>
                 </div>
             `;
             groupContainer.innerHTML = totalHeaderHtml;
@@ -6020,7 +6020,7 @@ to{transform:rotate(360deg)}
                                 </div>
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <span style="font-size: 9px; font-weight: 700; color: #94a3b8; text-transform: uppercase;">VAL</span>
-                                    <span style="font-size: 13px; font-weight: 800; color: #ffffff; text-shadow: 0 1px 3px rgba(0,0,0,0.8);">${formatPreciseShortNumber(cat.val)}</span>
+                                    <span style="font-size: 13px; font-weight: 800; color: #ffffff; text-shadow: 0 1px 3px rgba(0,0,0,0.8);">${fmtBalance(cat.val)}</span>
                                 </div>
                             </div>
                         </div>
