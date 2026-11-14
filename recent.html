@@ -17,7 +17,7 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Sacramento" rel="stylesheet"><link href="https://fonts.googleapis.com/icon?family=League+Script" rel="stylesheet"><link href="https://fonts.googleapis.com/icon?family=Corinthia" rel="stylesheet"><link href="https://fonts.googleapis.com/icon?family=Satisfy" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Manrope" rel="stylesheet"><link href="https://fonts.googleapis.com/icon?family=IBM+Plex+Mono" rel="stylesheet"><link href="https://fonts.googleapis.com/icon?family=PT+Mono" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/icon?family=Mr+De+Haviland" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/icon?family=Mr+De+Haviland" rel="stylesheet"><link href="https://fonts.googleapis.com/icon?family=Libre+Baskerville" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Alegreya" rel="stylesheet"><link href="https://fonts.googleapis.com/icon?family=Marck+Script" rel="stylesheet"><link href="https://fonts.googleapis.com/icon?family=Mrs+Saint+Delafield" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
@@ -726,8 +726,8 @@ html, body {
   background-size: cover;
   background-position: center 47%;
   background-repeat: no-repeat;filter: saturate(110%) contrast(1.1);}
-.budget-total,#budget-spent,.marker-value,#budget-remaining{font-family:"Lora";}
-.budget-total{font-size:20px;font-weight:500;color:rgba(255,255,255,.85);margin-bottom:8px}
+.budget-total,#budget-spent,.marker-value,#budget-remaining{font-family:"Libre Baskerville";}
+.budget-total{font-size:18px;font-weight:500;color:rgba(255,255,255,.85);margin-bottom:8px}
 
 .budget-bar{position:relative;width:100%;height:7px;background:#505867;border-radius:999px;overflow:hidden}
 #budget-fill{position:absolute;left:0;top:0;height:100%;border-radius:999px;background:linear-gradient( 90deg,#4f21ff 0%,#6b4dff 35%,#9a88ff 65%,#ffffff 100% );transition:width .4s ease}
@@ -1578,15 +1578,15 @@ to{transform:rotate(360deg)}
                 <div class="budget-card">
                     <!-- Sub-Tab Switcher Header (Placed at top) -->
                     <div class="budget-subtabs" style="display: flex; align-items: center; justify-content: space-between; margin: 5px;">
-                        <button type="button" class="budget-subtab" onclick="switchBudgetTab(this, 'subcategory')">
+                        <button type="button" class="budget-subtab" onclick="switchBudgetTab(this, 'subcategory');if (window.innerWidth <= 480) this.parentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });">
                             <span class="material-icons-round" style="font-size: 16px;">segment</span>
                             <span>Detail</span>
                         </button>
-                        <button type="button" class="budget-subtab active" onclick="switchBudgetTab(this, 'spending')">
+                        <button type="button" class="budget-subtab active" onclick="switchBudgetTab(this, 'spending');if (window.innerWidth <= 480) this.parentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });">
                             <span class="material-icons-round" style="font-size: 16px;">history</span>
                             <span>Recent</span>
                         </button>
-                        <button type="button" class="budget-subtab" onclick="switchBudgetTab(this, 'subscription')">
+                        <button type="button" class="budget-subtab" onclick="switchBudgetTab(this, 'subscription');if (window.innerWidth <= 480) this.parentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });">
                             <span class="material-icons-round" style="font-size: 16px;">cloud</span>
                             <span>Subs</span>
                         </button>
@@ -3538,10 +3538,33 @@ to{transform:rotate(360deg)}
 
           var percent = currentExpense / averageExpense;
           var remaining = averageExpense - currentExpense;
+          var pctVal = percent * 100;
+
+          var badgeBg, gradColors;
+          if (pctVal > 120) {
+              badgeBg = "#ef4444"; // red
+              gradColors = "linear-gradient(135deg, #ef4444 0%, #f87171 100%)";
+          } else if (pctVal >= 100) {
+              badgeBg = "#e286d4"; // pink
+              gradColors = "linear-gradient(135deg, #e286d4 0%, #ffa6f6 100%)";
+          } else if (pctVal > 80) {
+              badgeBg = "#eab308"; // yellow
+              gradColors = "linear-gradient(135deg, #eab308 0%, #fde047 100%)";
+          } else {
+              badgeBg = "#2bbba0"; // default / safe
+              gradColors = "linear-gradient(135deg, #2bbba0 0%, #34d399 100%)";
+          }
 
           document.getElementById("budget-average").textContent = fmtFull(averageExpense);
-          document.getElementById("budget-spent").innerHTML = fmtFull(currentExpense) + " <span class='budget-percent'>" + (percent * 100).toFixed(0) + "%</span>";
-          document.getElementById("budget-remaining").textContent = fmtFull(remaining);
+          document.getElementById("budget-spent").innerHTML = fmtFull(currentExpense) + 
+              " <span class='budget-percent' style='background-color: " + badgeBg + " !important; color: #fff !important;'>" + pctVal.toFixed(0) + "%</span>";
+          
+          var remEl = document.getElementById("budget-remaining");
+          remEl.textContent = fmtFull(remaining);
+          remEl.style.setProperty("background", gradColors, "important");
+          remEl.style.setProperty("-webkit-background-clip", "text", "important");
+          remEl.style.setProperty("-webkit-text-fill-color", "transparent", "important");
+          remEl.style.setProperty("background-clip", "text", "important");
 
           function buildAllocationBar(mains,currentExpense,lastMonthExpense,averageExpense){for(var categoryPalette=[{bg:"#0f52ba",text:"#ffffff",dot:"#0f52ba"},{bg:"#2bbba0",text:"#ffffff",dot:"#2bbba0"},{bg:"#e286d4",text:"#ffffff",dot:"#e286d4"},{bg:"#f34e2c",text:"#ffffff",dot:"#f34e2c"},{bg:"#8a6be7",text:"#ffffff",dot:"#8a6be7"},{bg:"#0032c8",text:"#ffffff",dot:"#0032c8"}],cats=[],total=0,i=0;i<mains.length;i++)mains[i].curr>0&&(cats.push(mains[i]),total+=mains[i].curr);var barTrack=document.getElementById("budget-fill-track"),barEl=document.getElementById("budget-fill-container"),legendEl=document.getElementById("budget-fill-legend");if(barTrack&&barEl&&legendEl){if(barEl.innerHTML="",legendEl.innerHTML="",total<=0)return;var isMobile=window.innerWidth<1024,scaleMax=Math.max(lastMonthExpense,currentExpense,1),barWidthPct=Math.min(currentExpense/scaleMax*100,100);barEl.style.transition="width 0.8s cubic-bezier(0.25, 1, 0.5, 1)",barEl.style.width="0%",barEl.style.borderRadius="9999px",barTrack.style.width="100%",barTrack.style.borderRadius="9999px",requestAnimationFrame(function(){barEl.style.width=barWidthPct+"%"});var markerPercent=Math.min(lastMonthExpense/scaleMax,1),marker=document.getElementById("last-month-marker");marker&&(marker.style.transition="left 0.8s cubic-bezier(0.25, 1, 0.5, 1)",marker.style.left=100*markerPercent+"%",marker.innerHTML='<i class="bi bi-caret-up Custom-triangle" style="margin-top:24px!important;display:block;"></i>');var lastMonthEl=document.getElementById("last-month-display");lastMonthEl&&(lastMonthEl.innerHTML='<div class="budget-label" style="font-size:11px;">Last month</div><div style="font-family:DM Sans;font-size:13px;color:var(--fg-dim)">'+fmtFull(lastMonthExpense)+"</div>");var overEl=document.getElementById("budget-over-indicator");if(overEl)if(averageExpense>0&&scaleMax>averageExpense){var budgetPct=averageExpense/scaleMax*100,overWidthPct=(scaleMax-averageExpense)/scaleMax*100;overEl.style.setProperty("display","block","important"),overEl.style.position="absolute",overEl.style.top="0",overEl.style.bottom="0",overEl.style.backgroundColor="rgba(226, 134, 212, 0.2)",overEl.style.zIndex="5",overEl.style.transition="all 0.8s cubic-bezier(0.25, 1, 0.5, 1)",overEl.style.left=budgetPct+"%",overEl.style.width="0%",requestAnimationFrame(function(){overEl.style.left=budgetPct+"%",overEl.style.width=overWidthPct+"%"}),overEl.title="Budget limit to Max: "+fmtAxis(scaleMax-averageExpense)}else overEl.style.setProperty("display","none","important");for(var c=0;c<cats.length;c++){var paletteItem=categoryPalette[c%categoryPalette.length],pct=cats[c].curr/total*100,seg=document.createElement("div");if(seg.className="budget-fill-seg",seg.style.flex=pct+" 1 0%",seg.style.height="100%",seg.style.backgroundColor=paletteItem.bg,seg.style.color="#ffffff",c>0&&c<cats.length-1?seg.classList.add("pill-overlay"):0===c?(seg.style.borderTopLeftRadius="9999px",seg.style.borderBottomLeftRadius="9999px"):c===cats.length-1&&(seg.style.borderTopRightRadius="9999px",seg.style.borderBottomRightRadius="9999px"),pct>=1){var label=document.createElement("span");label.textContent=pct.toFixed(0)+"%",label.style.fontWeight="700",pct<8&&(label.style.fontSize="10px"),seg.appendChild(label)}barEl.appendChild(seg);var item=document.createElement("span");item.className="legend-item",item.style.animationDelay=.1+.05*c+"s";var rawName=cats[c].name,shortName=rawName;isMobile?rawName.includes("Family")?shortName="Family":rawName.includes("Bills")?shortName="Bills":rawName.includes("Rental")?shortName="Rental":rawName.includes("Food")?shortName="Groceries":rawName.includes("Shop")&&(shortName="Shop/Travel"):shortName=rawName.length>12?rawName.slice(0,10)+"…":rawName,item.innerHTML='<span class="legend-dot" style="background:'+paletteItem.dot+'"></span>'+shortName,legendEl.appendChild(item)}}}
           buildAllocationBar(mains, currentExpense, lastMonthExpense, averageExpense);
