@@ -1792,7 +1792,7 @@ to{transform:rotate(360deg)}
                                 <div class="wallet-widget">
                                     <div class="wallet-container">
                                         <div class="cards-stack" id="cardsStack"></div>
-                                        <div class="wallet-pocket">
+                                        <div class="wallet-pocket" id="wallet-pocket">
                                             <div>
                                                 <div class="pocket-header" style="display: flex; align-items: center; gap: 8px;">
                                                     <span class="material-icons-round">wallet</span>
@@ -1900,7 +1900,7 @@ to{transform:rotate(360deg)}
                                 </header>
 
                                 <!-- Hero Overview Card -->
-                                <div class="hero-bg-wrap">
+                                <div class="hero-bg-wrap" id="hero-bg-wrap">
                                     <div class="hero-card" id="hero-card" style="display:none;">
                                         <div class="hero-caption-row">
                                             <div class="hero-caption"><span>Total </span><i class="bi bi-fire" style="font-size:25px;margin-bottom:10px!important;" aria-hidden="true"></i><span> F. I. R. E. BUDGET</span></div>
@@ -9748,53 +9748,75 @@ to{transform:rotate(360deg)}
     window.addEventListener("DOMContentLoaded", () => {
         const ringsWrap = document.getElementById("rings-wrap");
         if (!ringsWrap) return;
-
-        // Danh sách các ảnh kèm theo vị trí center (% tùy chỉnh riêng cho từng hình)
         const bgData = [
-            {
-                url: "https://i.pinimg.com/736x/c7/1e/e8/c71ee8482941cf728e54c51d517b2395.jpg",
-                position: "60% 65%"
-            },
-            {
-                url: "https://i.pinimg.com/736x/17/0a/c8/170ac8caa1f9da216d70822bee6e7580.jpg",
-                position: "65% 65%"
-            },
-            {
-                url: "https://i.pinimg.com/736x/fd/ae/39/fdae392e3a40bec6b92c5507be095776.jpg",
-                position: "65% 45%"
-            },
-            {
-                url: "https://i.pinimg.com/736x/72/75/a9/7275a9bdbc320a93dadea9fc179fa5e6.jpg",
-                position: "65% 50%"
-            },
+            {url: "https://i.pinimg.com/736x/c7/1e/e8/c71ee8482941cf728e54c51d517b2395.jpg",position: "60% 65%"},
+            {url: "https://i.pinimg.com/736x/17/0a/c8/170ac8caa1f9da216d70822bee6e7580.jpg",position: "65% 65%"},
+            {url: "https://i.pinimg.com/736x/fd/ae/39/fdae392e3a40bec6b92c5507be095776.jpg",position: "65% 45%"},
+            {url: "https://i.pinimg.com/736x/72/75/a9/7275a9bdbc320a93dadea9fc179fa5e6.jpg",position: "65% 50%"},
             {url: "https://i.pinimg.com/1200x/bd/72/78/bd7278b95a89cc9f2db0116463357f1a.jpg",position: "65% 50%"},
             {url: "https://i.pinimg.com/736x/fa/2a/e5/fa2ae54e604f670fa9e30e579004e8c9.jpg",position: "65% 50%"},
             {url: "https://i.pinimg.com/736x/c7/23/d5/c723d525b9d0954ef0868497e760f450.jpg",position: "65% 50%"},
             {url: "https://i.pinimg.com/1200x/32/24/ae/3224aeaac65912a7797d3685fa80f0d4.jpg",position: "65% 50%"}
-
-
         ];
-
-        // Cấu hình style chuyển đổi mượt mà
         ringsWrap.style.transition = "background-image 1s ease-in-out, background-position 1s ease-in-out";
         ringsWrap.style.backgroundSize = "cover";
 
-        // Hàm cập nhật background và position ngẫu nhiên
         const changeBackground = () => {
             const randomItem = bgData[Math.floor(Math.random() * bgData.length)];
-            
-            // Gán ảnh nền kèm lớp phủ gradient
             ringsWrap.style.backgroundImage = `linear-gradient(135deg, rgba(15,23,42,.45) 0, rgba(15,23,42,.4) 100%), url(${randomItem.url})`;
-            
-            // Gán vị trí tâm riêng cho hình đó
             ringsWrap.style.backgroundPosition = randomItem.position;
         };
-
-        // Random ngay lập tức lần đầu load (không theo thứ tự)
         changeBackground();
-
-        // Tiếp tục đổi ngẫu nhiên mỗi 10 giây
         setInterval(changeBackground, 5000);
+    });
+
+    window.addEventListener("DOMContentLoaded", () => {
+        const ringsWrap = document.getElementById("hero-bg-wrap");
+        if (!ringsWrap) return;
+        const bgData = [
+            {url: "https://i.pinimg.com/736x/61/7d/89/617d89a284bd5dbac3ec440e5cc67754.jpg",position: "60% 65%"},
+            {url: "https://i.pinimg.com/1200x/1c/c6/8a/1cc68ac2301f68e217db16bac3bcf94b.jpg",position: "65% 65%"},
+            {url: "https://i.pinimg.com/736x/b2/40/c8/b240c8a280eb9d2a714ce95eba2994a1.jpg",position: "65% 50%"},
+            {url: "https://i.pinimg.com/736x/18/d3/07/18d307146ef5fdfc55408fa439f742ba.jpg",position: "65% 50%"},
+            {url: "https://i.pinimg.com/736x/9c/ab/60/9cab60d53596015f06a9d2d32459950a.jpg",position: "65% 50%"},
+            {url: "https://i.pinimg.com/736x/75/1c/58/751c58fe2de3d6b7e644b91ff13b1d54.jpg",position: "65% 50%"},
+            {url: "https://i.pinimg.com/736x/28/b4/08/28b408ad354eb6f40dfbc6c24ff0b00e.jpg",position: "65% 50%"},
+            {url: "https://i.pinimg.com/1200x/d6/5f/70/d65f70c4a8b2b6d155258cf88d461f95.jpg",position: "65% 70%"}
+        ];
+        ringsWrap.style.transition = "background-image 1s ease-in-out, background-position 1s ease-in-out";
+        ringsWrap.style.backgroundSize = "cover";
+
+        const changeBackground = () => {
+            const randomItem = bgData[Math.floor(Math.random() * bgData.length)];
+            ringsWrap.style.backgroundImage = `linear-gradient(135deg, rgba(15,23,42,.45) 0, rgba(15,23,42,.4) 100%), url(${randomItem.url})`;
+            ringsWrap.style.backgroundPosition = randomItem.position;
+        };
+        changeBackground();
+        setInterval(changeBackground, 5000);
+    });
+
+    window.addEventListener("DOMContentLoaded", () => {
+        const ringsWrap = document.getElementById("wallet-pocket");
+        if (!ringsWrap) return;
+        const bgData = [
+            {url: "https://i.pinimg.com/736x/3d/9d/5f/3d9d5f59d0ba5da31cd9cf8e9bba9817.jpg",position: "60% 45%"},
+            {url: "https://i.pinimg.com/736x/e2/fe/3e/e2fe3ec0116c63ff7268d4004f907f4f.jpg",position: "65% 50%"},//jp
+            {url: "https://i.pinimg.com/1200x/eb/ab/98/ebab988a920547b38aaf3e6974821944.jpg",position: "65% 50%"},//green cross
+            {url: "https://i.pinimg.com/736x/f3/9e/c6/f39ec6350264128bb1f875c2551a3f66.jpg",position: "65% 40%"},//flower
+            {url: "https://i.pinimg.com/736x/05/d8/7b/05d87b2d925f41468c55c9ba7b5cd33b.jpg",position: "65% 60%"},//cat
+            {url: "https://i.pinimg.com/736x/5c/31/aa/5c31aae5e74e9a65265b36c00e6a0b18.jpg",position: "65% 50%"},//bh
+            {url: "https://i.pinimg.com/736x/92/bd/f0/92bdf005c8e76c229216d91ee8ba8310.jpg",position: "65% 70%"}//LV
+        ];
+        ringsWrap.style.transition = "opacity 1s ease-in-out, background-image 1s ease-in-out, background-position 1s ease-in-out";
+        ringsWrap.style.backgroundSize = "cover";
+
+        const changeBackground = () => {
+            const randomItem = bgData[Math.floor(Math.random() * bgData.length)];
+            ringsWrap.style.backgroundImage = `linear-gradient(135deg, rgba(15,23,42,.45) 0, rgba(15,23,42,.4) 100%), url(${randomItem.url})`;
+            ringsWrap.style.backgroundPosition = randomItem.position;
+        };
+        changeBackground();
+        setInterval(changeBackground, 10000);
     });
 
     !function(){function applyAllSplitLayouts(){(function(){var bigWrap=document.querySelector(".big-wrap"),rightSlot=document.getElementById("exp-split-right"),ringsWrap=document.getElementById("rings-wrap"),spendingView=document.getElementById("budget-view-subcategory"),budgetCard=document.querySelector(".budget-card"),slideZero=document.getElementById("slide-0");if(bigWrap&&rightSlot&&spendingView&&slideZero){var tabBtn,shouldSplit=(tabBtn=document.getElementById("tab-btn-0"),window.innerWidth>480&&!!tabBtn&&tabBtn.classList.contains("active")),isSplit=bigWrap.classList.contains("expense-split");if(shouldSplit&&!isSplit){bigWrap.classList.add("expense-split"),ringsWrap&&rightSlot.appendChild(ringsWrap),rightSlot.appendChild(spendingView);var recentBtn=budgetCard&&budgetCard.querySelector(".budget-subtabs .budget-subtab:first-child");if(recentBtn&&recentBtn.classList.contains("active")){var detailBtn=budgetCard.querySelector(".budget-subtabs .budget-subtab:nth-child(1)");detailBtn&&detailBtn.click()}}else!shouldSplit&&isSplit&&(bigWrap.classList.remove("expense-split"),slideZero&&ringsWrap&&slideZero.insertBefore(ringsWrap,slideZero.firstChild),spendingView&&budgetCard&&budgetCard.appendChild(spendingView))}})(),function(){var bigWrap=document.querySelector(".big-wrap"),rightSlot=document.getElementById("ovw-split-right"),walletView=document.getElementById("budget-view-wallet"),budgetCard=document.querySelector("#ca-wrap .budget-card");if(bigWrap&&rightSlot&&walletView&&budgetCard){var tabBtn,shouldSplit=(tabBtn=document.getElementById("tab-btn-1"),window.innerWidth>480&&!!tabBtn&&tabBtn.classList.contains("active")),isSplit=bigWrap.classList.contains("wallet-split");if(shouldSplit&&!isSplit){bigWrap.classList.add("wallet-split"),rightSlot.appendChild(walletView);var walletBtn=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:first-child');if(walletBtn&&walletBtn.classList.contains("active")){var fireBtn=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:last-child');fireBtn&&fireBtn.click()}}else if(!shouldSplit&&isSplit){bigWrap.classList.remove("wallet-split"),budgetCard.insertBefore(walletView,budgetCard.querySelector("#budget-view-fire")||null);var fireBtnBack=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:last-child');if(fireBtnBack&&fireBtnBack.classList.contains("active")){var walletBtnBack=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:first-child');walletBtnBack&&walletBtnBack.click()}}}}(),function(){var bigWrap=document.querySelector(".big-wrap"),rightSlot=document.getElementById("port-split-right"),portfolioView=document.getElementById("budget-view-portfolio"),budgetCard=document.querySelector("#slide-2 .budget-card");if(bigWrap&&rightSlot&&portfolioView&&budgetCard){var tabBtn,shouldSplit=(tabBtn=document.getElementById("tab-btn-2"),window.innerWidth>480&&!!tabBtn&&tabBtn.classList.contains("active")),isSplit=bigWrap.classList.contains("portfolio-split");if(shouldSplit&&!isSplit){bigWrap.classList.add("portfolio-split"),rightSlot.appendChild(portfolioView);var portfolioBtn=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:first-child');if(portfolioBtn&&portfolioBtn.classList.contains("active")){var btcBtn=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:last-child');btcBtn&&btcBtn.click()}}else if(!shouldSplit&&isSplit){bigWrap.classList.remove("portfolio-split");var btcView=document.getElementById("budget-view-btc");btcView&&btcView.parentNode===budgetCard?budgetCard.insertBefore(portfolioView,btcView):budgetCard.appendChild(portfolioView);var btcBtnBack=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:last-child');if(btcBtnBack&&btcBtnBack.classList.contains("active")){var portfolioBtnBack=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:first-child');portfolioBtnBack&&portfolioBtnBack.click()}}}}()}var applyTimer,resizeTimer,tabBarObserverTarget=document.getElementById("tab-bar")||document.getElementById("tab-btn-group")||document.body;new MutationObserver(function(){clearTimeout(applyTimer),applyTimer=setTimeout(applyAllSplitLayouts,0)}).observe(tabBarObserverTarget,{attributes:!0,attributeFilter:["class"],subtree:!0}),window.addEventListener("resize",function(){clearTimeout(resizeTimer),resizeTimer=setTimeout(applyAllSplitLayouts,100)}),document.addEventListener("DOMContentLoaded",applyAllSplitLayouts),applyAllSplitLayouts()}();
