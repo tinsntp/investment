@@ -9749,14 +9749,14 @@ to{transform:rotate(360deg)}
         const ringsWrap = document.getElementById("rings-wrap");
         if (!ringsWrap) return;
         const bgData = [
-            {url: "https://i.pinimg.com/736x/c7/1e/e8/c71ee8482941cf728e54c51d517b2395.jpg",position: "60% 65%"},
-            {url: "https://i.pinimg.com/736x/17/0a/c8/170ac8caa1f9da216d70822bee6e7580.jpg",position: "65% 65%"},
-            {url: "https://i.pinimg.com/736x/fd/ae/39/fdae392e3a40bec6b92c5507be095776.jpg",position: "65% 45%"},
-            {url: "https://i.pinimg.com/736x/72/75/a9/7275a9bdbc320a93dadea9fc179fa5e6.jpg",position: "65% 50%"},
-            {url: "https://i.pinimg.com/1200x/bd/72/78/bd7278b95a89cc9f2db0116463357f1a.jpg",position: "65% 50%"},
-            {url: "https://i.pinimg.com/736x/fa/2a/e5/fa2ae54e604f670fa9e30e579004e8c9.jpg",position: "65% 50%"},
-            {url: "https://i.pinimg.com/736x/c7/23/d5/c723d525b9d0954ef0868497e760f450.jpg",position: "65% 50%"},
-            {url: "https://i.pinimg.com/1200x/32/24/ae/3224aeaac65912a7797d3685fa80f0d4.jpg",position: "65% 50%"}
+            {url: "https://i.pinimg.com/736x/c7/1e/e8/c71ee8482941cf728e54c51d517b2395.jpg",position: "60% 60%"},//coffee
+            {url: "https://i.pinimg.com/736x/17/0a/c8/170ac8caa1f9da216d70822bee6e7580.jpg",position: "65% 65%"},//green guy
+            {url: "https://i.pinimg.com/736x/fd/ae/39/fdae392e3a40bec6b92c5507be095776.jpg",position: "65% 45%"},//table cafe
+            {url: "https://i.pinimg.com/1200x/bd/72/78/bd7278b95a89cc9f2db0116463357f1a.jpg",position: "65% 50%"},//bread
+            {url: "https://i.pinimg.com/1200x/b6/93/eb/b693ebd82214783579dd81c04f2e9679.jpg",position: "65% 55%"},//bar
+            {url: "https://i.pinimg.com/1200x/bc/62/f9/bc62f982e1c03795359af01b09762e2e.jpg",position: "65% 50%"},//street
+            {url: "https://i.pinimg.com/736x/be/8e/e6/be8ee6f1723fab147800fc911e52717f.jpg",position: "65% 50%"},//supermarket
+            {url: "https://i.pinimg.com/1200x/32/24/ae/3224aeaac65912a7797d3685fa80f0d4.jpg",position: "65% 70%"}//japanese restaurant
         ];
         ringsWrap.style.transition = "background-image 1s ease-in-out, background-position 1s ease-in-out";
         ringsWrap.style.backgroundSize = "cover";
@@ -9799,20 +9799,20 @@ to{transform:rotate(360deg)}
         const ringsWrap = document.getElementById("wallet-pocket");
         if (!ringsWrap) return;
         const bgData = [
-            {url: "https://i.pinimg.com/736x/3d/9d/5f/3d9d5f59d0ba5da31cd9cf8e9bba9817.jpg",position: "60% 45%"},
-            {url: "https://i.pinimg.com/736x/e2/fe/3e/e2fe3ec0116c63ff7268d4004f907f4f.jpg",position: "65% 50%"},//jp
+            {url: "https://i.pinimg.com/1200x/c2/d6/5a/c2d65a57ed567458409355bfb56987b9.jpg",position: "60% 45%"},
+            {url: "https://i.pinimg.com/1200x/c2/d6/5a/c2d65a57ed567458409355bfb56987b9.jpg",position: "65% 50%"},//d flower
             {url: "https://i.pinimg.com/1200x/eb/ab/98/ebab988a920547b38aaf3e6974821944.jpg",position: "65% 50%"},//green cross
             {url: "https://i.pinimg.com/736x/f3/9e/c6/f39ec6350264128bb1f875c2551a3f66.jpg",position: "65% 40%"},//flower
-            {url: "https://i.pinimg.com/736x/05/d8/7b/05d87b2d925f41468c55c9ba7b5cd33b.jpg",position: "65% 60%"},//cat
+            {url: "https://i.pinimg.com/736x/29/ae/6d/29ae6d3160a8e07b773980a14bff04d4.jpg",position: "65% 60%"},//vans
             {url: "https://i.pinimg.com/736x/5c/31/aa/5c31aae5e74e9a65265b36c00e6a0b18.jpg",position: "65% 50%"},//bh
-            {url: "https://i.pinimg.com/736x/92/bd/f0/92bdf005c8e76c229216d91ee8ba8310.jpg",position: "65% 70%"}//LV
+            {url: "https://i.pinimg.com/736x/79/32/86/793286b8e921f901b8ab454186b1e8aa.jpg",position: "65% 70%"}//LV
         ];
         ringsWrap.style.transition = "opacity 1s ease-in-out, background-image 1s ease-in-out, background-position 1s ease-in-out";
         ringsWrap.style.backgroundSize = "cover";
 
         const changeBackground = () => {
             const randomItem = bgData[Math.floor(Math.random() * bgData.length)];
-            ringsWrap.style.backgroundImage = `linear-gradient(135deg, rgba(15,23,42,.45) 0, rgba(15,23,42,.4) 100%), url(${randomItem.url})`;
+            ringsWrap.style.backgroundImage = `linear-gradient(135deg, rgba(15,23,42,.75) 0, rgba(15,23,42,.4) 100%), url(${randomItem.url})`;
             ringsWrap.style.backgroundPosition = randomItem.position;
         };
         changeBackground();
