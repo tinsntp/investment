@@ -679,7 +679,7 @@ html, body {
 .tradingview-widget-container__widget{width:100% !important;position:relative !important;overflow:hidden !important}
 .tradingview-widget-container iframe{position:absolute !important;top:-1px !important;left:-1px !important;width:calc(100% + 2px) !important;border:none !important;outline:none !important;box-shadow:none !important}
 #chart-macro{height:200px !important}
-#chart-micro{height:340px !important}
+#chart-micro{height:320px !important}
 
 /* ══ DETAIL STYLES ══ https://i.pinimg.com/1200x/75/ab/b1/75abb1ed3cc7e63dc9161635c015e925.jpg*/
 #rings-wrap{display:flex;flex-wrap:wrap;gap:1.5vw;justify-content:space-around;margin-bottom:1.5vw;border-radius:10px;background:linear-gradient(135deg,rgba(15,23,42,.45)0,rgba(15,23,42,.4) 100%),url(https://i.pinimg.com/736x/17/0a/c8/170ac8caa1f9da216d70822bee6e7580.jpg);background-size:cover;background-position:center 65%;background-repeat:no-repeat;filter:saturate(100%) contrast(1.1)}#chart-svg{transition:opacity .18s ease}#chart-svg.tc-fading{opacity:0}@keyframes animBarGrow{0%{transform:scaleY(0);opacity:0}to{transform:scaleY(1);opacity:1}}.anim-bar{transform-box:fill-box;transform-origin:bottom;animation:animBarGrow .45s ease-out both}@keyframes animAreaFadeIn{0%{opacity:0}to{opacity:1}}.anim-area{animation:animAreaFadeIn .5s ease-out both}@keyframes animLineDraw{to{stroke-dashoffset:0}}.anim-line{stroke-dasharray:4000;stroke-dashoffset:4000;animation:animLineDraw .9s ease-out forwards}@keyframes balanceValPop{0%{transform:scale(.92);opacity:.4}60%{transform:scale(1.03);opacity:1}to{transform:scale(1);opacity:1}}@keyframes walletCardFanIn{0%{opacity:0;transform:translateY(30px) scale(.93) rotateX(-10deg)}to{opacity:1;transform:translateY(0) scale(1) rotateX(0deg)}}
@@ -2553,10 +2553,6 @@ to{transform:rotate(360deg)}
 
                                       <!-- Table 1: Allocation & Stress Test Summary -->
                                       <div class="section-block-rock">
-                                          <div class="section-header-rock">
-                                              <div class="asset-tag-rock">📊 ALLOCATION & STRESS TEST SUMMARY</div>
-                                              <span class="rule-pill-rock">2 Portfolios</span>
-                                          </div>
                                           <div class="table-wrap-rock">
                                               <table class="table-rock">
                                                   <colgroup>
@@ -2574,18 +2570,6 @@ to{transform:rotate(360deg)}
                                                       </tr>
                                                   </thead>
                                                   <tbody>
-                                                      <tr>
-                                                          <td class="text-normal-rock">Main Capital</td>
-                                                          <td>260M</td>
-                                                          <td>250M</td>
-                                                          <td style="color:#fff; font-weight:800;">510M</td>
-                                                      </tr>
-                                                      <tr>
-                                                          <td class="text-normal-rock">Backup</td>
-                                                          <td>150 - 250M</td>
-                                                          <td>100M</td>
-                                                          <td style="color:#cbd5e1;">300-500M</td>
-                                                      </tr>
                                                       <tr>
                                                           <td class="text-normal-rock">∑ Lot</td>
                                                           <td>5×0.04 = <strong style="color:#fbbf24">0.20</strong></td>
@@ -2615,18 +2599,6 @@ to{transform:rotate(360deg)}
                                                           <td><span class="val-neg-deep-rock">-510M</span> <span class="sub-note-rock">@2200</span></td>
                                                           <td><span class="val-neg-deep-rock">-255M</span> <span class="sub-note-rock">@10K</span></td>
                                                           <td><span class="val-neg-deep-rock">-765M</span></td>
-                                                      </tr>
-                                                      <tr>
-                                                          <td class="text-normal-rock">Target TP</td>
-                                                          <td style="color:#fbbf24; font-weight:800;">5,600</td>
-                                                          <td style="color:#f97316; font-weight:800;">160K</td>
-                                                          <td>-</td>
-                                                      </tr>
-                                                      <tr>
-                                                          <td class="text-normal-rock">∑ @TP</td>
-                                                          <td><span class="val-pos-rock">+1.22B</span></td>
-                                                          <td><span class="val-pos-rock">+1.28B</span></td>
-                                                          <td><span class="val-pos-rock">+2.50B</span></td>
                                                       </tr>
                                                   </tbody>
                                               </table>
