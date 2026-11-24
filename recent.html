@@ -6037,180 +6037,180 @@ function renderStructuredTable(points){var tbody=document.getElementById("table-
         }
     }
 
-    function fetchWatchlistData() {
-    var csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=523826078&t=" + Date.now(),
-        container = document.getElementById("watchlist-items-container"),
-        heatmapContainer = document.getElementById("watchlist-view-heatmap-mode");
+        function fetchWatchlistData() {
+        var csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=523826078&t=" + Date.now(),
+            container = document.getElementById("watchlist-items-container"),
+            heatmapContainer = document.getElementById("watchlist-view-heatmap-mode");
 
-    var skeletonHeatmapHtml = '';
-    skeletonHeatmapHtml += '<div class="skeleton-card" style="grid-column: span 6; grid-row: span 3; height: 100%; min-height: 120px; border-radius: 0px; opacity: 0.7;"></div>';
-    for (var s = 0; s < 2; s++) {
-        skeletonHeatmapHtml += '<div class="skeleton-card" style="grid-column: span 3; grid-row: span 3; height: 100%; min-height: 120px; border-radius: 0px; opacity: 0.7;"></div>';
-    }
+        var skeletonHeatmapHtml = '';
+        skeletonHeatmapHtml += '<div class="skeleton-card" style="grid-column: span 6; grid-row: span 3; height: 100%; min-height: 120px; border-radius: 0px; opacity: 0.7;"></div>';
+        for (var s = 0; s < 2; s++) {
+            skeletonHeatmapHtml += '<div class="skeleton-card" style="grid-column: span 3; grid-row: span 3; height: 100%; min-height: 120px; border-radius: 0px; opacity: 0.7;"></div>';
+        }
 
-    var skeletonTableHtml = '';
-    for (var t = 0; t < 3; t++) { // Giảm luôn list table xuống 3 dòng cho đồng bộ
-        skeletonTableHtml += '<div class="skeleton-card" style="height: 50px; width: 100%; margin-bottom: 8px; border-radius: 0px;"></div>';
-    }
+        var skeletonTableHtml = '';
+        for (var t = 0; t < 3; t++) { // Giảm luôn list table xuống 3 dòng cho đồng bộ
+            skeletonTableHtml += '<div class="skeleton-card" style="height: 50px; width: 100%; margin-bottom: 8px; border-radius: 0px;"></div>';
+        }
 
-    if (container) container.innerHTML = skeletonTableHtml;
-    if (heatmapContainer) heatmapContainer.innerHTML = skeletonHeatmapHtml;
+        if (container) container.innerHTML = skeletonTableHtml;
+        if (heatmapContainer) heatmapContainer.innerHTML = skeletonHeatmapHtml;
 
-    var now = new Date(), day = now.getDay(), currentTimeVal = 100 * now.getHours() + now.getMinutes(),
-        isMarketOpen = day >= 1 && day <= 5 && currentTimeVal >= 900 && currentTimeVal <= 1500,
-        liveIndicatorHtml = `<span class="${isMarketOpen ? "tv-live-dot active" : "tv-live-dot closed"}" title="${isMarketOpen ? "Market Live" : "Market Closed"}"></span>`;
+        var now = new Date(), day = now.getDay(), currentTimeVal = 100 * now.getHours() + now.getMinutes(),
+            isMarketOpen = day >= 1 && day <= 5 && currentTimeVal >= 900 && currentTimeVal <= 1500,
+            liveIndicatorHtml = `<span class="${isMarketOpen ? "tv-live-dot active" : "tv-live-dot closed"}" title="${isMarketOpen ? "Market Live" : "Market Closed"}"></span>`;
 
-    fetch(csvUrl, { cache: "no-store" }).then(function (response) {
-        if (!response.ok) throw new Error("HTTP " + response.status);
-        return response.text();
-    }).then(function (text) {
-        var lines = text.split(/\r?\n/), items = [], vnindexItem = null;
-        
-        for (var i = 0; i < lines.length; i++) {
-            var line = lines[i].trim();
-            if (line) {
-                var cols = parseCsvRow(line),
-                    symbol = (cols[15] || "").replace(/["']/g, "").trim(),
-                    priceRaw = (cols[16] || "").replace(/["']/g, "").trim(),
-                    changeRaw = (cols[17] || "").replace(/["']/g, "").trim(),
-                    pctRaw = (cols[18] || "").replace(/["']/g, "").trim(),
-                    desc = (cols[19] || "").replace(/["']/g, "").trim(),
-                    iconUrl = (cols[20] || "").replace(/["']/g, "").trim();
+        fetch(csvUrl, { cache: "no-store" }).then(function (response) {
+            if (!response.ok) throw new Error("HTTP " + response.status);
+            return response.text();
+        }).then(function (text) {
+            var lines = text.split(/\r?\n/), items = [], vnindexItem = null;
+            
+            for (var i = 0; i < lines.length; i++) {
+                var line = lines[i].trim();
+                if (line) {
+                    var cols = parseCsvRow(line),
+                        symbol = (cols[15] || "").replace(/["']/g, "").trim(),
+                        priceRaw = (cols[16] || "").replace(/["']/g, "").trim(),
+                        changeRaw = (cols[17] || "").replace(/["']/g, "").trim(),
+                        pctRaw = (cols[18] || "").replace(/["']/g, "").trim(),
+                        desc = (cols[19] || "").replace(/["']/g, "").trim(),
+                        iconUrl = (cols[20] || "").replace(/["']/g, "").trim();
 
-                if (symbol && priceRaw) {
-                    var rawPriceNum = cleanNum(priceRaw),
-                        rawChangeNum = cleanNum(changeRaw),
-                        pctVal = cleanNum(pctRaw),
-                        changeVal = 1e3 * rawChangeNum;
+                    if (symbol && priceRaw) {
+                        var rawPriceNum = cleanNum(priceRaw),
+                            rawChangeNum = cleanNum(changeRaw),
+                            pctVal = cleanNum(pctRaw),
+                            changeVal = 1e3 * rawChangeNum;
 
-                    var parsedObj = {
-                        symbol: symbol,
-                        price: (1e3 * rawPriceNum).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 1 }),
-                        change: Math.round(Math.abs(changeVal)).toLocaleString("en-US"),
-                        pctVal: pctVal,
-                        absPct: Math.abs(pctVal),
-                        isPositive: changeVal > 0,
-                        isZero: 0 === changeVal,
-                        desc: desc,
-                        iconUrl: iconUrl
-                    };
+                        var parsedObj = {
+                            symbol: symbol,
+                            price: (1e3 * rawPriceNum).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 1 }),
+                            change: Math.round(Math.abs(changeVal)).toLocaleString("en-US"),
+                            pctVal: pctVal,
+                            absPct: Math.abs(pctVal),
+                            isPositive: changeVal > 0,
+                            isZero: 0 === changeVal,
+                            desc: desc,
+                            iconUrl: iconUrl
+                        };
 
-                    if (symbol === "VNINDEX") {
-                        vnindexItem = parsedObj;
-                    } else {
-                        items.push(parsedObj);
+                        if (symbol === "VNINDEX") {
+                            vnindexItem = parsedObj;
+                        } else {
+                            items.push(parsedObj);
+                        }
                     }
                 }
             }
-        }
 
-        // VNINDEX Header
-        if (vnindexItem) {
-            var badgeEl = document.getElementById("vnindex-header-badge");
-            var iconEl = document.getElementById("vnindex-icon");
-            var priceEl = document.getElementById("vnindex-price");
-            var pctSpan = document.getElementById("vnindex-pct");
-            if (badgeEl && iconEl && priceEl && pctSpan) {
-                iconEl.src = vnindexItem.iconUrl;
-                priceEl.textContent = vnindexItem.price;
-                var changeSign = vnindexItem.isZero ? "" : vnindexItem.isPositive ? "+" : "-";
-                pctSpan.textContent = `${changeSign}${vnindexItem.change}`;
-                pctSpan.className = vnindexItem.isZero || vnindexItem.isPositive ? "text-teal" : "text-pink";
-                badgeEl.style.display = "flex";
+            // VNINDEX Header
+            if (vnindexItem) {
+                var badgeEl = document.getElementById("vnindex-header-badge");
+                var iconEl = document.getElementById("vnindex-icon");
+                var priceEl = document.getElementById("vnindex-price");
+                var pctSpan = document.getElementById("vnindex-pct");
+                if (badgeEl && iconEl && priceEl && pctSpan) {
+                    iconEl.src = vnindexItem.iconUrl;
+                    priceEl.textContent = vnindexItem.price;
+                    var changeSign = vnindexItem.isZero ? "" : vnindexItem.isPositive ? "+" : "-";
+                    pctSpan.textContent = `${changeSign}${vnindexItem.change}`;
+                    pctSpan.className = vnindexItem.isZero || vnindexItem.isPositive ? "text-teal" : "text-pink";
+                    badgeEl.style.display = "flex";
+                }
             }
+
+            items.sort(function(a, b) {
+                return b.absPct - a.absPct;
+            });
+
+            var listHtml = "", heatmapHtml = "";
+    var totalItems = items.length;
+
+    items.forEach(function(item, index) {
+        var colorClass = item.isZero || item.isPositive ? "text-teal" : "text-pink";
+        var changeSign = item.isZero ? "" : item.isPositive ? "+" : "-";
+        
+        // Màu sắc Glassy tươi sáng, nổi khối (Không bo tròn, không bị tối xỉn)
+        var glassyStyle = "";
+        if (item.isZero) {
+            glassyStyle = "background: linear-gradient(135deg, rgba(148, 163, 184, 0.75), rgba(100, 116, 139, 0.65)); border: 1px solid rgba(255, 255, 255, 0.25); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);";
+        } else if (item.isPositive) {
+            glassyStyle = "background: linear-gradient(135deg, rgba(20, 184, 166, 0.9), rgba(13, 148, 136, 0.75)); border: 1px solid rgba(94, 234, 212, 0.4); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);";
+        } else {
+            glassyStyle = "background: linear-gradient(135deg, rgba(244, 63, 94, 0.9), rgba(225, 29, 72, 0.75)); border: 1px solid rgba(253, 164, 175, 0.4); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);";
         }
 
-        items.sort(function(a, b) {
-            return b.absPct - a.absPct;
-        });
+        // Phân bổ tỷ lệ cell đa dạng dựa vào biên độ % thay đổi (absPct)
+        var gridSpan = "", iconSize = "16px", symSize = "11px", priceSize = "9px", pctSize = "10px";
 
-        var listHtml = "", heatmapHtml = "";
-var totalItems = items.length;
+        if (index === 0 && item.absPct >= 2.0) {
+            // Mã lớn nhất: Chiếm 4 cột, 3 hàng
+            gridSpan = "grid-column: span 4; grid-row: span 3;";
+            iconSize = "32px"; symSize = "16px"; priceSize = "13px"; pctSize = "16px";
+        } else if (item.absPct >= 1.5) {
+            // Mã lớn vừa: Chiếm 3 cột, 2 hàng
+            gridSpan = "grid-column: span 3; grid-row: span 2;";
+            iconSize = "24px"; symSize = "13px"; priceSize = "11px"; pctSize = "13px";
+        } else if (item.absPct >= 0.8) {
+            // Mã trung bình: Chiếm 2 cột, 2 hàng hoặc 2 cột 1 hàng
+            gridSpan = index % 2 === 0 ? "grid-column: span 2; grid-row: span 2;" : "grid-column: span 2; grid-row: span 1;";
+            iconSize = "20px"; symSize = "12px"; priceSize = "10px"; pctSize = "11px";
+        } else {
+            // Mã nhỏ: Chiếm 2 cột 1 hàng hoặc 1 cột 1 hàng xen kẽ
+            gridSpan = index % 3 === 0 ? "grid-column: span 2; grid-row: span 1;" : "grid-column: span 1; grid-row: span 1;";
+            iconSize = "15px"; symSize = "10px"; priceSize = "9px"; pctSize = "10px";
+        }
 
-items.forEach(function(item, index) {
-    var colorClass = item.isZero || item.isPositive ? "text-teal" : "text-pink";
-    var changeSign = item.isZero ? "" : item.isPositive ? "+" : "-";
-    
-    // Màu sắc Glassy tươi sáng, nổi khối (Không bo tròn, không bị tối xỉn)
-    var glassyStyle = "";
-    if (item.isZero) {
-        glassyStyle = "background: linear-gradient(135deg, rgba(148, 163, 184, 0.75), rgba(100, 116, 139, 0.65)); border: 1px solid rgba(255, 255, 255, 0.25); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);";
-    } else if (item.isPositive) {
-        glassyStyle = "background: linear-gradient(135deg, rgba(20, 184, 166, 0.9), rgba(13, 148, 136, 0.75)); border: 1px solid rgba(94, 234, 212, 0.4); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);";
-    } else {
-        glassyStyle = "background: linear-gradient(135deg, rgba(244, 63, 94, 0.9), rgba(225, 29, 72, 0.75)); border: 1px solid rgba(253, 164, 175, 0.4); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);";
-    }
-
-    // Phân bổ tỷ lệ cell đa dạng dựa vào biên độ % thay đổi (absPct)
-    var gridSpan = "", iconSize = "16px", symSize = "11px", priceSize = "9px", pctSize = "10px";
-
-    if (index === 0 && item.absPct >= 2.0) {
-        // Mã lớn nhất: Chiếm 4 cột, 3 hàng
-        gridSpan = "grid-column: span 4; grid-row: span 3;";
-        iconSize = "32px"; symSize = "16px"; priceSize = "13px"; pctSize = "16px";
-    } else if (item.absPct >= 1.5) {
-        // Mã lớn vừa: Chiếm 3 cột, 2 hàng
-        gridSpan = "grid-column: span 3; grid-row: span 2;";
-        iconSize = "24px"; symSize = "13px"; priceSize = "11px"; pctSize = "13px";
-    } else if (item.absPct >= 0.8) {
-        // Mã trung bình: Chiếm 2 cột, 2 hàng hoặc 2 cột 1 hàng
-        gridSpan = index % 2 === 0 ? "grid-column: span 2; grid-row: span 2;" : "grid-column: span 2; grid-row: span 1;";
-        iconSize = "20px"; symSize = "12px"; priceSize = "10px"; pctSize = "11px";
-    } else {
-        // Mã nhỏ: Chiếm 2 cột 1 hàng hoặc 1 cột 1 hàng xen kẽ
-        gridSpan = index % 3 === 0 ? "grid-column: span 2; grid-row: span 1;" : "grid-column: span 1; grid-row: span 1;";
-        iconSize = "15px"; symSize = "10px"; priceSize = "9px"; pctSize = "10px";
-    }
-
-    // A. Table / List view
-    listHtml += `
-        <div class="tv-item-row">
-          <div class="tv-item-left">
-            <img class="tv-item-icon" src="${item.iconUrl}" onerror="this.src='https://via.placeholder.com/32'" />
-            <div class="tv-item-symbol-wrap">
-              <div class="tv-symbol-title">
-                ${item.symbol} 
-                ${liveIndicatorHtml}
+        // A. Table / List view
+        listHtml += `
+            <div class="tv-item-row">
+              <div class="tv-item-left">
+                <img class="tv-item-icon" src="${item.iconUrl}" onerror="this.src='https://via.placeholder.com/32'" />
+                <div class="tv-item-symbol-wrap">
+                  <div class="tv-symbol-title">
+                    ${item.symbol} 
+                    ${liveIndicatorHtml}
+                  </div>
+                  <div class="tv-symbol-desc" title="${item.desc}">${item.desc}</div>
+                </div>
               </div>
-              <div class="tv-symbol-desc" title="${item.desc}">${item.desc}</div>
+              <div class="tv-item-right">
+                <div class="tv-item-price">${item.price}</div>
+                <div class="tv-item-changes ${colorClass}">
+                  <span class="${colorClass}">${changeSign}${item.change}.0</span>
+                  <span class="${colorClass}">${changeSign}${item.absPct.toFixed(2)}%</span>
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="tv-item-right">
-            <div class="tv-item-price">${item.price}</div>
-            <div class="tv-item-changes ${colorClass}">
-              <span class="${colorClass}">${changeSign}${item.change}.0</span>
-              <span class="${colorClass}">${changeSign}${item.absPct.toFixed(2)}%</span>
-            </div>
-          </div>
-        </div>
-    `;
+        `;
 
-    // B. Heatmap view (Glassy tươi sáng, góc vuông sắc cạnh, chống rớt hàng)
-    heatmapHtml += `
-        <div style="${gridSpan} ${glassyStyle} backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 6px 8px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; cursor: pointer; border-radius: 0px; overflow: hidden; transition: filter 0.15s;" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter='brightness(1)'" title="${item.symbol} - ${item.desc}">
-            <!-- Dòng trên: Icon + Symbol -->
-            <div style="display: flex; align-items: center; gap: 4px; overflow: hidden;">
-                <img src="${item.iconUrl}" style="width: ${iconSize}; height: ${iconSize}; object-fit: contain; border-radius: 50%; background: rgba(255,255,255,0.9); padding: 1px; flex-shrink: 0;" onerror="this.src='https://via.placeholder.com/14'" />
-                <span style="font-weight: 800; color: #fff; font-size: ${symSize}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">${item.symbol}</span>
+        // B. Heatmap view (Glassy tươi sáng, góc vuông sắc cạnh, chống rớt hàng)
+        heatmapHtml += `
+            <div style="${gridSpan} ${glassyStyle} backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 6px 8px; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; cursor: pointer; border-radius: 0px; overflow: hidden; transition: filter 0.15s;" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter='brightness(1)'" title="${item.symbol} - ${item.desc}">
+                <!-- Dòng trên: Icon + Symbol -->
+                <div style="display: flex; align-items: center; gap: 4px; overflow: hidden;">
+                    <img src="${item.iconUrl}" style="width: ${iconSize}; height: ${iconSize}; object-fit: contain; border-radius: 50%; background: rgba(255,255,255,0.9); padding: 1px; flex-shrink: 0;" onerror="this.src='https://via.placeholder.com/14'" />
+                    <span style="font-weight: 800; color: #fff; font-size: ${symSize}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">${item.symbol}</span>
+                </div>
+                
+                <!-- Dòng dưới: Price và % Change căn phải, chống rớt hàng tuyệt đối -->
+                <div style="display: flex; flex-direction: column; gap: 0px; align-items: flex-end; text-align: right; white-space: nowrap;">
+                    <span style="font-size: ${priceSize}; font-weight: 600; color: rgba(255,255,255,0.9); line-height: 1.1;">${item.price}</span>
+                    <span style="font-size: ${pctSize}; font-weight: 700; color: #fff; line-height: 1.2; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">${changeSign}${item.absPct.toFixed(2)}%</span>
+                </div>
             </div>
-            
-            <!-- Dòng dưới: Price và % Change căn phải, chống rớt hàng tuyệt đối -->
-            <div style="display: flex; flex-direction: column; gap: 0px; align-items: flex-end; text-align: right; white-space: nowrap;">
-                <span style="font-size: ${priceSize}; font-weight: 600; color: rgba(255,255,255,0.9); line-height: 1.1;">${item.price}</span>
-                <span style="font-size: ${pctSize}; font-weight: 700; color: #fff; line-height: 1.2; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">${changeSign}${item.absPct.toFixed(2)}%</span>
-            </div>
-        </div>
-    `;
-});
-
-        if (container) container.innerHTML = listHtml || '<div style="text-align:center; color: #94a3b8; padding: 20px;">No watchlist items found.</div>';
-        if (heatmapContainer) heatmapContainer.innerHTML = heatmapHtml || '<div style="text-align:center; color: #f43f5e; padding: 20px; grid-column: 1 / -1;">Failed to load heatmap.</div>';
-    }).catch(function (err) {
-        console.error("Watchlist fetch error:", err);
-        if (container) container.innerHTML = '<div style="text-align:center; color: #f43f5e; padding: 20px;">Failed to load watchlist.</div>';
-        if (heatmapContainer) heatmapContainer.innerHTML = '<div style="text-align:center; color: #f43f5e; padding: 20px; grid-column: 1 / -1;">Failed to load heatmap.</div>';
+        `;
     });
-}
+
+            if (container) container.innerHTML = listHtml || '<div style="text-align:center; color: #94a3b8; padding: 20px;">No watchlist items found.</div>';
+            if (heatmapContainer) heatmapContainer.innerHTML = heatmapHtml || '<div style="text-align:center; color: #f43f5e; padding: 20px; grid-column: 1 / -1;">Failed to load heatmap.</div>';
+        }).catch(function (err) {
+            console.error("Watchlist fetch error:", err);
+            if (container) container.innerHTML = '<div style="text-align:center; color: #f43f5e; padding: 20px;">Failed to load watchlist.</div>';
+            if (heatmapContainer) heatmapContainer.innerHTML = '<div style="text-align:center; color: #f43f5e; padding: 20px; grid-column: 1 / -1;">Failed to load heatmap.</div>';
+        });
+    }
 
     document.addEventListener("DOMContentLoaded", fetchWatchlistData);
     
@@ -10990,6 +10990,956 @@ items.forEach(function(item, index) {
         changeBackground();
         setInterval(changeBackground, 10000);
     });
+
+    (function () {
+    const HOLIDAY_CSV_BASE = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=236507518&t=";
+
+
+    const WEEKDAYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+    const MONTH_LABELS = [
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
+    const MONTH_NAMES_FULL = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+    const CELL_PALETTE = [
+        { bg: "#e86f52", fg: "#141414" },
+        { bg: "#d9d4c7", fg: "#141414" },
+        { bg: "#2e78a6", fg: "#f8fafc" },
+        { bg: "#2f855a", fg: "#f8fafc" },
+        { bg: "#d9a441", fg: "#141414" },
+        { bg: "#c85a7c", fg: "#f8fafc" }
+    ];
+
+    let holidaysByDate = {};
+    let holidaysLoaded = false;
+    let viewYear = 2027;
+    let currentMonthIdx = 0;
+    let loadedMonths = [];
+    let modalEl = null;
+    let userHoveredDetail = false;
+
+    function ensureBootstrapIcons() {
+        if (document.getElementById("jp-bootstrap-icons")) return;
+        const hasBi = Array.from(document.styleSheets).some(s => {
+            try { return s.href && s.href.includes("bootstrap-icons"); } catch (e) { return false; }
+        });
+        if (hasBi) return;
+        const link = document.createElement("link");
+        link.id = "jp-bootstrap-icons";
+        link.rel = "stylesheet";
+        link.href = "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css";
+        document.head.appendChild(link);
+    }
+
+    function parseCSVLine(line) {
+        const values = [];
+        let currentVal = "";
+        let inQuotes = false;
+        for (let i = 0; i < line.length; i++) {
+            const char = line.charAt(i);
+            if (char === '"' && line.charAt(i + 1) === '"') {
+                currentVal += '"';
+                i++;
+            } else if (char === '"') {
+                inQuotes = !inQuotes;
+            } else if (char === "," && !inQuotes) {
+                values.push(currentVal.trim());
+                currentVal = "";
+            } else {
+                currentVal += char;
+            }
+        }
+        values.push(currentVal.trim());
+        return values;
+    }
+
+    function sanitizeImageUrl(raw) {
+        const s = String(raw || "").trim();
+        if (!s) return "";
+        if (/^https?:\/\//i.test(s)) return s;
+        return "";
+    }
+
+    function injectHolidayStyles() {
+        if (document.getElementById("jp-holiday-popup-style")) return;
+        const style = document.createElement("style");
+        style.id = "jp-holiday-popup-style";
+        style.textContent = `
+            #jp-holiday-backdrop {
+                position: fixed;
+                inset: 0;
+                z-index: 9999;
+                display: none;
+                align-items: center;
+                justify-content: center;
+                padding: 16px;
+                background: rgba(6, 10, 18, 0.28);
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+            }
+            #jp-holiday-backdrop.open {
+                display: flex;
+            }
+            .jp-cal-card {
+    width: min(580px, 96vw);
+    max-height: 92vh;
+    background: rgba(243, 239, 230, 0.34);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    color: #161616;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 24px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35), 4px 4px 0px rgba(22, 22, 22, 0.28);
+    font-family: 'Libre Baskerville';
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+    position: relative;
+}
+            .jp-cal-topbar {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px 14px;
+                background: #191919;
+                color: #f3efe6;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+                border-radius: 13px 13px 0 0;
+                gap: 10px;
+                flex-shrink: 0;
+                position: relative;
+                z-index: 20;
+            }
+
+            /* Custom Glass Dropdown (bên trái + Bootstrap Icons) */
+            .jp-month-dd {
+                position: relative;
+            }
+            .jp-month-dd-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 7px;font-family: 'Libre Baskerville';
+                padding: 6px 11px;
+                border-radius: 10px;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                background: transparent;
+                color: #f8fafc;
+                font-size: 16px;
+                font-weight: 700;
+                letter-spacing: 0.02em;
+                cursor: pointer;
+                outline: none;
+                transition: all 0.18s ease;
+            }
+            .jp-month-dd-btn:hover,
+            .jp-month-dd.open .jp-month-dd-btn {
+                background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(167, 139, 250, 0.22));
+                border-color: rgba(196, 181, 253, 0.55);
+            }
+            .jp-month-dd-btn .bi-calendar3 {
+                color: #c4b5fd;
+                font-size: 13px;
+            }
+            .jp-month-dd-btn .bi-chevron-down {
+                font-size: 11px;
+                color: rgba(226, 232, 240, 0.8);
+                transition: transform 0.2s ease;
+            }
+            .jp-month-dd.open .jp-month-dd-btn .bi-chevron-down {
+                transform: rotate(180deg);
+                color: #c4b5fd;
+            }
+            .jp-month-dd-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 312px;
+    max-height: none;
+    overflow: visible;
+    padding: 10px;
+    border-radius: 16px;
+    background: rgba(15, 20, 30, 0.88);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 20px 44px rgba(0, 0, 0, 0.58);
+    display: none;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    z-index: 60;
+}
+
+.jp-month-dd.open .jp-month-dd-menu {
+    display: grid;
+}
+
+.jp-month-dd-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    min-height: 54px;font-family:Lexend;
+    padding: 8px 6px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    background: rgba(30, 38, 52, 0.78);
+    color: #f1f5f9;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.jp-month-dd-item:hover {
+    transform: translateY(-1px);
+    background: rgba(45, 212, 191, 0.18);
+    border-color: rgba(45, 212, 191, 0.45);
+}
+
+.jp-month-dd-item.has-holiday {
+    background: linear-gradient(145deg, rgba(19, 78, 74, 0.78), rgba(15, 118, 110, 0.68));
+    border-color: rgba(45, 212, 191, 0.35);
+    color: #f0fdfa;
+}
+
+.jp-month-dd-item.is-active {
+    background: linear-gradient(145deg, rgba(20, 184, 166, 0.48), rgba(45, 212, 191, 0.34));
+    border-color: #2dd4bf;
+    box-shadow: 0 0 0 1px rgba(45, 212, 191, 0.35), 0 6px 16px rgba(13, 148, 136, 0.28);
+    color: #ffffff;
+}
+
+.jp-month-dd-name {
+    font-size: 12.5px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    line-height: 1.15;
+}
+
+.jp-month-dd-sub {
+    font-size: 10.5px;
+    font-weight: 700;
+    color: #99f6e4;
+    line-height: 1.1;
+}
+            .jp-month-dd-item .bi-check2 {
+                font-size: 13px;
+                color: #2dd4bf;
+                opacity: 0;
+            }
+            .jp-month-dd-item.is-active .bi-check2 {
+                opacity: 1;
+            }
+
+            /* Nút < > x dùng Bootstrap Icons bên phải */
+            .jp-cal-nav-group {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                margin-left: auto;
+            }
+            .jp-cal-btn {
+                width: 30px;
+                height: 30px;
+                border-radius: 9px;
+                border: 1px solid rgba(255, 255, 255, 0.18);
+                background: rgba(255, 255, 255, 0.08);
+                color: #f8fafc;
+                font-size: 13px;
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                transition: background 0.16s ease, border-color 0.16s ease, transform 0.14s ease;
+            }
+            .jp-cal-btn:hover {
+                background: rgba(167, 139, 250, 0.25);
+                border-color: rgba(196, 181, 253, 0.55);
+                transform: translateY(-1px);
+            }
+            .jp-cal-close-btn {
+                width: 30px;
+                height: 30px;
+                border-radius: 9px;
+                border: 1px solid rgba(251, 113, 133, 0.35);
+                background: rgba(251, 113, 133, 0.14);
+                color: #fda4af;
+                font-size: 12px;
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease, transform 0.14s ease;
+            }
+            .jp-cal-close-btn:hover {
+                background: rgba(251, 113, 133, 0.28);
+                border-color: rgba(251, 113, 133, 0.65);
+                color: #fff1f2;
+                transform: translateY(-1px);
+            }
+
+            /* Khu vực scroll ~1.5 - 2 tháng */
+            .jp-cal-scroll-area {
+                height: 560px;
+                max-height: 68vh;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                padding: 12px;
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+                background: rgba(236, 230, 216, 0.16);
+            }
+            .jp-cal-scroll-area::-webkit-scrollbar {
+                width: 6px;
+            }
+            .jp-cal-scroll-area::-webkit-scrollbar-thumb {
+                background: rgba(22, 22, 22, 0.28);
+                border-radius: 999px;
+            }
+            .jp-month-block {
+                border-radius: 6px;
+                overflow: hidden;
+                background: rgba(243, 239, 230, 0.32);
+    border: 1px solid rgba(22, 22, 22, 0.35);
+                flex-shrink: 0;
+            }
+            .jp-month-banner {
+                padding: 6px 10px;font-family: 'Libre Baskerville';
+                background: rgba(226, 219, 208, 0.42);
+    border-bottom: 1px solid rgba(22, 22, 22, 0.3);
+                font-size: 12px;
+                font-weight: 900;
+                letter-spacing: 0.05em;
+                text-transform: uppercase;
+            }
+            .jp-cal-weekdays {
+                display: grid;
+                grid-template-columns: repeat(7, 1fr);
+                background: rgba(230, 224, 210, 0.36);
+    border-bottom: 1px solid rgba(22, 22, 22, 0.3);
+            }
+            .jp-cal-wd {
+                padding: 5px 4px;font-family: 'Libre Baskerville';
+                text-align: center;
+                font-size: 10.5px;
+                font-weight: 800;
+                letter-spacing: 0.05em;
+                border-right: 1px solid rgba(22, 22, 22, 0.25);
+            }
+            .jp-cal-wd:last-child {
+                border-right: none;
+            }
+            .jp-cal-grid {
+                display: grid;
+                grid-template-columns: repeat(7, 1fr);
+                user-select: none;
+            }
+            .jp-cal-cell {
+                min-height: 68px;
+                padding: 5px 6px;
+                border-right: 1px solid rgba(22, 22, 22, 0.35);
+                border-bottom: 1px solid rgba(22, 22, 22, 0.35);
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                position: relative;
+                overflow: hidden;
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                transition: filter 0.15s ease;
+            }
+            .jp-cal-cell:nth-child(7n) {
+                border-right: none;
+            }
+            .jp-cal-cell.is-muted {
+                opacity: 0.36;
+                background-color: rgba(232, 227, 215, 0.25);
+            }
+            .jp-cal-cell.is-holiday {
+                cursor: pointer;
+                font-weight: 800;
+            }
+            .jp-cal-cell.has-bg-img::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: rgba(15, 23, 42, 0.45);
+                z-index: 0;
+            }
+            .jp-cal-cell.has-bg-img > * {
+                position: relative;
+                z-index: 1;
+                color: #ffffff;
+                text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+            }
+            .jp-cal-cell.is-holiday:hover {
+                filter: brightness(1.06);
+            }
+            .jp-cal-daynum {
+                font-size: 23px;
+                font-weight: 900;
+                line-height: 1;
+                letter-spacing: -0.03em;
+            }
+            .jp-cal-tag {
+                font-size: 9.5px;
+                line-height: 1.15;
+                font-weight: 800;
+                margin-top: 4px;
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+            }
+            .jp-cal-detail {
+                padding: 10px 14px;
+                background: #191919;
+                color: #f8fafc;
+                font-size: 12px;
+                line-height: 1.45;
+                border-top: 1px solid rgba(255, 255, 255, 0.14);
+                border-radius: 0 0 13px 13px;
+                min-height: 54px;
+                flex-shrink: 0;
+            }
+            .jp-cal-detail-title {
+                font-weight: 800;
+                color: #fbbf24;
+                margin-bottom: 2px;
+            }
+            .jp-cal-detail-meta {
+                color: #cbd5e1;
+                font-size: 11px;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    function setActiveMonthUI(monthZeroIdx) {
+        currentMonthIdx = Math.max(0, Math.min(11, monthZeroIdx));
+        const labelEl = document.getElementById("jp-month-dd-label");
+        if (labelEl) {
+            labelEl.textContent = `${MONTH_NAMES_FULL[currentMonthIdx]} ${viewYear}`;
+        }
+        const items = document.querySelectorAll(".jp-month-dd-item");
+        items.forEach(btn => {
+            const idx = parseInt(btn.dataset.monthIdx, 10);
+            btn.classList.toggle("is-active", idx === currentMonthIdx);
+        });
+    }
+
+    function countHolidaysInMonth(monthZeroIdx) {
+    const daysInM = new Date(viewYear, monthZeroIdx + 1, 0).getDate();
+    let count = 0;
+    for (let d = 1; d <= daysInM; d++) {
+        const list = holidaysByDate[dateKey(viewYear, monthZeroIdx, d)];
+        if (list && list.length) count++;
+    }
+    return count;
+}
+
+function renderMonthDropdownItems() {
+    const menuEl = document.getElementById("jp-month-dd-menu");
+    if (!menuEl) return;
+
+    menuEl.innerHTML = MONTH_LABELS.map((lbl, idx) => {
+        const hCount = holidaysLoaded ? countHolidaysInMonth(idx) : 0;
+        const isActive = idx === currentMonthIdx;
+        const hasHoliday = hCount > 0;
+        const subText = hCount > 0 ? `${hCount}d off` : "";
+
+        return `
+            <button
+                type="button"
+                class="jp-month-dd-item${isActive ? " is-active" : ""}${hasHoliday ? " has-holiday" : ""}"
+                data-month-idx="${idx}"
+                role="menuitem"
+            >
+                <span class="jp-month-dd-name">${lbl}</span>
+                ${subText ? `<span class="jp-month-dd-sub">${subText}</span>` : ""}
+            </button>
+        `;
+    }).join("");
+
+    const ddWrap = document.getElementById("jp-month-dd");
+    const ddToggle = document.getElementById("jp-month-dd-toggle");
+    menuEl.querySelectorAll(".jp-month-dd-item").forEach(btn => {
+        btn.addEventListener("click", function (e) {
+            e.stopPropagation();
+            const idx = parseInt(btn.dataset.monthIdx, 10);
+            if (ddWrap) ddWrap.classList.remove("open");
+            if (ddToggle) ddToggle.setAttribute("aria-expanded", "false");
+            goToMonth(idx);
+        });
+    });
+}
+
+    function ensurePopup() {
+        if (modalEl) return modalEl;
+        ensureBootstrapIcons();
+        injectHolidayStyles();
+
+        const menuItemsHtml = MONTH_LABELS.map((lbl, idx) => `
+            <button type="button" class="jp-month-dd-item${idx === currentMonthIdx ? " is-active" : ""}" data-month-idx="${idx}">
+                <span>${lbl} ${viewYear}</span>
+                <i class="bi bi-check2" aria-hidden="true"></i>
+            </button>
+        `).join("");
+
+        modalEl = document.createElement("div");
+        modalEl.id = "jp-holiday-backdrop";
+        modalEl.innerHTML = `
+            <div class="jp-cal-card" role="dialog" aria-modal="true" aria-label="Holiday Calendar">
+                <div class="jp-cal-topbar">
+                    <div class="jp-month-dd" id="jp-month-dd">
+                        <button type="button" class="jp-month-dd-btn" id="jp-month-dd-toggle" aria-expanded="false" aria-label="Select month">
+                            <i class="bi bi-calendar3" aria-hidden="true"></i>
+                            <span id="jp-month-dd-label">${MONTH_LABELS[currentMonthIdx]} ${viewYear}</span>
+                            <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                        </button>
+                        <div class="jp-month-dd-menu" id="jp-month-dd-menu" role="menu">
+                            ${menuItemsHtml}
+                        </div>
+                    </div>
+                    <div class="jp-cal-nav-group">
+                        <button type="button" class="jp-cal-btn" id="jp-prev-month" title="Previous month" aria-label="Previous month">
+                            <i class="bi bi-chevron-left" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="jp-cal-btn" id="jp-next-month" title="Next month" aria-label="Next month">
+                            <i class="bi bi-chevron-right" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" class="jp-cal-close-btn" id="jp-close-cal" title="Close" aria-label="Close">
+                            <i class="bi bi-x-lg" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="jp-cal-scroll-area" id="jp-cal-scroll-area"></div>
+                <div class="jp-cal-detail" id="jp-cal-detail">
+                    <div class="jp-cal-detail-meta">Loading holidays...</div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modalEl);
+
+        // Click outside backdrop to close
+        modalEl.addEventListener("click", function (e) {
+            if (e.target === modalEl) {
+                closePopup();
+            }
+        });
+
+        // Toggle custom dropdown
+        const ddWrap = document.getElementById("jp-month-dd");
+        const ddToggle = document.getElementById("jp-month-dd-toggle");
+        ddToggle.addEventListener("click", function (e) {
+            e.stopPropagation();
+            const isOpen = ddWrap.classList.toggle("open");
+            ddToggle.setAttribute("aria-expanded", String(isOpen));
+        });
+
+        // Select item in custom dropdown
+        document.querySelectorAll(".jp-month-dd-item").forEach(btn => {
+            btn.addEventListener("click", function (e) {
+                e.stopPropagation();
+                const idx = parseInt(btn.dataset.monthIdx, 10);
+                ddWrap.classList.remove("open");
+                ddToggle.setAttribute("aria-expanded", "false");
+                goToMonth(idx);
+            });
+        });
+
+        // Click anywhere else inside modal closes dropdown
+        modalEl.querySelector(".jp-cal-card").addEventListener("click", function (e) {
+            if (!e.target.closest("#jp-month-dd")) {
+                ddWrap.classList.remove("open");
+                ddToggle.setAttribute("aria-expanded", "false");
+            }
+        });
+
+        document.getElementById("jp-close-cal").addEventListener("click", closePopup);
+
+        document.getElementById("jp-prev-month").addEventListener("click", function () {
+            goToMonth((currentMonthIdx + 11) % 12);
+        });
+
+        document.getElementById("jp-next-month").addEventListener("click", function () {
+            goToMonth((currentMonthIdx + 1) % 12);
+        });
+
+        const scrollArea = document.getElementById("jp-cal-scroll-area");
+        scrollArea.addEventListener("scroll", function () {
+            userHoveredDetail = false;
+            const nearBottom = scrollArea.scrollTop + scrollArea.clientHeight >= scrollArea.scrollHeight - 90;
+            if (nearBottom) {
+                appendNextMonth();
+            }
+            syncPickerAndDetailWithScroll();
+        }, { passive: true });
+
+        document.addEventListener("keydown", function (e) {
+            if (e.key === "Escape" && modalEl.classList.contains("open")) {
+                if (ddWrap.classList.contains("open")) {
+                    ddWrap.classList.remove("open");
+                    ddToggle.setAttribute("aria-expanded", "false");
+                } else {
+                    closePopup();
+                }
+            }
+        });
+
+        return modalEl;
+    }
+
+    function dateKey(y, mZeroIdx, day) {
+        return `${y}-${mZeroIdx + 1}-${day}`;
+    }
+
+    function parseDMY(str) {
+        const m = String(str || "").trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+        if (!m) return null;
+        return new Date(parseInt(m[3], 10), parseInt(m[2], 10) - 1, parseInt(m[1], 10));
+    }
+
+    function parseDateRange(rangeStr) {
+        const clean = String(rangeStr || "").replace(/[–—−]/g, "-").trim();
+        const parts = clean.split("-").map(s => s.trim()).filter(Boolean);
+        if (parts.length === 1) {
+            const single = parseDMY(parts[0]);
+            return single ? [single, single] : null;
+        }
+        if (parts.length >= 2) {
+            const start = parseDMY(parts[0]);
+            const end = parseDMY(parts[1]);
+            if (start && end) return [start, end];
+        }
+        return null;
+    }
+
+    function indexHolidayRows(rows) {
+        holidaysByDate = {};
+        let paletteIdx = 0;
+
+        rows.forEach(row => {
+            const name = row[1] || "";
+            const dateRangeText = row[2] || "";
+            const daysCount = row[3] || "";
+            const note = row[4] || "";
+            const imageUrl = sanitizeImageUrl(row[5]);
+            if (!name && !dateRangeText) return;
+
+            const bounds = parseDateRange(dateRangeText);
+            if (!bounds) return;
+
+            const theme = CELL_PALETTE[paletteIdx % CELL_PALETTE.length];
+            paletteIdx++;
+
+            const cur = new Date(bounds[0].getFullYear(), bounds[0].getMonth(), bounds[0].getDate());
+            const end = new Date(bounds[1].getFullYear(), bounds[1].getMonth(), bounds[1].getDate());
+
+            while (cur <= end) {
+                const key = dateKey(cur.getFullYear(), cur.getMonth(), cur.getDate());
+                if (!holidaysByDate[key]) holidaysByDate[key] = [];
+                holidaysByDate[key].push({
+                    name,
+                    dateRangeText,
+                    daysCount,
+                    note,
+                    imageUrl,
+                    theme
+                });
+                cur.setDate(cur.getDate() + 1);
+            }
+        });
+    }
+
+    function fetchHolidayCSV() {
+        const detailEl = document.getElementById("jp-cal-detail");
+        const csvUrl = HOLIDAY_CSV_BASE + Date.now();
+
+        fetch(csvUrl, { cache: "no-store" })
+            .then(function (response) {
+                if (!response.ok) throw new Error("HTTP " + response.status);
+                return response.text();
+            })
+            .then(function (text) {
+                const lines = text.trim().split(/\r?\n/);
+                if (lines.length < 2) {
+                    holidaysLoaded = true;
+                    refreshRenderedMonths();
+                    return;
+                }
+                const parsedRows = lines.slice(1).map(parseCSVLine);
+                indexHolidayRows(parsedRows);
+                holidaysLoaded = true;
+                refreshRenderedMonths();
+            })
+            .catch(function (err) {
+                console.error("Holiday calendar load error:", err);
+                if (detailEl) {
+                    detailEl.innerHTML = `<div class="jp-cal-detail-meta">Holiday load error: ${err.message}</div>`;
+                }
+            });
+    }
+
+    function renderDetailBox(holiday, monthFallbackIdx) {
+        const detailEl = document.getElementById("jp-cal-detail");
+        if (!detailEl) return;
+
+        if (holiday) {
+            detailEl.innerHTML = `
+                <div class="jp-cal-detail-title">${holiday.name} (${holiday.dateRangeText}${holiday.daysCount ? " • " + holiday.daysCount : ""})</div>
+                <div class="jp-cal-detail-meta">${holiday.note || ""}</div>
+            `;
+            return;
+        }
+
+        const mIdx = typeof monthFallbackIdx === "number" ? monthFallbackIdx : currentMonthIdx;
+        detailEl.innerHTML = `
+            <div class="jp-cal-detail-title">${MONTH_NAMES_FULL[mIdx]} ${viewYear}</div>
+            <div class="jp-cal-detail-meta">No holiday scheduled in this visible view. Scroll to browse other months.</div>
+        `;
+    }
+
+    function buildMonthCard(year, monthZeroIdx) {
+        const block = document.createElement("div");
+        block.className = "jp-month-block";
+        block.dataset.monthIdx = String(monthZeroIdx);
+        block.id = "jp-cal-m-" + monthZeroIdx;
+
+        const banner = document.createElement("div");
+        banner.className = "jp-month-banner";
+        banner.textContent = `${MONTH_NAMES_FULL[monthZeroIdx]} ${year}`;
+        block.appendChild(banner);
+
+        const wdRow = document.createElement("div");
+        wdRow.className = "jp-cal-weekdays";
+        wdRow.innerHTML = WEEKDAYS.map(w => `<div class="jp-cal-wd">${w}</div>`).join("");
+        block.appendChild(wdRow);
+
+        const gridEl = document.createElement("div");
+        gridEl.className = "jp-cal-grid";
+
+        const firstDay = new Date(year, monthZeroIdx, 1);
+        const leadingBlanks = (firstDay.getDay() + 6) % 7;
+        const daysInMonth = new Date(year, monthZeroIdx + 1, 0).getDate();
+        const prevMonthDays = new Date(year, monthZeroIdx, 0).getDate();
+
+        const cells = [];
+        for (let i = leadingBlanks - 1; i >= 0; i--) {
+            cells.push({ day: prevMonthDays - i, muted: true, holidays: [] });
+        }
+        for (let d = 1; d <= daysInMonth; d++) {
+            const hList = holidaysByDate[dateKey(year, monthZeroIdx, d)] || [];
+            cells.push({ day: d, muted: false, holidays: hList });
+        }
+        const remainder = cells.length % 7;
+        if (remainder !== 0) {
+            const trailing = 7 - remainder;
+            for (let t = 1; t <= trailing; t++) {
+                cells.push({ day: t, muted: true, holidays: [] });
+            }
+        }
+
+        cells.forEach(c => {
+            const cell = document.createElement("div");
+            cell.className = "jp-cal-cell" + (c.muted ? " is-muted" : "");
+
+            const h = c.holidays[0];
+            if (!c.muted && h) {
+                cell.classList.add("is-holiday");
+                cell.style.backgroundColor = h.theme.bg;
+                cell.style.color = h.theme.fg;
+                if (h.imageUrl) {
+                    cell.classList.add("has-bg-img");
+                    cell.style.backgroundImage = `url("${h.imageUrl}")`;
+                }
+            }
+
+            const numSpan = document.createElement("div");
+            numSpan.className = "jp-cal-daynum";
+            numSpan.textContent = c.day;
+            cell.appendChild(numSpan);
+
+            if (!c.muted && h) {
+                const tagSpan = document.createElement("div");
+                tagSpan.className = "jp-cal-tag";
+                tagSpan.textContent = h.name;
+                cell.appendChild(tagSpan);
+
+                cell.addEventListener("mouseenter", () => {
+                    userHoveredDetail = true;
+                    renderDetailBox(h, monthZeroIdx);
+                });
+                cell.addEventListener("click", () => {
+                    userHoveredDetail = true;
+                    renderDetailBox(h, monthZeroIdx);
+                });
+            }
+
+            gridEl.appendChild(cell);
+        });
+
+        block.appendChild(gridEl);
+        return block;
+    }
+
+    function appendMonth(monthZeroIdx) {
+        const scrollArea = document.getElementById("jp-cal-scroll-area");
+        if (!scrollArea) return;
+        const clamped = ((monthZeroIdx % 12) + 12) % 12;
+        if (loadedMonths.includes(clamped)) return;
+        loadedMonths.push(clamped);
+        scrollArea.appendChild(buildMonthCard(viewYear, clamped));
+    }
+
+    function appendNextMonth() {
+        if (!loadedMonths.length) {
+            appendMonth(0);
+            appendMonth(1);
+            return;
+        }
+        const last = loadedMonths[loadedMonths.length - 1];
+        if (last < 11) {
+            appendMonth(last + 1);
+        }
+    }
+
+    function findHolidayInMonth(monthZeroIdx) {
+        const daysInM = new Date(viewYear, monthZeroIdx + 1, 0).getDate();
+        for (let d = 1; d <= daysInM; d++) {
+            const list = holidaysByDate[dateKey(viewYear, monthZeroIdx, d)];
+            if (list && list.length) {
+                return list[0];
+            }
+        }
+        return null;
+    }
+
+    function refreshRenderedMonths() {
+        const scrollArea = document.getElementById("jp-cal-scroll-area");
+        if (!scrollArea) return;
+        const prevScroll = scrollArea.scrollTop;
+        const toRender = loadedMonths.length ? loadedMonths.slice() : [0, 1];
+        loadedMonths = [];
+        scrollArea.innerHTML = "";
+        toRender.forEach(mIdx => appendMonth(mIdx));
+        scrollArea.scrollTop = prevScroll;
+
+        if (holidaysLoaded && !userHoveredDetail) {
+            syncPickerAndDetailWithScroll();
+        }
+    }
+
+    function goToMonth(monthZeroIdx) {
+        const target = Math.max(0, Math.min(11, monthZeroIdx));
+        const scrollArea = document.getElementById("jp-cal-scroll-area");
+        setActiveMonthUI(target);
+
+        if (!loadedMonths.includes(target)) {
+            loadedMonths = [];
+            for (let m = 0; m <= Math.min(11, target + 1); m++) {
+                appendMonth(m);
+            }
+        } else if (target === loadedMonths[loadedMonths.length - 1] && target < 11) {
+            appendMonth(target + 1);
+        }
+
+        const el = document.getElementById("jp-cal-m-" + target);
+        if (el && scrollArea) {
+            scrollArea.scrollTop = el.offsetTop - scrollArea.offsetTop;
+        }
+
+        if (holidaysLoaded) {
+            userHoveredDetail = false;
+            renderDetailBox(findHolidayInMonth(target), target);
+        }
+    }
+
+    function syncPickerAndDetailWithScroll() {
+        const scrollArea = document.getElementById("jp-cal-scroll-area");
+        if (!scrollArea) return;
+
+        const blocks = Array.from(scrollArea.querySelectorAll(".jp-month-block"));
+        const viewTop = scrollArea.scrollTop;
+        const viewBottom = viewTop + scrollArea.clientHeight;
+
+        let activeBlock = blocks[0];
+        for (const b of blocks) {
+            const bTop = b.offsetTop - scrollArea.offsetTop;
+            if (bTop <= viewTop + 60) {
+                activeBlock = b;
+            }
+        }
+
+        if (activeBlock) {
+            const idx = parseInt(activeBlock.dataset.monthIdx, 10);
+            setActiveMonthUI(idx);
+
+            if (holidaysLoaded && !userHoveredDetail) {
+                // Tìm ngày lễ đầu tiên đang nằm trong vùng hiển thị hiện tại (ưu tiên tháng đang active)
+                const holidayCells = Array.from(scrollArea.querySelectorAll(".jp-cal-cell.is-holiday"));
+                let visibleHoliday = null;
+                for (const cell of holidayCells) {
+                    const cardEl = cell.closest(".jp-month-block");
+                    const cardTop = cardEl ? cardEl.offsetTop - scrollArea.offsetTop : 0;
+                    const cellTop = cardTop + cell.offsetTop;
+                    const cellBottom = cellTop + cell.offsetHeight;
+                    if (cellBottom >= viewTop + 10 && cellTop <= viewBottom - 10) {
+                        const mIdx = cardEl ? parseInt(cardEl.dataset.monthIdx, 10) : idx;
+                        const dayNum = parseInt(cell.querySelector(".jp-cal-daynum")?.textContent || "0", 10);
+                        const list = holidaysByDate[dateKey(viewYear, mIdx, dayNum)];
+                        if (list && list.length) {
+                            visibleHoliday = { holiday: list[0], mIdx };
+                            break;
+                        }
+                    }
+                }
+
+                if (visibleHoliday) {
+                    renderDetailBox(visibleHoliday.holiday, visibleHoliday.mIdx);
+                } else {
+                    renderDetailBox(findHolidayInMonth(idx), idx);
+                }
+            }
+        }
+    }
+
+    function openPopup() {
+        const popup = ensurePopup();
+        popup.classList.add("open");
+        if (!loadedMonths.length) {
+            loadedMonths = [0, 1];
+        }
+        setActiveMonthUI(loadedMonths[0]);
+        refreshRenderedMonths();
+        if (!holidaysLoaded) {
+            fetchHolidayCSV();
+        }
+    }
+
+    function closePopup() {
+        if (modalEl) {
+            modalEl.classList.remove("open");
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        ensurePopup();
+        const trigger = document.getElementById("today-jp");
+        if (trigger) {
+            trigger.style.cursor = "pointer";
+            trigger.addEventListener("click", function (e) {
+                e.stopPropagation();
+                openPopup();
+            });
+        }
+    });
+})();
 
     !function(){function applyAllSplitLayouts(){(function(){var bigWrap=document.querySelector(".big-wrap"),rightSlot=document.getElementById("exp-split-right"),ringsWrap=document.getElementById("rings-wrap"),spendingView=document.getElementById("budget-view-subcategory"),budgetCard=document.querySelector(".budget-card"),slideZero=document.getElementById("slide-0");if(bigWrap&&rightSlot&&spendingView&&slideZero){var tabBtn,shouldSplit=(tabBtn=document.getElementById("tab-btn-0"),window.innerWidth>480&&!!tabBtn&&tabBtn.classList.contains("active")),isSplit=bigWrap.classList.contains("expense-split");if(shouldSplit&&!isSplit){bigWrap.classList.add("expense-split"),ringsWrap&&rightSlot.appendChild(ringsWrap),rightSlot.appendChild(spendingView);var recentBtn=budgetCard&&budgetCard.querySelector(".budget-subtabs .budget-subtab:first-child");if(recentBtn&&recentBtn.classList.contains("active")){var detailBtn=budgetCard.querySelector(".budget-subtabs .budget-subtab:nth-child(1)");detailBtn&&detailBtn.click()}}else!shouldSplit&&isSplit&&(bigWrap.classList.remove("expense-split"),slideZero&&ringsWrap&&slideZero.insertBefore(ringsWrap,slideZero.firstChild),spendingView&&budgetCard&&budgetCard.appendChild(spendingView))}})(),function(){var bigWrap=document.querySelector(".big-wrap"),rightSlot=document.getElementById("ovw-split-right"),walletView=document.getElementById("budget-view-wallet"),budgetCard=document.querySelector("#ca-wrap .budget-card");if(bigWrap&&rightSlot&&walletView&&budgetCard){var tabBtn,shouldSplit=(tabBtn=document.getElementById("tab-btn-1"),window.innerWidth>480&&!!tabBtn&&tabBtn.classList.contains("active")),isSplit=bigWrap.classList.contains("wallet-split");if(shouldSplit&&!isSplit){bigWrap.classList.add("wallet-split"),rightSlot.appendChild(walletView);var walletBtn=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:first-child');if(walletBtn&&walletBtn.classList.contains("active")){var fireBtn=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:last-child');fireBtn&&fireBtn.click()}}else if(!shouldSplit&&isSplit){bigWrap.classList.remove("wallet-split"),budgetCard.insertBefore(walletView,budgetCard.querySelector("#budget-view-fire")||null);var fireBtnBack=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:last-child');if(fireBtnBack&&fireBtnBack.classList.contains("active")){var walletBtnBack=budgetCard.querySelector('[data-tabgroup="wallet-fire"] .budget-subtab-v2:first-child');walletBtnBack&&walletBtnBack.click()}}}}(),function(){var bigWrap=document.querySelector(".big-wrap"),rightSlot=document.getElementById("port-split-right"),portfolioView=document.getElementById("budget-view-portfolio"),budgetCard=document.querySelector("#slide-2 .budget-card");if(bigWrap&&rightSlot&&portfolioView&&budgetCard){var tabBtn,shouldSplit=(tabBtn=document.getElementById("tab-btn-2"),window.innerWidth>480&&!!tabBtn&&tabBtn.classList.contains("active")),isSplit=bigWrap.classList.contains("portfolio-split");if(shouldSplit&&!isSplit){bigWrap.classList.add("portfolio-split"),rightSlot.appendChild(portfolioView);var portfolioBtn=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:first-child');if(portfolioBtn&&portfolioBtn.classList.contains("active")){var btcBtn=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:last-child');btcBtn&&btcBtn.click()}}else if(!shouldSplit&&isSplit){bigWrap.classList.remove("portfolio-split");var btcView=document.getElementById("budget-view-btc");btcView&&btcView.parentNode===budgetCard?budgetCard.insertBefore(portfolioView,btcView):budgetCard.appendChild(portfolioView);var btcBtnBack=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:last-child');if(btcBtnBack&&btcBtnBack.classList.contains("active")){var portfolioBtnBack=budgetCard.querySelector('[data-tabgroup="portfolio-btc"] .budget-subtab-v2:first-child');portfolioBtnBack&&portfolioBtnBack.click()}}}}()}var applyTimer,resizeTimer,tabBarObserverTarget=document.getElementById("tab-bar")||document.getElementById("tab-btn-group")||document.body;new MutationObserver(function(){clearTimeout(applyTimer),applyTimer=setTimeout(applyAllSplitLayouts,0)}).observe(tabBarObserverTarget,{attributes:!0,attributeFilter:["class"],subtree:!0}),window.addEventListener("resize",function(){clearTimeout(resizeTimer),resizeTimer=setTimeout(applyAllSplitLayouts,100)}),document.addEventListener("DOMContentLoaded",applyAllSplitLayouts),applyAllSplitLayouts()}();
     function switchBudgetTab(e,t){var a=e.closest(".budget-card")||e.closest(".slide")||document,group=e.closest("[data-tabgroup]"),groupKey=group?group.getAttribute("data-tabgroup"):null;a.querySelectorAll(".budget-subtab, .budget-subtab-v2, .tab-btn:not(#tab-btn-x)").forEach(function(el){el.classList.remove("active")}),e.classList.add("active"),a.querySelectorAll(".budget-tab-content").forEach(function(el){el.style.display="none"});var c=a.querySelector("#portfolio-view-"+t)||a.querySelector("#budget-view-"+t);c&&(c.style.display="block"),groupKey?localStorage.setItem("active_budget_subtab_"+groupKey,t):localStorage.setItem("active_budget_subtab",t),e.id&&localStorage.setItem("active_regular_tab_id",e.id);var card=document.getElementById("card"),chartBtn=document.getElementById("tab-btn-x");card&&chartBtn&&("none"!==card.style.display&&"none"!==getComputedStyle(card).display&&"0px"!==card.style.maxHeight?chartBtn.classList.add("active"):chartBtn.classList.remove("active")),"subcategory"===t&&"function"==typeof renderSubcategoryBreakdown?renderSubcategoryBreakdown():"watchlist"===t&&"function"==typeof fetchWatchlistData?fetchWatchlistData():"portfolio"===t&&restoreBudgetSubtab("portfolio-group","watchlist")}function restoreBudgetSubtab(groupKey,defaultTab){var groupEl=document.querySelector('[data-tabgroup="'+groupKey+'"]');if(groupEl){var storageKey="active_budget_subtab_"+groupKey,savedSubtab=localStorage.getItem(storageKey)||defaultTab,targetBtn=groupEl.querySelector(`.budget-subtab[onclick*="'${savedSubtab}'"], .budget-subtab-v2[onclick*="'${savedSubtab}'"]`);targetBtn&&switchBudgetTab(targetBtn,savedSubtab)}}document.addEventListener("DOMContentLoaded",function(){var savedSubtabV1=localStorage.getItem("active_budget_subtab")||"spending",targetBtnV1=document.querySelector(`.budget-subtab[onclick*="'${savedSubtabV1}'"], .budget-subtab-v2[onclick*="'${savedSubtabV1}'"]`);if(targetBtnV1)switchBudgetTab(targetBtnV1,savedSubtabV1);else{var defaultBtn=document.querySelector(".budget-subtab, .budget-subtab-v2");defaultBtn&&switchBudgetTab(defaultBtn,"spending")}restoreBudgetSubtab("wallet-fire","wallet"),restoreBudgetSubtab("portfolio-btc","portfolio"),restoreBudgetSubtab("portfolio-group","watchlist");var chartBtn=document.getElementById("tab-btn-x"),card=document.getElementById("card");chartBtn&&card&&(card.style.overflow="hidden",card.style.transition="max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease-in-out, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)","shown"===(localStorage.getItem("tab-btn-x-card-state")||"shown")?(chartBtn.classList.add("active"),card.style.display="block",card.style.maxHeight="1000px",card.style.opacity="1",card.style.transform="translateY(0)"):(chartBtn.classList.remove("active"),card.style.display="none",card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)"),chartBtn.addEventListener("click",function(e){e.stopPropagation(),"none"===card.style.display||"none"===getComputedStyle(card).display||"0px"===card.style.maxHeight?(card.style.display="block",card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)",card.offsetHeight,card.style.maxHeight="1000px",card.style.opacity="1",card.style.transform="translateY(0)",this.classList.add("active"),localStorage.setItem("tab-btn-x-card-state","shown")):(card.style.maxHeight="0px",card.style.opacity="0",card.style.transform="translateY(-12px)",this.classList.remove("active"),setTimeout(function(){"0px"===card.style.maxHeight&&(card.style.display="none")},400),localStorage.setItem("tab-btn-x-card-state","hidden"));var savedId=localStorage.getItem("active_regular_tab_id"),activeBtn=(savedId?document.getElementById(savedId):null)||targetBtnV1||document.querySelector(".budget-subtab, .budget-subtab-v2, .tab-btn:not(#tab-btn-x)");activeBtn&&activeBtn.classList.add("active"),"block"===card.style.display&&"function"==typeof loadBalanceHistoryTC&&loadBalanceHistoryTC()})),document.querySelectorAll(".tab-btn").forEach(function(btn){btn.addEventListener("click",function(){"tab-btn-x"!==this.id&&(document.querySelectorAll(".tab-btn:not(#tab-btn-x)").forEach(function(otherBtn){otherBtn.classList.remove("active")}),this.classList.add("active"),this.id&&localStorage.setItem("active_regular_tab_id",this.id),card&&chartBtn&&("none"!==card.style.display&&"none"!==getComputedStyle(card).display&&"0px"!==card.style.maxHeight?chartBtn.classList.add("active"):chartBtn.classList.remove("active")))})})}),
