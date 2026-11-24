@@ -2023,7 +2023,7 @@ to{transform:rotate(360deg)}
                                   <div class="chart-segment-bonus" id="bar-bonus" title="Bonus & Incentives"></div>
                                 </div>
 
-                                <div class="progress-legend" id="overview-legend-container">
+                                <div class="progress-legend" id="overview-legend-container" style="font-family:Lexend;">
                                 </div>
                                     <div style="display: flex; justify-content: flex-end; align-items: flex-end; flex-direction: column; margin-top:15px;margin-bottom: -20px; text-align: right;">
                                     <div class="chart-header-row">
@@ -2043,7 +2043,7 @@ to{transform:rotate(360deg)}
                                           <div id="chart-diff-badge" style="font-size: 13px; font-weight: 600; color: #00f5d4;">+0.0M</div>
                                       </div>
                                     </div>
-                                    <div id="chart-pct-note" style="font-size: 11px; color: #9e9e9e;">higher than last year</div>
+                                    <div id="chart-pct-note" style="font-family:Lexend;font-weight:500;font-size: 11px; color: #9e9e9e;">higher than last year</div>
                                     </div>
                                     <div style="position: relative; width: 100%; height: 160px;">
                                     <canvas id="salaryTrendChart" style="width: 100%; height: 100%; display: block;"></canvas>
@@ -2085,7 +2085,7 @@ to{transform:rotate(360deg)}
             <!-- PORTFOLIO SLIDE -->
             <div class="slide" id="slide-2" data-idx="2" style="overflow-y:auto;overflow-x:hidden;">
                 <div class="budget-card">
-                    <div class="budget-subtabs-v2" data-tabgroup="portfolio-btc" style="display:flex!important;align-items:center;justify-content:center;gap:8px;position:relative;width:100%;margin-bottom:5px">
+                    <div class="budget-subtabs-v2" data-tabgroup="portfolio-btc" style="display:none!important;align-items:center;justify-content:center;gap:8px;position:relative;width:100%;margin-bottom:5px">
                         <button type="button" class="budget-subtab-v2 active" onclick="switchBudgetTab(this, 'portfolio')">
                             <span class="material-icons-round" style="font-size:6px;">circle</span>
                         </button>
@@ -2094,7 +2094,7 @@ to{transform:rotate(360deg)}
                         </button>
                     </div>
 
-                    <div class="budget-tab-content" id="budget-view-portfolio" style="display: flex;">
+                    <div class="budget-tab-content" id="budget-view-portfolio" style="display: none;">
                         <div class="dashboard-grid">
                             <div id="det-msg"></div>
                             <!-- HERO STAT CARD -->
@@ -2514,7 +2514,7 @@ to{transform:rotate(360deg)}
 
                                       <!-- 2x2 KPI Cards -->
                                       <div class="kpi-grid-rock">
-                                          <div class="kpi-card-rock">
+                                          <div class="kpi-card-rock" style="background: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)),url('https://i.pinimg.com/1200x/b2/5c/ff/b25cffb2af3d37fea306b6289e789ffc.jpg') center / cover no-repeat">
                                               <div class="kpi-label-rock">TOTAL MAIN CAPITAL</div>
                                               <div class="kpi-value-rock">510,000,000₫</div>
                                               <div class="kpi-sub-rock">
@@ -2523,7 +2523,7 @@ to{transform:rotate(360deg)}
                                               </div>
                                           </div>
 
-                                          <div class="kpi-card-rock">
+                                          <div class="kpi-card-rock" style="background: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)),url('https://i.pinimg.com/736x/b3/13/06/b3130638630d82b416187a9462cd1966.jpg') center / cover no-repeat">
                                               <div class="kpi-label-rock">BACKUP RESERVE</div>
                                               <div class="kpi-value-rock">300 - 500M</div>
                                               <div class="kpi-sub-rock">
@@ -2532,7 +2532,7 @@ to{transform:rotate(360deg)}
                                               </div>
                                           </div>
 
-                                          <div class="kpi-card-rock dd-highlight-rock">
+                                          <div class="kpi-card-rock dd-highlight-rock" style="background: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)),url('https://i.pinimg.com/1200x/49/b0/9d/49b09da0acc756cf63d87ca4ce0048c9.jpg') center / cover no-repeat">
                                               <div class="kpi-label-rock">MILESTONE / DEEP DD</div>
                                               <div class="kpi-value-rock">-204M / -510M</div>
                                               <div class="kpi-sub-rock">
@@ -2540,7 +2540,7 @@ to{transform:rotate(360deg)}
                                               </div>
                                           </div>
 
-                                          <div class="kpi-card-rock tp-highlight-rock">
+                                          <div class="kpi-card-rock tp-highlight-rock" style="background: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)),url('https://i.pinimg.com/736x/5a/f7/d6/5af7d624ed645b8fe5c79eb7bd9bdc53.jpg') center / cover no-repeat">
                                               <div class="kpi-label-rock">TOTAL PROFIT @TP</div>
                                               <div class="kpi-value-rock">+2,500,000,000₫</div>
                                               <div class="kpi-sub-rock">
@@ -2551,7 +2551,7 @@ to{transform:rotate(360deg)}
                                       </div>
 
                                       <!-- Table 1: Allocation & Stress Test Summary -->
-                                      <div class="section-block-rock">
+                                      <div class="section-block-rock" style="background: linear-gradient(rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.9)),url('https://i.pinimg.com/736x/ca/8f/40/ca8f400c02a208eb79c20ef0f4707ab3.jpg') center / cover no-repeat">
                                           <div class="table-wrap-rock">
                                               <table class="table-rock">
                                                   <colgroup>
@@ -4785,17 +4785,38 @@ to{transform:rotate(360deg)}
     function csvRow(line){for(var cols=[],cur="",inQ=!1,i=0;i<line.length;i++){var c=line[i];'"'===c?inQ=!inQ:","!==c||inQ?cur+=c:(cols.push(cur),cur="")}return cols.push(cur),cols.map(function(s){return s.replace(/^"|"$/g,"").trim()})}function parseAmt(raw){if(!raw)return NaN;var s=raw.replace(/[^\d,.\-]/g,"");return parseFloat(s.replace(/,/g,""))}function parseSheetDate(raw){if(!raw)return null;var match=raw.trim().match(/^(\d{1,2})[\/\-\s]([A-Za-z]{3,})[\/\-\s](\d{2,4})$/);if(match){var mon={jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11}[match[2].toLowerCase().slice(0,3)],yr=match[3].length<=2?2e3+parseInt(match[3]):parseInt(match[3]);return new Date(yr,mon,parseInt(match[1]))}var d=new Date(raw);return isNaN(d.getTime())?null:d}function fmtUSD(v){return isNaN(v)||null===v?"—":"$"+Math.round(v).toLocaleString("en-US")}function fmtDateCompact(d){if(!d)return"—";return String(d.getDate()).padStart(2,"0")+"-"+["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][d.getMonth()]+"-"+String(d.getFullYear()).slice(-2)}
     function buildSmoothPath(pts){if(pts.length<2)return"";for(var d="M "+pts[0].x+" "+pts[0].y,i=0;i<pts.length-1;i++){var p0=pts[i],p1=pts[i+1],cx=(p0.x+p1.x)/2;d+=" C "+cx+" "+p0.y+" "+cx+" "+p1.y+" "+p1.x+" "+p1.y}return d}
     function loadCycles(){fetch(BTC_CSV_URL+"&t="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(text){var rows=text.split("\n").filter(function(l){return l.trim()}).map(csvRow).slice(1);globalPoints=[],rows.forEach(function(cols){var d=parseSheetDate(cols[2]);if(d){var ath=parseAmt(cols[3]),atl=parseAmt(cols[4]),type=isNaN(ath)?isNaN(atl)?null:"atl":"ath";type&&globalPoints.push({cycleNum:cols[0]?parseInt(cols[0]):null,rangeDay:parseAmt(cols[1]),date:d,value:"ath"===type?ath:atl,type,changeStr:cols[5]||"",isCurrent:!!cols[6]&&"true"===cols[6].trim().toLowerCase()})}}),globalPoints.sort(function(a,b){return a.date-b.date}),document.getElementById("loading-msg").style.display="none",document.getElementById("table-container").style.display="block",renderTradingViewChart(),renderStructuredTable(globalPoints),setupGlobalInteractivePhysics(),loadMetrics()})}
-    function renderTradingViewChart() {
+    var _waveRevealRafId = null;
+
+function stopWaveRevealAnimation() {
+    if (_waveRevealRafId !== null) {
+        cancelAnimationFrame(_waveRevealRafId);
+        _waveRevealRafId = null;
+    }
+}
+
+function renderTradingViewChart(replayAnim) {
     var svg = document.getElementById("wave-svg");
     if (!svg || !globalPoints || !globalPoints.length) return;
+
+    stopWaveRevealAnimation();
     svg.innerHTML = "";
 
     var ns = "http://www.w3.org/2000/svg",
         W = 640,
         H = window.innerWidth >= 401 && window.innerWidth <= 1024 ? 240 : 200;
 
+    svg.setAttribute("viewBox", "0 0 " + W + " " + H);
     svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
     svg.style.overflow = "hidden";
+
+    function addSvgEl(parent, tag, attrs) {
+        var el = document.createElementNS(ns, tag);
+        Object.keys(attrs || {}).forEach(function (k) {
+            el.setAttribute(k, attrs[k]);
+        });
+        if (parent) parent.appendChild(el);
+        return el;
+    }
 
     var plotTop = 55,
         plotBottom = H - 24,
@@ -4821,59 +4842,50 @@ to{transform:rotate(360deg)}
         return plotTop + (1 - (Math.log10(val) - currentMinL) / (currentMaxL - currentMinL)) * plotH;
     }
 
-    // Defs: Glassy gradient & glow filter
-    var defs = document.createElementNS(ns, "defs");
+    var defs = addSvgEl(svg, "defs");
 
-    var grad = document.createElementNS(ns, "linearGradient");
-    grad.setAttribute("id", "waveGrad");
-    grad.setAttribute("gradientUnits", "userSpaceOnUse");
-    grad.setAttribute("x1", -145);
-    grad.setAttribute("y1", "0");
-    grad.setAttribute("x2", 585);
-    grad.setAttribute("y2", "0");
+    var grad = addSvgEl(defs, "linearGradient", {
+        id: "waveGrad",
+        gradientUnits: "userSpaceOnUse",
+        x1: -145,
+        y1: "0",
+        x2: 585,
+        y2: "0"
+    });
     [
         ["0%", "#f472b6"],
         ["50%", "#a78bfa"],
         ["100%", "#2dd4bf"]
     ].forEach(function (st) {
-        var s = document.createElementNS(ns, "stop");
-        s.setAttribute("offset", st[0]);
-        s.setAttribute("stop-color", st[1]);
-        grad.appendChild(s);
+        addSvgEl(grad, "stop", { offset: st[0], "stop-color": st[1] });
     });
-    defs.appendChild(grad);
 
-    var areaGrad = document.createElementNS(ns, "linearGradient");
-    areaGrad.setAttribute("id", "waveGlassArea");
-    areaGrad.setAttribute("x1", "0");
-    areaGrad.setAttribute("y1", "0");
-    areaGrad.setAttribute("x2", "0");
-    areaGrad.setAttribute("y2", "1");
+    var areaGrad = addSvgEl(defs, "linearGradient", {
+        id: "waveGlassArea",
+        x1: "0",
+        y1: "0",
+        x2: "0",
+        y2: "1"
+    });
     [
         ["0%", "rgba(167, 139, 250, 0.14)"],
         ["100%", "rgba(15, 23, 42, 0.0)"]
     ].forEach(function (st) {
-        var s = document.createElementNS(ns, "stop");
-        s.setAttribute("offset", st[0]);
-        s.setAttribute("stop-color", st[1]);
-        areaGrad.appendChild(s);
+        addSvgEl(areaGrad, "stop", { offset: st[0], "stop-color": st[1] });
     });
-    defs.appendChild(areaGrad);
-    svg.appendChild(defs);
 
-    // Horizontal log grid lines
     [100, 300, 1e3, 3e3, 1e4, 3e4, 7e4, 1e5, 18e4, 3e5].forEach(function (tk) {
         var y = getY(tk);
         if (y > plotTop && y < plotBottom) {
-            var gl = document.createElementNS(ns, "line");
-            gl.setAttribute("x1", 0);
-            gl.setAttribute("x2", 585);
-            gl.setAttribute("y1", y);
-            gl.setAttribute("y2", y);
-            gl.setAttribute("stroke", "rgba(148, 163, 184, 0.11)");
-            gl.setAttribute("stroke-dasharray", "2 3");
-            gl.setAttribute("class", "grid-line");
-            svg.appendChild(gl);
+            addSvgEl(svg, "line", {
+                x1: 0,
+                x2: 585,
+                y1: y,
+                y2: y,
+                stroke: "rgba(148, 163, 184, 0.11)",
+                "stroke-dasharray": "2 3",
+                "class": "grid-line"
+            });
         }
     });
 
@@ -4881,39 +4893,46 @@ to{transform:rotate(360deg)}
         return { x: getX(p.date), y: getY(p.value), p: p };
     });
 
-    // Subtle glassy area under visible curve
     if (xy.length > 1) {
         var areaD = buildSmoothPath(xy) +
             " L " + xy[xy.length - 1].x + "," + plotBottom +
             " L " + xy[0].x + "," + plotBottom + " Z";
-        var areaEl = document.createElementNS(ns, "path");
-        areaEl.setAttribute("d", areaD);
-        areaEl.setAttribute("fill", "url(#waveGlassArea)");
-        svg.appendChild(areaEl);
+        addSvgEl(svg, "path", {
+            d: areaD,
+            fill: "url(#waveGlassArea)"
+        });
     }
 
-    // Trend segments (past = glassy gradient stroke, future = dashed pastel projection)
+    var revealLines = [];
     for (var i = 0; i < xy.length - 1; i++) {
         var p0 = xy[i], p1 = xy[i + 1];
         var isFutureSegment = p0.p.date.getTime() > FIXED_NOW_TIME || p1.p.date.getTime() > FIXED_NOW_TIME;
-        var segmentPath = document.createElementNS(ns, "path");
-        segmentPath.setAttribute("d", buildSmoothPath([p0, p1]));
-        segmentPath.setAttribute("fill", "none");
+        var segEl;
         if (isFutureSegment) {
             var projectionColor = p1.p.value > p0.p.value ? "#6ee7b7" : "#fda4af";
-            segmentPath.setAttribute("stroke", projectionColor);
-            segmentPath.setAttribute("stroke-width", "1.8");
-            segmentPath.setAttribute("stroke-dasharray", "4 4");
-            segmentPath.setAttribute("opacity", "0.85");
+            segEl = addSvgEl(svg, "path", {
+                d: buildSmoothPath([p0, p1]),
+                fill: "none",
+                stroke: projectionColor,
+                "stroke-width": "1.8",
+                "stroke-dasharray": "4 4",
+                opacity: "0.85"
+            });
         } else {
-            segmentPath.setAttribute("stroke", "url(#waveGrad)");
-            segmentPath.setAttribute("stroke-width", "2.1");
-            segmentPath.setAttribute("stroke-linecap", "round");
+            segEl = addSvgEl(svg, "path", {
+                d: buildSmoothPath([p0, p1]),
+                fill: "none",
+                stroke: "url(#waveGrad)",
+                "stroke-width": "2.1",
+                "stroke-linecap": "round"
+            });
+            var segLen = segEl.getTotalLength ? segEl.getTotalLength() : 0;
+            if (segLen > 0) {
+                revealLines.push({ el: segEl, len: segLen });
+            }
         }
-        svg.appendChild(segmentPath);
     }
 
-    // Day-span pills between points
     for (i = 0; i < xy.length - 1; i++) {
         p0 = xy[i];
         p1 = xy[i + 1];
@@ -4921,193 +4940,228 @@ to{transform:rotate(360deg)}
             midY = (p0.y + p1.y) / 2;
         if (midX > -145 && midX < 585 && midY > plotTop && midY < plotBottom) {
             var labelTxtStr = Math.round(Math.abs(p1.p.date - p0.p.date) / 864e5) + " d",
-                rectW = 6 * labelTxtStr.length + 10,
-                lBg = document.createElementNS(ns, "rect");
-            lBg.setAttribute("x", midX - rectW / 2);
-            lBg.setAttribute("y", midY - 7.5);
-            lBg.setAttribute("width", rectW);
-            lBg.setAttribute("height", 15);
-            lBg.setAttribute("rx", 5);
-            lBg.setAttribute("fill", "rgba(15, 23, 42, 0.78)");
-            lBg.setAttribute("stroke", "rgba(255, 255, 255, 0.14)");
-            lBg.setAttribute("stroke-width", "0.8");
-            lBg.setAttribute("class", "trend-label-bg");
-            svg.appendChild(lBg);
+                rectW = 6 * labelTxtStr.length + 10;
 
-            var lTx = document.createElementNS(ns, "text");
-            lTx.setAttribute("x", midX);
-            lTx.setAttribute("y", midY + 3);
-            lTx.setAttribute("fill", "#cbd5e1");
-            lTx.setAttribute("class", "trend-label-text");
+            addSvgEl(svg, "rect", {
+                x: midX - rectW / 2,
+                y: midY - 7.5,
+                width: rectW,
+                height: 15,
+                rx: 5,
+                fill: "rgba(15, 23, 42, 0.78)",
+                stroke: "rgba(255, 255, 255, 0.14)",
+                "stroke-width": "0.8",
+                "class": "trend-label-bg"
+            });
+
+            var lTx = addSvgEl(svg, "text", {
+                x: midX,
+                y: midY + 3,
+                fill: "#cbd5e1",
+                "class": "trend-label-text"
+            });
             lTx.textContent = labelTxtStr;
-            svg.appendChild(lTx);
         }
     }
 
-    // Next cycle vertical marker
-    var targetMarkerDate = null;
-    globalPoints.forEach(function (p) {
-        if (2026 === p.date.getFullYear() && 9 === p.date.getMonth()) {
-            targetMarkerDate = p.date;
+    var targetMarkerPoint = null;
+    xy.forEach(function (item) {
+        if (2026 === item.p.date.getFullYear() && 9 === item.p.date.getMonth()) {
+            targetMarkerPoint = item;
         }
     });
-    if (targetMarkerDate) {
-        var targetX = getX(targetMarkerDate);
+    if (targetMarkerPoint) {
+        var targetX = targetMarkerPoint.x;
+        var targetY = targetMarkerPoint.y;
         if (targetX >= -145 && targetX <= 585) {
-            var tgtLine = document.createElementNS(ns, "line");
-            tgtLine.setAttribute("x1", targetX);
-            tgtLine.setAttribute("x2", targetX);
-            tgtLine.setAttribute("y1", 0);
-            tgtLine.setAttribute("y2", plotBottom);
-            tgtLine.setAttribute("stroke", "rgba(167, 139, 250, 0.45)");
-            tgtLine.setAttribute("stroke-width", "1");
-            tgtLine.setAttribute("stroke-dasharray", "4 4");
-            svg.appendChild(tgtLine);
+            addSvgEl(svg, "line", {
+                x1: targetX,
+                x2: targetX,
+                y1: 0,
+                y2: plotBottom,
+                stroke: "rgba(167, 139, 250, 0.45)",
+                "stroke-width": "1",
+                "stroke-dasharray": "4 4"
+            });
 
-            var tgtLabel = document.createElementNS(ns, "text");
-            tgtLabel.setAttribute("x", targetX + 6);
-            tgtLabel.setAttribute("y", 14);
-            tgtLabel.setAttribute("font-size", "13px");
-            tgtLabel.setAttribute("fill", "#c4b5fd");
-            tgtLabel.setAttribute("font-weight", "600");
+            var tgtLabel = addSvgEl(svg, "text", {
+                x: targetX + 6,
+                y: 14,
+                "font-size": "13px",
+                fill: "#c4b5fd",
+                "font-weight": "600"
+            });
             tgtLabel.textContent = "next cycle";
-            svg.appendChild(tgtLabel);
+
+            if (targetY >= plotTop && targetY <= plotBottom) {
+                var livePing = addSvgEl(svg, "circle", {
+                    cx: targetX,
+                    cy: targetY,
+                    r: 4,
+                    fill: "rgba(167, 139, 250, 0.45)",
+                    stroke: "#a78bfa",
+                    "stroke-width": "1.2"
+                });
+                addSvgEl(livePing, "animate", {
+                    attributeName: "r",
+                    values: "4;13;4",
+                    dur: "1.8s",
+                    repeatCount: "indefinite"
+                });
+                addSvgEl(livePing, "animate", {
+                    attributeName: "opacity",
+                    values: "0.9;0;0.9",
+                    dur: "1.8s",
+                    repeatCount: "indefinite"
+                });
+
+                var liveCore = addSvgEl(svg, "circle", {
+                    cx: targetX,
+                    cy: targetY,
+                    r: 4.2,
+                    fill: "#c4b5fd",
+                    stroke: "#0f172a",
+                    "stroke-width": "1.5"
+                });
+                addSvgEl(liveCore, "animate", {
+                    attributeName: "r",
+                    values: "3.6;5.2;3.6",
+                    dur: "1.4s",
+                    repeatCount: "indefinite"
+                });
+            }
         }
     }
 
-    // Point markers + price & % labels + x-axis ticks
     xy.forEach(function (pt) {
         if (!(pt.x < -145 || pt.x > 585 || pt.y < plotTop || pt.y > plotBottom)) {
             var isTop = "ath" === pt.p.type,
                 isFuture = pt.p.date.getTime() > FIXED_NOW_TIME,
                 markerColor = isTop ? "#34d399" : "#fb7185";
 
-            // Soft outer glow halo
-            var halo = document.createElementNS(ns, "circle");
-            halo.setAttribute("cx", pt.x);
-            halo.setAttribute("cy", pt.y);
-            halo.setAttribute("r", "7");
-            halo.setAttribute("fill", markerColor);
-            halo.setAttribute("fill-opacity", isFuture ? "0.14" : "0.22");
-            svg.appendChild(halo);
+            addSvgEl(svg, "circle", {
+                cx: pt.x,
+                cy: pt.y,
+                r: "7",
+                fill: markerColor,
+                "fill-opacity": isFuture ? "0.14" : "0.22"
+            });
 
-            var dot = document.createElementNS(ns, "circle");
-            dot.setAttribute("cx", pt.x);
-            dot.setAttribute("cy", pt.y);
-            dot.setAttribute("r", "3.6");
-            dot.setAttribute("stroke", markerColor);
-            dot.setAttribute("stroke-width", "2");
-            dot.setAttribute("fill", isFuture ? "#0f172a" : markerColor);
-            svg.appendChild(dot);
+            addSvgEl(svg, "circle", {
+                cx: pt.x,
+                cy: pt.y,
+                r: "3.6",
+                stroke: markerColor,
+                "stroke-width": "2",
+                fill: isFuture ? "#0f172a" : markerColor
+            });
 
-            var lblPrice = document.createElementNS(ns, "text");
-            lblPrice.setAttribute("x", pt.x);
-            lblPrice.setAttribute("y", isTop ? pt.y - 28 : pt.y + 23);
-            lblPrice.setAttribute("text-anchor", "middle");
-            lblPrice.setAttribute("fill", "#f8fafc");
-            lblPrice.setAttribute("class", "wave-pt-label");
+            var lblPrice = addSvgEl(svg, "text", {
+                x: pt.x,
+                y: isTop ? pt.y - 28 : pt.y + 23,
+                "text-anchor": "middle",
+                fill: "#f8fafc",
+                "class": "wave-pt-label"
+            });
             lblPrice.textContent = fmtUSD(pt.p.value);
-            svg.appendChild(lblPrice);
 
             if (pt.p.changeStr) {
-                var lblPct = document.createElementNS(ns, "text");
-                lblPct.setAttribute("x", pt.x);
-                lblPct.setAttribute("y", isTop ? pt.y - 12 : pt.y + 43);
-                lblPct.setAttribute("text-anchor", "middle");
-                lblPct.setAttribute("class", "wave-pt-sublabel");
-                lblPct.setAttribute("fill", "-" === pt.p.changeStr.charAt(0) ? "#fda4af" : "#6ee7b7");
+                var lblPct = addSvgEl(svg, "text", {
+                    x: pt.x,
+                    y: isTop ? pt.y - 12 : pt.y + 43,
+                    "text-anchor": "middle",
+                    "class": "wave-pt-sublabel",
+                    fill: "-" === pt.p.changeStr.charAt(0) ? "#fda4af" : "#6ee7b7"
+                });
                 lblPct.textContent = pt.p.changeStr;
-                svg.appendChild(lblPct);
             }
 
-            var tmLine = document.createElementNS(ns, "line");
-            tmLine.setAttribute("x1", pt.x);
-            tmLine.setAttribute("x2", pt.x);
-            tmLine.setAttribute("y1", plotBottom);
-            tmLine.setAttribute("y2", plotBottom - 4);
-            tmLine.setAttribute("class", "axis-line");
-            svg.appendChild(tmLine);
+            addSvgEl(svg, "line", {
+                x1: pt.x,
+                x2: pt.x,
+                y1: plotBottom,
+                y2: plotBottom - 4,
+                "class": "axis-line"
+            });
 
-            var tmTx = document.createElementNS(ns, "text");
-            tmTx.setAttribute("x", pt.x);
-            tmTx.setAttribute("y", H - 8);
-            tmTx.setAttribute("fill", "#94a3b8");
-            tmTx.setAttribute("class", "axis-text");
-            tmTx.setAttribute("text-anchor", "middle");
+            var tmTx = addSvgEl(svg, "text", {
+                x: pt.x,
+                y: H - 8,
+                fill: "#94a3b8",
+                "class": "axis-text",
+                "text-anchor": "middle"
+            });
             tmTx.textContent = String(pt.p.date.getFullYear()).slice(-2);
-            svg.appendChild(tmTx);
         }
     });
 
-    // Axes
-    var rAxis = document.createElementNS(ns, "line");
-    rAxis.setAttribute("x1", 585);
-    rAxis.setAttribute("x2", 585);
-    rAxis.setAttribute("y1", 0);
-    rAxis.setAttribute("y2", plotBottom);
-    rAxis.setAttribute("stroke", "rgba(255, 255, 255, 0.14)");
-    rAxis.setAttribute("class", "axis-line");
-    svg.appendChild(rAxis);
+    addSvgEl(svg, "line", {
+        x1: 585,
+        x2: 585,
+        y1: 0,
+        y2: plotBottom,
+        stroke: "rgba(255, 255, 255, 0.14)",
+        "class": "axis-line"
+    });
 
-    var bAxis = document.createElementNS(ns, "line");
-    bAxis.setAttribute("x1", 0);
-    bAxis.setAttribute("x2", W);
-    bAxis.setAttribute("y1", plotBottom);
-    bAxis.setAttribute("y2", plotBottom);
-    bAxis.setAttribute("stroke", "rgba(255, 255, 255, 0.14)");
-    bAxis.setAttribute("class", "axis-line");
-    svg.appendChild(bAxis);
+    addSvgEl(svg, "line", {
+        x1: 0,
+        x2: W,
+        y1: plotBottom,
+        y2: plotBottom,
+        stroke: "rgba(255, 255, 255, 0.14)",
+        "class": "axis-line"
+    });
 
-    // Hitboxes & Crosshair
-    var bodyHit = document.createElementNS(ns, "rect");
-    bodyHit.setAttribute("x", 0);
-    bodyHit.setAttribute("y", 0);
-    bodyHit.setAttribute("width", 585);
-    bodyHit.setAttribute("height", plotBottom);
-    bodyHit.setAttribute("class", "chart-body-hitbox");
-    svg.appendChild(bodyHit);
+    var bodyHit = addSvgEl(svg, "rect", {
+        x: 0,
+        y: 0,
+        width: 585,
+        height: plotBottom,
+        "class": "chart-body-hitbox"
+    });
 
-    var xHit = document.createElementNS(ns, "rect");
-    xHit.setAttribute("x", 0);
-    xHit.setAttribute("y", plotBottom);
-    xHit.setAttribute("width", 585);
-    xHit.setAttribute("height", 24);
-    xHit.setAttribute("class", "x-axis-hitbox");
-    svg.appendChild(xHit);
+    addSvgEl(svg, "rect", {
+        x: 0,
+        y: plotBottom,
+        width: 585,
+        height: 24,
+        "class": "x-axis-hitbox"
+    });
 
-    var yHit = document.createElementNS(ns, "rect");
-    yHit.setAttribute("x", 585);
-    yHit.setAttribute("y", 0);
-    yHit.setAttribute("width", 55);
-    yHit.setAttribute("height", plotBottom);
-    yHit.setAttribute("class", "y-axis-hitbox");
-    svg.appendChild(yHit);
+    addSvgEl(svg, "rect", {
+        x: 585,
+        y: 0,
+        width: 55,
+        height: plotBottom,
+        "class": "y-axis-hitbox"
+    });
 
-    var hCH = document.createElementNS(ns, "line");
-    hCH.setAttribute("class", "crosshair");
-    hCH.setAttribute("stroke", "rgba(226, 232, 240, 0.45)");
-    hCH.setAttribute("stroke-dasharray", "3 3");
-    svg.appendChild(hCH);
+    var hCH = addSvgEl(svg, "line", {
+        "class": "crosshair",
+        stroke: "rgba(226, 232, 240, 0.45)",
+        "stroke-dasharray": "3 3"
+    });
 
-    var vCH = document.createElementNS(ns, "line");
-    vCH.setAttribute("class", "crosshair");
-    vCH.setAttribute("stroke", "rgba(226, 232, 240, 0.45)");
-    vCH.setAttribute("stroke-dasharray", "3 3");
-    svg.appendChild(vCH);
+    var vCH = addSvgEl(svg, "line", {
+        "class": "crosshair",
+        stroke: "rgba(226, 232, 240, 0.45)",
+        "stroke-dasharray": "3 3"
+    });
 
-    var tagY = document.createElementNS(ns, "rect");
-    tagY.setAttribute("class", "crosshair-tag");
-    tagY.setAttribute("width", 51);
-    tagY.setAttribute("height", 16);
-    tagY.setAttribute("rx", 4);
-    tagY.setAttribute("fill", "rgba(30, 41, 59, 0.92)");
-    tagY.setAttribute("stroke", "rgba(167, 139, 250, 0.5)");
-    svg.appendChild(tagY);
+    var tagY = addSvgEl(svg, "rect", {
+        "class": "crosshair-tag",
+        width: 51,
+        height: 16,
+        rx: 4,
+        fill: "rgba(30, 41, 59, 0.92)",
+        stroke: "rgba(167, 139, 250, 0.5)"
+    });
 
-    var txtY = document.createElementNS(ns, "text");
-    txtY.setAttribute("class", "crosshair-text");
-    txtY.setAttribute("fill", "#f8fafc");
-    svg.appendChild(txtY);
+    var txtY = addSvgEl(svg, "text", {
+        "class": "crosshair-text",
+        fill: "#f8fafc"
+    });
 
     bodyHit.addEventListener("mousemove", function (e) {
         if (!activeDragMode) {
@@ -5144,6 +5198,51 @@ to{transform:rotate(360deg)}
             txtY.style.opacity = 0;
         }
     });
+
+    if (replayAnim !== false && revealLines.length > 0) {
+        var totalRevealLen = revealLines.reduce(function (acc, item) { return acc + item.len; }, 0);
+        var cumBefore = 0;
+        var segs = revealLines.map(function (item) {
+            var s = {
+                el: item.el,
+                len: item.len,
+                startRatio: cumBefore / totalRevealLen,
+                endRatio: (cumBefore + item.len) / totalRevealLen
+            };
+            cumBefore += item.len;
+            item.el.setAttribute("stroke-dasharray", item.len);
+            item.el.setAttribute("stroke-dashoffset", item.len);
+            return s;
+        });
+
+        var revealStart = null;
+        var revealDuration = 750;
+
+        function stepReveal(ts) {
+            if (!revealStart) revealStart = ts;
+            var rawT = Math.min(1, (ts - revealStart) / revealDuration);
+            var eased = 1 - Math.pow(1 - rawT, 3);
+
+            segs.forEach(function (s) {
+                var spanRatio = s.endRatio - s.startRatio || 1;
+                var localP = Math.max(0, Math.min(1, (eased - s.startRatio) / spanRatio));
+                var offset = s.len * (1 - localP);
+                s.el.setAttribute("stroke-dashoffset", offset);
+            });
+
+            if (rawT < 1) {
+                _waveRevealRafId = requestAnimationFrame(stepReveal);
+            } else {
+                segs.forEach(function (s) {
+                    s.el.removeAttribute("stroke-dasharray");
+                    s.el.removeAttribute("stroke-dashoffset");
+                });
+                _waveRevealRafId = null;
+            }
+        }
+
+        _waveRevealRafId = requestAnimationFrame(stepReveal);
+    }
 }
 
 function setupGlobalInteractivePhysics() {
@@ -5268,8 +5367,60 @@ function renderStructuredTable(points){var tbody=document.getElementById("table-
     function toggleExpandAll(){var expandableCards=Array.from(document.querySelectorAll(".cat-card")).filter(function(c){return null!==c.querySelector(".cat-children-wrapper")}),shouldExpand=expandableCards.filter(function(c){return c.classList.contains("open")}).length<expandableCards.length;expandableCards.forEach(function(card){shouldExpand?card.classList.add("open"):card.classList.remove("open")}),updateToggleButtonState()}
     function updateToggleButtonState(){var btn=document.getElementById("toggle-all-btn");if(btn){var expandableCards=Array.from(document.querySelectorAll(".cat-card")).filter(function(c){return null!==c.querySelector(".cat-children-wrapper")}),openCards=expandableCards.filter(function(c){return c.classList.contains("open")});expandableCards.length>0&&openCards.length===expandableCards.length?btn.textContent="Collapse All":btn.textContent="Expand All"}}
     !function(){var order=loadTabOrder(),activeIdx=loadActiveTab();applyTabOrder(order),switchTab(activeIdx)}();
-    document.addEventListener("DOMContentLoaded",()=>{const subTabs=document.querySelectorAll(".sub-tab-btn"),subSlidesWrap=document.getElementById("sub-slides-wrap"),totalTabs=subTabs.length;function activateTab(idx){const numIdx=Number(idx)||0;if(subTabs.forEach(t=>t.classList.remove("active")),subTabs[numIdx]&&subTabs[numIdx].classList.add("active"),subSlidesWrap&&totalTabs>0){const stepPct=100/totalTabs;subSlidesWrap.style.transform=`translateX(-${numIdx*stepPct}%)`}}subSlidesWrap&&totalTabs>0&&(subSlidesWrap.style.display="flex",subSlidesWrap.style.width=100*totalTabs+"%",subSlidesWrap.style.transition="transform 0.3s ease",Array.from(subSlidesWrap.children).forEach(slide=>{slide.style.flex=`0 0 ${100/totalTabs}%`,slide.style.width=100/totalTabs+"%",slide.style.minWidth="0",slide.style.overflow="hidden"})),subTabs.length>0&&activateTab(0),subTabs.forEach((btn,i)=>{btn.addEventListener("click",()=>{activateTab(btn.getAttribute("data-sub-idx")??i)})})});
+    document.addEventListener("DOMContentLoaded", () => {
+    const subTabs = document.querySelectorAll(".sub-tab-btn"),
+        subSlidesWrap = document.getElementById("sub-slides-wrap"),
+        totalTabs = subTabs.length;
 
+    let chartTabTimer = null;
+
+    function activateTab(idx) {
+        const numIdx = Number(idx) || 0;
+        subTabs.forEach(t => t.classList.remove("active"));
+        if (subTabs[numIdx]) subTabs[numIdx].classList.add("active");
+
+        if (subSlidesWrap && totalTabs > 0) {
+            const stepPct = 100 / totalTabs;
+            subSlidesWrap.style.transform = `translateX(-${numIdx * stepPct}%)`;
+        }
+
+        if (chartTabTimer) clearTimeout(chartTabTimer);
+
+        if (numIdx === 1 && typeof renderTradingViewChart === "function") {
+            // 1. Hiện loading line ngay khi mở tab 2
+            renderTradingViewChart(true);
+
+            // 2. Sau khi slide trượt xong (300ms) và data đã sẵn sàng -> render chart thật
+            chartTabTimer = setTimeout(() => {
+                if (typeof globalPoints !== "undefined" && Array.isArray(globalPoints) && globalPoints.length > 0) {
+                    requestAnimationFrame(() => {
+                        renderTradingViewChart(false, true);
+                    });
+                }
+            }, 300);
+        }
+    }
+
+    if (subSlidesWrap && totalTabs > 0) {
+        subSlidesWrap.style.display = "flex";
+        subSlidesWrap.style.width = 100 * totalTabs + "%";
+        subSlidesWrap.style.transition = "transform 0.3s ease";
+        Array.from(subSlidesWrap.children).forEach(slide => {
+            slide.style.flex = `0 0 ${100 / totalTabs}%`;
+            slide.style.width = 100 / totalTabs + "%";
+            slide.style.minWidth = "0";
+            slide.style.overflow = "hidden";
+        });
+    }
+
+    if (subTabs.length > 0) activateTab(0);
+
+    subTabs.forEach((btn, i) => {
+        btn.addEventListener("click", () => {
+            activateTab(btn.getAttribute("data-sub-idx") ?? i);
+        });
+    });
+});
     const halvingDates = [
         new Date("2012-11-28"), new Date("2016-07-09"), 
         new Date("2020-05-11"), new Date("2024-04-20"), 
