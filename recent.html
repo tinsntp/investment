@@ -2175,8 +2175,7 @@ to{transform:rotate(360deg)}
                                     <div class="budget-tab-content" id="budget-view-tradingview" style="display: none;">
                                         <!-- TradingView Market Overview Widget BEGIN -->
                                         <div class="tradingview-widget-container" style="width: 100%; height: 700px; background: transparent; overflow: hidden;">
-                                            <iframe src="https://s.tradingview.com/embed-widget/market-overview/?locale=en#%7B%22colorTheme%22%3A%22dark%22%2C%22dateRange%22%3A%221D%22%2C%22showChart%22%3Atrue%2C%22locale%22%3A%22en%22%2C%22width%22%3A%22100%25%22%2C%22height%22%3A%22100%25%22%2C%22isTransparent%22%3Atrue%2C%22showSymbolLogo%22%3Atrue%2C%22showFloatingTooltip%22%3Afalse%2C%22plotLineColorGrowing%22%3A%22rgba(0%2C%20191%2C%20165%2C%201)%22%2C%22plotLineColorFalling%22%3A%22rgba(244%2C%20114%2C%20182%2C%201)%22%2C%22gridLineColor%22%3A%22rgba(240%2C%20243%2C%20250%2C%200)%22%2C%22scaleFontColor%22%3A%22rgba(120%2C%20123%2C%20134%2C%201)%22%2C%22tabs%22%3A%5B%7B%22title%22%3A%22General%22%2C%22symbols%22%3A%5B%7B%22s%22%3A%22FX%3AXAUUSD%22%7D%2C%7B%22s%22%3A%22CRYPTO%3ABTCUSD%22%7D%2C%7B%22s%22%3A%22EASYMARKETS%3AOILUSD%22%7D%2C%7B%22s%22%3A%22CAPITALCOM%3ADXY%22%7D%2C%7B%22s%22%3A%22PYTH%3AUS10Y%22%7D%2C%7B%22s%22%3A%22FOREXCOM%3AXAGUSD%22%7D%2C%7B%22s%22%3A%22SPREADEX%3ADJI%22%7D%2C%7B%22s%22%3A%22CRYPTO%3AETHUSD%22%7D%2C%7B%22s%22%3A%22CRYPTOCAP%3ASOL%22%7D%5D%7D%5D%7D" style="width: 100%; height: 100%; border: none; margin: 0; padding: 0; display: block; background: transparent;" scrolling="no" frameborder="0" allowtransparency="true">
-                                            </iframe>
+                                            <iframe src="https://s.tradingview.com/embed-widget/market-overview/?locale=en#%7B%22colorTheme%22%3A%22dark%22%2C%22dateRange%22%3A%221D%22%2C%22showChart%22%3Atrue%2C%22locale%22%3A%22en%22%2C%22width%22%3A%22100%25%22%2C%22height%22%3A%22100%25%22%2C%22isTransparent%22%3Atrue%2C%22showSymbolLogo%22%3Atrue%2C%22showFloatingTooltip%22%3Afalse%2C%22plotLineColorGrowing%22%3A%22rgba(0%2C%20191%2C%20165%2C%201)%22%2C%22plotLineColorFalling%22%3A%22rgba(244%2C%20114%2C%20182%2C%201)%22%2C%22gridLineColor%22%3A%22rgba(240%2C%20243%2C%20250%2C%200)%22%2C%22scaleFontColor%22%3A%22rgba(120%2C%20123%2C%20134%2C%201)%22%2C%22tabs%22%3A%5B%7B%22title%22%3A%22Indices%20%26%20Crypto%22%2C%22symbols%22%3A%5B%7B%22s%22%3A%22CAPITALCOM%3AXAUUSD%22%7D%2C%7B%22s%22%3A%22COINBASE%3ABTCUSD%22%7D%2C%7B%22s%22%3A%22TVC%3AUSOIL%22%7D%2C%7B%22s%22%3A%22CAPITALCOM%3ADXY%22%7D%2C%7B%22s%22%3A%22PYTH%3AUS10Y%22%7D%2C%7B%22s%22%3A%22CAPITALCOM%3AXAGUSD%22%7D%2C%7B%22s%22%3A%22CAPITALCOM%3ANAS100%22%7D%2C%7B%22s%22%3A%22SPREADEX%3ADJI%22%7D%2C%7B%22s%22%3A%22SPREADEX%3ANIKKEI%22%7D%2C%7B%22s%22%3A%22COINBASE%3AETHUSD%22%7D%2C%7B%22s%22%3A%22COINBASE%3ASOLUSD%22%7D%5D%7D%2C%7B%22title%22%3A%22Stocks%22%2C%22symbols%22%3A%5B%7B%22s%22%3A%22NASDAQ%3AAAPL%22%7D%2C%7B%22s%22%3A%22NASDAQ%3ANVDA%22%7D%2C%7B%22s%22%3A%22NASDAQ%3ATSLA%22%7D%2C%7B%22s%22%3A%22NASDAQ%3AGOOGL%22%7D%2C%7B%22s%22%3A%22NASDAQ%3AMSFT%22%7D%2C%7B%22s%22%3A%22NASDAQ%3AANT%22%7D%2C%7B%22s%22%3A%22NYSE%3AORCL%22%7D%2C%7B%22s%22%3A%22NYSE%3ADELL%22%7D%5D%7D%5D%7D" style="width: 100%; height: 100%; border: none; margin: 0; padding: 0; display: block; background: transparent;" scrolling="no" frameborder="0" allowtransparency="true"></iframe>
                                         </div>
                                         <!-- TradingView Market Overview Widget END -->
                                     </div>
@@ -2200,10 +2199,13 @@ to{transform:rotate(360deg)}
                                                 <!-- View Mode Switch Buttons -->
                                                 <div style="background: rgba(255,255,255,0.06); padding: 4px; border-radius: 20px; display: flex; border: 1px solid rgba(255,255,255,0.1); gap: 4px;">
                                                     <button type="button" id="btn-watchlist-heatmap" onclick="switchWatchlistView('heatmap')" style="background: #374151; color: #fff; border: none; padding: 6px 14px; border-radius: 16px; font-family:DM Sans; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s;">
-                                                        <i class="bi bi-grid-fill" style="font-size: 13px;"></i> Heatmap
+                                                        <i class="bi bi-grid-fill" style="font-size: 13px;"></i>
+                                                    </button>
+                                                    <button type="button" id="btn-watchlist-world" onclick="switchWatchlistView('world')" style="background: transparent; color: #94a3b8; border: none; padding: 6px 14px; border-radius: 16px; font-family:DM Sans; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s;">
+                                                        <i class="bi bi-globe-americas" style="font-size: 13px;"></i>
                                                     </button>
                                                     <button type="button" id="btn-watchlist-table" onclick="switchWatchlistView('table')" style="background: transparent; color: #94a3b8; border: none; padding: 6px 14px; border-radius: 16px; font-family:DM Sans; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s;">
-                                                        <i class="bi bi-table" style="font-size: 13px;"></i> Table
+                                                        <i class="bi bi-table" style="font-size: 13px;"></i> 
                                                     </button>
                                                 </div>
                                             </div>
@@ -2211,6 +2213,11 @@ to{transform:rotate(360deg)}
                                             <!-- HEAT MAP MODE VIEW (Mặc định hiển thị) -->
                                             <div id="watchlist-view-heatmap-mode" class="watchlist-mode-view" style="display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 46px; grid-auto-flow: dense; gap: 2px; padding: 0; background: #0f172a; border-radius: 20px; overflow: hidden; margin: 5px;">
                                                 <!-- Rendered Dynamically -->
+                                            </div>
+
+                                            <!-- WORLD MODE VIEW -->
+                                            <div id="watchlist-view-world-mode" class="watchlist-mode-view" style="display: none; border-radius: 20px; overflow: hidden;">
+                                                <iframe style="width: 100%; height: 480px; border: none; display: block; background: transparent;" scrolling="no" frameborder="0" allowtransparency="true" srcdoc='<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;padding:0;width:100%;height:100%;background:transparent;overflow:hidden;}</style><script type="module" src="https://widgets.tradingview-widget.com/w/en/tv-world-market-summary.js"></script></head><body><tv-world-market-summary theme="dark" hide-legend></tv-world-market-summary></body></html>'></iframe>
                                             </div>
 
                                             <!-- TABLE / LIST MODE VIEW -->
@@ -6019,23 +6026,26 @@ function renderStructuredTable(points){var tbody=document.getElementById("table-
     function updateMarketStatusDot(){const now=new Date,utc=now.getTime()+6e4*now.getTimezoneOffset(),vnTime=new Date(utc+252e5),day=vnTime.getDay(),currentTimeMinutes=60*vnTime.getHours()+vnTime.getMinutes(),isMarketHours=day>=1&&day<=5&&currentTimeMinutes>=540&&currentTimeMinutes<=900,dot=document.getElementById("market-live-dot");dot&&(isMarketHours?(dot.style.backgroundColor="#2dd4bf",dot.style.boxShadow="0 0 6px #2dd4bf",dot.title="Market is Open"):(dot.style.backgroundColor="#64748b",dot.style.boxShadow="none",dot.title="Market is Closed"))}
     function parseCsvRow(rowStr){for(var cols=[],current="",inQuotes=!1,i=0;i<rowStr.length;i++){var char=rowStr[i];'"'===char||"'"===char?inQuotes=!inQuotes:","!==char||inQuotes?current+=char:(cols.push(current),current="")}return cols.push(current),cols}function cleanNum(val){if(!val)return 0;var cleaned=String(val).replace(/[^0-9.-]/g,"");return parseFloat(cleaned)||0}
     function switchWatchlistView(mode) {
-        const heatmapBtn = document.getElementById('btn-watchlist-heatmap');
-        const tableBtn = document.getElementById('btn-watchlist-table');
-        const heatmapView = document.getElementById('watchlist-view-heatmap-mode');
-        const tableView = document.getElementById('watchlist-view-table-mode');
+            const heatmapBtn = document.getElementById('btn-watchlist-heatmap');
+            const worldBtn = document.getElementById('btn-watchlist-world');
+            const tableBtn = document.getElementById('btn-watchlist-table');
 
-        if (mode === 'heatmap') {
-            if (heatmapBtn) { heatmapBtn.style.background = '#374151'; heatmapBtn.style.color = '#fff'; }
-            if (tableBtn) { tableBtn.style.background = 'transparent'; tableBtn.style.color = '#94a3b8'; }
-            if (heatmapView) heatmapView.style.display = 'grid';
-            if (tableView) tableView.style.display = 'none';
-        } else {
-            if (tableBtn) { tableBtn.style.background = '#374151'; tableBtn.style.color = '#fff'; }
-            if (heatmapBtn) { heatmapBtn.style.background = 'transparent'; heatmapBtn.style.color = '#94a3b8'; }
-            if (heatmapView) heatmapView.style.display = 'none';
-            if (tableView) tableView.style.display = 'block';
+            const heatmapView = document.getElementById('watchlist-view-heatmap-mode');
+            const worldView = document.getElementById('watchlist-view-world-mode');
+            const tableView = document.getElementById('watchlist-view-table-mode');
+
+            const activeBtn = mode === 'heatmap' ? heatmapBtn : mode === 'world' ? worldBtn : tableBtn;
+            [heatmapBtn, worldBtn, tableBtn].forEach(btn => {
+                if (!btn) return;
+                const isActive = btn === activeBtn;
+                btn.style.background = isActive ? '#374151' : 'transparent';
+                btn.style.color = isActive ? '#fff' : '#94a3b8';
+            });
+
+            if (heatmapView) heatmapView.style.display = mode === 'heatmap' ? 'grid' : 'none';
+            if (worldView) worldView.style.display = mode === 'world' ? 'block' : 'none';
+            if (tableView) tableView.style.display = mode === 'table' ? 'block' : 'none';
         }
-    }
 
         function fetchWatchlistData() {
         var csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQnzbOhfKNO_niIpBIoReyDiy5p-UdXvtO6SIMNKXrZts9Cax9hR_5F7RqB_uejrjZuyV6N-Pjc08kd/pub?output=csv&gid=523826078&t=" + Date.now(),
@@ -9767,8 +9777,10 @@ function renderStructuredTable(points){var tbody=document.getElementById("table-
         usa: "https://cdn-icons-png.flaticon.com/512/323/323310.png",
         birthday: "https://cdn-icons-png.flaticon.com/512/2824/2824572.png",
         holiday: "https://cdn-icons-png.flaticon.com/512/6004/6004749.png",
-        event: "https://cdn-icons-png.flaticon.com/512/10302/10302360.png",
-        economic: "https://cdn-icons-png.flaticon.com/512/4021/4021922.png"
+        publicholiday: "https://cdn-icons-png.flaticon.com/512/1090/1090663.png",
+        pto: "https://cdn-icons-png.flaticon.com/512/2318/2318707.png",
+        event: "https://cdn-icons-png.flaticon.com/512/8414/8414067.png",
+        economic: "https://cdn-icons-png.flaticon.com/512/6005/6005505.png"
     };
 
     const now = new Date();
@@ -9799,15 +9811,12 @@ function renderStructuredTable(points){var tbody=document.getElementById("table-
     function getTypeVisual(type, location) {
         const t = String(type || "").trim().toLowerCase();
         if (!t) return { isPto: false, iconUrl: "" };
-        if (t === "pto") return { isPto: true, iconUrl: "" };
+        if (t === "pto") return { isPto: false, iconUrl: ICON_MAP.pto };
         if (t === "birthday") return { isPto: false, iconUrl: ICON_MAP.birthday };
         if (t === "economic") return { isPto: false, iconUrl: ICON_MAP.economic };
         if (t === "event") return { isPto: false, iconUrl: ICON_MAP.event };
         if (t === "holiday") return { isPto: false, iconUrl: ICON_MAP.holiday };
-        if (t === "public holiday") {
-            const locIcon = getLocationIconUrl(location);
-            return { isPto: false, iconUrl: locIcon || ICON_MAP.holiday };
-        }
+        if (t === "public holiday") return { isPto: false, iconUrl: ICON_MAP.publicholiday };
         return { isPto: false, iconUrl: ICON_MAP.event };
     }
 
