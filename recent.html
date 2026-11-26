@@ -1477,7 +1477,30 @@ to{transform:rotate(360deg)}
     animation: skeletonShimmer 2.4s ease infinite;
     border-radius: 8px;
 }
+#watchlist-view-world-mode {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  min-height: 360px;
+}
 
+#watchlist-view-world-mode tv-world-market-summary {
+  display: block;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  margin: -2px;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Thử ghi đè nếu TradingView expose part bọc ngoài */
+#watchlist-view-world-mode tv-world-market-summary::part(container),
+#watchlist-view-world-mode tv-world-market-summary::part(wrapper) {
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
 </style>
 </head>
 <body >
@@ -2200,13 +2223,13 @@ to{transform:rotate(360deg)}
                                                 <!-- View Mode Switch Buttons -->
                                                 <div style="background: rgba(255,255,255,0.06); padding: 4px; border-radius: 20px; display: flex; border: 1px solid rgba(255,255,255,0.1); gap: 4px;">
                                                     <button type="button" id="btn-watchlist-heatmap" onclick="switchWatchlistView('heatmap')" style="background: #374151; color: #fff; border: none; padding: 6px 14px; border-radius: 16px; font-family:DM Sans; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s;">
-                                                        <i class="bi bi-grid-fill" style="font-size: 13px;"></i>
+                                                        <i class="bi bi-grid-fill" style="font-size: 13px!important;"></i>
                                                     </button>
                                                     <button type="button" id="btn-watchlist-world" onclick="switchWatchlistView('world')" style="background: transparent; color: #94a3b8; border: none; padding: 6px 14px; border-radius: 16px; font-family:DM Sans; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s;">
-                                                        <i class="bi bi-globe-americas" style="font-size: 13px;"></i>
+                                                        <i class="bi bi-globe-americas" style="font-size: 13px!important;"></i>
                                                     </button>
-                                                    <button type="button" id="btn-watchlist-table" onclick="switchWatchlistView('table')" style="background: transparent; color: #94a3b8; border: none; padding: 6px 14px; border-radius: 16px; font-family:DM Sans; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s;">
-                                                        <i class="bi bi-table" style="font-size: 13px;"></i> 
+                                                    <button type="button" id="btn-watchlist-table" onclick="switchWatchlistView('table'); if (window.innerWidth <= 480) this.parentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });" style="background: transparent; color: #94a3b8; border: none; padding: 6px 14px; border-radius: 16px; font-family:DM Sans; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s;">
+                                                        <i class="bi bi-table" style="font-size: 13px!important;"></i> 
                                                     </button>
                                                 </div>
                                             </div>
