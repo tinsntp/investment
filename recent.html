@@ -2175,7 +2175,7 @@ to{transform:rotate(360deg)}
                                     </div>
                                 </div>
                                 <!-- PORTFOLIO TABLE CARD -->
-                                <div class="budget-card" >
+                                <div class="budget-card" id="budget-card-portfolio">
                                     <!-- Sub-Tab Switcher Header (Placed at top) -->
                                     <div class="budget-subtabs" data-tabgroup="portfolio-group" style="display: flex; align-items: center; justify-content: space-between; margin: 10px 3px 10px 3px;">
                                         <button type="button" class="budget-subtab active" onclick="switchBudgetTab(this, 'watchlist');document.getElementById('budget-view-portfolio').scrollIntoView({ behavior: 'smooth', block: 'start' });">
@@ -2228,7 +2228,7 @@ to{transform:rotate(360deg)}
                                                     <button type="button" id="btn-watchlist-world" onclick="switchWatchlistView('world');document.getElementById('budget-view-portfolio').scrollIntoView({ behavior: 'smooth', block: 'start' });" style="background: transparent; color: #94a3b8; border: none; padding: 6px 14px; border-radius: 16px; font-family:DM Sans; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s;">
                                                         <i class="bi bi-globe-americas" style="font-size: 13px!important;"></i>
                                                     </button>
-                                                    <button type="button" id="btn-watchlist-table" onclick="switchWatchlistView('table'); if (window.innerWidth <= 480) this.parentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });" style="background: transparent; color: #94a3b8; border: none; padding: 6px 14px; border-radius: 16px; font-family:DM Sans; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s;">
+                                                    <button type="button" id="btn-watchlist-table" onclick="switchWatchlistView('table');document.getElementById('budget-card-portfolio').scrollIntoView({ behavior: 'smooth', block: 'start' });" style="background: transparent; color: #94a3b8; border: none; padding: 6px 14px; border-radius: 16px; font-family:DM Sans; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.2s;">
                                                         <i class="bi bi-table" style="font-size: 13px!important;"></i> 
                                                     </button>
                                                 </div>
